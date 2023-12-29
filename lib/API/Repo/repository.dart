@@ -1,9 +1,17 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
+import 'package:pds/API/Model/DeleteUserChatModel/DeleteUserChat_Model.dart';
+import 'package:pds/API/Model/GetAllInboxImagesModel/GetAllInboxImagesModel.dart';
+import 'package:pds/API/Model/acceptRejectInvitaionModel/GetAllNotificationModel.dart';
+import 'package:pds/API/Model/selectMultipleUsers_ChatModel/selectMultipleUsers_ChatModel.dart';
+import 'package:pds/API/Model/UserTagModel/UserTag_model.dart';
+import 'package:pds/API/Model/GetUsersChatByUsernameModel/GetUsersChatByUsernameModel.dart';
+import 'package:pds/API/Model/BlogComment_Model/BlogLikeList_model.dart';
 import 'package:pds/API/Model/FollwersModel/FllowersModel.dart';
 import 'package:pds/API/Model/HasTagModel/hasTagModel.dart';
 import 'package:pds/API/Model/IsTokenExpired/IsTokenExpired.dart';
+import 'package:pds/API/Model/OnTimeDMModel/OnTimeDMModel.dart';
 import 'package:pds/API/Model/RePost_Model/RePost_model.dart';
 import 'package:pds/API/Model/BlogComment_Model/BlogCommentDelete_model.dart';
 import 'package:pds/API/Model/BlogComment_Model/BlogComment_model.dart';
@@ -39,7 +47,6 @@ import 'package:pds/API/Model/deletecomment/delete_comment_model.dart';
 import 'package:pds/API/Model/getAllHashtagModel/getAllHashtagModel.dart';
 import 'package:pds/API/Model/getSerchDataModel/getSerchDataModel.dart';
 import 'package:pds/API/Model/inboxScreenModel/inboxScrrenModel.dart';
-import 'package:pds/API/Model/logoutModel/logoutModel.dart';
 import 'package:pds/API/Model/removeFolloweModel/removeFollowerModel.dart';
 import 'package:pds/API/Model/serchDataAddModel/serchDataAddModel.dart';
 import 'package:pds/API/Model/serchForInboxModel/serchForinboxModel.dart';
@@ -100,6 +107,10 @@ import 'package:pds/API/Model/saveBlogModel/saveBlog_Model.dart';
 import 'package:pds/API/Model/saveAllBlogModel/saveAllBlog_Model.dart';
 import 'package:pds/API/Model/ViewStoryModel/StoryViewList_Model.dart';
 import 'package:pds/API/Model/storyDeleteModel/storyDeleteModel.dart';
+import 'package:pds/API/Model/acceptRejectInvitaionModel/seenNotificationModel.dart';
+import 'package:pds/API/Model/acceptRejectInvitaionModel/getAllNotificationCount.dart';
+
+
 
 class Repository {
   ApiServices apiServices = ApiServices();
@@ -551,6 +562,72 @@ class Repository {
         return jsonString;
     }
   }
+
+  AllNotificationAPI(BuildContext context) async {
+    final response = await apiServices.getApiCallWithToken(
+        '${Config.getAllNotifications}', context);
+    print(response);
+    var jsonString = json.decode(response.body);
+    switch (response.statusCode) {
+      case 200:
+        return GetAllNotificationModel.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+      case 400:
+        return Config.somethingWentWrong;
+      case 701:
+        return Config.somethingWentWrong;
+      default:
+        return jsonString;
+    }
+  }
+
+  SeenNotificationAPI(BuildContext context, String notificationUid) async {
+    final response = await apiServices.getApiCallWithToken(
+        '${Config.SeenNotification}?notificationUid=${notificationUid}',
+        context);
+    print(response);
+    var jsonString = json.decode(response.body);
+    switch (response.statusCode) {
+      case 200:
+        return seenNotificationModel.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+      case 400:
+        return Config.somethingWentWrong;
+      case 701:
+        return Config.somethingWentWrong;
+      default:
+        return jsonString;
+    }
+  }
+
+  // getAllNoticationsCountAPI(
+  //     BuildContext context) async {
+  //   final response = await apiServices.getApiCallWithToken(
+  //       '${Config.getAllNoticationsCount}',
+  //       context);
+  //   print(response);
+  //   var jsonString = json.decode(response.body);
+  //   switch (response.statusCode) {
+  //     case 200:
+  //       return getAllNotificationCount.fromJson(jsonString);
+  //     case 404:
+  //       return Config.somethingWentWrong;
+  //     case 500:
+  //       return Config.servernotreachable;
+  //     case 400:
+  //       return Config.somethingWentWrong;
+  //     case 701:
+  //       return Config.somethingWentWrong;
+  //     default:
+  //       return jsonString;
+  //   }
+  // }
 
   HashTagBanner(BuildContext context) async {
     final response =
@@ -1280,15 +1357,38 @@ class Repository {
     }
   }
 
-  chatImage(BuildContext context, String inboxChatUserUid, String userUid,
+  chatImage(BuildContext context, String RoomChatUserUid, String userUid,
       File imageFile) async {
     final response = await apiServices.multipartFileUserprofile(
-        "${Config.chatImage}/${inboxChatUserUid}/${userUid}",
+        "${Config.chatImageRoom}/${RoomChatUserUid}/${userUid}",
         imageFile,
         context,
         imageDataType: "yes");
     var jsonString = json.decode(response.body);
     print('jasonnString$jsonString');
+    switch (response.statusCode) {
+      case 200:
+        return jsonString;
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+      case 400:
+        return Config.somethingWentWrong;
+      case 701:
+        return Config.somethingWentWrong;
+      default:
+        return jsonString;
+    }
+  }
+
+  chatImage1(String inboxChatUserUid, String userUid, File imageFile,
+      BuildContext context) async {
+    final response = await apiServices.multipartFileWithSoket(
+        "${Config.chatImageDM}?inboxChatUserUid=$inboxChatUserUid&userUid=$userUid",
+        imageFile,
+        context);
+    var jsonString = json.decode(response.body);
     switch (response.statusCode) {
       case 200:
         return jsonString;
@@ -2038,9 +2138,14 @@ class Repository {
     }
   }
 
-  openSaveImagePost(BuildContext context, String PostUID) async {
-    final response = await apiServices.getApiCallWithToken(
-        '${Config.OpenSaveImagePost}?postUid=$PostUID', context);
+  openSaveImagePost(
+      BuildContext context, String PostLink, String PostUID) async {
+    final response = PostUID == ""
+        ? await apiServices.getApiCallWithToken(
+            '${Config.OpenSaveImagePost}?postLink=${PostLink}', context)
+        : await apiServices.getApiCallWithToken(
+            '${Config.OpenSaveImagePost}?postLink=${PostLink}&postUid=$PostUID',
+            context);
     var jsonString = json.decode(response.body);
     switch (response.statusCode) {
       case 200:
@@ -2189,10 +2294,12 @@ class Repository {
     }
   }
 
-  RePost(
-      BuildContext context, Map<String, dynamic> params, String? uuId) async {
+  RePost(BuildContext context, Map<String, dynamic> params, String? uuId,
+      String? name) async {
     final response = await apiServices.postApiCall(
-        Config.rePost + "?postUid=" + "${uuId}", params, context);
+        Config.rePost + "?postUid=" + "${uuId}" + "&rePostType=" + "${name}",
+        params,
+        context);
     print('AddPost$response');
     var jsonString = json.decode(response.body);
     switch (response.statusCode) {
@@ -2279,7 +2386,30 @@ class Repository {
   search_user_for_inbox(
       String searchFilter, String pageNumber, BuildContext context) async {
     final response = await apiServices.getApiCallWithToken(
-        '${Config.search_user_for_inboxUrl}?searchFilter=$searchFilter&numberOfRecords=30&pageNumber=$pageNumber',
+        '${Config.insearch_user_for_inboxUrl1}?searchFilter=$searchFilter&numberOfRecords=30&pageNumber=$pageNumber',
+        context);
+    var jsonString = json.decode(response.body);
+    print('jsonString-$jsonString');
+    switch (response.statusCode) {
+      case 200:
+        return SearchUserForInbox.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+      case 400:
+        return Config.somethingWentWrong;
+      case 701:
+        return Config.somethingWentWrong;
+      default:
+        return jsonString;
+    }
+  }
+
+  search_user_for_inbox1(
+      String searchFilter, String pageNumber, BuildContext context) async {
+    final response = await apiServices.getApiCallWithToken(
+        '${Config.search_user_for_inboxUrl}?searchByUsername=$searchFilter&numberOfRecords=30&pageNumber=$pageNumber',
         context);
     var jsonString = json.decode(response.body);
     print('jsonString-$jsonString');
@@ -2430,15 +2560,40 @@ class Repository {
         return jsonString;
     }
   }
-   Blogcomment(BuildContext context, String blogID) async {
-    final responce = await apiServices.getApiCall(
+
+  Blogcomment(BuildContext context, String blogID) async {
+    final responce = await apiServices.getApiCallWithToken(
         '${Config.blogComment}?blogUid=${blogID}', context);
     var jsonString = json.decode(responce.body);
     print('jasonnString$jsonString');
     print('respnse ${responce.statusCode}');
     switch (responce.statusCode) {
       case 200:
+        return BlogCommentModel.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+      case 400:
+        return Config.somethingWentWrong;
+      case 701:
+        return Config.somethingWentWrong;
+      default:
         return jsonString;
+    }
+  }
+
+  FirstTimeChat(
+    BuildContext context,
+    String? userWithUid,
+  ) async {
+    final response = await apiServices.postApiCalla(
+        "${Config.create_user_chat}?userWithUid=${userWithUid}", context);
+    print('AddPost$response');
+    var jsonString = json.decode(response.body);
+    switch (response.statusCode) {
+      case 200:
+        return OnTimeDMModel.fromJson(jsonString);
       case 404:
         return Config.somethingWentWrong;
       case 500:
@@ -2476,14 +2631,152 @@ class Repository {
         return jsonString;
     }
   }
-  DeleteBlogcomment(String commentuid, BuildContext context) async {
-    final response = await apiServices.deleteApiCall(
-        "${Config.deleteBlogcomment}?commentUid=${commentuid}", {}, context);
+
+  DeleteBlogcomment(
+      String commentuid, String loginuser, BuildContext context) async {
+    final response = await apiServices.deleteApiCallWithToken(
+        "${Config.deleteBlogcomment}?commentUid=${commentuid}&loginUserUid=$loginuser",
+        context);
     print(response);
     var jsonString = json.decode(response!.body);
     switch (response.statusCode) {
       case 200:
         return DeleteBlogCommentModel.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+      case 400:
+        return Config.somethingWentWrong;
+      case 701:
+        return Config.somethingWentWrong;
+      default:
+        return jsonString;
+    }
+  }
+
+  DeleteUserDelete(String userChatInboxUid, BuildContext context) async {
+    final response = await apiServices.deleteApiCallWithToken(
+        "${Config.delete_user_chat}?userChatInboxUid=${userChatInboxUid}",
+        context);
+    print(response);
+    var jsonString = json.decode(response!.body);
+    switch (response.statusCode) {
+      case 200:
+        return DeleteUserChatModel.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+      case 400:
+        return Config.somethingWentWrong;
+      case 701:
+        return Config.somethingWentWrong;
+      default:
+        return jsonString;
+    }
+  }
+
+  BlogLikeList(BuildContext context, String blogID, String? uuID) async {
+    final responce = await apiServices.getApiCallWithToken(
+        '${Config.blogLikeList}?blogUid=${blogID}&loginUserUid=${uuID}',
+        context);
+    var jsonString = json.decode(responce.body);
+    print('jasonnString$jsonString');
+    print('respnse ${responce.statusCode}');
+    switch (responce.statusCode) {
+      case 200:
+        return BlogLikeListModel.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+      case 400:
+        return Config.somethingWentWrong;
+      case 701:
+        return Config.somethingWentWrong;
+      default:
+        return jsonString;
+    }
+  }
+
+  get_UsersChatByUsername(
+      String searchUsername, String pageNumber, BuildContext context) async {
+    final respone = await apiServices.getApiCallWithToken(
+        '${Config.get_UsersChatByUsername}?searchUsername=$searchUsername&pageNumber=$pageNumber&numberOfRecords=20',
+        context);
+    var jsonString = json.decode(respone.body);
+    switch (respone.statusCode) {
+      case 200:
+        return GetUsersChatByUsername.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+      case 400:
+        return Config.somethingWentWrong;
+      case 701:
+        return Config.somethingWentWrong;
+      default:
+        return jsonString;
+    }
+  }
+
+  selectMultipleUsers_Chat(
+      Map<String, dynamic> params, BuildContext context) async {
+    final respone = await apiServices.postApiCall(
+        Config.selectMultipleUsers_Chat, params, context);
+    var jsonString = json.decode(respone.body);
+    print("dfhdsfhd-$jsonString");
+    switch (respone.statusCode) {
+      case 200:
+        return SelectMultipleUsersChatModel.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+      case 400:
+        return Config.somethingWentWrong;
+      case 701:
+        return Config.somethingWentWrong;
+      default:
+        return jsonString;
+    }
+  }
+
+  UserTag(BuildContext context, String? name) async {
+    final responce = await apiServices.getApiCall(
+        '${Config.userTag}?username=${name}', context);
+    var jsonString = json.decode(responce.body);
+    print('jasonnString$jsonString');
+    print('respnse ${responce.statusCode}');
+    switch (responce.statusCode) {
+      case 200:
+        return UserTagModel.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+      case 400:
+        return Config.somethingWentWrong;
+      case 701:
+        return Config.somethingWentWrong;
+      default:
+        return jsonString;
+    }
+  }
+
+  get_all_inbox_images(
+      BuildContext context, String userChatInboxUid, String pageNumber) async {
+    final responce = await apiServices.getApiCallWithToken(
+        '${Config.get_all_inbox_images}?userChatInboxUid=${userChatInboxUid}&pageNumber=${pageNumber}&numberOfRecords=20',
+        context);
+    var jsonString = json.decode(responce.body);
+    print('jasonnString$jsonString');
+    print('respnse ${responce.statusCode}');
+    switch (responce.statusCode) {
+      case 200:
+        return GetAllInboxImages.fromJson(jsonString);
       case 404:
         return Config.somethingWentWrong;
       case 500:

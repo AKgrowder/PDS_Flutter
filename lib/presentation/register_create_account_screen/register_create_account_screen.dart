@@ -1,21 +1,10 @@
-import 'package:pds/API/Bloc/Fatch_All_PRoom_Bloc/Fatch_PRoom_cubit.dart';
-import 'package:pds/API/Bloc/FetchExprtise_Bloc/fetchExprtise_cubit.dart';
-import 'package:pds/API/Bloc/GuestAllPost_Bloc/GuestAllPost_cubit.dart';
-import 'package:pds/API/Bloc/PublicRoom_Bloc/CreatPublicRoom_cubit.dart';
-import 'package:pds/API/Bloc/auth/register_Block.dart';
-import 'package:pds/API/Bloc/creatForum_Bloc/creat_Forum_cubit.dart';
-import 'package:pds/API/Bloc/senMSG_Bloc/senMSG_cubit.dart';
 import 'package:pds/core/app_export.dart';
 import 'package:pds/presentation/%20new/newbottembar.dart';
+
 import 'package:pds/presentation/Login_Screen/Login_Screen.dart';
 import 'package:pds/widgets/app_bar/appbar_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../API/Bloc/GetAllPrivateRoom_Bloc/GetAllPrivateRoom_cubit.dart';
-import '../../API/Bloc/Invitation_Bloc/Invitation_cubit.dart';
 import '../create_account_screen/create_account_screen.dart';
-import '../../API/Bloc/auth/login_Block.dart';
-import '../../API/Bloc/device_info_Bloc/device_info_bloc.dart';
 
 class RegisterCreateAccountScreen extends StatefulWidget {
   @override
@@ -54,7 +43,13 @@ class _RegisterCreateAccountScreenState
                       top: 50,
                     ),
                     onTap: () {
-                      Navigator.push(context,
+                     /*  Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  NewBottomBar(buttomIndex: 0)),
+                          (route) => false); */
+                       Navigator.push(context,
                           MaterialPageRoute(builder: (context) {
                         return NewBottomBar(buttomIndex: 0);
                       }));

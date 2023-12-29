@@ -2058,7 +2058,11 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                             ),
                                           ),
 
-                                          statusList.isNotEmpty
+                                          PriveateRoomData
+                                                      ?.object?[index]
+                                                      .expertUserProfile
+                                                      ?.isEmpty !=
+                                                  true
                                               ? Padding(
                                                   padding:
                                                       const EdgeInsets.all(8.0),
@@ -2072,18 +2076,22 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                                             builder: (context) {
                                                               return ProfileScreen(
                                                                   User_ID:
-                                                                      "${statusList.first.uuid}",
+                                                                      "${PriveateRoomData?.object?[index].expertUserProfile?.first.uuid}",
                                                                   isFollowing:
                                                                       "");
                                                             },
                                                           ));
                                                         },
-                                                        child: statusList.first
+                                                        child: PriveateRoomData
+                                                                    ?.object?[
+                                                                        index]
+                                                                    .expertUserProfile
+                                                                    ?.first
                                                                     .userProfilePic !=
                                                                 null
                                                             ? CustomImageView(
                                                                 url:
-                                                                    "${statusList.first.userProfilePic}",
+                                                                    "${PriveateRoomData?.object?[index].expertUserProfile?.first.userProfilePic}",
                                                                 height: 30,
                                                                 radius:
                                                                     BorderRadius
@@ -2104,14 +2112,32 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                                                             .tomcruse),
                                                               ),
                                                       ),
-                                                      Text(
-                                                          " ${statusList.first.userName}"),
+                                                      GestureDetector(
+                                                        onTap: () {
+                                                          Navigator.push(
+                                                              context,
+                                                              MaterialPageRoute(
+                                                            builder: (context) {
+                                                              return ProfileScreen(
+                                                                  User_ID:
+                                                                      "${PriveateRoomData?.object?[index].expertUserProfile?.first.uuid}",
+                                                                  isFollowing:
+                                                                      "");
+                                                            },
+                                                          ));
+                                                        },
+                                                        child: Container(
+                                                          child: Text(
+                                                              " ${PriveateRoomData?.object?[index].expertUserProfile?.first.userName}"),
+                                                        ),
+                                                      ),
                                                       Spacer(),
                                                       GestureDetector(
                                                         onTap: () {
                                                           print(
                                                               "hey i am experts");
-                                                          Navigator.push(
+
+                                                          /*   Navigator.push(
                                                               context,
                                                               MaterialPageRoute(
                                                             builder: (context) {
@@ -2124,15 +2150,16 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                                                     uniqueList,
                                                               );
                                                             },
-                                                          ));
+                                                          )); */
                                                         },
                                                         child: Container(
                                                           width: 80,
                                                           height: 20,
                                                           decoration:
                                                               ShapeDecoration(
-                                                            color: Color(
-                                                                0xFFED1C25),
+                                                                color: ColorConstant.primary_color,
+                                                            // color: Color(
+                                                            //     0xFFED1C25),
                                                             shape:
                                                                 RoundedRectangleBorder(
                                                               borderRadius:

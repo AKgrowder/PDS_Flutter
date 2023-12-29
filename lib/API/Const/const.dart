@@ -49,7 +49,7 @@ class Config {
   static const String loginerror = "Please Login With UserName";
   static const String RateUs = "guest/addRating";
   static const String emailVerifaction = "user/api/send_email_verify";
-  static const String chatImage = "user/send_image_in_user_chat";
+  static const String chatImageRoom = "user/sendImageInChat/";
   static const String unPin = "user/saveRoom";
   static const String unSavePin = "user/unsaveRoom";
   static const String getCountOfSavedRoom = "user/getCountOfSavedRoom";
@@ -106,7 +106,8 @@ class Config {
   static const String get_all_followings = "user/api/get_all_followings";
   static const String remove_follower = "user/api/remove_follower";
   static const String SelectChatMember = "user/search_user_for_inbox";
-  static const String validateTokenCheck = "auth/auth/validateTokenCheck";
+  static const String validateTokenCheck = "auth/auth/validateTokenCheck"
+  ;
   static const String logOutUserSttionExperied = "auth/auth/isTokenExpired";
   static const String roomExists = "user/api/assignAdminToOtherRoomMember";
   static const String search_user_for_inboxUrl = "user/search_user_for_inbox";
@@ -117,8 +118,23 @@ class Config {
   static const String delete_story = "user/api/delete_story";
   static const String DMChatList = "user/get_inbox_messages";
   static const String get_all_hashtag = "user/api/get_all_hashtag";
-   static const String blogComment = "admin/blog/get_all_comments_on_blog";
-  static const String addBlogcomments = "admin/blog/add_comment";
-   static const String deleteBlogcomment = "admin/blog/delete_comment_by_uid";
-}
+  static const String blogComment = "user/api/get_all_comment_on_blog";
+  static const String addBlogcomments = "user/api/add_comment_on_blog";
+  static const String deleteBlogcomment = "user/api/delete_blog_comment_by_uid";
+  static const String blogLikeList = "user/api/get_all_blog_likes";
+  static const String create_user_chat = "user/create_user_chat";
+  static const String get_UsersChatByUsername = "user/get_UsersChatByUsername";
+  static const String userTag = "user/api/get_uuid_by_username";
+  static const String selectMultipleUsers_Chat =
+      "user/selectMultipleUsers_Chat";
+  static const String chatImageDM = "user/send_image_in_user_chat"; // ankur 
+  static const String get_all_inbox_images = "user/get_all_inbox_images"; 
+  static const String delete_user_chat = "user/delete_user_chat"; 
+  static const String getAllNotifications = "user/api/getAllNotifications"; 
+  static const String insearch_user_for_inboxUrl1 = "user/search_user_for_tag";
+  static const String SeenNotification = "user/api/notificationSeenByUser";
+  static const String getAllNoticationsCount = "user/api/getAllNotificationsCount";
 
+
+
+}

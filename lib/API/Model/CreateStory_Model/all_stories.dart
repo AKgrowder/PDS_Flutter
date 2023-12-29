@@ -68,7 +68,7 @@ class StoryData {
   String? createdAt;
   bool? isLoggedIn;
   bool? storySeen;
-
+  int? storyViewCount;
   StoryData(
       {this.storyUid,
       this.storyData,
@@ -77,7 +77,8 @@ class StoryData {
       this.userName,
       this.createdAt,
       this.isLoggedIn,
-      this.storySeen});
+      this.storySeen,
+      this.storyViewCount});
 
   StoryData.fromJson(Map<String, dynamic> json) {
     storyUid = json['storyUid'];
@@ -88,6 +89,7 @@ class StoryData {
     createdAt = json['createdAt'];
     isLoggedIn = json['isLoggedIn'];
     storySeen = json['storySeen'];
+    storyViewCount = json['storyViewCount'];
   }
 
   Map<String, dynamic> toJson() {
@@ -100,6 +102,7 @@ class StoryData {
     data['createdAt'] = this.createdAt;
     data['isLoggedIn'] = this.isLoggedIn;
     data['storySeen'] = this.storySeen;
+    data['storyViewCount'] = this.storyViewCount;
     return data;
   }
 }

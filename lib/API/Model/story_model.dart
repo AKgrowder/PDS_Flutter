@@ -5,7 +5,7 @@ class StoryModel {
   String? username;
   String? storyUid;
   String? userUid;
-
+  int?storyViewCount;
   StoryModel(this.image, this.date, this.profileImage, this.username,
-      this.storyUid, this.userUid);
+      this.storyUid, this.userUid,this.storyViewCount);
 }

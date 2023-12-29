@@ -65,7 +65,7 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
   String? UserLogin_ID;
   ImagePicker picker = ImagePicker();
   XFile? pickedImageFile;
-  ScrollController scrollController = ScrollController();
+  ScrollController  scrollController = ScrollController();
   ScrollController scrollController1 = ScrollController();
   bool isScroll = false;
   bool AddNewData = false;
@@ -544,7 +544,7 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                                                   ),
                                                                 ),
                                                               )
-                                                            :Padding(
+                                                            : Padding(
                                                                 padding:
                                                                     const EdgeInsets
                                                                         .symmetric(),
@@ -577,13 +577,23 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                                                           ),
                                                                         ),
                                                                         Spacer(),
-                                                                        Text(
-                                                                          "${AllChatmodelData?.object?.messageOutputList?.content?[index].userName}",
-                                                                          style: TextStyle(
-                                                                              fontWeight: FontWeight.w400,
-                                                                              color: Colors.black,
-                                                                              fontFamily: "outfit",
-                                                                              fontSize: 14),
+                                                                        GestureDetector(
+                                                                          onTap:
+                                                                              () {
+                                                                            print("send user id -- ${AllChatmodelData?.object?.messageOutputList?.content?[index].uid}");
+                                                                            Navigator.push(context,
+                                                                                MaterialPageRoute(builder: (context) {
+                                                                              return ProfileScreen(User_ID: "${AllChatmodelData?.object?.messageOutputList?.content?[index].userCode}", isFollowing: "");
+                                                                            }));
+                                                                          },
+                                                                          child:
+                                                                              Container(
+                                                                            child:
+                                                                                Text(
+                                                                              "${AllChatmodelData?.object?.messageOutputList?.content?[index].userName}",
+                                                                              style: TextStyle(fontWeight: FontWeight.w400, color: Colors.black, fontFamily: "outfit", fontSize: 14),
+                                                                            ),
+                                                                          ),
                                                                         ),
                                                                         Padding(
                                                                             padding:
@@ -887,14 +897,14 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                   decoration: InputDecoration(
                                       filled: true,
                                       fillColor: Color(0x82EFEFEF),
-                                      prefixIcon: IconButton(
+                                      /* prefixIcon: IconButton(
                                         icon: Icon(
                                           isEmojiVisible
                                               ? Icons.keyboard_rounded
                                               : Icons.emoji_emotions_outlined,
                                         ),
                                         onPressed: onClickedEmoji,
-                                      ),
+                                      ), */
                                       hintText: "Add Comment",
                                       enabledBorder: OutlineInputBorder(
                                         borderSide: BorderSide(

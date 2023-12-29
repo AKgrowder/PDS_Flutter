@@ -5,8 +5,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_mentions/flutter_mentions.dart';
 import 'package:hashtagable/widgets/hashtag_text.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
@@ -27,12 +27,13 @@ import 'package:pds/presentation/Create_Post_Screen/CreatePostShow_ImageRow/phot
 import 'package:pds/widgets/commentPdf.dart';
 import 'package:pds/widgets/custom_image_view.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:pinput/pinput.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:transparent_image/transparent_image.dart';
+import 'package:video_player/video_player.dart';
 
 import '../../API/Model/HashTage_Model/HashTagView_model.dart';
 import '../Create_Post_Screen/CreatePostShow_ImageRow/photo_gallery-master/lib/photo_gallery.dart';
+import 'home_screen_new.dart';
 
 class RePostScreen extends StatefulWidget {
   String? username;
@@ -78,6 +79,7 @@ class _RePostScreenState extends State<RePostScreen> {
 
   @override
   void initState() {
+    print("check Viedo Formated-${widget.postDataType}");
     _loading = true;
     getDocumentSize();
     initAsync();
@@ -91,6 +93,7 @@ class _RePostScreenState extends State<RePostScreen> {
     GetUserData();
     super.initState();
   }
+
   List<String> postTexContrlloer = [];
 
   ImagePicker _imagePicker = ImagePicker();
@@ -125,10 +128,15 @@ class _RePostScreenState extends State<RePostScreen> {
   String? UserProfileImage;
   SearchUserForInbox? searchUserForInbox1;
   HasDataModel? getAllHashtag;
-
+  bool isVideodata = false;
+  List<Map<String, dynamic>> tageData = [];
+  List<Map<String, dynamic>> heshTageData = [];
+  VideoPlayerController? _controller;
+  bool istageData = false;
+  bool isrepostDataSet = true;
   bool isHeshTegData = false;
-  bool isTagData = false;
-
+  List<File> galleryFile = [];
+  VideoPlayerController? _controllersRepost;
   GetUserData() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     User_ID = prefs.getString(PreferencesKey.loginUserID);
@@ -165,19 +173,81 @@ class _RePostScreenState extends State<RePostScreen> {
 
           print("imageDataPost-->${imageDataPost?.object?.data}");
         }
-      }
-       if (state is SearchHistoryDataAddxtends) {
-          searchUserForInbox1 = state.searchUserForInbox;
-          isTagData = true;
-          isHeshTegData = false;
-        }
-         if (state is GetAllHashtagState) {
-          getAllHashtag = state.getAllHashtag;
-          isHeshTegData = true;
-          isTagData = false;
 
+        if (imageDataPost?.object?.data?.isNotEmpty == true) {
+          if (imageDataPost!.object!.data!.first.endsWith('.mp4')) {
+            isVideodata = true;
+          }
         }
+        if (isVideodata == true) {
+          print("this condison is working");
+          _controller = VideoPlayerController.networkUrl(
+              Uri.parse('${imageDataPost!.object!.data!.first}'));
+          _controller?.initialize().then((value) => setState(() {}));
+          setState(() {
+            _controller?.play();
+            _controller?.setLooping(true);
+          });
+        }
+        // if (widget.postDataType == "VIDEO") {
+        //   for (int i = 0; i < widget.postData!.length; i++) {
+        //     _controllersRepost = VideoPlayerController.networkUrl(
+        //         Uri.parse('${widget.postData?[i]}'));
+        //     print("video list -- ${widget.postData}");
+        //     _controllersRepost?.initialize().then((value) => setState(() {}));
+        //     setState(() {
+        //       _controllersRepost?.play();
+        //       _controllersRepost?.pause();
+        //       _controllersRepost?.setLooping(true);
+        //     });
+        //   }
+        // }
+      }
+      if (state is SearchHistoryDataAddxtends) {
+        searchUserForInbox1 = state.searchUserForInbox;
+        searchUserForInbox1?.object?.content?.forEach((element) {
+          Map<String, dynamic> dataSetup = {
+            'id': element.userUid,
+            'display': element.userName,
+            'photo': element.userProfilePic
+          };
+
+          tageData.add(dataSetup);
+          List<Map<String, dynamic>> uniqueTageData = [];
+          Set<String> encounteredIds = Set<String>();
+          for (Map<String, dynamic> data in tageData) {
+            if (!encounteredIds.contains(data['id'])) {
+              // If the ID hasn't been encountered, add to the result list
+              uniqueTageData.add(data);
+
+              // Mark the ID as encountered
+              encounteredIds.add(data['id']);
+            }
+            tageData = uniqueTageData;
+          }
+          if (tageData.isNotEmpty == true) {
+            istageData = true;
+          }
+        });
+      }
+      if (state is GetAllHashtagState) {
+        getAllHashtag = state.getAllHashtag;
+        for (int i = 0;
+            i < (getAllHashtag?.object?.content?.length ?? 0);
+            i++) {
+          // getAllHashtag?.object?.content?[i].split('#').last;
+          Map<String, dynamic> dataSetup = {
+            'id': '${i}',
+            'display': '${getAllHashtag?.object?.content?[i].split('#').last}',
+          };
+          heshTageData.add(dataSetup);
+          if (heshTageData.isNotEmpty == true) {
+            isHeshTegData = true;
+          }
+        }
+      }
       if (state is RePostLoadedState) {
+        isrepostDataSet = true;
         print("lodedSate-->");
         SnackBar snackBar = SnackBar(
           content: Text(state.RePost.object.toString()),
@@ -195,6 +265,7 @@ class _RePostScreenState extends State<RePostScreen> {
     }, builder: (context, state) {
       return SafeArea(
           child: Scaffold(
+            backgroundColor: Colors.white,
         body: Container(
           color: Colors.white,
           child: Stack(
@@ -225,7 +296,9 @@ class _RePostScreenState extends State<RePostScreen> {
                                 onTap: () {
                                   HasetagList = [];
                                   CreatePostDone = true;
-                                  dataPostFucntion();
+                                  if (isrepostDataSet == true) {
+                                    dataPostFucntion();
+                                  }
                                 },
                                 child: Container(
                                   decoration: BoxDecoration(
@@ -351,151 +424,292 @@ class _RePostScreenState extends State<RePostScreen> {
                             width: _width,
                             child: Column(
                               children: [
-                                Padding(
-                                  padding: EdgeInsets.only(top: 0.0, left: 10),
-                                  child: TextFormField(
-                                    controller: postText1,
-                                    maxLines: null,
-                                    cursorColor: Colors.grey,
-                                    decoration: InputDecoration(
-                                      hintText: "What's on your head?",
-                                      border: InputBorder.none,
-                                    ),
-                                    inputFormatters: [
-                                      // Custom formatter to trim leading spaces
-                                      TextInputFormatter.withFunction(
-                                          (oldValue, newValue) {
-                                        if (newValue.text.startsWith(' ')) {
-                                          return TextEditingValue(
-                                            text: newValue.text.trimLeft(),
-                                            selection: TextSelection.collapsed(
-                                                offset: newValue.text
-                                                    .trimLeft()
-                                                    .length),
-                                          );
-                                        }
-                                        return newValue;
-                                      }),
-                                    ],
+                                SizedBox(
+                                  height: 80,
+                                  child: FlutterMentions(
                                     onChanged: (value) {
                                       onChangeMethod(value);
-                                      setState(() {
-                                        primaryColor = value.isNotEmpty
-                                            ? ColorConstant.primary_color
-                                            : ColorConstant.primaryLight_color;
-                                        textColor = value.isNotEmpty
-                                            ? Colors.white
-                                            : ColorConstant.primary_color;
-                                      });
                                     },
+                                    suggestionPosition:
+                                        SuggestionPosition.values.last,
+                                    maxLines: 10,
+                                    decoration: InputDecoration(
+                                      hintText: 'What’s on your head?',
+                                      border: InputBorder.none,
+                                      focusedBorder: InputBorder.none,
+                                    ),
+                                    mentions: [
+                                      Mention(
+                                          trigger: "@",
+                                          style: TextStyle(color: Colors.blue),
+                                          data: tageData,
+                                          matchAll: true,
+                                          suggestionBuilder: (tageData) {
+                                            if (istageData) {
+                                              return Container(
+                                                padding: EdgeInsets.all(10.0),
+                                                child: Row(
+                                                  children: <Widget>[
+                                                    tageData['photo'] != null
+                                                        ? CircleAvatar(
+                                                            backgroundImage:
+                                                                NetworkImage(
+                                                              tageData['photo'],
+                                                            ),
+                                                          )
+                                                        : CircleAvatar(
+                                                            backgroundImage:
+                                                                AssetImage(
+                                                                    ImageConstant
+                                                                        .tomcruse),
+                                                          ),
+                                                    SizedBox(
+                                                      width: 20.0,
+                                                    ),
+                                                    Column(
+                                                      children: <Widget>[
+                                                        Text(
+                                                            '@${tageData['display']}'),
+                                                      ],
+                                                    )
+                                                  ],
+                                                ),
+                                              );
+                                            }
+
+                                            return Container(
+                                              color: Colors.amber,
+                                            );
+                                          }),
+                                      Mention(
+                                          trigger: "#",
+                                          style: TextStyle(color: Colors.blue),
+                                          disableMarkup: true,
+                                          data: heshTageData,
+                                          matchAll: true,
+                                          suggestionBuilder: (tageData) {
+                                            if (isHeshTegData) {
+                                              return Container(
+                                                  padding: EdgeInsets.all(10.0),
+                                                  child: ListTile(
+                                                    leading: CircleAvatar(
+                                                      child: Text('#'),
+                                                    ),
+                                                    title: Text(
+                                                        '${tageData['display']}'),
+                                                  )
+                                                  /* Column(
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .start,
+                                                            children: <Widget>[
+                                                              Text(
+                                                                  '${tageData['display']}'),
+                                                            ],
+                                                          ), */
+                                                  );
+                                            }
+                                            print(
+                                                "suggestionBuilder-$tageData");
+                                            return Container(
+                                              color: Colors.amber,
+                                            );
+                                          }),
+                                    ],
                                   ),
                                 ),
+                                /*  Padding(
+                                      padding: EdgeInsets.only(top: 0.0, left: 10),
+                                      child: TextFormField(
+                                        controller: postText1,
+                                        maxLines: null,
+                                        cursorColor: Colors.grey,
+                                        decoration: InputDecoration(
+                                          hintText: "What's on your head?",
+                                          border: InputBorder.none,
+                                        ),
+                                        inputFormatters: [
+                                          // Custom formatter to trim leading spaces
+                                          TextInputFormatter.withFunction(
+                                              (oldValue, newValue) {
+                                            if (newValue.text.startsWith(' ')) {
+                                              return TextEditingValue(
+                                                text: newValue.text.trimLeft(),
+                                                selection: TextSelection.collapsed(
+                                                    offset: newValue.text
+                                                        .trimLeft()
+                                                        .length),
+                                              );
+                                            }
+                                            return newValue;
+                                          }),
+                                        ],
+                                        onChanged: (value) {
+                                          onChangeMethod(value);
+                                          setState(() {
+                                            primaryColor = value.isNotEmpty
+                                                ? ColorConstant.primary_color
+                                                : ColorConstant.primaryLight_color;
+                                            textColor = value.isNotEmpty
+                                                ? Colors.white
+                                                : ColorConstant.primary_color;
+                                          });
+                                        },
+                                      ),
+                                    ), */
                                 Padding(
                                   padding: const EdgeInsets.only(top: 5),
                                   child: SizedBox(
-                                    child: file12?.path != null
-                                        ? Container(
-                                            height: 400,
-                                            width: _width,
-                                            child: DocumentViewScreen1(
-                                              path: imageDataPost
-                                                  ?.object?.data?.first
-                                                  .toString(),
-                                            ))
-                                        : pickedImage.isNotEmpty
-                                            ? _loading
-                                                ? Center(
-                                                    child: Container(
-                                                      margin: EdgeInsets.only(
-                                                          bottom: 100),
-                                                      child: ClipRRect(
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(20),
-                                                        child: Image.asset(
-                                                            ImageConstant
-                                                                .loader,
-                                                            fit: BoxFit.cover,
-                                                            height: 100,
-                                                            width: 100),
-                                                      ),
+                                    child: isVideodata == true
+                                        ? _controller!.value.isInitialized
+                                            ? Container(
+                                                // color: Colors.amber,
+                                                height: _height / 3.5,
+                                                child: Column(
+                                                  children: [
+                                                    AspectRatio(
+                                                      aspectRatio: _controller!
+                                                          .value.aspectRatio,
+                                                      child: VideoPlayer(
+                                                          _controller!),
                                                     ),
-                                                  )
-                                                : isTrue == true
-                                                    ? imageDataPost?.object
-                                                                ?.data !=
-                                                            null
-                                                        ? SizedBox(
-                                                            height:
-                                                                _height / 1.5,
-                                                            width: _width,
-                                                            child: PageView
-                                                                .builder(
-                                                              onPageChanged:
-                                                                  (value) {
-                                                                setState(() {
-                                                                  _currentPages =
-                                                                      value;
-                                                                });
-                                                              },
-                                                              itemCount:
-                                                                  imageDataPost
-                                                                      ?.object
-                                                                      ?.data
-                                                                      ?.length,
-                                                              controller:
-                                                                  _pageControllers,
-                                                              itemBuilder:
-                                                                  (context,
-                                                                      index) {
-                                                                return SizedBox(
-                                                                    height:
-                                                                        _height /
-                                                                            2,
-                                                                    width:
-                                                                        _width,
-                                                                    child:
-                                                                        Padding(
-                                                                      padding:
-                                                                          const EdgeInsets.all(
-                                                                              8.0),
-                                                                      child:
-                                                                          CachedNetworkImage(
-                                                                        imageUrl:
-                                                                            '${imageDataPost?.object?.data?[index]}',
-                                                                      ),
-                                                                    ));
-                                                              },
-                                                            ),
-                                                          )
-                                                        : Container()
-                                                    : SizedBox() /* Center(
-                                                        child: GFLoader(
-                                                            type: GFLoaderType
-                                                                .ios),
-                                                      ) */
-                                            : selectImage == true
-                                                ? medium1?.mediumType ==
-                                                        MediumType.image
-                                                    ? GestureDetector(
-                                                        onTap: () async {
-                                                          print("fgfgfhg");
-                                                        },
-                                                        child: FadeInImage(
-                                                          fit: BoxFit.cover,
-                                                          placeholder: MemoryImage(
-                                                              kTransparentImage),
-                                                          image: PhotoProvider(
-                                                              mediumId:
-                                                                  medium1!.id),
+                                                    // GestureDetector(
+                                                    //   onTap: () {
+                                                    //     if (_controller!.value
+                                                    //         .isPlaying) {
+                                                    //       setState(() {
+                                                    //         _controller
+                                                    //             ?.pause();
+                                                    //       });
+                                                    //     } else {
+                                                    //       setState(() {
+                                                    //         _controller
+                                                    //             ?.play();
+                                                    //       });
+                                                    //     }
+                                                    //   },
+                                                    //   child: Icon(
+                                                    //     _controller!.value
+                                                    //             .isPlaying
+                                                    //         ? Icons.pause
+                                                    //         : Icons
+                                                    //             .play_arrow,
+                                                    //   ),
+                                                    // ),
+                                                  ],
+                                                ),
+                                              )
+                                            : Container()
+                                        : file12?.path != null
+                                            ? Container(
+                                                height: 400,
+                                                width: _width,
+                                                child: DocumentViewScreen1(
+                                                  path: imageDataPost
+                                                      ?.object?.data?.first
+                                                      .toString(),
+                                                ))
+                                            : pickedImage.isNotEmpty
+                                                ? _loading
+                                                    ? Center(
+                                                        child: Container(
+                                                          margin:
+                                                              EdgeInsets.only(
+                                                                  bottom: 100),
+                                                          child: ClipRRect(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        20),
+                                                            child: Image.asset(
+                                                                ImageConstant
+                                                                    .loader,
+                                                                fit: BoxFit
+                                                                    .cover,
+                                                                height: 100,
+                                                                width: 100),
+                                                          ),
                                                         ),
                                                       )
-                                                    : VideoProvider(
-                                                        mediumId: medium1!.id,
-                                                      )
-                                                : Container(
-                                                    color: Colors.white,
-                                                  ),
+                                                    : isTrue == true
+                                                        ? imageDataPost?.object
+                                                                    ?.data !=
+                                                                null
+                                                            ? SizedBox(
+                                                                height:
+                                                                    _height /
+                                                                        1.5,
+                                                                width: _width,
+                                                                child: PageView
+                                                                    .builder(
+                                                                  onPageChanged:
+                                                                      (value) {
+                                                                    setState(
+                                                                        () {
+                                                                      _currentPages =
+                                                                          value;
+                                                                    });
+                                                                  },
+                                                                  itemCount:
+                                                                      imageDataPost
+                                                                          ?.object
+                                                                          ?.data
+                                                                          ?.length,
+                                                                  controller:
+                                                                      _pageControllers,
+                                                                  itemBuilder:
+                                                                      (context,
+                                                                          index) {
+                                                                    return SizedBox(
+                                                                        height:
+                                                                            _height /
+                                                                                2,
+                                                                        width:
+                                                                            _width,
+                                                                        child:
+                                                                            Padding(
+                                                                          padding:
+                                                                              const EdgeInsets.all(8.0),
+                                                                          child:
+                                                                              CachedNetworkImage(
+                                                                            imageUrl:
+                                                                                '${imageDataPost?.object?.data?[index]}',
+                                                                          ),
+                                                                        ));
+                                                                  },
+                                                                ),
+                                                              )
+                                                            : Container()
+                                                        : SizedBox() /* Center(
+                                                            child: GFLoader(
+                                                                type: GFLoaderType
+                                                                    .ios),
+                                                          ) */
+                                                : selectImage == true
+                                                    ? medium1?.mediumType ==
+                                                            MediumType.image
+                                                        ? GestureDetector(
+                                                            onTap: () async {
+                                                              print("fgfgfhg");
+                                                            },
+                                                            child: FadeInImage(
+                                                              fit: BoxFit.cover,
+                                                              placeholder:
+                                                                  MemoryImage(
+                                                                      kTransparentImage),
+                                                              image: PhotoProvider(
+                                                                  mediumId:
+                                                                      medium1!
+                                                                          .id),
+                                                            ),
+                                                          )
+                                                        : VideoProvider(
+                                                            mediumId:
+                                                                medium1!.id,
+                                                          )
+                                                    : Container(
+                                                        color: Colors.white,
+                                                      ),
                                   ),
                                 ),
                                 imageDataPost?.object?.data != null &&
@@ -652,145 +866,218 @@ class _RePostScreenState extends State<RePostScreen> {
                                             //           )),
                                             // );
                                           },
-                                          child: Container(
-                                            width: _width,
-                                            child: widget.postDataType == null
-                                                ? SizedBox()
-                                                : widget.postData?.length == 1
-                                                    ? widget.postDataType ==
-                                                            "IMAGE"
-                                                        ? Container(
-                                                            width: _width,
-                                                            height: 150,
-                                                            margin:
-                                                                EdgeInsets.only(
-                                                                    left: 16,
-                                                                    top: 15,
-                                                                    right: 16),
-                                                            child: Center(
-                                                                child:
-                                                                    CustomImageView(
-                                                              url:
-                                                                  "${widget.postData?[0]}",
-                                                            )),
-                                                          )
-                                                        : widget.postDataType ==
-                                                                "ATTACHMENT"
-                                                            ? Container(
-                                                                height: 400,
-                                                                width: _width,
-                                                                child:
-                                                                    DocumentViewScreen1(
-                                                                  path: widget
-                                                                      .postData?[0],
-                                                                ))
-                                                            : SizedBox()
-                                                    : Column(
-                                                        children: [
-                                                          Stack(
-                                                            children: [
-                                                              if ((widget
-                                                                      .postData
-                                                                      ?.isNotEmpty ??
-                                                                  false)) ...[
-                                                                SizedBox(
-                                                                  height: 300,
-                                                                  child: PageView
-                                                                      .builder(
-                                                                    onPageChanged:
-                                                                        (page) {
-                                                                      setState(
-                                                                          () {
-                                                                        currentPages[widget.index ??
-                                                                                0] =
-                                                                            page;
-                                                                      });
-                                                                    },
-                                                                    controller:
-                                                                        pageControllers[
-                                                                            widget.index ??
-                                                                                0],
-                                                                    itemCount: widget
-                                                                        .postData
-                                                                        ?.length,
-                                                                    itemBuilder:
-                                                                        (BuildContext
-                                                                                context,
-                                                                            int index1) {
-                                                                      if (widget
-                                                                              .postDataType ==
-                                                                          "IMAGE") {
-                                                                        return Container(
-                                                                          width:
-                                                                              _width,
-                                                                          margin: EdgeInsets.only(
-                                                                              left: 16,
-                                                                              top: 15,
-                                                                              right: 16),
-                                                                          child: Center(
-                                                                              child: CustomImageView(
-                                                                            url:
-                                                                                "${widget.postData?[index1]}",
-                                                                          )),
-                                                                        );
-                                                                      } else if (widget
-                                                                              .postDataType ==
-                                                                          "ATTACHMENT") {
-                                                                        return Container(
-                                                                            height:
-                                                                                400,
-                                                                            width:
-                                                                                _width,
-                                                                            child:
-                                                                                DocumentViewScreen1(
-                                                                              path: widget.postData?[index1].toString(),
-                                                                            ));
-                                                                      }
-                                                                    },
-                                                                  ),
-                                                                ),
-                                                                Positioned(
-                                                                    bottom: 5,
-                                                                    left: 0,
-                                                                    right: 0,
-                                                                    child:
-                                                                        Padding(
-                                                                      padding: const EdgeInsets
-                                                                              .only(
+                                          child: widget.postDataType == 'VIDEO'
+                                              ? Padding(
+                                                padding: const EdgeInsets.all(20),
+                                                child: VideoListItem(
+                                                    videoUrl: widget
+                                                        .postData?[0]),
+                                              )
+                                              : Container(
+                                                  width: _width,
+                                                  child: widget.postDataType ==
+                                                          null
+                                                      ? SizedBox()
+                                                      : widget.postData
+                                                                  ?.length ==
+                                                              1
+                                                          ? widget.postDataType ==
+                                                                  "IMAGE"
+                                                              ? Container(
+                                                                  width: _width,
+                                                                  height: 150,
+                                                                  margin: EdgeInsets
+                                                                      .only(
+                                                                          left:
+                                                                              16,
                                                                           top:
-                                                                              0),
+                                                                              15,
+                                                                          right:
+                                                                              16),
+                                                                  child: Center(
                                                                       child:
-                                                                          Container(
+                                                                          CustomImageView(
+                                                                    url:
+                                                                        "${widget.postData?[0]}",
+                                                                  )),
+                                                                )
+                                                              // : widget.postDataType ==
+                                                              //         "VIDEO"
+                                                              //     ? _controllersRepost!
+                                                              //             .value
+                                                              //             .isInitialized
+                                                              //         ? Padding(
+                                                              //             padding: const EdgeInsets
+                                                              //                     .only(
+                                                              //                 left:
+                                                              //                     15,
+                                                              //                 right:
+                                                              //                     15,
+                                                              //                 top:
+                                                              //                     15),
+                                                              //             child:
+                                                              //                 Container(
+                                                              //               height:
+                                                              //                   200,
+                                                              //               child:
+                                                              //                   Stack(
+                                                              //                 children: [
+                                                              //                   AspectRatio(
+                                                              //                     aspectRatio:
+                                                              //                         _controllersRepost!.value.aspectRatio,
+                                                              //                     child:
+                                                              //                         VideoPlayer(_controllersRepost!),
+                                                              //                   ),
+                                                              //                   Positioned(
+                                                              //                     right:
+                                                              //                         0,
+                                                              //                     bottom:
+                                                              //                         0,
+                                                              //                     child:
+                                                              //                         IconButton(
+                                                              //                       color: ColorConstant.primary_color,
+                                                              //                       icon: Icon(
+                                                              //                         /*  _isFullScreen ? Icons.fullscreen_exit : */ Icons.fullscreen,
+                                                              //                       ),
+                                                              //                       onPressed: () {
+                                                              //                         Navigator.push(context, MaterialPageRoute(
+                                                              //                           builder: (context) {
+                                                              //                             return VideoFullScreen(
+                                                              //                               postData: widget.postData?[0],
+                                                              //                             );
+                                                              //                           },
+                                                              //                         ));
+                                                              //                       }, /* _toggleFullScreen */
+                                                              //                     ),
+                                                              //                   ),
+                                                              //                   Positioned
+                                                              //                       .fill(
+                                                              //                     child:
+                                                              //                         GestureDetector(
+                                                              //                       onTap: () {
+                                                              //                         // _playPause(index);
+                                                              //                         if (_controllersRepost!.value.isPlaying) {
+                                                              //                           setState(() {
+                                                              //                             _controllersRepost!.pause();
+                                                              //                           });
+                                                              //                         } else {
+                                                              //                           setState(() {
+                                                              //                             _controllersRepost!.play();
+                                                              //                           });
+                                                              //                         }
+                                                              //                       },
+                                                              //                       child: _controllersRepost!.value.isPlaying
+                                                              //                           ? Icon(
+                                                              //                               Icons.pause_circle_outline,
+                                                              //                               size: 50,
+                                                              //                               color: Colors.white,
+                                                              //                             )
+                                                              //                           : Icon(
+                                                              //                               Icons.play_circle_outline,
+                                                              //                               size: 50,
+                                                              //                               color: Colors.white,
+                                                              //                             ),
+                                                              //                     ),
+                                                              //                   ),
+                                                              //                 ],
+                                                              //               ),
+                                                              //             ),
+                                                              //           )
+                                                              //         : SizedBox()
+                                                              : widget.postDataType ==
+                                                                      "ATTACHMENT"
+                                                                  ? Container(
+                                                                      height:
+                                                                          400,
+                                                                      width:
+                                                                          _width,
+                                                                      child:
+                                                                          DocumentViewScreen1(
+                                                                        path: widget
+                                                                            .postData?[0],
+                                                                      ))
+                                                                  : SizedBox()
+                                                          : Column(
+                                                              children: [
+                                                                Stack(
+                                                                  children: [
+                                                                    if ((widget
+                                                                            .postData
+                                                                            ?.isNotEmpty ??
+                                                                        false)) ...[
+                                                                      SizedBox(
                                                                         height:
-                                                                            20,
-                                                                        child:
-                                                                            DotsIndicator(
-                                                                          dotsCount:
-                                                                              widget.postData?.length ?? 1,
-                                                                          position:
-                                                                              currentPages[widget.index ?? 0].toDouble(),
-                                                                          decorator:
-                                                                              DotsDecorator(
-                                                                            size:
-                                                                                const Size(10.0, 7.0),
-                                                                            activeSize:
-                                                                                const Size(10.0, 10.0),
-                                                                            spacing:
-                                                                                const EdgeInsets.symmetric(horizontal: 2),
-                                                                            activeColor:
-                                                                                Color(0xffED1C25),
-                                                                            color:
-                                                                                Color(0xff6A6A6A),
-                                                                          ),
+                                                                            300,
+                                                                        child: PageView
+                                                                            .builder(
+                                                                          onPageChanged:
+                                                                              (page) {
+                                                                            setState(() {
+                                                                              currentPages[widget.index ?? 0] = page;
+                                                                            });
+                                                                          },
+                                                                          controller:
+                                                                              pageControllers[widget.index ?? 0],
+                                                                          itemCount: widget
+                                                                              .postData
+                                                                              ?.length,
+                                                                          itemBuilder:
+                                                                              (BuildContext context, int index1) {
+                                                                            if (widget.postDataType ==
+                                                                                "IMAGE") {
+                                                                              return Container(
+                                                                                width: _width,
+                                                                                margin: EdgeInsets.only(left: 16, top: 15, right: 16),
+                                                                                child: Center(
+                                                                                    child: CustomImageView(
+                                                                                  url: "${widget.postData?[index1]}",
+                                                                                )),
+                                                                              );
+                                                                            } else if (widget.postDataType ==
+                                                                                "ATTACHMENT") {
+                                                                              return Container(
+                                                                                  height: 400,
+                                                                                  width: _width,
+                                                                                  child: DocumentViewScreen1(
+                                                                                    path: widget.postData?[index1].toString(),
+                                                                                  ));
+                                                                            }
+                                                                          },
                                                                         ),
                                                                       ),
-                                                                    ))
-                                                              ]
-                                                            ],
-                                                          ),
-                                                        ],
-                                                      ),
-                                          ),
+                                                                      Positioned(
+                                                                          bottom:
+                                                                              5,
+                                                                          left:
+                                                                              0,
+                                                                          right:
+                                                                              0,
+                                                                          child:
+                                                                              Padding(
+                                                                            padding:
+                                                                                const EdgeInsets.only(top: 0),
+                                                                            child:
+                                                                                Container(
+                                                                              height: 20,
+                                                                              child: DotsIndicator(
+                                                                                dotsCount: widget.postData?.length ?? 1,
+                                                                                position: currentPages[widget.index ?? 0].toDouble(),
+                                                                                decorator: DotsDecorator(
+                                                                                  size: const Size(10.0, 7.0),
+                                                                                  activeSize: const Size(10.0, 10.0),
+                                                                                  spacing: const EdgeInsets.symmetric(horizontal: 2),
+                                                                                  activeColor: Color(0xffED1C25),
+                                                                                  color: Color(0xff6A6A6A),
+                                                                                ),
+                                                                              ),
+                                                                            ),
+                                                                          ))
+                                                                    ]
+                                                                  ],
+                                                                ),
+                                                              ],
+                                                            ),
+                                                ),
                                         ),
                                         SizedBox(
                                           height: 10,
@@ -804,191 +1091,11 @@ class _RePostScreenState extends State<RePostScreen> {
                           ),
                         ),
                       ),
-                       if (isHeshTegData)
-                                Container(
-                                  margin: EdgeInsets.only(
-                                       top:20),
-                                  height: imageDataPost?.object?.data != null
-                                      ? _height / 3
-                                      : _height,
-                                  width: _width,
-                                  // color: Colors.amber,
-                                  child: ListView.builder(
-                                    // physics: NeverScrollableScrollPhysics(),
-                                    shrinkWrap: true,
-                                    itemCount:
-                                        getAllHashtag?.object?.content?.length,
-                                    itemBuilder: (context, index) {
-                                      return Container(
-                                        margin: EdgeInsets.all(10),
-                                        height: 70,
-                                        width: _width,
-
-                                        decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(20),
-                                            border: Border.all(
-                                                color: Color(0xffE6E6E6))),
-                                        child: GestureDetector(
-                                          onTap: (){
-                                               setState(() {
-                                              if (postText1.text.isNotEmpty) {
-                                                /*   postText1.text =
-                                                  '${postText1.text} @${searchUserForInbox1?.object?.content?[index].userName}'; */
-                                                postTexContrlloer.add(
-                                                    '${getAllHashtag?.object?.content?[index]}');
-                                              }
-                                              postText1.text =
-                                                  postTexContrlloer.join(' ,');
-
-                                              // postText1.text = '${postText1.text}@${searchUserForInbox1?.object?.content?[index].userName}';
-                                             
-                                            });
-                                          },
-                                          child: Row(
-                                            children: [
-                                              Container(
-                                                width: _width / 1.6,
-                                                child: Padding(
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                          left: 10),
-                                                  child: Text(
-                                                    '${getAllHashtag?.object?.content?[index]}',
-                                                    style: TextStyle(
-                                                      overflow:
-                                                          TextOverflow.ellipsis,
-                                                      color: Colors.black,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                    ),
-                                                  ),
-                                                ),
-                                              )
-                                            ],
-                                          ),
-                                        ),
-                                        // color: Colors.green,
-                                      );
-                                    },
-                                  ),
-                                ),
-                              if (isTagData)
-                                Container(
-                                  margin: EdgeInsets.only(
-                                      top:20),
-                                  height: imageDataPost?.object?.data != null
-                                      ? _height / 3
-                                      : _height,
-                                  width: _width,
-                                  // color: Colors.amber,
-                                  child: ListView.builder(
-                                    // physics: NeverScrollableScrollPhysics(),
-                                    shrinkWrap: true,
-                                    itemCount: searchUserForInbox1
-                                        ?.object?.content?.length,
-                                    itemBuilder: (context, index) {
-                                      return Container(
-                                        margin: EdgeInsets.all(10),
-                                        height: 70,
-                                        width: _width,
-                                        // color: Colors.green,
-                                        decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(20),
-                                            border: Border.all(
-                                                color: Color(0xffE6E6E6))),
-                                        child: GestureDetector(
-                                          onTap: () {
-                                            setState(() {
-                                              if (postText1.text.isNotEmpty) {
-                                                /*   postText1.text =
-                                                  '${postText1.text} @${searchUserForInbox1?.object?.content?[index].userName}'; */
-                                                postTexContrlloer.add(
-                                                    '@${searchUserForInbox1?.object?.content?[index].userName}');
-                                              }
-                                              postText1.text =
-                                                  postTexContrlloer.join(' ,');
-
-                                              // postText1.text = '${postText1.text}@${searchUserForInbox1?.object?.content?[index].userName}';
-                                             
-                                            });
-                                          },
-                                          child: Row(
-                                            children: [
-                                              searchUserForInbox1
-                                                              ?.object
-                                                              ?.content?[index]
-                                                              .userProfilePic !=
-                                                          null &&
-                                                      searchUserForInbox1
-                                                              ?.object
-                                                              ?.content?[index]
-                                                              .userProfilePic
-                                                              ?.isNotEmpty ==
-                                                          true
-                                                  ? Padding(
-                                                      padding:
-                                                          const EdgeInsets.only(
-                                                              left: 10),
-                                                      child: CircleAvatar(
-                                                        radius: 30.0,
-                                                        backgroundImage:
-                                                            NetworkImage(
-                                                                "${searchUserForInbox1?.object?.content?[index].userProfilePic}"),
-                                                        backgroundColor:
-                                                            Colors.transparent,
-                                                      ),
-                                                    )
-                                                  : Padding(
-                                                      padding:
-                                                          const EdgeInsets.only(
-                                                              left: 10),
-                                                      child: CircleAvatar(
-                                                        radius: 30.0,
-                                                        backgroundImage:
-                                                            AssetImage(
-                                                                ImageConstant
-                                                                    .tomcruse),
-                                                        backgroundColor:
-                                                            Colors.transparent,
-                                                      ),
-                                                    ),
-                                              Container(
-                                                width: _width / 1.6,
-                                                child: Padding(
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                          left: 10),
-                                                  child: Text(
-                                                    searchUserForInbox1
-                                                            ?.object
-                                                            ?.content?[index]
-                                                            .userName ??
-                                                        '',
-                                                    style: TextStyle(
-                                                      overflow:
-                                                          TextOverflow.ellipsis,
-                                                      color: Colors.black,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                    ),
-                                                  ),
-                                                ),
-                                              )
-                                            ],
-                                          ),
-                                        ),
-                                        // color: Colors.green,
-                                      );
-                                    },
-                                  ),
-                                ),
-                      
                     ],
                   ),
                 ),
               ),
+               if(widget.postDataType != 'VIDEO')
               Align(
                 alignment: Alignment.bottomCenter,
                 child: Column(
@@ -1032,6 +1139,7 @@ class _RePostScreenState extends State<RePostScreen> {
                                 ),
                               ),
                             ),
+                            
                             Container(
                               height: 90,
                               width: _width - 106,
@@ -1143,6 +1251,7 @@ class _RePostScreenState extends State<RePostScreen> {
                         ),
                       ),
                     ),
+                    if(widget.postDataType != 'VIDEO')
                     Container(
                       height: 30,
                       color: Colors.white,
@@ -1174,10 +1283,15 @@ class _RePostScreenState extends State<RePostScreen> {
                             SizedBox(
                               width: 30,
                             ),
-                            // Image.asset(
-                            //   ImageConstant.Gif_icon,
-                            //   height: 20,
-                            // ),
+                            GestureDetector(
+                              onTap: () {
+                                getVideo();
+                              },
+                              child: Icon(
+                                Icons.play_circle_outline_sharp,
+                                color: ColorConstant.primary_color,
+                              ),
+                            )
                           ],
                         ),
                       ),
@@ -1537,6 +1651,29 @@ class _RePostScreenState extends State<RePostScreen> {
     return STR;
   }
 
+  Future getVideo() async {
+    final pickedFile = await _imagePicker.pickVideo(
+        source: ImageSource.gallery,
+        preferredCameraDevice: CameraDevice.front,
+        maxDuration: const Duration(minutes: 10));
+    XFile? xfilePick = pickedFile;
+    setState(
+      () {
+        galleryFile.clear();
+        if (xfilePick != null) {
+          galleryFile.add(File(pickedFile!.path));
+          BlocProvider.of<RePostCubit>(context).UplodeImageAPIImane(
+            context,
+            galleryFile,
+          );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(// is this context <<<
+              const SnackBar(content: Text('Nothing is selected')));
+        }
+      },
+    );
+  }
+
   Future<void> _getImageFromCamera() async {
     try {
       pickedFile = await _imagePicker.pickImage(source: ImageSource.camera);
@@ -1625,7 +1762,11 @@ class _RePostScreenState extends State<RePostScreen> {
       print("Selected option index: $selectedOption");
     }
   }
- onChangeMethod(String value) {
+
+  onChangeMethod(String value) {
+    setState(() {
+      postText1.text = value;
+    });
     if (value.contains('@')) {
       print("if this condison is working-${value}");
       if (value.length >= 3 && value.contains('@')) {
@@ -1644,20 +1785,19 @@ class _RePostScreenState extends State<RePostScreen> {
       } else {
         print("check lenth else-${value.length}");
       }
-    }
-    else if(value.contains('#')){
+    } else if (value.contains('#')) {
       print("check length-${value}");
-       String data1 = value.split(' #').last.replaceAll('#', '');
-          BlocProvider.of<RePostCubit>(context)
-              .GetAllHashtag(context, '10', '#${data1.trim()}');
-    }
-    else {
+      String data1 = value.split(' #').last.replaceAll('#', '');
+      BlocProvider.of<RePostCubit>(context)
+          .GetAllHashtag(context, '10', '#${data1.trim()}');
+    } else {
       setState(() {
-        isTagData = false;
+        istageData = false;
         isHeshTegData = false;
       });
     }
   }
+
   dataPostFucntion() {
     print("dfhghghfhgh-${pickedFile?.path}");
     print("FBSDFNFBDBFSBF--${postText1.text.length}");
@@ -1702,6 +1842,9 @@ class _RePostScreenState extends State<RePostScreen> {
           ScaffoldMessenger.of(context).showSnackBar(snackBar);
         } else { */
         if (CreatePostDone == true) {
+          setState(() {
+            isrepostDataSet = false;
+          });
           if (postText1.text.isNotEmpty && file?.path != null) {
             Map<String, dynamic> param = {
               "description": postText1.text,
@@ -1710,7 +1853,7 @@ class _RePostScreenState extends State<RePostScreen> {
               "postType": soicalData[indexx].toString().toUpperCase()
             };
             BlocProvider.of<RePostCubit>(context)
-                .RePostAPI(context, param, widget.postUid);
+                .RePostAPI(context, param, widget.postUid, "");
           } else if (postText1.text.isNotEmpty && file12?.path != null) {
             Map<String, dynamic> param = {
               "description": postText1.text,
@@ -1719,7 +1862,7 @@ class _RePostScreenState extends State<RePostScreen> {
               "postType": soicalData[indexx].toString().toUpperCase()
             };
             BlocProvider.of<RePostCubit>(context)
-                .RePostAPI(context, param, widget.postUid);
+                .RePostAPI(context, param, widget.postUid, "");
           } else if (postText1.text.isNotEmpty && pickedImage.isNotEmpty) {
             Map<String, dynamic> param = {
               "description": postText1.text,
@@ -1728,7 +1871,7 @@ class _RePostScreenState extends State<RePostScreen> {
               "postType": soicalData[indexx].toString().toUpperCase()
             };
             BlocProvider.of<RePostCubit>(context)
-                .RePostAPI(context, param, widget.postUid);
+                .RePostAPI(context, param, widget.postUid, "");
           } else if (pickedFile?.path != null && postText1.text.isNotEmpty) {
             Map<String, dynamic> param = {
               "description": postText1.text,
@@ -1737,7 +1880,17 @@ class _RePostScreenState extends State<RePostScreen> {
               "postType": soicalData[indexx].toString().toUpperCase()
             };
             BlocProvider.of<RePostCubit>(context)
-                .RePostAPI(context, param, widget.postUid);
+                .RePostAPI(context, param, widget.postUid, "");
+          } else if (postText1.text.isNotEmpty &&
+              _controller?.value.isPlaying == true) {
+            Map<String, dynamic> param = {
+              "description": postText1.text,
+              "postData": imageDataPost?.object?.data,
+              "postDataType": "VIDEO",
+              "postType": soicalData[indexx].toString().toUpperCase()
+            };
+            BlocProvider.of<RePostCubit>(context)
+                .RePostAPI(context, param, widget.postUid, "");
           } else {
             if (postText1.text.isNotEmpty) {
               Map<String, dynamic> param = {
@@ -1745,7 +1898,7 @@ class _RePostScreenState extends State<RePostScreen> {
                 "postType": soicalData[indexx].toString().toUpperCase()
               };
               BlocProvider.of<RePostCubit>(context)
-                  .RePostAPI(context, param, widget.postUid);
+                  .RePostAPI(context, param, widget.postUid, "");
             } else if (file?.path != null) {
               Map<String, dynamic> param = {
                 "postData": imageDataPost?.object?.data,
@@ -1753,7 +1906,7 @@ class _RePostScreenState extends State<RePostScreen> {
                 "postType": soicalData[indexx].toString().toUpperCase(),
               };
               BlocProvider.of<RePostCubit>(context)
-                  .RePostAPI(context, param, widget.postUid);
+                  .RePostAPI(context, param, widget.postUid, "");
             } else if (pickedFile?.path != null) {
               Map<String, dynamic> param = {
                 "postData": imageDataPost?.object?.data,
@@ -1761,7 +1914,7 @@ class _RePostScreenState extends State<RePostScreen> {
                 "postType": soicalData[indexx].toString().toUpperCase(),
               };
               BlocProvider.of<RePostCubit>(context)
-                  .RePostAPI(context, param, widget.postUid);
+                  .RePostAPI(context, param, widget.postUid, "");
             } else if (file12?.path != null) {
               Map<String, dynamic> param = {
                 "postData": imageDataPost?.object?.data,
@@ -1769,7 +1922,7 @@ class _RePostScreenState extends State<RePostScreen> {
                 "postType": soicalData[indexx].toString().toUpperCase(),
               };
               BlocProvider.of<RePostCubit>(context)
-                  .RePostAPI(context, param, widget.postUid);
+                  .RePostAPI(context, param, widget.postUid, "");
             } else if (pickedImage.isNotEmpty) {
               Map<String, dynamic> param = {
                 "postData": imageDataPost?.object?.data,
@@ -1777,7 +1930,17 @@ class _RePostScreenState extends State<RePostScreen> {
                 "postType": soicalData[indexx].toString().toUpperCase(),
               };
               BlocProvider.of<RePostCubit>(context)
-                  .RePostAPI(context, param, widget.postUid);
+                  .RePostAPI(context, param, widget.postUid, "");
+            }
+            
+            else if (_controller?.value.isPlaying == true) {
+              Map<String, dynamic> param = {
+                "postData": imageDataPost?.object?.data,
+                "postDataType": "VIDEO",
+                "postType": soicalData[indexx].toString().toUpperCase(),
+              };
+              BlocProvider.of<RePostCubit>(context)
+                  .RePostAPI(context, param, widget.postUid, "");
             } else {
               SnackBar snackBar = SnackBar(
                 content: Text('Please selcte image either fill Text'),

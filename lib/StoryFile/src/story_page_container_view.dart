@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:collection';
+
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -17,10 +18,11 @@ import 'package:pds/core/utils/sharedPreferences.dart';
 import 'package:pds/presentation/%20new/newbottembar.dart';
 import 'package:pds/presentation/%20new/profileNew.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import 'package:video_player/video_player.dart';
+
 import '../../core/utils/image_constant.dart';
 import '../../widgets/custom_image_view.dart';
+
 bool isBottomSheetOpen = false;
 
 class StoryPageContainerView extends StatefulWidget {
@@ -29,14 +31,14 @@ class StoryPageContainerView extends StatefulWidget {
   final PageController? pageController;
   final VoidCallback? onClosePressed;
   final Function()? onTap;
-  const StoryPageContainerView({
-    Key? key,
-    required this.buttonData,
-    required this.onStoryComplete,
-    this.pageController,
-    this.onClosePressed,
-    this.onTap
-  }) : super(key: key);
+  const StoryPageContainerView(
+      {Key? key,
+      required this.buttonData,
+      required this.onStoryComplete,
+      this.pageController,
+      this.onClosePressed,
+      this.onTap})
+      : super(key: key);
 
   @override
   State<StoryPageContainerView> createState() => _StoryPageContainerViewState();
@@ -48,34 +50,48 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
   final Stopwatch _stopwatch = Stopwatch();
   Offset _pointerDownPosition = Offset.zero;
   int _pointerDownMillis = 0;
-
   VideoPlayerController? _controller;
   double _pageValue = 0.0;
   List<bool> imageLoads = [];
   bool? StoryView = false;
   int DummyStoryView = -1;
   bool? DummyStoryViewBool = false;
-  String? User_ID = "";
+  String? User_ID;
   StoryViewListModel? StoryViewListModelData;
   late PointerUpEvent event1;
   DeleteStory? deleteStory;
   bool ifVideoPlayer = false;
   String lastLoggedTime = "";
   Duration? durationOfVideo;
+  int countcheck = 0;
+  dataFunctionSetup() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    User_ID = prefs.getString(PreferencesKey.loginUserID);
+    setState(() {});
+  }
+
+  bool isStoryViewData = false;
+
   @override
   void initState() {
+    // blockFunction();
+    dataFunctionSetup();
     _storyController =
         widget.buttonData.storyController ?? StoryTimelineController();
     _stopwatch.start();
-    GetUserID();
+    // GetUserID();
     _storyController!.addListener(_onTimelineEvent);
     imageLoads =
         List.generate(widget.buttonData.images.length, (index) => false);
-    print("storyUid-${widget.buttonData.images[_curSegmentIndex].storyUid}");
-    BlocProvider.of<ViewStoryCubit>(context).StoryViewList(
-        context, "${widget.buttonData.images[_curSegmentIndex].storyUid}");
+
     dataSetUpAPi();
     super.initState();
+  }
+
+  blockFunction() async {
+    print("this is the DataGet-${_curSegmentIndex}");
+    await BlocProvider.of<ViewStoryCubit>(context).StoryViewList(
+        context, "${widget.buttonData.images[_curSegmentIndex].storyUid}");
   }
 
   dataSetUpAPi() async {
@@ -167,35 +183,38 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
                     GestureDetector(
                       onTap: widget.onTap,
                       child: widget.buttonData.images[0].profileImage != null &&
-                          widget.buttonData.images[0].profileImage != ""
+                              widget.buttonData.images[0].profileImage != ""
                           ? CustomImageView(
-                        url:
-                        "${widget.buttonData.images[0].profileImage}",
-                        height: 32,
-                        width: 32,
-                        fit: BoxFit.fill,
-                        radius: BorderRadius.circular(25),
-                      )
+                              url:
+                                  "${widget.buttonData.images[0].profileImage}",
+                              height: 32,
+                              width: 32,
+                              fit: BoxFit.fill,
+                              radius: BorderRadius.circular(25),
+                            )
                           : CustomImageView(
-                        imagePath: ImageConstant.tomcruse,
-                        height: 32,
-                        width: 32,
-                        fit: BoxFit.fill,
-                        radius: BorderRadius.circular(25),
-                      ),
+                              imagePath: ImageConstant.tomcruse,
+                              height: 32,
+                              width: 32,
+                              fit: BoxFit.fill,
+                              radius: BorderRadius.circular(25),
+                            ),
                     ),
                     SizedBox(
                       width: 12,
                     ),
-                    Text(
-                      '${widget.buttonData.images[0].username}',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
-                        fontFamily: 'outfit',
-                        fontWeight: FontWeight.w400,
-                        height: 0.08,
-                        letterSpacing: -0.17,
+                    GestureDetector(
+                      onTap: widget.onTap,
+                      child: Text(
+                        '${widget.buttonData.images[0].username}',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontFamily: 'outfit',
+                          fontWeight: FontWeight.w400,
+                          height: 0.08,
+                          letterSpacing: -0.17,
+                        ),
                       ),
                     ),
                     SizedBox(
@@ -270,12 +289,13 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
   }
 
   Widget _buildPageContent() {
+    dataFunctionSetup();
     bool imageLoaded = false;
     _storyController!.pause();
     NetworkImage networkImage =
         NetworkImage(widget.buttonData.images[_curSegmentIndex].image ?? "");
-    print(_curSegmentIndex);
-
+    //  BlocProvider.of<ViewStoryCubit>(context).StoryViewList(
+    //       context, "${widget.buttonData.images[_curSegmentIndex].storyUid}");
     networkImage.resolve(ImageConfiguration()).addListener(
       ImageStreamListener((info, call) {
         if (mounted) {
@@ -288,11 +308,13 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
 
           // Image has been loaded
           imageLoaded = true;
-          print("image loaded : unpause");
+
           _storyController!.unpause();
 
           if (DummyStoryViewBool == true) {
             StoryView = true;
+            BlocProvider.of<ViewStoryCubit>(context).StoryViewList(context,
+                "${widget.buttonData.images[_curSegmentIndex].storyUid}");
             setState(() {});
           }
         }
@@ -310,16 +332,15 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
       if (StoryView == true) {
         StoryView = false;
 
-        print(
-            'storyUid-${widget.buttonData.images[_curSegmentIndex].storyUid}');
-        print('User_Id--$User_ID');
-
-        // if (User_ID != widget.buttonData.images[_curSegmentIndex].userUid) {
+        if (User_ID != widget.buttonData.images[_curSegmentIndex].userUid) {
+          print("this condison then story user id And storyuserid not match");
           BlocProvider.of<ViewStoryCubit>(context).ViewStory(
               context,
               "${User_ID}",
               "${widget.buttonData.images[_curSegmentIndex].storyUid}");
-        // }
+        }else{
+          
+        }
       }
     }
     return imageLoaded == false
@@ -367,7 +388,11 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
   }
 
   Widget _buildPageContent1() {
+    dataFunctionSetup();
+
     bool imageLoaded = false;
+    // BlocProvider.of<ViewStoryCubit>(context).StoryViewList(
+    //     context, "${widget.buttonData.images[_curSegmentIndex].storyUid}");
     _controller?.addListener(() {
       if (mounted) {
         if (DummyStoryView == _curSegmentIndex) {
@@ -384,6 +409,8 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
 
         if (DummyStoryViewBool == true) {
           StoryView = true;
+          BlocProvider.of<ViewStoryCubit>(context).StoryViewList(context,
+              "${widget.buttonData.images[_curSegmentIndex].storyUid}");
           setState(() {});
         }
       }
@@ -407,7 +434,6 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
 
         print(
             'storyUid-${widget.buttonData.images[_curSegmentIndex].storyUid}');
-        print('User_Id--$User_ID');
 
         if (User_ID != widget.buttonData.images[_curSegmentIndex].userUid) {
           BlocProvider.of<ViewStoryCubit>(context).ViewStory(
@@ -417,7 +443,6 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
         }
       }
     }
-    print("video loaded : unpause");
     _storyController!.unpause();
     return StoryPageScaffold(
       body: Container(
@@ -448,8 +473,6 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
         _pointerDownMillis = _stopwatch.elapsedMilliseconds;
         _pointerDownPosition = event.position;
         _storyController?.pause();
-        await BlocProvider.of<ViewStoryCubit>(context).StoryViewList(
-            context, "${widget.buttonData.images[_curSegmentIndex].storyUid}");
       },
       onPointerUp: (PointerUpEvent event) {
         event1 = event;
@@ -468,7 +491,7 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
             }
           }
         }
-        print("pointer up loaded : unpause");
+
         _storyController!.unpause();
       },
       child: SizedBox(
@@ -491,10 +514,9 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
                             _pointerDownMillis = _stopwatch.elapsedMilliseconds;
                             _pointerDownPosition = details.localPosition;
                             _storyController!.pause();
-                             setState(() {
-                               isBottomSheetOpen = true;
-
-                             });
+                            setState(() {
+                              isBottomSheetOpen = true;
+                            });
                             showModalBottomSheet(
                                 isScrollControlled: true,
                                 useSafeArea: true,
@@ -514,7 +536,10 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
                                         width: _width,
                                         child: Row(
                                           children: [
-                                            Spacer(),
+                                            SizedBox(
+                                              width: _width / 2.3,
+                                            ),
+                                            // Spacer(),
                                             Container(
                                               height: 2,
                                               width: 50,
@@ -639,15 +664,18 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
                                                       SizedBox(
                                                         height: 6,
                                                       ),
-                                                      Text(
-                                                        "${StoryViewListModelData?.object?[index].userName}",
-                                                        style: TextStyle(
-                                                            fontSize: 20,
-                                                            fontFamily:
-                                                                "outfit",
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .bold),
+                                                      Container(
+                                                        color: Colors.amber,
+                                                        child: Text(
+                                                          "${StoryViewListModelData?.object?[index].userName}",
+                                                          style: TextStyle(
+                                                              fontSize: 20,
+                                                              fontFamily:
+                                                                  "outfit",
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold),
+                                                        ),
                                                       ),
                                                       // Text(
                                                       //   customFormat(
@@ -761,11 +789,11 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
                               print("bottom sheet closed : unpause");
                               setState(() {
                                 isBottomSheetOpen = false;
-
                               });
                               _storyController!.unpause();
                             });
                           },
+                          //this is the view counet
                           child: Container(
                             height: 50,
                             width: 150,
@@ -781,7 +809,7 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
                                   width: 5,
                                 ),
                                 Text(
-                                  "${StoryViewListModelData?.object?.length ?? "0"}",
+                                  "${widget.buttonData.images[_curSegmentIndex].storyViewCount}",
                                   style: TextStyle(
                                       color: Colors.white,
                                       fontFamily: "outfit",
@@ -848,9 +876,7 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
             ),
           );
         }
-        if (state is ViewStoryLoadedState) {
-          print(state.ViewStoryModelData.object);
-        }
+        if (state is ViewStoryLoadedState) {}
         if (state is StoryViewListLoadedState) {
           StoryViewListModelData = state.StoryViewListModelData;
         }
@@ -929,7 +955,7 @@ class StoryTimelineController {
   }
 
   void unpause() {
-    if(!isBottomSheetOpen) {
+    if (!isBottomSheetOpen) {
       _state?.unpause();
     }
   }
@@ -963,7 +989,8 @@ class _StoryTimelineState extends State<StoryTimeline> {
 
   @override
   void initState() {
-    _maxAccumulator = widget.buttonData.segmentDuration.inMilliseconds;
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      _maxAccumulator = widget.buttonData.segmentDuration.inMilliseconds;
     _timer = Timer.periodic(
       Duration(
         milliseconds: widget.durationOfVideo != null
@@ -978,6 +1005,8 @@ class _StoryTimelineState extends State<StoryTimeline> {
         StoryWatchedContract.onStoryStart) {
       widget.buttonData.markAsWatched();
     }
+    });
+    
   }
 
   void _setTimelineAvailable(bool value) {

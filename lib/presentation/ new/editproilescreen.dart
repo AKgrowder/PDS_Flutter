@@ -18,12 +18,10 @@ import 'package:pds/API/Model/createDocumentModel/createDocumentModel.dart';
 import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/core/utils/image_constant.dart';
 import 'package:pds/core/utils/sharedPreferences.dart';
-import 'package:pds/presentation/%20new/newbottembar.dart';
 import 'package:pds/presentation/my%20account/my_account_screen.dart';
 import 'package:pds/widgets/commentPdf.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../Create_Post_Screen/CreatePostShow_ImageRow/photo_gallery-master/lib/photo_gallery.dart';
 import '../create_foram/create_foram_screen.dart';
 
 class EditProfileScreen extends StatefulWidget {
@@ -79,6 +77,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   List<String> industryUUID = [];
   ImagePicker picker = ImagePicker();
   List<String> industryUUIDinApi = [];
+  bool removeProfilePic = false;
+  bool removeCoverPic = false;
   dataSetUpMethod() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     User_Module = prefs.getString(PreferencesKey.module);
@@ -762,94 +762,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                 "Dfsdfsdhgfsdgfg-${widget.newProfileData?.object?.module}");
                             print("i want to check UserId-${User_ID}");
                             userAllRqureidData();
-                            if (widget.newProfileData?.object?.module ==
-                                'COMPANY') {
-                              companyUserData();
-                            } else if (widget.newProfileData?.object?.module ==
-                                'EXPERT') {
-                              await expertUserData();
-                            } else {
-                              if (chooseDocumentuploded?.object.toString() !=
-                                      null &&
-                                  chooseDocumentuploded1?.object.toString() !=
-                                      null) {
-                                var params = {
-                                  "userProfilePic":
-                                      chooseDocumentuploded?.object.toString(),
-                                  "userBackgroundPic":
-                                      chooseDocumentuploded1?.object.toString(),
-                                  "email": emailController.text,
-                                  "name": nameController.text,
-                                  // "userName": userNameController.text,
-                                  "uuid": User_ID
-                                };
-                                print("parems--$params");
-                                BlocProvider.of<MyAccountCubit>(context)
-                                    .UpdateProfileEmployee(params, context);
-                              } else if (chooseDocumentuploded?.object
-                                      .toString() !=
-                                  null) {
-                                var params = {
-                                  "userProfilePic":
-                                      chooseDocumentuploded?.object.toString(),
-                                  "userBackgroundPic": widget.newProfileData
-                                              ?.object?.userBackgroundPic !=
-                                          null
-                                      ? widget.newProfileData?.object
-                                          ?.userBackgroundPic
-                                      : null,
-                                  "email": emailController.text,
-                                  "name": nameController.text,
-                                  // "userName": userNameController.text,
-                                  "uuid": User_ID
-                                };
-                                print("parems--$params");
-                                BlocProvider.of<MyAccountCubit>(context)
-                                    .UpdateProfileEmployee(params, context);
-                              } else if (chooseDocumentuploded1?.object
-                                      .toString() !=
-                                  null) {
-                                var params = {
-                                  "userBackgroundPic":
-                                      chooseDocumentuploded1?.object.toString(),
-                                  "email": emailController.text,
-                                  "userProfilePic": widget.newProfileData
-                                              ?.object?.userProfilePic !=
-                                          null
-                                      ? widget.newProfileData?.object
-                                          ?.userProfilePic
-                                      : null,
-                                  "name": nameController.text,
-                                  // "userName": userNameController.text,
-                                  "uuid": User_ID
-                                };
-                                print("parems--$params");
-                                BlocProvider.of<MyAccountCubit>(context)
-                                    .UpdateProfileEmployee(params, context);
-                              } else {
-                                var params = {
-                                  "userBackgroundPic": widget.newProfileData
-                                              ?.object?.userBackgroundPic !=
-                                          null
-                                      ? widget.newProfileData?.object
-                                          ?.userBackgroundPic
-                                      : null,
-                                  "userProfilePic": widget.newProfileData
-                                              ?.object?.userProfilePic !=
-                                          null
-                                      ? widget.newProfileData?.object
-                                          ?.userProfilePic
-                                      : null,
-                                  "email": emailController.text,
-                                  "name": nameController.text,
-                                  // "userName": userNameController.text,
-                                  "uuid": User_ID
-                                };
-                                print("parems--$params");
-                                BlocProvider.of<MyAccountCubit>(context)
-                                    .UpdateProfileEmployee(params, context);
-                              }
-                            }
                           },
                           child: Padding(
                             padding: const EdgeInsets.only(top: 20, bottom: 20),
@@ -886,7 +798,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     );
   }
 
-  userAllRqureidData() {
+  userAllRqureidData() async {
     RegExp nameRegExp = RegExp(r"^[a-zA-Z0-9\s'@]+$");
     final RegExp emailRegExp =
         RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$');
@@ -946,6 +858,81 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         backgroundColor: ColorConstant.primary_color,
       );
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    } else {
+      if (widget.newProfileData?.object?.module == 'COMPANY') {
+        companyUserData();
+      } else if (widget.newProfileData?.object?.module == 'EXPERT') {
+        await expertUserData();
+      } else {
+        if (chooseDocumentuploded?.object.toString() != null &&
+            chooseDocumentuploded1?.object.toString() != null) {
+          var params = {
+            "userProfilePic": chooseDocumentuploded?.object.toString(),
+            "userBackgroundPic": chooseDocumentuploded1?.object.toString(),
+            "email": emailController.text,
+            "name": nameController.text,
+            // "userName": userNameController.text,
+            "uuid": User_ID
+          };
+          print("parems--$params");
+          BlocProvider.of<MyAccountCubit>(context)
+              .UpdateProfileEmployee(params, context);
+        } else if (chooseDocumentuploded?.object.toString() != null) {
+          var params = {
+            "userProfilePic": chooseDocumentuploded?.object.toString(),
+            "userBackgroundPic": /* widget.newProfileData
+                                              ?.object?.userBackgroundPic !=
+                                          null */
+                removeCoverPic == false
+                    ? widget.newProfileData?.object?.userBackgroundPic
+                    : null,
+            "email": emailController.text,
+            "name": nameController.text,
+            // "userName": userNameController.text,
+            "uuid": User_ID
+          };
+          print("parems--$params");
+          BlocProvider.of<MyAccountCubit>(context)
+              .UpdateProfileEmployee(params, context);
+        } else if (chooseDocumentuploded1?.object.toString() != null) {
+          var params = {
+            "userBackgroundPic": chooseDocumentuploded1?.object.toString(),
+            "email": emailController.text,
+            "userProfilePic": /* widget.newProfileData
+                                              ?.object?.userProfilePic !=
+                                          null */
+                removeProfilePic == false
+                    ? widget.newProfileData?.object?.userProfilePic
+                    : null,
+            "name": nameController.text,
+            // "userName": userNameController.text,
+            "uuid": User_ID
+          };
+          print("parems--$params");
+          BlocProvider.of<MyAccountCubit>(context)
+              .UpdateProfileEmployee(params, context);
+        } else {
+          var params = {
+            "userBackgroundPic": /* widget.newProfileData
+                                              ?.object?.userBackgroundPic !=
+                                          null */
+                removeCoverPic == false
+                    ? widget.newProfileData?.object?.userBackgroundPic
+                    : null,
+            "userProfilePic":
+                widget.newProfileData?.object?.userProfilePic != null
+                    ? widget.newProfileData?.object?.userProfilePic
+                    : null,
+            "email": emailController.text,
+            "name": nameController.text,
+            // "userName": userNameController.text,
+            "uuid": User_ID
+          };
+          print("parems--$params");
+          BlocProvider.of<MyAccountCubit>(context)
+              .UpdateProfileEmployee(params, context);
+        }
+      }
     }
   }
 
@@ -1024,6 +1011,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           chooseDocumentuploded?.object.toString() != null) {
         params['userProfilePic'] = chooseDocumentuploded?.object.toString();
         params['userBackgroundPic'] = chooseDocumentuploded1?.object.toString();
+      } else if (removeProfilePic == true) {
+        params['userProfilePic'] = "";
+      } else if (removeCoverPic == true) {
+        params['userBackgroundPic'] = "";
+      } else if (removeProfilePic == true && removeCoverPic == true) {
+        params['userProfilePic'] = "";
+        params['userBackgroundPic'] = "";
       } else if (chooseDocumentuploded?.object.toString() != null) {
         params['userProfilePic'] = chooseDocumentuploded?.object.toString();
       } else if (chooseDocumentuploded1?.object.toString() != null) {
@@ -1123,6 +1117,15 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           "name": nameController.text
         };
 
+        if (removeProfilePic == true) {
+          params['userProfilePic'] = "";
+        } else if (removeCoverPic == true) {
+          params['userBackgroundPic'] = "";
+        } else if (removeCoverPic == true || removeProfilePic == true) {
+          params['userProfilePic'] = "";
+          params['userBackgroundPic'] = "";
+        }
+
         print("parmas-$params");
         BlocProvider.of<MyAccountCubit>(context)
             .addExpertProfile(params, context);
@@ -1140,13 +1143,22 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           "email": emailController.text,
           "userProfilePic": chooseDocumentuploded?.object.toString(),
           "userBackgroundPic":
-              widget.newProfileData?.object?.userBackgroundPic != null
+              // widget.newProfileData?.object?.userBackgroundPic != null
+              removeCoverPic == false
                   ? widget.newProfileData?.object?.userBackgroundPic
                   : null,
           //  "userName":"AnkurTestTest17",
           "uid": User_ID,
           "name": nameController.text
         };
+        if (removeProfilePic == true) {
+          params['userProfilePic'] = "";
+        } else if (removeCoverPic == true) {
+          params['userBackgroundPic'] = "";
+        } else if (removeCoverPic == true || removeProfilePic == true) {
+          params['userProfilePic'] = "";
+          params['userBackgroundPic'] = "";
+        }
         print("parmas-$params");
         //asssss
         BlocProvider.of<MyAccountCubit>(context)
@@ -1161,7 +1173,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           "expertUId": ["${selectedExpertise?.uid}"],
           "userBackgroundPic": chooseDocumentuploded1?.object.toString(),
           "userProfilePic":
-              widget.newProfileData?.object?.userProfilePic != null
+              // widget.newProfileData?.object?.userProfilePic != null
+              removeProfilePic == false
                   ? widget.newProfileData?.object?.userProfilePic
                   : null,
           "fees": fees.text,
@@ -1173,6 +1186,14 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           "email": emailController.text,
           "uid": User_ID,
         };
+        if (removeProfilePic == true) {
+          params['userProfilePic'] = "";
+        } else if (removeCoverPic == true) {
+          params['userBackgroundPic'] = "";
+        } else if (removeCoverPic == true || removeProfilePic == true) {
+          params['userProfilePic'] = "";
+          params['userBackgroundPic'] = "";
+        }
         print("parmas-$params");
         BlocProvider.of<MyAccountCubit>(context)
             .addExpertProfile(params, context);
@@ -1180,11 +1201,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         print("else working on");
         var params = {
           "userProfilePic":
-              widget.newProfileData?.object?.userProfilePic != null
+              // widget.newProfileData?.object?.userProfilePic != null
+              removeProfilePic == false
                   ? widget.newProfileData?.object?.userProfilePic
                   : null,
           "userBackgroundPic":
-              widget.newProfileData?.object?.userBackgroundPic != null
+              // widget.newProfileData?.object?.userBackgroundPic != null
+              removeCoverPic == false
                   ? widget.newProfileData?.object?.userBackgroundPic
                   : null,
           "document": chooseDocumentuploded2?.object != null
@@ -1200,6 +1223,14 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           "email": emailController.text,
           "uid": User_ID,
         };
+        if (removeProfilePic == true) {
+          params['userProfilePic'] = "";
+        } else if (removeCoverPic == true) {
+          params['userBackgroundPic'] = "";
+        } else if (removeCoverPic == true || removeProfilePic == true) {
+          params['userProfilePic'] = "";
+          params['userBackgroundPic'] = "";
+        }
         BlocProvider.of<MyAccountCubit>(context)
             .addExpertProfile(params, context);
         print("else condison working--$industryUUID11");
@@ -1795,12 +1826,14 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   }
 
   removeuserProfilePic() async {
+    removeProfilePic = true;
     widget.newProfileData?.object?.userProfilePic = null;
     setState(() {});
     Navigator.pop(context);
   }
 
   removeUserCover() async {
+    removeCoverPic = true;
     widget.newProfileData?.object?.userBackgroundPic = null;
     setState(() {});
     Navigator.pop(context);
@@ -1984,40 +2017,45 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   getFileSize(String filepath, int decimals, PlatformFile file1, int Index,
       context) async {
+        CroppedFile? croppedFile;
     var file = File(filepath);
     int bytes = await file.length();
     if (bytes <= 0) return "0 B";
     const suffixes = ["B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"];
     var i = (log(bytes) / log(1024)).floor();
     var STR = ((bytes / pow(1024, i)).toStringAsFixed(decimals));
-    print('getFileSizevariable-${file1.path}');
+    print(
+        'getFileSizevariable1-${file1.path?.split('/').last.split('.').last}');
     value2 = double.parse(STR);
+    // if(file1.path?.split('/').last.split('.').last.)
+    if (file1.path?.split('/').last.split('.').last != 'pdf') {
+       croppedFile = await ImageCropper().cropImage(
+        sourcePath: file.path.toString(),
+        aspectRatioPresets: [
+          CropAspectRatioPreset.square,
+          CropAspectRatioPreset.ratio3x2,
+          CropAspectRatioPreset.original,
+          CropAspectRatioPreset.ratio4x3,
+          CropAspectRatioPreset.ratio16x9
+        ],
+        uiSettings: [
+          AndroidUiSettings(
+              toolbarTitle: 'Cropper',
+              activeControlsWidgetColor: Color(0xffED1C25),
+              toolbarColor: Color(0xffED1C25),
+              toolbarWidgetColor: Colors.white,
+              initAspectRatio: CropAspectRatioPreset.original,
+              lockAspectRatio: false),
+          IOSUiSettings(
+            title: 'Cropper',
+          ),
+          WebUiSettings(
+            context: context,
+          ),
+        ],
+      );
+    }
 
-    CroppedFile? croppedFile = await ImageCropper().cropImage(
-      sourcePath: file.path.toString(),
-      aspectRatioPresets: [
-        CropAspectRatioPreset.square,
-        CropAspectRatioPreset.ratio3x2,
-        CropAspectRatioPreset.original,
-        CropAspectRatioPreset.ratio4x3,
-        CropAspectRatioPreset.ratio16x9
-      ],
-      uiSettings: [
-        AndroidUiSettings(
-            toolbarTitle: 'Cropper',
-            activeControlsWidgetColor: Color(0xffED1C25),
-            toolbarColor: Color(0xffED1C25),
-            toolbarWidgetColor: Colors.white,
-            initAspectRatio: CropAspectRatioPreset.original,
-            lockAspectRatio: false),
-        IOSUiSettings(
-          title: 'Cropper',
-        ),
-        WebUiSettings(
-          context: context,
-        ),
-      ],
-    );
     print(value2);
     switch (i) {
       case 0:

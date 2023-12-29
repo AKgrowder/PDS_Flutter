@@ -5,6 +5,7 @@ import 'package:pds/API/Model/NewProfileScreenModel/GetAppUserPost_Model.dart';
 import 'package:pds/API/Model/NewProfileScreenModel/GetSavePost_Model.dart';
 import 'package:pds/API/Model/NewProfileScreenModel/GetUserPostCommet_Model.dart';
 import 'package:pds/API/Model/NewProfileScreenModel/NewProfileScreen_Model.dart';
+import 'package:pds/API/Model/OnTimeDMModel/OnTimeDMModel.dart';
 import 'package:pds/API/Model/WorkExperience_Model/ADDExperience_model.dart';
 import 'package:pds/API/Model/WorkExperience_Model/DeleteExperience_model.dart';
 import 'package:pds/API/Model/WorkExperience_Model/WorkExperience_model.dart';
@@ -108,4 +109,9 @@ class GetWorkExpereinceLoadedState extends NewProfileSState {
 class DeleteWorkExpereinceLoadedState extends NewProfileSState {
   final DeleteWorkExperienceModel deleteWorkExperienceModel;
   DeleteWorkExpereinceLoadedState(this.deleteWorkExperienceModel);
+}
+
+class DMChatListLoadedState extends NewProfileSState {
+  final OnTimeDMModel DMChatList;
+  DMChatListLoadedState(this.DMChatList);
 }

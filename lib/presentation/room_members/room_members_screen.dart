@@ -306,13 +306,26 @@ class _RoomMembersScreenState extends State<RoomMembersScreen> {
                               SizedBox(
                                 width: 10,
                               ),
-                              Text(
-                                "${_data?.object?[index].fullName ?? ""}",
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.black,
-                                    fontFamily: "outfit",
-                                    fontSize: 15),
+                              GestureDetector(
+                                onTap: () {
+                                  Navigator.push(context,
+                                      MaterialPageRoute(builder: (context) {
+                                    return ProfileScreen(
+                                        User_ID:
+                                            "${_data?.object?[index].userUuid}",
+                                        isFollowing: "");
+                                  }));
+                                },
+                                child: Container(
+                                  child: Text(
+                                    "${_data?.object?[index].fullName ?? ""}",
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.black,
+                                        fontFamily: "outfit",
+                                        fontSize: 15),
+                                  ),
+                                ),
                               ),
                               // _data?.object?[index].isExpert == true
                               //     ? Container(

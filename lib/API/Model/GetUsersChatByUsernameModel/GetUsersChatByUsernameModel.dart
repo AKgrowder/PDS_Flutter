@@ -1,11 +1,11 @@
-class DMChatListModel {
+class GetUsersChatByUsername {
   String? message;
   Object? object;
   bool? success;
 
-  DMChatListModel({this.message, this.object, this.success});
+  GetUsersChatByUsername({this.message, this.object, this.success});
 
-  DMChatListModel.fromJson(Map<String, dynamic> json) {
+  GetUsersChatByUsername.fromJson(Map<String, dynamic> json) {
     message = json['message'];
     object =
         json['object'] != null ? new Object.fromJson(json['object']) : null;
@@ -26,8 +26,8 @@ class DMChatListModel {
 class Object {
   List<Content>? content;
   Pageable? pageable;
-  int? totalElements;
   int? totalPages;
+  int? totalElements;
   bool? last;
   int? size;
   int? number;
@@ -39,8 +39,8 @@ class Object {
   Object(
       {this.content,
       this.pageable,
-      this.totalElements,
       this.totalPages,
+      this.totalElements,
       this.last,
       this.size,
       this.number,
@@ -59,8 +59,8 @@ class Object {
     pageable = json['pageable'] != null
         ? new Pageable.fromJson(json['pageable'])
         : null;
-    totalElements = json['totalElements'];
     totalPages = json['totalPages'];
+    totalElements = json['totalElements'];
     last = json['last'];
     size = json['size'];
     number = json['number'];
@@ -78,8 +78,8 @@ class Object {
     if (this.pageable != null) {
       data['pageable'] = this.pageable!.toJson();
     }
-    data['totalElements'] = this.totalElements;
     data['totalPages'] = this.totalPages;
+    data['totalElements'] = this.totalElements;
     data['last'] = this.last;
     data['size'] = this.size;
     data['number'] = this.number;
@@ -94,42 +94,42 @@ class Object {
 }
 
 class Content {
-  String? userUid;
-  String? userChatMessageUid;
-  String? userName;
+  String? userUuid;
   String? userProfilePic;
-  String? message;
-  String? createdDate;
+  String? username;
+  String? latestMessage;
   String? messageType;
+  String? userChatInboxUid;
+  String? createdAt;
 
   Content(
-      {this.userUid,
-      this.userChatMessageUid,
-      this.userName,
+      {this.userUuid,
       this.userProfilePic,
-      this.message,
-      this.createdDate,
-      this.messageType});
+      this.username,
+      this.latestMessage,
+      this.messageType,
+      this.userChatInboxUid,
+      this.createdAt});
 
   Content.fromJson(Map<String, dynamic> json) {
-    userUid = json['userUid'];
-    userChatMessageUid = json['userChatMessageUid'];
-    userName = json['userName'];
+    userUuid = json['userUuid'];
     userProfilePic = json['userProfilePic'];
-    message = json['message'];
-    createdDate = json['createdDate'];
+    username = json['username'];
+    latestMessage = json['latestMessage'];
     messageType = json['messageType'];
+    userChatInboxUid = json['userChatInboxUid'];
+    createdAt = json['createdAt'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['userUid'] = this.userUid;
-    data['userChatMessageUid'] = this.userChatMessageUid;
-    data['userName'] = this.userName;
+    data['userUuid'] = this.userUuid;
     data['userProfilePic'] = this.userProfilePic;
-    data['message'] = this.message;
-    data['createdDate'] = this.createdDate;
+    data['username'] = this.username;
+    data['latestMessage'] = this.latestMessage;
     data['messageType'] = this.messageType;
+    data['userChatInboxUid'] = this.userChatInboxUid;
+    data['createdAt'] = this.createdAt;
     return data;
   }
 }

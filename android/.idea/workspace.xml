@@ -5,13 +5,47 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d961eb55-d03b-471a-8b69-c7586df8a238" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/deploymentTargetDropDown.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../lib/fick_players/flick_video_player.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../lib/fick_players/src/controls/flick_landscape_controls.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../lib/fick_players/src/controls/flick_portrait_controls.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../lib/fick_players/src/controls/flick_video_with_controls.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../lib/fick_players/src/flick_video_player.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../lib/fick_players/src/manager/client_channels.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../lib/fick_players/src/manager/control_manager.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../lib/fick_players/src/manager/display_manager.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../lib/fick_players/src/manager/flick_manager.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../lib/fick_players/src/manager/video_manager.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../lib/fick_players/src/utils/flick_manager_builder.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../lib/fick_players/src/utils/web_key_bindings.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../lib/fick_players/src/widgets/action_widgets/flick_seek_video_action.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../lib/fick_players/src/widgets/action_widgets/flick_show_control_action.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../lib/fick_players/src/widgets/action_widgets/flick_show_control_action_web.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../lib/fick_players/src/widgets/action_widgets/flick_toggle_play_action.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../lib/fick_players/src/widgets/action_widgets/flick_toggle_sound_action.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../lib/fick_players/src/widgets/flick_animated_volume_level.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../lib/fick_players/src/widgets/flick_auto_play_circular_progress.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../lib/fick_players/src/widgets/flick_current_position.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../lib/fick_players/src/widgets/flick_full_screen_toggle.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../lib/fick_players/src/widgets/flick_left_duration.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../lib/fick_players/src/widgets/flick_native_video_player.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../lib/fick_players/src/widgets/flick_play_toggle.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../lib/fick_players/src/widgets/flick_set_play_back.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../lib/fick_players/src/widgets/flick_sound_toggle.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../lib/fick_players/src/widgets/flick_subtitle_toggle.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../lib/fick_players/src/widgets/flick_total_duration.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../lib/fick_players/src/widgets/flick_video_buffer.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../lib/fick_players/src/widgets/flick_video_progress_bar.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../lib/fick_players/src/widgets/helpers/auto_play_timer_progress/auto_play_timer_progress.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../lib/fick_players/src/widgets/helpers/auto_play_timer_progress/auto_play_timer_progress_colors.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../lib/fick_players/src/widgets/helpers/flick_auto_hide_child.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../lib/fick_players/src/widgets/helpers/progress_bar/progress_bar_settings.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/release/app-release.aab" beforeDir="false" afterPath="$PROJECT_DIR$/app/release/app-release.aab" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../lib/API/ApiService/ApiService.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../lib/API/ApiService/ApiService.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../lib/API/Repo/repository.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../lib/API/Repo/repository.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../lib/presentation/ new/editproilescreen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../lib/presentation/ new/editproilescreen.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../lib/widgets/commentPdf.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../lib/widgets/commentPdf.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../lib/presentation/ new/BlogComment_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../lib/presentation/ new/BlogComment_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../lib/presentation/ new/home_screen_new.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../lib/presentation/ new/home_screen_new.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../pubspec.lock" beforeDir="false" afterPath="$PROJECT_DIR$/../pubspec.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/../pubspec.yaml" afterDir="false" />
     </list>
@@ -20,11 +54,31 @@
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[/Users/techgrowder/.android/avd/Pixel_6_Pro_API_33-1.avd]" />
+  <component name="ClangdSettings">
+    <option name="formatViaClangd" value="false" />
+  </component>
+  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[/home/ankurborad/.android/avd/Pixel_6_API_34.avd]" />
   <component name="ExternalProjectsData">
     <projectState path="$PROJECT_DIR$">
       <ProjectState />
     </projectState>
+  </component>
+  <component name="ExternalProjectsManager">
+    <system id="GRADLE">
+      <state>
+        <projects_view>
+          <tree_state>
+            <expand>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="android" type="f1a62948:ProjectNode" />
+              </path>
+            </expand>
+            <select />
+          </tree_state>
+        </projects_view>
+      </state>
+    </system>
   </component>
   <component name="GenerateSignedApkSettings">
     <option name="EXPORT_PRIVATE_KEY" value="false" />
@@ -39,29 +93,31 @@
   <component name="ProjectViewState">
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;BundleExportedModule&quot;: &quot;android.app&quot;,
-    &quot;ExportBundle.BundlePathForandroid.app&quot;: &quot;/Users/techgrowder/Archit Kheni/PDS_Flutter/PDS_Flutter/android/app&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.cidr.known.project.marker&quot;: &quot;true&quot;,
-    &quot;cidr.known.project.marker&quot;: &quot;true&quot;,
-    &quot;dart.analysis.tool.window.visible&quot;: &quot;false&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/home/anandpatel/Documents/PDS_Flutter/PDSApp.jks&quot;,
-    &quot;memory.settings.postsync.last.time.stamp&quot;: &quot;1700229886293&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.17&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.lookFeel&quot;,
-    &quot;show.migrate.to.gradle.popup&quot;: &quot;false&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "BundleExportedModule": "android.app",
+    "ExportBundle.BundlePathForandroid.app": "/Users/techgrowder/Archit Kheni/PDS_Flutter/PDS_Flutter/android/app",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.cidr.known.project.marker": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "cf.first.check.clang-format": "false",
+    "cidr.known.project.marker": "true",
+    "dart.analysis.tool.window.visible": "false",
+    "last_opened_file_path": "/home/ankurborad/live projectworking/PDS_Flutter/android",
+    "memory.settings.postsync.last.time.stamp": "1700229886293",
+    "project.structure.last.edited": "Modules",
+    "project.structure.proportion": "0.17",
+    "project.structure.side.proportion": "0.2",
+    "settings.editor.selected.configurable": "preferences.lookFeel",
+    "show.migrate.to.gradle.popup": "false"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;ExportApk.BuildVariants&quot;: [
-      &quot;release&quot;
+  "keyToStringList": {
+    "ExportApk.BuildVariants": [
+      "release"
     ]
   }
-}</component>
+}]]></component>
   <component name="PsdUISettings">
     <option name="MODULE_TAB" value="Signing Configs" />
     <option name="BUILD_VARIANTS_TAB" value="Build Types" />
@@ -95,6 +151,8 @@
         <option name="WORKING_DIR" value="" />
         <option name="TARGET_LOGGING_CHANNELS" value="lldb process:gdb-remote packets" />
         <option name="SHOW_OPTIMIZED_WARNING" value="true" />
+        <option name="ATTACH_ON_WAIT_FOR_DEBUGGER" value="false" />
+        <option name="DEBUG_SANDBOX_SDK" value="false" />
       </Auto>
       <Hybrid>
         <option name="USE_JAVA_AWARE_DEBUGGER" value="false" />
@@ -102,14 +160,21 @@
         <option name="WORKING_DIR" value="" />
         <option name="TARGET_LOGGING_CHANNELS" value="lldb process:gdb-remote packets" />
         <option name="SHOW_OPTIMIZED_WARNING" value="true" />
+        <option name="ATTACH_ON_WAIT_FOR_DEBUGGER" value="false" />
+        <option name="DEBUG_SANDBOX_SDK" value="false" />
       </Hybrid>
-      <Java />
+      <Java>
+        <option name="ATTACH_ON_WAIT_FOR_DEBUGGER" value="false" />
+        <option name="DEBUG_SANDBOX_SDK" value="false" />
+      </Java>
       <Native>
         <option name="USE_JAVA_AWARE_DEBUGGER" value="false" />
         <option name="SHOW_STATIC_VARS" value="true" />
         <option name="WORKING_DIR" value="" />
         <option name="TARGET_LOGGING_CHANNELS" value="lldb process:gdb-remote packets" />
         <option name="SHOW_OPTIMIZED_WARNING" value="true" />
+        <option name="ATTACH_ON_WAIT_FOR_DEBUGGER" value="false" />
+        <option name="DEBUG_SANDBOX_SDK" value="false" />
       </Native>
       <Profilers>
         <option name="ADVANCED_PROFILING_ENABLED" value="false" />

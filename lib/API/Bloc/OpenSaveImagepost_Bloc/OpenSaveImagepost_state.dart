@@ -1,5 +1,6 @@
 import 'package:pds/API/Model/OpenSaveImagepostModel/OpenSaveImagepost_Model.dart';
 import 'package:pds/API/Model/RePost_Model/RePost_model.dart';
+import 'package:pds/API/Model/UserTagModel/UserTag_model.dart';
 import 'package:pds/API/Model/like_Post_Model/like_Post_Model.dart';
 
 abstract class OpenSaveState {}
@@ -26,4 +27,9 @@ class RePostLoadedState extends OpenSaveState {
 class OpenSaveErrorState extends OpenSaveState {
   final dynamic error;
   OpenSaveErrorState(this.error);
+}
+
+class UserTagSaveLoadedState extends OpenSaveState {
+  final UserTagModel userTagModel;
+  UserTagSaveLoadedState(this.userTagModel);
 }

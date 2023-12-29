@@ -2,9 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import 'package:multi_select_flutter/dialog/multi_select_dialog_field.dart';
-import 'package:multi_select_flutter/util/multi_select_item.dart';
-import 'package:multi_select_flutter/util/multi_select_list_type.dart';
 import 'package:pds/API/Model/FetchExprtiseModel/fetchExprtiseModel.dart';
 import 'package:pds/API/Model/IndustrytypeModel/Industrytype_Model.dart';
 import 'package:pds/core/utils/color_constant.dart';
@@ -65,7 +62,8 @@ class _AddWorkExperienceScreenState extends State<AddWorkExperienceScreen> {
   TextEditingController StartDateController = TextEditingController();
   TextEditingController EndDateController = TextEditingController();
   TextEditingController ExpertiseInController = TextEditingController();
-
+  bool value = false;
+  bool valuesecond = false;
   List<Expertise> expertiseData = [];
   Expertise? selectedExpertise;
   FetchExprtise? _fetchExprtise;
@@ -73,6 +71,9 @@ class _AddWorkExperienceScreenState extends State<AddWorkExperienceScreen> {
   IndustryType? selectedIndustryTypes;
   IndustryTypeModel? industryTypeModel;
   String? formattedDateStart;
+  String? apiDateStart;
+  String? apiDatepresent;
+  String? apiDateEnd;
   String? formattedDateEnd;
   DateTime? pickedStartDate;
 
@@ -81,6 +82,8 @@ class _AddWorkExperienceScreenState extends State<AddWorkExperienceScreen> {
     if (widget.typeName != "COMPANY") {
       BlocProvider.of<NewProfileSCubit>(context).fetchExprties(context);
     }
+    print("widget.endDate"+widget.endDate.toString());
+    valuesecond= widget.endDate=="Present";
     BlocProvider.of<NewProfileSCubit>(context).IndustryTypeAPI(context);
     if (widget.edit == true) {
       companyNameController.text = widget.companyName.toString();
@@ -90,6 +93,7 @@ class _AddWorkExperienceScreenState extends State<AddWorkExperienceScreen> {
       EndDateController.text = widget.endDate.toString();
       print("startDate${widget.startDate.toString()}");
       print("endDate${widget.endDate.toString()}");
+      
 
       //  widget.typeName != "COMPANY" ? selectedExpertise.expertiseName = widget.expertise : "";
     }
@@ -356,6 +360,27 @@ class _AddWorkExperienceScreenState extends State<AddWorkExperienceScreen> {
                                 )
                               : SizedBox(),
                           Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Checkbox( 
+                                activeColor: ColorConstant.primary_color,
+                                value: this.valuesecond,
+                                onChanged: (bool? value ) {
+                                  setState(() {
+                                    this.valuesecond = value!;
+
+                                    if (valuesecond == true) {
+                                      EndDateController.text = "Present";
+                                    } else {
+                                      EndDateController.text = "";
+                                    }
+                                  });
+                                },
+                              ),
+                              Text("Current Working in this Role"),
+                            ],
+                          ),
+                          Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Column(
@@ -384,14 +409,19 @@ class _AddWorkExperienceScreenState extends State<AddWorkExperienceScreen> {
                                           context: context,
                                           initialDate: DateTime.now(),
                                           firstDate: DateTime(2000),
-                                          lastDate: DateTime(2101));
+                                          lastDate: DateTime.now());
 
                                       if (pickedStartDate != null) {
-                                        print(pickedStartDate);
+                                        print(
+                                            "pickedStartDate${pickedStartDate}");
                                         formattedDateStart =
                                             DateFormat('dd-MM-yyyy').format(
                                                 pickedStartDate ??
                                                     DateTime.now());
+                                        apiDateStart = DateFormat('yyyy-MM-dd')
+                                            .format(pickedStartDate ??
+                                                DateTime.now());
+
                                         print(
                                             "formattedDate Start--${formattedDateStart}");
 
@@ -412,7 +442,15 @@ class _AddWorkExperienceScreenState extends State<AddWorkExperienceScreen> {
                                   Padding(
                                     padding: const EdgeInsets.only(
                                         top: 15, bottom: 10),
-                                    child: Text(
+                                    child: /* valuesecond==true? Text(
+                                      "Current Date",
+                                      style: TextStyle(
+                                        fontSize: 17,
+                                        fontWeight: FontWeight.w500,
+                                        color: Colors.black,
+                                      ),
+                                    ): */
+                                        Text(
                                       "End Date",
                                       style: TextStyle(
                                         fontSize: 17,
@@ -428,41 +466,47 @@ class _AddWorkExperienceScreenState extends State<AddWorkExperienceScreen> {
                                     isReadOnly: true,
                                     textInputAction: TextInputAction.next,
                                     onTap: () async {
-                                      if (StartDateController.text.isNotEmpty) {
-                                        DateTime? pickedDate =
-                                            await showDatePicker(
-                                                context: context,
-                                                initialDate:
-                                                    pickedStartDate ??
-                                                        DateTime.now(),
-                                                firstDate: pickedStartDate ??
-                                                    DateTime.now(),
-                                                lastDate: DateTime(2101));
+                                      if (valuesecond != true) {
+                                        if (StartDateController
+                                            .text.isNotEmpty) {
+                                          DateTime? pickedDate =
+                                              await showDatePicker(
+                                                  context: context,
+                                                  initialDate:
+                                                      pickedStartDate ??
+                                                          DateTime.now(),
+                                                  firstDate: pickedStartDate ??
+                                                      DateTime.now(),
+                                                  lastDate: DateTime(2101));
 
-                                        if (pickedDate != null) {
-                                          print(pickedDate);
-                                          formattedDateEnd =
-                                              DateFormat('dd-MM-yyyy')
-                                                  .format(pickedDate);
-                                          print(
-                                              "formattedDate end--${formattedDateEnd}");
+                                          if (pickedDate != null) {
+                                            print(pickedDate);
+                                            formattedDateEnd =
+                                                DateFormat('dd-MM-yyyy')
+                                                    .format(pickedDate);
+                                            apiDateEnd =
+                                                DateFormat('yyyy-MM-dd')
+                                                    .format(pickedDate);
+                                            print(
+                                                "formattedDate end--${formattedDateEnd}");
 
-                                          setState(() {
-                                            EndDateController.text =
-                                                formattedDateEnd.toString();
-                                          });
+                                            setState(() {
+                                              EndDateController.text =
+                                                  formattedDateEnd.toString();
+                                            });
+                                          } else {
+                                            print("Date is not selected");
+                                          }
                                         } else {
-                                          print("Date is not selected");
+                                          SnackBar snackBar = SnackBar(
+                                            content: Text(
+                                                'Please Select Start Date'),
+                                            backgroundColor:
+                                                ColorConstant.primary_color,
+                                          );
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(snackBar);
                                         }
-                                      } else {
-                                        SnackBar snackBar = SnackBar(
-                                          content:
-                                              Text('Please Select Start Date'),
-                                          backgroundColor:
-                                              ColorConstant.primary_color,
-                                        );
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(snackBar);
                                       }
                                     },
                                   ),
@@ -526,29 +570,33 @@ class _AddWorkExperienceScreenState extends State<AddWorkExperienceScreen> {
                               );
                               ScaffoldMessenger.of(context)
                                   .showSnackBar(snackBar);
-                            } /*  else if (formattedDateStart.toString().isNotEmpty) {
-                                    SnackBar snackBar = SnackBar(
-                                      content: Text('Please select Start Date'),
-                                      backgroundColor: ColorConstant.primary_color,
-                                    );
-                                    ScaffoldMessenger.of(context)
-                                        .showSnackBar(snackBar);
-                                  } else if (formattedDateEnd.toString().isNotEmpty) {
-                                    SnackBar snackBar = SnackBar(
-                                      content: Text('Please select End Date'),
-                                      backgroundColor: ColorConstant.primary_color,
-                                    );
-                                    ScaffoldMessenger.of(context)
-                                        .showSnackBar(snackBar);
-                                  }  */
-                            else {
+                            } else if (StartDateController.text.isEmpty) {
+                              SnackBar snackBar = SnackBar(
+                                content: Text('Please select Start Date'),
+                                backgroundColor: ColorConstant.primary_color,
+                              );
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(snackBar);
+                            } else if (EndDateController.text.isEmpty) {
+                              SnackBar snackBar = SnackBar(
+                                content: Text('Please select End Date'),
+                                backgroundColor: ColorConstant.primary_color,
+                              );
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(snackBar);
+                            } else {
+                              apiDatepresent = DateFormat('yyyy-MM-dd')
+                                  .format(DateTime.now());
+                              print("date print -- ${apiDatepresent}");
                               var params = {
                                 "companyName": companyNameController.text,
                                 "industryType":
                                     selectedIndustryTypes?.industryTypeName,
                                 "jobProfile": JobProfileController.text,
-                                "endDate": EndDateController.text,
-                                "startDate": StartDateController.text,
+                                "endDate": EndDateController.text == "Present"
+                                    ? apiDatepresent
+                                    : apiDateEnd,
+                                "startDate": apiDateStart,
                                 "userWorkExperienceUid": widget.workUserID
                               };
                               print(
@@ -609,30 +657,33 @@ class _AddWorkExperienceScreenState extends State<AddWorkExperienceScreen> {
                               );
                               ScaffoldMessenger.of(context)
                                   .showSnackBar(snackBar);
-                            } /*  else if (formattedDateStart.toString().isNotEmpty) {
-                                    SnackBar snackBar = SnackBar(
-                                      content: Text('Please select Start Date'),
-                                      backgroundColor: ColorConstant.primary_color,
-                                    );
-                                    ScaffoldMessenger.of(context)
-                                        .showSnackBar(snackBar);
-                                  } else if (formattedDateEnd.toString().isNotEmpty) {
-                                    SnackBar snackBar = SnackBar(
-                                      content: Text('Please select End Date'),
-                                      backgroundColor: ColorConstant.primary_color,
-                                    );
-                                    ScaffoldMessenger.of(context)
-                                        .showSnackBar(snackBar);
-                                  } */
-                            else {
+                            } else if (StartDateController.text.isEmpty) {
+                              SnackBar snackBar = SnackBar(
+                                content: Text('Please select Start Date'),
+                                backgroundColor: ColorConstant.primary_color,
+                              );
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(snackBar);
+                            } else if (EndDateController.text.isEmpty) {
+                              SnackBar snackBar = SnackBar(
+                                content: Text('Please select End Date'),
+                                backgroundColor: ColorConstant.primary_color,
+                              );
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(snackBar);
+                            } else {
+                              apiDatepresent = DateFormat('yyyy-MM-dd')
+                                  .format(DateTime.now());
                               var params1 = {
                                 "companyName": companyNameController.text,
                                 "industryType":
                                     selectedIndustryTypes?.industryTypeName,
                                 "expertiseIn": selectedExpertise?.expertiseName,
                                 "jobProfile": JobProfileController.text,
-                                "endDate": EndDateController.text,
-                                "startDate": StartDateController.text,
+                                "endDate": EndDateController.text == "Present"
+                                    ? apiDatepresent
+                                    : apiDateEnd,
+                                "startDate": apiDateStart,
                                 "userWorkExperienceUid": widget.workUserID
                               };
                               print("NewProfileSCubit${params1}");
@@ -686,29 +737,32 @@ class _AddWorkExperienceScreenState extends State<AddWorkExperienceScreen> {
                               );
                               ScaffoldMessenger.of(context)
                                   .showSnackBar(snackBar);
-                            } /*  else if (formattedDateStart.toString().isNotEmpty) {
-                                    SnackBar snackBar = SnackBar(
-                                      content: Text('Please select Start Date'),
-                                      backgroundColor: ColorConstant.primary_color,
-                                    );
-                                    ScaffoldMessenger.of(context)
-                                        .showSnackBar(snackBar);
-                                  } else if (formattedDateEnd.toString().isNotEmpty) {
-                                    SnackBar snackBar = SnackBar(
-                                      content: Text('Please select End Date'),
-                                      backgroundColor: ColorConstant.primary_color,
-                                    );
-                                    ScaffoldMessenger.of(context)
-                                        .showSnackBar(snackBar);
-                                  }  */
-                            else {
+                            } else if (StartDateController.text.isEmpty) {
+                              SnackBar snackBar = SnackBar(
+                                content: Text('Please select Start Date'),
+                                backgroundColor: ColorConstant.primary_color,
+                              );
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(snackBar);
+                            } else if (EndDateController.text.isEmpty) {
+                              SnackBar snackBar = SnackBar(
+                                content: Text('Please select End Date'),
+                                backgroundColor: ColorConstant.primary_color,
+                              );
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(snackBar);
+                            } else {
+                              apiDatepresent = DateFormat('yyyy-MM-dd')
+                                  .format(DateTime.now());
                               var params = {
                                 "companyName": companyNameController.text,
                                 "industryType":
                                     selectedIndustryTypes?.industryTypeName,
                                 "jobProfile": JobProfileController.text,
-                                "endDate": formattedDateEnd,
-                                "startDate": formattedDateStart
+                                "endDate": EndDateController.text == "Present"
+                                    ? apiDatepresent
+                                    : apiDateEnd,
+                                "startDate": apiDateStart
                               };
                               print(
                                   "AddWorkExperienceAPIAddWorkExperienceAPI${params}");
@@ -768,30 +822,33 @@ class _AddWorkExperienceScreenState extends State<AddWorkExperienceScreen> {
                               );
                               ScaffoldMessenger.of(context)
                                   .showSnackBar(snackBar);
-                            } /*  else if (formattedDateStart.toString().isNotEmpty) {
-                                    SnackBar snackBar = SnackBar(
-                                      content: Text('Please select Start Date'),
-                                      backgroundColor: ColorConstant.primary_color,
-                                    );
-                                    ScaffoldMessenger.of(context)
-                                        .showSnackBar(snackBar);
-                                  } else if (formattedDateEnd.toString().isNotEmpty) {
-                                    SnackBar snackBar = SnackBar(
-                                      content: Text('Please select End Date'),
-                                      backgroundColor: ColorConstant.primary_color,
-                                    );
-                                    ScaffoldMessenger.of(context)
-                                        .showSnackBar(snackBar);
-                                  } */
-                            else {
+                            } else if (StartDateController.text.isEmpty) {
+                              SnackBar snackBar = SnackBar(
+                                content: Text('Please select Start Date'),
+                                backgroundColor: ColorConstant.primary_color,
+                              );
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(snackBar);
+                            } else if (EndDateController.text.isEmpty) {
+                              SnackBar snackBar = SnackBar(
+                                content: Text('Please select End Date'),
+                                backgroundColor: ColorConstant.primary_color,
+                              );
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(snackBar);
+                            } else {
+                              apiDatepresent = DateFormat('yyyy-MM-dd')
+                                  .format(DateTime.now());
                               var params1 = {
                                 "companyName": companyNameController.text,
                                 "industryType":
                                     selectedIndustryTypes?.industryTypeName,
                                 "expertiseIn": selectedExpertise?.expertiseName,
                                 "jobProfile": JobProfileController.text,
-                                "endDate": formattedDateEnd,
-                                "startDate": formattedDateStart,
+                                "endDate": EndDateController.text == "Present"
+                                    ? apiDatepresent
+                                    : apiDateEnd,
+                                "startDate": apiDateStart,
                               };
                               print("NewProfileSCubit${params1}");
                               print("widget.workUserID${widget.workUserID}");
@@ -809,7 +866,7 @@ class _AddWorkExperienceScreenState extends State<AddWorkExperienceScreen> {
                             borderRadius: BorderRadius.circular(10)),
                         child: Center(
                           child: Text(
-                            widget.edit == true ? "Edit" : "Save",
+                           "Save",
                             style: TextStyle(
                               fontSize: 17,
                               fontWeight: FontWeight.w500,

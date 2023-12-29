@@ -1,6 +1,6 @@
 name: pds
 description: A new Flutter project.
-version: 1.0.0+7
+version: 1.0.0+8
 environment: 
   sdk: '>=2.12.0 <3.0.0'
 dependencies: 
@@ -54,6 +54,17 @@ dependencies:
   flutter_downloader: ^1.11.5
   linkfy_text: ^1.1.5
   video_player: 
+  cr_mentions: ^0.0.1+1
+  multiselect: ^0.0.7
+  flutter_mentions: ^2.0.1
+  flutter_typeahead: ^4.8.0
+  chewie: ^1.7.4
+  visibility_detector: ^0.4.0+2 
+  provider: 
+  wakelock: ^0.6.2
+  universal_html: 
+  dio:
+  path_provider: 
   # dio: ^5.3.4
   
   
@@ -65,6 +76,7 @@ dev_dependencies:
 dependency_overrides:
   path_drawing: ^0.5.1
   xml: ^6.0.1
+  win32: ^3.0.0
   
 flutter: 
   uses-material-design: true

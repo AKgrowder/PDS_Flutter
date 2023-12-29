@@ -232,6 +232,49 @@ class ImageConstant {
   static String ChatimageIcon = "assets/images/ChatimageIcon.png";
   static String shareBlack = "assets/images/share.png";
   static String shareWhite = "assets/images/share_white.png";
-  static String profileLock ="assets/images/lock profile.png";
+  static String profileLock = "assets/images/lock profile.png";
+  static String check_box = "assets/images/check-box.png";
+  static String check = "assets/images/check.png";
+  static String chat = "assets/images/chat.png";
+  static String RightArrowgrey = "assets/images/RightArrowgrey.png";
+  static String inbox_search = "assets/images/inboxSearch_icon.png";
+  static String inbox_picture = "assets/images/inboxPicture_icon.png";
+/// Notification Image icon List  Start
+  static String PaymentNotificationLogo = "assets/images/Payment Notification Logo.png";
+  static String RoomCloseLogo = "assets/images/Room Close Logo.png";
+  static String RoomDeleteLogo = "assets/images/Room Delete Logo.png";
+  static String ExitMemberLogo = "assets/images/Exit Member Logo.png";
+  static String NewUpdateLogo = "assets/images/New Update Logo.png";
+  static String InviteAcceptepLogo = "assets/images/Invite Acceptep Logo.png";
+  static String Like_Post = "assets/images/Like Post.png";
+  static String Comment_Post = "assets/images/Comment Post.png";
+  static String Tag_Comment_Post = "assets/images/Tag Comment Post.png";
+  static String Expert_Accept_Invite = "assets/images/Expert Accept Invite.png";
+  static String Expert_Reject_Invite = "assets/images/Expert Reject Invite.png";
+  static String Follow_Public_Account = "assets/images/Follow Public Account.png";
+  static String Follow_Private_Account_Request = "assets/images/Follow Private Account Request.png";
+  static String Follow_Request_Accept = "assets/images/Follow Request Accept.png";
+  static String Invite_Rejected = "assets/images/Invite Rejected.png";
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+  
+
+
+  
+/// end
+
+
+
 }
- 

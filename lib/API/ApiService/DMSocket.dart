@@ -21,7 +21,7 @@ void onConnect(StompFrame frame) {
   );
 
   DMstompClient.subscribe(
-    destination: "/topic/getDeletedMessage/${DMChatInboxUid}",
+    destination: "/topic/getDeletedInboxMessage/${DMChatInboxUid}",
     callback: (StompFrame frame) {
       print('Received message Delete-: ${frame.body}');
       // Process the received message
@@ -39,7 +39,7 @@ void onConnect(StompFrame frame) {
     );
 
     DMstompClient.subscribe(
-      destination: "/topic/getDeletedMessage/${DMChatInboxUid}",
+      destination: "/topic/getDeletedInboxMessage/${DMChatInboxUid}",
       callback: (StompFrame frame) {
         print("Delete Meassge --------------------------------------------------------------------");
         print('Received message Delete --->: ${frame.body}');

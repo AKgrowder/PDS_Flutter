@@ -20,16 +20,20 @@ import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../API/Bloc/OpenSaveImagepost_Bloc/OpenSaveImagepost_state.dart';
+import '../../API/Model/UserTagModel/UserTag_model.dart';
 
 // ignore: must_be_immutable
 class OpenSavePostImage extends StatefulWidget {
   String? PostID;
+  String? PostopenLink;
   bool? profileTure;
   int? index;
+
   OpenSavePostImage({
     Key? key,
     required this.PostID,
     this.profileTure,
+    this.PostopenLink,
     this.index,
   }) : super(key: key);
   @override
@@ -45,11 +49,19 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
   List<PageController> pageControllers = [];
   bool added = false;
   int imageCount = 1;
+  UserTagModel? userTagModel;
 
   @override
   void initState() {
-    BlocProvider.of<OpenSaveCubit>(context)
-        .openSaveImagePostAPI(context, "${widget.PostID}");
+    if (widget.PostID == "0") {
+      BlocProvider.of<OpenSaveCubit>(context)
+          .openSaveImagePostAPI(context, "${widget.PostopenLink}", "");
+    } else {
+      print("dfgdfgdgf-");
+      BlocProvider.of<OpenSaveCubit>(context)
+          .openSaveImagePostAPI(context, "", "${widget.PostID}");
+    }
+
     super.initState();
   }
 
@@ -122,6 +134,9 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
           );
           ScaffoldMessenger.of(context).showSnackBar(snackBar);
         }
+      }
+      if (state is UserTagSaveLoadedState) {
+        userTagModel = await state.userTagModel;
       }
     }, builder: (context, state) {
       if (state is OpenSaveLoadingState) {
@@ -206,13 +221,26 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
                         Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(
-                                '${OpenSaveModelData?.object?.postUserName}',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 16,
-                                  fontFamily: 'outfit',
-                                  fontWeight: FontWeight.w600,
+                             GestureDetector( onTap: () {
+                            Navigator.push(context,
+                                MaterialPageRoute(builder: (context) {
+                              return ProfileScreen(
+                                  User_ID:
+                                      "${OpenSaveModelData?.object?.userUid}",
+                                  isFollowing:
+                                      OpenSaveModelData?.object?.isFollowing);
+                            }));
+                          },
+                                child: Container(
+                                  child: Text(
+                                    '${OpenSaveModelData?.object?.postUserName}',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 16,
+                                      fontFamily: 'outfit',
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
                                 ),
                               ),
                               SizedBox(height: 7),
@@ -417,13 +445,12 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
                               textStyle: TextStyle(color: Colors.white),
                               linkTypes: [
                                 LinkType.url,
-                                // LinkType
-                                //     .userTag,
+                                LinkType.userTag,
                                 LinkType.hashTag,
                                 // LinkType
                                 //     .email
                               ],
-                              onTap: (link) {
+                              onTap: (link) async {
                                 var SelectedTest = link.value.toString();
                                 var Link = SelectedTest.startsWith('https');
                                 var Link1 = SelectedTest.startsWith('http');
@@ -431,6 +458,8 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
                                 var Link3 = SelectedTest.startsWith('WWW');
                                 var Link4 = SelectedTest.startsWith('HTTPS');
                                 var Link5 = SelectedTest.startsWith('HTTP');
+                                var Link6 = SelectedTest.startsWith(
+                                    'https://pdslink.page.link/');
                                 print(SelectedTest.toString());
 
                                 if (Link == true ||
@@ -438,21 +467,59 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
                                     Link2 == true ||
                                     Link3 == true ||
                                     Link4 == true ||
-                                    Link5 == true) {
+                                    Link5 == true ||
+                                    Link6 == true) {
                                   if (Link2 == true || Link3 == true) {
                                     launchUrl(Uri.parse(
                                         "https://${link.value.toString()}"));
                                   } else {
-                                    launchUrl(Uri.parse(link.value.toString()));
+                                    if (Link6 == true) {
+                                      print("yes i am in room");
+                                      Navigator.push(context, MaterialPageRoute(
+                                        builder: (context) {
+                                          return NewBottomBar(
+                                            buttomIndex: 1,
+                                          );
+                                        },
+                                      ));
+                                    } else {
+                                      launchUrl(
+                                          Uri.parse(link.value.toString()));
+                                      print(
+                                          "link.valuelink.value -- ${link.value}");
+                                    }
                                   }
                                 } else {
-                                  print("${link}");
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => HashTagViewScreen(
-                                            title: "${link.value}"),
-                                      ));
+                                  if (link.value!.startsWith('#')) {
+                                    print("${link}");
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              HashTagViewScreen(
+                                                  title: "${link.value}"),
+                                        ));
+                                    } else if (link.value!.startsWith('@')) {
+                                    var name;
+                                    var tagName;
+                                    name = SelectedTest;
+                                    tagName = name.replaceAll("@", "");
+                                    await BlocProvider.of<OpenSaveCubit>(
+                                            context)
+                                        .UserTagAPI(context, tagName);
+
+                                    Navigator.push(context,
+                                        MaterialPageRoute(builder: (context) {
+                                      return ProfileScreen(
+                                          User_ID: "${userTagModel?.object}",
+                                          isFollowing: "");
+                                    }));
+
+                                    print("tagName -- ${tagName}");
+                                    print("user id -- ${userTagModel?.object}");
+                                  }else{
+                                                                                    launchUrl(Uri.parse("https://${link.value.toString()}"));
+                                                                                }
                                 }
                               },
                             ), /* Text(
@@ -732,7 +799,7 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
   navigationFunction() {
     if (widget.profileTure == true) {
       Future.delayed(
-        Duration(seconds: 2),
+        Duration(seconds: 1),
       ).then((value) {
         BlocProvider.of<AddcommentCubit>(context)
             .Addcomment(context, '${OpenSaveModelData?.object?.postUid}');
@@ -837,7 +904,10 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
                       onTap: () async {
                         Map<String, dynamic> param = {"postType": "PUBLIC"};
                         BlocProvider.of<OpenSaveCubit>(context).RePostAPI(
-                            context, param, OpenSaveModelData?.object?.postUid);
+                            context,
+                            param,
+                            OpenSaveModelData?.object?.postUid,
+                            "Repost");
                       }),
                 ),
                 SizedBox(

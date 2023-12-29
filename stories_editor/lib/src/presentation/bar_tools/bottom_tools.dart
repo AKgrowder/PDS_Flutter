@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_single_cascade_in_expression_statements
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gallery_media_picker/gallery_media_picker.dart';
@@ -10,6 +12,7 @@ import 'package:stories_editor/src/domain/sevices/save_as_image.dart';
 import 'package:stories_editor/src/presentation/widgets/animated_onTap_button.dart';
 
 bool isDataGet = true;
+bool isData = false;
 
 class BottomTools extends StatelessWidget {
   final GlobalKey contentKey;
@@ -34,7 +37,17 @@ class BottomTools extends StatelessWidget {
       builder: (_, controlNotifier, scrollNotifier, itemNotifier, __) {
         final editorNotifier =
             Provider.of<TextEditingNotifier>(context1, listen: false);
-        editorNotifier..textController.text = editorNotifier.text;
+        // editorNotifier..textController.text = editorNotifier.text;
+        print(
+            "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+        print(editorNotifier.text);
+        if (editorNotifier.text != "" ||
+            editorNotifier.text.isEmpty != true ||
+            controlNotifier.mediaPath.isEmpty != true) {
+          isData = true;
+        }/* else{
+          isData = false;
+        } */
         return Container(
           decoration: const BoxDecoration(color: Colors.transparent),
           child: Padding(
@@ -112,12 +125,20 @@ class BottomTools extends StatelessWidget {
                       scale: 0.9,
                       child: AnimatedOnTapButton(
                           onTap: () async {
-                            print("editorNotifier.text-${editorNotifier.text.isEmpty}");
-                            print("controlNotifier.mediaPath-${controlNotifier.mediaPath.isEmpty}");
-                            if (editorNotifier.text.isEmpty == true &&
+                            print(
+                                "editprofile Screen check-${editorNotifier.text}");
+                            print(
+                                "editorNotifier.text-${editorNotifier.text.isEmpty}");
+                            print(
+                                "controlNotifier.mediaPath-${controlNotifier.mediaPath}");
+                            if (isData == false &&
                                 controlNotifier.mediaPath.isEmpty == true) {
                               print("Now this condiosn is working");
                             } else {
+                              isData = false;
+                              print("else consion is working");
+                              print(
+                                  "else condiosn is -${controlNotifier.mediaPath}");
                               String pngUri;
 
                               await takePicture(
@@ -146,8 +167,9 @@ class BottomTools extends StatelessWidget {
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(15),
                                 border: Border.all(
-                                    color: editorNotifier.text.isEmpty == true &&
-                                controlNotifier.mediaPath.isEmpty == true
+                                    color: isData == false &&
+                                            controlNotifier.mediaPath.isEmpty ==
+                                                true
                                         ? Colors.grey
                                         : Colors.white,
                                     width: 1.5)),
@@ -156,8 +178,9 @@ class BottomTools extends StatelessWidget {
                               Text(
                                 'Share',
                                 style: TextStyle(
-                                    color: editorNotifier.text.isEmpty == true &&
-                                controlNotifier.mediaPath.isEmpty == true
+                                    color: isData == false &&
+                                            controlNotifier.mediaPath.isEmpty ==
+                                                true
                                         ? Colors.grey
                                         : Colors.white,
                                     letterSpacing: 1.5,

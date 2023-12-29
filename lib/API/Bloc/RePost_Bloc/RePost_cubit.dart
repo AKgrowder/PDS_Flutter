@@ -48,11 +48,11 @@ class RePostCubit extends Cubit<RePostState> {
   }
 
   Future<void> RePostAPI(
-      BuildContext context, Map<String, dynamic> params, String? uuid) async {
+      BuildContext context, Map<String, dynamic> params, String? uuid,String? name) async {
     dynamic addPostData;
     try {
       emit(RePostLoadingState());
-      addPostData = await Repository().RePost(context, params, uuid);
+      addPostData = await Repository().RePost(context, params, uuid,name);
       print("addPostData-->$addPostData");
       if (addPostData == "Something Went Wrong, Try After Some Time.") {
         emit(RePostErrorState("${addPostData}"));

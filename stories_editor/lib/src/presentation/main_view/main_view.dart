@@ -2,6 +2,7 @@
 
 import 'dart:io';
 import 'dart:math';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -105,13 +106,12 @@ class _MainViewState extends State<MainView> {
   /// delete position
   bool _isDeletePosition = false;
   bool _inAction = false;
+  bool nodatainTextfiled = false;
 
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       var _control = Provider.of<ControlNotifier>(context, listen: false);
-
-      /// initialize control variable provider
       _control.giphyKey = widget.giphyKey;
       _control.middleBottomWidget = widget.middleBottomWidget;
       _control.isCustomFontList = widget.isCustomFontList ?? false;
@@ -173,7 +173,6 @@ class _MainViewState extends State<MainView> {
                             onTap: () {
                               controlNotifier.isTextEditing =
                                   !controlNotifier.isTextEditing;
-                                  
                             },
                             child: Align(
                               alignment: Alignment.topCenter,
@@ -379,7 +378,8 @@ class _MainViewState extends State<MainView> {
                           });
                         },
                         onDoneButtonStyle: widget.onDoneButtonStyle,
-                        editorBackgroundColor: widget.editorBackgroundColor, context1: context,
+                        editorBackgroundColor: widget.editorBackgroundColor,
+                        context1: context,
                       ),
                   ],
                 ),
