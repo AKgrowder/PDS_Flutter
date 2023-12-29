@@ -61,7 +61,7 @@ class _RecentBlogScrenState extends State<RecentBlogScren> {
       children: [
         SingleChildScrollView(
           child: Container(
-            child: Column(
+            child: Column(crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Stack(
                   children: [
