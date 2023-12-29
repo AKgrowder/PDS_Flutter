@@ -377,7 +377,7 @@ class _DmScreenState extends State<DmScreen> {
                                       ),
                                     ),
                                   ),
-                              /*     Padding(
+                                  /*     Padding(
                                     padding: const EdgeInsets.only(left: 7),
                                     child: GestureDetector(
                                       onTap: () {},

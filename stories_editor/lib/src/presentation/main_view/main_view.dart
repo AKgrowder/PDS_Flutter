@@ -7,7 +7,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:gallery_media_picker/gallery_media_picker.dart';
+import 'package:stories_editor/src/gallery_media_picker/gallery_media_picker.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:provider/provider.dart';
 import 'package:stories_editor/src/domain/models/editable_items.dart';
@@ -30,6 +30,7 @@ import 'package:stories_editor/src/presentation/utils/modal_sheets.dart';
 import 'package:stories_editor/src/presentation/widgets/animated_onTap_button.dart';
 import 'package:stories_editor/src/presentation/widgets/scrollable_pageView.dart';
 import 'package:video_player/video_player.dart';
+
 
 class MainView extends StatefulWidget {
   /// editor custom font families
@@ -107,6 +108,7 @@ class _MainViewState extends State<MainView> {
   bool _isDeletePosition = false;
   bool _inAction = false;
   bool nodatainTextfiled = false;
+  Duration? duration;
 
   @override
   void initState() {
@@ -401,6 +403,7 @@ class _MainViewState extends State<MainView> {
                             .split('.')
                             .last ==
                         'mp4') {
+                      print('this is the Get');
                       getVideo(path.first.path.toString(), 1, context,
                           controlNotifier, itemProvider);
                     } else {
@@ -451,7 +454,12 @@ class _MainViewState extends State<MainView> {
     );
   }
 
+  String _formatDuration(Duration duration) {
+    return duration.toString().split('.').first;
+  }
+
   getVideo(
+      // this is the me ankur is working
       String filepath,
       int decimals,
       context,
@@ -466,6 +474,7 @@ class _MainViewState extends State<MainView> {
     value2 = double.parse(STR);
     print("viedo check-${widget.finalvideoSize}");
     print(value2);
+    
     switch (i) {
       case 0:
         print("Done file size B");
@@ -478,7 +487,10 @@ class _MainViewState extends State<MainView> {
         _controller =
             VideoPlayerController.file(File(controlNotifier.mediaPath));
 
-        _controller?.initialize().then((value) => setState(() {}));
+        _controller?.initialize().then((value) => setState(() {
+              duration = _controller!.value.duration;
+              print("check duration -${duration}");
+            }));
         setState(() {
           _controller?.play();
           _controller?.setLooping(true);
@@ -497,11 +509,16 @@ class _MainViewState extends State<MainView> {
         _controller =
             VideoPlayerController.file(File(controlNotifier.mediaPath));
 
-        _controller?.initialize().then((value) => setState(() {}));
+        _controller?.initialize().then((value) => setState(() {
+              duration = _controller!.value.duration;
+              print("check duration -${duration}");
+            }));
         setState(() {
           _controller?.play();
           _controller?.setLooping(true);
         });
+        print(
+            "check then value Get-${_formatDuration(_controller!.value.duration)}");
 
         break;
       case 2:
@@ -540,7 +557,10 @@ class _MainViewState extends State<MainView> {
           _controller =
               VideoPlayerController.file(File(controlNotifier.mediaPath));
 
-          _controller?.initialize().then((value) => setState(() {}));
+          _controller?.initialize().then((value) => setState(() {
+                duration = _controller!.value.duration;
+                print("check duration -${duration}");
+              }));
           setState(() {
             _controller?.play();
             _controller?.setLooping(true);
