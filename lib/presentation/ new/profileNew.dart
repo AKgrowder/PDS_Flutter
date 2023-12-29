@@ -2502,207 +2502,206 @@ class _ProfileScreenState extends State<ProfileScreen>
                 (index) {
               parsedDateTimeBlogs = DateTime.parse(
                   '${saveAllBlogModelData?.object?[index].createdAt ?? ""}');
-              return Container(
-                margin: EdgeInsets.only(bottom: 10),
-                height: 155,
-                decoration: BoxDecoration(
-                    // color: Colors.amber,
+              return GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => RecentBlogScren(
+                            description1: saveAllBlogModelData
+                                    ?.object?[index].description
+                                    .toString() ??
+                                "",
+                            title: saveAllBlogModelData?.object?[index].title
+                                    .toString() ??
+                                "",
+                            imageURL: saveAllBlogModelData?.object?[index].image
+                                    .toString() ??
+                                "",
+                            ProfileScreenMove: true,
+                            index: index,
+                            saveAllBlogModelData: saveAllBlogModelData),
+                      )).then((value) => getAllAPI_Data());
+                },
+                child: Container(
+                  margin: EdgeInsets.only(bottom: 10),
+                  height: 155,
+                  decoration: BoxDecoration(
+                      // color: Colors.amber,
 
-                    borderRadius: BorderRadius.circular(20),
-                    border: Border.all(color: Color(0xffF1F1F1))),
-                child: GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => RecentBlogScren(
-                                description1: saveAllBlogModelData
-                                        ?.object?[index].description
-                                        .toString() ??
-                                    "",
-                                title: saveAllBlogModelData
-                                        ?.object?[index].title
-                                        .toString() ??
-                                    "",
-                                imageURL: saveAllBlogModelData
-                                        ?.object?[index].image
-                                        .toString() ??
-                                    "",
-                                ProfileScreenMove: true,
-                                index: index,
-                                saveAllBlogModelData: saveAllBlogModelData),
-                          )).then((value) => getAllAPI_Data());
-                    },
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(left: 10, top: 10),
-                          child: Container(
-                            width: 135,
-                            height: 135,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            child: CustomImageView(
-                              url:
-                                  "${saveAllBlogModelData?.object?[index].image}",
-                              fit: BoxFit.fill,
-                            ),
+                      borderRadius: BorderRadius.circular(20),
+                      border: Border.all(color: Color(0xffF1F1F1))),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(left: 10, top: 10),
+                        child: Container(
+                          width: 135,
+                          height: 135,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: CustomImageView(
+                            url:
+                                "${saveAllBlogModelData?.object?[index].image}",
+                            fit: BoxFit.fill,
                           ),
                         ),
-                        Container(
-                          width: MediaQuery.of(context).size.width - 187,
-                          // color: Colors.blue,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              SizedBox(
-                                height: 15,
+                      ),
+                      Container(
+                        width: MediaQuery.of(context).size.width - 187,
+                        // color: Colors.blue,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SizedBox(
+                              height: 15,
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 20),
+                              child: Text(
+                                "${saveAllBlogModelData?.object?[index].title}",
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.black),
                               ),
-                              Padding(
-                                padding: const EdgeInsets.only(left: 20),
-                                child: Text(
-                                  "${saveAllBlogModelData?.object?[index].title}",
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.w600,
-                                      color: Colors.black),
-                                ),
+                            ),
+                            SizedBox(
+                              height: 5,
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 20),
+                              child: Text(
+                                "${saveAllBlogModelData?.object?[index].description}",
+                                maxLines: 3,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.grey),
                               ),
-                              SizedBox(
-                                height: 5,
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(left: 20),
-                                child: Text(
-                                  "${saveAllBlogModelData?.object?[index].description}",
-                                  maxLines: 3,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w600,
-                                      color: Colors.grey),
-                                ),
-                              ),
-                              Spacer(),
-                              Padding(
-                                padding: const EdgeInsets.only(
-                                    left: 20, right: 10, bottom: 10),
-                                child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    crossAxisAlignment: CrossAxisAlignment.end,
-                                    children: [
-                                      Text(
-                                        customFormat(parsedDateTimeBlogs!),
-                                        style: TextStyle(
-                                            fontSize: 9.5,
-                                            fontWeight: FontWeight.w400,
-                                            color: Colors.grey),
-                                      ),
-                                      // Text(
-                                      //   "10:47 pm",
-                                      //   style: TextStyle(
-                                      //       fontSize: 9.5,
-                                      //       fontWeight: FontWeight.w400,
-                                      //       color: Colors.grey),
-                                      // ),
+                            ),
+                            Spacer(),
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                  left: 20, right: 10, bottom: 10),
+                              child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: [
+                                    Text(
+                                      customFormat(parsedDateTimeBlogs!),
+                                      style: TextStyle(
+                                          fontSize: 9.5,
+                                          fontWeight: FontWeight.w400,
+                                          color: Colors.grey),
+                                    ),
+                                    // Text(
+                                    //   "10:47 pm",
+                                    //   style: TextStyle(
+                                    //       fontSize: 9.5,
+                                    //       fontWeight: FontWeight.w400,
+                                    //       color: Colors.grey),
+                                    // ),
 
-                                      Text(
-                                        " ",
-                                        style: TextStyle(
-                                            fontSize: 9.5,
-                                            fontWeight: FontWeight.w400,
-                                            color: Colors.grey),
-                                      ),
-                                      Spacer(),
-                                      // GestureDetector(
-                                      //   onTap: () {
-                                      //     print("click on Blog like button");
+                                    Text(
+                                      " ",
+                                      style: TextStyle(
+                                          fontSize: 9.5,
+                                          fontWeight: FontWeight.w400,
+                                          color: Colors.grey),
+                                    ),
+                                    Spacer(),
+                                    // GestureDetector(
+                                    //   onTap: () {
+                                    //     print("click on Blog like button");
 
-                                      //     BlocProvider.of<NewProfileSCubit>(
-                                      //             context)
-                                      //         .ProfileLikeBlog(
-                                      //             context,
-                                      //             "${User_ID}",
-                                      //             "${saveAllBlogModelData?.object?[index].uid}");
-                                      //     if (saveAllBlogModelData
-                                      //             ?.object?[index].isLiked ==
-                                      //         false) {
-                                      //       saveAllBlogModelData
-                                      //           ?.object?[index].isLiked = true;
-                                      //     } else {
-                                      //       saveAllBlogModelData?.object?[index]
-                                      //           .isLiked = false;
-                                      //     }
-                                      //   },
-                                      //   child: saveAllBlogModelData
-                                      //               ?.object?[index].isLiked ==
-                                      //           false
-                                      //       ? Icon(Icons.favorite_border)
-                                      //       : Icon(
-                                      //           Icons.favorite,
-                                      //           color: Colors.red,
-                                      //         ),
-                                      // ),
-                                      // SizedBox(
-                                      //   width: 10,
-                                      // ),
-                                      // GestureDetector(
-                                      //     onTap: () {
-                                      //       print("Unsave Button");
+                                    //     BlocProvider.of<NewProfileSCubit>(
+                                    //             context)
+                                    //         .ProfileLikeBlog(
+                                    //             context,
+                                    //             "${User_ID}",
+                                    //             "${saveAllBlogModelData?.object?[index].uid}");
+                                    //     if (saveAllBlogModelData
+                                    //             ?.object?[index].isLiked ==
+                                    //         false) {
+                                    //       saveAllBlogModelData
+                                    //           ?.object?[index].isLiked = true;
+                                    //     } else {
+                                    //       saveAllBlogModelData?.object?[index]
+                                    //           .isLiked = false;
+                                    //     }
+                                    //   },
+                                    //   child: saveAllBlogModelData
+                                    //               ?.object?[index].isLiked ==
+                                    //           false
+                                    //       ? Icon(Icons.favorite_border)
+                                    //       : Icon(
+                                    //           Icons.favorite,
+                                    //           color: Colors.red,
+                                    //         ),
+                                    // ),
+                                    // SizedBox(
+                                    //   width: 10,
+                                    // ),
+                                    // GestureDetector(
+                                    //     onTap: () {
+                                    //       print("Unsave Button");
 
-                                      //       BlocProvider.of<NewProfileSCubit>(
-                                      //               context)
-                                      //           .ProfileSaveBlog(
-                                      //               context,
-                                      //               "${User_ID}",
-                                      //               "${saveAllBlogModelData?.object?[index].uid}");
+                                    //       BlocProvider.of<NewProfileSCubit>(
+                                    //               context)
+                                    //           .ProfileSaveBlog(
+                                    //               context,
+                                    //               "${User_ID}",
+                                    //               "${saveAllBlogModelData?.object?[index].uid}");
 
-                                      //       if (saveAllBlogModelData
-                                      //               ?.object?[index].isSaved ==
-                                      //           true) {
-                                      //         saveAllBlogModelData?.object
-                                      //             ?.removeAt(index);
-                                      //         setState(() {
-                                      //           SaveBlogCount =
-                                      //               saveAllBlogModelData
-                                      //                       ?.object?.length ??
-                                      //                   0;
-                                      //         });
-                                      //       }
-                                      //     },
-                                      //     child: Container(
-                                      //       height: 25,
-                                      //       width: 25,
-                                      //       decoration: BoxDecoration(
-                                      //           borderRadius:
-                                      //               BorderRadius.circular(5),
-                                      //           color: Colors.white),
-                                      //       child: Center(
-                                      //           child: Padding(
-                                      //         padding:
-                                      //             const EdgeInsets.all(5.0),
-                                      //         child: Image.asset(
-                                      //           saveAllBlogModelData
-                                      //                       ?.object?[index]
-                                      //                       .isSaved ==
-                                      //                   false
-                                      //               ? ImageConstant.savePin
-                                      //               : ImageConstant.Savefill,
-                                      //           width: 12.5,
-                                      //         ),
-                                      //       )),
-                                      //     )),
-                                    ]),
-                              ),
-                            ],
-                          ),
-                        )
-                      ],
-                    )),
+                                    //       if (saveAllBlogModelData
+                                    //               ?.object?[index].isSaved ==
+                                    //           true) {
+                                    //         saveAllBlogModelData?.object
+                                    //             ?.removeAt(index);
+                                    //         setState(() {
+                                    //           SaveBlogCount =
+                                    //               saveAllBlogModelData
+                                    //                       ?.object?.length ??
+                                    //                   0;
+                                    //         });
+                                    //       }
+                                    //     },
+                                    //     child: Container(
+                                    //       height: 25,
+                                    //       width: 25,
+                                    //       decoration: BoxDecoration(
+                                    //           borderRadius:
+                                    //               BorderRadius.circular(5),
+                                    //           color: Colors.white),
+                                    //       child: Center(
+                                    //           child: Padding(
+                                    //         padding:
+                                    //             const EdgeInsets.all(5.0),
+                                    //         child: Image.asset(
+                                    //           saveAllBlogModelData
+                                    //                       ?.object?[index]
+                                    //                       .isSaved ==
+                                    //                   false
+                                    //               ? ImageConstant.savePin
+                                    //               : ImageConstant.Savefill,
+                                    //           width: 12.5,
+                                    //         ),
+                                    //       )),
+                                    //     )),
+                                  ]),
+                            ),
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+                ),
               );
             })),
       );
@@ -3323,6 +3322,9 @@ class _ProfileScreenState extends State<ProfileScreen>
               ),
             );
           },
+        ),
+        SizedBox(
+          height: 10,
         )
       ],
     );
@@ -3525,22 +3527,24 @@ class _ProfileScreenState extends State<ProfileScreen>
                 ),
                 Row(
                   children: [
-                    Container(
-                        height: 50,
-                        width: _width - 175,
-                        decoration: BoxDecoration(
-                            color: Color(0XFFF6F6F6),
-                            borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(5),
-                                bottomLeft: Radius.circular(5))),
-                        child: Padding(
-                          padding: const EdgeInsets.only(top: 15, left: 10),
-                          child: Text(
-                            '${dopcument.toString().split('/').last}',
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(fontSize: 16),
-                          ),
-                        )),
+                    Expanded(
+                      child: Container(
+                          height: 50,
+                          // width: _width - 175,
+                          decoration: BoxDecoration(
+                              color: Color(0XFFF6F6F6),
+                              borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(5),
+                                  bottomLeft: Radius.circular(5))),
+                          child: Padding(
+                            padding: const EdgeInsets.only(top: 15, left: 10),
+                            child: Text(
+                              '${dopcument.toString().split('/').last}',
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(fontSize: 16),
+                            ),
+                          )),
+                    ),
                     dopcument == "Upload Image"
                         ? GestureDetector(
                             onTap: () async {
@@ -3550,7 +3554,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                             },
                             child: Container(
                               height: 50,
-                              width: _width / 4.5,
+                              // width: _width / 4.5,
                               decoration: BoxDecoration(
                                   color: Color(0XFF777777),
                                   borderRadius: BorderRadius.only(
@@ -3576,7 +3580,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                               // setState(() {});
                               print("dfsdfgsdfgdfg-${dopcument}");
                               Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => DocumentViewScreen(
+                                  builder: (context) => DocumentViewScreen1(
                                         path: NewProfileData
                                             ?.object?.userDocument,
                                         title: 'Pdf',

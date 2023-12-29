@@ -665,7 +665,7 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
                                                         height: 6,
                                                       ),
                                                       Container(
-                                                        color: Colors.amber,
+                                                        // color: Colors.amber,
                                                         child: Text(
                                                           "${StoryViewListModelData?.object?[index].userName}",
                                                           style: TextStyle(

@@ -57,7 +57,7 @@ class _BlogCommentBottomSheetState extends State<BlogCommentBottomSheet> {
   void _goToElement() {
     /* scroll.animateTo((1000.0 * 100),
         duration: const Duration(milliseconds: 20), curve: Curves.easeOut); */
-        scroll.jumpTo(scroll.position.maxScrollExtent+100);
+    scroll.jumpTo(scroll.position.maxScrollExtent + 100);
   }
 
   bool istageData = false;
@@ -158,13 +158,24 @@ class _BlogCommentBottomSheetState extends State<BlogCommentBottomSheet> {
                 Map<String, dynamic> dataSetup = {
                   'id': element.userUid,
                   'display': element.userName,
-                  'photo': element.userProfilePic
+                  'photo': element.userProfilePic,
                 };
                 tageData.add(dataSetup);
+                List<Map<String, dynamic>> uniqueTageData = [];
+                Set<String> encounteredIds = Set<String>();
+                for (Map<String, dynamic> data in tageData) {
+                  if (!encounteredIds.contains(data['id'])) {
+                    // If the ID hasn't been encountered, add to the result list
+                    uniqueTageData.add(data);
+
+                    // Mark the ID as encountered
+                    encounteredIds.add(data['id']);
+                  }
+                  tageData = uniqueTageData;
+                }
                 if (tageData.isNotEmpty == true) {
                   istageData = true;
                 }
-                print("check All Tag Datat-$tageData");
               });
             }
             if (state is GetAllHashtagState1) {
@@ -222,7 +233,7 @@ class _BlogCommentBottomSheetState extends State<BlogCommentBottomSheet> {
                             Padding(
                               padding: const EdgeInsets.only(bottom: 70),
                               child: ListView.builder(
-                                physics:  NeverScrollableScrollPhysics(),
+                                physics: NeverScrollableScrollPhysics(),
                                 itemCount: blogCommentModel?.object?.length,
                                 shrinkWrap: true,
                                 // controller: scroll,
@@ -493,7 +504,10 @@ class _BlogCommentBottomSheetState extends State<BlogCommentBottomSheet> {
                                                                           HashTagViewScreen(
                                                                               title: "${link.value}"),
                                                                     ));
-                                                               } else if (link.value!.startsWith('@')) {
+                                                              } else if (link
+                                                                  .value!
+                                                                  .startsWith(
+                                                                      '@')) {
                                                                 var name;
                                                                 var tagName;
                                                                 name =
@@ -525,9 +539,10 @@ class _BlogCommentBottomSheetState extends State<BlogCommentBottomSheet> {
                                                                     "tagName -- ${tagName}");
                                                                 print(
                                                                     "user id -- ${userTagModel?.object}");
-                                                              }else{
-                                                                                    launchUrl(Uri.parse("https://${link.value.toString()}"));
-                                                                                }
+                                                              } else {
+                                                                launchUrl(Uri.parse(
+                                                                    "https://${link.value.toString()}"));
+                                                              }
                                                             }
                                                           },
                                                         )
@@ -621,19 +636,21 @@ class _BlogCommentBottomSheetState extends State<BlogCommentBottomSheet> {
                                                         left: 50, bottom: 10),
                                                     child: Row(
                                                       children: <Widget>[
-                                                        tageData['photo'] != null
-                                                        ? CircleAvatar(
-                                                            backgroundImage:
-                                                                NetworkImage(
-                                                              tageData['photo'],
-                                                            ),
-                                                          )
-                                                        : CircleAvatar(
-                                                            backgroundImage:
-                                                                AssetImage(
-                                                                    ImageConstant
-                                                                        .tomcruse),
-                                                          ),
+                                                        tageData['photo'] !=
+                                                                null
+                                                            ? CircleAvatar(
+                                                                backgroundImage:
+                                                                    NetworkImage(
+                                                                  tageData[
+                                                                      'photo'],
+                                                                ),
+                                                              )
+                                                            : CircleAvatar(
+                                                                backgroundImage:
+                                                                    AssetImage(
+                                                                        ImageConstant
+                                                                            .tomcruse),
+                                                              ),
                                                         SizedBox(
                                                           width: 20.0,
                                                         ),
