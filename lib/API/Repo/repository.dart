@@ -47,7 +47,6 @@ import 'package:pds/API/Model/deletecomment/delete_comment_model.dart';
 import 'package:pds/API/Model/getAllHashtagModel/getAllHashtagModel.dart';
 import 'package:pds/API/Model/getSerchDataModel/getSerchDataModel.dart';
 import 'package:pds/API/Model/inboxScreenModel/inboxScrrenModel.dart';
-import 'package:pds/API/Model/logoutModel/logoutModel.dart';
 import 'package:pds/API/Model/removeFolloweModel/removeFollowerModel.dart';
 import 'package:pds/API/Model/serchDataAddModel/serchDataAddModel.dart';
 import 'package:pds/API/Model/serchForInboxModel/serchForinboxModel.dart';

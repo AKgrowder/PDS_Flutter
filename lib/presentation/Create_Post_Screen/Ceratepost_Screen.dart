@@ -332,9 +332,11 @@ class _CreateNewPostState extends State<CreateNewPost> {
                                     )
                                   : GestureDetector(
                                       onTap: () {
+
+                                          print("DSfsdhfsdhfshd");
                                         HasetagList = [];
                                         CreatePostDone = true;
-
+                                        
                                         if (isDataSet == true) {
                                           dataPostFucntion();
                                         }
