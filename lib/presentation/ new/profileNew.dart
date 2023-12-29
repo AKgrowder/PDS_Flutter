@@ -3576,7 +3576,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                               // setState(() {});
                               print("dfsdfgsdfgdfg-${dopcument}");
                               Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => DocumentViewScreen(
+                                  builder: (context) => DocumentViewScreen1(
                                         path: NewProfileData
                                             ?.object?.userDocument,
                                         title: 'Pdf',
