@@ -1540,22 +1540,33 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Container(
-                  height: 50,
-                  width: _width / 1.6,
-                  decoration: BoxDecoration(
-                      color: Color(0XFFF6F6F6),
-                      borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(5),
-                          bottomLeft: Radius.circular(5))),
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 15, left: 20),
-                    child: Text(
-                      '${dopcument}',
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(fontSize: 16),
-                    ),
-                  )),
+              GestureDetector(onTap: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) => DocumentViewScreen(
+                                        path:  /* widget.newProfileData?.object?.documentName */
+                                        '${widget.newProfileData?.object?.userDocument}', 
+                                        title: 'Pdf',
+                                      )));
+              },
+                child: Expanded(
+                  child: Container(
+                      height: 50,
+                      // width: _width / 1.6,
+                      decoration: BoxDecoration(
+                          color: Color(0XFFF6F6F6),
+                          borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(5),
+                              bottomLeft: Radius.circular(5))),
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 15, left: 20),
+                        child: Text(
+                          '${dopcument}',
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(fontSize: 16),
+                        ),
+                      )),
+                ),
+              ),
               dopcument == "Upload Document"
                   ? GestureDetector(
                       onTap: () async {
@@ -1564,20 +1575,23 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       },
                       child: Container(
                         height: 50,
-                        width: _width / 5,
+                        // width: _width / 5,
                         decoration: BoxDecoration(
                             color: Color(0XFF777777),
                             borderRadius: BorderRadius.only(
                                 topRight: Radius.circular(5),
                                 bottomRight: Radius.circular(5))),
                         child: Center(
-                          child: Text(
-                            "Choose",
-                            style: TextStyle(
-                              fontFamily: 'outfit',
-                              fontSize: 15,
-                              color: Colors.white,
-                              fontWeight: FontWeight.w500,
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              "Choose",
+                              style: TextStyle(
+                                fontFamily: 'outfit',
+                                fontSize: 15,
+                                color: Colors.white,
+                                fontWeight: FontWeight.w500,
+                              ),
                             ),
                           ),
                         ),
@@ -1585,7 +1599,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     )
                   : Container(
                       height: 50,
-                      width: _width / 5,
+                      // width: _width / 5,
                       decoration: BoxDecoration(
                           color: Color.fromARGB(255, 228, 228, 228),
                           borderRadius: BorderRadius.only(

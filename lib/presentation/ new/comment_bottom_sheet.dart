@@ -141,20 +141,35 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
               }
             }
             if (state is SearchHistoryDataAddxtends) {
-              searchUserForInbox1 = state.searchUserForInbox;
-              searchUserForInbox1?.object?.content?.forEach((element) {
-                Map<String, dynamic> dataSetup = {
-                  'id': element.userUid,
-                  'display': element.userName,
-                  'photo': element.userProfilePic
-                };
-                tageData.add(dataSetup);
-                if (tageData.isNotEmpty == true) {
-                  istageData = true;
-                }
-                print("check All Tag Datat-$tageData");
-              });
+        searchUserForInbox1 = state.searchUserForInbox;
+
+        /*  isTagData = true;
+          isHeshTegData = false; */
+        searchUserForInbox1?.object?.content?.forEach((element) {
+          Map<String, dynamic> dataSetup = {
+            'id': element.userUid,
+            'display': element.userName,
+            'photo': element.userProfilePic,
+          };
+
+          tageData.add(dataSetup);
+          List<Map<String, dynamic>> uniqueTageData = [];
+          Set<String> encounteredIds = Set<String>();
+          for (Map<String, dynamic> data in tageData) {
+            if (!encounteredIds.contains(data['id'])) {
+              // If the ID hasn't been encountered, add to the result list
+              uniqueTageData.add(data);
+
+              // Mark the ID as encountered
+              encounteredIds.add(data['id']);
             }
+            tageData = uniqueTageData;
+          }
+          if (tageData.isNotEmpty == true) {
+            istageData = true;
+          }
+        });
+      }
             if (state is AddCommentErrorState) {
               SnackBar snackBar = SnackBar(
                 content: Text(state.error),
