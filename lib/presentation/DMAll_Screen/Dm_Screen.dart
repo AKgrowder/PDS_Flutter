@@ -89,7 +89,7 @@ class _DmScreenState extends State<DmScreen> {
   getDocumentSize() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     documentuploadsize = await double.parse(
-        prefs.getString(PreferencesKey.MaxPostUploadSizeInMB) ?? "0");
+        prefs.getString(PreferencesKey.MaxInboxUploadSizeInMB) ?? "0");
 
     finalFileSize = documentuploadsize;
     setState(() {});
@@ -377,7 +377,7 @@ class _DmScreenState extends State<DmScreen> {
                                       ),
                                     ),
                                   ),
-                                  Padding(
+                              /*     Padding(
                                     padding: const EdgeInsets.only(left: 7),
                                     child: GestureDetector(
                                       onTap: () {},
@@ -395,7 +395,7 @@ class _DmScreenState extends State<DmScreen> {
                                         ),
                                       ),
                                     ),
-                                  ),
+                                  ), */
                                 ]),
                           ),
 
@@ -937,9 +937,9 @@ class _DmScreenState extends State<DmScreen> {
                                                                                                 if (Link == true || Link1 == true || Link2 == true || Link3 == true || Link4 == true || Link5 == true || Link6 == true) {
                                                                                                   print("qqqqqqqqhttps://${link.value}");
 
-                                                                                                  launchUrl(Uri.parse("https://${link.value.toString()}"));
+                                                                                                  launchUrl(Uri.parse("${link.value.toString()}"));
                                                                                                 } else {
-                                                                                                  launchUrl(Uri.parse(link.value.toString()));
+                                                                                                  launchUrl(Uri.parse("https://${link.value.toString()}"));
                                                                                                 }
                                                                                               },
                                                                                             ),

@@ -51,5 +51,7 @@ class PreferencesKey {
   static String tabSelction = "tabSelction";
   static String MaxPostUploadSizeInMB = "MaxPostUploadSizeInMB";
   static String MaxStoryUploadSizeInMB = "MaxStoryUploadSizeInMB";
+  static String MaxInboxUploadSizeInMB = "MaxInboxUploadSizeInMB";
 
+  
 }
