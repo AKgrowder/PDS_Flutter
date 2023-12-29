@@ -31,6 +31,8 @@ class _InviteMeesageState extends State<InviteMeesage> {
   TextEditingController searchController = TextEditingController();
   bool isDataGet = false;
   String? UserIndexUUID = "";
+  int Index = 0;
+
   ScrollController scrollController = ScrollController();
   SearchUserForInbox? searchUserForInbox1;
   List MultiUser = [];
@@ -170,6 +172,21 @@ class _InviteMeesageState extends State<InviteMeesage> {
             if (state is DMChatListLoadedState) {
               print(state.DMChatList.object);
               UserIndexUUID = state.DMChatList.object;
+
+
+                if (UserIndexUUID != "" && UserIndexUUID != null) {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) {
+                    return DmScreen(
+                      UserName:
+                          "${searchUserForInbox1?.object?.content?[Index].userName}",
+                      ChatInboxUid: UserIndexUUID ?? "",
+                      UserImage:
+                          "${searchUserForInbox1?.object?.content?[Index].userProfilePic}",
+                    );
+                  }));
+                  // UserIndexUUID = "";
+                }
+              
             }
             if (state is SelectMultipleUsers_ChatLoadestate) {
               MultiUser = [];
@@ -676,11 +693,12 @@ class _InviteMeesageState extends State<InviteMeesage> {
             return GestureDetector(
               onTap: () {
                 // DMChatListm
+                Index = index;
                 BlocProvider.of<PersonalChatListCubit>(context).DMChatListm(
                     "${searchUserForInbox1?.object?.content?[index].userUid}",
                     context);
 
-                if (UserIndexUUID != "" || UserIndexUUID != null) {
+               /*  if (UserIndexUUID != "" && UserIndexUUID != null) {
                   Navigator.push(context, MaterialPageRoute(builder: (context) {
                     return DmScreen(
                       UserName:
@@ -691,7 +709,7 @@ class _InviteMeesageState extends State<InviteMeesage> {
                     );
                   }));
                   // UserIndexUUID = "";
-                }
+                } */
               },
               child: Container(
                 margin: EdgeInsets.all(10),
