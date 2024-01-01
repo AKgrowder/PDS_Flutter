@@ -960,6 +960,9 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
 
   NewApi() async {
     await BlocProvider.of<GetGuestAllPostCubit>(context)
+        .getAllNoticationsCountAPI(context);
+
+    await BlocProvider.of<GetGuestAllPostCubit>(context)
         .seetinonExpried(context);
     Future.delayed(Duration(seconds: 2));
     await BlocProvider.of<GetGuestAllPostCubit>(context)
@@ -1433,6 +1436,10 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                 );
                 ScaffoldMessenger.of(context).showSnackBar(snackBar);
                 saveAutoEnterINRoom();
+              }
+              if (state is GetNotificationCountLoadedState) {
+                saveNotificationCount(
+                    state.GetNotificationCountData.object ?? 0);
               }
               if (state is OpenSharePostLoadedState) {
                 if (state.OpenSharePostData.object?.postUid != "" &&
@@ -3611,36 +3618,35 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                           borderRadius:
                                                                               BorderRadius.circular(4)),
                                                                       child: uuid ==
-                                                                            null ? Text(
-                                                                                  'Follow',
-                                                                                  style: TextStyle(fontFamily: "outfit", fontSize: 12, fontWeight: FontWeight.bold, color: Colors.white),
-                                                                                ):
-                                                                      
-                                                                       AllGuestPostRoomData?.object?.content?[index].userAccountType ==
-                                                                              "PUBLIC"
-                                                                          ? (AllGuestPostRoomData?.object?.content?[index].isFollowing == 'FOLLOW'
-                                                                              ? Text(
-                                                                                  'Follow',
-                                                                                  style: TextStyle(fontFamily: "outfit", fontSize: 12, fontWeight: FontWeight.bold, color: Colors.white),
-                                                                                )
-                                                                              : Text(
-                                                                                  'Following ',
-                                                                                  style: TextStyle(fontFamily: "outfit", fontSize: 12, fontWeight: FontWeight.bold, color: Colors.white),
-                                                                                ))
-                                                                          : AllGuestPostRoomData?.object?.content?[index].isFollowing == 'FOLLOW'
-                                                                              ? Text(
-                                                                                  'Follow',
-                                                                                  style: TextStyle(fontFamily: "outfit", fontSize: 12, fontWeight: FontWeight.bold, color: Colors.white),
-                                                                                )
-                                                                              : AllGuestPostRoomData?.object?.content?[index].isFollowing == 'REQUESTED'
+                                                                              null
+                                                                          ? Text(
+                                                                              'Follow',
+                                                                              style: TextStyle(fontFamily: "outfit", fontSize: 12, fontWeight: FontWeight.bold, color: Colors.white),
+                                                                            )
+                                                                          : AllGuestPostRoomData?.object?.content?[index].userAccountType == "PUBLIC"
+                                                                              ? (AllGuestPostRoomData?.object?.content?[index].isFollowing == 'FOLLOW'
                                                                                   ? Text(
-                                                                                      'Requested',
+                                                                                      'Follow',
                                                                                       style: TextStyle(fontFamily: "outfit", fontSize: 12, fontWeight: FontWeight.bold, color: Colors.white),
                                                                                     )
                                                                                   : Text(
                                                                                       'Following ',
                                                                                       style: TextStyle(fontFamily: "outfit", fontSize: 12, fontWeight: FontWeight.bold, color: Colors.white),
-                                                                                    ),
+                                                                                    ))
+                                                                              : AllGuestPostRoomData?.object?.content?[index].isFollowing == 'FOLLOW'
+                                                                                  ? Text(
+                                                                                      'Follow',
+                                                                                      style: TextStyle(fontFamily: "outfit", fontSize: 12, fontWeight: FontWeight.bold, color: Colors.white),
+                                                                                    )
+                                                                                  : AllGuestPostRoomData?.object?.content?[index].isFollowing == 'REQUESTED'
+                                                                                      ? Text(
+                                                                                          'Requested',
+                                                                                          style: TextStyle(fontFamily: "outfit", fontSize: 12, fontWeight: FontWeight.bold, color: Colors.white),
+                                                                                        )
+                                                                                      : Text(
+                                                                                          'Following ',
+                                                                                          style: TextStyle(fontFamily: "outfit", fontSize: 12, fontWeight: FontWeight.bold, color: Colors.white),
+                                                                                        ),
                                                                     ),
                                                                   ),
                                                           ),
@@ -4327,7 +4333,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                             .asset(
                                                                             /* AllGuestPostRoomData?.object?.content?[index].isSaved == false
                                                                                 ? ImageConstant.savePin
-                                                                                : */ ImageConstant.savePin,
+                                                                                : */
+                                                                            ImageConstant.savePin,
                                                                             height:
                                                                                 17,
                                                                           )
@@ -4492,7 +4499,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                           children: [
                                                                             AllExperData?.object?[index].profilePic == null || AllExperData?.object?[index].profilePic == ""
                                                                                 ? CustomImageView(
-                                                                                   height: 110,
+                                                                                    height: 110,
                                                                                     width: 128,
                                                                                     // fit: BoxFit.fill,
                                                                                     imagePath: ImageConstant.brandlogo,
@@ -4578,7 +4585,12 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                                       ),
                                                                                       Row(
                                                                                         children: [
-                                                                                          SizedBox(height: 13, child: Image.asset(ImageConstant.beg,color: Colors.black,)),
+                                                                                          SizedBox(
+                                                                                              height: 13,
+                                                                                              child: Image.asset(
+                                                                                                ImageConstant.beg,
+                                                                                                color: Colors.black,
+                                                                                              )),
                                                                                           SizedBox(
                                                                                             width: 2,
                                                                                           ),
@@ -5113,6 +5125,11 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
       default:
         return '';
     }
+  }
+
+  saveNotificationCount(int NotificationCount) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setInt(PreferencesKey.NotificationCount, NotificationCount);
   }
 
   CreateForum() async {

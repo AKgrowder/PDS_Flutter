@@ -249,6 +249,7 @@ class ApiServices {
         print("multipartFile2 else condions working on--");
       }
       response.fields["document"] = params['document'];
+      response.fields["documentName"] = params['documentName'];
       response.fields["companyName"] = params['companyName'];
       response.fields["jobProfile"] = params['jobProfile'];
       response.fields["profileUid"] = params['profileUid'];
@@ -301,6 +302,7 @@ class ApiServices {
       if (apiName != 'create forum') {
         response.fields["document"] = params['document'] ?? "";
         response.fields["companyName"] = params['companyName'] ?? "";
+        response.fields["documentName"] = params['documentName'] ?? "";
         response.fields["jobProfile"] = params['jobProfile'] ?? "";
         response.fields["industryTypesUid"] = params['industryTypesUid'] ?? [];
 
