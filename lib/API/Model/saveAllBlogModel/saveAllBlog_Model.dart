@@ -37,6 +37,8 @@ class Object {
   String? createdAt;
   bool? isSaved;
   bool? isLiked;
+  int? likeCount;
+  int? commentCount;
 
   Object(
       {this.uid,
@@ -47,6 +49,8 @@ class Object {
       this.modifiedAt,
       this.createdAt,
       this.isSaved,
+      this.likeCount,
+      this.commentCount,
       this.isLiked});
 
   Object.fromJson(Map<String, dynamic> json) {
@@ -58,6 +62,8 @@ class Object {
     modifiedAt = json['modifiedAt'];
     createdAt = json['createdAt'];
     isSaved = json['isSaved'];
+    likeCount = json['likeCount'];
+    commentCount = json['commentCount'];
     isLiked = json['isLiked'];
   }
 
@@ -71,6 +77,8 @@ class Object {
     data['modifiedAt'] = this.modifiedAt;
     data['createdAt'] = this.createdAt;
     data['isSaved'] = this.isSaved;
+    data['likeCount'] = this.likeCount;
+    data['commentCount'] = this.commentCount;
     data['isLiked'] = this.isLiked;
     return data;
   }
