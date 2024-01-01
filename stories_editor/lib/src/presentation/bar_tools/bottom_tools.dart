@@ -45,7 +45,7 @@ class BottomTools extends StatelessWidget {
             editorNotifier.text.isEmpty != true ||
             controlNotifier.mediaPath.isEmpty != true) {
           isData = true;
-        }/* else{
+        } /* else{
           isData = false;
         } */
         return Container(

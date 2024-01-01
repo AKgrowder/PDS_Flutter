@@ -15,6 +15,8 @@ import 'package:pds/API/Model/like_Post_Model/like_Post_Model.dart';
 import 'package:pds/API/Model/saveAllBlogModel/saveAllBlog_Model.dart';
 import 'package:pds/API/Model/saveBlogModel/saveBlog_Model.dart';
 
+import '../../Model/serchForInboxModel/serchForinboxModel.dart';
+
 abstract class NewProfileSState {}
 
 class NewProfileSLoadingState extends NewProfileSState {}
@@ -115,3 +117,8 @@ class DMChatListLoadedState extends NewProfileSState {
   final OnTimeDMModel DMChatList;
   DMChatListLoadedState(this.DMChatList);
 }
+// class SearchHistoryDataAddxtends extends NewProfileSState {
+//   final SearchUserForInbox searchUserForInbox;
+//   SearchHistoryDataAddxtends(this.searchUserForInbox);
+// }
+
