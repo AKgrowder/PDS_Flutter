@@ -15,6 +15,8 @@ import 'package:pds/presentation/%20new/newbottembar.dart';
 import 'package:pds/presentation/%20new/profileNew.dart';
 import 'package:pds/presentation/room_members/room_members_screen.dart';
 import 'package:pds/widgets/custom_image_view.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:pds/core/utils/sharedPreferences.dart';
 
 import '../rooms/room_details_screen.dart';
 
@@ -41,6 +43,7 @@ class _NewNotifactionScreenState extends State<NewNotifactionScreen>
     BlocProvider.of<InvitationCubit>(context).AllNotification(context);
     BlocProvider.of<InvitationCubit>(context).RequestListAPI(context);
     BlocProvider.of<InvitationCubit>(context).InvitationAPI(context);
+    BlocProvider.of<InvitationCubit>(context).getAllNoticationsCountAPI(context);
     super.initState();
   }
 
@@ -75,6 +78,12 @@ class _NewNotifactionScreenState extends State<NewNotifactionScreen>
               ScaffoldMessenger.of(context).showSnackBar(snackBar);
             }
           }
+           if (state is GetNotificationCountLoadedState) {
+                print(state.GetNotificationCountData.object);
+                saveNotificationCount(
+                    state.GetNotificationCountData.object ?? 0);
+              }
+
           if (state is GetAllNotificationLoadedState) {
             NotificationCount = 0;
             AllNotificationData = state.AllNotificationData;
@@ -312,6 +321,11 @@ class _NewNotifactionScreenState extends State<NewNotifactionScreen>
         },
       ),
     );
+  }
+  
+   saveNotificationCount(int NotificationCount) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setInt(PreferencesKey.NotificationCount, NotificationCount);
   }
 }
 
@@ -570,6 +584,8 @@ class _AllNotificationClassState extends State<AllNotificationClass> {
                                 BlocProvider.of<InvitationCubit>(context)
                                     .SeenNotification(context,
                                         "${AllNotificationData?.object?[index].postNotificationUid}");
+    BlocProvider.of<InvitationCubit>(context).getAllNoticationsCountAPI(context);
+
                               },
                               child: Container(
                                 // height: 90,

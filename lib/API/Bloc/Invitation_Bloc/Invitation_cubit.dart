@@ -140,22 +140,22 @@ class InvitationCubit extends Cubit<InvitationState> {
     }
   } 
 
-  // Future<void> getAllNoticationsCountAPI(BuildContext context) async {
-  //   dynamic acceptRejectInvitationModel;
-  //   try {
-  //     emit(InvitationLoadingState());
-  //     acceptRejectInvitationModel =
-  //         await Repository().getAllNoticationsCountAPI(context);
-  //     if (acceptRejectInvitationModel ==
-  //         "Something Went Wrong, Try After Some Time.") {
-  //       emit(InvitationErrorState("${acceptRejectInvitationModel}"));
-  //     } else {
-  //       if (acceptRejectInvitationModel.success == true) {
-  //         emit(SeenNotificationLoadedState(acceptRejectInvitationModel));
-  //       }
-  //     }
-  //   } catch (e) {
-  //     emit(InvitationErrorState(acceptRejectInvitationModel));
-  //   }
-  // }
+  Future<void> getAllNoticationsCountAPI(BuildContext context) async {
+    dynamic acceptRejectInvitationModel;
+    try {
+      emit(InvitationLoadingState());
+      acceptRejectInvitationModel =
+          await Repository().getAllNoticationsCountAPI(context);
+      if (acceptRejectInvitationModel ==
+          "Something Went Wrong, Try After Some Time.") {
+        emit(InvitationErrorState("${acceptRejectInvitationModel}"));
+      } else {
+        if (acceptRejectInvitationModel.success == true) {
+          emit(GetNotificationCountLoadedState(acceptRejectInvitationModel));
+        }
+      }
+    } catch (e) {
+      emit(InvitationErrorState(acceptRejectInvitationModel));
+    }
+  }
 }
