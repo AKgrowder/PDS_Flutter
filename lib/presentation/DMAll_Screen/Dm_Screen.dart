@@ -36,13 +36,14 @@ import '../register_create_account_screen/register_create_account_screen.dart';
 
 class DmScreen extends StatefulWidget {
   String UserName;
+  String UserUID;
   String ChatInboxUid;
   String UserImage;
-  // String UserUID;
+
   DmScreen(
       {required this.ChatInboxUid,
       required this.UserName,
-      // required this.UserUID,
+      required this.UserUID,
       required this.UserImage});
 
   @override
@@ -241,7 +242,7 @@ class _DmScreenState extends State<DmScreen> {
 
     return WillPopScope(
         onWillPop: onBackPress,
-        child: Scaffold(
+        child:  Scaffold(
             // resizeToAvoidBottomInset: true,
             backgroundColor: theme.colorScheme.onPrimary,
             body: BlocConsumer<DmInboxCubit, getInboxState>(
@@ -308,34 +309,59 @@ class _DmScreenState extends State<DmScreen> {
                                       ),
                                     ),
                                   ),
-                                  widget.UserImage != null &&
-                                          widget.UserImage != ""
-                                      ? Container(
-                                          child: CustomImageView(
-                                            url: "${widget.UserImage}",
-                                            height: 30,
-                                            width: 30,
-                                            fit: BoxFit.cover,
-                                            radius: BorderRadius.circular(30),
-                                          ),
-                                        )
-                                      : CustomImageView(
-                                          imagePath: ImageConstant.tomcruse,
-                                          height: 30,
-                                          width: 30,
-                                        ),
+                                  GestureDetector( onTap: () {
+                                        Navigator.push(context,
+                                            MaterialPageRoute(
+                                          builder: (context) {
+                                            return ProfileScreen(
+                                                User_ID: widget.UserUID,
+                                                isFollowing: "");
+                                          },
+                                        ));
+                                      },
+                                    child: Container(
+                                      child: widget.UserImage != null &&
+                                              widget.UserImage != ""
+                                          ? Container(
+                                              child: CustomImageView(
+                                                url: "${widget.UserImage}",
+                                                height: 30,
+                                                width: 30,
+                                                fit: BoxFit.cover,
+                                                radius: BorderRadius.circular(30),
+                                              ),
+                                            )
+                                          : CustomImageView(
+                                              imagePath: ImageConstant.tomcruse,
+                                              height: 30,
+                                              width: 30,
+                                            ),
+                                    ),
+                                  ),
                                   Padding(
                                     padding:
                                         const EdgeInsets.only(left: 10, top: 2),
-                                    child: Container(
-                                      child: Text(
-                                        "${widget.UserName} ",
-                                        overflow: TextOverflow.ellipsis,
-                                        style: TextStyle(
-                                          fontFamily: 'outfit',
-                                          fontSize: 15,
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.w700,
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        Navigator.push(context,
+                                            MaterialPageRoute(
+                                          builder: (context) {
+                                            return ProfileScreen(
+                                                User_ID: widget.UserUID,
+                                                isFollowing: "");
+                                          },
+                                        ));
+                                      },
+                                      child: Container(
+                                        child: Text(
+                                          "${widget.UserName}",
+                                          overflow: TextOverflow.ellipsis,
+                                          style: TextStyle(
+                                            fontFamily: 'outfit',
+                                            fontSize: 15,
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.w700,
+                                          ),
                                         ),
                                       ),
                                     ),
@@ -1752,6 +1778,35 @@ String customFormat(DateTime date) {
 
   String formattedDate = '$time';
   return formattedDate;
+}
+
+
+String getTimeDifference(DateTime dateTime) {
+  final difference = DateTime.now().difference(dateTime);
+  if (difference.inDays > 0) {
+    if (difference.inDays == 1) {
+      return '1 day ago';
+    } else if (difference.inDays < 7) {
+      return '${difference.inDays} days ago';
+    } else {
+      final weeks = (difference.inDays / 7).floor();
+      return '$weeks week${weeks == 1 ? '' : 's'} ago';
+    }
+  } else if (difference.inHours > 0) {
+    if (difference.inHours == 1) {
+      return '1 hour ago';
+    } else {
+      return '${difference.inHours} hours ago';
+    }
+  } else if (difference.inMinutes > 0) {
+    if (difference.inMinutes == 1) {
+      return '1 minute ago';
+    } else {
+      return '${difference.inMinutes} minutes ago';
+    }
+  } else {
+    return 'Just now';
+  }
 }
 
 String _getMonthName(int month) {
