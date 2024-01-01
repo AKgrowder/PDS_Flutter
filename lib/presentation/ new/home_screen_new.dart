@@ -2865,7 +2865,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                                   ? /* repostMainControllers[0].value.isInitialized
                                                                                       ? */
                                                                                   Padding(
-                                                                                      padding: const EdgeInsets.only( right: 20, top: 15),
+                                                                                      padding: const EdgeInsets.only(right: 20, top: 15),
                                                                                       child: Column(
                                                                                         mainAxisSize: MainAxisSize.min,
                                                                                         children: [
@@ -3610,7 +3610,13 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                               0xffED1C25),
                                                                           borderRadius:
                                                                               BorderRadius.circular(4)),
-                                                                      child: AllGuestPostRoomData?.object?.content?[index].userAccountType ==
+                                                                      child: uuid ==
+                                                                            null ? Text(
+                                                                                  'Follow',
+                                                                                  style: TextStyle(fontFamily: "outfit", fontSize: 12, fontWeight: FontWeight.bold, color: Colors.white),
+                                                                                ):
+                                                                      
+                                                                       AllGuestPostRoomData?.object?.content?[index].userAccountType ==
                                                                               "PUBLIC"
                                                                           ? (AllGuestPostRoomData?.object?.content?[index].isFollowing == 'FOLLOW'
                                                                               ? Text(
@@ -3815,7 +3821,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                               ? */
 
                                                                           Padding(
-                                                                              padding: const EdgeInsets.only( right: 20, top: 15),
+                                                                              padding: const EdgeInsets.only(right: 20, top: 15),
                                                                               child: Column(
                                                                                 mainAxisSize: MainAxisSize.min,
                                                                                 children: [
@@ -4315,17 +4321,24 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                     padding:
                                                                         const EdgeInsets.all(
                                                                             5.0),
-                                                                    child: Image
-                                                                        .asset(
-                                                                      AllGuestPostRoomData?.object?.content?[index].isSaved ==
-                                                                              false
-                                                                          ? ImageConstant
-                                                                              .savePin
-                                                                          : ImageConstant
-                                                                              .Savefill,
-                                                                      height:
-                                                                          17,
-                                                                    ),
+                                                                    child: uuid ==
+                                                                            null
+                                                                        ? Image
+                                                                            .asset(
+                                                                            /* AllGuestPostRoomData?.object?.content?[index].isSaved == false
+                                                                                ? ImageConstant.savePin
+                                                                                : */ ImageConstant.savePin,
+                                                                            height:
+                                                                                17,
+                                                                          )
+                                                                        : Image
+                                                                            .asset(
+                                                                            AllGuestPostRoomData?.object?.content?[index].isSaved == false
+                                                                                ? ImageConstant.savePin
+                                                                                : ImageConstant.Savefill,
+                                                                            height:
+                                                                                17,
+                                                                          ),
                                                                   ),
                                                                 ),
                                                               ),
@@ -4479,13 +4492,13 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                           children: [
                                                                             AllExperData?.object?[index].profilePic == null || AllExperData?.object?[index].profilePic == ""
                                                                                 ? CustomImageView(
-                                                                                    height: _height / 4.8,
-                                                                                    width: _width,
+                                                                                   height: 110,
+                                                                                    width: 128,
                                                                                     // fit: BoxFit.fill,
                                                                                     imagePath: ImageConstant.brandlogo,
                                                                                   )
                                                                                 : CustomImageView(
-                                                                                    height: 100,
+                                                                                    height: 120,
                                                                                     width: 128,
                                                                                     radius: BorderRadius.only(topLeft: Radius.circular(10), topRight: Radius.circular(10)),
                                                                                     url: "${AllExperData?.object?[index].profilePic}",
@@ -4552,7 +4565,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                                         children: [
                                                                                           Text(
                                                                                             "${AllExperData?.object?[index].userName}",
-                                                                                            style: TextStyle(fontSize: 11, color: Colors.white, fontFamily: "outfit", fontWeight: FontWeight.bold),
+                                                                                            style: TextStyle(fontSize: 11, color: Colors.black, fontFamily: "outfit", fontWeight: FontWeight.bold),
                                                                                           ),
                                                                                           SizedBox(
                                                                                             width: 2,
@@ -4565,15 +4578,15 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                                       ),
                                                                                       Row(
                                                                                         children: [
-                                                                                          SizedBox(height: 13, child: Image.asset(ImageConstant.beg)),
+                                                                                          SizedBox(height: 13, child: Image.asset(ImageConstant.beg,color: Colors.black,)),
                                                                                           SizedBox(
                                                                                             width: 2,
                                                                                           ),
                                                                                           Expanded(
                                                                                             child: Text(
-                                                                                              'Expertise inList =   ${AllExperData?.object?[index].expertise?[0].expertiseName}',
+                                                                                              '${AllExperData?.object?[index].expertise?[0].expertiseName}',
                                                                                               maxLines: 1,
-                                                                                              style: TextStyle(fontFamily: "outfit", fontSize: 11, overflow: TextOverflow.ellipsis, color: Colors.white, fontWeight: FontWeight.bold),
+                                                                                              style: TextStyle(fontFamily: "outfit", fontSize: 11, overflow: TextOverflow.ellipsis, color: Colors.black, fontWeight: FontWeight.bold),
                                                                                             ),
                                                                                           ),
                                                                                         ],

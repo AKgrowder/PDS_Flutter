@@ -179,7 +179,7 @@ class _NewNotifactionScreenState extends State<NewNotifactionScreen>
                                       ? SizedBox()
                                       : Container(
                                           child: Text(
-                                            '${AllNotificationData?.object?.length ?? ""}',
+                                            '${NotificationCount}',
                                             style: TextStyle(
                                                 overflow: TextOverflow.ellipsis,
                                                 fontFamily: "outfit",
