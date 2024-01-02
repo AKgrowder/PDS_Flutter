@@ -31,7 +31,7 @@ import 'package:stories_editor/src/presentation/utils/modal_sheets.dart';
 import 'package:stories_editor/src/presentation/widgets/animated_onTap_button.dart';
 import 'package:stories_editor/src/presentation/widgets/scrollable_pageView.dart';
 import 'package:video_player/video_player.dart';
-import 'package:video_trimmer/video_trimmer.dart';
+// import 'package:video_trimmer/video_trimmer.dart';
 
 class MainView extends StatefulWidget {
   /// editor custom font families
