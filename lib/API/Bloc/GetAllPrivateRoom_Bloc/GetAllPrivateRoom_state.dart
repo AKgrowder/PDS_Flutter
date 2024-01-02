@@ -1,3 +1,4 @@
+import 'package:pds/API/Model/acceptRejectInvitaionModel/getAllNotificationCount.dart';
 import 'package:pds/API/Model/checkUserStatusModel/chekuserStausModel.dart';
 import 'package:pds/API/Model/delete_room_model/Delete_room_model.dart';
 import 'package:pds/API/Model/fetch_room_detail_model/fetch_room_detail_model.dart';
@@ -41,3 +42,9 @@ class CheckuserLoadedState extends GetAllPrivateRoomState {
 //   FetchRoomDetailLoadedState(this.fetchRoomDetailModel);
 // }
 
+
+
+class GetNotificationCountLoadedState extends GetAllPrivateRoomState {
+  final getAllNotificationCount GetNotificationCountData;
+  GetNotificationCountLoadedState(this.GetNotificationCountData);
+}

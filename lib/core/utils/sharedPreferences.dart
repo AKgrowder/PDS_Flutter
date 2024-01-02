@@ -52,6 +52,8 @@ class PreferencesKey {
   static String MaxPostUploadSizeInMB = "MaxPostUploadSizeInMB";
   static String MaxStoryUploadSizeInMB = "MaxStoryUploadSizeInMB";
   static String MaxInboxUploadSizeInMB = "MaxInboxUploadSizeInMB";
+  static String NotificationCount = "NotificationCount";
+
 
   
 }

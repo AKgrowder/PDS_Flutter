@@ -607,28 +607,28 @@ class Repository {
     }
   }
 
-  // getAllNoticationsCountAPI(
-  //     BuildContext context) async {
-  //   final response = await apiServices.getApiCallWithToken(
-  //       '${Config.getAllNoticationsCount}',
-  //       context);
-  //   print(response);
-  //   var jsonString = json.decode(response.body);
-  //   switch (response.statusCode) {
-  //     case 200:
-  //       return getAllNotificationCount.fromJson(jsonString);
-  //     case 404:
-  //       return Config.somethingWentWrong;
-  //     case 500:
-  //       return Config.servernotreachable;
-  //     case 400:
-  //       return Config.somethingWentWrong;
-  //     case 701:
-  //       return Config.somethingWentWrong;
-  //     default:
-  //       return jsonString;
-  //   }
-  // }
+  getAllNoticationsCountAPI(
+      BuildContext context) async {
+    final response = await apiServices.getApiCallWithToken(
+        '${Config.getAllNoticationsCount}',
+        context);
+    print(response);
+    var jsonString = json.decode(response.body);
+    switch (response.statusCode) {
+      case 200:
+        return getAllNotificationCount.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+      case 400:
+        return Config.somethingWentWrong;
+      case 701:
+        return Config.somethingWentWrong;
+      default:
+        return jsonString;
+    }
+  }
 
   HashTagBanner(BuildContext context) async {
     final response =

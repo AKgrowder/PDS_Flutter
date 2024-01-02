@@ -5,6 +5,8 @@ import 'package:pds/API/Model/GetGuestAllPostModel/GetGuestAllPost_Model.dart';
 import 'package:pds/API/Model/GetGuestAllPostModel/ShareAppOpenPostModel.dart';
 import 'package:pds/API/Model/IsTokenExpired/IsTokenExpired.dart';
 import 'package:pds/API/Model/System_Config_model/system_config_model.dart';
+import 'package:pds/API/Model/acceptRejectInvitaionModel/getAllNotificationCount.dart';
+import 'package:pds/API/Model/acceptRejectInvitaionModel/seenNotificationModel.dart';
 import 'package:pds/API/Model/createStroyModel/createStroyModel.dart';
 import 'package:pds/API/Model/getCountOfSavedRoomModel/getCountOfSavedRoomModel.dart';
 import 'package:pds/API/Model/like_Post_Model/like_Post_Model.dart';
@@ -100,4 +102,9 @@ class AutoEnterinLoadedState extends GetGuestAllPostState {
 class OpenSharePostLoadedState extends GetGuestAllPostState {
   final ShareAppOpenPostModel OpenSharePostData;
   OpenSharePostLoadedState(this.OpenSharePostData);
+}
+
+class GetNotificationCountLoadedState extends GetGuestAllPostState {
+  final getAllNotificationCount GetNotificationCountData;
+  GetNotificationCountLoadedState(this.GetNotificationCountData);
 }
