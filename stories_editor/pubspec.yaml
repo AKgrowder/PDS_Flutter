@@ -41,9 +41,9 @@ dependencies:
   http:
   photo_manager:
     path: ./photo_manager
-  video_trimmer: 
+  # video_trimmer: 
   video_editor: ^3.0.0
-  ffmpeg_kit_flutter_min:
+  ffmpeg_kit_flutter: 6.0.3
 
 dev_dependencies:
   flutter_test:
