@@ -132,7 +132,7 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
              if (state is GetNotificationCountLoadedState) {
                 print(state.GetNotificationCountData.object);
                 saveNotificationCount(
-                    state.GetNotificationCountData.object ?? 0);
+                    state.GetNotificationCountData.object?.notificationCount ?? 0,state.GetNotificationCountData.object?.messageCount ?? 0);
               }
             if (state is GetAllUserLoadedState) {
               dataget = true;
@@ -1227,8 +1227,9 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
       ));
     }
   }
-   saveNotificationCount(int NotificationCount) async {
+   saveNotificationCount(int NotificationCount,int MessageCount) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setInt(PreferencesKey.NotificationCount, NotificationCount);
+    prefs.setInt(PreferencesKey.MessageCount, MessageCount);
   }
 }

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:chewie/chewie.dart';
@@ -959,8 +960,11 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
   }
 
   NewApi() async {
-    await BlocProvider.of<GetGuestAllPostCubit>(context)
-        .getAllNoticationsCountAPI(context);
+    Timer.periodic(Duration(seconds: 15), (_) {
+      // print("Room Socket ++++++++++++++++++++++++++++++++++++++++++++++++++++");
+      BlocProvider.of<GetGuestAllPostCubit>(context)
+          .getAllNoticationsCountAPI(context);
+    });
 
     await BlocProvider.of<GetGuestAllPostCubit>(context)
         .seetinonExpried(context);
@@ -1439,7 +1443,9 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
               }
               if (state is GetNotificationCountLoadedState) {
                 saveNotificationCount(
-                    state.GetNotificationCountData.object ?? 0);
+                    state.GetNotificationCountData.object?.notificationCount ??
+                        0,
+                    state.GetNotificationCountData.object?.messageCount ?? 0);
               }
               if (state is OpenSharePostLoadedState) {
                 if (state.OpenSharePostData.object?.postUid != "" &&
@@ -5127,9 +5133,10 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
     }
   }
 
-  saveNotificationCount(int NotificationCount) async {
+  saveNotificationCount(int NotificationCount, int MessageCount) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setInt(PreferencesKey.NotificationCount, NotificationCount);
+    prefs.setInt(PreferencesKey.MessageCount, MessageCount);
   }
 
   CreateForum() async {
