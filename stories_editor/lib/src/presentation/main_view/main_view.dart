@@ -218,6 +218,7 @@ class _MainViewState extends State<MainView> {
                                                 /// the gestures of all movable items.
                                             controlNotifier.mediaPath
                                                         .endsWith('.mp4') &&
+                                                _controller != null &&
                                                     _controller!
                                                         .value.isInitialized
                                                 ? AspectRatio(
