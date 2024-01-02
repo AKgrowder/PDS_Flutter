@@ -2163,7 +2163,7 @@ class Repository {
 
   aboutMe(BuildContext context, String aboutMe) async {
     final response = await apiServices.getApiCallWithToken(
-        '${Config.add_update_about_me}?aboutMe=$aboutMe', context);
+        '${Config.add_update_about_me}?aboutMe=${aboutMe.replaceAll("#", "%23")}', context);
     var jsonString = json.decode(response.body);
     switch (response.statusCode) {
       case 200:
@@ -2229,7 +2229,7 @@ class Repository {
 
   Deletecomment(String commentuid, BuildContext context) async {
     final response = await apiServices.deleteApiCall(
-      '${Config.add_update_about_me}?aboutMe=${aboutMe.replaceAll("#", "%23")}', context);
+        "${Config.deletecomment}?commentUid=${commentuid}", {}, context);
     print(response);
     var jsonString = json.decode(response!.body);
     switch (response.statusCode) {
