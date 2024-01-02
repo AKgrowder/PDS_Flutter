@@ -184,4 +184,23 @@ class PersonalChatListCubit extends Cubit<PersonalChatListState> {
       emit(PersonalChatListErrorState(e.toString()));
     }
   }
+
+    Future<void> getAllNoticationsCountAPI(BuildContext context) async {
+    dynamic acceptRejectInvitationModel;
+    try {
+      emit(PersonalChatListLoadingState());
+      acceptRejectInvitationModel =
+          await Repository().getAllNoticationsCountAPI(context);
+      if (acceptRejectInvitationModel ==
+          "Something Went Wrong, Try After Some Time.") {
+        emit(PersonalChatListErrorState("${acceptRejectInvitationModel}"));
+      } else {
+        if (acceptRejectInvitationModel.success == true) {
+          emit(GetNotificationCountLoadedState(acceptRejectInvitationModel));
+        }
+      }
+    } catch (e) {
+      emit(PersonalChatListErrorState(acceptRejectInvitationModel));
+    }
+  }
 }

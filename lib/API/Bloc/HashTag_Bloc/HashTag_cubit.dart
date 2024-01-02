@@ -299,4 +299,24 @@ class HashTagCubit extends Cubit<HashTagState> {
       emit(HashTagErrorState(userTagData));
     }
   }
+
+
+  Future<void> getAllNoticationsCountAPI(BuildContext context) async {
+    dynamic acceptRejectInvitationModel;
+    try {
+      emit(HashTagLoadingState());
+      acceptRejectInvitationModel =
+          await Repository().getAllNoticationsCountAPI(context);
+      if (acceptRejectInvitationModel ==
+          "Something Went Wrong, Try After Some Time.") {
+        emit(HashTagErrorState("${acceptRejectInvitationModel}"));
+      } else {
+        if (acceptRejectInvitationModel.success == true) {
+          emit(GetNotificationCountLoadedState(acceptRejectInvitationModel));
+        }
+      }
+    } catch (e) {
+      emit(HashTagErrorState(acceptRejectInvitationModel));
+    }
+  }
 }

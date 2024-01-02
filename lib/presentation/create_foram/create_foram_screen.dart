@@ -156,7 +156,7 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
           }
           if (state is CreatFourmLoadedState) {
             SnackBar snackBar = SnackBar(
-              content: Text(state.createForm.message ?? ""),
+              content: Text(state.createForm.object ?? ""),
               backgroundColor: ColorConstant.primary_color,
             );
             String industryType = industryUUID.join(', ');
@@ -164,7 +164,8 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
               'document': chooseDocument?.object.toString(),
               'companyName': name.text,
               'jobProfile': profile.text,
-              'industryTypesUid': industryType
+              'industryTypesUid': industryType,
+              'documentName' : dopcument
             };
 
             // Navigator.pushAndRemoveUntil(context, MaterialPageRoute(
@@ -185,6 +186,7 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
                     params, uplopdfile.text, filepath.toString(), context));
             ScaffoldMessenger.of(context).showSnackBar(snackBar);
             print('check Status--${state.createForm.success}');
+            print("${dopcument} :- dopcumentdopcumentdopcumentdopcumentdopcumentdopcument");
           }
         },
         builder: (context, state) {
@@ -566,12 +568,15 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
                             'document': chooseDocument?.object.toString(),
                             'companyName': name.text,
                             'jobProfile': profile.text,
-                            'industryTypesUid': industryType
+                            'industryTypesUid': industryType,
+                            'documentName' : dopcument
                           };
 
                           print('button-$params');
 
                           if (SubmitOneTime == false) {
+                            print(
+                                "${dopcument} :- dopcumentdopcumentdopcumentdopcumentdopcumentdopcument");
                             SubmitOneTime = true;
                             BlocProvider.of<CreatFourmCubit>(context)
                                 .CreatFourm(params, uplopdfile.text,
@@ -821,6 +826,7 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
             ],
           );
           if (croppedFile != null) {
+            dopcument = file1.name;
             /* setState(() {
               uplopdfile.text = croppedFile.path.split('/').last;
               dopcument = file1.name;

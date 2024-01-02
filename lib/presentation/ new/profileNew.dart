@@ -3,10 +3,13 @@
 import 'dart:io';
 import 'dart:math';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:getwidget/components/loader/gf_loader.dart';
+import 'package:getwidget/types/gf_loader_type.dart';
 import 'package:intl/intl.dart';
 import 'package:pds/API/Bloc/NewProfileScreen_Bloc/NewProfileScreen_cubit.dart';
 import 'package:pds/API/Bloc/NewProfileScreen_Bloc/NewProfileScreen_state.dart';
@@ -33,8 +36,11 @@ import 'package:pds/presentation/settings/setting_screen.dart';
 import 'package:pds/widgets/commentPdf.dart';
 import 'package:pds/widgets/custom_text_form_field.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:video_player/video_player.dart';
+import 'package:video_thumbnail/video_thumbnail.dart';
 
 import '../../API/Model/WorkExperience_Model/WorkExperience_model.dart';
+import 'home_screen_new.dart';
 
 class ProfileScreen extends StatefulWidget {
   String User_ID;
@@ -117,10 +123,13 @@ class _ProfileScreenState extends State<ProfileScreen>
   GetWorkExperienceModel? addWorkExperienceModel;
   String? formattedDateStart;
   String? formattedDateEnd;
-
   String? User_Module;
   FollowersClassModel? followersClassModel1;
   FollowersClassModel? followersClassModel2;
+  List<String> videoUrls = [];
+  Map<String, Uint8List> thumbnailDataMap = {};
+  Uint8List? thumbnailData;
+  List<Uint8List?> thumbnailData1 = [];
   String getTimeDifference(DateTime dateTime) {
     final difference = DateTime.now().difference(dateTime);
     if (difference.inDays > 0) {
@@ -263,6 +272,7 @@ class _ProfileScreenState extends State<ProfileScreen>
       if (state is DMChatListLoadedState) {
         Navigator.push(context, MaterialPageRoute(builder: (context) {
           return DmScreen(
+            UserUID:"${NewProfileData?.object?.userUid}", 
             UserName: "${NewProfileData?.object?.userName}",
             ChatInboxUid: state.DMChatList.object ?? "",
             UserImage: "${NewProfileData?.object?.userProfilePic}",
@@ -356,6 +366,53 @@ class _ProfileScreenState extends State<ProfileScreen>
           int? y = int.parse(aa.split('.')[0]);
           FinalPostCount = y;
         }
+        state.GetAllPost.object?.forEach((element) async {
+          if (element.postDataType == "VIDEO") {
+            for (int i = 0; i < element.postData!.length; i++) {
+              videoUrls.add(element.postData?.first ?? '');
+              thumbnailData = await VideoThumbnail.thumbnailData(
+                video: element.postData![i],
+                // imageFormat: ImageFormat.JPEG,
+                quality: 50,
+              );
+              thumbnailData1.add(thumbnailData);
+            }
+          } else if (element.postDataType == "IMAGE") {
+            for (int i = 0; i < element.postData!.length; i++) {
+              videoUrls.add(element.postData?.first ?? '');
+            }
+          } else if (element.description != null) {
+            videoUrls.add(element.description ?? '');
+          }
+          /*    if (element.postDataType == "VIDEO") {
+            thumbnailData = await VideoThumbnail.thumbnailData(
+              video: element.postData?.first ?? '',
+              // imageFormat: ImageFormat.JPEG,
+              quality: 50,
+            );
+
+            /*  String videoUrl = element.postData!.first;
+            videoUrls.add(element.postData?.first ?? '');
+            for (int i = 0; i < element.postData!.length; i++) {
+              thumbnailData =
+                  await VideoThumbnail.thumbnailData(
+                video: videoUrl,
+                imageFormat: ImageFormat.JPEG,
+                quality: 50,
+              );
+              // Add thumbnail data to the list
+              if (thumbnailData != null) {
+                thumbnailDataMap[videoUrl] = thumbnailData ?? Uint8List(0);
+                videoUrls.add(videoUrl);
+                print("print video url == ${videoUrl}");
+              }
+              print("video image length -- ${videoUrls[i]}");
+            } */
+          } else {
+            thumbnailData = Uint8List(0);
+          }
+          thumbnailData1.add(thumbnailData); */
+        });
       }
       if (state is GetUserPostCommetLoadedState) {
         print(
@@ -1780,8 +1837,8 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                   .postDataType ==
                                                               "IMAGE"
                                                           ? Container(
-                                                              margin: EdgeInsets.all(
-                                                                  0.0),
+                                                              margin: EdgeInsets
+                                                                  .all(0.0),
                                                               decoration: BoxDecoration(
                                                                   borderRadius:
                                                                       BorderRadius.circular(
@@ -1792,52 +1849,101 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                 fit: BoxFit
                                                                     .cover,
                                                                 url:
-                                                                    "${GetAllPostData?.object?[index].postData?[0]}",
+                                                                    "${GetAllPostData?.object?[index].postData?.first}",
                                                               ))
                                                           : GetAllPostData
                                                                       ?.object?[
                                                                           index]
                                                                       .postDataType ==
-                                                                  "ATTACHMENT"
-                                                              ? Container(
-                                                                  margin: EdgeInsets.all(
-                                                                      0.0),
-                                                                  decoration: BoxDecoration(
-                                                                      borderRadius:
-                                                                          BorderRadius.circular(
-                                                                              20)), // Remove margin
-
-                                                                  child:
-                                                                      DocumentViewScreen1(
-                                                                    path: GetAllPostData
-                                                                        ?.object?[
-                                                                            index]
-                                                                        .postData?[0],
-                                                                  ))
-                                                              : GetAllPostData
-                                                                          ?.object?[index]
-                                                                          .postDataType ==
-                                                                      null
-                                                                  ? Container(
-                                                                      margin: EdgeInsets.all(0.0),
-                                                                      decoration: BoxDecoration(border: Border.all(color: Color(0xffF0F0F0)), borderRadius: BorderRadius.circular(20)),
-                                                                      child: Padding(
-                                                                        padding: const EdgeInsets.only(
-                                                                            top:
-                                                                                15,
-                                                                            left:
-                                                                                8,
-                                                                            right:
-                                                                                10),
-                                                                        child:
-                                                                            Text(
-                                                                          '${GetAllPostData?.object?[index].description}',
-                                                                          style: TextStyle(
-                                                                              color: Colors.black,
-                                                                              fontSize: 16),
+                                                                  "VIDEO"
+                                                              ? Stack(
+                                                                  children: [
+                                                                    Container(
+                                                                      decoration: BoxDecoration(
+                                                                          color: Colors.transparent,
+                                                                          border: Border.all(
+                                                                            color:
+                                                                                Colors.grey,
+                                                                          ),
+                                                                          borderRadius: BorderRadius.circular(20)),
+                                                                    ),
+                                                                    // thumbnailData !=
+                                                                    //         null
+                                                                    Container(
+                                                                      height:
+                                                                          200,
+                                                                      decoration:
+                                                                          BoxDecoration(
+                                                                              borderRadius: BorderRadius.circular(20)),
+                                                                      child:
+                                                                          ClipRRect(
+                                                                        borderRadius:
+                                                                            BorderRadius.circular(20),
+                                                                        child: Image
+                                                                            .memory(
+                                                                          thumbnailData1[index] ??
+                                                                              Uint8List(0),
+                                                                          // thumbnailData ??
+                                                                          //     Uint8List(0),
+                                                                          width:
+                                                                              _width,
+                                                                          fit: BoxFit
+                                                                              .cover,
                                                                         ),
+                                                                      ),
+                                                                    )
+                                                                    // : GFLoader(
+                                                                    //     type:
+                                                                    //         GFLoaderType.ios),
+                                                                    // Container(
+
+                                                                    //   child:
+                                                                    //       Padding(
+                                                                    //     padding:
+                                                                    //         const EdgeInsets.only(right: 10),
+                                                                    //     child:
+                                                                    //         VideoListItem(
+                                                                    //       videoUrl:
+                                                                    //           videoUrls.first,
+                                                                    //     ),
+                                                                    //   ),
+                                                                    // ),
+                                                                  ],
+                                                                )
+                                                              : GetAllPostData
+                                                                          ?.object?[
+                                                                              index]
+                                                                          .postDataType ==
+                                                                      "ATTACHMENT"
+                                                                  ? Container(
+                                                                      margin:
+                                                                          EdgeInsets.all(
+                                                                              0.0),
+                                                                      decoration:
+                                                                          BoxDecoration(borderRadius: BorderRadius.circular(20)), // Remove margin
+
+                                                                      child: DocumentViewScreen1(
+                                                                        path: GetAllPostData
+                                                                            ?.object?[index]
+                                                                            .postData
+                                                                            ?.first,
                                                                       ))
-                                                                  : SizedBox(),
+                                                                  : GetAllPostData?.object?[index].postDataType == null
+                                                                      ? Container(
+                                                                          margin: EdgeInsets.all(0.0),
+                                                                          decoration: BoxDecoration(border: Border.all(color: Color(0xffF0F0F0)), borderRadius: BorderRadius.circular(20)),
+                                                                          child: Padding(
+                                                                            padding: const EdgeInsets.only(
+                                                                                top: 15,
+                                                                                left: 8,
+                                                                                right: 10),
+                                                                            child:
+                                                                                Text(
+                                                                              '${GetAllPostData?.object?[index].description}',
+                                                                              style: TextStyle(color: Colors.black, fontSize: 16),
+                                                                            ),
+                                                                          ))
+                                                                      : SizedBox(),
                                                 ),
                                               ),
                                             );

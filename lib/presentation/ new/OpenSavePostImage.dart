@@ -737,17 +737,24 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
                             child: Container(
                               color: Colors.transparent,
                               child: Padding(
-                                padding: const EdgeInsets.all(5.0),
-                                child: Image.asset(
-                                  OpenSaveModelData?.object?.isSaved == false
-                                      ? ImageConstant.savePin
-                                      : ImageConstant.Savefill,
-                                  height: 18,
-                                  color: Colors.white,
-                                ),
-                              ),
+                                  padding: const EdgeInsets.all(5.0),
+                                  child: OpenSaveModelData?.object?.isSaved ==
+                                          false
+                                      ? Image.asset(
+                                          ImageConstant.savePin,
+                                          height: 18,
+                                          color: Colors.white,
+                                        )
+                                      : Image.asset(
+                                          ImageConstant.Savefill,
+                                          height: 18,
+                                        )
+
+                                  // color: Colors.white,
+                                  ),
                             ),
                           ),
+
                           // GestureDetector(
                           //   onTap: () {
                           //     Share.share(
