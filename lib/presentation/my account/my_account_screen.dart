@@ -1671,7 +1671,9 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                                         ? chooseDocumentuploded?.object
                                             .toString()
                                         : null,
-                                "email": email.text
+                                "email": email.text,
+          "documentName" : dopcument
+                                
                               };
 
                               BlocProvider.of<MyAccountCubit>(context)

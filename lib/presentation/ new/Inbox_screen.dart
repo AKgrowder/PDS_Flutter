@@ -34,6 +34,7 @@ class _InboxScreenState extends State<InboxScreen> {
   ScrollController scrollController = ScrollController();
   String? UserIndexUUID = "";
   bool apiData = false;
+  int Index = 0;
   FocusNode _focusNode = FocusNode();
   GetUsersChatByUsername? getUsersChatByUsername;
   String? userID;
@@ -42,7 +43,8 @@ class _InboxScreenState extends State<InboxScreen> {
   void initState() {
     getDocumentSize();
     BlocProvider.of<PersonalChatListCubit>(context).PersonalChatList(context);
-
+    BlocProvider.of<PersonalChatListCubit>(context)
+        .getAllNoticationsCountAPI(context);
     super.initState();
   }
 
@@ -124,6 +126,10 @@ class _InboxScreenState extends State<InboxScreen> {
               isDataGet = true;
               searchUserForInbox1 = state.searchUserForInbox;
             }
+            if (state is GetNotificationCountLoadedState) {
+              print(state.GetNotificationCountData.object);
+              saveNotificationCount(state.GetNotificationCountData.object ?? 0);
+            }
             if (state is PersonalChatListLoadedState) {
               apiData = true;
               PersonalChatListModelData = state.PersonalChatListModelData;
@@ -131,6 +137,25 @@ class _InboxScreenState extends State<InboxScreen> {
             if (state is DMChatListLoadedState) {
               print(state.DMChatList.object);
               UserIndexUUID = state.DMChatList.object;
+
+              if (UserIndexUUID != "" || UserIndexUUID != null) {
+                Navigator.push(context, MaterialPageRoute(builder: (context) {
+                  return DmScreen(
+                     UserUID:
+                          "${getUsersChatByUsername?.object?.content?[Index].userUuid}",
+                      UserName:
+                          "${getUsersChatByUsername?.object?.content?[Index].username}",
+                      ChatInboxUid: UserIndexUUID ?? "",
+                      UserImage:
+                          "${getUsersChatByUsername?.object?.content?[Index].userProfilePic}");
+                })).then((value) => CallBackFunc()
+                    /* BlocProvider.of<PersonalChatListCubit>(context)
+                          .PersonalChatList(context) */
+
+                    );
+                // UserIndexUUID = "";
+              }
+
               setState(() {});
             }
             if (state is UserChatDeleteLoaded) {
@@ -265,6 +290,11 @@ class _InboxScreenState extends State<InboxScreen> {
     );
   }
 
+  saveNotificationCount(int NotificationCount) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setInt(PreferencesKey.NotificationCount, NotificationCount);
+  }
+
   intaldatashow() {
     var _height = MediaQuery.of(context).size.height;
     var _width = MediaQuery.of(context).size.width;
@@ -354,6 +384,9 @@ class _InboxScreenState extends State<InboxScreen> {
                       Navigator.push(context,
                           MaterialPageRoute(builder: (context) {
                         return DmScreen(
+                          
+                          UserUID:
+                              "${PersonalChatListModelData?.object?[index].userUid}",
                           UserName:
                               "${PersonalChatListModelData?.object?[index].userName}",
                           ChatInboxUid:
@@ -535,15 +568,21 @@ class _InboxScreenState extends State<InboxScreen> {
             return GestureDetector(
               onTap: () {
                 // DMChatListm
-                /*   BlocProvider.of<PersonalChatListCubit>(context).DMChatListm(
-                    "${searchUserForInbox1?.object?.content?[index].userUid}",
+                print(
+                    "${getUsersChatByUsername?.object?.content?[index].userUuid}");
+                print(
+                    "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+                Index = index;
+                BlocProvider.of<PersonalChatListCubit>(context).DMChatListm(
+                    "${getUsersChatByUsername?.object?.content?[index].userUuid}",
                     context);
-                if (UserIndexUUID != "" || UserIndexUUID != null) {
+                /* if (UserIndexUUID != "" || UserIndexUUID != null) {
                   Navigator.push(context, MaterialPageRoute(builder: (context) {
                     return DmScreen(
                       UserName:
                           "${searchUserForInbox1?.object?.content?[index].userName}",
                       ChatInboxUid: UserIndexUUID ?? "",
+                      UserImage : ""
                     );
                   })).then((value) => CallBackFunc()
                       /* BlocProvider.of<PersonalChatListCubit>(context)

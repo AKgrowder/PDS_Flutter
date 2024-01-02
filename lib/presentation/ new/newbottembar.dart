@@ -4,6 +4,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:pds/connection_status/connection_status_singleton.dart';
+import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/core/utils/image_constant.dart';
 import 'package:pds/core/utils/sharedPreferences.dart';
 import 'package:pds/presentation/%20new/Inbox_screen.dart';
@@ -12,7 +13,7 @@ import 'package:pds/presentation/%20new/notifaction2.dart';
 import 'package:pds/presentation/register_create_account_screen/register_create_account_screen.dart';
 import 'package:pds/presentation/rooms/rooms_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
+import 'package:badges/badges.dart' as badges;
 import 'SearchBar_screen.dart';
 
 // import 'package:growder/presentation/Buy_Screen/Buy_screen.dart';
@@ -37,6 +38,7 @@ class _NewBottomBarState extends State<NewBottomBar> {
   var IsGuestUserEnabled;
   var GetTimeSplash;
   var UserLogin_ID;
+  int NotificationCount = 0;
 
   List widgetOptions = [
     // HomeScreen(),
@@ -336,32 +338,72 @@ class _NewBottomBarState extends State<NewBottomBar> {
                           //     Theme.of(context).brightness == Brightness.light
                           //         ? const Color(0xFFFFFFFF)
                           //         : const Color(0xFF0D0D0D),
+
                           child: Container(
                             // height: 35,
                             child: selectedIndex != 4
-                                ? Padding(
-                                    padding: const EdgeInsets.all(10.0),
-                                    child: Image.asset(
-                                      ImageConstant.nottifactionpng,
-                                      height: 30,
-                                      width: 26,
-                                    ),
-                                  )
+                                ? NotificationCount == 0
+                                    ? Center(
+                                        child: Image.asset(
+                                          ImageConstant.nottifactionpng,
+                                          height: 30,
+                                          width: 26,
+                                        ),
+                                      )
+                                    : Padding(
+                                        padding: const EdgeInsets.all(10.0),
+                                        child: badges.Badge(
+                                          badgeStyle: badges.BadgeStyle(
+                                              badgeColor:
+                                                  ColorConstant.primary_color),
+                                          badgeContent: Text(
+                                            "${NotificationCount}",
+                                            style:
+                                                TextStyle(color: Colors.white),
+                                          ),
+                                          child: Image.asset(
+                                            ImageConstant.nottifactionpng,
+                                            height: 30,
+                                            width: 26,
+                                          ),
+                                        ),
+                                      )
                                 : Container(
                                     // color: Colors.indigo,
                                     height: 30,
                                     width: 30,
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(10.0),
-                                      child: Image.asset(
-                                        ImageConstant.nottifactionpng,
-                                        color: const Color(0XFFED1C25),
-                                        // fit: BoxFit.cover,
-                                        // fit: BoxFit.scaleDown,
-                                        // height: 30,
-                                        // width: 26,
-                                      ),
-                                    ),
+                                    child: NotificationCount == 0
+                                        ? Center(
+                                            child: Image.asset(
+                                              ImageConstant.nottifactionpng,
+                                              color: const Color(0XFFED1C25),
+                                              // fit: BoxFit.cover,
+                                              // fit: BoxFit.scaleDown,
+                                              height: 30,
+                                              width: 26,
+                                            ),
+                                          )
+                                        : Padding(
+                                            padding: const EdgeInsets.all(10.0),
+                                            child: badges.Badge(
+                                              badgeStyle: badges.BadgeStyle(
+                                                  badgeColor: ColorConstant
+                                                      .primary_color),
+                                              badgeContent: Text(
+                                                "${NotificationCount}",
+                                                style: TextStyle(
+                                                    color: Colors.white),
+                                              ),
+                                              child: Image.asset(
+                                                ImageConstant.nottifactionpng,
+                                                color: const Color(0XFFED1C25),
+                                                // fit: BoxFit.cover,
+                                                // fit: BoxFit.scaleDown,
+                                                // height: 30,
+                                                // width: 26,
+                                              ),
+                                            ),
+                                          ),
                                     decoration: const BoxDecoration(
                                       borderRadius:
                                           BorderRadius.all(Radius.circular(50)),
@@ -390,6 +432,12 @@ class _NewBottomBarState extends State<NewBottomBar> {
   checkGuestUser() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     UserLogin_ID = prefs.getString(PreferencesKey.loginUserID);
+
+    Timer.periodic(Duration(seconds: 2), (_) {
+      // print("Room Socket ++++++++++++++++++++++++++++++++++++++++++++++++++++");
+      NotificationCount = prefs.getInt(PreferencesKey.NotificationCount) ?? 0;
+      setState(() {});
+    });
   }
 
   NaviRegisterScreen() {

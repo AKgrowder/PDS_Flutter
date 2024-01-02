@@ -298,7 +298,7 @@ class _RoomDetailScreenState extends State<RoomDetailScreen> {
                               // color: Colors.amber,
                               width: _width / 1.5,
                               child: Text(
-                                "${fetchRoomDetailModel?.object?.document}",
+                                "${fetchRoomDetailModel?.object?.documentName}",
                                 style: TextStyle(
                                     overflow: TextOverflow.ellipsis,
                                     fontWeight: FontWeight.w400,

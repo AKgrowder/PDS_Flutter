@@ -3,10 +3,13 @@
 import 'dart:io';
 import 'dart:math';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:getwidget/components/loader/gf_loader.dart';
+import 'package:getwidget/types/gf_loader_type.dart';
 import 'package:intl/intl.dart';
 import 'package:pds/API/Bloc/NewProfileScreen_Bloc/NewProfileScreen_cubit.dart';
 import 'package:pds/API/Bloc/NewProfileScreen_Bloc/NewProfileScreen_state.dart';
@@ -33,8 +36,11 @@ import 'package:pds/presentation/settings/setting_screen.dart';
 import 'package:pds/widgets/commentPdf.dart';
 import 'package:pds/widgets/custom_text_form_field.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:video_player/video_player.dart';
+import 'package:video_thumbnail/video_thumbnail.dart';
 
 import '../../API/Model/WorkExperience_Model/WorkExperience_model.dart';
+import 'home_screen_new.dart';
 
 class ProfileScreen extends StatefulWidget {
   String User_ID;
@@ -117,10 +123,13 @@ class _ProfileScreenState extends State<ProfileScreen>
   GetWorkExperienceModel? addWorkExperienceModel;
   String? formattedDateStart;
   String? formattedDateEnd;
-
   String? User_Module;
   FollowersClassModel? followersClassModel1;
   FollowersClassModel? followersClassModel2;
+  List<String> videoUrls = [];
+  Map<String, Uint8List> thumbnailDataMap = {};
+  Uint8List? thumbnailData;
+  List<Uint8List?> thumbnailData1 = [];
   String getTimeDifference(DateTime dateTime) {
     final difference = DateTime.now().difference(dateTime);
     if (difference.inDays > 0) {
@@ -263,6 +272,7 @@ class _ProfileScreenState extends State<ProfileScreen>
       if (state is DMChatListLoadedState) {
         Navigator.push(context, MaterialPageRoute(builder: (context) {
           return DmScreen(
+            UserUID:"${NewProfileData?.object?.userUid}", 
             UserName: "${NewProfileData?.object?.userName}",
             ChatInboxUid: state.DMChatList.object ?? "",
             UserImage: "${NewProfileData?.object?.userProfilePic}",
@@ -356,6 +366,53 @@ class _ProfileScreenState extends State<ProfileScreen>
           int? y = int.parse(aa.split('.')[0]);
           FinalPostCount = y;
         }
+        state.GetAllPost.object?.forEach((element) async {
+          if (element.postDataType == "VIDEO") {
+            for (int i = 0; i < element.postData!.length; i++) {
+              videoUrls.add(element.postData?.first ?? '');
+              thumbnailData = await VideoThumbnail.thumbnailData(
+                video: element.postData![i],
+                // imageFormat: ImageFormat.JPEG,
+                quality: 50,
+              );
+              thumbnailData1.add(thumbnailData);
+            }
+          } else if (element.postDataType == "IMAGE") {
+            for (int i = 0; i < element.postData!.length; i++) {
+              videoUrls.add(element.postData?.first ?? '');
+            }
+          } else if (element.description != null) {
+            videoUrls.add(element.description ?? '');
+          }
+          /*    if (element.postDataType == "VIDEO") {
+            thumbnailData = await VideoThumbnail.thumbnailData(
+              video: element.postData?.first ?? '',
+              // imageFormat: ImageFormat.JPEG,
+              quality: 50,
+            );
+
+            /*  String videoUrl = element.postData!.first;
+            videoUrls.add(element.postData?.first ?? '');
+            for (int i = 0; i < element.postData!.length; i++) {
+              thumbnailData =
+                  await VideoThumbnail.thumbnailData(
+                video: videoUrl,
+                imageFormat: ImageFormat.JPEG,
+                quality: 50,
+              );
+              // Add thumbnail data to the list
+              if (thumbnailData != null) {
+                thumbnailDataMap[videoUrl] = thumbnailData ?? Uint8List(0);
+                videoUrls.add(videoUrl);
+                print("print video url == ${videoUrl}");
+              }
+              print("video image length -- ${videoUrls[i]}");
+            } */
+          } else {
+            thumbnailData = Uint8List(0);
+          }
+          thumbnailData1.add(thumbnailData); */
+        });
       }
       if (state is GetUserPostCommetLoadedState) {
         print(
@@ -1780,8 +1837,8 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                   .postDataType ==
                                                               "IMAGE"
                                                           ? Container(
-                                                              margin: EdgeInsets.all(
-                                                                  0.0),
+                                                              margin: EdgeInsets
+                                                                  .all(0.0),
                                                               decoration: BoxDecoration(
                                                                   borderRadius:
                                                                       BorderRadius.circular(
@@ -1792,52 +1849,101 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                 fit: BoxFit
                                                                     .cover,
                                                                 url:
-                                                                    "${GetAllPostData?.object?[index].postData?[0]}",
+                                                                    "${GetAllPostData?.object?[index].postData?.first}",
                                                               ))
                                                           : GetAllPostData
                                                                       ?.object?[
                                                                           index]
                                                                       .postDataType ==
-                                                                  "ATTACHMENT"
-                                                              ? Container(
-                                                                  margin: EdgeInsets.all(
-                                                                      0.0),
-                                                                  decoration: BoxDecoration(
-                                                                      borderRadius:
-                                                                          BorderRadius.circular(
-                                                                              20)), // Remove margin
-
-                                                                  child:
-                                                                      DocumentViewScreen1(
-                                                                    path: GetAllPostData
-                                                                        ?.object?[
-                                                                            index]
-                                                                        .postData?[0],
-                                                                  ))
-                                                              : GetAllPostData
-                                                                          ?.object?[index]
-                                                                          .postDataType ==
-                                                                      null
-                                                                  ? Container(
-                                                                      margin: EdgeInsets.all(0.0),
-                                                                      decoration: BoxDecoration(border: Border.all(color: Color(0xffF0F0F0)), borderRadius: BorderRadius.circular(20)),
-                                                                      child: Padding(
-                                                                        padding: const EdgeInsets.only(
-                                                                            top:
-                                                                                15,
-                                                                            left:
-                                                                                8,
-                                                                            right:
-                                                                                10),
-                                                                        child:
-                                                                            Text(
-                                                                          '${GetAllPostData?.object?[index].description}',
-                                                                          style: TextStyle(
-                                                                              color: Colors.black,
-                                                                              fontSize: 16),
+                                                                  "VIDEO"
+                                                              ? Stack(
+                                                                  children: [
+                                                                    Container(
+                                                                      decoration: BoxDecoration(
+                                                                          color: Colors.transparent,
+                                                                          border: Border.all(
+                                                                            color:
+                                                                                Colors.grey,
+                                                                          ),
+                                                                          borderRadius: BorderRadius.circular(20)),
+                                                                    ),
+                                                                    // thumbnailData !=
+                                                                    //         null
+                                                                    Container(
+                                                                      height:
+                                                                          200,
+                                                                      decoration:
+                                                                          BoxDecoration(
+                                                                              borderRadius: BorderRadius.circular(20)),
+                                                                      child:
+                                                                          ClipRRect(
+                                                                        borderRadius:
+                                                                            BorderRadius.circular(20),
+                                                                        child: Image
+                                                                            .memory(
+                                                                          thumbnailData1[index] ??
+                                                                              Uint8List(0),
+                                                                          // thumbnailData ??
+                                                                          //     Uint8List(0),
+                                                                          width:
+                                                                              _width,
+                                                                          fit: BoxFit
+                                                                              .cover,
                                                                         ),
+                                                                      ),
+                                                                    )
+                                                                    // : GFLoader(
+                                                                    //     type:
+                                                                    //         GFLoaderType.ios),
+                                                                    // Container(
+
+                                                                    //   child:
+                                                                    //       Padding(
+                                                                    //     padding:
+                                                                    //         const EdgeInsets.only(right: 10),
+                                                                    //     child:
+                                                                    //         VideoListItem(
+                                                                    //       videoUrl:
+                                                                    //           videoUrls.first,
+                                                                    //     ),
+                                                                    //   ),
+                                                                    // ),
+                                                                  ],
+                                                                )
+                                                              : GetAllPostData
+                                                                          ?.object?[
+                                                                              index]
+                                                                          .postDataType ==
+                                                                      "ATTACHMENT"
+                                                                  ? Container(
+                                                                      margin:
+                                                                          EdgeInsets.all(
+                                                                              0.0),
+                                                                      decoration:
+                                                                          BoxDecoration(borderRadius: BorderRadius.circular(20)), // Remove margin
+
+                                                                      child: DocumentViewScreen1(
+                                                                        path: GetAllPostData
+                                                                            ?.object?[index]
+                                                                            .postData
+                                                                            ?.first,
                                                                       ))
-                                                                  : SizedBox(),
+                                                                  : GetAllPostData?.object?[index].postDataType == null
+                                                                      ? Container(
+                                                                          margin: EdgeInsets.all(0.0),
+                                                                          decoration: BoxDecoration(border: Border.all(color: Color(0xffF0F0F0)), borderRadius: BorderRadius.circular(20)),
+                                                                          child: Padding(
+                                                                            padding: const EdgeInsets.only(
+                                                                                top: 15,
+                                                                                left: 8,
+                                                                                right: 10),
+                                                                            child:
+                                                                                Text(
+                                                                              '${GetAllPostData?.object?[index].description}',
+                                                                              style: TextStyle(color: Colors.black, fontSize: 16),
+                                                                            ),
+                                                                          ))
+                                                                      : SizedBox(),
                                                 ),
                                               ),
                                             );
@@ -2502,207 +2608,206 @@ class _ProfileScreenState extends State<ProfileScreen>
                 (index) {
               parsedDateTimeBlogs = DateTime.parse(
                   '${saveAllBlogModelData?.object?[index].createdAt ?? ""}');
-              return Container(
-                margin: EdgeInsets.only(bottom: 10),
-                height: 155,
-                decoration: BoxDecoration(
-                    // color: Colors.amber,
+              return GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => RecentBlogScren(
+                            description1: saveAllBlogModelData
+                                    ?.object?[index].description
+                                    .toString() ??
+                                "",
+                            title: saveAllBlogModelData?.object?[index].title
+                                    .toString() ??
+                                "",
+                            imageURL: saveAllBlogModelData?.object?[index].image
+                                    .toString() ??
+                                "",
+                            ProfileScreenMove: true,
+                            index: index,
+                            saveAllBlogModelData: saveAllBlogModelData),
+                      )).then((value) => getAllAPI_Data());
+                },
+                child: Container(
+                  margin: EdgeInsets.only(bottom: 10),
+                  height: 155,
+                  decoration: BoxDecoration(
+                      // color: Colors.amber,
 
-                    borderRadius: BorderRadius.circular(20),
-                    border: Border.all(color: Color(0xffF1F1F1))),
-                child: GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => RecentBlogScren(
-                                description1: saveAllBlogModelData
-                                        ?.object?[index].description
-                                        .toString() ??
-                                    "",
-                                title: saveAllBlogModelData
-                                        ?.object?[index].title
-                                        .toString() ??
-                                    "",
-                                imageURL: saveAllBlogModelData
-                                        ?.object?[index].image
-                                        .toString() ??
-                                    "",
-                                ProfileScreenMove: true,
-                                index: index,
-                                saveAllBlogModelData: saveAllBlogModelData),
-                          )).then((value) => getAllAPI_Data());
-                    },
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(left: 10, top: 10),
-                          child: Container(
-                            width: 135,
-                            height: 135,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            child: CustomImageView(
-                              url:
-                                  "${saveAllBlogModelData?.object?[index].image}",
-                              fit: BoxFit.fill,
-                            ),
+                      borderRadius: BorderRadius.circular(20),
+                      border: Border.all(color: Color(0xffF1F1F1))),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(left: 10, top: 10),
+                        child: Container(
+                          width: 135,
+                          height: 135,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: CustomImageView(
+                            url:
+                                "${saveAllBlogModelData?.object?[index].image}",
+                            fit: BoxFit.fill,
                           ),
                         ),
-                        Container(
-                          width: MediaQuery.of(context).size.width - 187,
-                          // color: Colors.blue,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              SizedBox(
-                                height: 15,
+                      ),
+                      Container(
+                        width: MediaQuery.of(context).size.width - 187,
+                        // color: Colors.blue,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SizedBox(
+                              height: 15,
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 20),
+                              child: Text(
+                                "${saveAllBlogModelData?.object?[index].title}",
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.black),
                               ),
-                              Padding(
-                                padding: const EdgeInsets.only(left: 20),
-                                child: Text(
-                                  "${saveAllBlogModelData?.object?[index].title}",
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.w600,
-                                      color: Colors.black),
-                                ),
+                            ),
+                            SizedBox(
+                              height: 5,
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 20),
+                              child: Text(
+                                "${saveAllBlogModelData?.object?[index].description}",
+                                maxLines: 3,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.grey),
                               ),
-                              SizedBox(
-                                height: 5,
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(left: 20),
-                                child: Text(
-                                  "${saveAllBlogModelData?.object?[index].description}",
-                                  maxLines: 3,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w600,
-                                      color: Colors.grey),
-                                ),
-                              ),
-                              Spacer(),
-                              Padding(
-                                padding: const EdgeInsets.only(
-                                    left: 20, right: 10, bottom: 10),
-                                child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    crossAxisAlignment: CrossAxisAlignment.end,
-                                    children: [
-                                      Text(
-                                        customFormat(parsedDateTimeBlogs!),
-                                        style: TextStyle(
-                                            fontSize: 9.5,
-                                            fontWeight: FontWeight.w400,
-                                            color: Colors.grey),
-                                      ),
-                                      // Text(
-                                      //   "10:47 pm",
-                                      //   style: TextStyle(
-                                      //       fontSize: 9.5,
-                                      //       fontWeight: FontWeight.w400,
-                                      //       color: Colors.grey),
-                                      // ),
+                            ),
+                            Spacer(),
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                  left: 20, right: 10, bottom: 10),
+                              child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: [
+                                    Text(
+                                      customFormat(parsedDateTimeBlogs!),
+                                      style: TextStyle(
+                                          fontSize: 9.5,
+                                          fontWeight: FontWeight.w400,
+                                          color: Colors.grey),
+                                    ),
+                                    // Text(
+                                    //   "10:47 pm",
+                                    //   style: TextStyle(
+                                    //       fontSize: 9.5,
+                                    //       fontWeight: FontWeight.w400,
+                                    //       color: Colors.grey),
+                                    // ),
 
-                                      Text(
-                                        " ",
-                                        style: TextStyle(
-                                            fontSize: 9.5,
-                                            fontWeight: FontWeight.w400,
-                                            color: Colors.grey),
-                                      ),
-                                      Spacer(),
-                                      // GestureDetector(
-                                      //   onTap: () {
-                                      //     print("click on Blog like button");
+                                    Text(
+                                      " ",
+                                      style: TextStyle(
+                                          fontSize: 9.5,
+                                          fontWeight: FontWeight.w400,
+                                          color: Colors.grey),
+                                    ),
+                                    Spacer(),
+                                    // GestureDetector(
+                                    //   onTap: () {
+                                    //     print("click on Blog like button");
 
-                                      //     BlocProvider.of<NewProfileSCubit>(
-                                      //             context)
-                                      //         .ProfileLikeBlog(
-                                      //             context,
-                                      //             "${User_ID}",
-                                      //             "${saveAllBlogModelData?.object?[index].uid}");
-                                      //     if (saveAllBlogModelData
-                                      //             ?.object?[index].isLiked ==
-                                      //         false) {
-                                      //       saveAllBlogModelData
-                                      //           ?.object?[index].isLiked = true;
-                                      //     } else {
-                                      //       saveAllBlogModelData?.object?[index]
-                                      //           .isLiked = false;
-                                      //     }
-                                      //   },
-                                      //   child: saveAllBlogModelData
-                                      //               ?.object?[index].isLiked ==
-                                      //           false
-                                      //       ? Icon(Icons.favorite_border)
-                                      //       : Icon(
-                                      //           Icons.favorite,
-                                      //           color: Colors.red,
-                                      //         ),
-                                      // ),
-                                      // SizedBox(
-                                      //   width: 10,
-                                      // ),
-                                      // GestureDetector(
-                                      //     onTap: () {
-                                      //       print("Unsave Button");
+                                    //     BlocProvider.of<NewProfileSCubit>(
+                                    //             context)
+                                    //         .ProfileLikeBlog(
+                                    //             context,
+                                    //             "${User_ID}",
+                                    //             "${saveAllBlogModelData?.object?[index].uid}");
+                                    //     if (saveAllBlogModelData
+                                    //             ?.object?[index].isLiked ==
+                                    //         false) {
+                                    //       saveAllBlogModelData
+                                    //           ?.object?[index].isLiked = true;
+                                    //     } else {
+                                    //       saveAllBlogModelData?.object?[index]
+                                    //           .isLiked = false;
+                                    //     }
+                                    //   },
+                                    //   child: saveAllBlogModelData
+                                    //               ?.object?[index].isLiked ==
+                                    //           false
+                                    //       ? Icon(Icons.favorite_border)
+                                    //       : Icon(
+                                    //           Icons.favorite,
+                                    //           color: Colors.red,
+                                    //         ),
+                                    // ),
+                                    // SizedBox(
+                                    //   width: 10,
+                                    // ),
+                                    // GestureDetector(
+                                    //     onTap: () {
+                                    //       print("Unsave Button");
 
-                                      //       BlocProvider.of<NewProfileSCubit>(
-                                      //               context)
-                                      //           .ProfileSaveBlog(
-                                      //               context,
-                                      //               "${User_ID}",
-                                      //               "${saveAllBlogModelData?.object?[index].uid}");
+                                    //       BlocProvider.of<NewProfileSCubit>(
+                                    //               context)
+                                    //           .ProfileSaveBlog(
+                                    //               context,
+                                    //               "${User_ID}",
+                                    //               "${saveAllBlogModelData?.object?[index].uid}");
 
-                                      //       if (saveAllBlogModelData
-                                      //               ?.object?[index].isSaved ==
-                                      //           true) {
-                                      //         saveAllBlogModelData?.object
-                                      //             ?.removeAt(index);
-                                      //         setState(() {
-                                      //           SaveBlogCount =
-                                      //               saveAllBlogModelData
-                                      //                       ?.object?.length ??
-                                      //                   0;
-                                      //         });
-                                      //       }
-                                      //     },
-                                      //     child: Container(
-                                      //       height: 25,
-                                      //       width: 25,
-                                      //       decoration: BoxDecoration(
-                                      //           borderRadius:
-                                      //               BorderRadius.circular(5),
-                                      //           color: Colors.white),
-                                      //       child: Center(
-                                      //           child: Padding(
-                                      //         padding:
-                                      //             const EdgeInsets.all(5.0),
-                                      //         child: Image.asset(
-                                      //           saveAllBlogModelData
-                                      //                       ?.object?[index]
-                                      //                       .isSaved ==
-                                      //                   false
-                                      //               ? ImageConstant.savePin
-                                      //               : ImageConstant.Savefill,
-                                      //           width: 12.5,
-                                      //         ),
-                                      //       )),
-                                      //     )),
-                                    ]),
-                              ),
-                            ],
-                          ),
-                        )
-                      ],
-                    )),
+                                    //       if (saveAllBlogModelData
+                                    //               ?.object?[index].isSaved ==
+                                    //           true) {
+                                    //         saveAllBlogModelData?.object
+                                    //             ?.removeAt(index);
+                                    //         setState(() {
+                                    //           SaveBlogCount =
+                                    //               saveAllBlogModelData
+                                    //                       ?.object?.length ??
+                                    //                   0;
+                                    //         });
+                                    //       }
+                                    //     },
+                                    //     child: Container(
+                                    //       height: 25,
+                                    //       width: 25,
+                                    //       decoration: BoxDecoration(
+                                    //           borderRadius:
+                                    //               BorderRadius.circular(5),
+                                    //           color: Colors.white),
+                                    //       child: Center(
+                                    //           child: Padding(
+                                    //         padding:
+                                    //             const EdgeInsets.all(5.0),
+                                    //         child: Image.asset(
+                                    //           saveAllBlogModelData
+                                    //                       ?.object?[index]
+                                    //                       .isSaved ==
+                                    //                   false
+                                    //               ? ImageConstant.savePin
+                                    //               : ImageConstant.Savefill,
+                                    //           width: 12.5,
+                                    //         ),
+                                    //       )),
+                                    //     )),
+                                  ]),
+                            ),
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+                ),
               );
             })),
       );
@@ -3323,6 +3428,9 @@ class _ProfileScreenState extends State<ProfileScreen>
               ),
             );
           },
+        ),
+        SizedBox(
+          height: 10,
         )
       ],
     );
@@ -3525,22 +3633,24 @@ class _ProfileScreenState extends State<ProfileScreen>
                 ),
                 Row(
                   children: [
-                    Container(
-                        height: 50,
-                        width: _width - 175,
-                        decoration: BoxDecoration(
-                            color: Color(0XFFF6F6F6),
-                            borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(5),
-                                bottomLeft: Radius.circular(5))),
-                        child: Padding(
-                          padding: const EdgeInsets.only(top: 15, left: 10),
-                          child: Text(
-                            '${dopcument.toString().split('/').last}',
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(fontSize: 16),
-                          ),
-                        )),
+                    Expanded(
+                      child: Container(
+                          height: 50,
+                          // width: _width - 175,
+                          decoration: BoxDecoration(
+                              color: Color(0XFFF6F6F6),
+                              borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(5),
+                                  bottomLeft: Radius.circular(5))),
+                          child: Padding(
+                            padding: const EdgeInsets.only(top: 15, left: 10),
+                            child: Text(
+                              '${dopcument.toString().split('/').last}',
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(fontSize: 16),
+                            ),
+                          )),
+                    ),
                     dopcument == "Upload Image"
                         ? GestureDetector(
                             onTap: () async {
@@ -3550,7 +3660,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                             },
                             child: Container(
                               height: 50,
-                              width: _width / 4.5,
+                              // width: _width / 4.5,
                               decoration: BoxDecoration(
                                   color: Color(0XFF777777),
                                   borderRadius: BorderRadius.only(
@@ -3576,7 +3686,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                               // setState(() {});
                               print("dfsdfgsdfgdfg-${dopcument}");
                               Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => DocumentViewScreen(
+                                  builder: (context) => DocumentViewScreen1(
                                         path: NewProfileData
                                             ?.object?.userDocument,
                                         title: 'Pdf',

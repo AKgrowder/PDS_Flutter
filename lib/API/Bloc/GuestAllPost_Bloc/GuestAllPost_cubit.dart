@@ -387,4 +387,67 @@ class GetGuestAllPostCubit extends Cubit<GetGuestAllPostState> {
       emit(GetGuestAllPostErrorState(userTagData));
     }
   }
+
+
+   Future<void> AutoEnterinRoom(
+    BuildContext context,
+    String RoomID
+  ) async {
+    dynamic AutoEnterRoom;
+    try {
+      emit(GetGuestAllPostLoadingState());
+      AutoEnterRoom = await Repository().AutoEnterinAPI(context,RoomID);
+      if (AutoEnterRoom == "Something Went Wrong, Try After Some Time.") {
+        emit(GetGuestAllPostErrorState("${AutoEnterRoom}"));
+      } else {
+      if (AutoEnterRoom.success == true) {
+        emit(AutoEnterinLoadedState(AutoEnterRoom));
+      } else {
+        emit(GetGuestAllPostErrorState(AutoEnterRoom.message));
+      }}
+    } catch (e) {
+      emit(GetGuestAllPostErrorState(AutoEnterRoom));
+    }
+  }
+  
+
+    Future<void> SharePost(
+    BuildContext context,
+    String postLink
+  ) async {
+    dynamic AutoEnterRoom;
+    try {
+      emit(GetGuestAllPostLoadingState());
+      AutoEnterRoom = await Repository().AutoOpenPostAPI(context,postLink);
+      if (AutoEnterRoom == "Something Went Wrong, Try After Some Time.") {
+        emit(GetGuestAllPostErrorState("${AutoEnterRoom}"));
+      } else {
+      if (AutoEnterRoom.success == true) {
+        emit(OpenSharePostLoadedState(AutoEnterRoom));
+      } else {
+        emit(GetGuestAllPostErrorState(AutoEnterRoom.message));
+      }}
+    } catch (e) {
+      emit(GetGuestAllPostErrorState(AutoEnterRoom));
+    }
+  }
+
+    Future<void> getAllNoticationsCountAPI(BuildContext context) async {
+    dynamic acceptRejectInvitationModel;
+    try {
+      emit(GetGuestAllPostLoadingState());
+      acceptRejectInvitationModel =
+          await Repository().getAllNoticationsCountAPI(context);
+      if (acceptRejectInvitationModel ==
+          "Something Went Wrong, Try After Some Time.") {
+        emit(GetGuestAllPostErrorState("${acceptRejectInvitationModel}"));
+      } else {
+        if (acceptRejectInvitationModel.success == true) {
+          emit(GetNotificationCountLoadedState(acceptRejectInvitationModel));
+        }
+      }
+    } catch (e) {
+      emit(GetGuestAllPostErrorState(acceptRejectInvitationModel));
+    }
+  }
 }

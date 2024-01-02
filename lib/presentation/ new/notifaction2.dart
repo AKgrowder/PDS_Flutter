@@ -15,6 +15,8 @@ import 'package:pds/presentation/%20new/newbottembar.dart';
 import 'package:pds/presentation/%20new/profileNew.dart';
 import 'package:pds/presentation/room_members/room_members_screen.dart';
 import 'package:pds/widgets/custom_image_view.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:pds/core/utils/sharedPreferences.dart';
 
 import '../rooms/room_details_screen.dart';
 
@@ -41,6 +43,7 @@ class _NewNotifactionScreenState extends State<NewNotifactionScreen>
     BlocProvider.of<InvitationCubit>(context).AllNotification(context);
     BlocProvider.of<InvitationCubit>(context).RequestListAPI(context);
     BlocProvider.of<InvitationCubit>(context).InvitationAPI(context);
+    BlocProvider.of<InvitationCubit>(context).getAllNoticationsCountAPI(context);
     super.initState();
   }
 
@@ -75,6 +78,12 @@ class _NewNotifactionScreenState extends State<NewNotifactionScreen>
               ScaffoldMessenger.of(context).showSnackBar(snackBar);
             }
           }
+           if (state is GetNotificationCountLoadedState) {
+                print(state.GetNotificationCountData.object);
+                saveNotificationCount(
+                    state.GetNotificationCountData.object ?? 0);
+              }
+
           if (state is GetAllNotificationLoadedState) {
             NotificationCount = 0;
             AllNotificationData = state.AllNotificationData;
@@ -179,7 +188,7 @@ class _NewNotifactionScreenState extends State<NewNotifactionScreen>
                                       ? SizedBox()
                                       : Container(
                                           child: Text(
-                                         '${AllNotificationData?.object?.length?? ""}',
+                                            '${NotificationCount}',
                                             style: TextStyle(
                                                 overflow: TextOverflow.ellipsis,
                                                 fontFamily: "outfit",
@@ -313,6 +322,11 @@ class _NewNotifactionScreenState extends State<NewNotifactionScreen>
       ),
     );
   }
+  
+   saveNotificationCount(int NotificationCount) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setInt(PreferencesKey.NotificationCount, NotificationCount);
+  }
 }
 
 class AllNotificationClass extends StatefulWidget {
@@ -323,7 +337,7 @@ class AllNotificationClass extends StatefulWidget {
 }
 
 class _AllNotificationClassState extends State<AllNotificationClass> {
-   String getTimeDifference(DateTime dateTime) {
+  String getTimeDifference(DateTime dateTime) {
     final difference = DateTime.now().difference(dateTime);
     if (difference.inDays > 0) {
       if (difference.inDays == 1) {
@@ -350,6 +364,7 @@ class _AllNotificationClassState extends State<AllNotificationClass> {
       return 'Just now';
     }
   }
+
   @override
   void initState() {
     BlocProvider.of<InvitationCubit>(context).AllNotification(context);
@@ -456,9 +471,7 @@ class _AllNotificationClassState extends State<AllNotificationClass> {
                                                     "DELETE_ROOM" ||
                                                 AllNotificationData?.object?[index].subject ==
                                                     "EXPERT_ACCEРТ_INVITE" ||
-                                                AllNotificationData
-                                                        ?.object?[index]
-                                                        .subject ==
+                                                AllNotificationData?.object?[index].subject ==
                                                     "EXPERT_REJECT_INVITE"
                                             ? print(
                                                 "Notification Seen  EXPERT_LEFT_ROOM & MEMBER_LEFT_ROOM & DELETE_ROOM & EXPERT_ACCEРТ_INVITE & EXPERT_REJECT_INVITE")
@@ -495,23 +508,17 @@ class _AllNotificationClassState extends State<AllNotificationClass> {
                                                                 )),
                                                       )
                                                     // print("opne Save Image screen LIKE_POST & COMMENT_POST & TAG_COMMENT_POST")
-                                                    : AllNotificationData?.object?[index].subject ==
-                                                                "FOLLOW_PUBLIC_ACCOUNT" ||
+                                                    : AllNotificationData?.object?[index].subject == "FOLLOW_PUBLIC_ACCOUNT" ||
                                                             AllNotificationData?.object?[index].subject ==
                                                                 "FOLLOW_PRIVATE_ACCOUNT_REQUEST" ||
+                                                            AllNotificationData?.object?[index].subject ==
+                                                                "FOLLOW_REQUEST_ACCEPTED" ||
+                                                            AllNotificationData?.object?[index].subject ==
+                                                                "PROFILE_APPROVED" ||
                                                             AllNotificationData
                                                                     ?.object?[index]
                                                                     .subject ==
-                                                                "FOLLOW_REQUEST_ACCEPTED" || AllNotificationData
-                                                                    ?.object?[index]
-                                                                    .subject ==
-                                                                "PROFILE_APPROVED" || AllNotificationData
-                                                                    ?.object?[index]
-                                                                    .subject ==
                                                                 "PROFILE_REJECTED"
-
-
-                                                                
                                                         ? Navigator.push(context, MaterialPageRoute(builder: (context) {
                                                             return ProfileScreen(
                                                                 User_ID:
@@ -577,6 +584,8 @@ class _AllNotificationClassState extends State<AllNotificationClass> {
                                 BlocProvider.of<InvitationCubit>(context)
                                     .SeenNotification(context,
                                         "${AllNotificationData?.object?[index].postNotificationUid}");
+    BlocProvider.of<InvitationCubit>(context).getAllNoticationsCountAPI(context);
+
                               },
                               child: Container(
                                 // height: 90,
@@ -635,7 +644,10 @@ class _AllNotificationClassState extends State<AllNotificationClass> {
                                           child: Container(
                                             height: 60,
                                             width: 60,
-                                            child: AllNotificationData?.object?[index].subject == "TAG_POST" ||
+                                            child: AllNotificationData
+                                                            ?.object?[index]
+                                                            .subject ==
+                                                        "TAG_POST" ||
                                                     AllNotificationData
                                                             ?.object?[index]
                                                             .subject ==
@@ -643,13 +655,15 @@ class _AllNotificationClassState extends State<AllNotificationClass> {
                                                     AllNotificationData
                                                             ?.object?[index]
                                                             .subject ==
-                                                        "INVITE_ROOM" || AllNotificationData
-                                                                    ?.object?[index]
-                                                                    .subject ==
-                                                                "PROFILE_APPROVED" || AllNotificationData
-                                                                    ?.object?[index]
-                                                                    .subject ==
-                                                                "PROFILE_REJECTED"
+                                                        "INVITE_ROOM" ||
+                                                    AllNotificationData
+                                                            ?.object?[index]
+                                                            .subject ==
+                                                        "PROFILE_APPROVED" ||
+                                                    AllNotificationData
+                                                            ?.object?[index]
+                                                            .subject ==
+                                                        "PROFILE_REJECTED"
                                                 ? Image.asset(ImageConstant
                                                     .InviteAcceptepLogo)
                                                 : AllNotificationData
@@ -664,12 +678,8 @@ class _AllNotificationClassState extends State<AllNotificationClass> {
                                                                 ?.object?[index]
                                                                 .subject ==
                                                             "DELETE_ROOM"
-                                                    ? Image.asset(ImageConstant
-                                                        .RoomDeleteLogo)
-                                                    : AllNotificationData
-                                                                ?.object?[index]
-                                                                .subject ==
-                                                            "EXPERT_REJECT_INVITE"
+                                                    ? Image.asset(ImageConstant.RoomDeleteLogo)
+                                                    : AllNotificationData?.object?[index].subject == "EXPERT_REJECT_INVITE"
                                                         ? Image.asset(ImageConstant.Invite_Rejected)
                                                         : AllNotificationData?.object?[index].subject == "LIKE_POST"
                                                             ? Image.asset(ImageConstant.Like_Post)
@@ -677,7 +687,7 @@ class _AllNotificationClassState extends State<AllNotificationClass> {
                                                                 ? Image.asset(ImageConstant.Comment_Post)
                                                                 : AllNotificationData?.object?[index].subject == "TAG_COMMENT_POST"
                                                                     ? Image.asset(ImageConstant.Tag_Comment_Post)
-                                                                    : AllNotificationData?.object?[index].subject == "EXPERT_ACCEРТ_INVITE"
+                                                                    : AllNotificationData?.object?[index].subject == "EXPERT_ACCEРТ_INVITE" || AllNotificationData?.object?[index].subject == "INVITE_EXPERT_ROOM"
                                                                         ? Image.asset(ImageConstant.Expert_Accept_Invite)
                                                                         : AllNotificationData?.object?[index].subject == "EXPERT_REJECT_INVITE"
                                                                             ? Image.asset(ImageConstant.Expert_Reject_Invite)
@@ -729,7 +739,7 @@ class _AllNotificationClassState extends State<AllNotificationClass> {
                                         ),
                                       ],
                                     ),
-                                   Padding(
+                                    Padding(
                                         padding: const EdgeInsets.only(
                                             top: 5, bottom: 5, right: 2),
                                         child: Align(
@@ -739,7 +749,8 @@ class _AllNotificationClassState extends State<AllNotificationClass> {
                                             // width: 130,
                                             // color: Colors.red,
                                             child: Text(
-                                              getTimeDifference(parsedDateTime!),
+                                              getTimeDifference(
+                                                  parsedDateTime!),
                                               style: TextStyle(
                                                 fontSize: 12,
                                                 fontFamily: "outfit",

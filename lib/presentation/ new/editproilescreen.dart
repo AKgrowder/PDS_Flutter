@@ -51,6 +51,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   List<IndustryType> selectedIndustryTypes3 = [];
 
   String? dopcument;
+  String? dopcumentNameUpdate;
+
   var crop;
   File? _image;
   File? _image1;
@@ -936,7 +938,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     }
   }
 
-  companyUserData() {
+  companyUserData() async   {
     if (jobProfile.text == null || jobProfile.text == '') {
       SnackBar snackBar = SnackBar(
         content: Text('Please Enter Job profile '),
@@ -1005,6 +1007,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         params['document'] =
             widget.newProfileData?.object?.userDocument?.toString();
       }
+      params['documentName'] = dopcumentNameUpdate;
       print("userProfiePicture---${chooseDocumentuploded?.object.toString()}");
       print("userBackgroundPic---${chooseDocumentuploded1?.object.toString()}");
       if (chooseDocumentuploded1?.object.toString() != null &&
@@ -1025,8 +1028,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       } else {
         print("else dataPassing condiosn");
       }
+      print(
+          "${dopcumentNameUpdate} :- 1 555555555555555555555555555555555555555555555555555555");
+
+      print("RonakRonakRonakRonakRonakRonakRonakRonakRonakRonak");
       print(params);
-      BlocProvider.of<MyAccountCubit>(context).cretaForumUpdate(
+     await BlocProvider.of<MyAccountCubit>(context).cretaForumUpdate(
         params,
         context,
       );
@@ -1095,7 +1102,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       print("userBackgroundPic");
 
       print(chooseDocumentuploded1?.object);
-
+      print(
+          "${dopcumentNameUpdate} :- 2 555555555555555555555555555555555555555555555555555555");
       if (chooseDocumentuploded?.object.toString() != null &&
           chooseDocumentuploded1?.object.toString() != null) {
         print("both condison");
@@ -1114,7 +1122,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           "userBackgroundPic": chooseDocumentuploded1?.object.toString(),
           //  "userName":"AnkurTestTest17",
           "uid": User_ID,
-          "name": nameController.text
+          "name": nameController.text,
+          "documentName": dopcumentNameUpdate
         };
 
         if (removeProfilePic == true) {
@@ -1131,6 +1140,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             .addExpertProfile(params, context);
       } else if (chooseDocumentuploded?.object.toString() != null) {
         // "userProfilePic": chooseDocumentuploded?.object.toString(),
+        print(
+            "${dopcumentNameUpdate} :- 3 555555555555555555555555555555555555555555555555555555");
+
         var params = {
           "document": chooseDocumentuploded2?.object != null
               ? chooseDocumentuploded2?.object.toString()
@@ -1149,7 +1161,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   : null,
           //  "userName":"AnkurTestTest17",
           "uid": User_ID,
-          "name": nameController.text
+          "name": nameController.text, "documentName": dopcumentNameUpdate
         };
         if (removeProfilePic == true) {
           params['userProfilePic'] = "";
@@ -1165,6 +1177,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             .addExpertProfile(params, context);
       } else if (chooseDocumentuploded1?.object.toString() != null) {
         print("userBackgroundPic condiosn working");
+        print(
+            "${dopcumentNameUpdate} :- 4 555555555555555555555555555555555555555555555555555555");
 
         var params = {
           "document": chooseDocumentuploded2?.object != null
@@ -1185,6 +1199,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           "name": nameController.text,
           "email": emailController.text,
           "uid": User_ID,
+          "documentName": dopcumentNameUpdate
         };
         if (removeProfilePic == true) {
           params['userProfilePic'] = "";
@@ -1199,6 +1214,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             .addExpertProfile(params, context);
       } else {
         print("else working on");
+        print(
+            "${dopcumentNameUpdate} :- 5 555555555555555555555555555555555555555555555555555555");
+
         var params = {
           "userProfilePic":
               // widget.newProfileData?.object?.userProfilePic != null
@@ -1222,6 +1240,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           "name": nameController.text,
           "email": emailController.text,
           "uid": User_ID,
+          "documentName": dopcumentNameUpdate
         };
         if (removeProfilePic == true) {
           params['userProfilePic'] = "";
@@ -1540,22 +1559,33 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Container(
-                  height: 50,
-                  width: _width / 1.6,
-                  decoration: BoxDecoration(
-                      color: Color(0XFFF6F6F6),
-                      borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(5),
-                          bottomLeft: Radius.circular(5))),
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 15, left: 20),
-                    child: Text(
-                      '${dopcument}',
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(fontSize: 16),
-                    ),
-                  )),
+              GestureDetector(
+                onTap: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => DocumentViewScreen(
+                            path: /* widget.newProfileData?.object?.documentName */
+                                '${widget.newProfileData?.object?.userDocument}',
+                            title: 'Pdf',
+                          )));
+                },
+                child: Container(
+                    height: 50,
+                    width: _width / 1.6,
+                    decoration: BoxDecoration(
+                        color: Color(0XFFF6F6F6),
+                        borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(5),
+                            bottomLeft: Radius.circular(5))),
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 15, left: 20),
+                      child: Text(
+                        // main Display Name
+                        '${dopcument}',
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(fontSize: 16),
+                      ),
+                    )),
+              ),
               dopcument == "Upload Document"
                   ? GestureDetector(
                       onTap: () async {
@@ -1571,13 +1601,16 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                 topRight: Radius.circular(5),
                                 bottomRight: Radius.circular(5))),
                         child: Center(
-                          child: Text(
-                            "Choose",
-                            style: TextStyle(
-                              fontFamily: 'outfit',
-                              fontSize: 15,
-                              color: Colors.white,
-                              fontWeight: FontWeight.w500,
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              "Choose",
+                              style: TextStyle(
+                                fontFamily: 'outfit',
+                                fontSize: 15,
+                                color: Colors.white,
+                                fontWeight: FontWeight.w500,
+                              ),
                             ),
                           ),
                         ),
@@ -2017,7 +2050,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   getFileSize(String filepath, int decimals, PlatformFile file1, int Index,
       context) async {
-        CroppedFile? croppedFile;
+    CroppedFile? croppedFile;
     var file = File(filepath);
     int bytes = await file.length();
     if (bytes <= 0) return "0 B";
@@ -2029,7 +2062,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     value2 = double.parse(STR);
     // if(file1.path?.split('/').last.split('.').last.)
     if (file1.path?.split('/').last.split('.').last != 'pdf') {
-       croppedFile = await ImageCropper().cropImage(
+      croppedFile = await ImageCropper().cropImage(
         sourcePath: file.path.toString(),
         aspectRatioPresets: [
           CropAspectRatioPreset.square,
@@ -2066,6 +2099,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               setState(() {
                 uplopdfile.text = file1.name;
                 dopcument = file1.name;
+                dopcumentNameUpdate = dopcument;
                 crop = file1.path;
               });
             }
@@ -2084,6 +2118,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               setState(() {
                 uplopdfile.text = file1.name;
                 dopcument = file1.name;
+                dopcumentNameUpdate = dopcument;
               });
             }
             print('filenamecheckdocmenut-${dopcument}');
@@ -2133,6 +2168,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               setState(() {
                 uplopdfile.text = file1.name;
                 dopcument = file1.name;
+                dopcumentNameUpdate = dopcument;
               });
               break;
 
@@ -2143,6 +2179,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           setState(() {
             uplopdfile.text = file1.name;
             dopcument = file1.name;
+            dopcumentNameUpdate = dopcument;
           });
           BlocProvider.of<MyAccountCubit>(context).chooseDocumentprofile(
               dopcument.toString(),

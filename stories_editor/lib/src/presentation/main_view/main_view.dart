@@ -22,6 +22,7 @@ import 'package:stories_editor/src/presentation/bar_tools/bottom_tools.dart';
 import 'package:stories_editor/src/presentation/bar_tools/top_tools.dart';
 import 'package:stories_editor/src/presentation/draggable_items/delete_item.dart';
 import 'package:stories_editor/src/presentation/draggable_items/draggable_widget.dart';
+import 'package:stories_editor/src/presentation/main_view/trimervideo.dart';
 import 'package:stories_editor/src/presentation/painting_view/painting.dart';
 import 'package:stories_editor/src/presentation/painting_view/widgets/sketcher.dart';
 import 'package:stories_editor/src/presentation/text_editor_view/TextEditor.dart';
@@ -30,6 +31,7 @@ import 'package:stories_editor/src/presentation/utils/modal_sheets.dart';
 import 'package:stories_editor/src/presentation/widgets/animated_onTap_button.dart';
 import 'package:stories_editor/src/presentation/widgets/scrollable_pageView.dart';
 import 'package:video_player/video_player.dart';
+// import 'package:video_trimmer/video_trimmer.dart';
 
 class MainView extends StatefulWidget {
   /// editor custom font families
@@ -102,11 +104,13 @@ class _MainViewState extends State<MainView> {
   double _currentScale = 1;
   double _currentRotation = 0;
   double value2 = 0.0;
+  // Initialize your trimmer instance
 
   /// delete position
   bool _isDeletePosition = false;
   bool _inAction = false;
   bool nodatainTextfiled = false;
+  Duration? duration;
 
   @override
   void initState() {
@@ -211,7 +215,7 @@ class _MainViewState extends State<MainView> {
                                           alignment: Alignment.center,
                                           children: [
                                             /// in this case photo view works as a main background container to manage
-                                            /// the gestures of all movable items.
+                                            /*    /// the gestures of all movable items.
                                             controlNotifier.mediaPath
                                                         .endsWith('.mp4') &&
                                                     _controller!
@@ -222,13 +226,14 @@ class _MainViewState extends State<MainView> {
                                                     child: VideoPlayer(
                                                         _controller!),
                                                   )
-                                                : PhotoView.customChild(
-                                                    child: Container(),
-                                                    backgroundDecoration:
-                                                        const BoxDecoration(
-                                                            color: Colors
-                                                                .transparent),
-                                                  ),
+                                                : */
+                                            PhotoView.customChild(
+                                              child: Container(),
+                                              backgroundDecoration:
+                                                  const BoxDecoration(
+                                                      color:
+                                                          Colors.transparent),
+                                            ),
 
                                             ///list items
                                             ...itemProvider.draggableWidget
@@ -401,6 +406,7 @@ class _MainViewState extends State<MainView> {
                             .split('.')
                             .last ==
                         'mp4') {
+                      print('this is the Get');
                       getVideo(path.first.path.toString(), 1, context,
                           controlNotifier, itemProvider);
                     } else {
@@ -417,9 +423,18 @@ class _MainViewState extends State<MainView> {
                       alignment: Alignment.bottomRight,
                       child: AnimatedOnTapButton(
                         onTap: () {
-                          scrollProvider.pageController.animateToPage(0,
-                              duration: const Duration(milliseconds: 300),
-                              curve: Curves.easeIn);
+                          if (controlNotifier.mediaPath.endsWith('.mp4')) {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => VideoEditor(
+                                          file: File(controlNotifier.mediaPath),
+                                        )));
+                          } else {
+                            scrollProvider.pageController.animateToPage(0,
+                                duration: const Duration(milliseconds: 300),
+                                curve: Curves.easeIn);
+                          }
                         },
                         child: Container(
                           padding: const EdgeInsets.symmetric(
@@ -451,7 +466,12 @@ class _MainViewState extends State<MainView> {
     );
   }
 
+  String _formatDuration(Duration duration) {
+    return duration.toString().split('.').first;
+  }
+
   getVideo(
+      // this is the me ankur is working
       String filepath,
       int decimals,
       context,
@@ -466,6 +486,7 @@ class _MainViewState extends State<MainView> {
     value2 = double.parse(STR);
     print("viedo check-${widget.finalvideoSize}");
     print(value2);
+
     switch (i) {
       case 0:
         print("Done file size B");
@@ -477,13 +498,18 @@ class _MainViewState extends State<MainView> {
               ..position = const Offset(0.0, 0));
         _controller =
             VideoPlayerController.file(File(controlNotifier.mediaPath));
+        /*  _controller =
+            VideoPlayerController.file(File(controlNotifier.mediaPath));
 
-        _controller?.initialize().then((value) => setState(() {}));
+        _controller?.initialize().then((value) => setState(() {
+              duration = _controller!.value.duration;
+              print("check duration -${duration}");
+            }));
         setState(() {
           _controller?.play();
           _controller?.setLooping(true);
         });
-
+ */
         break;
       case 1:
         print("Done file size KB");
@@ -496,12 +522,19 @@ class _MainViewState extends State<MainView> {
               ..position = const Offset(0.0, 0));
         _controller =
             VideoPlayerController.file(File(controlNotifier.mediaPath));
+        /* 
 
-        _controller?.initialize().then((value) => setState(() {}));
+        _controller?.initialize().then((value) => setState(() {
+              duration = _controller!.value.duration;
+              print("check duration -${duration}");
+            }));
+
         setState(() {
           _controller?.play();
           _controller?.setLooping(true);
-        });
+        }); */
+        print(
+            "check then value Get-${_formatDuration(_controller!.value.duration)}");
 
         break;
       case 2:
@@ -539,12 +572,18 @@ class _MainViewState extends State<MainView> {
                 ..position = const Offset(0.0, 0));
           _controller =
               VideoPlayerController.file(File(controlNotifier.mediaPath));
+          /* 
+        
 
-          _controller?.initialize().then((value) => setState(() {}));
+          _controller?.initialize().then((value) => setState(() {
+                duration = _controller!.value.duration;
+                print("check duration -${duration}");
+              }));
+
           setState(() {
             _controller?.play();
             _controller?.setLooping(true);
-          });
+          }); */
         }
 
         break;

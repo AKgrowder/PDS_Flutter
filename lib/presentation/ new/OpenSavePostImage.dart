@@ -21,6 +21,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../../API/Bloc/OpenSaveImagepost_Bloc/OpenSaveImagepost_state.dart';
 import '../../API/Model/UserTagModel/UserTag_model.dart';
+import 'home_screen_new.dart';
 
 // ignore: must_be_immutable
 class OpenSavePostImage extends StatefulWidget {
@@ -221,16 +222,17 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
                         Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                             GestureDetector( onTap: () {
-                            Navigator.push(context,
-                                MaterialPageRoute(builder: (context) {
-                              return ProfileScreen(
-                                  User_ID:
-                                      "${OpenSaveModelData?.object?.userUid}",
-                                  isFollowing:
-                                      OpenSaveModelData?.object?.isFollowing);
-                            }));
-                          },
+                              GestureDetector(
+                                onTap: () {
+                                  Navigator.push(context,
+                                      MaterialPageRoute(builder: (context) {
+                                    return ProfileScreen(
+                                        User_ID:
+                                            "${OpenSaveModelData?.object?.userUid}",
+                                        isFollowing: OpenSaveModelData
+                                            ?.object?.isFollowing);
+                                  }));
+                                },
                                 child: Container(
                                   child: Text(
                                     '${OpenSaveModelData?.object?.postUserName}',
@@ -260,178 +262,197 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
                           // width: _width,
                           child: OpenSaveModelData?.object?.postDataType == null
                               ? SizedBox()
-                              : OpenSaveModelData?.object?.postData?.length == 1
-                                  ? OpenSaveModelData?.object?.postDataType ==
-                                          "IMAGE"
-                                      ? Center(
-                                          child: CustomImageView(
-                                          fit: BoxFit.cover,
-                                          url:
-                                              "${OpenSaveModelData?.object?.postData?[0]}",
-                                        ))
-                                      : OpenSaveModelData
+                              : OpenSaveModelData?.object?.postDataType ==
+                                      "VIDEO"
+                                  ? Padding(
+                                      padding: const EdgeInsets.only(
+                                          right: 20, top: 15),
+                                      child: VideoListItem(
+                                        videoUrl: OpenSaveModelData
+                                                ?.object?.postData?.first ??
+                                            '',
+                                      ),
+                                    )
+                                  : OpenSaveModelData
+                                              ?.object?.postData?.length ==
+                                          1
+                                      ? OpenSaveModelData
                                                   ?.object?.postDataType ==
-                                              "ATTACHMENT"
-                                          ? Container(
-                                              height: 400,
-                                              width: _width,
-                                              child: DocumentViewScreen1(
-                                                path: "",
-                                              ))
-                                          : SizedBox()
-                                  : Column(
-                                      children: [
-                                        Stack(
+                                              "IMAGE"
+                                          ? Center(
+                                              child: CustomImageView(
+                                              fit: BoxFit.cover,
+                                              url:
+                                                  "${OpenSaveModelData?.object?.postData?[0]}",
+                                            ))
+                                          : OpenSaveModelData
+                                                      ?.object?.postDataType ==
+                                                  "ATTACHMENT"
+                                              ? Container(
+                                                  height: 400,
+                                                  width: _width,
+                                                  child: DocumentViewScreen1(
+                                                    path: "",
+                                                  ))
+                                              : SizedBox()
+                                      : Column(
                                           children: [
-                                            if ((OpenSaveModelData?.object
-                                                    ?.postData?.isNotEmpty ??
-                                                false)) ...[
-                                              Container(
-                                                color: Colors.transparent,
-                                                height: _height / 2,
-                                                child: PageView.builder(
-                                                  onPageChanged: (page) {
-                                                    setState(() {
-                                                      currentPages[
-                                                          widget.index ??
-                                                              0] = page;
-                                                      imageCount = page + 1;
-                                                    });
-                                                  },
-                                                  controller: pageControllers[
-                                                      widget.index ?? 0],
-                                                  itemCount: OpenSaveModelData
-                                                      ?.object
-                                                      ?.postData
-                                                      ?.length,
-                                                  itemBuilder:
-                                                      (BuildContext context,
-                                                          int index1) {
-                                                    if (OpenSaveModelData
-                                                            ?.object
-                                                            ?.postDataType ==
-                                                        "IMAGE") {
-                                                      return Container(
-                                                        width: _width,
-                                                        margin: EdgeInsets.only(
-                                                            left: 16,
-                                                            top: 15,
-                                                            right: 16),
-                                                        child: Center(
-                                                          child: Stack(
-                                                            children: [
-                                                              Align(
-                                                                alignment:
-                                                                    Alignment
-                                                                        .topCenter,
-                                                                child:
-                                                                    CustomImageView(
-                                                                  url:
-                                                                      "${OpenSaveModelData?.object?.postData?[index1]}",
-                                                                ),
+                                            Stack(
+                                              children: [
+                                                if ((OpenSaveModelData
+                                                        ?.object
+                                                        ?.postData
+                                                        ?.isNotEmpty ??
+                                                    false)) ...[
+                                                  Container(
+                                                    color: Colors.transparent,
+                                                    height: _height / 2,
+                                                    child: PageView.builder(
+                                                      onPageChanged: (page) {
+                                                        setState(() {
+                                                          currentPages[
+                                                              widget.index ??
+                                                                  0] = page;
+                                                          imageCount = page + 1;
+                                                        });
+                                                      },
+                                                      controller:
+                                                          pageControllers[
+                                                              widget.index ??
+                                                                  0],
+                                                      itemCount:
+                                                          OpenSaveModelData
+                                                              ?.object
+                                                              ?.postData
+                                                              ?.length,
+                                                      itemBuilder:
+                                                          (BuildContext context,
+                                                              int index1) {
+                                                        if (OpenSaveModelData
+                                                                ?.object
+                                                                ?.postDataType ==
+                                                            "IMAGE") {
+                                                          return Container(
+                                                            width: _width,
+                                                            margin:
+                                                                EdgeInsets.only(
+                                                                    left: 16,
+                                                                    top: 15,
+                                                                    right: 16),
+                                                            child: Center(
+                                                              child: Stack(
+                                                                children: [
+                                                                  Align(
+                                                                    alignment:
+                                                                        Alignment
+                                                                            .topCenter,
+                                                                    child:
+                                                                        CustomImageView(
+                                                                      url:
+                                                                          "${OpenSaveModelData?.object?.postData?[index1]}",
+                                                                    ),
+                                                                  ),
+                                                                  Align(
+                                                                    alignment:
+                                                                        Alignment
+                                                                            .topRight,
+                                                                    child: Card(
+                                                                      color: Colors
+                                                                          .transparent,
+                                                                      elevation:
+                                                                          0,
+                                                                      child: Container(
+                                                                          alignment: Alignment.center,
+                                                                          height: 30,
+                                                                          width: 50,
+                                                                          decoration: BoxDecoration(
+                                                                            color: Color.fromARGB(
+                                                                                255,
+                                                                                2,
+                                                                                1,
+                                                                                1),
+                                                                            borderRadius:
+                                                                                BorderRadius.all(Radius.circular(50)),
+                                                                          ),
+                                                                          child: Text(
+                                                                            imageCount.toString() +
+                                                                                '/' +
+                                                                                '${OpenSaveModelData?.object?.postData?.length}',
+                                                                            style:
+                                                                                TextStyle(color: Colors.white),
+                                                                          )),
+                                                                    ),
+                                                                  )
+                                                                ],
                                                               ),
-                                                              Align(
-                                                                alignment:
-                                                                    Alignment
-                                                                        .topRight,
-                                                                child: Card(
-                                                                  color: Colors
-                                                                      .transparent,
-                                                                  elevation: 0,
-                                                                  child: Container(
-                                                                      alignment: Alignment.center,
-                                                                      height: 30,
-                                                                      width: 50,
-                                                                      decoration: BoxDecoration(
-                                                                        color: Color.fromARGB(
-                                                                            255,
-                                                                            2,
-                                                                            1,
-                                                                            1),
-                                                                        borderRadius:
-                                                                            BorderRadius.all(Radius.circular(50)),
-                                                                      ),
-                                                                      child: Text(
-                                                                        imageCount.toString() +
-                                                                            '/' +
-                                                                            '${OpenSaveModelData?.object?.postData?.length}',
-                                                                        style: TextStyle(
-                                                                            color:
-                                                                                Colors.white),
-                                                                      )),
-                                                                ),
-                                                              )
-                                                            ],
-                                                          ),
-                                                        ),
-                                                      );
-                                                    } else if (OpenSaveModelData
-                                                            ?.object
-                                                            ?.postDataType ==
-                                                        "ATTACHMENT") {
-                                                      return Container(
-                                                          height: 400,
-                                                          width: _width,
-                                                          // color: Colors.green,
-                                                          child:
-                                                              DocumentViewScreen1(
-                                                            path:
-                                                                OpenSaveModelData
+                                                            ),
+                                                          );
+                                                        } else if (OpenSaveModelData
+                                                                ?.object
+                                                                ?.postDataType ==
+                                                            "ATTACHMENT") {
+                                                          return Container(
+                                                              height: 400,
+                                                              width: _width,
+                                                              // color: Colors.green,
+                                                              child:
+                                                                  DocumentViewScreen1(
+                                                                path: OpenSaveModelData
                                                                     ?.object
                                                                     ?.postData?[
                                                                         index1]
                                                                     .toString(),
-                                                          ));
-                                                    }
-                                                  },
-                                                ),
-                                              ),
-                                              Positioned(
-                                                  bottom: 5,
-                                                  left: 0,
-                                                  right: 0,
-                                                  child: Padding(
-                                                    padding:
-                                                        const EdgeInsets.only(
-                                                            top: 0),
-                                                    child: Container(
-                                                      height: 20,
-                                                      child: DotsIndicator(
-                                                        dotsCount:
-                                                            OpenSaveModelData
-                                                                    ?.object
-                                                                    ?.postData
-                                                                    ?.length ??
-                                                                1,
-                                                        position: currentPages[
-                                                                widget.index ??
-                                                                    0]
-                                                            .toDouble(),
-                                                        decorator:
-                                                            DotsDecorator(
-                                                          size: const Size(
-                                                              10.0, 7.0),
-                                                          activeSize:
-                                                              const Size(
-                                                                  10.0, 10.0),
-                                                          spacing:
-                                                              const EdgeInsets
+                                                              ));
+                                                        }
+                                                      },
+                                                    ),
+                                                  ),
+                                                  Positioned(
+                                                      bottom: 5,
+                                                      left: 0,
+                                                      right: 0,
+                                                      child: Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .only(top: 0),
+                                                        child: Container(
+                                                          height: 20,
+                                                          child: DotsIndicator(
+                                                            dotsCount:
+                                                                OpenSaveModelData
+                                                                        ?.object
+                                                                        ?.postData
+                                                                        ?.length ??
+                                                                    1,
+                                                            position: currentPages[
+                                                                    widget.index ??
+                                                                        0]
+                                                                .toDouble(),
+                                                            decorator:
+                                                                DotsDecorator(
+                                                              size: const Size(
+                                                                  10.0, 7.0),
+                                                              activeSize:
+                                                                  const Size(
+                                                                      10.0,
+                                                                      10.0),
+                                                              spacing: const EdgeInsets
                                                                       .symmetric(
                                                                   horizontal:
                                                                       2),
-                                                          activeColor:
-                                                              Color(0xffED1C25),
-                                                          color:
-                                                              Color(0xff6A6A6A),
+                                                              activeColor: Color(
+                                                                  0xffED1C25),
+                                                              color: Color(
+                                                                  0xff6A6A6A),
+                                                            ),
+                                                          ),
                                                         ),
-                                                      ),
-                                                    ),
-                                                  ))
-                                            ]
+                                                      ))
+                                                ]
+                                              ],
+                                            ),
                                           ],
                                         ),
-                                      ],
-                                    ),
                         ),
                   OpenSaveModelData?.object?.description == null
                       ? SizedBox()
@@ -499,7 +520,7 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
                                               HashTagViewScreen(
                                                   title: "${link.value}"),
                                         ));
-                                    } else if (link.value!.startsWith('@')) {
+                                  } else if (link.value!.startsWith('@')) {
                                     var name;
                                     var tagName;
                                     name = SelectedTest;
@@ -517,9 +538,10 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
 
                                     print("tagName -- ${tagName}");
                                     print("user id -- ${userTagModel?.object}");
-                                  }else{
-                                                                                    launchUrl(Uri.parse("https://${link.value.toString()}"));
-                                                                                }
+                                  } else {
+                                    launchUrl(Uri.parse(
+                                        "https://${link.value.toString()}"));
+                                  }
                                 }
                               },
                             ), /* Text(
@@ -715,17 +737,24 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
                             child: Container(
                               color: Colors.transparent,
                               child: Padding(
-                                padding: const EdgeInsets.all(5.0),
-                                child: Image.asset(
-                                  OpenSaveModelData?.object?.isSaved == false
-                                      ? ImageConstant.savePin
-                                      : ImageConstant.Savefill,
-                                  height: 18,
-                                  color: Colors.white,
-                                ),
-                              ),
+                                  padding: const EdgeInsets.all(5.0),
+                                  child: OpenSaveModelData?.object?.isSaved ==
+                                          false
+                                      ? Image.asset(
+                                          ImageConstant.savePin,
+                                          height: 18,
+                                          color: Colors.white,
+                                        )
+                                      : Image.asset(
+                                          ImageConstant.Savefill,
+                                          height: 18,
+                                        )
+
+                                  // color: Colors.white,
+                                  ),
                             ),
                           ),
+
                           // GestureDetector(
                           //   onTap: () {
                           //     Share.share(
