@@ -386,4 +386,23 @@ class NewProfileSCubit extends Cubit<NewProfileSState> {
       emit(AddPostErrorState(addPostImageUploded));
     }
   }
+
+Future<void> UserTagAPI(BuildContext context, String? name) async {
+    dynamic userTagData;
+    try {
+      emit(NewProfileSLoadingState());
+      userTagData = await Repository().UserTag(context, name);
+      print("userTagDataaaaaaaaaaaa-->${userTagData}");
+      if (userTagData == "Something Went Wrong, Try After Some Time.") {
+        emit(NewProfileSErrorState("${userTagData}"));
+      } else {
+        if (userTagData.success == true) {
+          emit(UserTagLoadedState(userTagData));
+        }
+      }
+    } catch (e) {
+      emit(NewProfileSErrorState(userTagData));
+    }
+  }
+
 }
