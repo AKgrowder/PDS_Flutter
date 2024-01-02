@@ -215,7 +215,7 @@ class _MainViewState extends State<MainView> {
                                           alignment: Alignment.center,
                                           children: [
                                             /// in this case photo view works as a main background container to manage
-                                            /*    /// the gestures of all movable items.
+                                                /// the gestures of all movable items.
                                             controlNotifier.mediaPath
                                                         .endsWith('.mp4') &&
                                                     _controller!
@@ -226,7 +226,7 @@ class _MainViewState extends State<MainView> {
                                                     child: VideoPlayer(
                                                         _controller!),
                                                   )
-                                                : */
+                                                :
                                             PhotoView.customChild(
                                               child: Container(),
                                               backgroundDecoration:
@@ -396,7 +396,6 @@ class _MainViewState extends State<MainView> {
                   // gridViewPhysics: itemProvider.draggableWidget.isEmpty
                   //     ? const NeverScrollableScrollPhysics()
                   //     : const ScrollPhysics(),
-
                   pathList: (path) {
                     if (path.first.path
                             .toString()
@@ -407,8 +406,9 @@ class _MainViewState extends State<MainView> {
                             .last ==
                         'mp4') {
                       print('this is the Get');
-                      getVideo(path.first.path.toString(), 1, context,
-                          controlNotifier, itemProvider);
+                      /*getVideo(path.first.path.toString(), 1, context,
+                          controlNotifier, itemProvider);*/
+                      controlNotifier.mediaPath = path.first.path.toString();
                     } else {
                       if (path.first.path.toString().isNotEmpty) {
                         getFileSize(path.first.path.toString(), 1, context,
@@ -422,14 +422,23 @@ class _MainViewState extends State<MainView> {
                     child: Align(
                       alignment: Alignment.bottomRight,
                       child: AnimatedOnTapButton(
-                        onTap: () {
+                        onTap: () async{
                           if (controlNotifier.mediaPath.endsWith('.mp4')) {
-                            Navigator.push(
+                            String? path  = await Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => VideoEditor(
                                           file: File(controlNotifier.mediaPath),
                                         )));
+                            if(path != null && path.isNotEmpty){
+                              print("exported path : ${path}");
+
+                              getVideo(path, 1, context,
+                                  controlNotifier, itemProvider);
+                              scrollProvider.pageController.animateToPage(0,
+                                  duration: const Duration(milliseconds: 300),
+                                  curve: Curves.easeIn);
+                            }
                           } else {
                             scrollProvider.pageController.animateToPage(0,
                                 duration: const Duration(milliseconds: 300),
@@ -498,18 +507,19 @@ class _MainViewState extends State<MainView> {
               ..position = const Offset(0.0, 0));
         _controller =
             VideoPlayerController.file(File(controlNotifier.mediaPath));
-        /*  _controller =
+          _controller =
             VideoPlayerController.file(File(controlNotifier.mediaPath));
 
         _controller?.initialize().then((value) => setState(() {
               duration = _controller!.value.duration;
               print("check duration -${duration}");
+              _controller?.play();
+              _controller?.setLooping(true);
             }));
-        setState(() {
+        /*setState(() {
           _controller?.play();
           _controller?.setLooping(true);
-        });
- */
+        });*/
         break;
       case 1:
         print("Done file size KB");
@@ -522,17 +532,18 @@ class _MainViewState extends State<MainView> {
               ..position = const Offset(0.0, 0));
         _controller =
             VideoPlayerController.file(File(controlNotifier.mediaPath));
-        /* 
 
         _controller?.initialize().then((value) => setState(() {
               duration = _controller!.value.duration;
               print("check duration -${duration}");
+              _controller?.play();
+              _controller?.setLooping(true);
             }));
 
-        setState(() {
-          _controller?.play();
-          _controller?.setLooping(true);
-        }); */
+        // setState(() {
+        //   _controller?.play();
+        //   _controller?.setLooping(true);
+        // });
         print(
             "check then value Get-${_formatDuration(_controller!.value.duration)}");
 
@@ -572,18 +583,19 @@ class _MainViewState extends State<MainView> {
                 ..position = const Offset(0.0, 0));
           _controller =
               VideoPlayerController.file(File(controlNotifier.mediaPath));
-          /* 
-        
+
 
           _controller?.initialize().then((value) => setState(() {
                 duration = _controller!.value.duration;
                 print("check duration -${duration}");
+                _controller?.play();
+                _controller?.setLooping(true);
               }));
 
-          setState(() {
+          /*setState(() {
             _controller?.play();
             _controller?.setLooping(true);
-          }); */
+          });*/
         }
 
         break;

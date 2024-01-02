@@ -45,6 +45,8 @@ class _InboxScreenState extends State<InboxScreen> {
     BlocProvider.of<PersonalChatListCubit>(context).PersonalChatList(context);
     BlocProvider.of<PersonalChatListCubit>(context)
         .getAllNoticationsCountAPI(context);
+
+        
     super.initState();
   }
 
@@ -128,7 +130,7 @@ class _InboxScreenState extends State<InboxScreen> {
             }
             if (state is GetNotificationCountLoadedState) {
               print(state.GetNotificationCountData.object);
-              saveNotificationCount(state.GetNotificationCountData.object ?? 0);
+              saveNotificationCount(state.GetNotificationCountData.object?.notificationCount ?? 0,state.GetNotificationCountData.object?.messageCount ?? 0);
             }
             if (state is PersonalChatListLoadedState) {
               apiData = true;
@@ -290,9 +292,10 @@ class _InboxScreenState extends State<InboxScreen> {
     );
   }
 
-  saveNotificationCount(int NotificationCount) async {
+  saveNotificationCount(int NotificationCount,int MessageCount) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setInt(PreferencesKey.NotificationCount, NotificationCount);
+    prefs.setInt(PreferencesKey.MessageCount, MessageCount);
   }
 
   intaldatashow() {

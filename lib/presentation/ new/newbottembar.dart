@@ -39,6 +39,7 @@ class _NewBottomBarState extends State<NewBottomBar> {
   var GetTimeSplash;
   var UserLogin_ID;
   int NotificationCount = 0;
+  int MessageCount = 0;
 
   List widgetOptions = [
     // HomeScreen(),
@@ -284,26 +285,66 @@ class _NewBottomBarState extends State<NewBottomBar> {
                           //         : const Color(0xFF0D0D0D),
                           child: Container(
                             child: selectedIndex != 3
-                                ? Padding(
-                                    padding: const EdgeInsets.all(12.0),
-                                    child: Image.asset(
-                                      ImageConstant.meesagePng,
-                                      // height: 26,
-                                      // width: 26,
-                                    ),
-                                  )
+                                ? MessageCount == 0
+                                    ? Padding(
+                                        padding: const EdgeInsets.all(12.0),
+                                        child: Image.asset(
+                                          ImageConstant.meesagePng,
+                                          // height: 26,
+                                          // width: 26,
+                                        ),
+                                      )
+                                    : Padding(
+                                        padding: const EdgeInsets.all(12.0),
+                                        child: badges.Badge(
+                                          badgeStyle: badges.BadgeStyle(
+                                              badgeColor:
+                                                  ColorConstant.primary_color),
+                                          badgeContent: Text(
+                                            "${MessageCount}",
+                                            style:
+                                                TextStyle(color: Colors.white),
+                                          ),
+                                          child: Image.asset(
+                                            ImageConstant.meesagePng,
+                                            // height: 26,
+                                            // width: 26,
+                                          ),
+                                        ),
+                                      )
                                 : Container(
                                     // height: 30,
                                     // width: 30,
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(12.0),
-                                      child: Image.asset(
-                                        ImageConstant.meesagePng,
-                                        color: const Color(0XFFED1C25),
-                                        // height: 26,
-                                        // width: 26,
-                                      ),
-                                    ),
+                                    child: MessageCount == 0
+                                        ? Center(
+                                          child: Image.asset(
+                                            ImageConstant.meesagePng,
+                                            color: const Color(0XFFED1C25),
+                                            // height: 26,
+                                            // width: 26,
+                                            height: 30,
+                                                width: 26,
+                                          ),
+                                        )
+                                        : Padding(
+                                            padding: const EdgeInsets.all(12.0),
+                                            child: badges.Badge(
+                                              badgeStyle: badges.BadgeStyle(
+                                                  badgeColor: ColorConstant
+                                                      .primary_color),
+                                              badgeContent: Text(
+                                                "${MessageCount}",
+                                                style: TextStyle(
+                                                    color: Colors.white),
+                                              ),
+                                              child: Image.asset(
+                                                ImageConstant.meesagePng,
+                                                color: const Color(0XFFED1C25),
+                                                // height: 26,
+                                                // width: 26,
+                                              ),
+                                            ),
+                                          ),
                                     decoration: const BoxDecoration(
                                       borderRadius:
                                           BorderRadius.all(Radius.circular(50)),
@@ -436,6 +477,8 @@ class _NewBottomBarState extends State<NewBottomBar> {
     Timer.periodic(Duration(seconds: 2), (_) {
       // print("Room Socket ++++++++++++++++++++++++++++++++++++++++++++++++++++");
       NotificationCount = prefs.getInt(PreferencesKey.NotificationCount) ?? 0;
+      MessageCount = prefs.getInt(PreferencesKey.MessageCount) ?? 0;
+
       setState(() {});
     });
   }

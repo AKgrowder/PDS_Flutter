@@ -106,19 +106,38 @@ class DmInboxCubit extends Cubit<getInboxState> {
           .get_all_inbox_images(context, userChatInboxUid, pageNumber);
 
       if (GetAllInboxImagesPagantionApi.success == true) {
-
         getAllInboxImage.object.content
             .addAll(GetAllInboxImagesPagantionApi.object.content);
         getAllInboxImage.object.pageable.pageNumber =
             GetAllInboxImagesPagantionApi.object.pageable.pageNumber;
         getAllInboxImage.object.totalElements =
             GetAllInboxImagesPagantionApi.object.totalElements;
-            
+
         emit(GetAllInboxImagesState(getAllInboxImage));
       }
     } catch (e) {
       print('eeee-$e');
       emit(getInboxErrorState(e.toString()));
+    }
+  }
+
+  Future<void> SeenMessage(BuildContext context,String inboxUid) async {
+    dynamic SeenMessgaeModelData;
+    try {
+      emit(getInboxLoadingState());
+      SeenMessgaeModelData = await Repository().SeenMessage(context,inboxUid);
+      if (SeenMessgaeModelData == "Something Went Wrong, Try After Some Time.") {
+        emit(getInboxErrorState("${SeenMessgaeModelData}"));
+      } else {
+        if (SeenMessgaeModelData.success == true) {
+          emit(SeenAllMessageLoadedState(SeenMessgaeModelData));
+          print("+++++++++++++++++++++++++++++++++++++");
+          print(SeenMessgaeModelData.message);
+        }
+      }
+    } catch (e) {
+      print('LoginScreen-${e.toString()}');
+      emit(getInboxErrorState(SeenMessgaeModelData));
     }
   }
 }
