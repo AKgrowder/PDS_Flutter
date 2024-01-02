@@ -1,6 +1,8 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:stories_editor/src/service/export_service.dart';
 import 'package:video_editor/video_editor.dart';
 
 //-------------------//
@@ -23,7 +25,7 @@ class _VideoEditorState extends State<VideoEditor> {
   late final VideoEditorController _controller = VideoEditorController.file(
     widget.file,
     minDuration: const Duration(seconds: 1),
-    maxDuration: const Duration(seconds: 40),
+    maxDuration: const Duration(seconds: 30),
   );
 
   @override
@@ -56,16 +58,30 @@ class _VideoEditorState extends State<VideoEditor> {
 
     final config = VideoFFmpegVideoEditorConfig(
       _controller,
-      // format: VideoExportFormat.gif,
-      // commandBuilder: (config, videoPath, outputPath) {
-      //   final List<String> filters = config.getExportFilters();
-      //   filters.add('hflip'); // add horizontal flip
-      // print("check outpath-${outputPath}");
-      //   return '-i $videoPath ${config.filtersCmd(filters)} -preset ultrafast $outputPath';
-      // },
-    
+      format: VideoExportFormat.mp4,
+      outputDirectory: Platform.isAndroid ? "/storage/emulated/0/Download":(await getApplicationDocumentsDirectory()).path
     );
-    
+
+    FFmpegVideoEditorExecute trimExecute = await config.getExecuteConfig();
+    print("export path : ${trimExecute.outputPath}");
+    //
+    await ExportService.runFFmpegCommand(
+      await config.getExecuteConfig(),
+      onProgress: (stats) {
+        _exportingProgress.value = config.getFFmpegProgress(stats.getTime().toInt());
+      },
+      onError: (e, s) => _showErrorSnackBar("Error on export video :("),
+      onCompleted: (file) {
+        _isExporting.value = false;
+        if (!mounted) return;
+        print("exported path : ${file.path}");
+        Navigator.pop(context,file.path);
+        /*showDialog(
+          context: context,
+          builder: (_) => VideoResultPopup(video: file),
+        );*/
+      },
+    );
     
   }
 
