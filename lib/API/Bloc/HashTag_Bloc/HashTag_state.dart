@@ -4,6 +4,7 @@ import 'package:pds/API/Model/HashTage_Model/HashTagBanner_model.dart';
 import 'package:pds/API/Model/HashTage_Model/HashTagView_model.dart';
 import 'package:pds/API/Model/HashTage_Model/HashTag_model.dart';
 import 'package:pds/API/Model/UserTagModel/UserTag_model.dart';
+import 'package:pds/API/Model/acceptRejectInvitaionModel/getAllNotificationCount.dart';
 import 'package:pds/API/Model/getSerchDataModel/getSerchDataModel.dart';
 import 'package:pds/API/Model/like_Post_Model/like_Post_Model.dart';
 import 'package:pds/API/Model/serchDataAddModel/serchDataAddModel.dart';
@@ -69,4 +70,9 @@ class GetSerchData extends HashTagState {
 class UserTagHashTagLoadedState extends HashTagState {
   final UserTagModel userTagModel;
   UserTagHashTagLoadedState(this.userTagModel);
+}
+
+class GetNotificationCountLoadedState extends HashTagState {
+  final getAllNotificationCount GetNotificationCountData;
+  GetNotificationCountLoadedState(this.GetNotificationCountData);
 }

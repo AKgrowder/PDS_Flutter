@@ -87,6 +87,9 @@ class _RoomsScreenState extends State<RoomsScreen> {
           .seetinonExpried(context);
       await BlocProvider.of<GetAllPrivateRoomCubit>(context)
           .chckUserStaus(context);
+
+      await BlocProvider.of<GetAllPrivateRoomCubit>(context)
+          .getAllNoticationsCountAPI(context);
     }
 
     await BlocProvider.of<GetAllPrivateRoomCubit>(context)
@@ -230,6 +233,11 @@ class _RoomsScreenState extends State<RoomsScreen> {
                 }
                 return acc;
               });
+            }
+
+            if (state is GetNotificationCountLoadedState) {
+              print(state.GetNotificationCountData.object);
+              saveNotificationCount(state.GetNotificationCountData.object ?? 0);
             }
 
             if (state is CheckuserLoadedState) {
@@ -2157,7 +2165,8 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                                           height: 20,
                                                           decoration:
                                                               ShapeDecoration(
-                                                                color: ColorConstant.primary_color,
+                                                            color: ColorConstant
+                                                                .primary_color,
                                                             // color: Color(
                                                             //     0xFFED1C25),
                                                             shape:
@@ -2477,6 +2486,11 @@ class _RoomsScreenState extends State<RoomsScreen> {
             );
           })),
     );
+  }
+
+  saveNotificationCount(int NotificationCount) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setInt(PreferencesKey.NotificationCount, NotificationCount);
   }
 
   showAlert() {

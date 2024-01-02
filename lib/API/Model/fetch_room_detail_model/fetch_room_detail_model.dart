@@ -32,6 +32,7 @@ class Object {
   String? roomName;
   String? roomDescription;
   String? document;
+  String? documentName;
   String? createdDate;
 
   Object(
@@ -40,6 +41,7 @@ class Object {
       this.roomName,
       this.roomDescription,
       this.document,
+      this.documentName,
       this.createdDate});
 
   Object.fromJson(Map<String, dynamic> json) {
@@ -48,6 +50,7 @@ class Object {
     roomName = json['roomName'];
     roomDescription = json['roomDescription'];
     document = json['document'];
+    documentName = json['documentName'];
     createdDate = json['createdDate'];
   }
 
@@ -58,6 +61,7 @@ class Object {
     data['roomName'] = this.roomName;
     data['roomDescription'] = this.roomDescription;
     data['document'] = this.document;
+    data['documentName'] = this.documentName;
     data['createdDate'] = this.createdDate;
     return data;
   }

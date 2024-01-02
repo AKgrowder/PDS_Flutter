@@ -10,6 +10,7 @@ import 'package:pds/API/Model/Getalluset_list_Model/get_all_userlist_model.dart'
 import 'package:pds/API/Model/getSerchDataModel/getSerchDataModel.dart';
 import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/core/utils/image_constant.dart';
+import 'package:pds/core/utils/sharedPreferences.dart';
 import 'package:pds/presentation/%20new/HashTagView_screen.dart';
 import 'package:pds/presentation/%20new/newbottembar.dart';
 import 'package:pds/widgets/pagenation.dart';
@@ -77,6 +78,7 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
   void initState() {
     super.initState();
     BlocProvider.of<HashTagCubit>(context).seetinonExpried(context);
+    BlocProvider.of<HashTagCubit>(context).getAllNoticationsCountAPI(context);
     getUserData();
     BlocProvider.of<HashTagCubit>(context)
         .HashTagForYouAPI(context, 'FOR YOU', '1');
@@ -127,6 +129,11 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
 
               hashtagModel = state.HashTagData;
             }
+             if (state is GetNotificationCountLoadedState) {
+                print(state.GetNotificationCountData.object);
+                saveNotificationCount(
+                    state.GetNotificationCountData.object ?? 0);
+              }
             if (state is GetAllUserLoadedState) {
               dataget = true;
               print("api caling");
@@ -1219,5 +1226,9 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
         color: Colors.red,
       ));
     }
+  }
+   saveNotificationCount(int NotificationCount) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setInt(PreferencesKey.NotificationCount, NotificationCount);
   }
 }
