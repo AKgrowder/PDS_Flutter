@@ -166,6 +166,8 @@ class _DmScreenState extends State<DmScreen> {
   pageNumberMethod() async {
     await BlocProvider.of<DmInboxCubit>(context)
         .DMChatListApiMethod(widget.ChatInboxUid, 1, 20, context);
+    await BlocProvider.of<DmInboxCubit>(context)
+        .SeenMessage(context, widget.ChatInboxUid);
   }
 
   getUserID() async {
@@ -242,13 +244,16 @@ class _DmScreenState extends State<DmScreen> {
 
     return WillPopScope(
         onWillPop: onBackPress,
-        child:  Scaffold(
+        child: Scaffold(
             // resizeToAvoidBottomInset: true,
             backgroundColor: theme.colorScheme.onPrimary,
             body: BlocConsumer<DmInboxCubit, getInboxState>(
                 listener: (context, state) async {
               if (state is getInboxLoadedState) {
                 getInboxMessagesModel = state.getInboxMessagesModel;
+              }
+              if (state is SeenAllMessageLoadedState) {
+                print(state.SeenAllMessageModelData.object);
               }
               if (state is AddPostImaegState) {
                 imageDataPost = state.imageDataPost;
@@ -309,16 +314,16 @@ class _DmScreenState extends State<DmScreen> {
                                       ),
                                     ),
                                   ),
-                                  GestureDetector( onTap: () {
-                                        Navigator.push(context,
-                                            MaterialPageRoute(
-                                          builder: (context) {
-                                            return ProfileScreen(
-                                                User_ID: widget.UserUID,
-                                                isFollowing: "");
-                                          },
-                                        ));
-                                      },
+                                  GestureDetector(
+                                    onTap: () {
+                                      Navigator.push(context, MaterialPageRoute(
+                                        builder: (context) {
+                                          return ProfileScreen(
+                                              User_ID: widget.UserUID,
+                                              isFollowing: "");
+                                        },
+                                      ));
+                                    },
                                     child: Container(
                                       child: widget.UserImage != null &&
                                               widget.UserImage != ""
@@ -328,7 +333,8 @@ class _DmScreenState extends State<DmScreen> {
                                                 height: 30,
                                                 width: 30,
                                                 fit: BoxFit.cover,
-                                                radius: BorderRadius.circular(30),
+                                                radius:
+                                                    BorderRadius.circular(30),
                                               ),
                                             )
                                           : CustomImageView(
@@ -1779,7 +1785,6 @@ String customFormat(DateTime date) {
   String formattedDate = '$time';
   return formattedDate;
 }
-
 
 String getTimeDifference(DateTime dateTime) {
   final difference = DateTime.now().difference(dateTime);

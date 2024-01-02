@@ -5,6 +5,7 @@ import 'package:pds/API/Model/DeleteUserChatModel/DeleteUserChat_Model.dart';
 import 'package:pds/API/Model/GetAllInboxImagesModel/GetAllInboxImagesModel.dart';
 import 'package:pds/API/Model/GetGuestAllPostModel/ShareAppOpenPostModel.dart';
 import 'package:pds/API/Model/acceptRejectInvitaionModel/GetAllNotificationModel.dart';
+import 'package:pds/API/Model/inboxScreenModel/SeenAllMessageModel.dart';
 import 'package:pds/API/Model/selectMultipleUsers_ChatModel/selectMultipleUsers_ChatModel.dart';
 import 'package:pds/API/Model/UserTagModel/UserTag_model.dart';
 import 'package:pds/API/Model/GetUsersChatByUsernameModel/GetUsersChatByUsernameModel.dart';
@@ -943,6 +944,27 @@ class Repository {
     switch (response.statusCode) {
       case 200:
         return MyAccontDetails.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+      case 400:
+        return Config.somethingWentWrong;
+      case 701:
+        return jsonString;
+      default:
+        return jsonString;
+    }
+  }
+
+  SeenMessage(BuildContext context,String inboxUid) async {
+    final response =
+        await apiServices.getApiCallWithToken("${Config.message_seen_by_user}?inboxUid=${inboxUid}", context);
+    var jsonString = json.decode(response.body);
+    print('Myaccount${response.statusCode}');
+    switch (response.statusCode) {
+      case 200:
+        return SeenAllMessageModel.fromJson(jsonString);
       case 404:
         return Config.somethingWentWrong;
       case 500:
@@ -2207,7 +2229,7 @@ class Repository {
 
   Deletecomment(String commentuid, BuildContext context) async {
     final response = await apiServices.deleteApiCall(
-        "${Config.deletecomment}?commentUid=${commentuid}", {}, context);
+      '${Config.add_update_about_me}?aboutMe=${aboutMe.replaceAll("#", "%23")}', context);
     print(response);
     var jsonString = json.decode(response!.body);
     switch (response.statusCode) {
@@ -2341,7 +2363,7 @@ class Repository {
 
   SelectChatMemberList(BuildContext context) async {
     final responce =
-        await apiServices.getApiCall('${Config.SelectChatMember}', context);
+        await apiServices.getApiCallWithToken('${Config.SelectChatMember}', context);
     var jsonString = json.decode(responce.body);
     print('jasonnString$jsonString');
     switch (responce.statusCode) {
