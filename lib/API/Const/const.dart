@@ -135,6 +135,8 @@ class Config {
   static const String SeenNotification = "user/api/notificationSeenByUser";
   static const String getAllNoticationsCount = "user/api/getAllNotificationsCount";
   static const String getPostUidOrUserUid = "user/api/getPostUidOrUserUid";
+  static const String message_seen_by_user = "user/message_seen_by_user";
+
 
 
 

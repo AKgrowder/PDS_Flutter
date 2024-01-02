@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -88,8 +90,11 @@ class _RoomsScreenState extends State<RoomsScreen> {
       await BlocProvider.of<GetAllPrivateRoomCubit>(context)
           .chckUserStaus(context);
 
-      await BlocProvider.of<GetAllPrivateRoomCubit>(context)
-          .getAllNoticationsCountAPI(context);
+      Timer.periodic(Duration(seconds: 15), (_) {
+        // print("Room Socket ++++++++++++++++++++++++++++++++++++++++++++++++++++");
+        BlocProvider.of<GetAllPrivateRoomCubit>(context)
+            .getAllNoticationsCountAPI(context);
+      });
     }
 
     await BlocProvider.of<GetAllPrivateRoomCubit>(context)
@@ -237,7 +242,9 @@ class _RoomsScreenState extends State<RoomsScreen> {
 
             if (state is GetNotificationCountLoadedState) {
               print(state.GetNotificationCountData.object);
-              saveNotificationCount(state.GetNotificationCountData.object ?? 0);
+              saveNotificationCount(
+                  state.GetNotificationCountData.object?.notificationCount ?? 0,
+                  state.GetNotificationCountData.object?.messageCount ?? 0);
             }
 
             if (state is CheckuserLoadedState) {
@@ -2488,9 +2495,10 @@ class _RoomsScreenState extends State<RoomsScreen> {
     );
   }
 
-  saveNotificationCount(int NotificationCount) async {
+  saveNotificationCount(int NotificationCount, int MessageCount) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setInt(PreferencesKey.NotificationCount, NotificationCount);
+    prefs.setInt(PreferencesKey.MessageCount, MessageCount);
   }
 
   showAlert() {
