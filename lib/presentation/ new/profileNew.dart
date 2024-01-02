@@ -3,13 +3,11 @@
 import 'dart:io';
 import 'dart:math';
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:getwidget/components/loader/gf_loader.dart';
-import 'package:getwidget/types/gf_loader_type.dart';
+import 'package:flutter_mentions/flutter_mentions.dart';
 import 'package:intl/intl.dart';
 import 'package:pds/API/Bloc/NewProfileScreen_Bloc/NewProfileScreen_cubit.dart';
 import 'package:pds/API/Bloc/NewProfileScreen_Bloc/NewProfileScreen_state.dart';
@@ -36,11 +34,11 @@ import 'package:pds/presentation/settings/setting_screen.dart';
 import 'package:pds/widgets/commentPdf.dart';
 import 'package:pds/widgets/custom_text_form_field.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:video_player/video_player.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
 
+import '../../API/Model/HasTagModel/hasTagModel.dart';
 import '../../API/Model/WorkExperience_Model/WorkExperience_model.dart';
-import 'home_screen_new.dart';
+import '../../API/Model/serchForInboxModel/serchForinboxModel.dart';
 
 class ProfileScreen extends StatefulWidget {
   String User_ID;
@@ -127,6 +125,13 @@ class _ProfileScreenState extends State<ProfileScreen>
   FollowersClassModel? followersClassModel1;
   FollowersClassModel? followersClassModel2;
   List<String> videoUrls = [];
+  SearchUserForInbox? searchUserForInbox1;
+  bool istageData = false;
+  bool isHeshTegData = false;
+  HasDataModel? getAllHashtag;
+  List<Map<String, dynamic>> tageData = [];
+  List<Map<String, dynamic>> heshTageData = [];
+
   Map<String, Uint8List> thumbnailDataMap = {};
   Uint8List? thumbnailData;
   List<Uint8List?> thumbnailData1 = [];
@@ -272,7 +277,7 @@ class _ProfileScreenState extends State<ProfileScreen>
       if (state is DMChatListLoadedState) {
         Navigator.push(context, MaterialPageRoute(builder: (context) {
           return DmScreen(
-            UserUID:"${NewProfileData?.object?.userUid}", 
+            UserUID: "${NewProfileData?.object?.userUid}",
             UserName: "${NewProfileData?.object?.userName}",
             ChatInboxUid: state.DMChatList.object ?? "",
             UserImage: "${NewProfileData?.object?.userProfilePic}",
@@ -462,6 +467,57 @@ class _ProfileScreenState extends State<ProfileScreen>
       }
       if (state is GetWorkExpereinceLoadedState) {
         addWorkExperienceModel = state.addWorkExperienceModel;
+      }
+
+      if (state is SearchHistoryDataAddxtends) {
+        searchUserForInbox1 = state.searchUserForInbox;
+
+        /*  isTagData = true;
+          isHeshTegData = false; */
+        searchUserForInbox1?.object?.content?.forEach((element) {
+          Map<String, dynamic> dataSetup = {
+            'id': element.userUid,
+            'display': element.userName,
+            'photo': element.userProfilePic,
+          };
+
+          tageData.add(dataSetup);
+          List<Map<String, dynamic>> uniqueTageData = [];
+          Set<String> encounteredIds = Set<String>();
+          for (Map<String, dynamic> data in tageData) {
+            if (!encounteredIds.contains(data['id'])) {
+              // If the ID hasn't been encountered, add to the result list
+              uniqueTageData.add(data);
+
+              // Mark the ID as encountered
+              encounteredIds.add(data['id']);
+            }
+            tageData = uniqueTageData;
+          }
+          if (tageData.isNotEmpty == true) {
+            istageData = true;
+          }
+        });
+      }
+
+      if (state is GetAllHashtagState) {
+        getAllHashtag = state.getAllHashtag;
+
+        for (int i = 0;
+            i < (getAllHashtag?.object?.content?.length ?? 0);
+            i++) {
+          // getAllHashtag?.object?.content?[i].split('#').last;
+          Map<String, dynamic> dataSetup = {
+            'id': '${i}',
+            'display': '${getAllHashtag?.object?.content?[i].split('#').last}',
+            'style': TextStyle(color: Colors.blue)
+          };
+          heshTageData.add(dataSetup);
+          if (heshTageData.isNotEmpty == true) {
+            isHeshTegData = true;
+          }
+          print("check heshTageData -$heshTageData");
+        }
       }
     }, builder: (context, state) {
       return Scaffold(
@@ -1655,31 +1711,138 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                     ),
                                                                   )
                                                                 : Padding(
-                                                                    padding: const EdgeInsets
+                                                                    padding:
+                                                                        EdgeInsets
                                                                             .only(
-                                                                        left:
-                                                                            20,
-                                                                        right:
-                                                                            20),
+                                                                      left: 16,
+                                                                      right: 16,
+                                                                      top: 0,
+                                                                    ),
                                                                     child:
-                                                                        TextFormField(
-                                                                      inputFormatters: [
-                                                                        LengthLimitingTextInputFormatter(
-                                                                            500),
+                                                                        Stack(
+                                                                      children: [
+                                                                        Column(
+                                                                          children: [
+                                                                            SizedBox(
+                                                                              height: 100,
+                                                                              child: FlutterMentions(
+                                                                                readOnly: isAbourtMe,
+                                                                                defaultText: aboutMe.text,
+                                                                                onChanged: (value) {
+                                                                                  onChangeMethod(value);
+                                                                                },
+                                                                                suggestionPosition: SuggestionPosition.values.first,
+                                                                                maxLines: 5,
+                                                                                decoration: InputDecoration(
+                                                                                  hintText: 'Enter About Me',
+                                                                                  border: InputBorder.none,
+                                                                                  focusedBorder: InputBorder.none,
+                                                                                ),
+                                                                                mentions: [
+                                                                                  Mention(
+                                                                                      trigger: "@",
+                                                                                      data: tageData,
+                                                                                      matchAll: true,
+                                                                                      style: TextStyle(color: Colors.blue),
+                                                                                      suggestionBuilder: (tageData) {
+                                                                                        if (istageData) {
+                                                                                          return Container(
+                                                                                            padding: EdgeInsets.all(10.0),
+                                                                                            child: Row(
+                                                                                              children: <Widget>[
+                                                                                                tageData['photo'] != null
+                                                                                                    ? CircleAvatar(
+                                                                                                        backgroundImage: NetworkImage(
+                                                                                                          tageData['photo'],
+                                                                                                        ),
+                                                                                                      )
+                                                                                                    : CircleAvatar(
+                                                                                                        backgroundImage: AssetImage(ImageConstant.tomcruse),
+                                                                                                      ),
+                                                                                                SizedBox(
+                                                                                                  width: 20.0,
+                                                                                                ),
+                                                                                                Column(
+                                                                                                  children: <Widget>[
+                                                                                                    Text('@${tageData['display']}'),
+                                                                                                  ],
+                                                                                                )
+                                                                                              ],
+                                                                                            ),
+                                                                                          );
+                                                                                        }
+
+                                                                                        return Container(
+                                                                                          color: Colors.amber,
+                                                                                        );
+                                                                                      }),
+                                                                                  Mention(
+                                                                                      trigger: "#",
+                                                                                      style: TextStyle(color: Colors.blue),
+                                                                                      disableMarkup: true,
+                                                                                      data: heshTageData,
+                                                                                      // matchAll: true,
+                                                                                      suggestionBuilder: (tageData) {
+                                                                                        if (isHeshTegData) {
+                                                                                          return Container(
+                                                                                              padding: EdgeInsets.all(10.0),
+                                                                                              child: ListTile(
+                                                                                                leading: CircleAvatar(
+                                                                                                  child: Text('#'),
+                                                                                                ),
+                                                                                                title: Text('${tageData['display']}'),
+                                                                                              )
+                                                                                              /* Column(
+                                                                                                                            crossAxisAlignment:
+                                                                                                                                CrossAxisAlignment
+                                                                                                                                            .start,
+                                                                                                                            children: <Widget>[
+                                                                                                                              Text(
+                                                                                                                                  '${tageData['display']}'),
+                                                                                                                            ],
+                                                                                                                          ), */
+                                                                                              );
+                                                                                        }
+
+                                                                                        return Container(
+                                                                                          color: Colors.amber,
+                                                                                        );
+                                                                                      }),
+                                                                                ],
+                                                                              ),
+                                                                            ),
+                                                                          ],
+                                                                        ),
                                                                       ],
-                                                                      readOnly:
-                                                                          isAbourtMe,
-                                                                      controller:
-                                                                          aboutMe,
-                                                                      maxLines:
-                                                                          5,
-                                                                      decoration:
-                                                                          InputDecoration(
-                                                                        border:
-                                                                            OutlineInputBorder(),
-                                                                      ),
                                                                     ),
                                                                   ),
+
+                                                            // Padding(
+                                                            //         padding: const EdgeInsets
+                                                            //                 .only(
+                                                            //             left:
+                                                            //                 20,
+                                                            //             right:
+                                                            //                 20),
+                                                            //         child:
+                                                            //             TextFormField(
+                                                            //           inputFormatters: [
+                                                            //             LengthLimitingTextInputFormatter(
+                                                            //                 500),
+                                                            //           ],
+                                                            //           readOnly:
+                                                            //               isAbourtMe,
+                                                            //           controller:
+                                                            //               aboutMe,
+                                                            //           maxLines:
+                                                            //               5,
+                                                            //           decoration:
+                                                            //               InputDecoration(
+                                                            //             border:
+                                                            //                 OutlineInputBorder(),
+                                                            //           ),
+                                                            //         ),
+                                                            //       ),
                                                             //wiil DataGet
                                                             /*   : */
                                                             SizedBox(
@@ -3978,6 +4141,43 @@ class _ProfileScreenState extends State<ProfileScreen>
         return ' December';
       default:
         return '';
+    }
+  }
+
+  onChangeMethod(String value) {
+    setState(() {
+      aboutMe.text = value;
+    });
+
+    if (value.contains('@')) {
+      print("if this condison is working-${value}");
+      if (value.length >= 1 && value.contains('@')) {
+        print("value check --${value.endsWith(' #')}");
+        if (value.endsWith(' #')) {
+          String data1 = value.split(' #').last.replaceAll('#', '');
+          BlocProvider.of<NewProfileSCubit>(context)
+              .GetAllHashtag(context, '10', '#${data1.trim()}');
+        } else {
+          String data = value.split(' @').last.replaceAll('@', '');
+          BlocProvider.of<NewProfileSCubit>(context)
+              .search_user_for_inbox(context, '${data.trim()}', '1');
+        }
+      } else if (value.endsWith(' #')) {
+        print("ends with value-${value}");
+      } else {
+        print("check lenth else-${value.length}");
+      }
+    } else if (value.contains('#')) {
+      print("check length-${value}");
+      String data1 = value.split(' #').last.replaceAll('#', '');
+      BlocProvider.of<NewProfileSCubit>(context)
+          .GetAllHashtag(context, '10', '#${data1.trim()}');
+    } else {
+      setState(() {
+        // postText.text = postText.text + ' ' + postTexContrlloer.join(' ,');
+        istageData = false;
+        isHeshTegData = false;
+      });
     }
   }
 
