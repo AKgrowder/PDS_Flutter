@@ -2,8 +2,8 @@ class ImageDataPostOne {
   String? message;
   String? object;
   bool? success;
-
-  ImageDataPostOne({this.message, this.object, this.success});
+  String? videodurationGet; 
+  ImageDataPostOne({this.message, this.object, this.success,this.videodurationGet});
 
   ImageDataPostOne.fromJson(Map<String, dynamic> json) {
     message = json['message'];

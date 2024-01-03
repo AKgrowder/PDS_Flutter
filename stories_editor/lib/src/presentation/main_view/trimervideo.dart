@@ -56,33 +56,28 @@ class _VideoEditorState extends State<VideoEditor> {
     _exportingProgress.value = 0;
     _isExporting.value = true;
 
-    final config = VideoFFmpegVideoEditorConfig(
-      _controller,
-      format: VideoExportFormat.mp4,
-      outputDirectory: Platform.isAndroid ? "/storage/emulated/0/Download":(await getApplicationDocumentsDirectory()).path
-    );
-
-    FFmpegVideoEditorExecute trimExecute = await config.getExecuteConfig();
-    print("export path : ${trimExecute.outputPath}");
-    //
+    final config = VideoFFmpegVideoEditorConfig(_controller,
+        format: VideoExportFormat.mp4,
+        outputDirectory: Platform.isAndroid
+            ? "/storage/emulated/0/Download"
+            : (await getApplicationDocumentsDirectory()).path);
     await ExportService.runFFmpegCommand(
       await config.getExecuteConfig(),
       onProgress: (stats) {
-        _exportingProgress.value = config.getFFmpegProgress(stats.getTime().toInt());
+        _exportingProgress.value =
+            config.getFFmpegProgress(stats.getTime().toInt());
       },
       onError: (e, s) => _showErrorSnackBar("Error on export video :("),
       onCompleted: (file) {
         _isExporting.value = false;
         if (!mounted) return;
-        print("exported path : ${file.path}");
-        Navigator.pop(context,file.path);
-        /*showDialog(
+          Navigator.pop(context,file);
+        /* showDialog(
           context: context,
           builder: (_) => VideoResultPopup(video: file),
-        );*/
+        ); */
       },
     );
-    
   }
 
   @override
@@ -100,7 +95,7 @@ class _VideoEditorState extends State<VideoEditor> {
                         _topNavBar(),
                         Expanded(
                           child: DefaultTabController(
-                            length: 2,
+                            length: 1,
                             child: Column(
                               children: [
                                 Expanded(

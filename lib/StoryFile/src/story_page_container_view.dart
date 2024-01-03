@@ -338,9 +338,7 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
               context,
               "${User_ID}",
               "${widget.buttonData.images[_curSegmentIndex].storyUid}");
-        }else{
-          
-        }
+        } else {}
       }
     }
     return imageLoaded == false
@@ -990,23 +988,28 @@ class _StoryTimelineState extends State<StoryTimeline> {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      _maxAccumulator = widget.buttonData.segmentDuration.inMilliseconds;
-    _timer = Timer.periodic(
-      Duration(
-        milliseconds: widget.durationOfVideo != null
-            ? widget.durationOfVideo!.inMilliseconds
-            : kStoryTimerTickMillis,
-      ),
-      _onTimer,
-    );
-    widget.controller._state = this;
-    super.initState();
-    if (widget.buttonData.storyWatchedContract ==
-        StoryWatchedContract.onStoryStart) {
-      widget.buttonData.markAsWatched();
-    }
+      _maxAccumulator = widget.buttonData.images[_curSegmentIndex].duration !=
+              null
+          ? Duration(
+                  seconds:
+                      widget.buttonData.images[_curSegmentIndex].duration ?? 0)
+              .inMicroseconds
+          : widget.buttonData.segmentDuration.inMilliseconds;
+      _timer = Timer.periodic(
+        Duration(
+          milliseconds: widget.durationOfVideo != null
+              ? widget.durationOfVideo!.inMilliseconds
+              : kStoryTimerTickMillis,
+        ),
+        _onTimer,
+      );
+      widget.controller._state = this;
+      super.initState();
+      if (widget.buttonData.storyWatchedContract ==
+          StoryWatchedContract.onStoryStart) {
+        widget.buttonData.markAsWatched();
+      }
     });
-    
   }
 
   void _setTimelineAvailable(bool value) {
