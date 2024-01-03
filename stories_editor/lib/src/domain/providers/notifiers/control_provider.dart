@@ -29,7 +29,8 @@ class ControlNotifier extends ChangeNotifier {
 
   /// is text editor open
   bool get isTextEditing => _isTextEditing;
-
+  Duration durationofvideo =Duration(); 
+  Duration get duration => durationofvideo;
   /// get bool if is text editing
   set isTextEditing(bool val) {
     /// set bool if is text editing

@@ -112,8 +112,6 @@ import 'package:pds/API/Model/storyDeleteModel/storyDeleteModel.dart';
 import 'package:pds/API/Model/acceptRejectInvitaionModel/seenNotificationModel.dart';
 import 'package:pds/API/Model/acceptRejectInvitaionModel/getAllNotificationCount.dart';
 
-
-
 class Repository {
   ApiServices apiServices = ApiServices();
 
@@ -608,11 +606,9 @@ class Repository {
     }
   }
 
-  getAllNoticationsCountAPI(
-      BuildContext context) async {
+  getAllNoticationsCountAPI(BuildContext context) async {
     final response = await apiServices.getApiCallWithToken(
-        '${Config.getAllNoticationsCount}',
-        context);
+        '${Config.getAllNoticationsCount}', context);
     print(response);
     var jsonString = json.decode(response.body);
     switch (response.statusCode) {
@@ -957,9 +953,9 @@ class Repository {
     }
   }
 
-  SeenMessage(BuildContext context,String inboxUid) async {
-    final response =
-        await apiServices.getApiCallWithToken("${Config.message_seen_by_user}?inboxUid=${inboxUid}", context);
+  SeenMessage(BuildContext context, String inboxUid) async {
+    final response = await apiServices.getApiCallWithToken(
+        "${Config.message_seen_by_user}?inboxUid=${inboxUid}", context);
     var jsonString = json.decode(response.body);
     print('Myaccount${response.statusCode}');
     switch (response.statusCode) {
@@ -1490,7 +1486,8 @@ class Repository {
         return jsonString;
     }
   }
-   AutoOpenPostAPI(BuildContext context, String postLink) async {
+
+  AutoOpenPostAPI(BuildContext context, String postLink) async {
     final responce = await apiServices.getApiCallWithToken(
         '${Config.getPostUidOrUserUid}?postLink=${postLink}', context);
     var jsonString = json.decode(responce.body);
@@ -2163,7 +2160,8 @@ class Repository {
 
   aboutMe(BuildContext context, String aboutMe) async {
     final response = await apiServices.getApiCallWithToken(
-        '${Config.add_update_about_me}?aboutMe=${aboutMe.replaceAll("#", "%23")}', context);
+        '${Config.add_update_about_me}?aboutMe=${aboutMe.replaceAll("#", "%23")}',
+        context);
     var jsonString = json.decode(response.body);
     switch (response.statusCode) {
       case 200:
@@ -2362,8 +2360,8 @@ class Repository {
   }
 
   SelectChatMemberList(BuildContext context) async {
-    final responce =
-        await apiServices.getApiCallWithToken('${Config.SelectChatMember}', context);
+    final responce = await apiServices.getApiCallWithToken(
+        '${Config.SelectChatMember}', context);
     var jsonString = json.decode(responce.body);
     print('jasonnString$jsonString');
     switch (responce.statusCode) {

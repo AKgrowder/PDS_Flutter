@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pds/API/Bloc/CreateStory_Bloc/CreateStory_Cubit.dart';
 import 'package:pds/API/Model/storyModel/stroyModel.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stories_editor/stories_editor.dart';
 import '../../API/Bloc/CreateStory_Bloc/CreateStory_state.dart';
 import '../../API/Model/CreateStory_Model/CreateStory_model.dart';
@@ -27,6 +28,7 @@ class _CreateStoryPageState extends State<CreateStoryPage> {
   double finalFileSize = 0;
   ImageDataPostOne? imageDataPost;
   CreateStoryModel? createForm;
+
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<CreateStoryCubit, CreateStoryState>(
@@ -41,8 +43,7 @@ class _CreateStoryPageState extends State<CreateStoryPage> {
 
         if (state is AddPostImaegState) {
           print("dsfdfhsdhfh");
-          imageDataPost = state.imageDataPost;
-          Navigator.pop(context, imageDataPost);
+          dataGetFunction(state);
         }
       },
       builder: (context, state) {
@@ -53,16 +54,40 @@ class _CreateStoryPageState extends State<CreateStoryPage> {
           //fontFamilyList: const ['Shizuru', 'Aladin'],
           galleryThumbnailQuality: 300,
           //isCustomFontList: true,
-          onDone: (uri) {
+          onDone: (uri) async {
             print("finalUrlCheck-$uri");
-         
+
             BlocProvider.of<CreateStoryCubit>(context)
                 .UplodeImageAPI(context, 'Demo', uri);
-            
           },
         );
       },
     );
+  }
+
+  dataGetFunction(state) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    int? videoduration = prefs.getInt('videoduration');
+    print("check video durationGet-${videoduration}");
+
+    imageDataPost = state.imageDataPost;
+    print("data Get value Get-${imageDataPost?.object}");
+    if (imageDataPost?.object?.split('.').last == 'mp4') {
+      print("check condison working on");
+      dynamic imageDataPost1 = {
+        'imageDataPost': imageDataPost,
+        'videoduration': videoduration,
+      };
+      Navigator.pop(context, imageDataPost1);
+    } else {
+      Navigator.pop(context, imageDataPost);
+    }
+    /*  dynamic imageDataPost1 = {
+      'imageDataPost': imageDataPost,
+      'videoduration': videoduration,
+    };
+    Navigator.pop(context, imageDataPost1); */
   }
 
   prepareTestPdf(
