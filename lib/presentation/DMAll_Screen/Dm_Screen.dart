@@ -652,7 +652,7 @@ class _DmScreenState extends State<DmScreen> {
                                                                                     child: Container(
                                                                                       decoration: BoxDecoration(color: ColorConstant.ChatBackColor, borderRadius: BorderRadius.circular(5)),
                                                                                       child: Column(
-                                                                                        crossAxisAlignment: CrossAxisAlignment.end,
+                                                                                        crossAxisAlignment: CrossAxisAlignment.start,
                                                                                         mainAxisAlignment: MainAxisAlignment.start,
                                                                                         children: [
                                                                                           Padding(
@@ -664,6 +664,14 @@ class _DmScreenState extends State<DmScreen> {
                                                                                               style: TextStyle(fontWeight: FontWeight.w500, color: Colors.black, fontFamily: "outfit", fontSize: 13),
                                                                                             ),
                                                                                           ),
+                                                                                          // Padding(
+                                                                                          //   padding: const EdgeInsets.only(left: 4, right: 4),
+                                                                                          //   child: Text(
+                                                                                          //     getTimeDifference(parsedDateTime),
+                                                                                          //     textScaleFactor: 1.0,
+                                                                                          //     style: TextStyle(fontWeight: FontWeight.normal, color: Colors.black, fontFamily: "outfit", fontSize: 10),
+                                                                                          //   ),
+                                                                                          // ),
                                                                                           Padding(
                                                                                             padding: const EdgeInsets.only(left: 4, right: 4),
                                                                                             child: Text(
@@ -976,13 +984,18 @@ class _DmScreenState extends State<DmScreen> {
                                                                                               },
                                                                                             ),
                                                                                           ),
-                                                                                          Padding(
-                                                                                            padding: const EdgeInsets.only(left: 4, right: 4),
-                                                                                            child: Text(
-                                                                                              customFormat(parsedDateTime),
-                                                                                              textScaleFactor: 1.0,
-                                                                                              style: TextStyle(fontWeight: FontWeight.normal, color: Colors.white, fontFamily: "outfit", fontSize: 10),
-                                                                                            ),
+                                                                                          // Padding(
+                                                                                          //   padding: const EdgeInsets.only(left: 4, right: 4),
+                                                                                          //   child: Text(
+                                                                                          //     getTimeDifference(parsedDateTime),
+                                                                                          //     textScaleFactor: 1.0,
+                                                                                          //     style: TextStyle(fontWeight: FontWeight.normal, color: Colors.white, fontFamily: "outfit", fontSize: 10),
+                                                                                          //   ),
+                                                                                          // ),
+                                                                                          Text(
+                                                                                            customFormat(parsedDateTime),
+                                                                                            textScaleFactor: 1.0,
+                                                                                            style: TextStyle(fontWeight: FontWeight.normal, color: Colors.white, fontFamily: "outfit", fontSize: 10),
                                                                                           ),
                                                                                         ],
                                                                                       ),
@@ -1781,37 +1794,36 @@ String customFormat(DateTime date) {
   String month = _getMonthName(date.month);
   String year = date.year.toString();
   String time = DateFormat('h:mm a').format(date);
+  String DayCount = "";
 
-  String formattedDate = '$time';
-  return formattedDate;
-}
-
-String getTimeDifference(DateTime dateTime) {
-  final difference = DateTime.now().difference(dateTime);
+  final difference = DateTime.now().difference(date);
   if (difference.inDays > 0) {
     if (difference.inDays == 1) {
-      return '1 day ago';
+      DayCount = '1 day ago';
     } else if (difference.inDays < 7) {
-      return '${difference.inDays} days ago';
+      DayCount = '${difference.inDays} days ago';
     } else {
       final weeks = (difference.inDays / 7).floor();
-      return '$weeks week${weeks == 1 ? '' : 's'} ago';
+      DayCount = '$weeks week${weeks == 1 ? '' : 's'} ago';
     }
   } else if (difference.inHours > 0) {
     if (difference.inHours == 1) {
-      return '1 hour ago';
+      DayCount = '1 hour ago';
     } else {
-      return '${difference.inHours} hours ago';
+      DayCount = '${difference.inHours} hours ago';
     }
   } else if (difference.inMinutes > 0) {
     if (difference.inMinutes == 1) {
-      return '1 minute ago';
+      DayCount = '1 minute ago';
     } else {
-      return '${difference.inMinutes} minutes ago';
+      DayCount = '${difference.inMinutes} minutes ago';
     }
   } else {
-    return 'Just now';
+    DayCount = 'Just now';
   }
+
+  String formattedDate = ' $DayCount $time ';
+  return formattedDate;
 }
 
 String _getMonthName(int month) {
