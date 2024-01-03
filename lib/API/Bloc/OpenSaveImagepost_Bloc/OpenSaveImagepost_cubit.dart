@@ -6,12 +6,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class OpenSaveCubit extends Cubit<OpenSaveState> {
   OpenSaveCubit() : super(OpenSaveInitialState()) {}
   Future<void> openSaveImagePostAPI(
-      BuildContext context, String PostLink, String PostUID) async {
+      BuildContext context, String PostUID) async {
     dynamic OpenSaveModel;
     try {
       emit(OpenSaveLoadingState());
       OpenSaveModel =
-          await Repository().openSaveImagePost(context, PostLink, PostUID);
+          await Repository().openSaveImagePost(context,PostUID);
       if (OpenSaveModel == "Something Went Wrong, Try After Some Time.") {
         emit(OpenSaveErrorState("${OpenSaveModel}"));
       } else {

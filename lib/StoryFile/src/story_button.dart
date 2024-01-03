@@ -289,16 +289,7 @@ class StoryButtonData {
       ),
     ),
     this.borderOffset = 2.0,
-  }) : assert(
-        images[0].duration != null ?
-      Duration(milliseconds: images[0].duration?? 0).inMicroseconds % kStoryTimerTickMillis == 0 &&
-             Duration(milliseconds: images[0].duration?? 0).inMicroseconds >= 1000
-          // 'Segment duration in milliseconds must be a multiple of $kStoryTimerTickMillis and not less than 1000 milliseconds', 
-     :
-          segmentDuration.inMilliseconds % kStoryTimerTickMillis == 0 &&
-              segmentDuration.inMilliseconds >= 1000,
-          'Segment duration in milliseconds must be a multiple of $kStoryTimerTickMillis and not less than 1000 milliseconds',
-        );
+  }) ;
   void markAsWatched() {
     isWatch = true;
     _isWatched = isWatch ?? false;
