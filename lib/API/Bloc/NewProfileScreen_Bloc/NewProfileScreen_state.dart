@@ -6,6 +6,7 @@ import 'package:pds/API/Model/NewProfileScreenModel/GetSavePost_Model.dart';
 import 'package:pds/API/Model/NewProfileScreenModel/GetUserPostCommet_Model.dart';
 import 'package:pds/API/Model/NewProfileScreenModel/NewProfileScreen_Model.dart';
 import 'package:pds/API/Model/OnTimeDMModel/OnTimeDMModel.dart';
+import 'package:pds/API/Model/UserTagModel/UserTag_model.dart';
 import 'package:pds/API/Model/WorkExperience_Model/ADDExperience_model.dart';
 import 'package:pds/API/Model/WorkExperience_Model/DeleteExperience_model.dart';
 import 'package:pds/API/Model/WorkExperience_Model/WorkExperience_model.dart';
@@ -130,4 +131,9 @@ class GetAllHashtagState extends NewProfileSState {
 class AddPostErrorState extends NewProfileSState {
   final dynamic error;
   AddPostErrorState(this.error);
+}
+
+class UserTagLoadedState extends NewProfileSState {
+  final UserTagModel userTagModel;
+  UserTagLoadedState(this.userTagModel);
 }

@@ -1272,7 +1272,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                     element.storyData![index].userName,
                                     element.storyData![index].storyUid,
                                     element.storyData![index].userUid,
-                                    element.storyData![index].storyViewCount)),
+                                    element.storyData![index].storyViewCount,
+                                    element.storyData![index].duration)),
                             borderDecoration: BoxDecoration(
                               borderRadius: const BorderRadius.all(
                                 Radius.circular(60.0),
@@ -1377,7 +1378,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                 element.storyData![index].userName,
                                 element.storyData![index].storyUid,
                                 element.storyData![index].userUid,
-                                element.storyData![index].storyViewCount)),
+                                element.storyData![index].storyViewCount,
+                                element.storyData![index].duration)),
                         borderDecoration: BoxDecoration(
                           borderRadius: const BorderRadius.all(
                             Radius.circular(60.0),
@@ -1653,7 +1655,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                     if (!storyAdded)
                                       return GestureDetector(
                                         onTap: () async {
-                                          ImageDataPostOne? imageDataPost;
+                                          dynamic imageDataPost;
                                           if (uuid != null) {
                                             if (Platform.isAndroid) {
                                               final info =
@@ -1680,16 +1682,21 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                           finalvideoSize,
                                                     );
                                                   }));
-                                                  print(
-                                                      "dfhsdfhsdfsdhf--${imageDataPost?.object}");
-                                                  var parmes = {
-                                                    "storyData": imageDataPost
-                                                        ?.object
-                                                        .toString()
-                                                  };
-                                                  await Repository()
-                                                      .cretateStoryApi(
-                                                          context, parmes);
+                                                  if (imageDataPost[
+                                                              'imageDataPost']
+                                                          .object['storyData']
+                                                          .storyType ==
+                                                      'VIDEO') {
+                                                  } else {
+                                                    var parmes = {
+                                                      "storyData": imageDataPost
+                                                          ?.object
+                                                          .toString()
+                                                    };
+                                                    await Repository()
+                                                        .cretateStoryApi(
+                                                            context, parmes);
+                                                  }
                                                 }
                                               } else if (await permissionHandler(
                                                       context,
@@ -1707,14 +1714,21 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                         finalvideoSize,
                                                   );
                                                 }));
-                                                var parmes = {
-                                                  "storyData": imageDataPost
-                                                      ?.object
-                                                      .toString()
-                                                };
-                                                await Repository()
-                                                    .cretateStoryApi(
-                                                        context, parmes);
+                                                  if (imageDataPost[
+                                                              'imageDataPost']
+                                                          .object['storyData']
+                                                          .storyType ==
+                                                      'VIDEO') {
+                                                  } else {
+                                                    var parmes = {
+                                                      "storyData": imageDataPost
+                                                          ?.object
+                                                          .toString()
+                                                    };
+                                                    await Repository()
+                                                        .cretateStoryApi(
+                                                            context, parmes);
+                                                  }
                                               }
                                             }
                                           } else {
@@ -1790,7 +1804,151 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                     User_Name,
                                                     "",
                                                     "${User_ID}",
-                                                    0)
+                                                    0,
+                                                   15)
+                                              ],
+                                              isWatch: false,
+                                              borderDecoration: BoxDecoration(
+                                                borderRadius:
+                                                    const BorderRadius.all(
+                                                  Radius.circular(60.0),
+                                                ),
+                                                border: Border.fromBorderSide(
+                                                  BorderSide(
+                                                    color: Colors.red,
+                                                    width: 1.5,
+                                                  ),
+                                                ),
+                                              ),
+                                              storyPages: [
+                                                FullStoryPage(
+                                                  imageName:
+                                                      '${imageDataPost.object}',
+                                                )
+                                              ],
+                                              segmentDuration:
+                                                  const Duration(seconds: 3),
+                                            );
+
+                                            buttonDatas.insert(0, buttonData);
+                                            storyButtons[0] = StoryButton(
+                                                onPressed: (data) {
+                                                  Navigator.of(storycontext!)
+                                                      .push(
+                                                        StoryRoute(
+                                                          onTap: () {
+                                                            Navigator.push(
+                                                                context,
+                                                                MaterialPageRoute(
+                                                                    builder:
+                                                                        (context) {
+                                                              return ProfileScreen(
+                                                                  User_ID:
+                                                                      "${User_ID}",
+                                                                  isFollowing:
+                                                                      "");
+                                                            }));
+                                                          },
+                                                          storyContainerSettings:
+                                                              StoryContainerSettings(
+                                                            buttonData:
+                                                                buttonData,
+                                                            tapPosition: buttonData
+                                                                .buttonCenterPosition!,
+                                                            curve: buttonData
+                                                                .pageAnimationCurve,
+                                                            allButtonDatas:
+                                                                buttonDatas,
+                                                            pageTransform:
+                                                                StoryPage3DTransform(),
+                                                            storyListScrollController:
+                                                                ScrollController(),
+                                                          ),
+                                                          duration: buttonData
+                                                              .pageAnimationDuration,
+                                                        ),
+                                                      )
+                                                      .then((value) =>
+                                                          Get_UserToken());
+                                                },
+                                                buttonData: buttonData,
+                                                allButtonDatas: buttonDatas,
+                                                storyListViewController:
+                                                    ScrollController());
+
+                                            userName.add(User_Name!);
+                                            if (mounted)
+                                              setState(() {
+                                                storyAdded = true;
+                                              });
+                                          } else {
+                                           await BlocProvider.of<
+                                                        GetGuestAllPostCubit>(
+                                                    context)
+                                                .get_all_story(
+                                              context,
+                                            );
+                                            StoryButtonData buttonData =
+                                                StoryButtonData(
+                                              timelineBackgroundColor:
+                                                  Colors.grey,
+                                              buttonDecoration:
+                                                  UserProfileImage != null &&
+                                                          UserProfileImage != ""
+                                                      ? BoxDecoration(
+                                                          shape:
+                                                              BoxShape.circle,
+                                                          image:
+                                                              DecorationImage(
+                                                            image: NetworkImage(
+                                                                "${UserProfileImage}"),
+                                                            fit: BoxFit.fill,
+                                                          ),
+                                                        )
+                                                      : BoxDecoration(
+                                                          shape:
+                                                              BoxShape.circle,
+                                                          image:
+                                                              DecorationImage(
+                                                            image: AssetImage(
+                                                              ImageConstant
+                                                                  .tomcruse,
+                                                            ),
+                                                            fit: BoxFit.cover,
+                                                          ),
+                                                        ),
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.all(5.0),
+                                                child: Column(
+                                                  mainAxisSize:
+                                                      MainAxisSize.max,
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.end,
+                                                  children: [
+                                                    Text(
+                                                      '',
+                                                      style: const TextStyle(
+                                                        color: Colors.white,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                              images: [
+                                                StoryModel(
+                                                    imageDataPost!.object
+                                                        .toString(),
+                                                    DateTime.now()
+                                                        .toIso8601String(),
+                                                    UserProfileImage,
+                                                    User_Name,
+                                                    "",
+                                                    "${User_ID}",
+                                                    0,
+                                                   15)
                                               ],
                                               isWatch: false,
                                               borderDecoration: BoxDecoration(
@@ -3087,7 +3245,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                     context,
                                                     MaterialPageRoute(
                                                         builder: (context) =>
-                                                        
+                                                       
                                                             ShowAllPostLike("${AllGuestPostRoomData?.object?[index].postUid}"))); */
 
                                                                         Navigator.push(
@@ -4073,7 +4231,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                     context,
                                                     MaterialPageRoute(
                                                         builder: (context) =>
-          
+         
                                                             ShowAllPostLike("${AllGuestPostRoomData?.object?[index].postUid}"))); */
                                                                         if (uuid ==
                                                                             null) {
@@ -5290,7 +5448,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
         User_Name,
         "",
         "${User_ID}",
-        0));
+        0,
+        1));
     if (imageDataPost.object != null) {
       buttonDatas[0].storyPages.add(FullStoryPage(
             imageName: '${imageDataPost.object}',

@@ -1,4 +1,4 @@
-// ignore_for_file: must_be_immutable
+// ignore_for_file: must_be_immutable, override_on_non_overriding_member
 
 import 'dart:io';
 import 'dart:math';
@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_mentions/flutter_mentions.dart';
+import 'package:getwidget/getwidget.dart';
 import 'package:intl/intl.dart';
 import 'package:pds/API/Bloc/NewProfileScreen_Bloc/NewProfileScreen_cubit.dart';
 import 'package:pds/API/Bloc/NewProfileScreen_Bloc/NewProfileScreen_state.dart';
@@ -371,53 +372,7 @@ class _ProfileScreenState extends State<ProfileScreen>
           int? y = int.parse(aa.split('.')[0]);
           FinalPostCount = y;
         }
-        state.GetAllPost.object?.forEach((element) async {
-          if (element.postDataType == "VIDEO") {
-            for (int i = 0; i < element.postData!.length; i++) {
-              videoUrls.add(element.postData?.first ?? '');
-              thumbnailData = await VideoThumbnail.thumbnailData(
-                video: element.postData![i],
-                // imageFormat: ImageFormat.JPEG,
-                quality: 50,
-              );
-              thumbnailData1.add(thumbnailData);
-            }
-          } else if (element.postDataType == "IMAGE") {
-            for (int i = 0; i < element.postData!.length; i++) {
-              videoUrls.add(element.postData?.first ?? '');
-            }
-          } else if (element.description != null) {
-            videoUrls.add(element.description ?? '');
-          }
-          /*    if (element.postDataType == "VIDEO") {
-            thumbnailData = await VideoThumbnail.thumbnailData(
-              video: element.postData?.first ?? '',
-              // imageFormat: ImageFormat.JPEG,
-              quality: 50,
-            );
-
-            /*  String videoUrl = element.postData!.first;
-            videoUrls.add(element.postData?.first ?? '');
-            for (int i = 0; i < element.postData!.length; i++) {
-              thumbnailData =
-                  await VideoThumbnail.thumbnailData(
-                video: videoUrl,
-                imageFormat: ImageFormat.JPEG,
-                quality: 50,
-              );
-              // Add thumbnail data to the list
-              if (thumbnailData != null) {
-                thumbnailDataMap[videoUrl] = thumbnailData ?? Uint8List(0);
-                videoUrls.add(videoUrl);
-                print("print video url == ${videoUrl}");
-              }
-              print("video image length -- ${videoUrls[i]}");
-            } */
-          } else {
-            thumbnailData = Uint8List(0);
-          }
-          thumbnailData1.add(thumbnailData); */
-        });
+      
       }
       if (state is GetUserPostCommetLoadedState) {
         print(
@@ -2030,47 +1985,13 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                           ),
                                                                           borderRadius: BorderRadius.circular(20)),
                                                                     ),
-                                                                    // thumbnailData !=
-                                                                    //         null
-                                                                    Container(
-                                                                      height:
-                                                                          200,
-                                                                      decoration:
-                                                                          BoxDecoration(
-                                                                              borderRadius: BorderRadius.circular(20)),
-                                                                      child:
-                                                                          ClipRRect(
-                                                                        borderRadius:
-                                                                            BorderRadius.circular(20),
-                                                                        child: Image
-                                                                            .memory(
-                                                                          thumbnailData1[index] ??
-                                                                              Uint8List(0),
-                                                                          // thumbnailData ??
-                                                                          //     Uint8List(0),
-                                                                          width:
-                                                                              _width,
-                                                                          fit: BoxFit
-                                                                              .cover,
-                                                                        ),
-                                                                      ),
+                                                                    ThumbnailClass(
+                                                                      videourl: GetAllPostData
+                                                                              ?.object?[index]
+                                                                              .postData
+                                                                              ?.first ??
+                                                                          '',
                                                                     )
-                                                                    // : GFLoader(
-                                                                    //     type:
-                                                                    //         GFLoaderType.ios),
-                                                                    // Container(
-
-                                                                    //   child:
-                                                                    //       Padding(
-                                                                    //     padding:
-                                                                    //         const EdgeInsets.only(right: 10),
-                                                                    //     child:
-                                                                    //         VideoListItem(
-                                                                    //       videoUrl:
-                                                                    //           videoUrls.first,
-                                                                    //     ),
-                                                                    //   ),
-                                                                    // ),
                                                                   ],
                                                                 )
                                                               : GetAllPostData
@@ -2746,15 +2667,34 @@ class _ProfileScreenState extends State<ProfileScreen>
                       },
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(12.0),
-                        child: Container(
-                            margin: EdgeInsets.all(0.0),
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(20)),
-                            child: CustomImageView(
-                              url:
-                                  "${GetSavePostData?.object?[index].postData?[0]}",
-                              fit: BoxFit.cover,
-                            )),
+                        child: GetSavePostData?.object?[index].postDataType ==
+                                'VIDEO'
+                            ? ThumbnailClass(
+                                videourl: GetSavePostData
+                                        ?.object?[index].postData?.first ??
+                                    '')
+                            : (GetSavePostData?.object?[index].postDataType ==
+                                    "ATTACHMENT")
+                                ? Container(
+                                    margin: EdgeInsets.all(0.0),
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(
+                                            20)), // Remove margin
+
+                                    child: DocumentViewScreen1(
+                                      path: GetAllPostData
+                                          ?.object?[index].postData?[0],
+                                    ))
+                                : Container(
+                                    margin: EdgeInsets.all(0.0),
+                                    decoration: BoxDecoration(
+                                        borderRadius:
+                                            BorderRadius.circular(20)),
+                                    child: CustomImageView(
+                                      url:
+                                          "${GetSavePostData?.object?[index].postData?[0]}",
+                                      fit: BoxFit.cover,
+                                    )),
                       ),
                     ),
                   );
@@ -4185,5 +4125,49 @@ class _ProfileScreenState extends State<ProfileScreen>
     arrNotiyTypeList.forEach((element) {
       element.isSelected = false;
     });
+  }
+}
+
+class ThumbnailClass extends StatefulWidget {
+  String videourl;
+  ThumbnailClass({required this.videourl});
+
+  @override
+  State<ThumbnailClass> createState() => _ThumbnailClassState();
+}
+
+class _ThumbnailClassState extends State<ThumbnailClass> {
+  @override
+  Uint8List? data;
+
+  void initState() {
+    dataGetFunction();
+
+    super.initState();
+  }
+
+  dataGetFunction() async {
+    data = await VideoThumbnail.thumbnailData(
+      video: widget.videourl,
+      // imageFormat: ImageFormat.JPEG,
+      quality: 50,
+    );
+    setState(() {});
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 200,
+      decoration: BoxDecoration(borderRadius: BorderRadius.circular(20)),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(20),
+        child: Image.memory(
+          data ?? Uint8List(0),
+          width: MediaQuery.of(context).size.width,
+          fit: BoxFit.cover,
+        ),
+      ),
+    );
   }
 }

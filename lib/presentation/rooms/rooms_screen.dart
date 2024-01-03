@@ -90,11 +90,11 @@ class _RoomsScreenState extends State<RoomsScreen> {
       await BlocProvider.of<GetAllPrivateRoomCubit>(context)
           .chckUserStaus(context);
 
-      Timer.periodic(Duration(seconds: 15), (_) {
+      // Timer.periodic(Duration(seconds: 15), (_) {
         // print("Room Socket ++++++++++++++++++++++++++++++++++++++++++++++++++++");
-        BlocProvider.of<GetAllPrivateRoomCubit>(context)
+      await  BlocProvider.of<GetAllPrivateRoomCubit>(context)
             .getAllNoticationsCountAPI(context);
-      });
+      // });
     }
 
     await BlocProvider.of<GetAllPrivateRoomCubit>(context)
