@@ -129,6 +129,23 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
   void _onTimelineEvent(StoryTimelineEvent event) {
     if (event == StoryTimelineEvent.storyComplete) {
       widget.onStoryComplete.call();
+    } else if (event == StoryTimelineEvent.segmentComplete) {
+      if (widget.buttonData.images[_curSegmentIndex].image!.endsWith('.mp4')) {
+        _controller = VideoPlayerController.networkUrl(
+            (Uri.parse('${widget.buttonData.images[_curSegmentIndex].image}')))
+          ..initialize().then((_) {
+            setState(() {
+              ifVideoPlayer = true;
+              durationOfVideo = _controller!.value.duration;
+
+              _controller?.play();
+            });
+          });
+      } else {
+        setState(() {
+          ifVideoPlayer = false;
+        });
+      }
     }
     setState(() {});
   }
@@ -278,7 +295,12 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
           ? StoryTimeline(
               controller: _storyController!,
               buttonData: widget.buttonData,
-              durationOfVideo: durationOfVideo,
+              durationOfVideo:
+                  widget.buttonData.images[_curSegmentIndex].duration != null
+                      ? Duration(
+                          seconds: widget
+                              .buttonData.images[_curSegmentIndex].duration!)
+                      : durationOfVideo,
             )
           : SizedBox(),
     );
@@ -338,9 +360,7 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
               context,
               "${User_ID}",
               "${widget.buttonData.images[_curSegmentIndex].storyUid}");
-        }else{
-          
-        }
+        } else {}
       }
     }
     return imageLoaded == false
@@ -404,7 +424,6 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
 
         // Image has been loaded
         imageLoaded = true;
-        print("video loaded : unpause");
         _storyController!.unpause();
 
         if (DummyStoryViewBool == true) {
@@ -415,8 +434,6 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
         }
       }
     });
-
-    print("check Data ANdGet-_buildPageContent1");
 
     _storyController!.pause();
 
@@ -990,23 +1007,26 @@ class _StoryTimelineState extends State<StoryTimeline> {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      _maxAccumulator = widget.buttonData.segmentDuration.inMilliseconds;
-    _timer = Timer.periodic(
-      Duration(
-        milliseconds: widget.durationOfVideo != null
-            ? widget.durationOfVideo!.inMilliseconds
-            : kStoryTimerTickMillis,
-      ),
-      _onTimer,
-    );
-    widget.controller._state = this;
-    super.initState();
-    if (widget.buttonData.storyWatchedContract ==
-        StoryWatchedContract.onStoryStart) {
-      widget.buttonData.markAsWatched();
-    }
+      _maxAccumulator = widget.buttonData.images[_curSegmentIndex].duration !=
+              null
+          ? Duration(
+                  seconds:
+                      widget.buttonData.images[_curSegmentIndex].duration ?? 0)
+              .inMilliseconds
+          : widget.buttonData.segmentDuration.inMilliseconds;
+      _timer = Timer.periodic(
+        Duration(
+          milliseconds: kStoryTimerTickMillis,
+        ),
+        _onTimer,
+      );
+      widget.controller._state = this;
+      super.initState();
+      if (widget.buttonData.storyWatchedContract ==
+          StoryWatchedContract.onStoryStart) {
+        widget.buttonData.markAsWatched();
+      }
     });
-    
   }
 
   void _setTimelineAvailable(bool value) {
@@ -1017,38 +1037,19 @@ class _StoryTimelineState extends State<StoryTimeline> {
     if (_isPaused || !_isTimelineAvailable) {
       return;
     }
-    if (widget.durationOfVideo != null) {
-      if (_accumulatedTime + widget.durationOfVideo!.inMilliseconds <=
-          _maxAccumulator) {
-        _accumulatedTime += widget.durationOfVideo!.inMilliseconds;
-        if (_accumulatedTime >= _maxAccumulator) {
-          if (_isLastSegment) {
-            _onStoryComplete();
-          } else {
-            _accumulatedTime = 0;
-            _curSegmentIndex++;
-            _onSegmentComplete();
-          }
-        }
-        if (mounted) {
-          setState(() {});
+    if (_accumulatedTime + kStoryTimerTickMillis <= _maxAccumulator) {
+      _accumulatedTime += kStoryTimerTickMillis;
+      if (_accumulatedTime >= _maxAccumulator) {
+        if (_isLastSegment) {
+          _onStoryComplete();
+        } else {
+          _accumulatedTime = 0;
+          _curSegmentIndex++;
+          _onSegmentComplete();
         }
       }
-    } else {
-      if (_accumulatedTime + kStoryTimerTickMillis <= _maxAccumulator) {
-        _accumulatedTime += kStoryTimerTickMillis;
-        if (_accumulatedTime >= _maxAccumulator) {
-          if (_isLastSegment) {
-            _onStoryComplete();
-          } else {
-            _accumulatedTime = 0;
-            _curSegmentIndex++;
-            _onSegmentComplete();
-          }
-        }
-        if (mounted) {
-          setState(() {});
-        }
+      if (mounted) {
+        setState(() {});
       }
     }
   }
