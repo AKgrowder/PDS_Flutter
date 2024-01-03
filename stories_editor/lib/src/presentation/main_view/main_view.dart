@@ -7,6 +7,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stories_editor/src/gallery_media_picker/gallery_media_picker.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:provider/provider.dart';
@@ -111,7 +112,9 @@ class _MainViewState extends State<MainView> {
   bool _inAction = false;
   bool nodatainTextfiled = false;
   Duration? duration;
-
+  int? totalhoures;
+  int? totalminuert;
+  int? totalSeconds;
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
@@ -215,7 +218,7 @@ class _MainViewState extends State<MainView> {
                                           alignment: Alignment.center,
                                           children: [
                                             /// in this case photo view works as a main background container to manage
-                                                /// the gestures of all movable items.
+                                            /// the gestures of all movable items.
                                             controlNotifier.mediaPath
                                                         .endsWith('.mp4') &&
                                                 _controller != null &&
@@ -227,14 +230,13 @@ class _MainViewState extends State<MainView> {
                                                     child: VideoPlayer(
                                                         _controller!),
                                                   )
-                                                :
-                                            PhotoView.customChild(
-                                              child: Container(),
-                                              backgroundDecoration:
-                                                  const BoxDecoration(
-                                                      color:
-                                                          Colors.transparent),
-                                            ),
+                                                : PhotoView.customChild(
+                                                    child: Container(),
+                                                    backgroundDecoration:
+                                                        const BoxDecoration(
+                                                            color: Colors
+                                                                .transparent),
+                                                  ),
 
                                             ///list items
                                             ...itemProvider.draggableWidget
@@ -397,6 +399,7 @@ class _MainViewState extends State<MainView> {
                   // gridViewPhysics: itemProvider.draggableWidget.isEmpty
                   //     ? const NeverScrollableScrollPhysics()
                   //     : const ScrollPhysics(),
+
                   pathList: (path) {
                     if (path.first.path
                             .toString()
@@ -407,9 +410,8 @@ class _MainViewState extends State<MainView> {
                             .last ==
                         'mp4') {
                       print('this is the Get');
-                      /*getVideo(path.first.path.toString(), 1, context,
-                          controlNotifier, itemProvider);*/
-                      controlNotifier.mediaPath = path.first.path.toString();
+                      getVideo(path.first.path.toString(), 1, context,
+                          controlNotifier, itemProvider);
                     } else {
                       if (path.first.path.toString().isNotEmpty) {
                         getFileSize(path.first.path.toString(), 1, context,
@@ -423,28 +425,67 @@ class _MainViewState extends State<MainView> {
                     child: Align(
                       alignment: Alignment.bottomRight,
                       child: AnimatedOnTapButton(
-                        onTap: () async{
-                          if (controlNotifier.mediaPath.endsWith('.mp4')) {
-                            String? path  = await Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => VideoEditor(
-                                          file: File(controlNotifier.mediaPath),
-                                        )));
-                            if(path != null && path.isNotEmpty){
-                              print("exported path : ${path}");
+                        onTap: () async {
+                 
+                          if ((duration?.inSeconds ?? 0) <= 30) {
+                            scrollProvider.pageController.animateToPage(0,
+                                duration: const Duration(milliseconds: 300),
+                                curve: Curves.easeIn);
+                          } else {
+                           
+                            _controller = null;
+                            duration = null;
+                            final SharedPreferences prefs =
+                                await SharedPreferences.getInstance();
 
-                              getVideo(path, 1, context,
-                                  controlNotifier, itemProvider);
+                            if (controlNotifier.mediaPath.endsWith('.mp4')) {
+                              File file = await Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => VideoEditor(
+                                            file:
+                                                File(controlNotifier.mediaPath),
+                                          )));
+                              if (file.path.isNotEmpty) {
+                                controlNotifier.mediaPath = file.path;
+                                itemProvider.draggableWidget.insert(
+                                    0,
+                                    EditableItem()
+                                      ..type = ItemType.video
+                                      ..position = const Offset(0.0, 0));
+
+                                _controller =
+                                    VideoPlayerController.file(File(file.path));
+
+                                setState(() {});
+                                _controller
+                                    ?.initialize()
+                                    .then((value) => setState(() {
+                                          duration =
+                                              _controller!.value.duration;
+                                          controlNotifier.durationofvideo =
+                                              duration!;
+                                          prefs.setInt("videoduration",
+                                              duration?.inSeconds ?? 0);
+                                          print(
+                                              "check durationDataSet -${duration}");
+                                        }));
+
+                                setState(() {
+                                  _controller?.play();
+                                  _controller?.setLooping(true);
+                                });
+                                scrollProvider.pageController.animateToPage(0,
+                                    duration: const Duration(milliseconds: 300),
+                                    curve: Curves.easeIn);
+                              }
+                            } else {
                               scrollProvider.pageController.animateToPage(0,
                                   duration: const Duration(milliseconds: 300),
                                   curve: Curves.easeIn);
                             }
-                          } else {
-                            scrollProvider.pageController.animateToPage(0,
-                                duration: const Duration(milliseconds: 300),
-                                curve: Curves.easeIn);
                           }
+
                         },
                         child: Container(
                           padding: const EdgeInsets.symmetric(
@@ -508,19 +549,24 @@ class _MainViewState extends State<MainView> {
               ..position = const Offset(0.0, 0));
         _controller =
             VideoPlayerController.file(File(controlNotifier.mediaPath));
-          _controller =
-            VideoPlayerController.file(File(controlNotifier.mediaPath));
 
         _controller?.initialize().then((value) => setState(() {
               duration = _controller!.value.duration;
-              print("check duration -${duration}");
-              _controller?.play();
-              _controller?.setLooping(true);
+              print("check duration-${duration}");
+
+              print(
+                  "check data-${totalhoures}-${totalminuert}-${totalSeconds}");
             }));
-        /*setState(() {
-          _controller?.play();
-          _controller?.setLooping(true);
-        });*/
+        if (duration!.inSeconds <= 30) {
+          _controller =
+              VideoPlayerController.file(File(controlNotifier.mediaPath));
+
+          setState(() {
+            _controller?.play();
+            _controller?.setLooping(true);
+          });
+        }
+
         break;
       case 1:
         print("Done file size KB");
@@ -536,17 +582,26 @@ class _MainViewState extends State<MainView> {
 
         _controller?.initialize().then((value) => setState(() {
               duration = _controller!.value.duration;
-              print("check duration -${duration}");
-              _controller?.play();
-              _controller?.setLooping(true);
+              // print("check duration -${duration}");
+
+              print(
+                  "check data-${totalhoures}-${totalminuert}-${totalSeconds}");
             }));
 
-        // setState(() {
-        //   _controller?.play();
-        //   _controller?.setLooping(true);
-        // });
-        print(
-            "check then value Get-${_formatDuration(_controller!.value.duration)}");
+        _controller?.initialize().then((value) => setState(() {
+              duration = _controller!.value.duration;
+              print("check duration -${duration}");
+            }));
+
+        if (duration!.inSeconds <= 30) {
+          _controller =
+              VideoPlayerController.file(File(controlNotifier.mediaPath));
+
+          setState(() {
+            _controller?.play();
+            _controller?.setLooping(true);
+          });
+        }
 
         break;
       case 2:
@@ -585,18 +640,28 @@ class _MainViewState extends State<MainView> {
           _controller =
               VideoPlayerController.file(File(controlNotifier.mediaPath));
 
+          _controller?.initialize().then((value) => setState(() {
+                duration = _controller!.value.duration;
+                print("check duration-${duration}");
+
+                print(
+                    "check data-${totalhoures}-${totalminuert}-${totalSeconds}");
+              }));
 
           _controller?.initialize().then((value) => setState(() {
                 duration = _controller!.value.duration;
                 print("check duration -${duration}");
-                _controller?.play();
-                _controller?.setLooping(true);
               }));
 
-          /*setState(() {
-            _controller?.play();
-            _controller?.setLooping(true);
-          });*/
+          if (duration!.inSeconds <= 30) {
+            _controller =
+                VideoPlayerController.file(File(controlNotifier.mediaPath));
+
+            setState(() {
+              _controller?.play();
+              _controller?.setLooping(true);
+            });
+          }
         }
 
         break;
