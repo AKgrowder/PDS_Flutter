@@ -2592,7 +2592,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                 false)
                                                             ? SizedBox()
                                                             : Container(
-                                                                height: 200,
+                                                                // height: 200,
                                                                 width: _width,
                                                                 child: AllGuestPostRoomData
                                                                             ?.object
@@ -2638,15 +2638,12 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                                     child: Column(
                                                                                       mainAxisSize: MainAxisSize.min,
                                                                                       children: [
-                                                                                        /* Container(
-                                                                                            height: 250,
-                                                                                            width: _width,
-                                                                                            child: Chewie(
-                                                                                              controller: chewieController[index],
-                                                                                            )), */
-
-                                                                                        VideoListItem(
-                                                                                          videoUrl: videoUrls[index],
+                                                                                        Container(
+                                                                                          // height: 180,
+                                                                                          width: _width,
+                                                                                          child: VideoListItem(
+                                                                                            videoUrl: videoUrls[index],
+                                                                                          ),
                                                                                         ),
                                                                                       ],
                                                                                     ),
