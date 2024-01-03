@@ -40,6 +40,7 @@ class _InviteMeesageState extends State<InviteMeesage> {
   bool isChecked = false;
   bool isEmojiVisible = false;
   bool isKeyboardVisible = false;
+  bool singleTap = false;
   final focusNode = FocusNode();
   XFile? pickedImageFile;
   File? _image;
@@ -173,20 +174,20 @@ class _InviteMeesageState extends State<InviteMeesage> {
               print(state.DMChatList.object);
               UserIndexUUID = state.DMChatList.object;
 
-
-                if (UserIndexUUID != "" && UserIndexUUID != null) {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) {
-                    return DmScreen(UserUID:  "${searchUserForInbox1?.object?.content?[Index].userUid}",
-                      UserName:
-                          "${searchUserForInbox1?.object?.content?[Index].userName}",
-                      ChatInboxUid: UserIndexUUID ?? "",
-                      UserImage:
-                          "${searchUserForInbox1?.object?.content?[Index].userProfilePic}",
-                    );
-                  }));
-                  // UserIndexUUID = "";
-                }
-              
+              if (UserIndexUUID != "" && UserIndexUUID != null) {
+                Navigator.push(context, MaterialPageRoute(builder: (context) {
+                  return DmScreen(
+                    UserUID:
+                        "${searchUserForInbox1?.object?.content?[Index].userUid}",
+                    UserName:
+                        "${searchUserForInbox1?.object?.content?[Index].userName}",
+                    ChatInboxUid: UserIndexUUID ?? "",
+                    UserImage:
+                        "${searchUserForInbox1?.object?.content?[Index].userProfilePic}",
+                  );
+                }));
+                // UserIndexUUID = "";
+              }
             }
             if (state is SelectMultipleUsers_ChatLoadestate) {
               MultiUser = [];
@@ -477,7 +478,7 @@ class _InviteMeesageState extends State<InviteMeesage> {
                                   // color: Colors.amber,
                                   child: Row(
                                     children: [
-                                     /*  Container(
+                                      /*  Container(
                                         // color: Colors.amber,
                                         child: IconButton(
                                           icon: Icon(
@@ -541,53 +542,62 @@ class _InviteMeesageState extends State<InviteMeesage> {
                             ),
                             GestureDetector(
                               onTap: () async {
-                                print(
-                                    'MultiUserLengthCheck-${MultiUsermap.length}');
-                                if (Add_Comment.text.isNotEmpty) {
-                                  if (Add_Comment.text.length >= 1000) {
+                                if (singleTap == false) {
+                                  print(
+                                      'MultiUserLengthCheck-${MultiUsermap.length}');
+                                  if (Add_Comment.text.isNotEmpty) {
+                                    if (Add_Comment.text.length >= 1000) {
+                                      SnackBar snackBar = SnackBar(
+                                        content: Text(
+                                            'One Time Message Lenght only for 1000 Your Meassge -> ${Add_Comment.text.length}'),
+                                        backgroundColor:
+                                            ColorConstant.primary_color,
+                                      );
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(snackBar);
+                                    } else {
+                                      if (MultiUser.isNotEmpty) {
+                                        print("check Multi User-$MultiUser");
+
+                                        var parmes = {
+                                          "message": Add_Comment.text,
+                                          "messageType": "TEXT",
+                                          "usersIds": MultiUser
+                                        };
+                                        BlocProvider.of<PersonalChatListCubit>(
+                                                context)
+                                            .selectMultipleUsers_ChatMethod(
+                                                parmes, context);
+                                      }
+                                    }
+                                  } else if (MultiUser.isNotEmpty &&
+                                      _image != null) {
+                                    var parmes = {
+                                      "message": imageDataPost?.object,
+                                      "messageType": "IMAGE",
+                                      "usersIds": MultiUser
+                                    };
+                                    BlocProvider.of<PersonalChatListCubit>(
+                                            context)
+                                        .selectMultipleUsers_ChatMethod(
+                                            parmes, context);
+                                  } else {
                                     SnackBar snackBar = SnackBar(
-                                      content: Text(
-                                          'One Time Message Lenght only for 1000 Your Meassge -> ${Add_Comment.text.length}'),
+                                      content: Text('Please Enter Comment'),
                                       backgroundColor:
                                           ColorConstant.primary_color,
                                     );
                                     ScaffoldMessenger.of(context)
                                         .showSnackBar(snackBar);
-                                  } else {
-                                    if (MultiUser.isNotEmpty) {
-                                      print("check Multi User-$MultiUser");
-                                      var parmes = {
-                                        "message": Add_Comment.text,
-                                        "messageType": "TEXT",
-                                        "usersIds": MultiUser
-                                      };
-                                      BlocProvider.of<PersonalChatListCubit>(
-                                              context)
-                                          .selectMultipleUsers_ChatMethod(
-                                              parmes, context);
-                                    }
                                   }
-                                } else if (MultiUser.isNotEmpty &&
-                                    _image != null) {
-                                  var parmes = {
-                                    "message": imageDataPost?.object,
-                                    "messageType": "IMAGE",
-                                    "usersIds": MultiUser
-                                  };
-                                  BlocProvider.of<PersonalChatListCubit>(
-                                          context)
-                                      .selectMultipleUsers_ChatMethod(
-                                          parmes, context);
-                                } else {
-                                  SnackBar snackBar = SnackBar(
-                                    content: Text('Please Enter Comment'),
-                                    backgroundColor:
-                                        ColorConstant.primary_color,
-                                  );
-                                  ScaffoldMessenger.of(context)
-                                      .showSnackBar(snackBar);
+                                  singleTap = true;
+                                  MultiUser = [];
+                                  MultiUsermap.clear();
+                                  _image = null;
+                                  isDataGet = false;
+                                  Add_Comment.clear();
+                                  searchController.clear();
                                 }
-                                // }
                               },
                               child: Container(
                                 height: 50,
@@ -698,7 +708,7 @@ class _InviteMeesageState extends State<InviteMeesage> {
                     "${searchUserForInbox1?.object?.content?[index].userUid}",
                     context);
 
-               /*  if (UserIndexUUID != "" && UserIndexUUID != null) {
+                /*  if (UserIndexUUID != "" && UserIndexUUID != null) {
                   Navigator.push(context, MaterialPageRoute(builder: (context) {
                     return DmScreen(
                       UserName:
