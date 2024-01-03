@@ -195,7 +195,7 @@ class _InviteDilogScreenState extends State<InviteDilogScreen>
                                       //     return 'Please Enter Email';
                                       //   } else if (!emailRegExp
                                       //       .hasMatch(value)) {
-                                      //     return 'please Enter vaild Email';
+                                      //     return 'Please Enter Vaild Email';
                                       //   }
                                       //   return null;
                                       // },
@@ -275,7 +275,7 @@ class _InviteDilogScreenState extends State<InviteDilogScreen>
                                           .hasMatch(email.text.toString())) {
                                         SnackBar snackBar = SnackBar(
                                           content:
-                                              Text('please Enter vaild Email'),
+                                              Text('Please Enter Vaild Email'),
                                           backgroundColor:
                                               ColorConstant.primary_color,
                                         );

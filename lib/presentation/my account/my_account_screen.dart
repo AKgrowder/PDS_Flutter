@@ -1480,7 +1480,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                                 .showSnackBar(snackBar);
                           } else if (!emailRegExp.hasMatch(email.text)) {
                             SnackBar snackBar = SnackBar(
-                              content: Text('please Enter vaild Email'),
+                              content: Text('Please Enter Vaild Email'),
                               backgroundColor: ColorConstant.primary_color,
                             );
                             ScaffoldMessenger.of(context)
