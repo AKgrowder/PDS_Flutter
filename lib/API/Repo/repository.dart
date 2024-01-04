@@ -2179,14 +2179,13 @@ class Repository {
     }
   }
 
-  openSaveImagePost(
-      BuildContext context, String PostLink, String PostUID) async {
-    final response = PostUID == ""
+  openSaveImagePost(BuildContext context, String PostUID) async {
+    final response = /* PostUID == ""
         ? await apiServices.getApiCallWithToken(
             '${Config.OpenSaveImagePost}?postLink=${PostLink}', context)
-        : await apiServices.getApiCallWithToken(
-            '${Config.OpenSaveImagePost}?postLink=${PostLink}&postUid=$PostUID',
-            context);
+        : */
+        await apiServices.getApiCallWithToken(
+            '${Config.OpenSaveImagePost}?postUid=$PostUID', context);
     var jsonString = json.decode(response.body);
     switch (response.statusCode) {
       case 200:
