@@ -102,7 +102,6 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
           setState(() {
             ifVideoPlayer = true;
             durationOfVideo = _controller!.value.duration;
-
             _controller?.play();
           });
         });
@@ -137,13 +136,13 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
             setState(() {
               ifVideoPlayer = true;
               durationOfVideo = _controller!.value.duration;
-
               _controller?.play();
             });
           });
       } else {
         setState(() {
           ifVideoPlayer = false;
+          _controller?.dispose();
         });
       }
     }
@@ -164,6 +163,7 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
             if (widget.onClosePressed != null) {
               widget.onClosePressed!.call();
             } else {
+              _controller?.dispose();
               Navigator.of(context).pop();
             }
           },
