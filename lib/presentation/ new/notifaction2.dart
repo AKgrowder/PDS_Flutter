@@ -39,12 +39,16 @@ class _NewNotifactionScreenState extends State<NewNotifactionScreen>
   bool? Show_NoData_Image;
 
   void initState() {
-    BlocProvider.of<InvitationCubit>(context).seetinonExpried(context);
-    BlocProvider.of<InvitationCubit>(context).AllNotification(context);
-    BlocProvider.of<InvitationCubit>(context).RequestListAPI(context);
-    BlocProvider.of<InvitationCubit>(context).InvitationAPI(context);
-    BlocProvider.of<InvitationCubit>(context).getAllNoticationsCountAPI(context);
-    super.initState();
+    AllAPICall();
+    super.initState();   
+  }
+
+  AllAPICall() async {
+    await BlocProvider.of<InvitationCubit>(context).seetinonExpried(context);
+    await BlocProvider.of<InvitationCubit>(context).AllNotification(context);
+    await BlocProvider.of<InvitationCubit>(context).RequestListAPI(context);
+    await BlocProvider.of<InvitationCubit>(context).InvitationAPI(context);
+    await BlocProvider.of<InvitationCubit>(context).getAllNoticationsCountAPI(context);
   }
 
   @override
@@ -367,9 +371,15 @@ class _AllNotificationClassState extends State<AllNotificationClass> {
 
   @override
   void initState() {
-    BlocProvider.of<InvitationCubit>(context).AllNotification(context);
+    
+    AllAPICall();
     // BlocProvider.of<InvitationCubit>(context).RequestListAPI(context);
     super.initState();
+  }
+
+    AllAPICall() async {
+    await BlocProvider.of<InvitationCubit>(context).seetinonExpried(context);
+    await BlocProvider.of<InvitationCubit>(context).AllNotification(context);
   }
 
   bool? isdata = false;
@@ -768,7 +778,7 @@ class _AllNotificationClassState extends State<AllNotificationClass> {
                   })
               : Center(
                   child: Text(
-                    "No Now Any Notification",
+                    "No New Notification",
                     style: TextStyle(
                       fontFamily: 'outfit',
                       fontSize: 20,
@@ -793,9 +803,13 @@ class RequestOrderClass extends StatefulWidget {
 class _RequestOrderClassState extends State<RequestOrderClass> {
   @override
   void initState() {
-    BlocProvider.of<InvitationCubit>(context).seetinonExpried(context);
+    AllAPICall();
     // BlocProvider.of<InvitationCubit>(context).RequestListAPI(context);
     super.initState();
+  }
+    AllAPICall() async {
+    await BlocProvider.of<InvitationCubit>(context).seetinonExpried(context);
+    
   }
 
   accept_rejectModel? accept_rejectData;
@@ -1121,10 +1135,14 @@ class _InviationClassState extends State<InviationClass> {
   String? User_Mood;
   @override
   void initState() {
-    BlocProvider.of<InvitationCubit>(context).seetinonExpried(context);
-
-    BlocProvider.of<InvitationCubit>(context).InvitationAPI(context);
+AllAPICall();
     super.initState();
+  }
+
+
+  AllAPICall() async {
+    await BlocProvider.of<InvitationCubit>(context).seetinonExpried(context);
+    await BlocProvider.of<InvitationCubit>(context).InvitationAPI(context);
   }
 
   Widget build(BuildContext context) {

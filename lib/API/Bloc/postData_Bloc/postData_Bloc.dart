@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pds/API/ApiService/ApiService.dart';
 import 'package:pds/API/Bloc/postData_Bloc/postData_state.dart';
 import 'package:pds/API/Repo/repository.dart';
 
@@ -118,6 +119,28 @@ class AddPostCubit extends Cubit<AddPostState> {
     } catch (e) {
       print("eeerrror-${e.toString()}");
       emit(AddPostErrorState(e.toString()));
+    }
+  }
+
+   Future<void> seetinonExpried(BuildContext context,
+      {bool showAlert = false}) async {
+    try {
+      emit(AddPostLoadingState());
+      dynamic settionExperied =
+          await Repository().logOutSettionexperied(context);
+      print("checkDatWant--$settionExperied");
+      // if (settionExperied == "Something Went Wrong, Try After Some Time.") {
+      //     emit(GetGuestAllPostErrorState("${settionExperied}"));
+      //   } else {
+      if (settionExperied.success == true) {
+        await setLOGOUT(context);
+      } else {
+        print("failed--check---${settionExperied}");
+      }
+      // }
+    } catch (e) {
+      print('errorstate-$e');
+      // emit(GetGuestAllPostErrorState(e.toString()));
     }
   }
 }
