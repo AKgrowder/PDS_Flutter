@@ -124,6 +124,7 @@ class _CreateNewPostState extends State<CreateNewPost> {
   } */
 
   getDocumentSize() async {
+    await BlocProvider.of<AddPostCubit>(context).seetinonExpried(context);
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     documentuploadsize = await double.parse(
         prefs.getString(PreferencesKey.MaxPostUploadSizeInMB) ?? "0");

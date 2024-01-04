@@ -502,7 +502,6 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                             "New Version Alert",
                             style: TextStyle(
                               fontSize: 18,
-                          
                               fontWeight: FontWeight.w700,
                               color: ColorConstant.primary_color,
                             ),
@@ -938,9 +937,11 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
   }
 
   NewApi() async {
-    Timer.periodic(Duration(seconds: 15), (_) {
+    Timer.periodic(Duration(seconds: 15), (_) async {
       // print("Room Socket ++++++++++++++++++++++++++++++++++++++++++++++++++++");
-      BlocProvider.of<GetGuestAllPostCubit>(context)
+      await BlocProvider.of<GetGuestAllPostCubit>(context)
+          .seetinonExpried(context);
+      await BlocProvider.of<GetGuestAllPostCubit>(context)
           .getAllNoticationsCountAPI(context);
     });
 
@@ -1215,7 +1216,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                       buttonDatas.insert(
                           0,
                           StoryButtonData(
-                            isWatch: isWatch == false? true: false,
+                            isWatch: isWatch == false ? true : false,
                             timelineBackgroundColor: Colors.grey,
                             buttonDecoration: BoxDecoration(
                               shape: BoxShape.circle,
@@ -1283,7 +1284,10 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                           onPressed: (data) {
                             Navigator.of(storycontext!).push(
                               StoryRoute(
-                                onTap: () {
+                                onTap: () async {
+                                  await BlocProvider.of<GetGuestAllPostCubit>(
+                                          context)
+                                      .seetinonExpried(context);
                                   Navigator.push(context,
                                       MaterialPageRoute(builder: (context) {
                                     return ProfileScreen(
@@ -1309,13 +1313,12 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                           storyListViewController: ScrollController()));
 
                       storyAdded = true;
-                    } else if(element.userUid != User_ID){
-
+                    } else if (element.userUid != User_ID) {
                       userName.add(element.userName.toString());
-                   
+
                       print("check Data get -${element.userName.toString()}");
                       if (!storyAdded)
-                      // userName.add("Share Storyaaaa");
+                        // userName.add("Share Storyaaaa");
                         userName.add(element.userName.toString());
 
                       int count = 0;
@@ -1395,7 +1398,10 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                           onPressed: (data) {
                             Navigator.of(storycontext!).push(
                               StoryRoute(
-                                onTap: () {
+                                onTap: () async {
+                                  await BlocProvider.of<GetGuestAllPostCubit>(
+                                          context)
+                                      .seetinonExpried(context);
                                   Navigator.push(context,
                                       MaterialPageRoute(builder: (context) {
                                     return ProfileScreen(
@@ -1452,6 +1458,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                             )),
                   );
                 } else {
+                  await BlocProvider.of<GetGuestAllPostCubit>(context)
+                      .seetinonExpried(context);
                   Navigator.push(context, MaterialPageRoute(builder: (context) {
                     return ProfileScreen(
                         User_ID: "${state.OpenSharePostData.object?.userUid}",
@@ -1562,7 +1570,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                     width: 17,
                                   ),
                                   GestureDetector(
-                                      onTap: () {
+                                      onTap: () async {
                                         if (uuid == null) {
                                           /* Navigator.of(context).push(
                                               MaterialPageRoute(
@@ -1580,6 +1588,9 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                       RegisterCreateAccountScreen()),
                                               (route) => true);
                                         } else {
+                                          await BlocProvider.of<
+                                                  GetGuestAllPostCubit>(context)
+                                              .seetinonExpried(context);
                                           Navigator.push(context,
                                               MaterialPageRoute(
                                                   builder: (context) {
@@ -1647,6 +1658,10 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                         onTap: () async {
                                           ImageDataPostOne? imageDataPost;
                                           if (uuid != null) {
+                                            await BlocProvider.of<
+                                                        GetGuestAllPostCubit>(
+                                                    context)
+                                                .seetinonExpried(context);
                                             if (Platform.isAndroid) {
                                               final info =
                                                   await DeviceInfoPlugin()
@@ -1691,7 +1706,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                     Repository()
                                                         .cretateStoryApi(
                                                             context, parmes);
-                                                    isWatch = true;        
+                                                    isWatch = true;
                                                     Get_UserToken();
                                                   } else {
                                                     var parmes = {
@@ -1706,7 +1721,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                     Repository()
                                                         .cretateStoryApi(
                                                             context, parmes);
-                                                             isWatch = true; 
+                                                    isWatch = true;
                                                     Get_UserToken();
                                                   }
                                                 }
@@ -1745,7 +1760,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                       "scdfhgsdfhsd-${parmes}");
                                                   Repository().cretateStoryApi(
                                                       context, parmes);
-                                                       isWatch = true; 
+                                                  isWatch = true;
                                                   Get_UserToken();
                                                 } else {
                                                   var parmes = {
@@ -1759,7 +1774,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                       "CHECK:--------${parmes}");
                                                   Repository().cretateStoryApi(
                                                       context, parmes);
-                                                       isWatch = true; 
+                                                  isWatch = true;
                                                   Get_UserToken();
                                                 }
                                               }
@@ -1871,7 +1886,12 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                   Navigator.of(storycontext!)
                                                       .push(
                                                         StoryRoute(
-                                                          onTap: () {
+                                                          onTap: () async {
+                                                            await BlocProvider
+                                                                    .of<GetGuestAllPostCubit>(
+                                                                        context)
+                                                                .seetinonExpried(
+                                                                    context);
                                                             Navigator.push(
                                                                 context,
                                                                 MaterialPageRoute(
@@ -2146,7 +2166,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                           child: ListTile(
                                                             leading:
                                                                 GestureDetector(
-                                                              onTap: () {
+                                                              onTap: () async {
                                                                 if (uuid ==
                                                                     null) {
                                                                   Navigator.of(
@@ -2155,6 +2175,11 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                           builder: (context) =>
                                                                               RegisterCreateAccountScreen()));
                                                                 } else {
+                                                                  await BlocProvider.of<
+                                                                              GetGuestAllPostCubit>(
+                                                                          context)
+                                                                      .seetinonExpried(
+                                                                          context);
                                                                   Navigator.push(
                                                                       context,
                                                                       MaterialPageRoute(
@@ -2219,7 +2244,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                       .start,
                                                               children: [
                                                                 GestureDetector(
-                                                                  onTap: () {
+                                                                  onTap:
+                                                                      () async {
                                                                     if (uuid ==
                                                                         null) {
                                                                       Navigator.of(
@@ -2227,6 +2253,10 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                           .push(
                                                                               MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
                                                                     } else {
+                                                                      await BlocProvider.of<GetGuestAllPostCubit>(
+                                                                              context)
+                                                                          .seetinonExpried(
+                                                                              context);
                                                                       Navigator.push(
                                                                           context,
                                                                           MaterialPageRoute(builder:
@@ -2457,12 +2487,14 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                                 }
                                                                               } else {
                                                                                 if (link.value!.startsWith('#')) {
+                                                                                  await BlocProvider.of<GetGuestAllPostCubit>(context).seetinonExpried(context);
                                                                                   Navigator.push(
                                                                                       context,
                                                                                       MaterialPageRoute(
                                                                                         builder: (context) => HashTagViewScreen(title: "${link.value}"),
                                                                                       ));
                                                                                 } else if (link.value!.startsWith('@')) {
+                                                                                  await BlocProvider.of<GetGuestAllPostCubit>(context).seetinonExpried(context);
                                                                                   var name;
                                                                                   var tagName;
                                                                                   name = SelectedTest;
@@ -2711,12 +2743,14 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                     leading:
                                                                         GestureDetector(
                                                                       onTap:
-                                                                          () {
+                                                                          () async {
                                                                         if (uuid ==
                                                                             null) {
                                                                           Navigator.of(context)
                                                                               .push(MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
                                                                         } else {
+                                                                          await BlocProvider.of<GetGuestAllPostCubit>(context)
+                                                                              .seetinonExpried(context);
                                                                           Navigator.push(
                                                                               context,
                                                                               MaterialPageRoute(builder: (context) {
@@ -2752,11 +2786,12 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                       children: [
                                                                         GestureDetector(
                                                                           onTap:
-                                                                              () {
+                                                                              () async {
                                                                             if (uuid ==
                                                                                 null) {
                                                                               Navigator.of(context).push(MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
                                                                             } else {
+                                                                              await BlocProvider.of<GetGuestAllPostCubit>(context).seetinonExpried(context);
                                                                               Navigator.push(context, MaterialPageRoute(builder: (context) {
                                                                                 return MultiBlocProvider(providers: [
                                                                                   BlocProvider<NewProfileSCubit>(
@@ -2880,6 +2915,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                                 }
                                                                               } else {
                                                                                 if (link.value!.startsWith('#')) {
+                                                                                  await BlocProvider.of<GetGuestAllPostCubit>(context).seetinonExpried(context);
                                                                                   print("aaaaaaaaaa == ${link}");
                                                                                   Navigator.push(
                                                                                       context,
@@ -2887,6 +2923,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                                         builder: (context) => HashTagViewScreen(title: "${link.value}"),
                                                                                       ));
                                                                                 } else if (link.value!.startsWith('@')) {
+                                                                                  await BlocProvider.of<GetGuestAllPostCubit>(context).seetinonExpried(context);
                                                                                   var name;
                                                                                   var tagName;
                                                                                   name = SelectedTest;
@@ -3496,7 +3533,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                           child: ListTile(
                                                             leading:
                                                                 GestureDetector(
-                                                              onTap: () {
+                                                              onTap: () async {
                                                                 if (uuid ==
                                                                     null) {
                                                                   Navigator.of(
@@ -3505,6 +3542,11 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                           builder: (context) =>
                                                                               RegisterCreateAccountScreen()));
                                                                 } else {
+                                                                  await BlocProvider.of<
+                                                                              GetGuestAllPostCubit>(
+                                                                          context)
+                                                                      .seetinonExpried(
+                                                                          context);
                                                                   Navigator.push(
                                                                       context,
                                                                       MaterialPageRoute(
@@ -3571,7 +3613,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                 //   height: 6,
                                                                 // ),
                                                                 GestureDetector(
-                                                                  onTap: () {
+                                                                  onTap:
+                                                                      () async {
                                                                     if (uuid ==
                                                                         null) {
                                                                       Navigator.of(
@@ -3579,6 +3622,10 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                           .push(
                                                                               MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
                                                                     } else {
+                                                                      await BlocProvider.of<GetGuestAllPostCubit>(
+                                                                              context)
+                                                                          .seetinonExpried(
+                                                                              context);
                                                                       Navigator.push(
                                                                           context,
                                                                           MaterialPageRoute(builder:
@@ -3753,7 +3800,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                         },
                                                                         child:
                                                                             LinkifyText(
-                                                                       /*    utf8.decode(AllGuestPostRoomData?.object?.content?[index].description?.runes.toList() ??
+                                                                          /*    utf8.decode(AllGuestPostRoomData?.object?.content?[index].description?.runes.toList() ??
                                                                               []), */
                                                                           "${AllGuestPostRoomData?.object?.content?[index].description}",
                                                                           linkStyle:
@@ -3826,12 +3873,14 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                                 }
                                                                               } else if (link.value != null) {
                                                                                 if (link.value!.startsWith('#')) {
+                                                                                  await BlocProvider.of<GetGuestAllPostCubit>(context).seetinonExpried(context);
                                                                                   Navigator.push(
                                                                                       context,
                                                                                       MaterialPageRoute(
                                                                                         builder: (context) => HashTagViewScreen(title: "${link.value}"),
                                                                                       ));
                                                                                 } else if (link.value!.startsWith('@')) {
+                                                                                  await BlocProvider.of<GetGuestAllPostCubit>(context).seetinonExpried(context);
                                                                                   var name;
                                                                                   var tagName;
                                                                                   name = SelectedTest;
@@ -5356,7 +5405,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
             };
             print("scdfhgsdfhsd-${parmes}");
             Repository().cretateStoryApi(context, parmes);
-             isWatch = true; 
+            isWatch = true;
             Get_UserToken();
           } else {
             var parmes = {
@@ -5366,7 +5415,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
             };
             print("CHECK:--------${parmes}");
             Repository().cretateStoryApi(context, parmes);
-             isWatch = true; 
+            isWatch = true;
             Get_UserToken();
           }
         }

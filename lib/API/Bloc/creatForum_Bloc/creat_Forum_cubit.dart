@@ -2,6 +2,7 @@ import 'package:pds/API/Bloc/creatForum_Bloc/creat_Fourm_state.dart';
 import 'package:pds/API/Repo/repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pds/API/ApiService/ApiService.dart';
 
 class CreatFourmCubit extends Cubit<CreatFourmState> {
   CreatFourmCubit() : super(CreatFourmInitialState()) {}
@@ -80,6 +81,28 @@ class CreatFourmCubit extends Cubit<CreatFourmState> {
       }
     } catch (e) {
       emit(CreatFourmErrorState(industryType));
+    }
+  }
+
+    Future<void> seetinonExpried(BuildContext context,
+      {bool showAlert = false}) async {
+    try {
+      emit(CreatFourmLoadingState());
+      dynamic settionExperied =
+          await Repository().logOutSettionexperied(context);
+      print("checkDatWant--$settionExperied");
+      // if (settionExperied == "Something Went Wrong, Try After Some Time.") {
+      //     emit(GetGuestAllPostErrorState("${settionExperied}"));
+      //   } else {
+      if (settionExperied.success == true) {
+        await setLOGOUT(context);
+      } else {
+        print("failed--check---${settionExperied}");
+      }
+      // }
+    } catch (e) {
+      print('errorstate-$e');
+      // emit(GetGuestAllPostErrorState(e.toString()));
     }
   }
 }

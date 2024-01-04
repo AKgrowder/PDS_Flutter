@@ -14,13 +14,19 @@ class InvitationCubit extends Cubit<InvitationState> {
       emit(InvitationLoadingState());
       dynamic settionExperied =
           await Repository().logOutSettionexperied(context);
+      print("checkDatWant--$settionExperied");
+      // if (settionExperied == "Something Went Wrong, Try After Some Time.") {
+      //     emit(GetGuestAllPostErrorState("${settionExperied}"));
+      //   } else {
       if (settionExperied.success == true) {
         await setLOGOUT(context);
       } else {
         print("failed--check---${settionExperied}");
       }
+      // }
     } catch (e) {
       print('errorstate-$e');
+      // emit(GetGuestAllPostErrorState(e.toString()));
     }
   }
 

@@ -42,15 +42,18 @@ class _InboxScreenState extends State<InboxScreen> {
   @override
   void initState() {
     getDocumentSize();
-    BlocProvider.of<PersonalChatListCubit>(context).PersonalChatList(context);
-    BlocProvider.of<PersonalChatListCubit>(context)
-        .getAllNoticationsCountAPI(context);
 
-        
     super.initState();
   }
 
   getDocumentSize() async {
+    await BlocProvider.of<PersonalChatListCubit>(context)
+        .seetinonExpried(context);
+
+    BlocProvider.of<PersonalChatListCubit>(context).PersonalChatList(context);
+    BlocProvider.of<PersonalChatListCubit>(context)
+        .getAllNoticationsCountAPI(context);
+
     final SharedPreferences prefs = await SharedPreferences.getInstance();
 
     userID = prefs.getString(PreferencesKey.loginUserID);
@@ -130,7 +133,9 @@ class _InboxScreenState extends State<InboxScreen> {
             }
             if (state is GetNotificationCountLoadedState) {
               print(state.GetNotificationCountData.object);
-              saveNotificationCount(state.GetNotificationCountData.object?.notificationCount ?? 0,state.GetNotificationCountData.object?.messageCount ?? 0);
+              saveNotificationCount(
+                  state.GetNotificationCountData.object?.notificationCount ?? 0,
+                  state.GetNotificationCountData.object?.messageCount ?? 0);
             }
             if (state is PersonalChatListLoadedState) {
               apiData = true;
@@ -143,7 +148,7 @@ class _InboxScreenState extends State<InboxScreen> {
               if (UserIndexUUID != "" || UserIndexUUID != null) {
                 Navigator.push(context, MaterialPageRoute(builder: (context) {
                   return DmScreen(
-                     UserUID:
+                      UserUID:
                           "${getUsersChatByUsername?.object?.content?[Index].userUuid}",
                       UserName:
                           "${getUsersChatByUsername?.object?.content?[Index].username}",
@@ -292,7 +297,7 @@ class _InboxScreenState extends State<InboxScreen> {
     );
   }
 
-  saveNotificationCount(int NotificationCount,int MessageCount) async {
+  saveNotificationCount(int NotificationCount, int MessageCount) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setInt(PreferencesKey.NotificationCount, NotificationCount);
     prefs.setInt(PreferencesKey.MessageCount, MessageCount);
@@ -387,7 +392,6 @@ class _InboxScreenState extends State<InboxScreen> {
                       Navigator.push(context,
                           MaterialPageRoute(builder: (context) {
                         return DmScreen(
-                          
                           UserUID:
                               "${PersonalChatListModelData?.object?[index].userUid}",
                           UserName:
