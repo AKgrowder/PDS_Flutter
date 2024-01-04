@@ -8,10 +8,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_mentions/flutter_mentions.dart';
-import 'package:getwidget/getwidget.dart';
 import 'package:intl/intl.dart';
 import 'package:linkfy_text/linkfy_text.dart';
-import 'package:pds/API/Bloc/GuestAllPost_Bloc/GuestAllPost_cubit.dart';
 import 'package:pds/API/Bloc/NewProfileScreen_Bloc/NewProfileScreen_cubit.dart';
 import 'package:pds/API/Bloc/NewProfileScreen_Bloc/NewProfileScreen_state.dart';
 import 'package:pds/API/Bloc/followerBlock/followBlock.dart';
@@ -2760,7 +2758,7 @@ class _ProfileScreenState extends State<ProfileScreen>
       return Expanded(
           child: Padding(
         padding: EdgeInsets.only(left: 10, right: 10, top: 10),
-        child: GridView.builder(
+        child: GridView.builder(reverse: true,
           physics: NeverScrollableScrollPhysics(),
           padding: EdgeInsets.zero,
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
