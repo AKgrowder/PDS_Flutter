@@ -74,13 +74,18 @@ class _CreateStoryPageState extends State<CreateStoryPage> {
     imageDataPost = state.imageDataPost;
     print("data Get value Get-${imageDataPost?.object}");
     if (imageDataPost?.object?.split('.').last == 'mp4') {
-      print("check condison working on");
-      dynamic imageDataPost1 = {
-        'imageDataPost': imageDataPost,
-        'videoduration': videoduration,
+      print("check condison working on ");
+      Map<String, dynamic> imageDataPost1 = {
+        'message': imageDataPost?.message.toString(),
+        'object': imageDataPost?.object.toString(),
+        'videodurationGet': videoduration,
       };
-      Navigator.pop(context, imageDataPost1);
+      imageDataPost = ImageDataPostOne.fromJson(imageDataPost1);
+
+      print("check prams what get-${imageDataPost}");
+      Navigator.pop(context, imageDataPost);
     } else {
+      print("this is the dataChech-${imageDataPost?.object}");
       Navigator.pop(context, imageDataPost);
     }
     /*  dynamic imageDataPost1 = {

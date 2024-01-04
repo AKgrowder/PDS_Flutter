@@ -844,7 +844,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
     } else if (!emailRegExp.hasMatch(emailController.text)) {
       SnackBar snackBar = SnackBar(
-        content: Text('please Enter vaild Email'),
+        content: Text('Please Enter Vaild Email'),
         backgroundColor: ColorConstant.primary_color,
       );
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
