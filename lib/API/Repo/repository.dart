@@ -1965,7 +1965,7 @@ class Repository {
     final response = await apiServices.postApiCall(
         "${Config.crateStroyCheck}", params, context);
     var jsonString = json.decode(response.body);
-    print("cretateStoryApi$jsonString");
+    print("cretateStoryApi:-------------$jsonString");
     switch (response.statusCode) {
       case 200:
         return CreateStroy.fromJson(jsonString);

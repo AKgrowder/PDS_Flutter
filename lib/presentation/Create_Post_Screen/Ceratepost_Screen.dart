@@ -474,6 +474,13 @@ class _CreateNewPostState extends State<CreateNewPost> {
                                     suggestionPosition:
                                         SuggestionPosition.values.last,
                                     maxLines: 10,
+                                    // style: TextStyle(fontFamily: ),
+                                     style: TextStyle(
+                                      fontFamily: 'outfit',
+                                      fontSize: 16,
+                                      color: Colors.black,
+                                      // fontWeight: FontWeight.bold,
+                                    ),
                                     decoration: InputDecoration(
                                       hintText: 'What’s on your head?',
                                       border: InputBorder.none,

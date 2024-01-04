@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:chewie/chewie.dart';
@@ -1655,7 +1656,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                     if (!storyAdded)
                                       return GestureDetector(
                                         onTap: () async {
-                                          dynamic imageDataPost;
+                                          ImageDataPostOne? imageDataPost;
                                           if (uuid != null) {
                                             if (Platform.isAndroid) {
                                               final info =
@@ -1682,18 +1683,35 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                           finalvideoSize,
                                                     );
                                                   }));
-                                                  if (imageDataPost[
-                                                              'imageDataPost']
-                                                          .object['storyData']
-                                                          .storyType ==
-                                                      'VIDEO') {
+                                                  print("this is the 1");
+                                                  if (imageDataPost?.object
+                                                          ?.split('.')
+                                                          .last ==
+                                                      'mp4') {
+                                                    var parmes = {
+                                                      "storyData":
+                                                          imageDataPost?.object,
+                                                      "storyType": "VIDEO",
+                                                      "videoDuration":
+                                                          imageDataPost
+                                                              ?.videodurationGet
+                                                    };
+                                                    print(
+                                                        "scdfhgsdfhsd-${parmes}");
+                                                    Repository()
+                                                        .cretateStoryApi(
+                                                            context, parmes);
                                                   } else {
                                                     var parmes = {
                                                       "storyData": imageDataPost
                                                           ?.object
-                                                          .toString()
+                                                          .toString(),
+                                                      "storyType": "TEXT",
+                                                      "videoDuration": ''
                                                     };
-                                                    await Repository()
+                                                    print(
+                                                        "CHECK:--------${parmes}");
+                                                    Repository()
                                                         .cretateStoryApi(
                                                             context, parmes);
                                                   }
@@ -1702,6 +1720,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                       context,
                                                       Permission.storage) ??
                                                   false) {
+                                                print("this is the 3");
+
                                                 imageDataPost =
                                                     await Navigator.push(
                                                         context,
@@ -1714,21 +1734,35 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                         finalvideoSize,
                                                   );
                                                 }));
-                                                  if (imageDataPost[
-                                                              'imageDataPost']
-                                                          .object['storyData']
-                                                          .storyType ==
-                                                      'VIDEO') {
-                                                  } else {
-                                                    var parmes = {
-                                                      "storyData": imageDataPost
-                                                          ?.object
-                                                          .toString()
-                                                    };
-                                                    await Repository()
-                                                        .cretateStoryApi(
-                                                            context, parmes);
-                                                  }
+                                                if (imageDataPost?.object
+                                                        ?.split('.')
+                                                        .last ==
+                                                    'mp4') {
+                                                  var parmes = {
+                                                    "storyData":
+                                                        imageDataPost?.object,
+                                                    "storyType": "VIDEO",
+                                                    "videoDuration":
+                                                        imageDataPost
+                                                            ?.videodurationGet
+                                                  };
+                                                  print(
+                                                      "scdfhgsdfhsd-${parmes}");
+                                                  Repository().cretateStoryApi(
+                                                      context, parmes);
+                                                } else {
+                                                  var parmes = {
+                                                    "storyData": imageDataPost
+                                                        ?.object
+                                                        .toString(),
+                                                    "storyType": "TEXT",
+                                                    "videoDuration": ''
+                                                  };
+                                                  print(
+                                                      "CHECK:--------${parmes}");
+                                                  Repository().cretateStoryApi(
+                                                      context, parmes);
+                                                }
                                               }
                                             }
                                           } else {
@@ -1805,150 +1839,9 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                     "",
                                                     "${User_ID}",
                                                     0,
-                                                   15)
-                                              ],
-                                              isWatch: false,
-                                              borderDecoration: BoxDecoration(
-                                                borderRadius:
-                                                    const BorderRadius.all(
-                                                  Radius.circular(60.0),
-                                                ),
-                                                border: Border.fromBorderSide(
-                                                  BorderSide(
-                                                    color: Colors.red,
-                                                    width: 1.5,
-                                                  ),
-                                                ),
-                                              ),
-                                              storyPages: [
-                                                FullStoryPage(
-                                                  imageName:
-                                                      '${imageDataPost.object}',
-                                                )
-                                              ],
-                                              segmentDuration:
-                                                  const Duration(seconds: 3),
-                                            );
-
-                                            buttonDatas.insert(0, buttonData);
-                                            storyButtons[0] = StoryButton(
-                                                onPressed: (data) {
-                                                  Navigator.of(storycontext!)
-                                                      .push(
-                                                        StoryRoute(
-                                                          onTap: () {
-                                                            Navigator.push(
-                                                                context,
-                                                                MaterialPageRoute(
-                                                                    builder:
-                                                                        (context) {
-                                                              return ProfileScreen(
-                                                                  User_ID:
-                                                                      "${User_ID}",
-                                                                  isFollowing:
-                                                                      "");
-                                                            }));
-                                                          },
-                                                          storyContainerSettings:
-                                                              StoryContainerSettings(
-                                                            buttonData:
-                                                                buttonData,
-                                                            tapPosition: buttonData
-                                                                .buttonCenterPosition!,
-                                                            curve: buttonData
-                                                                .pageAnimationCurve,
-                                                            allButtonDatas:
-                                                                buttonDatas,
-                                                            pageTransform:
-                                                                StoryPage3DTransform(),
-                                                            storyListScrollController:
-                                                                ScrollController(),
-                                                          ),
-                                                          duration: buttonData
-                                                              .pageAnimationDuration,
-                                                        ),
-                                                      )
-                                                      .then((value) =>
-                                                          Get_UserToken());
-                                                },
-                                                buttonData: buttonData,
-                                                allButtonDatas: buttonDatas,
-                                                storyListViewController:
-                                                    ScrollController());
-
-                                            userName.add(User_Name!);
-                                            if (mounted)
-                                              setState(() {
-                                                storyAdded = true;
-                                              });
-                                          } else {
-                                           await BlocProvider.of<
-                                                        GetGuestAllPostCubit>(
-                                                    context)
-                                                .get_all_story(
-                                              context,
-                                            );
-                                            StoryButtonData buttonData =
-                                                StoryButtonData(
-                                              timelineBackgroundColor:
-                                                  Colors.grey,
-                                              buttonDecoration:
-                                                  UserProfileImage != null &&
-                                                          UserProfileImage != ""
-                                                      ? BoxDecoration(
-                                                          shape:
-                                                              BoxShape.circle,
-                                                          image:
-                                                              DecorationImage(
-                                                            image: NetworkImage(
-                                                                "${UserProfileImage}"),
-                                                            fit: BoxFit.fill,
-                                                          ),
-                                                        )
-                                                      : BoxDecoration(
-                                                          shape:
-                                                              BoxShape.circle,
-                                                          image:
-                                                              DecorationImage(
-                                                            image: AssetImage(
-                                                              ImageConstant
-                                                                  .tomcruse,
-                                                            ),
-                                                            fit: BoxFit.cover,
-                                                          ),
-                                                        ),
-                                              child: Padding(
-                                                padding:
-                                                    const EdgeInsets.all(5.0),
-                                                child: Column(
-                                                  mainAxisSize:
-                                                      MainAxisSize.max,
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.end,
-                                                  children: [
-                                                    Text(
-                                                      '',
-                                                      style: const TextStyle(
-                                                        color: Colors.white,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                              images: [
-                                                StoryModel(
-                                                    imageDataPost!.object
-                                                        .toString(),
-                                                    DateTime.now()
-                                                        .toIso8601String(),
-                                                    UserProfileImage,
-                                                    User_Name,
-                                                    "",
-                                                    "${User_ID}",
-                                                    0,
-                                                   15)
+                                                    imageDataPost
+                                                            .videodurationGet ??
+                                                        15)
                                               ],
                                               isWatch: false,
                                               borderDecoration: BoxDecoration(
@@ -2497,9 +2390,19 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                             LinkifyText(
                                                                           "${AllGuestPostRoomData?.object?.content?[index].description}",
                                                                           linkStyle:
-                                                                              TextStyle(color: Colors.blue),
+                                                                              TextStyle(
+                                                                            color:
+                                                                                Colors.blue,
+                                                                            fontFamily:
+                                                                                'outfit',
+                                                                          ),
                                                                           textStyle:
-                                                                              TextStyle(color: Colors.black),
+                                                                              TextStyle(
+                                                                            color:
+                                                                                Colors.black,
+                                                                            fontFamily:
+                                                                                'outfit',
+                                                                          ),
                                                                           linkTypes: [
                                                                             LinkType.url,
                                                                             LinkType.userTag,
@@ -2910,9 +2813,19 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                             LinkifyText(
                                                                           "${AllGuestPostRoomData?.object?.content?[index].repostOn?.description}",
                                                                           linkStyle:
-                                                                              TextStyle(color: Colors.blue),
+                                                                              TextStyle(
+                                                                            color:
+                                                                                Colors.blue,
+                                                                            fontFamily:
+                                                                                'outfit',
+                                                                          ),
                                                                           textStyle:
-                                                                              TextStyle(color: Colors.black),
+                                                                              TextStyle(
+                                                                            color:
+                                                                                Colors.black,
+                                                                            fontFamily:
+                                                                                'outfit',
+                                                                          ),
                                                                           linkTypes: [
                                                                             LinkType.url,
                                                                             LinkType.userTag,
@@ -3841,11 +3754,23 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                         },
                                                                         child:
                                                                             LinkifyText(
-                                                                          "${AllGuestPostRoomData?.object?.content?[index].description}",
+                                                                          utf8.decode(AllGuestPostRoomData?.object?.content?[index].description?.runes.toList() ??
+                                                                              []),
+                                                                          // "${AllGuestPostRoomData?.object?.content?[index].description}",
                                                                           linkStyle:
-                                                                              TextStyle(color: Colors.blue),
+                                                                              TextStyle(
+                                                                            color:
+                                                                                Colors.blue,
+                                                                            fontFamily:
+                                                                                'outfit',
+                                                                          ),
                                                                           textStyle:
-                                                                              TextStyle(color: Colors.black),
+                                                                              TextStyle(
+                                                                            color:
+                                                                                Colors.black,
+                                                                            fontFamily:
+                                                                                'outfit',
+                                                                          ),
                                                                           linkTypes: [
                                                                             LinkType.url,
                                                                             LinkType.userTag,
@@ -5408,8 +5333,11 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
   }
 
   Future<void> methodCalling() async {
+    print("method caling");
     ImageDataPostOne? imageDataPost;
+
     if (Platform.isAndroid) {
+      print("this conidddd");
       final info = await DeviceInfoPlugin().androidInfo;
       if (num.parse(await info.version.release).toInt() >= 13) {
         if (await permissionHandler(context, Permission.photos) ?? false) {
@@ -5420,13 +5348,29 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
               finalvideoSize: finalvideoSize,
             );
           }));
-          print("imageData--${imageDataPost?.object.toString()}");
-          var parmes = {"storyData": imageDataPost?.object.toString()};
 
-          Repository().cretateStoryApi(context, parmes);
+          if (imageDataPost?.object?.split('.').last == 'mp4') {
+            var parmes = {
+              "storyData": imageDataPost?.object,
+              "storyType": "VIDEO",
+              "videoDuration": imageDataPost?.videodurationGet
+            };
+            print("scdfhgsdfhsd-${parmes}");
+            Repository().cretateStoryApi(context, parmes);
+          } else {
+            var parmes = {
+              "storyData": imageDataPost?.object.toString(),
+              "storyType": "TEXT",
+              "videoDuration": ''
+            };
+            print("CHECK:--------${parmes}");
+            Repository().cretateStoryApi(context, parmes);
+          }
         }
       } else if (await permissionHandler(context, Permission.storage) ??
           false) {
+        print("this conidddd1");
+
         imageDataPost =
             await Navigator.push(context, MaterialPageRoute(builder: (context) {
           return CreateStoryPage(
@@ -5434,22 +5378,37 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
             finalvideoSize: finalvideoSize,
           );
         }));
-        var parmes = {"storyData": imageDataPost?.object.toString()};
-        Repository().cretateStoryApi(context, parmes);
+        if (imageDataPost?.object?.split('.').last == 'mp4') {
+          var parmes = {
+            "storyData": imageDataPost?.object,
+            "storyType": "VIDEO",
+            "videoDuration": imageDataPost?.videodurationGet
+          };
+          print("scdfhgsdfhsd-${parmes}");
+          Repository().cretateStoryApi(context, parmes);
+        } else {
+          var parmes = {
+            "storyData": imageDataPost?.object.toString(),
+            "storyType": "TEXT",
+            "videoDuration": ''
+          };
+          print("CHECK:--------${parmes}");
+          Repository().cretateStoryApi(context, parmes);
+        }
       }
     }
     buttonDatas[0].images.add(StoryModel(
-        imageDataPost!.object!,
+        imageDataPost?.object,
         DateTime.now().toIso8601String(),
         UserProfileImage,
         User_Name,
         "",
         "${User_ID}",
         0,
-        1));
-    if (imageDataPost.object != null) {
+        imageDataPost?.videodurationGet ?? 15));
+    if (imageDataPost?.object != null) {
       buttonDatas[0].storyPages.add(FullStoryPage(
-            imageName: '${imageDataPost.object}',
+            imageName: '${imageDataPost?.object}',
           ));
       if (mounted)
         setState(() {
