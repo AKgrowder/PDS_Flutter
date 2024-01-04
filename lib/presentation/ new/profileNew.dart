@@ -364,17 +364,31 @@ class _ProfileScreenState extends State<ProfileScreen>
         if (UserProfilePostCount.isOdd) {
           UserProfilePostCount = UserProfilePostCount + 1;
           var PostCount = UserProfilePostCount / 2;
-          print(PostCount);
           var aa = "${PostCount}";
+          print(
+              "PostCountPostCountPostCountPostCountPostCountPostCountPostCountPostCountPostCount : 1 :- ${PostCount}  :::::- ${UserProfilePostCount}");
+          print("sadasdsadasdsadasdsadasdsadasdsadasd : ------> ${aa}");
+
           int? y = int.parse(aa.split('.')[0]);
+          print("sadasdsadasdsadasdsadasdsadasdsadasd : ------> ${y}");
           FinalPostCount = y;
           UserProfilePostCount = UserProfilePostCount - 1;
+          print(
+              "sadasdsadasdsadasdsadasdsadasdsadasd : ------> ${FinalPostCount}");
         } else {
           print(UserProfilePostCount);
           var PostCount = UserProfilePostCount / 2;
+          print(
+              "PostCountPostCountPostCountPostCountPostCountPostCountPostCountPostCountPostCount : 2 :- ${PostCount}  :::::- ${UserProfilePostCount}");
           var aa = "${PostCount}";
+          print("sadasdsadasdsadasdsadasdsadasdsadasd : ------> ${aa}");
+
           int? y = int.parse(aa.split('.')[0]);
+          print("sadasdsadasdsadasdsadasdsadasdsadasd : ------> ${y}");
+
           FinalPostCount = y;
+          print(
+              "sadasdsadasdsadasdsadasdsadasdsadasd : ------> ${FinalPostCount}");
         }
       }
       if (state is GetUserPostCommetLoadedState) {
@@ -1641,9 +1655,19 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                     LinkifyText(
                                                                   "${aboutMe.text}",
                                                                   linkStyle:
-                                                                              TextStyle(color: Colors.blue,fontFamily: 'outfit',),
-                                                                          textStyle:
-                                                                              TextStyle(color: Colors.black,fontFamily: 'outfit',),
+                                                                      TextStyle(
+                                                                    color: Colors
+                                                                        .blue,
+                                                                    fontFamily:
+                                                                        'outfit',
+                                                                  ),
+                                                                  textStyle:
+                                                                      TextStyle(
+                                                                    color: Colors
+                                                                        .black,
+                                                                    fontFamily:
+                                                                        'outfit',
+                                                                  ),
                                                                   linkTypes: [
                                                                     LinkType
                                                                         .url,
@@ -2069,7 +2093,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                   bottom: 10, top: 10),
                                               child: ClipRRect(
                                                 borderRadius:
-                                                    BorderRadius.circular(12.0),
+                                                    BorderRadius.circular(20.0),
                                                 child: GestureDetector(
                                                   onTap: () {
                                                     // OpenSaveImagepostModel
@@ -2099,13 +2123,22 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                   .postDataType ==
                                                               "IMAGE"
                                                           ? Container(
-                                                              margin: EdgeInsets
-                                                                  .all(0.0),
-                                                              decoration: BoxDecoration(
-                                                                  borderRadius:
-                                                                      BorderRadius.circular(
-                                                                          20)), // Remove margin
-
+                                                              decoration:
+                                                                  BoxDecoration(
+                                                                border:
+                                                                    Border.all(
+                                                                  color: Color
+                                                                      .fromARGB(
+                                                                          255,
+                                                                          0,
+                                                                          0,
+                                                                          0),
+                                                                ),
+                                                                // borderRadius:
+                                                                //     BorderRadius
+                                                                //         .circular(
+                                                                //             15),
+                                                              ), // Remove margin
                                                               child:
                                                                   CustomImageView(
                                                                 fit: BoxFit
@@ -2124,8 +2157,11 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                       decoration: BoxDecoration(
                                                                           color: Colors.transparent,
                                                                           border: Border.all(
-                                                                            color:
-                                                                                Colors.grey,
+                                                                            color: const Color.fromARGB(
+                                                                                255,
+                                                                                0,
+                                                                                0,
+                                                                                0),
                                                                           ),
                                                                           borderRadius: BorderRadius.circular(20)),
                                                                     ),
@@ -2144,22 +2180,27 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                           .postDataType ==
                                                                       "ATTACHMENT"
                                                                   ? Container(
-                                                                      margin:
-                                                                          EdgeInsets.all(
+                                                                      margin: EdgeInsets
+                                                                          .all(
                                                                               0.0),
-                                                                      decoration:
-                                                                          BoxDecoration(borderRadius: BorderRadius.circular(20)), // Remove margin
+                                                                      decoration: BoxDecoration(
+                                                                          borderRadius: BorderRadius.circular(
+                                                                              20)), // Remove margin
 
-                                                                      child: DocumentViewScreen1(
+                                                                      child:
+                                                                          DocumentViewScreen1(
                                                                         path: GetAllPostData
                                                                             ?.object?[index]
                                                                             .postData
                                                                             ?.first,
                                                                       ))
-                                                                  : GetAllPostData?.object?[index].postDataType == null
+                                                                  : GetAllPostData
+                                                                              ?.object?[index]
+                                                                              .postDataType ==
+                                                                          null
                                                                       ? Container(
                                                                           margin: EdgeInsets.all(0.0),
-                                                                          decoration: BoxDecoration(border: Border.all(color: Color(0xffF0F0F0)), borderRadius: BorderRadius.circular(20)),
+                                                                          decoration: BoxDecoration(border: Border.all(color: Color.fromARGB(255, 0, 0, 0)), borderRadius: BorderRadius.circular(20)),
                                                                           child: Padding(
                                                                             padding: const EdgeInsets.only(
                                                                                 top: 15,
@@ -2758,7 +2799,8 @@ class _ProfileScreenState extends State<ProfileScreen>
       return Expanded(
           child: Padding(
         padding: EdgeInsets.only(left: 10, right: 10, top: 10),
-        child: GridView.builder(reverse: true,
+        child: GridView.builder(
+          reverse: true,
           physics: NeverScrollableScrollPhysics(),
           padding: EdgeInsets.zero,
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
