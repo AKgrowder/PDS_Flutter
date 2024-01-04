@@ -169,6 +169,8 @@ class _DmScreenState extends State<DmScreen> {
 
   pageNumberMethod() async {
     await BlocProvider.of<DmInboxCubit>(context)
+          .seetinonExpried(context);
+    await BlocProvider.of<DmInboxCubit>(context)
         .DMChatListApiMethod(widget.ChatInboxUid, 1, 20, context);
     await BlocProvider.of<DmInboxCubit>(context)
         .SeenMessage(context, widget.ChatInboxUid);

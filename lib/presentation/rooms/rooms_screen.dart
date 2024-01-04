@@ -86,7 +86,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
     var User_ID = prefs.getString(PreferencesKey.loginUserID);
     if (User_ID != "" && User_ID?.isNotEmpty == true) {
       await BlocProvider.of<GetAllPrivateRoomCubit>(context)
-          .seetinonExpried(context);
+          .seetinonExpried(context); 
       await BlocProvider.of<GetAllPrivateRoomCubit>(context)
           .chckUserStaus(context);
 
