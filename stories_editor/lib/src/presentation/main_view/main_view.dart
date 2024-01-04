@@ -138,6 +138,8 @@ class _MainViewState extends State<MainView> {
   @override
   void dispose() {
     _controller?.pause();
+    _controller?.dispose();
+    
     super.dispose();
   }
 
@@ -221,7 +223,7 @@ class _MainViewState extends State<MainView> {
                                             /// the gestures of all movable items.
                                             controlNotifier.mediaPath
                                                         .endsWith('.mp4') &&
-                                                _controller != null &&
+                                                    _controller != null &&
                                                     _controller!
                                                         .value.isInitialized
                                                 ? AspectRatio(
@@ -426,19 +428,28 @@ class _MainViewState extends State<MainView> {
                       alignment: Alignment.bottomRight,
                       child: AnimatedOnTapButton(
                         onTap: () async {
-                 
-                          if ((duration?.inSeconds ?? 0) <= 30) {
-                            scrollProvider.pageController.animateToPage(0,
-                                duration: const Duration(milliseconds: 300),
-                                curve: Curves.easeIn);
-                          } else {
-                           
-                            _controller = null;
-                            duration = null;
-                            final SharedPreferences prefs =
-                                await SharedPreferences.getInstance();
-
-                            if (controlNotifier.mediaPath.endsWith('.mp4')) {
+                          print(
+                              "check  controller  pathh -${controlNotifier.mediaPath}");
+                          if (controlNotifier.mediaPath.endsWith('.mp4')) {
+                            if ((duration?.inSeconds ?? 0) <= 30) {
+                              final SharedPreferences prefs =
+                                  await SharedPreferences.getInstance();
+                              print(
+                                  "check video duration -${duration?.inSeconds}");
+                              prefs.setInt(
+                                  "videoduration", duration?.inSeconds ?? 0);
+                              scrollProvider.pageController.animateToPage(0,
+                                  duration: const Duration(milliseconds: 300),
+                                  curve: Curves.easeIn);
+                              setState(() {
+                                _controller?.play();
+                                _controller?.setLooping(true);
+                              });
+                            } else {
+                              _controller = null;
+                              duration = null;
+                              final SharedPreferences prefs =
+                                  await SharedPreferences.getInstance();
                               File file = await Navigator.push(
                                   context,
                                   MaterialPageRoute(
@@ -448,11 +459,6 @@ class _MainViewState extends State<MainView> {
                                           )));
                               if (file.path.isNotEmpty) {
                                 controlNotifier.mediaPath = file.path;
-                                itemProvider.draggableWidget.insert(
-                                    0,
-                                    EditableItem()
-                                      ..type = ItemType.video
-                                      ..position = const Offset(0.0, 0));
 
                                 _controller =
                                     VideoPlayerController.file(File(file.path));
@@ -479,13 +485,12 @@ class _MainViewState extends State<MainView> {
                                     duration: const Duration(milliseconds: 300),
                                     curve: Curves.easeIn);
                               }
-                            } else {
-                              scrollProvider.pageController.animateToPage(0,
-                                  duration: const Duration(milliseconds: 300),
-                                  curve: Curves.easeIn);
                             }
+                          } else {
+                            scrollProvider.pageController.animateToPage(0,
+                                duration: const Duration(milliseconds: 300),
+                                curve: Curves.easeIn);
                           }
-
                         },
                         child: Container(
                           padding: const EdgeInsets.symmetric(
@@ -557,7 +562,7 @@ class _MainViewState extends State<MainView> {
               print(
                   "check data-${totalhoures}-${totalminuert}-${totalSeconds}");
             }));
-        if (duration!.inSeconds <= 30) {
+        /*  if (duration!.inSeconds <= 30) {
           _controller =
               VideoPlayerController.file(File(controlNotifier.mediaPath));
 
@@ -565,7 +570,7 @@ class _MainViewState extends State<MainView> {
             _controller?.play();
             _controller?.setLooping(true);
           });
-        }
+        } */
 
         break;
       case 1:
@@ -587,21 +592,6 @@ class _MainViewState extends State<MainView> {
               print(
                   "check data-${totalhoures}-${totalminuert}-${totalSeconds}");
             }));
-
-        _controller?.initialize().then((value) => setState(() {
-              duration = _controller!.value.duration;
-              print("check duration -${duration}");
-            }));
-
-        if (duration!.inSeconds <= 30) {
-          _controller =
-              VideoPlayerController.file(File(controlNotifier.mediaPath));
-
-          setState(() {
-            _controller?.play();
-            _controller?.setLooping(true);
-          });
-        }
 
         break;
       case 2:
@@ -643,17 +633,9 @@ class _MainViewState extends State<MainView> {
           _controller?.initialize().then((value) => setState(() {
                 duration = _controller!.value.duration;
                 print("check duration-${duration}");
-
-                print(
-                    "check data-${totalhoures}-${totalminuert}-${totalSeconds}");
               }));
 
-          _controller?.initialize().then((value) => setState(() {
-                duration = _controller!.value.duration;
-                print("check duration -${duration}");
-              }));
-
-          if (duration!.inSeconds <= 30) {
+          /*  if (duration!.inSeconds <= 30) {
             _controller =
                 VideoPlayerController.file(File(controlNotifier.mediaPath));
 
@@ -661,7 +643,7 @@ class _MainViewState extends State<MainView> {
               _controller?.play();
               _controller?.setLooping(true);
             });
-          }
+          } */
         }
 
         break;
