@@ -60,7 +60,7 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
   @override
   void initState() {
 
-      print("dfgdfgdgf-");
+      print("dfgdfgdgf-  ${widget.profileTure}");
       BlocProvider.of<OpenSaveCubit>(context).openSaveImagePostAPI(context, "${widget.PostID}");
     super.initState();
   }
@@ -95,11 +95,11 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
       if (state is OpenSaveLoadedState) {
         OpenSaveModelData = state.OpenSaveData;
         print(OpenSaveModelData?.object?.postUserName);
+        navigationFunction();
         parsedDateTimeBlogs =
             DateTime.parse('${OpenSaveModelData?.object?.createdAt ?? ""}');
         parsedDateTimeRepost =
             DateTime.parse('${OpenSaveModelData?.object?.repostOn?.createdAt}');
-        navigationFunction();
         print("home imges -- ${widget.index}");
         if (!added) {
           OpenSaveModelData?.object?.postData?.forEach((element) {
@@ -2051,7 +2051,7 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
   navigationFunction() {
     if (widget.profileTure == true) {
       Future.delayed(
-        Duration(seconds: 1),
+        Duration(seconds: 2),
       ).then((value) {
         BlocProvider.of<AddcommentCubit>(context)
             .Addcomment(context, '${OpenSaveModelData?.object?.postUid}');
