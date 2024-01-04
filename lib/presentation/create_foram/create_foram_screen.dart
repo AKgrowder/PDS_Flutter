@@ -65,6 +65,7 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
   List<String> industryUUID = [];
 
   getDocumentSize() async {
+    await BlocProvider.of<CreatFourmCubit>(context).seetinonExpried(context);
     final SharedPreferences prefs = await SharedPreferences.getInstance();
 
     documentuploadsize =

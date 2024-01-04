@@ -2,6 +2,7 @@ import 'package:pds/API/Bloc/FetchExprtise_Bloc/fetchExprtise_state.dart';
 import 'package:pds/API/Repo/repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pds/API/ApiService/ApiService.dart';
 
 class FetchExprtiseRoomCubit extends Cubit<FetchExprtiseRoomState> {
   FetchExprtiseRoomCubit() : super(FetchExprtiseRoomInitialState()) {}
@@ -13,9 +14,9 @@ class FetchExprtiseRoomCubit extends Cubit<FetchExprtiseRoomState> {
       if (fetchExprtise == "Something Went Wrong, Try After Some Time.") {
         emit(FetchExprtiseRoomErrorState("${fetchExprtise}"));
       } else {
-      if (fetchExprtise.success == true) {
-        emit(FetchExprtiseRoomLoadedState(fetchExprtise));
-      }
+        if (fetchExprtise.success == true) {
+          emit(FetchExprtiseRoomLoadedState(fetchExprtise));
+        }
       }
     } catch (e) {
       emit(FetchExprtiseRoomErrorState(fetchExprtise));
@@ -30,9 +31,10 @@ class FetchExprtiseRoomCubit extends Cubit<FetchExprtiseRoomState> {
       if (fetchExprtise == "Something Went Wrong, Try After Some Time.") {
         emit(FetchExprtiseRoomErrorState("${fetchExprtise}"));
       } else {
-      if (fetchExprtise.success == true) {
-        emit(AddExportLoadedState(fetchExprtise));
-      }}
+        if (fetchExprtise.success == true) {
+          emit(AddExportLoadedState(fetchExprtise));
+        }
+      }
     } catch (e) {
       emit(FetchExprtiseRoomErrorState(fetchExprtise));
     }
@@ -50,16 +52,18 @@ class FetchExprtiseRoomCubit extends Cubit<FetchExprtiseRoomState> {
       if (createForm == "Something Went Wrong, Try After Some Time.") {
         emit(FetchExprtiseRoomErrorState("${createForm}"));
       } else {
-      if (createForm.success == true) {
-        print('createFormdataGet-----${createForm.object}');
-        emit(chooseDocumentLoadedextends(createForm));
-      }}
+        if (createForm.success == true) {
+          print('createFormdataGet-----${createForm.object}');
+          emit(chooseDocumentLoadedextends(createForm));
+        }
+      }
     } catch (e) {
       print('error data-$e');
       emit(FetchExprtiseRoomErrorState(createForm));
     }
   }
-   Future<void> IndustryTypeAPI(BuildContext context) async {
+
+  Future<void> IndustryTypeAPI(BuildContext context) async {
     dynamic industryType;
     try {
       emit(FetchExprtiseRoomLoadingState());
@@ -67,11 +71,34 @@ class FetchExprtiseRoomCubit extends Cubit<FetchExprtiseRoomState> {
       if (industryType == "Something Went Wrong, Try After Some Time.") {
         emit(FetchExprtiseRoomErrorState("${industryType}"));
       } else {
-      if (industryType.success == true) {
-        emit(IndustryTypeLoadedState(industryType));
-      }}
+        if (industryType.success == true) {
+          emit(IndustryTypeLoadedState(industryType));
+        }
+      }
     } catch (e) {
       emit(FetchExprtiseRoomErrorState(industryType));
+    }
+  }
+
+  Future<void> seetinonExpried(BuildContext context,
+      {bool showAlert = false}) async {
+    try {
+      emit(FetchExprtiseRoomLoadingState());
+      dynamic settionExperied =
+          await Repository().logOutSettionexperied(context);
+      print("checkDatWant--$settionExperied");
+      // if (settionExperied == "Something Went Wrong, Try After Some Time.") {
+      //     emit(GetGuestAllPostErrorState("${settionExperied}"));
+      //   } else {
+      if (settionExperied.success == true) {
+        await setLOGOUT(context);
+      } else {
+        print("failed--check---${settionExperied}");
+      }
+      // }
+    } catch (e) {
+      print('errorstate-$e');
+      // emit(GetGuestAllPostErrorState(e.toString()));
     }
   }
 }
