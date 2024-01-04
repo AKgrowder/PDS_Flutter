@@ -478,7 +478,6 @@ class _NewBottomBarState extends State<NewBottomBar> {
       print("Message Count ++++++++++++++++++++++++++++++++++++++++++++++++++++");
       NotificationCount = prefs.getInt(PreferencesKey.NotificationCount) ?? 0;
       MessageCount = prefs.getInt(PreferencesKey.MessageCount) ?? 0;
-
       setState(() {});
     });
   }

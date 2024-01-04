@@ -55,6 +55,7 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
   HashtagModel? hashtagModel; /* 
   HashTagImageModel? hashTagImageModel; */
   bool apiDataSetup = false;
+
   getUserData() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     dataSetup = 0;
@@ -68,23 +69,22 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
       dataSetup = await widget.value2;
     } */
     if (mounted) {
-      setState(() {
-        // Update the widget's state.
-      });
+      // setState(() {
+      //   // Update the widget's state.
+      // });
     }
+
+    await BlocProvider.of<HashTagCubit>(context).seetinonExpried(context);
+    await BlocProvider.of<HashTagCubit>(context)
+        .getAllNoticationsCountAPI(context);
+    await BlocProvider.of<HashTagCubit>(context)
+        .HashTagForYouAPI(context, 'FOR YOU', '1');
   }
 
   @override
   void initState() {
     super.initState();
-    BlocProvider.of<HashTagCubit>(context).seetinonExpried(context);
-    BlocProvider.of<HashTagCubit>(context).getAllNoticationsCountAPI(context);
     getUserData();
-    BlocProvider.of<HashTagCubit>(context)
-        .HashTagForYouAPI(context, 'FOR YOU', '1');
-    // BlocProvider.of<HashTagCubit>(context).serchDataGet(context);
-
-    // BlocProvider.of<HashTagCubit>(context).HashTagBannerAPI(context);
   }
 
   void dispose() {
@@ -129,11 +129,12 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
 
               hashtagModel = state.HashTagData;
             }
-             if (state is GetNotificationCountLoadedState) {
-                print(state.GetNotificationCountData.object);
-                saveNotificationCount(
-                    state.GetNotificationCountData.object?.notificationCount ?? 0,state.GetNotificationCountData.object?.messageCount ?? 0);
-              }
+            if (state is GetNotificationCountLoadedState) {
+              print(state.GetNotificationCountData.object);
+              saveNotificationCount(
+                  state.GetNotificationCountData.object?.notificationCount ?? 0,
+                  state.GetNotificationCountData.object?.messageCount ?? 0);
+            }
             if (state is GetAllUserLoadedState) {
               dataget = true;
               print("api caling");
@@ -193,7 +194,7 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                                 },
                                 onChanged: (value) {
                                   print("i want to check value-${value}");
-                                  
+
                                   if (value.contains('#')) {
                                     print("value.contains('#')");
                                     if (indexxx == 0) {
@@ -1227,7 +1228,8 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
       ));
     }
   }
-   saveNotificationCount(int NotificationCount,int MessageCount) async {
+
+  saveNotificationCount(int NotificationCount, int MessageCount) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setInt(PreferencesKey.NotificationCount, NotificationCount);
     prefs.setInt(PreferencesKey.MessageCount, MessageCount);
