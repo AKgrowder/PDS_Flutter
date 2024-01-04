@@ -475,7 +475,7 @@ class _NewBottomBarState extends State<NewBottomBar> {
     UserLogin_ID = prefs.getString(PreferencesKey.loginUserID);
 
     Timer.periodic(Duration(seconds: 2), (_) {
-      // print("Room Socket ++++++++++++++++++++++++++++++++++++++++++++++++++++");
+      print("Message Count ++++++++++++++++++++++++++++++++++++++++++++++++++++");
       NotificationCount = prefs.getInt(PreferencesKey.NotificationCount) ?? 0;
       MessageCount = prefs.getInt(PreferencesKey.MessageCount) ?? 0;
 
