@@ -104,6 +104,13 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
   }
 
   getDocumentSize() async {
+    await BlocProvider.of<FetchExprtiseRoomCubit>(context)
+        .seetinonExpried(context);
+
+    await BlocProvider.of<FetchExprtiseRoomCubit>(context)
+        .fetchExprties(context);
+    await BlocProvider.of<FetchExprtiseRoomCubit>(context)
+        .IndustryTypeAPI(context);
     final SharedPreferences prefs = await SharedPreferences.getInstance();
 
     documentuploadsize =
@@ -116,8 +123,6 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
   void initState() {
     super.initState();
     getDocumentSize();
-    BlocProvider.of<FetchExprtiseRoomCubit>(context).fetchExprties(context);
-    BlocProvider.of<FetchExprtiseRoomCubit>(context).IndustryTypeAPI(context);
     dopcument = 'Upload Document';
   }
 

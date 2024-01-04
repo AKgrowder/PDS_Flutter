@@ -13,7 +13,6 @@ import 'package:intl/intl.dart';
 import 'package:linkfy_text/linkfy_text.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pds/API/Bloc/BlogComment_BLoc/BlogComment_cubit.dart';
-import 'package:pds/API/Bloc/Fatch_All_PRoom_Bloc/Fatch_PRoom_cubit.dart';
 import 'package:pds/API/Bloc/GuestAllPost_Bloc/GuestAllPost_cubit.dart';
 import 'package:pds/API/Bloc/GuestAllPost_Bloc/GuestAllPost_state.dart';
 import 'package:pds/API/Bloc/NewProfileScreen_Bloc/NewProfileScreen_cubit.dart';
@@ -67,7 +66,6 @@ import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:video_player/video_player.dart';
-import 'package:visibility_detector/visibility_detector.dart';
 
 import '../../API/Model/Get_all_blog_Model/get_all_blog_model.dart';
 import '../../API/Model/UserTagModel/UserTag_model.dart';
@@ -153,29 +151,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
   List<ChewieController> chewieController = [];
   ChewieController? inList;
   Map<String, bool> _videoVisibility = {};
-
-/*   @override
-  void dispose() {
-    for (var controller inList =   mainPostControllers) {
-      controller.dispose();
-    }
-    mainPostControllers.clear();
-    for (var controller inList =   repostControllers) {
-      controller.dispose();
-    }
-    repostControllers.clear();
-    for (var controller inList =   repostMainControllers) {
-      controller.dispose();
-    }
-    repostMainControllers.clear();
-    for (var controller inList =   chewieController) {
-      controller.dispose();
-    }
-    chewieController.clear();
-
-    super.dispose();
-  } */
-
+  bool isWatch = false;
   getDocumentSize() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     documentuploadsize = await double.parse(
@@ -961,9 +937,11 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
   }
 
   NewApi() async {
-    Timer.periodic(Duration(seconds: 15), (_) {
+    Timer.periodic(Duration(seconds: 15), (_) async {
       // print("Room Socket ++++++++++++++++++++++++++++++++++++++++++++++++++++");
-      BlocProvider.of<GetGuestAllPostCubit>(context)
+      await BlocProvider.of<GetGuestAllPostCubit>(context)
+          .seetinonExpried(context);
+      await BlocProvider.of<GetGuestAllPostCubit>(context)
           .getAllNoticationsCountAPI(context);
     });
 
@@ -1216,6 +1194,11 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                 if (state.getAllStoryModel.object != null ||
                     ((state.getAllStoryModel.object?.isNotEmpty == true) ??
                         false)) {
+                  final SharedPreferences prefs =
+                      await SharedPreferences.getInstance();
+                  prefs.setInt(PreferencesKey.StroyLengthCheck,
+                      state.getAllStoryModel.object?.length ?? 0);
+
                   state.getAllStoryModel.object?.forEach((element) {
                     int count = 0;
 
@@ -1229,10 +1212,11 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                     });
                     if (element.userUid == User_ID) {
                       userName.insert(0, element.userName.toString());
+                      print("check iswatch-$isWatch");
                       buttonDatas.insert(
                           0,
                           StoryButtonData(
-                            isWatch: element.storyData?.length == count,
+                            isWatch: isWatch == false ? true : false,
                             timelineBackgroundColor: Colors.grey,
                             buttonDecoration: BoxDecoration(
                               shape: BoxShape.circle,
@@ -1274,7 +1258,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                     element.storyData![index].storyUid,
                                     element.storyData![index].userUid,
                                     element.storyData![index].storyViewCount,
-                                    element.storyData![index].duration)),
+                                    element.storyData![index].videoDuration)),
                             borderDecoration: BoxDecoration(
                               borderRadius: const BorderRadius.all(
                                 Radius.circular(60.0),
@@ -1300,7 +1284,10 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                           onPressed: (data) {
                             Navigator.of(storycontext!).push(
                               StoryRoute(
-                                onTap: () {
+                                onTap: () async {
+                                  await BlocProvider.of<GetGuestAllPostCubit>(
+                                          context)
+                                      .seetinonExpried(context);
                                   Navigator.push(context,
                                       MaterialPageRoute(builder: (context) {
                                     return ProfileScreen(
@@ -1326,9 +1313,13 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                           storyListViewController: ScrollController()));
 
                       storyAdded = true;
-                    } else {
-                      if (!storyAdded) userName.add("Share Story");
+                    } else if (element.userUid != User_ID) {
                       userName.add(element.userName.toString());
+
+                      print("check Data get -${element.userName.toString()}");
+                      if (!storyAdded)
+                        // userName.add("Share Storyaaaa");
+                        userName.add(element.userName.toString());
 
                       int count = 0;
                       element.storyData?.forEach((element) {
@@ -1336,6 +1327,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                           count++;
                         }
                       });
+
                       StoryButtonData buttonData1 = StoryButtonData(
                         isWatch: element.storyData?.length == count,
                         timelineBackgroundColor: Colors.grey,
@@ -1380,7 +1372,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                 element.storyData![index].storyUid,
                                 element.storyData![index].userUid,
                                 element.storyData![index].storyViewCount,
-                                element.storyData![index].duration)),
+                                element.storyData![index].videoDuration)),
                         borderDecoration: BoxDecoration(
                           borderRadius: const BorderRadius.all(
                             Radius.circular(60.0),
@@ -1406,7 +1398,10 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                           onPressed: (data) {
                             Navigator.of(storycontext!).push(
                               StoryRoute(
-                                onTap: () {
+                                onTap: () async {
+                                  await BlocProvider.of<GetGuestAllPostCubit>(
+                                          context)
+                                      .seetinonExpried(context);
                                   Navigator.push(context,
                                       MaterialPageRoute(builder: (context) {
                                     return ProfileScreen(
@@ -1463,6 +1458,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                             )),
                   );
                 } else {
+                  await BlocProvider.of<GetGuestAllPostCubit>(context)
+                      .seetinonExpried(context);
                   Navigator.push(context, MaterialPageRoute(builder: (context) {
                     return ProfileScreen(
                         User_ID: "${state.OpenSharePostData.object?.userUid}",
@@ -1573,7 +1570,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                     width: 17,
                                   ),
                                   GestureDetector(
-                                      onTap: () {
+                                      onTap: () async {
                                         if (uuid == null) {
                                           /* Navigator.of(context).push(
                                               MaterialPageRoute(
@@ -1591,6 +1588,9 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                       RegisterCreateAccountScreen()),
                                               (route) => true);
                                         } else {
+                                          await BlocProvider.of<
+                                                  GetGuestAllPostCubit>(context)
+                                              .seetinonExpried(context);
                                           Navigator.push(context,
                                               MaterialPageRoute(
                                                   builder: (context) {
@@ -1658,6 +1658,10 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                         onTap: () async {
                                           ImageDataPostOne? imageDataPost;
                                           if (uuid != null) {
+                                            await BlocProvider.of<
+                                                        GetGuestAllPostCubit>(
+                                                    context)
+                                                .seetinonExpried(context);
                                             if (Platform.isAndroid) {
                                               final info =
                                                   await DeviceInfoPlugin()
@@ -1683,6 +1687,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                           finalvideoSize,
                                                     );
                                                   }));
+
                                                   print("this is the 1");
                                                   if (imageDataPost?.object
                                                           ?.split('.')
@@ -1701,6 +1706,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                     Repository()
                                                         .cretateStoryApi(
                                                             context, parmes);
+                                                    isWatch = true;
+                                                    Get_UserToken();
                                                   } else {
                                                     var parmes = {
                                                       "storyData": imageDataPost
@@ -1714,6 +1721,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                     Repository()
                                                         .cretateStoryApi(
                                                             context, parmes);
+                                                    isWatch = true;
+                                                    Get_UserToken();
                                                   }
                                                 }
                                               } else if (await permissionHandler(
@@ -1734,6 +1743,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                         finalvideoSize,
                                                   );
                                                 }));
+
                                                 if (imageDataPost?.object
                                                         ?.split('.')
                                                         .last ==
@@ -1750,6 +1760,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                       "scdfhgsdfhsd-${parmes}");
                                                   Repository().cretateStoryApi(
                                                       context, parmes);
+                                                  isWatch = true;
+                                                  Get_UserToken();
                                                 } else {
                                                   var parmes = {
                                                     "storyData": imageDataPost
@@ -1762,6 +1774,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                       "CHECK:--------${parmes}");
                                                   Repository().cretateStoryApi(
                                                       context, parmes);
+                                                  isWatch = true;
+                                                  Get_UserToken();
                                                 }
                                               }
                                             }
@@ -1872,7 +1886,12 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                   Navigator.of(storycontext!)
                                                       .push(
                                                         StoryRoute(
-                                                          onTap: () {
+                                                          onTap: () async {
+                                                            await BlocProvider
+                                                                    .of<GetGuestAllPostCubit>(
+                                                                        context)
+                                                                .seetinonExpried(
+                                                                    context);
                                                             Navigator.push(
                                                                 context,
                                                                 MaterialPageRoute(
@@ -2147,7 +2166,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                           child: ListTile(
                                                             leading:
                                                                 GestureDetector(
-                                                              onTap: () {
+                                                              onTap: () async {
                                                                 if (uuid ==
                                                                     null) {
                                                                   Navigator.of(
@@ -2156,6 +2175,11 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                           builder: (context) =>
                                                                               RegisterCreateAccountScreen()));
                                                                 } else {
+                                                                  await BlocProvider.of<
+                                                                              GetGuestAllPostCubit>(
+                                                                          context)
+                                                                      .seetinonExpried(
+                                                                          context);
                                                                   Navigator.push(
                                                                       context,
                                                                       MaterialPageRoute(
@@ -2220,7 +2244,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                       .start,
                                                               children: [
                                                                 GestureDetector(
-                                                                  onTap: () {
+                                                                  onTap:
+                                                                      () async {
                                                                     if (uuid ==
                                                                         null) {
                                                                       Navigator.of(
@@ -2228,6 +2253,10 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                           .push(
                                                                               MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
                                                                     } else {
+                                                                      await BlocProvider.of<GetGuestAllPostCubit>(
+                                                                              context)
+                                                                          .seetinonExpried(
+                                                                              context);
                                                                       Navigator.push(
                                                                           context,
                                                                           MaterialPageRoute(builder:
@@ -2458,12 +2487,14 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                                 }
                                                                               } else {
                                                                                 if (link.value!.startsWith('#')) {
+                                                                                  await BlocProvider.of<GetGuestAllPostCubit>(context).seetinonExpried(context);
                                                                                   Navigator.push(
                                                                                       context,
                                                                                       MaterialPageRoute(
                                                                                         builder: (context) => HashTagViewScreen(title: "${link.value}"),
                                                                                       ));
                                                                                 } else if (link.value!.startsWith('@')) {
+                                                                                  await BlocProvider.of<GetGuestAllPostCubit>(context).seetinonExpried(context);
                                                                                   var name;
                                                                                   var tagName;
                                                                                   name = SelectedTest;
@@ -2712,12 +2743,14 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                     leading:
                                                                         GestureDetector(
                                                                       onTap:
-                                                                          () {
+                                                                          () async {
                                                                         if (uuid ==
                                                                             null) {
                                                                           Navigator.of(context)
                                                                               .push(MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
                                                                         } else {
+                                                                          await BlocProvider.of<GetGuestAllPostCubit>(context)
+                                                                              .seetinonExpried(context);
                                                                           Navigator.push(
                                                                               context,
                                                                               MaterialPageRoute(builder: (context) {
@@ -2753,11 +2786,12 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                       children: [
                                                                         GestureDetector(
                                                                           onTap:
-                                                                              () {
+                                                                              () async {
                                                                             if (uuid ==
                                                                                 null) {
                                                                               Navigator.of(context).push(MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
                                                                             } else {
+                                                                              await BlocProvider.of<GetGuestAllPostCubit>(context).seetinonExpried(context);
                                                                               Navigator.push(context, MaterialPageRoute(builder: (context) {
                                                                                 return MultiBlocProvider(providers: [
                                                                                   BlocProvider<NewProfileSCubit>(
@@ -2881,6 +2915,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                                 }
                                                                               } else {
                                                                                 if (link.value!.startsWith('#')) {
+                                                                                  await BlocProvider.of<GetGuestAllPostCubit>(context).seetinonExpried(context);
                                                                                   print("aaaaaaaaaa == ${link}");
                                                                                   Navigator.push(
                                                                                       context,
@@ -2888,6 +2923,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                                         builder: (context) => HashTagViewScreen(title: "${link.value}"),
                                                                                       ));
                                                                                 } else if (link.value!.startsWith('@')) {
+                                                                                  await BlocProvider.of<GetGuestAllPostCubit>(context).seetinonExpried(context);
                                                                                   var name;
                                                                                   var tagName;
                                                                                   name = SelectedTest;
@@ -3497,7 +3533,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                           child: ListTile(
                                                             leading:
                                                                 GestureDetector(
-                                                              onTap: () {
+                                                              onTap: () async {
                                                                 if (uuid ==
                                                                     null) {
                                                                   Navigator.of(
@@ -3506,6 +3542,11 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                           builder: (context) =>
                                                                               RegisterCreateAccountScreen()));
                                                                 } else {
+                                                                  await BlocProvider.of<
+                                                                              GetGuestAllPostCubit>(
+                                                                          context)
+                                                                      .seetinonExpried(
+                                                                          context);
                                                                   Navigator.push(
                                                                       context,
                                                                       MaterialPageRoute(
@@ -3572,7 +3613,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                 //   height: 6,
                                                                 // ),
                                                                 GestureDetector(
-                                                                  onTap: () {
+                                                                  onTap:
+                                                                      () async {
                                                                     if (uuid ==
                                                                         null) {
                                                                       Navigator.of(
@@ -3580,6 +3622,10 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                           .push(
                                                                               MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
                                                                     } else {
+                                                                      await BlocProvider.of<GetGuestAllPostCubit>(
+                                                                              context)
+                                                                          .seetinonExpried(
+                                                                              context);
                                                                       Navigator.push(
                                                                           context,
                                                                           MaterialPageRoute(builder:
@@ -3754,9 +3800,9 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                         },
                                                                         child:
                                                                             LinkifyText(
-                                                                          utf8.decode(AllGuestPostRoomData?.object?.content?[index].description?.runes.toList() ??
-                                                                              []),
-                                                                          // "${AllGuestPostRoomData?.object?.content?[index].description}",
+                                                                          /*    utf8.decode(AllGuestPostRoomData?.object?.content?[index].description?.runes.toList() ??
+                                                                              []), */
+                                                                          "${AllGuestPostRoomData?.object?.content?[index].description}",
                                                                           linkStyle:
                                                                               TextStyle(
                                                                             color:
@@ -3827,12 +3873,14 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                                 }
                                                                               } else if (link.value != null) {
                                                                                 if (link.value!.startsWith('#')) {
+                                                                                  await BlocProvider.of<GetGuestAllPostCubit>(context).seetinonExpried(context);
                                                                                   Navigator.push(
                                                                                       context,
                                                                                       MaterialPageRoute(
                                                                                         builder: (context) => HashTagViewScreen(title: "${link.value}"),
                                                                                       ));
                                                                                 } else if (link.value!.startsWith('@')) {
+                                                                                  await BlocProvider.of<GetGuestAllPostCubit>(context).seetinonExpried(context);
                                                                                   var name;
                                                                                   var tagName;
                                                                                   name = SelectedTest;
@@ -5337,7 +5385,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
     ImageDataPostOne? imageDataPost;
 
     if (Platform.isAndroid) {
-      print("this conidddd");
+      print("tHIS iS THE dATA gET");
       final info = await DeviceInfoPlugin().androidInfo;
       if (num.parse(await info.version.release).toInt() >= 13) {
         if (await permissionHandler(context, Permission.photos) ?? false) {
@@ -5357,6 +5405,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
             };
             print("scdfhgsdfhsd-${parmes}");
             Repository().cretateStoryApi(context, parmes);
+            isWatch = true;
+            Get_UserToken();
           } else {
             var parmes = {
               "storyData": imageDataPost?.object.toString(),
@@ -5365,11 +5415,13 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
             };
             print("CHECK:--------${parmes}");
             Repository().cretateStoryApi(context, parmes);
+            isWatch = true;
+            Get_UserToken();
           }
         }
       } else if (await permissionHandler(context, Permission.storage) ??
           false) {
-        print("this conidddd1");
+        print("tHIS iS THE dATA ELSE");
 
         imageDataPost =
             await Navigator.push(context, MaterialPageRoute(builder: (context) {
@@ -5378,6 +5430,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
             finalvideoSize: finalvideoSize,
           );
         }));
+
         if (imageDataPost?.object?.split('.').last == 'mp4') {
           var parmes = {
             "storyData": imageDataPost?.object,
@@ -5386,6 +5439,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
           };
           print("scdfhgsdfhsd-${parmes}");
           Repository().cretateStoryApi(context, parmes);
+          Get_UserToken();
         } else {
           var parmes = {
             "storyData": imageDataPost?.object.toString(),
@@ -5394,6 +5448,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
           };
           print("CHECK:--------${parmes}");
           Repository().cretateStoryApi(context, parmes);
+          Get_UserToken();
         }
       }
     }

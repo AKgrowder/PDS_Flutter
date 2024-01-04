@@ -54,6 +54,7 @@ class _DmScreenState extends State<DmScreen> {
   bool emojiShowing = false;
   String addmsg = "";
   var Token = "";
+  bool isontap = true;
   var UserCode = "";
   var User_Name = "";
   String? userId;
@@ -144,6 +145,9 @@ class _DmScreenState extends State<DmScreen> {
         print("check this condiosn");
         BlocProvider.of<DmInboxCubit>(context).send_image_in_user_chat(context,
             widget.ChatInboxUid, UserLogin_ID.toString(), File(_image!.path));
+        setState(() {
+          SubmitOneTime = true;
+        });
       } else {
         if (UserLogin_ID != null) {
           Navigator.of(context).push(MaterialPageRoute(
@@ -164,6 +168,8 @@ class _DmScreenState extends State<DmScreen> {
   }
 
   pageNumberMethod() async {
+    await BlocProvider.of<DmInboxCubit>(context)
+          .seetinonExpried(context);
     await BlocProvider.of<DmInboxCubit>(context)
         .DMChatListApiMethod(widget.ChatInboxUid, 1, 20, context);
     await BlocProvider.of<DmInboxCubit>(context)
@@ -1739,14 +1745,14 @@ class _DmScreenState extends State<DmScreen> {
 
         if (value2 > finalFileSize) {
           print(
-              "this file size ${value2} ${suffixes[i]} Selected Max size ${finalFileSize}MB");
+              "this file size ${value2} Selected Max size ${finalFileSize}MB");
 
           showDialog(
             context: context,
             builder: (ctx) => AlertDialog(
               title: Text("Max Size ${finalFileSize}MB"),
               content: Text(
-                  "This file size ${value2} ${suffixes[i]} Selected Max size ${finalFileSize}MB"),
+                  "This file size ${value2} Selected Max size ${finalFileSize}MB"),
               actions: <Widget>[
                 TextButton(
                   onPressed: () {

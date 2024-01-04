@@ -493,7 +493,7 @@ class _InviteMeesageState extends State<InviteMeesage> {
                                         width: 5,
                                       ),
                                       Container(
-                                        width: _width / 1.8,
+                                        width: _width / 1.5, //old is 1.8
                                         // color: Colors.red,
                                         child: TextField(
                                           maxLines: null,
@@ -508,7 +508,7 @@ class _InviteMeesageState extends State<InviteMeesage> {
                                       SizedBox(
                                         width: 5,
                                       ),
-                                      GestureDetector(
+                                      /* GestureDetector(
                                         onTap: () {
                                           prepareTestPdf(0);
                                         },
@@ -516,11 +516,11 @@ class _InviteMeesageState extends State<InviteMeesage> {
                                           "assets/images/paperclip-2.png",
                                           height: 23,
                                         ),
-                                      ),
+                                      ), */
                                       SizedBox(
                                         width: 13,
                                       ),
-                                      GestureDetector(
+                                      /* GestureDetector(
                                         onTap: () {
                                           camerapicker();
                                         },
@@ -528,7 +528,7 @@ class _InviteMeesageState extends State<InviteMeesage> {
                                           "assets/images/Vector (12).png",
                                           height: 20,
                                         ),
-                                      ),
+                                      ), */
                                       SizedBox(
                                         width: 8,
                                       ),
