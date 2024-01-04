@@ -711,7 +711,8 @@ class _AllNotificationClassState extends State<AllNotificationClass> {
                                               height: 3,
                                             ),
                                             Text(
-                                              "${AllNotificationData?.object?[index].title.toString()[0].toUpperCase()}${AllNotificationData?.object?[index].title?.toString().substring(1).toLowerCase()}",
+                                              "${AllNotificationData?.object?[index].title}",
+                                              // "${AllNotificationData?.object?[index].title.toString()[0].toUpperCase()}${AllNotificationData?.object?[index].title?.toString().substring(1).toLowerCase()}",
                                               style: TextStyle(
                                                   fontSize: 17,
                                                   fontFamily: "outfit",

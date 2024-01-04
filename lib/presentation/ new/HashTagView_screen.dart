@@ -408,10 +408,10 @@ class _HashTagViewScreenState extends State<HashTagViewScreen> {
                                             alignment: Alignment.topLeft,
                                             child: LinkifyText(
                                               "${hashTagViewData?.object?.posts?[index].description}",
-                                              linkStyle:
-                                                  TextStyle(color: Colors.blue),
-                                              textStyle: TextStyle(
-                                                  color: Colors.white),
+                                                linkStyle:
+                                                                              TextStyle(color: Colors.blue,fontFamily: 'outfit',),
+                                                                          textStyle:
+                                                                              TextStyle(color: Colors.black,fontFamily: 'outfit',),
                                               linkTypes: [
                                                 LinkType.url,
                                                 LinkType.userTag,

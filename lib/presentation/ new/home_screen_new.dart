@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:chewie/chewie.dart';
@@ -1837,10 +1838,10 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                     User_Name,
                                                     "",
                                                     "${User_ID}",
-                                                  
                                                     0,
-                                                    imageDataPost.videodurationGet
-                                                        ?? 15)
+                                                    imageDataPost
+                                                            .videodurationGet ??
+                                                        15)
                                               ],
                                               isWatch: false,
                                               borderDecoration: BoxDecoration(
@@ -1916,7 +1917,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                               setState(() {
                                                 storyAdded = true;
                                               });
-                                          } 
+                                          }
                                         },
                                         child: Column(
                                           mainAxisSize: MainAxisSize.min,
@@ -2389,9 +2390,19 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                             LinkifyText(
                                                                           "${AllGuestPostRoomData?.object?.content?[index].description}",
                                                                           linkStyle:
-                                                                              TextStyle(color: Colors.blue),
+                                                                              TextStyle(
+                                                                            color:
+                                                                                Colors.blue,
+                                                                            fontFamily:
+                                                                                'outfit',
+                                                                          ),
                                                                           textStyle:
-                                                                              TextStyle(color: Colors.black),
+                                                                              TextStyle(
+                                                                            color:
+                                                                                Colors.black,
+                                                                            fontFamily:
+                                                                                'outfit',
+                                                                          ),
                                                                           linkTypes: [
                                                                             LinkType.url,
                                                                             LinkType.userTag,
@@ -2802,9 +2813,19 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                             LinkifyText(
                                                                           "${AllGuestPostRoomData?.object?.content?[index].repostOn?.description}",
                                                                           linkStyle:
-                                                                              TextStyle(color: Colors.blue),
+                                                                              TextStyle(
+                                                                            color:
+                                                                                Colors.blue,
+                                                                            fontFamily:
+                                                                                'outfit',
+                                                                          ),
                                                                           textStyle:
-                                                                              TextStyle(color: Colors.black),
+                                                                              TextStyle(
+                                                                            color:
+                                                                                Colors.black,
+                                                                            fontFamily:
+                                                                                'outfit',
+                                                                          ),
                                                                           linkTypes: [
                                                                             LinkType.url,
                                                                             LinkType.userTag,
@@ -3733,11 +3754,23 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                         },
                                                                         child:
                                                                             LinkifyText(
-                                                                          "${AllGuestPostRoomData?.object?.content?[index].description}",
+                                                                          utf8.decode(AllGuestPostRoomData?.object?.content?[index].description?.runes.toList() ??
+                                                                              []),
+                                                                          // "${AllGuestPostRoomData?.object?.content?[index].description}",
                                                                           linkStyle:
-                                                                              TextStyle(color: Colors.blue),
+                                                                              TextStyle(
+                                                                            color:
+                                                                                Colors.blue,
+                                                                            fontFamily:
+                                                                                'outfit',
+                                                                          ),
                                                                           textStyle:
-                                                                              TextStyle(color: Colors.black),
+                                                                              TextStyle(
+                                                                            color:
+                                                                                Colors.black,
+                                                                            fontFamily:
+                                                                                'outfit',
+                                                                          ),
                                                                           linkTypes: [
                                                                             LinkType.url,
                                                                             LinkType.userTag,
