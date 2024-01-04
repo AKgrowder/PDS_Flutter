@@ -69,7 +69,7 @@ class StoryData {
   bool? isLoggedIn;
   bool? storySeen;
   int? storyViewCount;
-  int? duration;
+  int? videoDuration;
   StoryData(
       {this.storyUid,
       this.storyData,
@@ -80,7 +80,7 @@ class StoryData {
       this.isLoggedIn,
       this.storySeen,
       this.storyViewCount,
-      this.duration,
+      this.videoDuration,
       });
 
   StoryData.fromJson(Map<String, dynamic> json) {
@@ -93,7 +93,7 @@ class StoryData {
     isLoggedIn = json['isLoggedIn'];
     storySeen = json['storySeen'];
     storyViewCount = json['storyViewCount'];
-    duration = json['duration'];
+    videoDuration = json['videoDuration'];
 
   }
 

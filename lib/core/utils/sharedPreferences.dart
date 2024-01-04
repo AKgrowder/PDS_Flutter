@@ -54,6 +54,8 @@ class PreferencesKey {
   static String MaxInboxUploadSizeInMB = "MaxInboxUploadSizeInMB";
   static String NotificationCount = "NotificationCount";
   static String MessageCount = "MessageCount";
+  static String StroyLengthCheck = "StroyLengthCheck";
+
 
 
 
