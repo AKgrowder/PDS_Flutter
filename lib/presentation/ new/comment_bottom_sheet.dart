@@ -485,10 +485,10 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                                                 // color: Colors.amber,
                                                 child: LinkifyText(
                                                   "${addCommentModeldata?.object?[index].comment}",
-                                                  linkStyle: TextStyle(
-                                                      color: Colors.blue),
-                                                  textStyle: TextStyle(
-                                                      color: Colors.black),
+                                                    linkStyle:
+                                                                              TextStyle(color: Colors.blue,fontFamily: 'outfit',),
+                                                                          textStyle:
+                                                                              TextStyle(color: Colors.black,fontFamily: 'outfit',),
                                                   linkTypes: [
                                                     LinkType.url,
                                                     LinkType.userTag,

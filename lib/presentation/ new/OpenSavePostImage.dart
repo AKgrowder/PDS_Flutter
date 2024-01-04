@@ -303,10 +303,10 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
                                         alignment: Alignment.centerLeft,
                                         child: LinkifyText(
                                           "${OpenSaveModelData?.object?.description}",
-                                          linkStyle:
-                                              TextStyle(color: Colors.blue),
-                                          textStyle:
-                                              TextStyle(color: Colors.white),
+                                         linkStyle:
+                                                                              TextStyle(color: Colors.blue,fontFamily: 'outfit',),
+                                                                          textStyle:
+                                                                              TextStyle(color: Colors.black,fontFamily: 'outfit',),
                                           linkTypes: [
                                             LinkType.url,
                                             LinkType.userTag,
@@ -771,10 +771,10 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
                                                 alignment: Alignment.centerLeft,
                                                 child: LinkifyText(
                                                   "${OpenSaveModelData?.object?.repostOn?.description}",
-                                                  linkStyle: TextStyle(
-                                                      color: Colors.blue),
-                                                  textStyle: TextStyle(
-                                                      color: Colors.white),
+                                                    linkStyle:
+                                                                              TextStyle(color: Colors.blue,fontFamily: 'outfit',),
+                                                                          textStyle:
+                                                                              TextStyle(color: Colors.black,fontFamily: 'outfit',),
                                                   linkTypes: [
                                                     LinkType.url,
                                                     LinkType.userTag,
@@ -1660,10 +1660,10 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
                                       alignment: Alignment.centerLeft,
                                       child: LinkifyText(
                                         "${OpenSaveModelData?.object?.description}",
-                                        linkStyle:
-                                            TextStyle(color: Colors.blue),
-                                        textStyle:
-                                            TextStyle(color: Colors.white),
+                                          linkStyle:
+                                                                              TextStyle(color: Colors.blue,fontFamily: 'outfit',),
+                                                                          textStyle:
+                                                                              TextStyle(color: Colors.black,fontFamily: 'outfit',),
                                         linkTypes: [
                                           LinkType.url,
                                           LinkType.userTag,

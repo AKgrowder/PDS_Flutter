@@ -1642,12 +1642,10 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                 child:
                                                                     LinkifyText(
                                                                   "${aboutMe.text}",
-                                                                  linkStyle: TextStyle(
-                                                                      color: Colors
-                                                                          .blue),
-                                                                  textStyle: TextStyle(
-                                                                      color: Colors
-                                                                          .black),
+                                                                  linkStyle:
+                                                                              TextStyle(color: Colors.blue,fontFamily: 'outfit',),
+                                                                          textStyle:
+                                                                              TextStyle(color: Colors.black,fontFamily: 'outfit',),
                                                                   linkTypes: [
                                                                     LinkType
                                                                         .url,
