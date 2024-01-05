@@ -243,7 +243,7 @@ class _InviteMeesageState extends State<InviteMeesage> {
                               children: MultiUsermap.map((Element) => Container(
                                     height: 40,
                                     decoration: BoxDecoration(
-                                      color: Color(0xffED1C25),
+                                      color: ColorConstant.primary_color,
                                       borderRadius: BorderRadius.circular(20),
                                       border:
                                           Border.all(color: Colors.grey[400]!),
@@ -598,12 +598,13 @@ class _InviteMeesageState extends State<InviteMeesage> {
                                   Add_Comment.clear();
                                   searchController.clear();
                                 }
+                                Navigator.pop(context);
                               },
                               child: Container(
                                 height: 50,
                                 // width: 50,
                                 decoration: BoxDecoration(
-                                    color: Color(0xFFED1C25),
+                                    color: ColorConstant.primary_color,
                                     borderRadius: BorderRadius.circular(25)),
                                 child: Image.asset(
                                   "assets/images/Vector (13).png",

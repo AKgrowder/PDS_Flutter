@@ -1,3 +1,4 @@
+import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/presentation/experts_details_screen/review_scren.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -280,7 +281,7 @@ class _ExpertsDetailsScreenState extends State<ExpertsDetailsScreen> {
                     "+ Add Rateing Reviw",
                     style: TextStyle(
                         fontWeight: FontWeight.w600,
-                        color: Color(0xFFED1C25),
+                        color: ColorConstant.primary_color,
                         fontFamily: "outfit",
                         fontSize: 15),
                   ),

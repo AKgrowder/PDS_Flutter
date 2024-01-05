@@ -1,4 +1,5 @@
 import 'package:pds/core/app_export.dart';
+import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/presentation/%20new/newbottembar.dart';
 
 import 'package:pds/presentation/Login_Screen/Login_Screen.dart';
@@ -114,7 +115,7 @@ class _RegisterCreateAccountScreenState
                 height: _height * 0.055,
                 width: _width,
                 decoration: BoxDecoration(
-                  color: Color(0xffED1C25),
+                  color: ColorConstant.primary_color,
                   borderRadius: BorderRadius.circular(5),
                 ),
                 child: Text(
@@ -143,11 +144,11 @@ class _RegisterCreateAccountScreenState
                 decoration: BoxDecoration(
                     color: Color(0xffFFD9DA),
                     borderRadius: BorderRadius.circular(5),
-                    border: Border.all(color: Color(0xffED1C25))),
+                    border: Border.all(color: ColorConstant.primary_color)),
                 child: Text(
                   'Log In',
                   style: TextStyle(
-                      color: Color(0xffED1C25),
+                      color: ColorConstant.primary_color,
                       fontFamily: 'outfit',
                       fontSize: 15,
                       fontWeight: FontWeight.bold),

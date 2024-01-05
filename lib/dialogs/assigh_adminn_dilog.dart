@@ -256,7 +256,7 @@ class _AssignAdminScreennState extends State<AssignAdminScreenn>
                                                       decoration:
                                                           ShapeDecoration(
                                                         color:
-                                                            Color(0xFFED1C25),
+                                                           ColorConstant.primary_color,
                                                         shape:
                                                             RoundedRectangleBorder(
                                                           borderRadius:
@@ -367,8 +367,7 @@ class _AssignAdminScreennState extends State<AssignAdminScreenn>
                                                             height: 20,
                                                             decoration:
                                                                 ShapeDecoration(
-                                                              color: Color(
-                                                                  0xFFED1C25),
+                                                              color:ColorConstant.primary_color,
                                                               shape:
                                                                   RoundedRectangleBorder(
                                                                 borderRadius:
@@ -519,7 +518,7 @@ class _AssignAdminScreennState extends State<AssignAdminScreenn>
                                                             decoration:
                                                                 ShapeDecoration(
                                                               color:
-                                                                  Color(0xFFED1C25),
+                                                                  ColorConstant.primary_color,
                                                               shape:
                                                                   RoundedRectangleBorder(
                                                                 borderRadius:
@@ -628,7 +627,7 @@ class _AssignAdminScreennState extends State<AssignAdminScreenn>
                                                             decoration:
                                                                 ShapeDecoration(
                                                               color:
-                                                                  Color(0xFFED1C25),
+                                                                  ColorConstant.primary_color,
                                                               shape:
                                                                   RoundedRectangleBorder(
                                                                 borderRadius:

@@ -172,7 +172,7 @@ class _SettingScreenState extends State<SettingScreen> {
                               alignment: Alignment.center,
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(10),
-                                  color: Color(0xffED1C25)),
+                                  color:ColorConstant.primary_color),
                               child: Text(
                                 'Please update',
                                 style: TextStyle(

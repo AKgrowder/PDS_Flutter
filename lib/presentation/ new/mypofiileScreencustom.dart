@@ -165,13 +165,13 @@
 //                         decoration: BoxDecoration(
 //                             color: Colors.white,
 //                             borderRadius: BorderRadius.circular(10),
-//                             border: Border.all(color: Color(0xffED1C25))),
+//                             border: Border.all(color: ColorConstant.primary_color,)),
 //                         child: Text(
 //                           'Edit Profile',
 //                           style: TextStyle(
 //                               fontFamily: "outfit",
 //                               fontSize: 18,
-//                               color: Color(0xffED1C25),
+//                               color: ColorConstant.primary_color,
 //                               fontWeight: FontWeight.w500),
 //                         ),
 //                       ),
@@ -189,7 +189,7 @@
 //                         width: 50,
 //                         decoration: BoxDecoration(
 //                             borderRadius: BorderRadius.circular(10),
-//                             color: Color(0XFFED1C25)),
+//                             color: ColorConstant.primary_color,),
 //                         child: Icon(
 //                           Icons.settings,
 //                           color: Colors.white,
@@ -203,7 +203,7 @@
 //                   height: 45,
 //                   width: _width / 3,
 //                   decoration: BoxDecoration(
-//                     color: Color(0xffED1C25),
+//                     color: ColorConstant.primary_color,
 //                     borderRadius: BorderRadius.circular(10),
 //                   ),
 //                   child: Text(
@@ -397,7 +397,7 @@
 //                                 width: 35,
 //                                 height: 35,
 //                                 decoration: ShapeDecoration(
-//                                   color: Color(0xFFED1C25),
+//                                   color: ColorConstant.primary_color,
 //                                   shape: OvalBorder(),
 //                                 ),
 //                               ),

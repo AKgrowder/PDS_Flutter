@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pds/core/utils/color_constant.dart';
 
 import '../core/utils/image_constant.dart';
 import '../widgets/custom_image_view.dart';
@@ -188,7 +189,7 @@ class _CreateRoomScreenState extends State<CreateRoomScreen>
                                     style: TextStyle(
                                       fontFamily: 'outfit',
                                       fontSize: 15,
-                                      color: Color(0xFFED1C25),
+                                      color: ColorConstant.primary_color,
                                       fontWeight: FontWeight.w400,
                                     ),
                                   )),
@@ -198,7 +199,7 @@ class _CreateRoomScreenState extends State<CreateRoomScreen>
                                 height: 43,
                                 width: width / 3,
                                 decoration: BoxDecoration(
-                                    color: Color(0xFFED1C25),
+                                    color: ColorConstant.primary_color,
                                     borderRadius: BorderRadius.circular(10)),
                                 child: Center(
                                     child: Text(

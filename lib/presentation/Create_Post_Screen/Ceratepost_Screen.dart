@@ -422,7 +422,7 @@ class _CreateNewPostState extends State<CreateNewPost> {
                                   decoration: BoxDecoration(
                                       border: Border.all(
                                         width: 1.5,
-                                        color: Color(0xffED1C25),
+                                        color: ColorConstant.primary_color,
                                       ),
                                       color: ColorConstant.primaryLight_color,
                                       borderRadius: BorderRadius.circular(10)),
@@ -782,7 +782,7 @@ class _CreateNewPostState extends State<CreateNewPost> {
                                             activeSize: const Size(10.0, 10.0),
                                             spacing: const EdgeInsets.symmetric(
                                                 horizontal: 2),
-                                            activeColor: Color(0xffED1C25),
+                                            activeColor: ColorConstant.primary_color,
                                             color: Color(0xff6A6A6A),
                                           ),
                                         ),
@@ -936,11 +936,9 @@ class _CreateNewPostState extends State<CreateNewPost> {
                                                                       toolbarTitle:
                                                                           'Cropper',
                                                                       activeControlsWidgetColor:
-                                                                          Color(
-                                                                              0xffED1C25),
+                                                                         ColorConstant.primary_color,
                                                                       toolbarColor:
-                                                                          Color(
-                                                                              0xffED1C25),
+                                                                         ColorConstant.primary_color,
                                                                       toolbarWidgetColor:
                                                                           Colors
                                                                               .white,
@@ -1149,7 +1147,7 @@ class _CreateNewPostState extends State<CreateNewPost> {
                                 activeSize: const Size(10.0, 10.0),
                                 spacing:
                                     const EdgeInsets.symmetric(horizontal: 2),
-                                activeColor: Color(0xffED1C25),
+                                activeColor: ColorConstant.primary_color,
                                 color: Color(0xff6A6A6A),
                               ),
                             ),
@@ -1967,7 +1965,7 @@ class _CreateNewPostState extends State<CreateNewPost> {
                 child: Container(
                   decoration: BoxDecoration(
                       color: indexx == index
-                          ? Color(0xffED1C25)
+                          ?ColorConstant.primary_color
                           : Colors.transparent,
                       borderRadius: BorderRadius.circular(5)),
                   width: 130,

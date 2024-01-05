@@ -123,7 +123,7 @@
 //                                           children: [
 //                                             Image.asset(
 //                                               "${ImageConstant.bottomhome}",
-//                                               color: Color(0XFFED1C25),
+//                                               color: ColorConstant.primary_color,
 //                                             ),
 //                                           ],
 //                                         ),
@@ -152,7 +152,7 @@
 //                                       height: 5,
 //                                       width: 30,
 //                                       decoration: BoxDecoration(
-//                                           color: Color(0XFFED1C25),
+//                                           color: ColorConstant.primary_color,
 //                                           borderRadius:
 //                                               BorderRadius.circular(10)),
 //                                     ),
@@ -199,7 +199,7 @@
 //                                               children: [
 //                                                 Image.asset(
 //                                                   "${ImageConstant.bottomgroup}",
-//                                                   color: Color(0XFFED1C25),
+//                                                   color: ColorConstant.primary_color,
 //                                                   height: 30,
 //                                                 ),
 //                                               ],
@@ -232,7 +232,7 @@
 //                                       height: 5,
 //                                       width: 30,
 //                                       decoration: BoxDecoration(
-//                                           color: Color(0XFFED1C25),
+//                                           color: ColorConstant.primary_color,
 //                                           borderRadius:
 //                                               BorderRadius.circular(10)),
 //                                     ),
@@ -276,7 +276,7 @@
 //                                             children: [
 //                                               Image.asset(
 //                                                 "${ImageConstant.bottomtimer}",
-//                                                 color: Color(0XFFED1C25),
+//                                                 color: ColorConstant.primary_color,
 //                                                 height: 24,
 //                                                 width: 24,
 //                                               ),
@@ -310,7 +310,7 @@
 //                                       height: 5,
 //                                       width: 30,
 //                                       decoration: BoxDecoration(
-//                                           color: Color(0XFFED1C25),
+//                                           color: ColorConstant.primary_color,
 //                                           borderRadius:
 //                                               BorderRadius.circular(10)),
 //                                     ),
@@ -354,7 +354,7 @@
 //                                             children: [
 //                                               Image.asset(
 //                                                 "${ImageConstant.bottombell}",
-//                                                 color: Color(0XFFED1C25),
+//                                                 color: ColorConstant.primary_color,
 //                                                 height: 26,
 //                                                 width: 26,
 //                                               ),
@@ -387,7 +387,7 @@
 //                                       height: 5,
 //                                       width: 30,
 //                                       decoration: BoxDecoration(
-//                                           color: Color(0XFFED1C25),
+//                                           color: ColorConstant.primary_color,
 //                                           borderRadius:
 //                                               BorderRadius.circular(10)),
 //                                     ),
@@ -434,7 +434,7 @@
 //                                             children: [
 //                                               Image.asset(
 //                                                 "${ImageConstant.bottomprofile}",
-//                                                 color: Color(0XFFED1C25),
+//                                                 color: ColorConstant.primary_color,
 //                                                 // fit: BoxFit.cover,
 //                                                 // fit: BoxFit.scaleDown,
 //                                                 height: 26,
@@ -472,7 +472,7 @@
 //                                       height: 5,
 //                                       width: 30,
 //                                       decoration: BoxDecoration(
-//                                           color: Color(0XFFED1C25),
+//                                           color: ColorConstant.primary_color,
 //                                           borderRadius:
 //                                               BorderRadius.circular(10)),
 //                                     ),

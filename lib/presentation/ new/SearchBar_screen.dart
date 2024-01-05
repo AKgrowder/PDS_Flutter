@@ -378,9 +378,9 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                                   width: 120,
                                   decoration: BoxDecoration(
                                       color: indexxx == index
-                                          ? Color(0xffED1C25)
+                                          ? ColorConstant.primary_color
                                           : dataSetup == index
-                                              ? Color(0xffED1C25)
+                                              ? ColorConstant.primary_color
                                               : Color(0xffFBD8D9),
                                       borderRadius: BorderRadius.circular(20)),
                                   child: Center(
@@ -393,7 +393,7 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                                             ? Colors.white
                                             : dataSetup == index
                                                 ? Colors.white
-                                                : Color(0xffED1C25)),
+                                                : ColorConstant.primary_color),
                                   )),
                                 ),
                               );
@@ -436,9 +436,9 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                                       width: 120,
                                       decoration: BoxDecoration(
                                           color: indexxx == index
-                                              ? Color(0xffED1C25)
+                                              ? ColorConstant.primary_color
                                               : dataSetup == index
-                                                  ? Color(0xffED1C25)
+                                                  ? ColorConstant.primary_color
                                                   : Color(0xffFBD8D9),
                                           borderRadius:
                                               BorderRadius.circular(20)),
@@ -452,7 +452,7 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                                                 ? Colors.white
                                                 : dataSetup == index
                                                     ? Colors.white
-                                                    : Color(0xffED1C25)),
+                                                    : ColorConstant.primary_color),
                                       )),
                                     ),
                                   );
@@ -661,7 +661,7 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                         size: const Size(10.0, 7.0),
                         activeSize: const Size(10.0, 10.0),
                         spacing: const EdgeInsets.symmetric(horizontal: 2),
-                        activeColor: Color(0xffED1C25),
+                        activeColor: ColorConstant.primary_color,
                         color: Color(0xff6A6A6A),
                       ),
                     ),
