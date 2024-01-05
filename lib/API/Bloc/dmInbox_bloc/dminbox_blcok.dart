@@ -140,4 +140,23 @@ class DmInboxCubit extends Cubit<getInboxState> {
       emit(getInboxErrorState(SeenMessgaeModelData));
     }
   }
+
+      Future<void> getAllNoticationsCountAPI(BuildContext context) async {
+    dynamic acceptRejectInvitationModel;
+    try {
+      emit(getInboxLoadingState());
+      acceptRejectInvitationModel =
+          await Repository().getAllNoticationsCountAPI(context);
+      if (acceptRejectInvitationModel ==
+          "Something Went Wrong, Try After Some Time.") {
+        emit(getInboxErrorState("${acceptRejectInvitationModel}"));
+      } else {
+        if (acceptRejectInvitationModel.success == true) {
+          emit(GetNotificationCountLoadedState(acceptRejectInvitationModel));
+        }
+      }
+    } catch (e) {
+      emit(getInboxErrorState(acceptRejectInvitationModel));
+    }
+  }
 }

@@ -496,7 +496,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                       fontFamily: 'outfit',
                                       fontSize: 15,
                                       fontWeight: FontWeight.w500,
-                                      color: Color(0xFFED1C25)),
+                                      color: ColorConstant.primary_color),
                                 ),
                               ),
                             ),
@@ -597,7 +597,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           //                   MaterialStateProperty.all<Size>(
                           //                       Size(double.maxFinite, 50))),
                           //       buttonTextStyle: TextStyle(
-                          //           color: Color(0xFFED1C25),
+                          //           color: ColorConstant.primary_color,
                           //           fontFamily: 'outfit',
                           //           fontSize: 15,
                           //           fontWeight: FontWeight.bold)),

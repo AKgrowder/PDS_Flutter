@@ -194,7 +194,7 @@
 //                               width: _width / 1.2,
 //                               decoration: BoxDecoration(
 //                                   border: Border.all(
-//                                       color: const Color(0XFFED1C25), width: 1),
+//                                       color: const ColorConstant.primary_color, width: 1),
 //                                   borderRadius: BorderRadius.circular(5)),
 //                               child: Column(
 //                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -680,7 +680,7 @@
 //                                           //       shape: RoundedRectangleBorder(
 //                                           //         side: BorderSide(
 //                                           //           width: 1,
-//                                           //           color: Color(0xFFED1C25),
+//                                           //           color: ColorConstant.primary_color,
 //                                           //         ),
 //                                           //         borderRadius:
 //                                           //             BorderRadius.circular(50),
@@ -691,7 +691,7 @@
 //                                           //       "Invite User",
 //                                           //       style: TextStyle(
 //                                           //           fontWeight: FontWeight.w400,
-//                                           //           color: Color(0xFFED1C25),
+//                                           //           color: ColorConstant.primary_color,
 //                                           //           fontFamily: "outfit",
 //                                           //           fontSize: 13),
 //                                           //     )),
@@ -845,7 +845,7 @@
 //                                               borderRadius: BorderRadius.only(
 //                                                 bottomRight: Radius.circular(4),
 //                                               ),
-//                                               color: Color(0xFFED1C25),
+//                                               color: ColorConstant.primary_color,
 //                                             ),
 //                                             child: Center(
 //                                               child: Text(
@@ -900,7 +900,7 @@
 //                       style: TextStyle(
 //                         fontFamily: 'outfit',
 //                         fontSize: 20,
-//                         color: Color(0XFFED1C25),
+//                         color: ColorConstant.primary_color,
 //                         fontWeight: FontWeight.bold,
 //                       ),
 //                     ),

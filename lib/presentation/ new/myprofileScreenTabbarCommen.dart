@@ -147,7 +147,7 @@
 //                                 width: 35,
 //                                 height: 35,
 //                                 decoration: ShapeDecoration(
-//                                   color: Color(0xFFED1C25),
+//                                   color: ColorConstant.primary_color,
 //                                   shape: OvalBorder(),
 //                                 ),
 //                               ),
@@ -277,7 +277,7 @@
 //             width: 35,
 //             height: 35,
 //             decoration: ShapeDecoration(
-//               color: Color(0xFFED1C25),
+//               color: ColorConstant.primary_color,
 //               shape: OvalBorder(),
 //             ),
 //           ),
@@ -524,7 +524,7 @@
 //             width: 35,
 //             height: 35,
 //             decoration: ShapeDecoration(
-//               color: Color(0xFFED1C25),
+//               color: ColorConstant.primary_color,
 //               shape: OvalBorder(),
 //             ),
 //           ),

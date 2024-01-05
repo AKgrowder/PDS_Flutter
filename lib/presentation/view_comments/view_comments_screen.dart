@@ -1060,7 +1060,7 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                   height: 50,
                                   margin: EdgeInsets.only(right: 5),
                                   decoration: BoxDecoration(
-                                      color: Color(0xFFED1C25),
+                                      color: ColorConstant.primary_color,
                                       borderRadius: BorderRadius.circular(25)),
                                   child: Image.asset(
                                     "assets/images/Vector (13).png",
@@ -1249,7 +1249,7 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                 height: 50,
                                 // width: 50,
                                 decoration: BoxDecoration(
-                                    color: Color(0xFFED1C25),
+                                    color: ColorConstant.primary_color,
                                     borderRadius: BorderRadius.circular(25)),
                                 child: Image.asset(
                                   "assets/images/Vector (13).png",

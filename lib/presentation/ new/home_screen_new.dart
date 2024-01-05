@@ -315,7 +315,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                       ),
                     ),
                     decoration: BoxDecoration(
-                        color: Color(0xffED1C25),
+                        color: ColorConstant.primary_color,
                         borderRadius: BorderRadius.circular(5)),
                   ),
                 ),
@@ -332,7 +332,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                     ),
                   ),
                   decoration: BoxDecoration(
-                      color: Color(0xffED1C25),
+                      color: ColorConstant.primary_color,
                       borderRadius: BorderRadius.circular(5)),
                 ),
               ),
@@ -350,7 +350,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                     ),
                   ),
                   decoration: BoxDecoration(
-                      color: Color(0xffED1C25),
+                      color: ColorConstant.primary_color,
                       borderRadius: BorderRadius.circular(5)),
                 ),
               ),
@@ -612,6 +612,13 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
   saveAutoEnterINRoom() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString(PreferencesKey.AutoSetRoomID, "Done");
+    Navigator.push(context, MaterialPageRoute(
+      builder: (context) {
+        return NewBottomBar(
+          buttomIndex: 1,
+        );
+      },
+    ));
   }
 
   SetUi() async {
@@ -1075,7 +1082,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
         child: Scaffold(
             resizeToAvoidBottomInset: false,
             floatingActionButton: FloatingActionButton(
-              backgroundColor: Color(0xffED1C25),
+              backgroundColor: ColorConstant.primary_color,
               onPressed: () {
                 if (uuid != null) {
                   Navigator.push(context, MaterialPageRoute(builder: (context) {
@@ -1293,7 +1300,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                     return ProfileScreen(
                                         User_ID: "${element.userUid}",
                                         isFollowing: "");
-                                  }));
+                                  })).then((value) => Get_UserToken());
                                 },
                                 storyContainerSettings: StoryContainerSettings(
                                   buttonData: buttonDatas[0],
@@ -1407,7 +1414,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                     return ProfileScreen(
                                         User_ID: "${element.userUid}",
                                         isFollowing: "");
-                                  }));
+                                  })).then((value) => Get_UserToken());
                                 },
                                 storyContainerSettings: StoryContainerSettings(
                                   buttonData: buttonData1,
@@ -1464,7 +1471,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                     return ProfileScreen(
                         User_ID: "${state.OpenSharePostData.object?.userUid}",
                         isFollowing: "");
-                  }));
+                  })).then((value) => Get_UserToken());
                 }
               }
               if (state is GetGuestAllPostLoadedState) {
@@ -1558,7 +1565,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                             width: 50,
                                             decoration: BoxDecoration(
                                                 shape: BoxShape.circle,
-                                                color: Color(0xffED1C25)),
+                                                color: ColorConstant.primary_color),
                                             child: Icon(
                                               Icons.person_add_alt,
                                               color: Colors.white,
@@ -1902,7 +1909,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                       "${User_ID}",
                                                                   isFollowing:
                                                                       "");
-                                                            }));
+                                                            })).then((value) =>
+                                                                Get_UserToken());
                                                           },
                                                           storyContainerSettings:
                                                               StoryContainerSettings(
@@ -2198,7 +2206,9 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                                 "${AllGuestPostRoomData?.object?.content?[index].userUid}",
                                                                             isFollowing:
                                                                                 AllGuestPostRoomData?.object?.content?[index].isFollowing));
-                                                                  }));
+                                                                  })).then(
+                                                                      (value) =>
+                                                                          Get_UserToken());
 
                                                                   ///
                                                                 }
@@ -2269,7 +2279,10 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                             ],
                                                                             child:
                                                                                 ProfileScreen(User_ID: "${AllGuestPostRoomData?.object?.content?[index].userUid}", isFollowing: AllGuestPostRoomData?.object?.content?[index].isFollowing));
-                                                                      }));
+                                                                      })).then(
+                                                                          (value) =>
+                                                                              Get_UserToken());
+
                                                                       //
                                                                     }
                                                                   },
@@ -2355,8 +2368,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                           bottom:
                                                                               5),
                                                                       decoration: BoxDecoration(
-                                                                          color: Color(
-                                                                              0xffED1C25),
+                                                                          color: ColorConstant.primary_color,
                                                                           borderRadius:
                                                                               BorderRadius.circular(4)),
                                                                       child: AllGuestPostRoomData?.object?.content?[index].userAccountType ==
@@ -2503,7 +2515,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
 
                                                                                   Navigator.push(context, MaterialPageRoute(builder: (context) {
                                                                                     return ProfileScreen(User_ID: "${userTagModel?.object}", isFollowing: "");
-                                                                                  }));
+                                                                                  })).then((value) => Get_UserToken());
 
                                                                                   print("tagName -- ${tagName}");
                                                                                   print("user id -- ${userTagModel?.object}");
@@ -2688,7 +2700,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                                                 size: const Size(10.0, 7.0),
                                                                                                 activeSize: const Size(10.0, 10.0),
                                                                                                 spacing: const EdgeInsets.symmetric(horizontal: 2),
-                                                                                                activeColor: Color(0xffED1C25),
+                                                                                                activeColor: ColorConstant.primary_color,
                                                                                                 color: Color(0xff6A6A6A),
                                                                                               ),
                                                                                             ),
@@ -2753,13 +2765,15 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                               .seetinonExpried(context);
                                                                           Navigator.push(
                                                                               context,
-                                                                              MaterialPageRoute(builder: (context) {
+                                                                              MaterialPageRoute(builder:
+                                                                                  (context) {
                                                                             return MultiBlocProvider(providers: [
                                                                               BlocProvider<NewProfileSCubit>(
                                                                                 create: (context) => NewProfileSCubit(),
                                                                               ),
                                                                             ], child: ProfileScreen(User_ID: "${AllGuestPostRoomData?.object?.content?[index].repostOn?.userUid}", isFollowing: AllGuestPostRoomData?.object?.content?[index].repostOn?.isFollowing));
-                                                                          }));
+                                                                          })).then((value) =>
+                                                                              Get_UserToken());
                                                                           //
                                                                         }
                                                                       },
@@ -2798,7 +2812,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                                     create: (context) => NewProfileSCubit(),
                                                                                   ),
                                                                                 ], child: ProfileScreen(User_ID: "${AllGuestPostRoomData?.object?.content?[index].repostOn?.userUid}", isFollowing: AllGuestPostRoomData?.object?.content?[index].repostOn?.isFollowing));
-                                                                              }));
+                                                                              })).then((value) => Get_UserToken());
                                                                               //
                                                                             }
                                                                           },
@@ -2932,7 +2946,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
 
                                                                                   Navigator.push(context, MaterialPageRoute(builder: (context) {
                                                                                     return ProfileScreen(User_ID: "${userTagModel?.object}", isFollowing: "");
-                                                                                  }));
+                                                                                  })).then((value) => Get_UserToken());
 
                                                                                   print("tagName -- ${tagName}");
                                                                                   print("user id -- ${userTagModel?.object}");
@@ -3097,7 +3111,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                                                   size: const Size(10.0, 7.0),
                                                                                                   activeSize: const Size(10.0, 10.0),
                                                                                                   spacing: const EdgeInsets.symmetric(horizontal: 2),
-                                                                                                  activeColor: Color(0xffED1C25),
+                                                                                                  activeColor: ColorConstant.primary_color,
                                                                                                   color: Color(0xff6A6A6A),
                                                                                                 ),
                                                                                               ),
@@ -3565,7 +3579,9 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                                 "${AllGuestPostRoomData?.object?.content?[index].userUid}",
                                                                             isFollowing:
                                                                                 AllGuestPostRoomData?.object?.content?[index].isFollowing));
-                                                                  }));
+                                                                  })).then(
+                                                                      (value) =>
+                                                                          Get_UserToken());
                                                                   //
                                                                 }
                                                               },
@@ -3638,7 +3654,9 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                             ],
                                                                             child:
                                                                                 ProfileScreen(User_ID: "${AllGuestPostRoomData?.object?.content?[index].userUid}", isFollowing: AllGuestPostRoomData?.object?.content?[index].isFollowing));
-                                                                      }));
+                                                                      })).then(
+                                                                          (value) =>
+                                                                              Get_UserToken());
                                                                       //
                                                                     }
                                                                   },
@@ -3733,8 +3751,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                           bottom:
                                                                               5),
                                                                       decoration: BoxDecoration(
-                                                                          color: Color(
-                                                                              0xffED1C25),
+                                                                          color: ColorConstant.primary_color,
                                                                           borderRadius:
                                                                               BorderRadius.circular(4)),
                                                                       child: uuid ==
@@ -3889,7 +3906,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
 
                                                                                   Navigator.push(context, MaterialPageRoute(builder: (context) {
                                                                                     return ProfileScreen(User_ID: "${userTagModel?.object}", isFollowing: "");
-                                                                                  }));
+                                                                                  })).then((value) => Get_UserToken());
 
                                                                                   print("tagName -- ${tagName}");
                                                                                   print("user id -- ${userTagModel?.object}");
@@ -4112,7 +4129,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                                           size: const Size(10.0, 7.0),
                                                                                           activeSize: const Size(10.0, 10.0),
                                                                                           spacing: const EdgeInsets.symmetric(horizontal: 2),
-                                                                                          activeColor: Color(0xffED1C25),
+                                                                                          activeColor: ColorConstant.primary_color,
                                                                                           color: Color(0xff6A6A6A),
                                                                                         ),
                                                                                       ),
@@ -4768,7 +4785,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                                       bottomLeft: Radius.circular(8),
                                                                                       bottomRight: Radius.circular(8),
                                                                                     ),
-                                                                                    color: Color(0xffED1C25),
+                                                                                    color: ColorConstant.primary_color,
                                                                                   ),
                                                                                   child: Center(
                                                                                     child: Text(
@@ -5205,7 +5222,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                 child: Container(
                   decoration: BoxDecoration(
                       color: indexx == index
-                          ? Color(0xffED1C25)
+                          ?ColorConstant.primary_color
                           : Colors.transparent,
                       borderRadius: BorderRadius.circular(5)),
                   width: 130,
@@ -5363,7 +5380,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                   child: Container(
                     decoration: BoxDecoration(
                         color: indexx == index
-                            ? Color(0xffED1C25)
+                            ?ColorConstant.primary_color
                             : Colors.transparent,
                         borderRadius: BorderRadius.circular(5)),
                     width: 130,

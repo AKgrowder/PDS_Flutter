@@ -861,14 +861,14 @@ class _ProfileScreenState extends State<ProfileScreen>
                                         color: Colors.white,
                                         borderRadius: BorderRadius.circular(10),
                                         border: Border.all(
-                                            color: Color(0xffED1C25))),
+                                            color: ColorConstant.primary_color,)),
                                     child: Text(
                                       'View Profile',
                                       maxLines: 1,
                                       style: TextStyle(
                                           fontFamily: "outfit",
                                           fontSize: 18,
-                                          color: Color(0xffED1C25),
+                                          color: ColorConstant.primary_color,
                                           fontWeight: FontWeight.w500),
                                     ),
                                   ),
@@ -895,7 +895,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                     width: 50,
                                     decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(10),
-                                        color: Color(0XFFED1C25)),
+                                        color:ColorConstant.primary_color,),
                                     child: Icon(
                                       Icons.settings,
                                       color: Colors.white,
@@ -913,7 +913,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                         height: 45,
                                         width: _width / 3,
                                         decoration: BoxDecoration(
-                                          color: Color(0xffED1C25),
+                                          color: ColorConstant.primary_color,
                                           borderRadius:
                                               BorderRadius.circular(10),
                                         ),
@@ -1245,7 +1245,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                     Container(
                                       height: 40,
                                       // color: arrNotiyTypeList[0].isSelected
-                                      //     ? Color(0xFFED1C25)
+                                      //     ? ColorConstant.primary_color
                                       //     : Theme.of(context).brightness == Brightness.light
                                       //         ? Colors.white
                                       //         : Colors.black,
@@ -1297,7 +1297,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                     Container(
                                       height: 40,
                                       // color: arrNotiyTypeList[1].isSelected
-                                      //     ? Color(0xFFED1C25)
+                                      //     ? ColorConstant.primary_color
                                       //     : Theme.of(context).brightness == Brightness.light
                                       //         ? Colors.white
                                       //         : Colors.black,
@@ -1352,7 +1352,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                         height: 40,
                                         alignment: Alignment.center,
                                         // color: arrNotiyTypeList[2].isSelected
-                                        //     ? Color(0xFFED1C25)
+                                        //     ? ColorConstant.primary_color
                                         //     : Theme.of(context).brightness == Brightness.light
                                         //         ? Colors.white
                                         //         : Colors.black,
@@ -1403,7 +1403,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                           height: 40,
                                           alignment: Alignment.center,
                                           // color: arrNotiyTypeList[3].isSelected
-                                          //     ? Color(0xFFED1C25)
+                                          //     ? ColorConstant.primary_color
                                           //     : Theme.of(context).brightness == Brightness.light
                                           //         ? Colors.white
                                           //         : Colors.black,
@@ -1520,8 +1520,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                 height: 35,
                                                                 decoration:
                                                                     ShapeDecoration(
-                                                                  color: Color(
-                                                                      0xFFED1C25),
+                                                                  color:ColorConstant.primary_color,
                                                                   shape:
                                                                       OvalBorder(),
                                                                 ),
@@ -1623,7 +1622,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                               width: 50,
                                                                               decoration: BoxDecoration(
                                                                                 borderRadius: BorderRadius.circular(5),
-                                                                                color: Color(0xFFED1C25),
+                                                                                color: ColorConstant.primary_color,
                                                                               ),
                                                                               child: Text(
                                                                                 'SAVE',
@@ -2067,7 +2066,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                               /// Content of Tab 2
                               arrNotiyTypeList[1].isSelected
                                   ? Container(
-                                      height: FinalPostCount * 190,
+                                      height: FinalPostCount * 185,
                                       // color: Colors.yellow,
                                       child: Padding(
                                         padding: EdgeInsets.only(
@@ -2733,12 +2732,10 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                               ShapeDecoration(
                                                             color: value1 ==
                                                                     index
-                                                                ? Color(
-                                                                    0xFFED1C25)
+                                                                ? ColorConstant.primary_color
                                                                 : dataSetup ==
                                                                         index
-                                                                    ? Color(
-                                                                        0xFFED1C25)
+                                                                    ?ColorConstant.primary_color
                                                                     : Color(
                                                                         0xFFFBD8D9),
                                                             shape:
@@ -2800,7 +2797,7 @@ class _ProfileScreenState extends State<ProfileScreen>
           child: Padding(
         padding: EdgeInsets.only(left: 10, right: 10, top: 10),
         child: GridView.builder(
-          reverse: true,
+          // reverse: true,
           physics: NeverScrollableScrollPhysics(),
           padding: EdgeInsets.zero,
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -3111,7 +3108,7 @@ class _ProfileScreenState extends State<ProfileScreen>
             width: 35,
             height: 35,
             decoration: ShapeDecoration(
-              color: Color(0xFFED1C25),
+              color: ColorConstant.primary_color,
               shape: OvalBorder(),
             ),
           ), */
@@ -3733,7 +3730,7 @@ class _ProfileScreenState extends State<ProfileScreen>
             width: 35,
             height: 35,
             decoration: ShapeDecoration(
-              color: Color(0xFFED1C25),
+              color: ColorConstant.primary_color,
               shape: OvalBorder(),
             ),
           ), */

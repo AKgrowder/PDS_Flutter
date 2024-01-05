@@ -590,7 +590,7 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
                           height: 50,
                           width: _width / 1.2,
                           decoration: BoxDecoration(
-                              color: Color(0XFFED1C25),
+                              color: ColorConstant.primary_color,
                               borderRadius: BorderRadius.circular(5)),
                           child: Center(
                             child: Text(
@@ -813,10 +813,10 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
             uiSettings: [
               AndroidUiSettings(
                   toolbarTitle: 'Cropper',
-                  toolbarColor: Color(0xffED1C25),
+                  toolbarColor: ColorConstant.primary_color,
                   toolbarWidgetColor: Colors.white,
                   initAspectRatio: CropAspectRatioPreset.original,
-                  activeControlsWidgetColor: Color(0xffED1C25),
+                  activeControlsWidgetColor: ColorConstant.primary_color,
                   lockAspectRatio: false),
               IOSUiSettings(
                 title: 'Cropper',
