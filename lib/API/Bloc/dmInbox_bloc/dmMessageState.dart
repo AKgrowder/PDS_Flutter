@@ -1,4 +1,5 @@
 import 'package:pds/API/Model/GetAllInboxImagesModel/GetAllInboxImagesModel.dart';
+import 'package:pds/API/Model/acceptRejectInvitaionModel/getAllNotificationCount.dart';
 import 'package:pds/API/Model/createDocumentModel/createDocumentModel.dart';
 import 'package:pds/API/Model/inboxScreenModel/SeenAllMessageModel.dart';
 import 'package:pds/API/Model/inboxScreenModel/inboxScrrenModel.dart';
@@ -34,6 +35,11 @@ class GetAllInboxImagesState extends getInboxState {
   GetAllInboxImagesState(this.getAllInboxImages);
 }
 
+
+class GetNotificationCountLoadedState extends getInboxState {
+  final getAllNotificationCount GetNotificationCountData;
+  GetNotificationCountLoadedState(this.GetNotificationCountData);
+}
 
 class SeenAllMessageLoadedState extends getInboxState {
   final SeenAllMessageModel SeenAllMessageModelData;

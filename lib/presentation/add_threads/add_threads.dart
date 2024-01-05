@@ -343,7 +343,7 @@ class _AddThreadsScreenState extends State<AddThreadsScreen> {
                           height: 50,
                           // width: width / 1.2,
                           decoration: BoxDecoration(
-                              color: Color(0XFFED1C25),
+                              color: ColorConstant.primary_color,
                               borderRadius: BorderRadius.circular(5)),
                           child: Center(
                             child: Text(

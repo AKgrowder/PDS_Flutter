@@ -163,12 +163,12 @@ class _NewNotifactionScreenState extends State<NewNotifactionScreen>
                         unselectedLabelColor: Colors.black,
                         indicator: BoxDecoration(
                             // borderRadius: BorderRadius.circular(8.0),
-                            color: Color(0xFFED1C25)),
+                            color: ColorConstant.primary_color,),
                         tabs: [
                           Container(
                             width: 150,
                             height: 50,
-                            // color: Color(0xFFED1C25),
+                            // color: ColorConstant.primary_color,
                             child: Center(
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
@@ -209,7 +209,7 @@ class _NewNotifactionScreenState extends State<NewNotifactionScreen>
                           ),
                           Container(
                             height: 50,
-                            // color: Color(0xFFED1C25),
+                            // color: ColorConstant.primary_color,
                             child: Center(
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
@@ -249,7 +249,7 @@ class _NewNotifactionScreenState extends State<NewNotifactionScreen>
                           ),
                           Container(
                             height: 50,
-                            // color: Color(0xFFED1C25),
+                            // color: ColorConstant.primary_color,
                             child: Center(
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
@@ -295,7 +295,7 @@ class _NewNotifactionScreenState extends State<NewNotifactionScreen>
                         //   style: TextStyle(
                         //     fontFamily: 'outfit',
                         //     fontSize: 20,
-                        //     color: Color(0XFFED1C25),
+                        //     color: ColorConstant.primary_color,
                         //     fontWeight: FontWeight.bold,
                         //   ),
                         // )),
@@ -782,7 +782,7 @@ class _AllNotificationClassState extends State<AllNotificationClass> {
                     style: TextStyle(
                       fontFamily: 'outfit',
                       fontSize: 20,
-                      color: Color(0XFFED1C25),
+                      color: ColorConstant.primary_color,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -1016,7 +1016,7 @@ class _RequestOrderClassState extends State<RequestOrderClass> {
                                                       width: 100,
                                                       decoration: BoxDecoration(
                                                           color:
-                                                              Color(0xFFED1C25),
+                                                              ColorConstant.primary_color,
                                                           borderRadius:
                                                               BorderRadius
                                                                   .circular(6)),
@@ -1052,16 +1052,14 @@ class _RequestOrderClassState extends State<RequestOrderClass> {
                                                               BorderRadius
                                                                   .circular(6),
                                                           border: Border.all(
-                                                              color: Color(
-                                                                  0xFFED1C25))),
+                                                              color: ColorConstant.primary_color,)),
                                                       child: Center(
                                                           child: Text(
                                                         "Reject",
                                                         style: TextStyle(
                                                             fontFamily:
                                                                 'outfit',
-                                                            color: Color(
-                                                                0xFFED1C25)),
+                                                            color: ColorConstant.primary_color,),
                                                       )),
                                                     ),
                                                   )
@@ -1109,7 +1107,7 @@ class _RequestOrderClassState extends State<RequestOrderClass> {
                     style: TextStyle(
                       fontFamily: 'outfit',
                       fontSize: 20,
-                      color: Color(0XFFED1C25),
+                      color: ColorConstant.primary_color,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -1193,7 +1191,7 @@ AllAPICall();
                       style: TextStyle(
                         fontFamily: 'outfit',
                         fontSize: 20,
-                        color: Color(0XFFED1C25),
+                        color: ColorConstant.primary_color,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -1218,7 +1216,7 @@ AllAPICall();
                                 width: _width / 1.2,
                                 decoration: BoxDecoration(
                                     border: Border.all(
-                                        color: const Color(0XFFED1C25),
+                                        color:   ColorConstant.primary_color,
                                         width: 1),
                                     borderRadius: BorderRadius.circular(5)),
                                 child: Column(
@@ -1751,7 +1749,7 @@ AllAPICall();
                                                   bottomRight:
                                                       Radius.circular(4),
                                                 ),
-                                                color: Color(0xFFED1C25),
+                                                color: ColorConstant.primary_color,
                                               ),
                                               child: Center(
                                                 child: Text(

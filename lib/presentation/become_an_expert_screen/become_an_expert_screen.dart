@@ -996,7 +996,7 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                           height: 50,
                           width: _width,
                           decoration: BoxDecoration(
-                              color: Color(0xffED1C25),
+                              color: ColorConstant.primary_color,
                               borderRadius: BorderRadius.circular(5)),
                           child: Text(
                             'Submit',
@@ -1238,10 +1238,10 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
             uiSettings: [
               AndroidUiSettings(
                   toolbarTitle: 'Cropper',
-                  toolbarColor: Color(0xffED1C25),
+                  toolbarColor: ColorConstant.primary_color,
                   toolbarWidgetColor: Colors.white,
                   initAspectRatio: CropAspectRatioPreset.original,
-                  activeControlsWidgetColor: Color(0xffED1C25),
+                  activeControlsWidgetColor: ColorConstant.primary_color,
                   lockAspectRatio: false),
               IOSUiSettings(
                 title: 'Cropper',

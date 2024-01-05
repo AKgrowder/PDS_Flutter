@@ -501,6 +501,8 @@ class _MainViewState extends State<MainView> {
                               border: Border.all(
                                 color: Colors.white,
                                 width: 1.2,
+
+
                               )),
                           child: const Text(
                             'Selected',
@@ -623,6 +625,7 @@ class _MainViewState extends State<MainView> {
           print("Done file Size 10 MB");
           controlNotifier.mediaPath = filepath;
           itemProvider.draggableWidget.insert(
+            
               0,
               EditableItem()
                 ..type = ItemType.video

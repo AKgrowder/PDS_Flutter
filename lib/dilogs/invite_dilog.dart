@@ -232,7 +232,7 @@ class _InviteDilogScreenState extends State<InviteDilogScreen>
                                         style: TextStyle(
                                           fontFamily: 'outfit',
                                           fontSize: 15,
-                                          color: Color(0xFFED1C25),
+                                          color:ColorConstant.primary_color,
                                           fontWeight: FontWeight.w400,
                                         ),
                                       )),
@@ -300,7 +300,7 @@ class _InviteDilogScreenState extends State<InviteDilogScreen>
                                       height: 43,
                                       width: width / 3.5,
                                       decoration: BoxDecoration(
-                                          color: Color(0xFFED1C25),
+                                          color:ColorConstant.primary_color,
                                           borderRadius:
                                               BorderRadius.circular(10)),
                                       child: Center(
@@ -353,7 +353,7 @@ class _InviteDilogScreenState extends State<InviteDilogScreen>
                                             style: TextStyle(
                                               fontFamily: 'outfit',
                                               fontSize: 15,
-                                              color: Color(0xFFED1C25),
+                                              color:ColorConstant.primary_color,
                                               fontWeight: FontWeight.w400,
                                             ),
                                           ),

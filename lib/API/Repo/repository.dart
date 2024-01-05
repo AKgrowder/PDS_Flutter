@@ -1473,7 +1473,7 @@ class Repository {
     print('jasonnString$jsonString');
     switch (responce.statusCode) {
       case 200:
-        return GetCountOfSavedRoomModel.fromJson(jsonString);
+        return AutoEnterRoomModel.fromJson(jsonString);
       case 404:
         return Config.somethingWentWrong;
       case 500:

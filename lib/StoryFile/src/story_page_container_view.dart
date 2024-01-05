@@ -165,6 +165,7 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
             } else {
               _controller?.dispose();
               Navigator.of(context).pop();
+              
             }
           },
           shape: RoundedRectangleBorder(

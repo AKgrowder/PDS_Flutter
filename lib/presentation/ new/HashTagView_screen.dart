@@ -345,7 +345,7 @@ class _HashTagViewScreenState extends State<HashTagViewScreen> {
                                                 margin:
                                                     EdgeInsets.only(bottom: 5),
                                                 decoration: BoxDecoration(
-                                                    color: Color(0xffED1C25),
+                                                    color: ColorConstant.primary_color,
                                                     borderRadius:
                                                         BorderRadius.circular(
                                                             4)),
@@ -799,7 +799,7 @@ class _HashTagViewScreenState extends State<HashTagViewScreen> {
                                                                         spacing:
                                                                             const EdgeInsets.symmetric(horizontal: 2),
                                                                         activeColor:
-                                                                            Color(0xffED1C25),
+                                                                            ColorConstant.primary_color,
                                                                         color: Color(
                                                                             0xff6A6A6A),
                                                                       ),
@@ -1150,7 +1150,7 @@ class _HashTagViewScreenState extends State<HashTagViewScreen> {
                   child: Container(
                     decoration: BoxDecoration(
                         color: indexx == index
-                            ? Color(0xffED1C25)
+                            ?ColorConstant.primary_color
                             : Colors.transparent,
                         borderRadius: BorderRadius.circular(5)),
                     width: 130,
