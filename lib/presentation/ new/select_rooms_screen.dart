@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'package:flutter/material.dart';
+import 'package:pds/core/utils/color_constant.dart';
 
 class SelectRoomsScreen extends StatefulWidget {
   @override
@@ -55,7 +56,7 @@ class _SelectRoomsScreenState extends State<SelectRoomsScreen> {
                           color: indexx == index
                               ? Color(0xffFFE7E7)
                               : Colors.white,
-                          border: Border.all(color: Color(0xffED1C25)),
+                          border: Border.all(color:ColorConstant.primary_color),
                           borderRadius: BorderRadius.circular(10)),
                       child: Padding(
                         padding: EdgeInsets.all(12),
@@ -94,7 +95,7 @@ class _SelectRoomsScreenState extends State<SelectRoomsScreen> {
               height: 50,
               width: double.infinity,
               decoration: BoxDecoration(
-                  color: Color(0xffED1C25),
+                  color: ColorConstant.primary_color,
                   borderRadius: BorderRadius.circular(10)),
               child: Center(
                 child: Text(

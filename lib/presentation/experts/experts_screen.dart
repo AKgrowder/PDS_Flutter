@@ -133,7 +133,7 @@ class _ExpertsScreenState extends State<ExpertsScreen> {
                     //         width: 55,
                     //         height: 45,
                     //         decoration: BoxDecoration(
-                    //             color: Color(0xFFED1C25),
+                    //             color: ColorConstant.primary_color,
                     //             borderRadius: BorderRadius.only(
                     //                 topLeft: Radius.circular(5),
                     //                 bottomLeft: Radius.circular(5))),
@@ -174,7 +174,7 @@ class _ExpertsScreenState extends State<ExpertsScreen> {
                     //         decoration: BoxDecoration(
                     //             color: Color(0xFFFFE7E7),
                     //             border: Border.all(
-                    //               color: Color(0xFFED1C25),
+                    //               color: ColorConstant.primary_color,
                     //             ),
                     //             borderRadius: BorderRadius.all(Radius.circular(5))),
                     //         child: Center(
@@ -499,7 +499,7 @@ class _ExpertsScreenState extends State<ExpertsScreen> {
                                               height: 30,
                                               width: _width,
                                               decoration: BoxDecoration(
-                                                color: Color(0xFFED1C25),
+                                                color: ColorConstant.primary_color,
                                                 borderRadius: BorderRadius.all(
                                                     Radius.circular(10)),
                                               ),

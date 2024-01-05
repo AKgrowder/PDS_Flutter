@@ -135,7 +135,7 @@ class _NewBottomBarState extends State<NewBottomBar> {
                                       // ignore: sort_child_properties_last
                                       child: Image.asset(
                                         ImageConstant.homePng,
-                                        color: const Color(0XFFED1C25),
+                                        color: ColorConstant.primary_color,
                                       ),
                                       decoration: const BoxDecoration(
                                         borderRadius: BorderRadius.all(
@@ -189,7 +189,7 @@ class _NewBottomBarState extends State<NewBottomBar> {
                                       padding: const EdgeInsets.all(8.0),
                                       child: Image.asset(
                                         ImageConstant.groupPng,
-                                        color: const Color(0XFFED1C25),
+                                        color: ColorConstant.primary_color,
                                       ),
                                     ),
                                     decoration: const BoxDecoration(
@@ -244,7 +244,7 @@ class _NewBottomBarState extends State<NewBottomBar> {
                                       padding: const EdgeInsets.all(12.0),
                                       child: Image.asset(
                                         ImageConstant.serchpng,
-                                        color: const Color(0XFFED1C25),
+                                        color: ColorConstant.primary_color,
                                         // height: 24,
                                         // width: 24,
                                       ),
@@ -319,7 +319,7 @@ class _NewBottomBarState extends State<NewBottomBar> {
                                         ? Center(
                                           child: Image.asset(
                                             ImageConstant.meesagePng,
-                                            color: const Color(0XFFED1C25),
+                                            color: ColorConstant.primary_color,
                                             // height: 26,
                                             // width: 26,
                                             height: 30,
@@ -339,7 +339,7 @@ class _NewBottomBarState extends State<NewBottomBar> {
                                               ),
                                               child: Image.asset(
                                                 ImageConstant.meesagePng,
-                                                color: const Color(0XFFED1C25),
+                                                color: ColorConstant.primary_color,
                                                 // height: 26,
                                                 // width: 26,
                                               ),
@@ -417,7 +417,7 @@ class _NewBottomBarState extends State<NewBottomBar> {
                                         ? Center(
                                             child: Image.asset(
                                               ImageConstant.nottifactionpng,
-                                              color: const Color(0XFFED1C25),
+                                              color:   ColorConstant.primary_color,
                                               // fit: BoxFit.cover,
                                               // fit: BoxFit.scaleDown,
                                               height: 30,
@@ -437,7 +437,7 @@ class _NewBottomBarState extends State<NewBottomBar> {
                                               ),
                                               child: Image.asset(
                                                 ImageConstant.nottifactionpng,
-                                                color: const Color(0XFFED1C25),
+                                                color: ColorConstant.primary_color,
                                                 // fit: BoxFit.cover,
                                                 // fit: BoxFit.scaleDown,
                                                 // height: 30,

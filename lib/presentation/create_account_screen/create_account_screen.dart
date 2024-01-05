@@ -765,7 +765,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                                     vertical:
                                         -2.0, // Adjust this value to change the size
                                   ),
-                                  checkColor: Color(0xffED1C25),
+                                  checkColor: ColorConstant.primary_color,
                                   value: isChecked,
                                   onChanged: (bool? value) {
                                     setState(() {
@@ -869,7 +869,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                               height: 50,
                               width: _width,
                               decoration: BoxDecoration(
-                                  color: Color(0xffED1C25),
+                                  color: ColorConstant.primary_color,
                                   borderRadius: BorderRadius.circular(5)),
                               child: Text(
                                 'Submit',

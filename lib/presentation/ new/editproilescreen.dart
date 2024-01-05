@@ -2074,8 +2074,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         uiSettings: [
           AndroidUiSettings(
               toolbarTitle: 'Cropper',
-              activeControlsWidgetColor: Color(0xffED1C25),
-              toolbarColor: Color(0xffED1C25),
+              activeControlsWidgetColor: ColorConstant.primary_color,
+              toolbarColor: ColorConstant.primary_color,
               toolbarWidgetColor: Colors.white,
               initAspectRatio: CropAspectRatioPreset.original,
               lockAspectRatio: false),
