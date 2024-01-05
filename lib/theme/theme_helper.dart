@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:pds/core/utils/color_constant.dart';
 import '../../core/app_export.dart';
 
 String _appTheme = "primary";
@@ -130,15 +131,15 @@ class ColorSchemes {
     onTertiary: Color(0XAF434343),
     scrim: Color(0XFFF5F5F5),
     primaryContainer: Color(0XFFF5F5F5),
-    tertiaryContainer: Color(0XFFED1C25),
-    secondaryContainer: Color(0XFFED1C25),
+    tertiaryContainer: ColorConstant.primary_color,
+    secondaryContainer: ColorConstant.primary_color,
     error: Color(0XFFFFFFFF),
     onErrorContainer: Color(0XFFFFFFFF),
     outline: Color(0XFFFFFFFF),
     onSurfaceVariant: Color(0XFFFFFFFF),
     onBackground: Color(0XAF434343),
     outlineVariant: Color(0XFFF5F5F5),
-    errorContainer: Color(0XFFED1C25),
+    errorContainer: ColorConstant.primary_color,
     onSurface: Color(0XAF434343),
     onError: Color(0XAF434343),
     surface: Color(0XFFF5F5F5),
@@ -147,20 +148,20 @@ class ColorSchemes {
     tertiary: Color(0XFFF5F5F5),
     surfaceTint: Color(0XFFFFFFFF),
     onTertiaryContainer: Color(0XFFFFFFFF),
-    surfaceVariant: Color(0XFFED1C25),
+    surfaceVariant: ColorConstant.primary_color,
     inversePrimary: Color(0XFFF5F5F5),
     secondary: Color(0XFFF5F5F5),
     inverseSurface: Color(0XFFFFFFFF),
     background: Color(0XFFF5F5F5),
     onSecondary: Color(0XAF434343),
-    primary: Color(0XFFED1C25),
+    primary: ColorConstant.primary_color,
   );
 }
 
 /// Class containing custom colors for a primary theme.
 class PrimaryColors {
   Color get primaryVariant => Color(0XFFF5F5F5);
-  Color get secondaryVariant => Color(0XFFED1C25);
+  Color get secondaryVariant => ColorConstant.primary_color;
   Color get red100 => Color(0XFFFFD8DA);
   Color get red10001 => Color(0XFFFFD9DA);
   Color get gray500 => Color(0XFFADADAD);

@@ -169,7 +169,7 @@ class _SelectChatMemberState extends State<SelectChatMember> {
                               width: 65,
                               margin: EdgeInsets.only(bottom: 5),
                               decoration: BoxDecoration(
-                                  color: Color(0xffED1C25),
+                                  color: ColorConstant.primary_color,
                                   borderRadius: BorderRadius.circular(4)),
                               child: Text(
                                 'Chat',

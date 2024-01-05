@@ -1,3 +1,4 @@
+import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/core/utils/size_utils.dart';
 import 'package:flutter/material.dart';
 
@@ -62,7 +63,7 @@ class _NoInternetScreenState extends State<NoInternetScreen> {
                 height: 50,
                 width: _width / 2,
                 decoration: BoxDecoration(
-                    color: Color(0xFFED1C25),
+                    color: ColorConstant.primary_color,
                     borderRadius: BorderRadius.all(Radius.circular(5))),
                 child: Center(
                   child: Text(

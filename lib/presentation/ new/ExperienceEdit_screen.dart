@@ -316,7 +316,7 @@ class _ExperienceEditScreenState extends State<ExperienceEditScreen> {
                                                                           fontSize:
                                                                               15,
                                                                           color:
-                                                                              Color(0xFFED1C25),
+                                                                              ColorConstant.primary_color,
                                                                           fontWeight:
                                                                               FontWeight.w400,
                                                                         ),
@@ -337,8 +337,7 @@ class _ExperienceEditScreenState extends State<ExperienceEditScreen> {
                                                                           _width /
                                                                               3.5,
                                                                       decoration: BoxDecoration(
-                                                                          color: Color(
-                                                                              0xFFED1C25),
+                                                                          color:ColorConstant.primary_color,
                                                                           borderRadius:
                                                                               BorderRadius.circular(10)),
                                                                       child: Center(

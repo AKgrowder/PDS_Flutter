@@ -88,7 +88,16 @@ class _DmScreenState extends State<DmScreen> {
 
   TextEditingController Add_Comment = TextEditingController();
   String formattedDate = DateFormat('dd-MM-yyyy').format(now);
+  void _goToElement() {
+    scrollController.jumpTo(scrollController.position.maxScrollExtent + 100);
+  }
+
   getDocumentSize() async {
+    await BlocProvider.of<DmInboxCubit>(context).seetinonExpried(context);
+    await BlocProvider.of<DmInboxCubit>(context)
+        .SeenMessage(context, widget.ChatInboxUid);
+    await BlocProvider.of<DmInboxCubit>(context)
+        .getAllNoticationsCountAPI(context);
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     documentuploadsize = await double.parse(
         prefs.getString(PreferencesKey.MaxInboxUploadSizeInMB) ?? "0");
@@ -169,11 +178,7 @@ class _DmScreenState extends State<DmScreen> {
 
   pageNumberMethod() async {
     await BlocProvider.of<DmInboxCubit>(context)
-          .seetinonExpried(context);
-    await BlocProvider.of<DmInboxCubit>(context)
         .DMChatListApiMethod(widget.ChatInboxUid, 1, 20, context);
-    await BlocProvider.of<DmInboxCubit>(context)
-        .SeenMessage(context, widget.ChatInboxUid);
   }
 
   getUserID() async {
@@ -263,6 +268,13 @@ class _DmScreenState extends State<DmScreen> {
               }
               if (state is AddPostImaegState) {
                 imageDataPost = state.imageDataPost;
+              }
+              if (state is GetNotificationCountLoadedState) {
+                print(state.GetNotificationCountData.object);
+                saveNotificationCount(
+                    state.GetNotificationCountData.object?.notificationCount ??
+                        0,
+                    state.GetNotificationCountData.object?.messageCount ?? 0);
               }
               if (state is SendImageInUserChatState) {
                 dynamic data = state.chatImageData;
@@ -509,8 +521,8 @@ class _DmScreenState extends State<DmScreen> {
                                                                   ?.length ??
                                                               0),
                                                       shrinkWrap: true,
-                                                      controller:
-                                                          scrollController1,
+                                                      // controller:
+                                                      //     scrollController1,
                                                       physics:
                                                           NeverScrollableScrollPhysics(),
                                                       itemBuilder:
@@ -1317,7 +1329,7 @@ class _DmScreenState extends State<DmScreen> {
                                                       getInboxMessagesModel
                                                           ?.object?.content
                                                           ?.add(content);
-
+                                                      _goToElement();
                                                       /*  _goToElement(AllChatmodelData
                                                             ?.object
                                                             ?.messageOutputList
@@ -1367,7 +1379,7 @@ class _DmScreenState extends State<DmScreen> {
                                   height: 50,
                                   // width: 50,
                                   decoration: BoxDecoration(
-                                      color: Color(0xFFED1C25),
+                                      color: ColorConstant.primary_color,
                                       borderRadius: BorderRadius.circular(25)),
                                   child: Image.asset(
                                     "assets/images/Vector (13).png",
@@ -1448,6 +1460,12 @@ class _DmScreenState extends State<DmScreen> {
               //   ),
               // );
             })));
+  }
+
+  saveNotificationCount(int NotificationCount, int MessageCount) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setInt(PreferencesKey.NotificationCount, NotificationCount);
+    prefs.setInt(PreferencesKey.MessageCount, MessageCount);
   }
 
   bool _isGifOrSvg(String imagePath) {
