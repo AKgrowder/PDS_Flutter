@@ -35,7 +35,7 @@ class BottomTools extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer3<ControlNotifier, ScrollNotifier, DraggableWidgetNotifier>(
       builder: (_, controlNotifier, scrollNotifier, itemNotifier, __) {
-        final editorNotifier =
+        /* final editorNotifier =
             Provider.of<TextEditingNotifier>(context1, listen: false);
         // editorNotifier..textController.text = editorNotifier.text;
         print(
@@ -45,7 +45,7 @@ class BottomTools extends StatelessWidget {
             editorNotifier.text.isEmpty != true ||
             controlNotifier.mediaPath.isEmpty != true) {
           isData = true;
-        } /* else{
+        } */ /* else{
           isData = false;
         } */
         return Container(
@@ -125,20 +125,11 @@ class BottomTools extends StatelessWidget {
                       scale: 0.9,
                       child: AnimatedOnTapButton(
                           onTap: () async {
-                            print(
-                                "editprofile Screen check-${editorNotifier.text}");
-                            print(
-                                "editorNotifier.text-${editorNotifier.text.isEmpty}");
-                            print(
-                                "controlNotifier.mediaPath-${controlNotifier.mediaPath}");
                             if (isData == false &&
                                 controlNotifier.mediaPath.isEmpty == true) {
-                              print("Now this condiosn is working");
                             } else {
                               isData = false;
-                              print("else consion is working");
-                              print(
-                                  "else condiosn is -${controlNotifier.mediaPath}");
+
                               String pngUri;
 
                               await takePicture(

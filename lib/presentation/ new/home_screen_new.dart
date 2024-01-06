@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:chewie/chewie.dart';
 import 'package:device_info_plus/device_info_plus.dart';
+import 'package:dio/dio.dart';
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
@@ -79,6 +80,9 @@ class HomeScreenNew extends StatefulWidget {
 }
 
 class _HomeScreenNewState extends State<HomeScreenNew> {
+  late String _localPath;
+  late bool _permissionReady;
+  int? version;
   List a = ['1', '2', '3', '4'];
   List<String> data1 = ['Create Forum', 'Become an Expert'];
   String? uuid;
@@ -890,7 +894,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
               width: 40,
               height: 50,
             ),
-          ], */
+          ], */ 
         );
       },
     );
@@ -909,6 +913,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
     print("User Token :--- " + "${Token}");
     print("User_id-${User_ID}");
     User_ID == null ? api() : NewApi();
+    shareImageDownload();
     AutoOpenPostBool = prefs.getBool(PreferencesKey.AutoOpenPostBool) ?? false;
     if (AutoOpenPostBool == true) {
       AutoOpenPostID = prefs.getString(PreferencesKey.AutoOpenPostID);
@@ -1192,7 +1197,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                 }
               }
 
-              if (state is GetAllStoryLoadedState) {
+            if (state is GetAllStoryLoadedState) {
                 getAllStoryModel = state.getAllStoryModel;
                 buttonDatas.clear();
                 storyButtons.clear();
@@ -1207,23 +1212,28 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                       state.getAllStoryModel.object?.length ?? 0);
 
                   state.getAllStoryModel.object?.forEach((element) {
-                    int count = 0;
-
-                    element.storyData?.forEach((element) {
-                      print("check count--${element.storySeen}");
-                      if (element.storySeen != null) {
-                        if (element.storySeen == true) {
-                          count++;
-                        }
-                      }
-                    });
                     if (element.userUid == User_ID) {
+                      int count = 0;
+
+
+                      element.storyData?.forEach((element) {
+                        print("check count--${element.storySeen}");
+                        if (element.storySeen != null) {
+                          print("element get -${element.storySeen}");
+                          if (element.storySeen == true) {
+                            count++;
+                          }
+                        }
+                      });
+                      print("first -${count}");
+
                       userName.insert(0, element.userName.toString());
-                      print("check iswatch-$isWatch");
                       buttonDatas.insert(
+                       
                           0,
                           StoryButtonData(
-                            isWatch: isWatch == false ? true : false,
+                            // isWatch: isWatch == false ? true : false,  iswatch 0
+                            isWatch: element.storyData?.length == count,
                             timelineBackgroundColor: Colors.grey,
                             buttonDecoration: BoxDecoration(
                               shape: BoxShape.circle,
@@ -1256,16 +1266,24 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                               ),
                             ),
                             images: List.generate(
-                                element.storyData?.length ?? 0,
-                                (index) => StoryModel(
-                                    element.storyData![index].storyData!,
-                                    element.storyData![index].createdAt!,
-                                    element.storyData![index].profilePic,
-                                    element.storyData![index].userName,
-                                    element.storyData![index].storyUid,
-                                    element.storyData![index].userUid,
-                                    element.storyData![index].storyViewCount,
-                                    element.storyData![index].videoDuration)),
+                                element.storyData?.length ?? 0, (index) {
+                              print(
+                                  "index check -${element.storyData![index].userName}");
+                              print(
+                                  "index check1 -${element.storyData![index].storyUid}");
+                              print(
+                                  "index check2 -${element.storyData![index].userUid}");
+
+                              return StoryModel(
+                                  element.storyData![index].storyData!,
+                                  element.storyData![index].createdAt!,
+                                  element.storyData![index].profilePic,
+                                  element.storyData![index].userName,
+                                  element.storyData![index].storyUid,
+                                  element.storyData![index].userUid,
+                                  element.storyData![index].storyViewCount,
+                                  element.storyData![index].videoDuration);
+                            }),
                             borderDecoration: BoxDecoration(
                               borderRadius: const BorderRadius.all(
                                 Radius.circular(60.0),
@@ -1565,7 +1583,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                             width: 50,
                                             decoration: BoxDecoration(
                                                 shape: BoxShape.circle,
-                                                color: ColorConstant.primary_color),
+                                                color: ColorConstant
+                                                    .primary_color),
                                             child: Icon(
                                               Icons.person_add_alt,
                                               color: Colors.white,
@@ -2368,7 +2387,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                           bottom:
                                                                               5),
                                                                       decoration: BoxDecoration(
-                                                                          color: ColorConstant.primary_color,
+                                                                          color: ColorConstant
+                                                                              .primary_color,
                                                                           borderRadius:
                                                                               BorderRadius.circular(4)),
                                                                       child: AllGuestPostRoomData?.object?.content?[index].userAccountType ==
@@ -3406,7 +3426,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                             builder: (context) =>
                                                                                 RegisterCreateAccountScreen()));
                                                                   } else {
-                                                                    post_shere(
+                                                                    _onShareXFileFromAssets(
                                                                         context,
                                                                         androidLink:
                                                                             // "https://play.google.com/store/apps/details?id=com.pds.app",
@@ -3751,7 +3771,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                           bottom:
                                                                               5),
                                                                       decoration: BoxDecoration(
-                                                                          color: ColorConstant.primary_color,
+                                                                          color: ColorConstant
+                                                                              .primary_color,
                                                                           borderRadius:
                                                                               BorderRadius.circular(4)),
                                                                       child: uuid ==
@@ -4421,7 +4442,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                             builder: (context) =>
                                                                                 RegisterCreateAccountScreen()));
                                                                   } else {
-                                                                    post_shere(
+                                                                    _onShareXFileFromAssets(
                                                                       context,
                                                                       androidLink:
                                                                           // "https://play.google.com/store/apps/details?id=com.pds.app",
@@ -5222,7 +5243,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                 child: Container(
                   decoration: BoxDecoration(
                       color: indexx == index
-                          ?ColorConstant.primary_color
+                          ? ColorConstant.primary_color
                           : Colors.transparent,
                       borderRadius: BorderRadius.circular(5)),
                   width: 130,
@@ -5380,7 +5401,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                   child: Container(
                     decoration: BoxDecoration(
                         color: indexx == index
-                            ?ColorConstant.primary_color
+                            ? ColorConstant.primary_color
                             : Colors.transparent,
                         borderRadius: BorderRadius.circular(5)),
                     width: 130,
@@ -5893,6 +5914,118 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
       //  \n \n iOS :- ${iosLink}",
       sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size,
     );
+  }
+
+  void _onShareXFileFromAssets(BuildContext context,
+      {String? androidLink}) async {
+    RenderBox? box = context.findAncestorRenderObjectOfType();
+
+    var directory = await getApplicationDocumentsDirectory();
+
+    if (Platform.isAndroid) {
+      await Share.shareXFiles(
+        [XFile("/sdcard/download/IP_Image.jpg")],
+        subject: "Share",
+        text: "Try This Awesome App \n\n Android :- ${androidLink}",
+        sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size,
+      );
+    } else {
+      await Share.shareXFiles(
+        [
+          XFile(directory.path +
+              Platform.pathSeparator +
+              'Growder_Image/IP_Image.jpg')
+        ],
+        subject: "Share",
+        text: "Try This Awesome App \n\n Android :- ${androidLink}",
+        sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size,
+      );
+    }
+  }
+
+  shareImageDownload() async {
+    print(":- %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    var url =
+        //  prefs.getString(UserdefaultsData.InviteUserUrl) ??
+        "https://pds-images-live.s3.ap-south-1.amazonaws.com/misc/PDS+Without+Reward.jpg";
+
+    if (url.isNotEmpty) {
+      _permissionReady = await _checkPermission();
+      await _prepareSaveDir();
+
+      if (_permissionReady) {
+        print("Downloading");
+        print("${url}");
+
+        try {
+          await Dio().download(
+            url.toString(),
+            _localPath + "/" + "IP_Image.jpg",
+          );
+
+          print("Download Completed.");
+        } catch (e) {
+          print("Download Failed.\n\n" + e.toString());
+        }
+      }
+    } else {
+      print('No Invoice Available');
+    }
+  }
+
+  Future<bool> _checkPermission() async {
+    if (Platform.isAndroid) {
+        DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+      print("objectobjectobjectobjectobjectobjectobjectobject ${androidInfo.version.release}");
+      version = int.parse(androidInfo.version.release);
+      // final SharedPreferences prefs = await SharedPreferences.getInstance();
+      // version =
+      //     await int.parse(prefs.getString(UserdefaultsData.version).toString());
+      print('dddwssadasdasdasdasdasd ${version}');
+    }
+    if (Platform.isAndroid) {
+      final status = (version ?? 0) < 13
+          ? await Permission.storage.status
+          : PermissionStatus.granted;
+      if (status != PermissionStatus.granted) {
+        print('gegegegegegegegegegegegegege');
+        print('gegegegegegegegegegegegegege $status');
+        final result = (version ?? 0) < 13
+            ? await Permission.storage.request()
+            : PermissionStatus.granted;
+        if (result == PermissionStatus.granted) {
+          return true;
+        }
+      } else {
+        return true;
+      }
+    } else {
+      return true;
+    }
+    return false;
+  }
+
+  Future<void> _prepareSaveDir() async {
+    _localPath = (await _findLocalPath())!;
+
+    print(_localPath);
+    final savedDir = Directory(_localPath);
+    bool hasExisted = await savedDir.exists();
+    if (!hasExisted) {
+      savedDir.create();
+      print('first vvvvvvvvvvvvvvvvvvv');
+    }
+  }
+
+  Future<String?> _findLocalPath() async {
+    if (Platform.isAndroid) {
+      return "/sdcard/download/";
+    } else {
+      var directory = await getApplicationDocumentsDirectory();
+      return directory.path + Platform.pathSeparator + 'IP_Image';
+    }
   }
 }
 
