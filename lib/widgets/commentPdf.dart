@@ -197,29 +197,9 @@ class DocumentViewScreen1 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        iconTheme: IconThemeData(),
-        leading: GestureDetector(
-          onTap: () {
-            Navigator.pop(context);
-          },
-          child: Container(
-            height: 30,
-            width: 30,
-            color: Color.fromRGBO(255, 255, 255, 0.3),
-            child: Center(
-              child: Image.asset(
-                ImageConstant.backArrow,
-                fit: BoxFit.fill,
-                height: 25,
-                width: 25,
-              ),
-            ),
-          ),
-        ),
-        elevation: 0,
-      ),
+
+  
+
       body: path != null
           ? Container(
               color: Colors.white,
