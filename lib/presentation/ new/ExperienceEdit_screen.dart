@@ -95,6 +95,7 @@ class _ExperienceEditScreenState extends State<ExperienceEditScreen> {
         if (state is GetWorkExpereinceLoadedState) {
           addWorkExperienceModel = state.addWorkExperienceModel;
           if (addWorkExperienceModel?.object?.isNotEmpty == true) {
+            // print("awdawdaw$");
             isdataget = true;
           }
         }
@@ -125,11 +126,15 @@ class _ExperienceEditScreenState extends State<ExperienceEditScreen> {
                                 addWorkExperienceModel
                                         ?.object?[index].startDate ??
                                     DateTime.now().toIso8601String()));
-                        formattedDateEnd = DateFormat('dd-MM-yyyy').format(
-                            DateFormat('yyyy-MM-dd').parse(
-                                addWorkExperienceModel
-                                        ?.object?[index].endDate ??
-                                    DateTime.now().toIso8601String()));
+                        if (addWorkExperienceModel?.object?[index].endDate !=
+                            'Present') {
+                          formattedDateEnd = DateFormat('dd-MM-yyyy').format(
+                              DateFormat('yyyy-MM-dd').parse(
+                                  addWorkExperienceModel
+                                          ?.object?[index].endDate ??
+                                      DateTime.now().toIso8601String()));
+                        }
+
                         return Padding(
                           padding: const EdgeInsets.only(
                               top: 20, left: 20, right: 20),
@@ -337,7 +342,8 @@ class _ExperienceEditScreenState extends State<ExperienceEditScreen> {
                                                                           _width /
                                                                               3.5,
                                                                       decoration: BoxDecoration(
-                                                                          color:ColorConstant.primary_color,
+                                                                          color: ColorConstant
+                                                                              .primary_color,
                                                                           borderRadius:
                                                                               BorderRadius.circular(10)),
                                                                       child: Center(
