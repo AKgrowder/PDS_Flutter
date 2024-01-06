@@ -5,6 +5,7 @@ import 'package:pds/API/Model/GetGuestAllPostModel/GetGuestAllPost_Model.dart';
 import 'package:pds/API/Model/GetGuestAllPostModel/ShareAppOpenPostModel.dart';
 import 'package:pds/API/Model/IsTokenExpired/IsTokenExpired.dart';
 import 'package:pds/API/Model/System_Config_model/system_config_model.dart';
+import 'package:pds/API/Model/acceptRejectInvitaionModel/accept_rejectModel.dart';
 import 'package:pds/API/Model/acceptRejectInvitaionModel/getAllNotificationCount.dart';
 import 'package:pds/API/Model/acceptRejectInvitaionModel/seenNotificationModel.dart';
 import 'package:pds/API/Model/createStroyModel/createStroyModel.dart';
@@ -108,3 +109,10 @@ class GetNotificationCountLoadedState extends GetGuestAllPostState {
   final getAllNotificationCount GetNotificationCountData;
   GetNotificationCountLoadedState(this.GetNotificationCountData);
 }
+
+
+class OnlineChatStatusLoadedState extends GetGuestAllPostState {
+  final accept_rejectModel accept_rejectModelData;
+  OnlineChatStatusLoadedState(this.accept_rejectModelData);
+}
+

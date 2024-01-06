@@ -958,7 +958,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
     });
 
     await BlocProvider.of<GetGuestAllPostCubit>(context)
-        .seetinonExpried(context);
+        .ChatOnline(context,true);
     Future.delayed(Duration(seconds: 2));
     await BlocProvider.of<GetGuestAllPostCubit>(context)
         .SystemConfigHome(context);

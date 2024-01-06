@@ -18,6 +18,7 @@ import 'package:pds/API/Model/createDocumentModel/createDocumentModel.dart';
 import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/core/utils/image_constant.dart';
 import 'package:pds/core/utils/sharedPreferences.dart';
+import 'package:pds/presentation/%20new/view_profile_background.dart';
 import 'package:pds/presentation/my%20account/my_account_screen.dart';
 import 'package:pds/widgets/commentPdf.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -938,7 +939,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     }
   }
 
-  companyUserData() async   {
+  companyUserData() async {
     if (jobProfile.text == null || jobProfile.text == '') {
       SnackBar snackBar = SnackBar(
         content: Text('Please Enter Job profile '),
@@ -1033,7 +1034,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
       print("RonakRonakRonakRonakRonakRonakRonakRonakRonakRonak");
       print(params);
-     await BlocProvider.of<MyAccountCubit>(context).cretaForumUpdate(
+      await BlocProvider.of<MyAccountCubit>(context).cretaForumUpdate(
         params,
         context,
       );
@@ -1809,17 +1810,17 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             widget.newProfileData?.object?.userProfilePic !=
                                 "") {
                           Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => DocumentViewScreen1(
+                              builder: (context) => ProfileandDocumentScreen(
                                     path:
                                         '${widget.newProfileData?.object?.userProfilePic}',
-                                    title: 'Pdf',
+                                    title: '',
                                   )));
                         } else {
                           Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => DocumentViewScreen1(
+                              builder: (context) => ProfileandDocumentScreen(
                                     path:
                                         'https://pds-images-live.s3.ap-south-1.amazonaws.com/misc/pds+logo.png',
-                                    title: 'Pdf',
+                                    title: '',
                                   )));
                         }
                       }),
@@ -1912,19 +1913,21 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                     "")
                               {
                                 Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (context) => DocumentViewScreen1(
+                                    builder: (context) =>
+                                        ProfileandDocumentScreen(
                                           path:
                                               '${widget.newProfileData?.object?.userBackgroundPic}',
-                                          title: 'Pdf',
+                                          title: '',
                                         )))
                               }
                             else
                               {
                                 Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (context) => DocumentViewScreen1(
+                                    builder: (context) =>
+                                        ProfileandDocumentScreen(
                                           path:
                                               'https://pds-images-live.s3.ap-south-1.amazonaws.com/misc/pds+logo.png',
-                                          title: 'Pdf',
+                                          title: '',
                                         )))
                               }
                             /* Navigator.of(context).push(MaterialPageRoute(

@@ -155,12 +155,7 @@ class _InboxScreenState extends State<InboxScreen> {
                       ChatInboxUid: UserIndexUUID ?? "",
                       UserImage:
                           "${getUsersChatByUsername?.object?.content?[Index].userProfilePic}");
-                })).then((value) => CallBackFunc()
-                    /* BlocProvider.of<PersonalChatListCubit>(context)
-                          .PersonalChatList(context) */
-
-                    );
-                // UserIndexUUID = "";
+                })).then((value) => CallBackFunc());
               }
 
               setState(() {});
@@ -402,9 +397,7 @@ class _InboxScreenState extends State<InboxScreen> {
                               "${PersonalChatListModelData?.object?[index].userProfilePic}",
                           // UserUID: "${PersonalChatListModelData?.object?[index].}",
                         );
-                      })).then((value) =>
-                          BlocProvider.of<PersonalChatListCubit>(context)
-                              .PersonalChatList(context));
+                      })).then((value) => CallBackFunc());
                     },
                     child: Container(
                       height: 80,
@@ -445,18 +438,24 @@ class _InboxScreenState extends State<InboxScreen> {
                                           : CustomImageView(
                                               imagePath:
                                                   ImageConstant.tomcruse)),
-                                  /* Positioned(
-                                      bottom: 1,
-                                      right: 5,
-                                      child: Container(
-                                        height: 12,
-                                        width: 12,
-                                        decoration: BoxDecoration(
-                                            color: ColorConstant.primary_color,
-                                            shape: BoxShape.circle,
-                                            border: Border.all(
-                                                color: Colors.white, width: 2)),
-                                      )) */
+                                  PersonalChatListModelData
+                                              ?.object?[index].onlineStatus ==
+                                          true
+                                      ? Positioned(
+                                          bottom: 1,
+                                          right: 5,
+                                          child: Container(
+                                            height: 12,
+                                            width: 12,
+                                            decoration: BoxDecoration(
+                                                color:
+                                                    ColorConstant.primary_color,
+                                                shape: BoxShape.circle,
+                                                border: Border.all(
+                                                    color: Colors.white,
+                                                    width: 2)),
+                                          ))
+                                      : SizedBox()
                                 ]),
                                 Padding(
                                   padding: EdgeInsets.only(
