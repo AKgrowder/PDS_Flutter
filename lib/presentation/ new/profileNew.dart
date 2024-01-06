@@ -540,10 +540,11 @@ class _ProfileScreenState extends State<ProfileScreen>
                                       ));
                                 } else {
                                   Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (context) => DocumentViewScreen1(
+                                      builder: (context) =>
+                                          ProfileandDocumentScreen(
                                             path:
                                                 'https://pds-images-live.s3.ap-south-1.amazonaws.com/misc/pds+logo.png',
-                                            title: 'Pdf',
+                                            title: '',
                                           )));
                                 }
                               },
@@ -613,10 +614,10 @@ class _ProfileScreenState extends State<ProfileScreen>
                                     Navigator.of(context).push(
                                         MaterialPageRoute(
                                             builder: (context) =>
-                                                DocumentViewScreen1(
+                                                ProfileandDocumentScreen(
                                                   path:
                                                       'https://pds-images-live.s3.ap-south-1.amazonaws.com/misc/pds+logo.png',
-                                                  title: 'Pdf',
+                                                  title: '',
                                                 )));
                                   }
                                 },
