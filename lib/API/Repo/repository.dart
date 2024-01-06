@@ -2080,8 +2080,9 @@ class Repository {
     final response = await apiServices.getApiCallWithToken(
         '${Config.view_story}?userUid=${userUid}&storyUid=${storyUid}',
         context);
-    print(response);
     var jsonString = json.decode(response.body);
+    print('ViewStory checck -${jsonString}');
+
     switch (response.statusCode) {
       case 200:
         return ViewStoryModel.fromJson(jsonString);

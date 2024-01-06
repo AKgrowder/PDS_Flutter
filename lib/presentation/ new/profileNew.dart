@@ -861,7 +861,8 @@ class _ProfileScreenState extends State<ProfileScreen>
                                         color: Colors.white,
                                         borderRadius: BorderRadius.circular(10),
                                         border: Border.all(
-                                            color: ColorConstant.primary_color,)),
+                                          color: ColorConstant.primary_color,
+                                        )),
                                     child: Text(
                                       'View Profile',
                                       maxLines: 1,
@@ -894,8 +895,9 @@ class _ProfileScreenState extends State<ProfileScreen>
                                     height: 45,
                                     width: 50,
                                     decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(10),
-                                        color:ColorConstant.primary_color,),
+                                      borderRadius: BorderRadius.circular(10),
+                                      color: ColorConstant.primary_color,
+                                    ),
                                     child: Icon(
                                       Icons.settings,
                                       color: Colors.white,
@@ -2732,10 +2734,12 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                               ShapeDecoration(
                                                             color: value1 ==
                                                                     index
-                                                                ? ColorConstant.primary_color
+                                                                ? ColorConstant
+                                                                    .primary_color
                                                                 : dataSetup ==
                                                                         index
-                                                                    ?ColorConstant.primary_color
+                                                                    ? ColorConstant
+                                                                        .primary_color
                                                                     : Color(
                                                                         0xFFFBD8D9),
                                                             shape:
@@ -3628,10 +3632,12 @@ class _ProfileScreenState extends State<ProfileScreen>
                 DateFormat('yyyy-MM-dd').parse(
                     addWorkExperienceModel?.object?[index].startDate ??
                         DateTime.now().toIso8601String()));
-            formattedDateEnd = DateFormat('dd-MM-yyyy').format(
-                DateFormat('yyyy-MM-dd').parse(
-                    addWorkExperienceModel?.object?[index].endDate ??
-                        DateTime.now().toIso8601String()));
+            if (addWorkExperienceModel?.object?[index].endDate != 'Present') {
+              formattedDateEnd = DateFormat('dd-MM-yyyy').format(
+                  DateFormat('yyyy-MM-dd').parse(
+                      addWorkExperienceModel?.object?[index].endDate ??
+                          DateTime.now().toIso8601String()));
+            }
             return ListTile(
               titleAlignment: ListTileTitleAlignment.top,
               leading: addWorkExperienceModel?.object?[index].userProfilePic !=
