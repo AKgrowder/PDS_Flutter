@@ -627,6 +627,28 @@ class Repository {
     }
   }
 
+  ChatOnline(BuildContext context,bool onlineStatus) async {
+    final response = await apiServices.getApiCallWithToken(
+        '${Config.online_offline_status}?onlineStatus=${onlineStatus}', context);
+    print(response);
+    var jsonString = json.decode(response.body);
+    switch (response.statusCode) {
+      case 200:
+        return accept_rejectModel.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+      case 400:
+        return Config.somethingWentWrong;
+      case 701:
+        return Config.somethingWentWrong;
+      default:
+        return jsonString;
+    }
+  }
+  
+
   HashTagBanner(BuildContext context) async {
     final response =
         await apiServices.getApiCall(Config.HashTagBanner, context);
