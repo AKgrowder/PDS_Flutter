@@ -35,6 +35,7 @@ class Object {
   String? message;
   String? createdDate;
   String? messageType;
+  bool? onlineStatus;
   String? userUid;
 
   Object(
@@ -44,6 +45,7 @@ class Object {
       this.userProfilePic,
       this.message,
       this.createdDate,
+      this.onlineStatus,
       this.messageType,this.userUid});
 
   Object.fromJson(Map<String, dynamic> json) {
@@ -54,6 +56,7 @@ class Object {
     message = json['message'];
     createdDate = json['createdDate'];
     messageType = json['messageType'];
+    onlineStatus = json['onlineStatus'];
     userUid = json['userUid'];
   }
 
@@ -66,6 +69,7 @@ class Object {
     data['message'] = this.message;
     data['createdDate'] = this.createdDate;
     data['messageType'] = this.messageType;
+    data['onlineStatus'] = this.onlineStatus;
     data['userUid'] = this.userUid;
     return data;
   }
