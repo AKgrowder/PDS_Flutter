@@ -355,13 +355,18 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
       if (StoryView == true) {
         StoryView = false;
 
-        if (User_ID != widget.buttonData.images[_curSegmentIndex].userUid) {
-          print("this condison then story user id And storyuserid not match");
+        // if (User_ID != widget.buttonData.images[_curSegmentIndex].userUid) {
+            print("check ImageData-${widget.buttonData.images[_curSegmentIndex].storyUid}");
           BlocProvider.of<ViewStoryCubit>(context).ViewStory(
               context,
               "${User_ID}",
               "${widget.buttonData.images[_curSegmentIndex].storyUid}");
-        } else {}
+        // } else {
+        //      BlocProvider.of<ViewStoryCubit>(context).ViewStory(
+        //       context,
+        //       "${User_ID}",
+        //       "${widget.buttonData.images[_curSegmentIndex].storyUid}");
+        // }
       }
     }
     return imageLoaded == false
@@ -449,16 +454,20 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
     if (imageLoaded == true) {
       if (StoryView == true) {
         StoryView = false;
+            print("check ImageData1-${widget.buttonData.images[_curSegmentIndex].storyUid}");
 
-        print(
-            'storyUid-${widget.buttonData.images[_curSegmentIndex].storyUid}');
 
-        if (User_ID != widget.buttonData.images[_curSegmentIndex].userUid) {
+        // if (User_ID != widget.buttonData.images[_curSegmentIndex].userUid) {
           BlocProvider.of<ViewStoryCubit>(context).ViewStory(
               context,
               "${User_ID}",
               "${widget.buttonData.images[_curSegmentIndex].storyUid}");
-        }
+        // }else{
+        //    BlocProvider.of<ViewStoryCubit>(context).ViewStory(
+        //       context,
+        //       "${User_ID}",
+        //       "${widget.buttonData.images[_curSegmentIndex].storyUid}");
+        // }
       }
     }
     _storyController!.unpause();
