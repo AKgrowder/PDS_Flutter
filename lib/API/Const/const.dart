@@ -136,6 +136,8 @@ class Config {
   static const String getAllNoticationsCount = "user/api/getAllNotificationsCount";
   static const String getPostUidOrUserUid = "user/api/getPostUidOrUserUid";
   static const String message_seen_by_user = "user/message_seen_by_user";
+  static const String online_offline_status = "user/online_offline_status";
+
 
 
 

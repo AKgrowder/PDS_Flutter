@@ -444,4 +444,23 @@ class GetGuestAllPostCubit extends Cubit<GetGuestAllPostState> {
       emit(GetGuestAllPostErrorState(acceptRejectInvitationModel));
     }
   }
+
+   Future<void> ChatOnline (BuildContext context,bool onlineStatus) async {
+    dynamic acceptRejectInvitationModel;
+    try {
+      emit(GetGuestAllPostLoadingState());
+      acceptRejectInvitationModel =
+          await Repository().ChatOnline(context,onlineStatus);
+      if (acceptRejectInvitationModel ==
+          "Something Went Wrong, Try After Some Time.") {
+        emit(GetGuestAllPostErrorState("${acceptRejectInvitationModel}"));
+      } else {
+        if (acceptRejectInvitationModel.success == true) {
+          emit(OnlineChatStatusLoadedState(acceptRejectInvitationModel));
+        }
+      }
+    } catch (e) {
+      emit(GetGuestAllPostErrorState(acceptRejectInvitationModel));
+    }
+  }
 }
