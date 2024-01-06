@@ -46,7 +46,7 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
   OpenSaveImagepostModel? OpenSaveModelData;
   String formattedDate = DateFormat('dd-MM-yyyy').format(DateTime.now());
   DateTime? parsedDateTimeBlogs;
-  DateTime? parsedDateTimeRepost;
+  DateTime? repostTime;
   final ScrollController scroll = ScrollController();
   List<int> currentPages = [];
   List<PageController> pageControllers = [];
@@ -98,8 +98,13 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
         navigationFunction();
         parsedDateTimeBlogs =
             DateTime.parse('${OpenSaveModelData?.object?.createdAt ?? ""}');
-        parsedDateTimeRepost =
-            DateTime.parse('${OpenSaveModelData?.object?.repostOn?.createdAt}');
+        // parsedDateTimeRepost =
+        //     DateTime.parse('${OpenSaveModelData?.object?.repostOn?.createdAt}');
+
+        if (OpenSaveModelData?.object?.repostOn != null) {
+          repostTime = DateTime.parse(
+              '${OpenSaveModelData?.object?.repostOn!.createdAt ?? ""}');
+        }
         print("home imges -- ${widget.index}");
         if (!added) {
           OpenSaveModelData?.object?.postData?.forEach((element) {
@@ -627,7 +632,8 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
                                                                           horizontal:
                                                                               2),
                                                                       activeColor:
-                                                                         ColorConstant.primary_color,
+                                                                          ColorConstant
+                                                                              .primary_color,
                                                                       color: Color(
                                                                           0xff6A6A6A),
                                                                     ),
@@ -749,8 +755,7 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
                                                   ),
                                                   SizedBox(height: 7),
                                                   Text(
-                                                      customFormat(
-                                                          parsedDateTimeRepost!),
+                                                      customFormat(repostTime!),
                                                       style: TextStyle(
                                                         color: Colors.white,
                                                         fontSize: 16,
