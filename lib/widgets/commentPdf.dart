@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:pds/core/utils/image_constant.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
@@ -196,7 +197,9 @@ class DocumentViewScreen1 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(backgroundColor: Colors.white, iconTheme: IconThemeData()),
+
+  
+
       body: path != null
           ? Container(
               color: Colors.white,
