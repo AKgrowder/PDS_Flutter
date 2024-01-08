@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chewie/chewie.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:dio/dio.dart';
@@ -894,7 +895,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
               width: 40,
               height: 50,
             ),
-          ], */ 
+          ], */
         );
       },
     );
@@ -958,7 +959,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
     });
 
     await BlocProvider.of<GetGuestAllPostCubit>(context)
-        .ChatOnline(context,true);
+        .ChatOnline(context, true);
     Future.delayed(Duration(seconds: 2));
     await BlocProvider.of<GetGuestAllPostCubit>(context)
         .SystemConfigHome(context);
@@ -1197,7 +1198,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                 }
               }
 
-            if (state is GetAllStoryLoadedState) {
+              if (state is GetAllStoryLoadedState) {
                 getAllStoryModel = state.getAllStoryModel;
                 buttonDatas.clear();
                 storyButtons.clear();
@@ -1215,7 +1216,6 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                     if (element.userUid == User_ID) {
                       int count = 0;
 
-
                       element.storyData?.forEach((element) {
                         print("check count--${element.storySeen}");
                         if (element.storySeen != null) {
@@ -1229,7 +1229,6 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
 
                       userName.insert(0, element.userName.toString());
                       buttonDatas.insert(
-                       
                           0,
                           StoryButtonData(
                             // isWatch: isWatch == false ? true : false,  iswatch 0
@@ -1978,7 +1977,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                 width: 67,
                                                 decoration: BoxDecoration(
                                                     shape: BoxShape.circle,
-                                                    color: Color(0x4CED1C25)),
+                                                    color: ColorConstant.primaryLight_color),
                                                 child: Icon(
                                                   Icons
                                                       .add_circle_outline_rounded,
@@ -4020,12 +4019,36 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
 
                                                                           : AllGuestPostRoomData?.object?.content?[index].postDataType == "ATTACHMENT"
                                                                               ? (AllGuestPostRoomData?.object?.content?[index].postData?.isNotEmpty == true)
-                                                                                  ? Container(
-                                                                                      height: 400,
-                                                                                      width: _width,
-                                                                                      child: DocumentViewScreen1(
-                                                                                        path: AllGuestPostRoomData?.object?.content?[index].postData?[0].toString(),
-                                                                                      ))
+                                                                                  ? Stack(
+                                                                                      children: [
+                                                                                        Container(
+                                                                                          height: 400,
+                                                                                          width: _width,
+                                                                                          color: Colors.transparent,
+                                                                                          /* child: DocumentViewScreen1(
+                                                                                            path: AllGuestPostRoomData?.object?.content?[index].postData?[0].toString(),
+                                                                                          ) */
+                                                                                        ),
+                                                                                        GestureDetector(
+                                                                                          onTap: () {
+                                                                                            print("objectobjectobjectobject");
+                                                                                            Navigator.push(context, MaterialPageRoute(
+                                                                                              builder: (context) {
+                                                                                                return DocumentViewScreen1(
+                                                                                                  path: AllGuestPostRoomData?.object?.content?[index].postData?[0].toString(),
+                                                                                                );
+                                                                                              },
+                                                                                            ));
+                                                                                          },
+                                                                                          child: Container(
+                                                                                            child: CachedNetworkImage(
+                                                                                              imageUrl: AllGuestPostRoomData?.object?.content?[index].thumbnailImageUrl ?? "",
+                                                                                              fit: BoxFit.cover,
+                                                                                            ),
+                                                                                          ),
+                                                                                        )
+                                                                                      ],
+                                                                                    )
                                                                                   : SizedBox()
                                                                               : SizedBox())
                                                                   : Column(
@@ -4664,7 +4687,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                             130,
                                                                         decoration: BoxDecoration(
                                                                             // color: Colors.red,
-                                                                            border: Border.all(color: Colors.red, width: 3),
+                                                                            border: Border.all(color: ColorConstant.primary_color, width: 3),
                                                                             borderRadius: BorderRadius.circular(14)),
                                                                         child:
                                                                             Stack(
@@ -4699,7 +4722,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                                       bottomLeft: Radius.circular(8),
                                                                                       bottomRight: Radius.circular(8),
                                                                                     ),
-                                                                                    color: Color.fromRGBO(237, 28, 37, 0.5),
+                                                                                    color: ColorConstant.primary_color,
                                                                                   ),
                                                                                   child: Row(
                                                                                     children: [
@@ -5051,7 +5074,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                                   ? Icon(Icons.favorite_border)
                                                                                   : Icon(
                                                                                       Icons.favorite,
-                                                                                      color: Colors.red,
+                                                                                      color: ColorConstant.primary_color,
                                                                                     ),
                                                                             ),
                                                                           ),
@@ -5944,7 +5967,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
   }
 
   shareImageDownload() async {
-    print(":- %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
+    print(
+        ":- %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     var url =
         //  prefs.getString(UserdefaultsData.InviteUserUrl) ??
@@ -5976,9 +6000,10 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
 
   Future<bool> _checkPermission() async {
     if (Platform.isAndroid) {
-        DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
-AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
-      print("objectobjectobjectobjectobjectobjectobjectobject ${androidInfo.version.release}");
+      DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+      AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+      print(
+          "objectobjectobjectobjectobjectobjectobjectobject ${androidInfo.version.release}");
       version = int.parse(androidInfo.version.release);
       // final SharedPreferences prefs = await SharedPreferences.getInstance();
       // version =
