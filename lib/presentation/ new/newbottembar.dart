@@ -2,6 +2,7 @@
 
 import 'dart:async';
 
+import 'package:badges/badges.dart' as badges;
 import 'package:flutter/material.dart';
 import 'package:pds/connection_status/connection_status_singleton.dart';
 import 'package:pds/core/utils/color_constant.dart';
@@ -13,7 +14,7 @@ import 'package:pds/presentation/%20new/notifaction2.dart';
 import 'package:pds/presentation/register_create_account_screen/register_create_account_screen.dart';
 import 'package:pds/presentation/rooms/rooms_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:badges/badges.dart' as badges;
+
 import 'SearchBar_screen.dart';
 
 // import 'package:growder/presentation/Buy_Screen/Buy_screen.dart';

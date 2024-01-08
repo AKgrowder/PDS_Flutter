@@ -76,12 +76,11 @@ class _AddWorkExperienceScreenState extends State<AddWorkExperienceScreen> {
   String? apiDateEnd;
   String? formattedDateEnd;
 
-
   DateTime? pickedStartDate;
 
   // DateTime now = DateTime.now();
   // String formattedDateTime = DateFormat('yyyy-MM-dd HH:mm:ss').format(pickedStartDate);
-  
+
   void initState() {
     super.initState();
     if (widget.typeName != "COMPANY") {
@@ -89,10 +88,7 @@ class _AddWorkExperienceScreenState extends State<AddWorkExperienceScreen> {
     }
     print("widget.endDate" + widget.endDate.toString());
 
-
-  valuesecond = widget.endDate == "Present";
- 
-    
+    valuesecond = widget.endDate == "Present";
 
     BlocProvider.of<NewProfileSCubit>(context).IndustryTypeAPI(context);
     if (widget.edit == true) {
@@ -432,7 +428,7 @@ class _AddWorkExperienceScreenState extends State<AddWorkExperienceScreen> {
                                                 DateTime.now());
 
                                         print(
-                                            "formattedDate Start--${formattedDateStart}");
+                                            "formattedDate Start--${apiDateStart}");
 
                                         setState(() {
                                           StartDateController.text =
@@ -487,7 +483,6 @@ class _AddWorkExperienceScreenState extends State<AddWorkExperienceScreen> {
                                                   firstDate: pickedStartDate ??
                                                       DateTime.now(),
                                                   lastDate: DateTime.now());
-                                          
 
                                           if (pickedDate != null) {
                                             print(pickedDate);
@@ -764,9 +759,8 @@ class _AddWorkExperienceScreenState extends State<AddWorkExperienceScreen> {
                             } else {
                               apiDatepresent = DateFormat('yyyy-MM-dd')
                                   .format(DateTime.now());
-                                  print('jkjjjhjhh-$apiDatepresent');
+                              print('jkjjjhjhh-$apiDatepresent');
                               var params = {
-                                
                                 "companyName": companyNameController.text,
                                 "industryType":
                                     selectedIndustryTypes?.industryTypeName,

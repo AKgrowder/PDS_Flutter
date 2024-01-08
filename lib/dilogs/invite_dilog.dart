@@ -232,7 +232,7 @@ class _InviteDilogScreenState extends State<InviteDilogScreen>
                                         style: TextStyle(
                                           fontFamily: 'outfit',
                                           fontSize: 15,
-                                          color:ColorConstant.primary_color,
+                                          color: ColorConstant.primary_color,
                                           fontWeight: FontWeight.w400,
                                         ),
                                       )),
@@ -300,7 +300,7 @@ class _InviteDilogScreenState extends State<InviteDilogScreen>
                                       height: 43,
                                       width: width / 3.5,
                                       decoration: BoxDecoration(
-                                          color:ColorConstant.primary_color,
+                                          color: ColorConstant.primary_color,
                                           borderRadius:
                                               BorderRadius.circular(10)),
                                       child: Center(
@@ -344,6 +344,7 @@ class _InviteDilogScreenState extends State<InviteDilogScreen>
                                       children: [
                                         CustomImageView(
                                           imagePath: ImageConstant.copyimage,
+                                          color: ColorConstant.primary_color,
                                           height: 20,
                                         ),
                                         Padding(
@@ -353,7 +354,8 @@ class _InviteDilogScreenState extends State<InviteDilogScreen>
                                             style: TextStyle(
                                               fontFamily: 'outfit',
                                               fontSize: 15,
-                                              color:ColorConstant.primary_color,
+                                              color:
+                                                  ColorConstant.primary_color,
                                               fontWeight: FontWeight.w400,
                                             ),
                                           ),
