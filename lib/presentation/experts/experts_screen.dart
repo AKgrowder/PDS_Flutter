@@ -220,10 +220,10 @@ class _ExpertsScreenState extends State<ExpertsScreen> {
                                       decoration: BoxDecoration(
                                         border: Border.all(
                                             color: _containerColor == index
-                                                ? Colors.red
+                                                ? ColorConstant.primary_color
                                                 : Colors.transparent),
                                         color: _containerColor == index
-                                            ? Color(0xFFFFE7E7)
+                                            ? ColorConstant.primaryLight_color
                                             : Colors.transparent,
                                         borderRadius: BorderRadius.all(
                                           Radius.circular(10),

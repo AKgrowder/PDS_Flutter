@@ -472,7 +472,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                     ),
                                     child: Icon(
                                       Icons.camera_alt_outlined,
-                                      color: Colors.red,
+                                      color: ColorConstant.primary_color,
                                     ),
                                   ),
                                 )
@@ -560,7 +560,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                           ),
                                           child: Icon(
                                             Icons.camera_alt_outlined,
-                                            color: Colors.red,
+                                            color: ColorConstant.primary_color,
                                           ),
                                         ),
                                       ),
@@ -1819,7 +1819,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           Navigator.of(context).push(MaterialPageRoute(
                               builder: (context) => ProfileandDocumentScreen(
                                     path:
-                                        'https://pds-images-live.s3.ap-south-1.amazonaws.com/misc/pds+logo.png',
+                                        'https://pds-images-live.s3.ap-south-1.amazonaws.com/misc/logo.png',
                                     title: '',
                                   )));
                         }
@@ -1848,7 +1848,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       leading: Icon(
                         Icons.delete,
                         size: 40,
-                        color: Colors.red,
+                        color: ColorConstant.primary_color,
                       ),
                       title: new Text('Remove Profile Picture'),
                       onTap: () => removeuserProfilePic()),
@@ -1926,7 +1926,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                     builder: (context) =>
                                         ProfileandDocumentScreen(
                                           path:
-                                              'https://pds-images-live.s3.ap-south-1.amazonaws.com/misc/pds+logo.png',
+                                              'https://pds-images-live.s3.ap-south-1.amazonaws.com/misc/logo.png',
                                           title: '',
                                         )))
                               }
