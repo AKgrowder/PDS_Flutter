@@ -86,6 +86,7 @@ class _ProfileScreenState extends State<ProfileScreen>
   String? dopcument;
   String? filepath;
   double value2 = 0.0;
+  bool isDataSet = true;
 
   String? workignStart;
   String? workignend;
@@ -543,7 +544,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                       builder: (context) =>
                                           ProfileandDocumentScreen(
                                             path:
-                                                'https://pds-images-live.s3.ap-south-1.amazonaws.com/misc/pds+logo.png',
+                                                'https://pds-images-live.s3.ap-south-1.amazonaws.com/misc/logo.png',
                                             title: '',
                                           )));
                                 }
@@ -616,7 +617,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                             builder: (context) =>
                                                 ProfileandDocumentScreen(
                                                   path:
-                                                      'https://pds-images-live.s3.ap-south-1.amazonaws.com/misc/pds+logo.png',
+                                                      'https://pds-images-live.s3.ap-south-1.amazonaws.com/misc/logo.png',
                                                   title: '',
                                                 )));
                                   }
@@ -3145,7 +3146,7 @@ class _ProfileScreenState extends State<ProfileScreen>
           ),
         ),
         Container(
-          height: _height / 1.4,
+          height: _height / 1.3,
           width: _width,
           //  color: Colors.amber,
           child: Padding(
@@ -3375,7 +3376,9 @@ class _ProfileScreenState extends State<ProfileScreen>
                     children: [
                       GestureDetector(
                         onTap: () {
-                          _selectStartTime(context);
+                          if (isDataSet == false) {
+                            _selectStartTime(context);
+                          }
                         },
                         child: Container(
                           height: 40,
@@ -3424,7 +3427,9 @@ class _ProfileScreenState extends State<ProfileScreen>
                       ),
                       GestureDetector(
                         onTap: () {
-                          _selectEndTime(context);
+                          if (isDataSet == false) {
+                            _selectStartTime(context);
+                          }
                         },
                         child: Container(
                           height: 40,
@@ -3695,13 +3700,14 @@ class _ProfileScreenState extends State<ProfileScreen>
                       fontSize: 12,
                     ),
                   ),
-                  /*  addWorkExperienceModel?.object?[index].startDate !=
+                  /* addWorkExperienceModel?.object?[index].startDate !=
                               null &&
                           addWorkExperienceModel?.object?[index].endDate !=
                               null
                       ? */
-                  DateFormat('dd-MM-yyyy').format(DateTime.now()) ==
-                          formattedDateEnd
+                  /* DateFormat('dd-MM-yyyy').format(DateTime.now()) ==
+                          formattedDateEnd */
+                          addWorkExperienceModel?.object?[index].endDate == "Present"
                       ? Text(
                           '${formattedDateStart} to Present',
                           style: TextStyle(
@@ -4017,6 +4023,9 @@ class _ProfileScreenState extends State<ProfileScreen>
   }
 
   Future<void> _selectStartTime(BuildContext context) async {
+    setState(() {
+      isDataSet = true;
+    });
     TimeOfDay initialTime = TimeOfDay(hour: 0, minute: 0);
 
     final pickedTime = await showTimePicker(
@@ -4044,6 +4053,9 @@ class _ProfileScreenState extends State<ProfileScreen>
   }
 
   Future<void> _selectEndTime(BuildContext context) async {
+    setState(() {
+      isDataSet = true;
+    });
     TimeOfDay initialTime = TimeOfDay(hour: 0, minute: 0);
 
     final pickedTime = await showTimePicker(

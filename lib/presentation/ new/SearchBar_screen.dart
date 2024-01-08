@@ -13,9 +13,10 @@ import 'package:pds/core/utils/image_constant.dart';
 import 'package:pds/core/utils/sharedPreferences.dart';
 import 'package:pds/presentation/%20new/HashTagView_screen.dart';
 import 'package:pds/presentation/%20new/newbottembar.dart';
+import 'package:pds/presentation/%20new/profileNew.dart';
 import 'package:pds/widgets/pagenation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:pds/presentation/%20new/profileNew.dart';
+
 import '../../API/Bloc/HashTag_Bloc/HashTag_cubit.dart';
 import '../../API/Bloc/HashTag_Bloc/HashTag_state.dart';
 import '../../API/Model/HashTage_Model/HashTag_model.dart';
@@ -385,7 +386,7 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                                           ? ColorConstant.primary_color
                                           : dataSetup == index
                                               ? ColorConstant.primary_color
-                                              : Color(0xffFBD8D9),
+                                              : ColorConstant.primaryLight_color,
                                       borderRadius: BorderRadius.circular(20)),
                                   child: Center(
                                       child: Text(

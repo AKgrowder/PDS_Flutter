@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -9,7 +7,6 @@ import 'package:pds/API/Bloc/CreateRoom_Bloc/CreateRoom_state.dart';
 import 'package:pds/dialogs/assigh_adminn_dilog.dart';
 import 'package:pds/dialogs/edit_dilog.dart';
 import 'package:pds/dilogs/invite_dilog.dart';
-import 'package:pds/presentation/%20new/Experts_member_Screen.dart';
 import 'package:pds/presentation/%20new/newbottembar.dart';
 import 'package:pds/presentation/%20new/profileNew.dart';
 import 'package:pds/presentation/experts/experts_screen.dart';
@@ -2422,11 +2419,11 @@ class _RoomsScreenState extends State<RoomsScreen> {
 
                             child: CustomImageView(
                               imagePath: checkuserdata == "PARTIALLY_REGISTERED"
-                                  ? ImageConstant.CreateForum
+                                  ? ImageConstant.CreateForum//done
                                   : checkuserdata == "PENDING"
-                                      ? ImageConstant.InPending
+                                      ? ImageConstant.InPending//done
                                       : checkuserdata == "APPROVED"
-                                          ? ImageConstant.noRoom
+                                          ? ImageConstant.noRoom//done
                                           : ImageConstant.Rejected,
                             ),
 
