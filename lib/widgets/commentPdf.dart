@@ -197,9 +197,11 @@ class DocumentViewScreen1 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
-  
-
+      appBar: AppBar(
+        iconTheme: IconThemeData(),
+        elevation: 0,
+        backgroundColor: Colors.transparent,
+      ),
       body: path != null
           ? Container(
               color: Colors.white,

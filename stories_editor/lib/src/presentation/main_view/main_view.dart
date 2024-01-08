@@ -415,6 +415,7 @@ class _MainViewState extends State<MainView> {
                                                   BorderRadius.circular(8),
                                               child: GestureDetector(
                                                 onTap: () {
+                                                  print("hey i am comming!!");
                                                   controlNotifier.isDataGet =
                                                       true;
                                                   if (controlNotifier
@@ -428,11 +429,14 @@ class _MainViewState extends State<MainView> {
                                                                         300),
                                                             curve:
                                                                 Curves.easeIn);
-                                                    /*  scrollNotifier.pageController
-                                          .animateToPage(1,
-                                              duration: const Duration(
-                                                  milliseconds: 300),
-                                              curve: Curves.ease); */
+                                                    scrollProvider
+                                                        .pageController
+                                                        .animateToPage(1,
+                                                            duration:
+                                                                const Duration(
+                                                                    milliseconds:
+                                                                        300),
+                                                            curve: Curves.ease);
                                                   }
                                                 },
                                                 child: const CoverThumbnail(
@@ -511,8 +515,7 @@ class _MainViewState extends State<MainView> {
                                                 print(pngUri);
 
                                                 print(pngUri);
-                                                    widget.onDone!(pngUri);
-
+                                                widget.onDone!(pngUri);
                                               } else {}
                                             });
                                           }
