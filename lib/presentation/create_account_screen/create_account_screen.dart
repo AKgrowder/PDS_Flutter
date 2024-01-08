@@ -202,7 +202,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                               ),
                               Spacer(),
                               CustomImageView(
-                                imagePath: ImageConstant.imgImage248,
+                                imagePath: ImageConstant.splashImage,
                                 height: 37,
                                 alignment: Alignment.center,
                               ),
@@ -232,7 +232,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                               height: _height / 15,
                               width: _width / 1,
                               decoration: BoxDecoration(
-                                  color: Color(0xFFFFE7E7),
+                                  color: ColorConstant.primaryLight_color,
                                   borderRadius:
                                       BorderRadius.all(Radius.circular(5))),
                               child: Padding(
@@ -390,11 +390,11 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                               RegExp nameRegExp = RegExp(r"^[a-zA-Z0-9\s'@]+$");
                               if (value!.isEmpty) {
                                 return 'Please Enter User ID';
+                              } else if (value.length < 4 ||
+                                  value.length > 50) {
+                                return 'Minimum length required';
                               } else if (!nameRegExp.hasMatch(value)) {
                                 return 'Input cannot contains prohibited special characters';
-                              } else if (value.length < 1 ||
-                                  value.length > 50) {
-                                return 'userId length is between 1 and 50 characters';
                               }
                               return null;
                             },
