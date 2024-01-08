@@ -449,7 +449,7 @@ class _InboxScreenState extends State<InboxScreen> {
                                             width: 12,
                                             decoration: BoxDecoration(
                                                 color:
-                                                    ColorConstant.primary_color,
+                                                    Colors.green,
                                                 shape: BoxShape.circle,
                                                 border: Border.all(
                                                     color: Colors.white,

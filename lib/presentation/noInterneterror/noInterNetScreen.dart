@@ -1,7 +1,7 @@
+import 'package:flutter/material.dart';
 import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/core/utils/image_constant.dart';
-import 'package:flutter/material.dart';
-import 'package:pds/core/utils/internet_utils.dart'; 
+import 'package:pds/core/utils/internet_utils.dart';
 import 'package:pds/presentation/%20new/newbottembar.dart';
 
 class NoInterNetScreen extends StatelessWidget {
@@ -19,7 +19,7 @@ class NoInterNetScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Image.asset(ImageConstant.noInternetConnection),
+              Image.asset(ImageConstant.noInternetConnection, ),
               SizedBox(height: _height * 0.03),
               Text(
                 "No Internet Connection",

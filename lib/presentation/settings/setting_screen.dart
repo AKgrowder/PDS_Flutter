@@ -490,7 +490,7 @@ class _SettingScreenState extends State<SettingScreen> {
                                     decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(8),
                                         // color: ColorConstant.CategoriesBackColor,
-                                        color: Color(0XFFFBD8D9),
+                                        color: ColorConstant.primaryLight_color,
                                         border: Border.all(
                                             width: 1,
                                             // color: ColorConstant.gray200,

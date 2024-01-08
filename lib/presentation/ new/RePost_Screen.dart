@@ -403,7 +403,7 @@ class _RePostScreenState extends State<RePostScreen> {
                                       Padding(
                                         padding: EdgeInsets.only(right: 7),
                                         child: Image.asset(
-                                          ImageConstant.downarrow,
+                                          ImageConstant.downarrow,color: ColorConstant.primary_color,
                                           height: 10,
                                           width: 10,
                                         ),
@@ -1131,7 +1131,7 @@ class _RePostScreenState extends State<RePostScreen> {
                                     ),
                                     child: Center(
                                       child: Image.asset(
-                                        ImageConstant.Cameraicon,
+                                        ImageConstant.Cameraicon,color: ColorConstant.primary_color,
                                         height: 30,
                                       ),
                                     ),
@@ -1264,7 +1264,7 @@ class _RePostScreenState extends State<RePostScreen> {
                                 prepareTestPdf(0);
                               },
                               child: Image.asset(
-                                ImageConstant.aTTACHMENT,
+                                ImageConstant.aTTACHMENT,color: ColorConstant.primary_color,
                                 height: 20,
                               ),
                             ),
@@ -1276,7 +1276,7 @@ class _RePostScreenState extends State<RePostScreen> {
                                 _getImageFromSource();
                               },
                               child: Image.asset(
-                                ImageConstant.gallery,
+                                ImageConstant.gallery,color: ColorConstant.primary_color,
                                 height: 20,
                               ),
                             ),

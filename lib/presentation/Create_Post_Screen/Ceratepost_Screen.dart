@@ -333,11 +333,10 @@ class _CreateNewPostState extends State<CreateNewPost> {
                                     )
                                   : GestureDetector(
                                       onTap: () {
-
-                                          print("DSfsdhfsdhfshd");
+                                        print("DSfsdhfsdhfshd");
                                         HasetagList = [];
                                         CreatePostDone = true;
-                                        
+
                                         if (isDataSet == true) {
                                           dataPostFucntion();
                                         }
@@ -447,6 +446,7 @@ class _CreateNewPostState extends State<CreateNewPost> {
                                         padding: EdgeInsets.only(right: 7),
                                         child: Image.asset(
                                           ImageConstant.downarrow,
+                                          color: ColorConstant.primary_color,
                                           height: 10,
                                           width: 10,
                                         ),
@@ -476,7 +476,7 @@ class _CreateNewPostState extends State<CreateNewPost> {
                                         SuggestionPosition.values.last,
                                     maxLines: 10,
                                     // style: TextStyle(fontFamily: ),
-                                     style: TextStyle(
+                                    style: TextStyle(
                                       fontFamily: 'outfit',
                                       fontSize: 16,
                                       color: Colors.black,
@@ -648,7 +648,12 @@ class _CreateNewPostState extends State<CreateNewPost> {
                                             ? Container(
                                                 height: 400,
                                                 width: _width,
-                                                child: DocumentViewScreen1(
+                                                child: /* CachedNetworkImage(
+                                                  imageUrl:
+                                                      '${imageDataPost?.object?.thumbnailImageUrl}',
+                                                  fit: BoxFit.cover,
+                                                ),  */
+                                                    DocumentViewScreen1(
                                                   path: imageDataPost
                                                       ?.object!.data!.first
                                                       .toString(),
@@ -782,7 +787,8 @@ class _CreateNewPostState extends State<CreateNewPost> {
                                             activeSize: const Size(10.0, 10.0),
                                             spacing: const EdgeInsets.symmetric(
                                                 horizontal: 2),
-                                            activeColor: ColorConstant.primary_color,
+                                            activeColor:
+                                                ColorConstant.primary_color,
                                             color: Color(0xff6A6A6A),
                                           ),
                                         ),
@@ -840,6 +846,8 @@ class _CreateNewPostState extends State<CreateNewPost> {
                                             child: Image.asset(
                                               ImageConstant.Cameraicon,
                                               height: 30,
+                                              color:
+                                                  ColorConstant.primary_color,
                                             ),
                                           ),
                                         ),
@@ -936,9 +944,11 @@ class _CreateNewPostState extends State<CreateNewPost> {
                                                                       toolbarTitle:
                                                                           'Cropper',
                                                                       activeControlsWidgetColor:
-                                                                         ColorConstant.primary_color,
+                                                                          ColorConstant
+                                                                              .primary_color,
                                                                       toolbarColor:
-                                                                         ColorConstant.primary_color,
+                                                                          ColorConstant
+                                                                              .primary_color,
                                                                       toolbarWidgetColor:
                                                                           Colors
                                                                               .white,
@@ -1049,6 +1059,7 @@ class _CreateNewPostState extends State<CreateNewPost> {
                                       child: Image.asset(
                                         ImageConstant.aTTACHMENT,
                                         height: 20,
+                                        color: ColorConstant.primary_color,
                                       ),
                                     ),
                                     SizedBox(
@@ -1061,6 +1072,7 @@ class _CreateNewPostState extends State<CreateNewPost> {
                                       child: Image.asset(
                                         ImageConstant.gallery,
                                         height: 20,
+                                        color: ColorConstant.primary_color,
                                       ),
                                     ),
                                     SizedBox(
@@ -1828,7 +1840,8 @@ class _CreateNewPostState extends State<CreateNewPost> {
             "description": postText.text,
             "postData": imageDataPost?.object?.data,
             "postDataType": "ATTACHMENT",
-            "postType": soicalData[indexx].toString().toUpperCase()
+            "postType": soicalData[indexx].toString().toUpperCase(),
+            "thumbnailImageUrl": imageDataPost?.object?.thumbnailImageUrl,
           };
           BlocProvider.of<AddPostCubit>(context).InvitationAPI(context, param);
         } else if (postText.text.isNotEmpty && pickedImage.isNotEmpty) {
@@ -1895,6 +1908,7 @@ class _CreateNewPostState extends State<CreateNewPost> {
               "postData": imageDataPost?.object?.data,
               "postDataType": "ATTACHMENT",
               "postType": soicalData[indexx].toString().toUpperCase(),
+              "thumbnailImageUrl": imageDataPost?.object?.thumbnailImageUrl,
             };
             BlocProvider.of<AddPostCubit>(context)
                 .InvitationAPI(context, param);
@@ -1965,7 +1979,7 @@ class _CreateNewPostState extends State<CreateNewPost> {
                 child: Container(
                   decoration: BoxDecoration(
                       color: indexx == index
-                          ?ColorConstant.primary_color
+                          ? ColorConstant.primary_color
                           : Colors.transparent,
                       borderRadius: BorderRadius.circular(5)),
                   width: 130,

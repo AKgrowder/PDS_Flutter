@@ -421,14 +421,13 @@ class _ExperienceEditScreenState extends State<ExperienceEditScreen> {
                                   /*   addWorkExperienceModel
                                                   ?.object?[index].startDate !=
                                               null &&
-                                          addWorkExperienceModel
-                                                  ?.object?[index].endDate !=
+                                          !=
                                               null
                                       ? */
 
-                                  DateFormat('dd-MM-yyyy')
-                                              .format(DateTime.now()) ==
-                                          formattedDateEnd
+                                  addWorkExperienceModel
+                                              ?.object?[index].endDate ==
+                                          "Present"
                                       ? Text(
                                           '${formattedDateStart} to Present',
                                           style: TextStyle(

@@ -128,7 +128,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
               title: AppbarImage(
                   height: 37,
                   width: 140,
-                  imagePath: ImageConstant.imgImage248)),
+                  imagePath: ImageConstant.splashImage)),
           body: BlocProvider<OtpCubit>(
             create: (context) => OtpCubit(),
             child: BlocConsumer<OtpCubit, OtpState>(
