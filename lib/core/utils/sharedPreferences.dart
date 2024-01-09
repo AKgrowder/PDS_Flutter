@@ -55,6 +55,9 @@ class PreferencesKey {
   static String NotificationCount = "NotificationCount";
   static String MessageCount = "MessageCount";
   static String StroyLengthCheck = "StroyLengthCheck";
+  static String AwsImageInPackagingLogoUrl = "AwsImageInPackagingLogoUrl";
+
+
 
 
 
