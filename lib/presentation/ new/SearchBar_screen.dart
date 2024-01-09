@@ -54,6 +54,7 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
   int? indexxx;
   bool isSerch = false;
   GetDataInSerch? getDataInSerch;
+  int? length;
   HashtagModel? hashtagModel; /* 
   HashTagImageModel? hashTagImageModel; */
   bool apiDataSetup = false;
@@ -128,6 +129,14 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
             }
             if (state is GetSerchData) {
               getDataInSerch = state.getDataInSerch;
+              if(getDataInSerch?.object !=null){
+                 if(getDataInSerch!.object!.length <=5){
+                  length = getDataInSerch!.object!.length;
+              }else{
+                length =5;
+              }
+              }
+             
             }
             if (state is HashTagLoadedState) {
               apiDataSetup = true;
@@ -550,7 +559,7 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                                 width: _width,
                                 // color: Colors.amber,
                                 child: Column(
-                                  children: List.generate(5, (index) {
+                                  children:  List.generate((length ??0), (index) {
                                     return Padding(
                                       padding: const EdgeInsets.all(8.0),
                                       child: GestureDetector(
