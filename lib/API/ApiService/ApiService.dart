@@ -245,11 +245,13 @@ class ApiServices {
         response.fields["userBackgroundPic"] = params['userBackgroundPic'];
       } else if (params['userProfilePic'] != null) {
         response.fields["userProfilePic"] = params['userProfilePic'];
+      }else if (params['documentName'] != null) {
+          response.fields["documentName"] = params['documentName'];
       } else {
         print("multipartFile2 else condions working on--");
       }
       response.fields["document"] = params['document'];
-      response.fields["documentName"] = params['documentName'];
+   
       response.fields["companyName"] = params['companyName'];
       response.fields["jobProfile"] = params['jobProfile'];
       response.fields["profileUid"] = params['profileUid'];
