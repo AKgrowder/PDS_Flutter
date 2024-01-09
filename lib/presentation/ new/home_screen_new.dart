@@ -1977,7 +1977,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                 width: 67,
                                                 decoration: BoxDecoration(
                                                     shape: BoxShape.circle,
-                                                    color: ColorConstant.primaryLight_color),
+                                                    color: ColorConstant
+                                                        .primaryLight_color),
                                                 child: Icon(
                                                   Icons
                                                       .add_circle_outline_rounded,
@@ -2617,12 +2618,43 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                                 //this is the ATTACHMENT
                                                                                 : AllGuestPostRoomData?.object?.content?[index].postDataType == "ATTACHMENT"
                                                                                     ? (AllGuestPostRoomData?.object?.content?[index].postData?.isNotEmpty == true)
-                                                                                        ? Container(
+                                                                                        ? /* Container(
                                                                                             height: 200,
                                                                                             width: _width,
                                                                                             child: DocumentViewScreen1(
                                                                                               path: AllGuestPostRoomData?.object?.content?[index].postData?[0].toString(),
-                                                                                            ))
+                                                                                            )) */
+                                                                                        Stack(
+                                                                                            children: [
+                                                                                              Container(
+                                                                                                height: 400,
+                                                                                                width: _width,
+                                                                                                color: Colors.transparent,
+                                                                                              ),
+                                                                                              GestureDetector(
+                                                                                                onTap: () {
+                                                                                                  if (uuid == null) {
+                                                                                                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
+                                                                                                  } else {
+                                                                                                    print("objectobjectobjectobject");
+                                                                                                    Navigator.push(context, MaterialPageRoute(
+                                                                                                      builder: (context) {
+                                                                                                        return DocumentViewScreen1(
+                                                                                                          path: AllGuestPostRoomData?.object?.content?[index].postData?[0].toString(),
+                                                                                                        );
+                                                                                                      },
+                                                                                                    ));
+                                                                                                  }
+                                                                                                },
+                                                                                                child: Container(
+                                                                                                  child: CachedNetworkImage(
+                                                                                                    imageUrl: AllGuestPostRoomData?.object?.content?[index].thumbnailImageUrl ?? "",
+                                                                                                    fit: BoxFit.cover,
+                                                                                                  ),
+                                                                                                ),
+                                                                                              )
+                                                                                            ],
+                                                                                          )
                                                                                         : SizedBox()
                                                                                     : SizedBox())
                                                                         : Column(
@@ -3028,12 +3060,37 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                                     )
                                                                                   // : SizedBox()
                                                                                   : AllGuestPostRoomData?.object?.content?[index].repostOn?.postDataType == "ATTACHMENT"
-                                                                                      ? Container(
-                                                                                          height: 400,
-                                                                                          width: _width,
-                                                                                          child: DocumentViewScreen1(
-                                                                                            path: "",
-                                                                                          ))
+                                                                                      ? Stack(
+                                                                                          children: [
+                                                                                            Container(
+                                                                                              height: 400,
+                                                                                              width: _width,
+                                                                                              color: Colors.transparent,
+                                                                                            ),
+                                                                                            GestureDetector(
+                                                                                              onTap: () {
+                                                                                                if (uuid == null) {
+                                                                                                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
+                                                                                                } else {
+                                                                                                  print("objectobjectobjectobject");
+                                                                                                  Navigator.push(context, MaterialPageRoute(
+                                                                                                    builder: (context) {
+                                                                                                      return DocumentViewScreen1(
+                                                                                                        path: AllGuestPostRoomData?.object?.content?[index].repostOn?.postData?[0].toString(),
+                                                                                                      );
+                                                                                                    },
+                                                                                                  ));
+                                                                                                }
+                                                                                              },
+                                                                                              child: Container(
+                                                                                                child: CachedNetworkImage(
+                                                                                                  imageUrl: AllGuestPostRoomData?.object?.content?[index].repostOn?.thumbnailImageUrl ?? "",
+                                                                                                  fit: BoxFit.cover,
+                                                                                                ),
+                                                                                              ),
+                                                                                            )
+                                                                                          ],
+                                                                                        )
                                                                                       : SizedBox())
                                                                           : Column(
                                                                               children: [
@@ -4031,14 +4088,18 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                                         ),
                                                                                         GestureDetector(
                                                                                           onTap: () {
-                                                                                            print("objectobjectobjectobject");
-                                                                                            Navigator.push(context, MaterialPageRoute(
-                                                                                              builder: (context) {
-                                                                                                return DocumentViewScreen1(
-                                                                                                  path: AllGuestPostRoomData?.object?.content?[index].postData?[0].toString(),
-                                                                                                );
-                                                                                              },
-                                                                                            ));
+                                                                                            if (uuid == null) {
+                                                                                              Navigator.of(context).push(MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
+                                                                                            } else {
+                                                                                              print("objectobjectobjectobject");
+                                                                                              Navigator.push(context, MaterialPageRoute(
+                                                                                                builder: (context) {
+                                                                                                  return DocumentViewScreen1(
+                                                                                                    path: AllGuestPostRoomData?.object?.content?[index].postData?[0].toString(),
+                                                                                                  );
+                                                                                                },
+                                                                                              ));
+                                                                                            }
                                                                                           },
                                                                                           child: Container(
                                                                                             child: CachedNetworkImage(
@@ -5900,6 +5961,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                             AllGuestPostRoomData: AllGuestPostRoomData,
                             postUid: AllGuestPostRoomData
                                 ?.object?.content?[index].postUid,
+                                thumbNailURL:AllGuestPostRoomData
+                                ?.object?.content?[index].thumbnailImageUrl ,
                           );
                         },
                       ));
