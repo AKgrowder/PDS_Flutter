@@ -960,7 +960,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
 
     await BlocProvider.of<GetGuestAllPostCubit>(context)
         .ChatOnline(context, true);
-    Future.delayed(Duration(seconds: 2));
+
     await BlocProvider.of<GetGuestAllPostCubit>(context)
         .SystemConfigHome(context);
     print("1111111111111 :- ${User_ID}");
