@@ -227,4 +227,24 @@ class PersonalChatListCubit extends Cubit<PersonalChatListState> {
     }
   }
 
+
+   Future<void> ChatOnline (BuildContext context,bool onlineStatus) async {
+    dynamic acceptRejectInvitationModel;
+    try {
+      emit(PersonalChatListLoadingState());
+      acceptRejectInvitationModel =
+          await Repository().ChatOnline(context,onlineStatus);
+      if (acceptRejectInvitationModel ==
+          "Something Went Wrong, Try After Some Time.") {
+        emit(PersonalChatListErrorState("${acceptRejectInvitationModel}"));
+      } else {
+        if (acceptRejectInvitationModel.success == true) {
+          emit(OnlineChatStatusLoadedState(acceptRejectInvitationModel));
+        }
+      }
+    } catch (e) {
+      emit(PersonalChatListErrorState(acceptRejectInvitationModel));
+    }
+  }
+
 }
