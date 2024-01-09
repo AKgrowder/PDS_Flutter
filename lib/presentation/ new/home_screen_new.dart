@@ -673,6 +673,10 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
         var IosMainversion = element.value ?? "";
         print(" IosMainversion  ${IosMainversion}");
         prefs.setString(PreferencesKey.IosMainversion, IosMainversion);
+      } else if (element.name == "AwsImageInPackagingLogoUrl") {
+        print(" ApkRouteVersion  ${ApkRouteVersion}");
+        prefs.setString(
+            PreferencesKey.AwsImageInPackagingLogoUrl, element.value ?? '');
       }
 
       /// ---------
@@ -5961,8 +5965,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                             AllGuestPostRoomData: AllGuestPostRoomData,
                             postUid: AllGuestPostRoomData
                                 ?.object?.content?[index].postUid,
-                                thumbNailURL:AllGuestPostRoomData
-                                ?.object?.content?[index].thumbnailImageUrl ,
+                            thumbNailURL: AllGuestPostRoomData
+                                ?.object?.content?[index].thumbnailImageUrl,
                           );
                         },
                       ));
@@ -6034,8 +6038,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
         ":- %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     var url =
-        //  prefs.getString(UserdefaultsData.InviteUserUrl) ??
-        "https://pds-images-live.s3.ap-south-1.amazonaws.com/misc/PDS+Without+Reward.jpg";
+         prefs.getString(PreferencesKey.AwsImageInPackagingLogoUrl) ??
+        "https://pds-images-live.s3.ap-south-1.amazonaws.com/misc/Inpackaging+Without+Reward.jpg";
 
     if (url.isNotEmpty) {
       _permissionReady = await _checkPermission();
@@ -6044,7 +6048,6 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
       if (_permissionReady) {
         print("Downloading");
         print("${url}");
-
         try {
           await Dio().download(
             url.toString(),

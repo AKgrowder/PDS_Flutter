@@ -166,7 +166,7 @@ class _RoomMembersScreenState extends State<RoomMembersScreen> {
                     height: _height / 8,
                     width: _width / 1.2,
                     decoration: BoxDecoration(
-                      color: Color(0xFFFFE7E7),
+                      color:ColorConstant.primaryLight_color,
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: Column(

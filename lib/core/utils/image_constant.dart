@@ -110,7 +110,7 @@ class ImageConstant {
 
   static String imageNotFound = 'assets/images/image_not_found.png';
   static String searchimage = 'assets/images/searchimage.png';
-  static String pdslogo = 'assets/images/final_logo-3.png';
+  static String pdslogo = 'assets/images/INPACKAGING.png';
   static String expertdetailimage = 'assets/images/expertdetailsimage.png';
 
   // ----------------

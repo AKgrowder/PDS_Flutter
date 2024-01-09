@@ -376,7 +376,7 @@ class _ExperienceEditScreenState extends State<ExperienceEditScreen> {
                                                           .toString()));
                                         },
                                         child: Image.asset(
-                                          ImageConstant.deleteIcon,
+                                          ImageConstant.delete,
                                           color: Colors.black,
                                           height: 20,
                                           width: 20,
