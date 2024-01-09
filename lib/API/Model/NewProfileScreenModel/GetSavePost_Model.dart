@@ -42,22 +42,25 @@ class Object {
   String? isFollowing;
   int? likedCount;
   int? commentCount;
+  String? thumbnailImageUrl;
 
-  Object(
-      {this.postUid,
-      this.createdAt,
-      this.userUid,
-      this.postUserName,
-      this.userProfilePic,
-      this.description,
-      this.postData,
-      this.postDataType,
-      this.postType,
-      this.isLiked,
-      this.isSaved,
-      this.isFollowing,
-      this.likedCount,
-      this.commentCount});
+  Object({
+    this.postUid,
+    this.createdAt,
+    this.userUid,
+    this.postUserName,
+    this.userProfilePic,
+    this.description,
+    this.postData,
+    this.postDataType,
+    this.postType,
+    this.isLiked,
+    this.isSaved,
+    this.isFollowing,
+    this.likedCount,
+    this.commentCount,
+    this.thumbnailImageUrl,
+  });
 
   Object.fromJson(Map<String, dynamic> json) {
     postUid = json['postUid'];
@@ -74,6 +77,7 @@ class Object {
     isFollowing = json['isFollowing'];
     likedCount = json['likedCount'];
     commentCount = json['commentCount'];
+    thumbnailImageUrl = json['thumbnailImageUrl'];
   }
 
   Map<String, dynamic> toJson() {
@@ -92,6 +96,7 @@ class Object {
     data['isFollowing'] = this.isFollowing;
     data['likedCount'] = this.likedCount;
     data['commentCount'] = this.commentCount;
+    data['thumbnailImageUrl'] = this.thumbnailImageUrl;
     return data;
   }
 }

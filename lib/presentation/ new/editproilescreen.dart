@@ -426,7 +426,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                           Radius.circular(20))),
                                   // color: Colors.red,
                                   child: Image.asset(
-                                    ImageConstant.pdslogo,
+                                    ImageConstant.splashImage,
                                     // fit: BoxFit.fill,
                                     height: 150,
                                     width: 150,
@@ -1965,7 +1965,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       leading: Icon(
                         Icons.delete,
                         size: 40,
-                        color: Colors.red,
+                        color: ColorConstant.primary_color,
                       ),
                       title: new Text('Remove Cover Picture'),
                       onTap: () => removeUserCover()),
