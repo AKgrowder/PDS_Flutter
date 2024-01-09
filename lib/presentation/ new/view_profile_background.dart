@@ -47,7 +47,8 @@ class ProfileandDocumentScreen extends StatelessWidget {
           margin: EdgeInsets.only(right: 8.0, top: 8.0, left: 8.0, bottom: 8.0),
           child: path!.contains('.jpg') ||
                   path!.contains('.png') ||
-                  path!.contains('.jpeg')
+                  path!.contains('.jpeg') ||
+                  path!.endsWith('.webp')
               ? Container(
                   child: PhotoView(
                     backgroundDecoration: BoxDecoration(),
