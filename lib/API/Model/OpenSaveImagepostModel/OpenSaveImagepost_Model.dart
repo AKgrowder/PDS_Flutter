@@ -40,6 +40,7 @@ class Object {
   int? commentCount;
   int? repostCount;
   RepostOn? repostOn;
+  Null? thumbnailImageUrl;
 
   Object(
       {this.postUid,
@@ -57,7 +58,8 @@ class Object {
       this.likedCount,
       this.commentCount,
       this.repostCount,
-      this.repostOn});
+      this.repostOn,
+      this.thumbnailImageUrl});
 
   Object.fromJson(Map<String, dynamic> json) {
     postUid = json['postUid'];
@@ -78,6 +80,7 @@ class Object {
     repostOn = json['repostOn'] != null
         ? new RepostOn.fromJson(json['repostOn'])
         : null;
+    thumbnailImageUrl = json['thumbnailImageUrl'];
   }
 
   Map<String, dynamic> toJson() {
@@ -100,6 +103,7 @@ class Object {
     if (this.repostOn != null) {
       data['repostOn'] = this.repostOn!.toJson();
     }
+    data['thumbnailImageUrl'] = this.thumbnailImageUrl;
     return data;
   }
 }
@@ -121,24 +125,27 @@ class RepostOn {
   int? commentCount;
   int? repostCount;
   Null? repostOn;
+  String? thumbnailImageUrl;
 
-  RepostOn(
-      {this.postUid,
-      this.createdAt,
-      this.userUid,
-      this.postUserName,
-      this.userProfilePic,
-      this.description,
-      this.postData,
-      this.postDataType,
-      this.postType,
-      this.isLiked,
-      this.isSaved,
-      this.isFollowing,
-      this.likedCount,
-      this.commentCount,
-      this.repostCount,
-      this.repostOn});
+  RepostOn({
+    this.postUid,
+    this.createdAt,
+    this.userUid,
+    this.postUserName,
+    this.userProfilePic,
+    this.description,
+    this.postData,
+    this.postDataType,
+    this.postType,
+    this.isLiked,
+    this.isSaved,
+    this.isFollowing,
+    this.likedCount,
+    this.commentCount,
+    this.repostCount,
+    this.repostOn,
+    this.thumbnailImageUrl,
+  });
 
   RepostOn.fromJson(Map<String, dynamic> json) {
     postUid = json['postUid'];
@@ -157,6 +164,7 @@ class RepostOn {
     commentCount = json['commentCount'];
     repostCount = json['repostCount'];
     repostOn = json['repostOn'];
+    thumbnailImageUrl = json['thumbnailImageUrl'];
   }
 
   Map<String, dynamic> toJson() {
@@ -177,6 +185,7 @@ class RepostOn {
     data['commentCount'] = this.commentCount;
     data['repostCount'] = this.repostCount;
     data['repostOn'] = this.repostOn;
+    data['thumbnailImageUrl'] = this.thumbnailImageUrl;
     return data;
   }
 }
