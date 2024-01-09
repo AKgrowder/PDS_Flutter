@@ -50,9 +50,12 @@ class _InboxScreenState extends State<InboxScreen> {
     await BlocProvider.of<PersonalChatListCubit>(context)
         .seetinonExpried(context);
 
-    BlocProvider.of<PersonalChatListCubit>(context).PersonalChatList(context);
-    BlocProvider.of<PersonalChatListCubit>(context)
+    await BlocProvider.of<PersonalChatListCubit>(context)
+        .PersonalChatList(context);
+    await BlocProvider.of<PersonalChatListCubit>(context)
         .getAllNoticationsCountAPI(context);
+    await BlocProvider.of<PersonalChatListCubit>(context)
+        .ChatOnline(context, true);
 
     final SharedPreferences prefs = await SharedPreferences.getInstance();
 
