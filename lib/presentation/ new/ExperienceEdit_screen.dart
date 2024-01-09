@@ -197,13 +197,12 @@ class _ExperienceEditScreenState extends State<ExperienceEditScreen> {
                                                         ?.object?[index]
                                                         .companyName,
                                                 edit: true,
-                                                endDate:
-                                                    DateFormat('dd-MM-yyyy')
-                                                                .format(DateTime
-                                                                    .now()) ==
-                                                            formattedDateEnd
-                                                        ? "Present"
-                                                        : formattedDateEnd,
+                                                endDate: addWorkExperienceModel
+                                                            ?.object?[index]
+                                                            .endDate ==
+                                                        "Present"
+                                                    ? "Present"
+                                                    : formattedDateEnd,
                                                 expertise:
                                                     addWorkExperienceModel
                                                         ?.object?[index]

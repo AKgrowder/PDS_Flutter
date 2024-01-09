@@ -180,7 +180,7 @@ class ImageConstant {
   static String vector2 = "assets/images/Vector (1).png";
   static String savePin = "assets/images/savePin.png";
   static String placeholder4 = "assets/images/plachodelr4.png";
-  static String Star = "assets/images/Star 7.png";
+  static String Star = "assets/images/Star 7 (1).png";
   static String beg = "assets/images/bag.png";
   static String huge = 'assets/images/Huge-icon.png';
   static String rendom = 'assets/images/unsplash_xX3T2C8ff1o.png';
