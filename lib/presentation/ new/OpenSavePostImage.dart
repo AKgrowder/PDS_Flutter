@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -473,7 +474,7 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
                                                                       ?.postData
                                                                       ?.isNotEmpty ==
                                                                   true)
-                                                              ? Container(
+                                                              ? /*  Container(
                                                                   height: 200,
                                                                   width: _width,
                                                                   child:
@@ -483,7 +484,46 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
                                                                         ?.postData?[
                                                                             0]
                                                                         .toString(),
-                                                                  ))
+                                                                  )) */
+                                                              Stack(
+                                                                  children: [
+                                                                    Container(
+                                                                      height:
+                                                                          400,
+                                                                      width:
+                                                                          _width,
+                                                                      color: Colors
+                                                                          .transparent,
+                                                                    ),
+                                                                    GestureDetector(
+                                                                      onTap:
+                                                                          () {
+                                                                        print(
+                                                                            "objectobjectobjectobject");
+                                                                        Navigator.push(
+                                                                            context,
+                                                                            MaterialPageRoute(
+                                                                          builder:
+                                                                              (context) {
+                                                                            return DocumentViewScreen1(
+                                                                              path: OpenSaveModelData?.object?.postData?[0].toString(),
+                                                                            );
+                                                                          },
+                                                                        ));
+                                                                      },
+                                                                      child:
+                                                                          Container(
+                                                                        child:
+                                                                            CachedNetworkImage(
+                                                                          imageUrl:
+                                                                              OpenSaveModelData?.object?.thumbnailImageUrl ?? "",
+                                                                          fit: BoxFit
+                                                                              .cover,
+                                                                        ),
+                                                                      ),
+                                                                    )
+                                                                  ],
+                                                                )
                                                               : SizedBox()
                                                           : SizedBox())
                                               : Column(
@@ -968,13 +1008,52 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
                                                                     ?.repostOn
                                                                     ?.postDataType ==
                                                                 "ATTACHMENT"
-                                                            ? Container(
+                                                            ? /* Container(
                                                                 height: 400,
                                                                 width: _width,
                                                                 child:
                                                                     DocumentViewScreen1(
                                                                   path: "",
-                                                                ))
+                                                                )) */
+                                                            Stack(
+                                                                children: [
+                                                                  Container(
+                                                                    height: 400,
+                                                                    width:
+                                                                        _width,
+                                                                    color: Colors
+                                                                        .transparent,
+                                                                  ),
+                                                                  GestureDetector(
+                                                                    onTap: () {
+                                                                      print(
+                                                                          "objectobjectobjectobject");
+                                                                      Navigator.push(
+                                                                          context,
+                                                                          MaterialPageRoute(
+                                                                        builder:
+                                                                            (context) {
+                                                                          return DocumentViewScreen1(
+                                                                            path:
+                                                                                OpenSaveModelData?.object?.repostOn?.postData?[0].toString(),
+                                                                          );
+                                                                        },
+                                                                      ));
+                                                                    },
+                                                                    child:
+                                                                        Container(
+                                                                      child:
+                                                                          CachedNetworkImage(
+                                                                        imageUrl:
+                                                                            OpenSaveModelData?.object?.repostOn?.thumbnailImageUrl ??
+                                                                                "",
+                                                                        fit: BoxFit
+                                                                            .cover,
+                                                                      ),
+                                                                    ),
+                                                                  )
+                                                                ],
+                                                              )
                                                             : SizedBox())
                                                 : Column(
                                                     children: [

@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -345,7 +346,8 @@ class _HashTagViewScreenState extends State<HashTagViewScreen> {
                                                 margin:
                                                     EdgeInsets.only(bottom: 5),
                                                 decoration: BoxDecoration(
-                                                    color: ColorConstant.primary_color,
+                                                    color: ColorConstant
+                                                        .primary_color,
                                                     borderRadius:
                                                         BorderRadius.circular(
                                                             4)),
@@ -408,10 +410,14 @@ class _HashTagViewScreenState extends State<HashTagViewScreen> {
                                             alignment: Alignment.topLeft,
                                             child: LinkifyText(
                                               "${hashTagViewData?.object?.posts?[index].description}",
-                                                linkStyle:
-                                                                              TextStyle(color: Colors.blue,fontFamily: 'outfit',),
-                                                                          textStyle:
-                                                                              TextStyle(color: Colors.black,fontFamily: 'outfit',),
+                                              linkStyle: TextStyle(
+                                                color: Colors.blue,
+                                                fontFamily: 'outfit',
+                                              ),
+                                              textStyle: TextStyle(
+                                                color: Colors.black,
+                                                fontFamily: 'outfit',
+                                              ),
                                               linkTypes: [
                                                 LinkType.url,
                                                 LinkType.userTag,
@@ -618,19 +624,47 @@ class _HashTagViewScreenState extends State<HashTagViewScreen> {
                                                                   .postData
                                                                   ?.isNotEmpty ==
                                                               true)
-                                                          ? Container(
-                                                              height: 230,
-                                                              width: _width,
-                                                              child:
-                                                                  DocumentViewScreen1(
-                                                                path: hashTagViewData
-                                                                    ?.object
-                                                                    ?.posts?[
-                                                                        index]
-                                                                    .postData?[
-                                                                        0]
-                                                                    .toString(),
-                                                              ))
+                                                          ? Stack(
+                                                              children: [
+                                                                Container(
+                                                                  width: _width,
+                                                                  color: Colors
+                                                                       .transparent,
+                                                                  /* child: DocumentViewScreen1(
+                                                                                            path: AllGuestPostRoomData?.object?.content?[index].postData?[0].toString(),
+                                                                                          ) */
+                                                                ),
+                                                                GestureDetector(
+                                                                  onTap: () {
+                                                                    print(
+                                                                        "objectobjectobjectobject");
+                                                                    Navigator.push(
+                                                                        context,
+                                                                        MaterialPageRoute(
+                                                                      builder:
+                                                                          (context) {
+                                                                        return DocumentViewScreen1(
+                                                                            path:
+                                                                                hashTagViewData?.object?.posts?[index].postData?[0].toString());
+                                                                      },
+                                                                    ));
+                                                                  },
+                                                                  child:
+                                                                      Container(
+                                                                    child:
+                                                                        CachedNetworkImage(
+                                                                      imageUrl: hashTagViewData
+                                                                              ?.object
+                                                                              ?.posts?[index]
+                                                                              .thumbnailImageUrl ??
+                                                                          "",
+                                                                      fit: BoxFit
+                                                                          .cover,
+                                                                    ),
+                                                                  ),
+                                                                )
+                                                              ],
+                                                            )
                                                           : SizedBox()
                                                       : SizedBox())
                                               : Column(
@@ -1150,7 +1184,7 @@ class _HashTagViewScreenState extends State<HashTagViewScreen> {
                   child: Container(
                     decoration: BoxDecoration(
                         color: indexx == index
-                            ?ColorConstant.primary_color
+                            ? ColorConstant.primary_color
                             : Colors.transparent,
                         borderRadius: BorderRadius.circular(5)),
                     width: 130,
@@ -1298,6 +1332,7 @@ class _HashTagViewScreenState extends State<HashTagViewScreen> {
                             hashTagViewData: hashTagViewData,
                             postUid:
                                 hashTagViewData?.object?.posts?[index].postUid,
+                                thumbNailURL:hashTagViewData?.object?.posts?[index].thumbnailImageUrl ,
                           );
                         },
                       ));

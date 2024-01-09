@@ -47,20 +47,22 @@ class RePostScreen extends StatefulWidget {
   GetGuestAllPostModel? AllGuestPostRoomData;
   HashtagViewDataModel? hashTagViewData;
   OpenSaveImagepostModel? OpenSaveModelData;
-  RePostScreen({
-    Key? key,
-    this.username,
-    this.postData,
-    this.date,
-    this.desc,
-    this.userProfile,
-    this.postDataType,
-    this.index,
-    this.AllGuestPostRoomData,
-    this.postUid,
-    this.hashTagViewData,
-    this.OpenSaveModelData,
-  }) : super(key: key);
+  String? thumbNailURL;
+  RePostScreen(
+      {Key? key,
+      this.username,
+      this.postData,
+      this.date,
+      this.desc,
+      this.userProfile,
+      this.postDataType,
+      this.index,
+      this.AllGuestPostRoomData,
+      this.postUid,
+      this.hashTagViewData,
+      this.OpenSaveModelData,
+      this.thumbNailURL})
+      : super(key: key);
 
   @override
   State<RePostScreen> createState() => _RePostScreenState();
@@ -265,7 +267,7 @@ class _RePostScreenState extends State<RePostScreen> {
     }, builder: (context, state) {
       return SafeArea(
           child: Scaffold(
-            backgroundColor: Colors.white,
+        backgroundColor: Colors.white,
         body: Container(
           color: Colors.white,
           child: Stack(
@@ -403,7 +405,8 @@ class _RePostScreenState extends State<RePostScreen> {
                                       Padding(
                                         padding: EdgeInsets.only(right: 7),
                                         child: Image.asset(
-                                          ImageConstant.downarrow,color: ColorConstant.primary_color,
+                                          ImageConstant.downarrow,
+                                          color: ColorConstant.primary_color,
                                           height: 10,
                                           width: 10,
                                         ),
@@ -726,7 +729,8 @@ class _RePostScreenState extends State<RePostScreen> {
                                             activeSize: const Size(10.0, 10.0),
                                             spacing: const EdgeInsets.symmetric(
                                                 horizontal: 2),
-                                            activeColor: ColorConstant.primary_color,
+                                            activeColor:
+                                                ColorConstant.primary_color,
                                             color: Color(0xff6A6A6A),
                                           ),
                                         ),
@@ -868,11 +872,12 @@ class _RePostScreenState extends State<RePostScreen> {
                                           },
                                           child: widget.postDataType == 'VIDEO'
                                               ? Padding(
-                                                padding: const EdgeInsets.all(20),
-                                                child: VideoListItem(
-                                                    videoUrl: widget
-                                                        .postData?[0]),
-                                              )
+                                                  padding:
+                                                      const EdgeInsets.all(20),
+                                                  child: VideoListItem(
+                                                      videoUrl:
+                                                          widget.postData?[0]),
+                                                )
                                               : Container(
                                                   width: _width,
                                                   child: widget.postDataType ==
@@ -986,7 +991,7 @@ class _RePostScreenState extends State<RePostScreen> {
                                                               //         : SizedBox()
                                                               : widget.postDataType ==
                                                                       "ATTACHMENT"
-                                                                  ? Container(
+                                                                  ? /*  Container(
                                                                       height:
                                                                           400,
                                                                       width:
@@ -995,7 +1000,41 @@ class _RePostScreenState extends State<RePostScreen> {
                                                                           DocumentViewScreen1(
                                                                         path: widget
                                                                             .postData?[0],
-                                                                      ))
+                                                                      )) */
+                                                                  Stack(
+                                                                      children: [
+                                                                        Container(
+                                                                          height:
+                                                                              400,
+                                                                          width:
+                                                                              _width,
+                                                                          color:
+                                                                              Colors.transparent,
+                                                                        ),
+                                                                        GestureDetector(
+                                                                          onTap:
+                                                                              () {
+                                                                            print("objectobjectobjectobject");
+                                                                            Navigator.push(context,
+                                                                                MaterialPageRoute(
+                                                                              builder: (context) {
+                                                                                return DocumentViewScreen1(
+                                                                                  path: widget.postData?[0].toString(),
+                                                                                );
+                                                                              },
+                                                                            ));
+                                                                          },
+                                                                          child:
+                                                                              Container(
+                                                                            child:
+                                                                                CachedNetworkImage(
+                                                                              imageUrl: widget.thumbNailURL ?? "",
+                                                                              fit: BoxFit.cover,
+                                                                            ),
+                                                                          ),
+                                                                        )
+                                                                      ],
+                                                                    )
                                                                   : SizedBox()
                                                           : Column(
                                                               children: [
@@ -1095,210 +1134,217 @@ class _RePostScreenState extends State<RePostScreen> {
                   ),
                 ),
               ),
-               if(widget.postDataType != 'VIDEO')
-              Align(
-                alignment: Alignment.bottomCenter,
-                child: Column(
-                  children: [
-                    Spacer(),
-                    Padding(
-                      padding: EdgeInsets.only(left: 16, right: 0),
-                      child: Container(
-                        color: Colors.white,
-                        child: Row(
-                          children: [
-                            SizedBox(
-                              // margin: EdgeInsets.all(8),
-                              height: 90,
-                              width: 90,
-                              child: Center(
-                                child: GestureDetector(
-                                  onTap: () async {
-                                    print("asdfdfgdfg");
-                                    _getImageFromCamera();
-                                  },
-                                  child: Container(
-                                    // margin: EdgeInsets.all(8),
-                                    height: 80,
-                                    width: 80,
-                                    decoration: BoxDecoration(
-                                      // color: Color.fromARGB(255, 0, 0, 0),
-                                      border: Border.all(
-                                          color: Color.fromARGB(
-                                              255, 174, 174, 174),
-                                          width: 2),
-                                      borderRadius: BorderRadius.circular(20),
-                                    ),
-                                    child: Center(
-                                      child: Image.asset(
-                                        ImageConstant.Cameraicon,color: ColorConstant.primary_color,
-                                        height: 30,
+              if (widget.postDataType != 'VIDEO')
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Column(
+                    children: [
+                      Spacer(),
+                      Padding(
+                        padding: EdgeInsets.only(left: 16, right: 0),
+                        child: Container(
+                          color: Colors.white,
+                          child: Row(
+                            children: [
+                              SizedBox(
+                                // margin: EdgeInsets.all(8),
+                                height: 90,
+                                width: 90,
+                                child: Center(
+                                  child: GestureDetector(
+                                    onTap: () async {
+                                      print("asdfdfgdfg");
+                                      _getImageFromCamera();
+                                    },
+                                    child: Container(
+                                      // margin: EdgeInsets.all(8),
+                                      height: 80,
+                                      width: 80,
+                                      decoration: BoxDecoration(
+                                        // color: Color.fromARGB(255, 0, 0, 0),
+                                        border: Border.all(
+                                            color: Color.fromARGB(
+                                                255, 174, 174, 174),
+                                            width: 2),
+                                        borderRadius: BorderRadius.circular(20),
+                                      ),
+                                      child: Center(
+                                        child: Image.asset(
+                                          ImageConstant.Cameraicon,
+                                          color: ColorConstant.primary_color,
+                                          height: 30,
+                                        ),
                                       ),
                                     ),
                                   ),
                                 ),
                               ),
-                            ),
-                            
-                            Container(
-                              height: 90,
-                              width: _width - 106,
-                              // color: Colors.green,
-                              child: _loading
-                                  ? Center(
-                                      child: Container(
-                                        margin: EdgeInsets.only(bottom: 100),
-                                        child: ClipRRect(
-                                          borderRadius:
-                                              BorderRadius.circular(20),
-                                          child: Image.asset(
-                                              ImageConstant.loader,
-                                              fit: BoxFit.cover,
-                                              height: 100,
-                                              width: 100),
+                              Container(
+                                height: 90,
+                                width: _width - 106,
+                                // color: Colors.green,
+                                child: _loading
+                                    ? Center(
+                                        child: Container(
+                                          margin: EdgeInsets.only(bottom: 100),
+                                          child: ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(20),
+                                            child: Image.asset(
+                                                ImageConstant.loader,
+                                                fit: BoxFit.cover,
+                                                height: 100,
+                                                width: 100),
+                                          ),
                                         ),
-                                      ),
-                                    )
-                                  : LayoutBuilder(
-                                      builder: (context, constraints) {
-                                        double gridWidth =
-                                            (constraints.maxWidth - 20) / 3;
-                                        double gridHeight = gridWidth + 33;
-                                        double ratio = gridWidth / gridHeight;
-                                        return Padding(
-                                          padding: const EdgeInsets.only(
-                                              top: 5, bottom: 5),
-                                          child: Container(
-                                            // padding: EdgeInsets.all(5),
-                                            child: SizedBox(
-                                              height: 100,
-                                              child: GridView.count(
-                                                crossAxisCount: 1,
-                                                mainAxisSpacing: 5.0,
-                                                crossAxisSpacing: 10.0,
-                                                scrollDirection:
-                                                    Axis.horizontal,
-                                                children: <Widget>[
-                                                  ...page!.items.map(
-                                                    (medium) => GestureDetector(
-                                                      onTap: () async {
-                                                        medium1 = medium;
-                                                        selectImage = true;
+                                      )
+                                    : LayoutBuilder(
+                                        builder: (context, constraints) {
+                                          double gridWidth =
+                                              (constraints.maxWidth - 20) / 3;
+                                          double gridHeight = gridWidth + 33;
+                                          double ratio = gridWidth / gridHeight;
+                                          return Padding(
+                                            padding: const EdgeInsets.only(
+                                                top: 5, bottom: 5),
+                                            child: Container(
+                                              // padding: EdgeInsets.all(5),
+                                              child: SizedBox(
+                                                height: 100,
+                                                child: GridView.count(
+                                                  crossAxisCount: 1,
+                                                  mainAxisSpacing: 5.0,
+                                                  crossAxisSpacing: 10.0,
+                                                  scrollDirection:
+                                                      Axis.horizontal,
+                                                  children: <Widget>[
+                                                    ...page!.items.map(
+                                                      (medium) =>
+                                                          GestureDetector(
+                                                        onTap: () async {
+                                                          medium1 = medium;
+                                                          selectImage = true;
 
-                                                        file =
-                                                            await PhotoGallery
-                                                                .getFile(
-                                                          mediumId: medium1!.id,
-                                                          mediumType:
-                                                              MediumType.image,
-                                                        );
-                                                        file12 = null;
-                                                        pickedImage.isEmpty;
-                                                        setState(() {});
-                                                        print(
-                                                            "medium1!.id--.${medium1?.filename}");
-                                                        BlocProvider.of<
-                                                                    RePostCubit>(
-                                                                context)
-                                                            .UplodeImageAPI(
-                                                                context,
-                                                                medium1?.filename ??
-                                                                    '',
-                                                                file?.path ??
-                                                                    '');
-                                                      },
-                                                      child: Container(
-                                                        height: 100,
-                                                        width: 100,
-                                                        decoration: BoxDecoration(
-                                                            color: Colors
-                                                                .grey[300],
+                                                          file =
+                                                              await PhotoGallery
+                                                                  .getFile(
+                                                            mediumId:
+                                                                medium1!.id,
+                                                            mediumType:
+                                                                MediumType
+                                                                    .image,
+                                                          );
+                                                          file12 = null;
+                                                          pickedImage.isEmpty;
+                                                          setState(() {});
+                                                          print(
+                                                              "medium1!.id--.${medium1?.filename}");
+                                                          BlocProvider.of<
+                                                                      RePostCubit>(
+                                                                  context)
+                                                              .UplodeImageAPI(
+                                                                  context,
+                                                                  medium1?.filename ??
+                                                                      '',
+                                                                  file?.path ??
+                                                                      '');
+                                                        },
+                                                        child: Container(
+                                                          height: 100,
+                                                          width: 100,
+                                                          decoration: BoxDecoration(
+                                                              color: Colors
+                                                                  .grey[300],
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          10)),
+                                                          child: ClipRRect(
                                                             borderRadius:
                                                                 BorderRadius
                                                                     .circular(
-                                                                        10)),
-                                                        child: ClipRRect(
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(10),
-                                                          child: FadeInImage(
-                                                            fit: BoxFit.cover,
-                                                            placeholder:
-                                                                MemoryImage(
-                                                                    kTransparentImage),
-                                                            image:
-                                                                ThumbnailProvider(
-                                                              mediumId:
-                                                                  medium.id,
-                                                              mediumType: medium
-                                                                  .mediumType,
-                                                              highQuality: true,
+                                                                        10),
+                                                            child: FadeInImage(
+                                                              fit: BoxFit.cover,
+                                                              placeholder:
+                                                                  MemoryImage(
+                                                                      kTransparentImage),
+                                                              image:
+                                                                  ThumbnailProvider(
+                                                                mediumId:
+                                                                    medium.id,
+                                                                mediumType: medium
+                                                                    .mediumType,
+                                                                highQuality:
+                                                                    true,
+                                                              ),
                                                             ),
                                                           ),
                                                         ),
                                                       ),
                                                     ),
-                                                  ),
-                                                ],
+                                                  ],
+                                                ),
                                               ),
                                             ),
-                                          ),
-                                        );
-                                      },
-                                    ),
-                            ),
-                          ],
+                                          );
+                                        },
+                                      ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                    if(widget.postDataType != 'VIDEO')
-                    Container(
-                      height: 30,
-                      color: Colors.white,
-                      child: Padding(
-                        padding: EdgeInsets.only(left: 20, right: 16),
-                        child: Row(
-                          children: [
-                            GestureDetector(
-                              onTap: () async {
-                                prepareTestPdf(0);
-                              },
-                              child: Image.asset(
-                                ImageConstant.aTTACHMENT,color: ColorConstant.primary_color,
-                                height: 20,
-                              ),
+                      if (widget.postDataType != 'VIDEO')
+                        Container(
+                          height: 30,
+                          color: Colors.white,
+                          child: Padding(
+                            padding: EdgeInsets.only(left: 20, right: 16),
+                            child: Row(
+                              children: [
+                                GestureDetector(
+                                  onTap: () async {
+                                    prepareTestPdf(0);
+                                  },
+                                  child: Image.asset(
+                                    ImageConstant.aTTACHMENT,
+                                    color: ColorConstant.primary_color,
+                                    height: 20,
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 30,
+                                ),
+                                GestureDetector(
+                                  onTap: () {
+                                    _getImageFromSource();
+                                  },
+                                  child: Image.asset(
+                                    ImageConstant.gallery,
+                                    color: ColorConstant.primary_color,
+                                    height: 20,
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 30,
+                                ),
+                                GestureDetector(
+                                  onTap: () {
+                                    getVideo();
+                                  },
+                                  child: Icon(
+                                    Icons.play_circle_outline_sharp,
+                                    color: ColorConstant.primary_color,
+                                  ),
+                                )
+                              ],
                             ),
-                            SizedBox(
-                              width: 30,
-                            ),
-                            GestureDetector(
-                              onTap: () {
-                                _getImageFromSource();
-                              },
-                              child: Image.asset(
-                                ImageConstant.gallery,color: ColorConstant.primary_color,
-                                height: 20,
-                              ),
-                            ),
-                            SizedBox(
-                              width: 30,
-                            ),
-                            GestureDetector(
-                              onTap: () {
-                                getVideo();
-                              },
-                              child: Icon(
-                                Icons.play_circle_outline_sharp,
-                                color: ColorConstant.primary_color,
-                              ),
-                            )
-                          ],
+                          ),
                         ),
-                      ),
-                    ),
-                  ],
-                ),
-              )
+                    ],
+                  ),
+                )
             ],
           ),
         ),
@@ -1745,7 +1791,7 @@ class _RePostScreenState extends State<RePostScreen> {
                 child: Container(
                   decoration: BoxDecoration(
                       color: indexx == index
-                          ?ColorConstant.primary_color
+                          ? ColorConstant.primary_color
                           : Colors.transparent,
                       borderRadius: BorderRadius.circular(5)),
                   width: 130,
@@ -1931,9 +1977,7 @@ class _RePostScreenState extends State<RePostScreen> {
               };
               BlocProvider.of<RePostCubit>(context)
                   .RePostAPI(context, param, widget.postUid, "");
-            }
-            
-            else if (_controller?.value.isPlaying == true) {
+            } else if (_controller?.value.isPlaying == true) {
               Map<String, dynamic> param = {
                 "postData": imageDataPost?.object?.data,
                 "postDataType": "VIDEO",
