@@ -3,7 +3,6 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http/http.dart';
 import 'package:http/http.dart' as http;
 import 'package:pds/core/utils/color_constant.dart';
@@ -31,7 +30,7 @@ class ApiServices {
           // "https://0b8e-2405-201-200b-a0cf-4523-3bc3-2996-dc22.ngrok.io/";
           // "https://uatapi.packagingdepot.store/";
           // "https://api.packagingdepot.store/";
-          "http://192.168.29.150:8081/";
+          "http://192.168.29.100:8081/";
     }
 
     print(baseURL);
@@ -68,7 +67,7 @@ class ApiServices {
           // "https://0b8e-2405-201-200b-a0cf-4523-3bc3-2996-dc22.ngrok.io/";
           // "https://uatapi.packagingdepot.store/";
           // "https://api.packagingdepot.store/";
-          "http://192.168.29.150:8081/";
+          "http://192.168.29.100:8081/";
     }
     print("API => ******** ${baseURL + APIurl}");
 
