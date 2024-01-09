@@ -599,7 +599,7 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
                                               },
                                               child: Icon(
                                                 Icons.delete,
-                                                color: Colors.red,
+                                                color: ColorConstant.primary_color,
                                               ),
                                             ),
                                             SizedBox(
