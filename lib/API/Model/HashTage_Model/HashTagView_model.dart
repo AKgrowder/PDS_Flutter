@@ -64,6 +64,7 @@ class Posts {
   String? isFollowing;
   int? likedCount;
   int? commentCount;
+  String? thumbnailImageUrl;
 
   Posts(
       {this.postUid,
@@ -79,7 +80,7 @@ class Posts {
       this.isSaved,
       this.isFollowing,
       this.likedCount,
-      this.commentCount});
+      this.commentCount,this.thumbnailImageUrl,});
 
   Posts.fromJson(Map<String, dynamic> json) {
     postUid = json['postUid'];
@@ -96,6 +97,7 @@ class Posts {
     isFollowing = json['isFollowing'];
     likedCount = json['likedCount'];
     commentCount = json['commentCount'];
+    thumbnailImageUrl = json['thumbnailImageUrl'];
   }
 
   Map<String, dynamic> toJson() {
@@ -114,6 +116,7 @@ class Posts {
     data['isFollowing'] = this.isFollowing;
     data['likedCount'] = this.likedCount;
     data['commentCount'] = this.commentCount;
+    data['thumbnailImageUrl'] = this.thumbnailImageUrl;
     return data;
   }
 }

@@ -3,6 +3,7 @@
 import 'dart:io';
 import 'dart:math';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -1540,7 +1541,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                         .w600,
                                                               ),
                                                             ),
-                                                            subtitle: Text(
+                                                            subtitle: /* Text(
                                                               '${NewProfileData?.object?.aboutMe}',
                                                               style: TextStyle(
                                                                   color: Colors
@@ -1548,7 +1549,141 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                   fontSize: 14,
                                                                   fontFamily:
                                                                       "outfit"),
-                                                            ),
+                                                            ), */
+
+                                                               LinkifyText(
+                                                                  "${NewProfileData?.object?.aboutMe}",
+                                                                  linkStyle:
+                                                                      TextStyle(
+                                                                    color: Colors
+                                                                        .blue,
+                                                                    fontFamily:
+                                                                        'outfit',
+                                                                  ),
+                                                                  textStyle:
+                                                                      TextStyle(
+                                                                    color: Colors
+                                                                        .black,
+                                                                    fontFamily:
+                                                                        'outfit',
+                                                                  ),
+                                                                  linkTypes: [
+                                                                    LinkType
+                                                                        .url,
+                                                                    LinkType
+                                                                        .userTag,
+                                                                    LinkType
+                                                                        .hashTag,
+                                                                    // LinkType
+                                                                    //     .email
+                                                                  ],
+                                                                  onTap:
+                                                                      (link) async {
+                                                                    /// do stuff with `link` like
+                                                                    /// if(link.type == Link.url) launchUrl(link.value);
+
+                                                                    var SelectedTest = link
+                                                                        .value
+                                                                        .toString();
+                                                                    var Link = SelectedTest
+                                                                        .startsWith(
+                                                                            'https');
+                                                                    var Link1 =
+                                                                        SelectedTest.startsWith(
+                                                                            'http');
+                                                                    var Link2 =
+                                                                        SelectedTest.startsWith(
+                                                                            'www');
+                                                                    var Link3 =
+                                                                        SelectedTest.startsWith(
+                                                                            'WWW');
+                                                                    var Link4 =
+                                                                        SelectedTest.startsWith(
+                                                                            'HTTPS');
+                                                                    var Link5 =
+                                                                        SelectedTest.startsWith(
+                                                                            'HTTP');
+                                                                    var Link6 =
+                                                                        SelectedTest.startsWith(
+                                                                            'https://pdslink.page.link/');
+                                                                    print(SelectedTest
+                                                                        .toString());
+
+                                                                    if (User_ID ==
+                                                                        null) {
+                                                                      Navigator.of(
+                                                                              context)
+                                                                          .push(
+                                                                              MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
+                                                                    } else {
+                                                                      if (Link == true ||
+                                                                          Link1 ==
+                                                                              true ||
+                                                                          Link2 ==
+                                                                              true ||
+                                                                          Link3 ==
+                                                                              true ||
+                                                                          Link4 ==
+                                                                              true ||
+                                                                          Link5 ==
+                                                                              true ||
+                                                                          Link6 ==
+                                                                              true) {
+                                                                        if (Link2 ==
+                                                                                true ||
+                                                                            Link3 ==
+                                                                                true) {
+                                                                          launchUrl(
+                                                                              Uri.parse("https://${link.value.toString()}"));
+                                                                          print(
+                                                                              "qqqqqqqqhttps://${link.value}");
+                                                                        } else {
+                                                                          if (Link6 ==
+                                                                              true) {
+                                                                            print("yes i am inList =   room");
+                                                                            Navigator.push(context,
+                                                                                MaterialPageRoute(
+                                                                              builder: (context) {
+                                                                                return NewBottomBar(
+                                                                                  buttomIndex: 1,
+                                                                                );
+                                                                              },
+                                                                            ));
+                                                                          } else {
+                                                                            launchUrl(Uri.parse(link.value.toString()));
+                                                                            print("link.valuelink.value -- ${link.value}");
+                                                                          }
+                                                                        }
+                                                                      } else {
+                                                                        if (link
+                                                                            .value!
+                                                                            .startsWith(
+                                                                                '#')) {
+                                                                          Navigator.push(
+                                                                              context,
+                                                                              MaterialPageRoute(
+                                                                                builder: (context) => HashTagViewScreen(title: "${link.value}"),
+                                                                              ));
+                                                                        } else if (link
+                                                                            .value!
+                                                                            .startsWith('@')) {
+                                                                          var name;
+                                                                          var tagName;
+                                                                          name =
+                                                                              SelectedTest;
+                                                                          tagName = name.replaceAll(
+                                                                              "@",
+                                                                              "");
+                                                                          await BlocProvider.of<NewProfileSCubit>(context).UserTagAPI(
+                                                                              context,
+                                                                              tagName);
+                                                                        } else {
+                                                                          launchUrl(
+                                                                              Uri.parse("https://${link.value.toString()}"));
+                                                                        }
+                                                                      }
+                                                                    }
+                                                                  },)
                                                           ),
                                                         ],
                                                       ))
@@ -2182,7 +2317,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                               index]
                                                                           .postDataType ==
                                                                       "ATTACHMENT"
-                                                                  ? Container(
+                                                                  ? /*  Container(
                                                                       margin: EdgeInsets
                                                                           .all(
                                                                               0.0),
@@ -2196,14 +2331,65 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                             ?.object?[index]
                                                                             .postData
                                                                             ?.first,
-                                                                      ))
+                                                                      )) */
+                                                                  Stack(
+                                                                      children: [
+                                                                        Container(
+                                                                          height:
+                                                                              400,
+                                                                          width:
+                                                                              _width,
+                                                                          decoration:
+                                                                              BoxDecoration(
+                                                                            color:
+                                                                                Colors.transparent,
+                                                                            border:
+                                                                                Border.all(color: Colors.grey),
+                                                                            borderRadius:
+                                                                                BorderRadius.circular(20),
+                                                                          ),
+                                                                        ),
+                                                                        Padding(
+                                                                          padding:
+                                                                              const EdgeInsets.all(8.0),
+                                                                          child:
+                                                                              GestureDetector(
+                                                                            onTap:
+                                                                                () {
+                                                                              print("objectobjectobjectobject");
+                                                                              Navigator.push(context, MaterialPageRoute(
+                                                                                builder: (context) {
+                                                                                  return DocumentViewScreen1(
+                                                                                    path: GetAllPostData?.object?[index].postData?.first,
+                                                                                  );
+                                                                                },
+                                                                              ));
+                                                                            },
+                                                                            child:
+                                                                                Container(
+                                                                              decoration: BoxDecoration(
+                                                                                borderRadius: BorderRadius.circular(20),
+                                                                              ),
+                                                                              child: CachedNetworkImage(
+                                                                                imageUrl: GetAllPostData?.object?[index].thumbnailImageUrl ?? "",
+                                                                                fit: BoxFit.cover,
+                                                                              ),
+                                                                            ),
+                                                                          ),
+                                                                        )
+                                                                      ],
+                                                                    )
                                                                   : GetAllPostData
-                                                                              ?.object?[index]
+                                                                              ?.object?[
+                                                                                  index]
                                                                               .postDataType ==
                                                                           null
                                                                       ? Container(
-                                                                          margin: EdgeInsets.all(0.0),
-                                                                          decoration: BoxDecoration(border: Border.all(color: Color.fromARGB(255, 0, 0, 0)), borderRadius: BorderRadius.circular(20)),
+                                                                          margin: EdgeInsets.all(
+                                                                              0.0),
+                                                                          decoration: BoxDecoration(
+                                                                              border: Border.all(color: Color.fromARGB(255, 0, 0, 0)),
+                                                                              borderRadius: BorderRadius.circular(20)),
                                                                           child: Padding(
                                                                             padding: const EdgeInsets.only(
                                                                                 top: 15,
@@ -2773,7 +2959,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                             ),
                                                           ),
                                                         )))),
-                                            NavagtionPassing()
+                                            NavagtionPassing(_width)
                                           ],
                                         ),
                                       ),
@@ -2797,7 +2983,7 @@ class _ProfileScreenState extends State<ProfileScreen>
     prefs.setInt(PreferencesKey.tabSelction, value);
   }
 
-  Widget NavagtionPassing() {
+  Widget NavagtionPassing(double _width) {
     if (value1 == 0) {
       return Expanded(
           child: Padding(
@@ -2864,7 +3050,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                     '')
                             : (GetSavePostData?.object?[index].postDataType ==
                                     "ATTACHMENT")
-                                ? Container(
+                                ? /* Container(
                                     margin: EdgeInsets.all(0.0),
                                     decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(
@@ -2873,7 +3059,53 @@ class _ProfileScreenState extends State<ProfileScreen>
                                     child: DocumentViewScreen1(
                                       path: GetAllPostData
                                           ?.object?[index].postData?[0],
-                                    ))
+                                    )) */
+                                Stack(
+                                    children: [
+                                      Container(
+                                        height: 400,
+                                        width: _width,
+                                        decoration: BoxDecoration(
+                                          color: Colors.transparent,
+                                          border:
+                                              Border.all(color: Colors.grey),
+                                          borderRadius:
+                                              BorderRadius.circular(20),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.all(8),
+                                        child: GestureDetector(
+                                          onTap: () {
+                                            print("objectobjectobjectobject");
+                                            Navigator.push(context,
+                                                MaterialPageRoute(
+                                              builder: (context) {
+                                                return DocumentViewScreen1(
+                                                  path: GetSavePostData
+                                                      ?.object?[index]
+                                                      .postData?[0],
+                                                );
+                                              },
+                                            ));
+                                          },
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(20),
+                                            ),
+                                            child: CachedNetworkImage(
+                                              imageUrl: GetSavePostData
+                                                      ?.object?[index]
+                                                      .thumbnailImageUrl ??
+                                                  "",
+                                              fit: BoxFit.fill,
+                                            ),
+                                          ),
+                                        ),
+                                      )
+                                    ],
+                                  )
                                 : Container(
                                     margin: EdgeInsets.all(0.0),
                                     decoration: BoxDecoration(
@@ -3707,7 +3939,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                       ? */
                   /* DateFormat('dd-MM-yyyy').format(DateTime.now()) ==
                           formattedDateEnd */
-                          addWorkExperienceModel?.object?[index].endDate == "Present"
+                  addWorkExperienceModel?.object?[index].endDate == "Present"
                       ? Text(
                           '${formattedDateStart} to Present',
                           style: TextStyle(
