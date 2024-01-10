@@ -7,11 +7,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:stories_editor/src/domain/sevices/save_as_image.dart';
-import 'package:stories_editor/src/gallery_media_picker/gallery_media_picker.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stories_editor/src/domain/models/editable_items.dart';
 import 'package:stories_editor/src/domain/models/painting_model.dart';
 import 'package:stories_editor/src/domain/providers/notifiers/control_provider.dart';
@@ -20,6 +18,8 @@ import 'package:stories_editor/src/domain/providers/notifiers/gradient_notifier.
 import 'package:stories_editor/src/domain/providers/notifiers/painting_notifier.dart';
 import 'package:stories_editor/src/domain/providers/notifiers/scroll_notifier.dart';
 import 'package:stories_editor/src/domain/providers/notifiers/text_editing_notifier.dart';
+import 'package:stories_editor/src/domain/sevices/save_as_image.dart';
+import 'package:stories_editor/src/gallery_media_picker/gallery_media_picker.dart';
 import 'package:stories_editor/src/presentation/bar_tools/bottom_tools.dart';
 import 'package:stories_editor/src/presentation/bar_tools/top_tools.dart';
 import 'package:stories_editor/src/presentation/draggable_items/delete_item.dart';
@@ -109,6 +109,8 @@ class _MainViewState extends State<MainView> {
   // Initialize your trimmer instance
 
   /// delete position
+  ///
+  dynamic data;
   bool _isDeletePosition = false;
   bool _inAction = false;
   bool nodatainTextfiled = false;
@@ -586,6 +588,20 @@ class _MainViewState extends State<MainView> {
                   //     : const ScrollPhysics(),
 
                   pathList: (path) {
+                    setState(() {
+                      data = path;
+
+                      if (data == null || data.isEmpty) {
+                        print("this condsion is working");
+
+                        itemProvider.draggableWidget = [];
+                        controlNotifier.mediaPath = '';
+                      }
+                    });
+
+                    print("value Get Check222-${path}");
+                    print("path-$data");
+                    print("value GetCheck-${path}");
                     if (path.first.path
                             .toString()
                             .split('/')
@@ -611,6 +627,7 @@ class _MainViewState extends State<MainView> {
                       alignment: Alignment.bottomRight,
                       child: AnimatedOnTapButton(
                         onTap: () async {
+                          print("dataaaa-${data}");
                           print(
                               "check  controller  pathh -${controlNotifier.mediaPath}");
                           if (controlNotifier.mediaPath.endsWith('.mp4')) {
@@ -685,9 +702,9 @@ class _MainViewState extends State<MainView> {
                                 color: Colors.white,
                                 width: 1.2,
                               )),
-                          child: const Text(
-                            'Selected',
-                            style: TextStyle(
+                          child: Text(
+                            data == null || data.isEmpty ? 'Cancel' : 'Select',
+                            style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 15,
                                 fontWeight: FontWeight.w400),
