@@ -11,7 +11,7 @@ class Config {
   static const String registerApi = "user/api/signup";
   static const String otpApi = "auth/auth/verifyOTP";
   static const String SendMSG = "guest/api/addMessageInRoom";
-  static const String coomment = "guest/api/fetchInbox";
+  static const String coomment = "user/fetchInbox";
   static const String getUserDetails = "auth/auth/getMasterUserByUUID";
   static const String company = "user/api/addUserProfile";
   static const String FetchMyRoom = "user/api/fetchMyRoom";

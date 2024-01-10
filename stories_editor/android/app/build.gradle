@@ -27,14 +27,6 @@ apply plugin: 'kotlin-android'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
 android {
-    signingConfigs {
-        release {
-            storeFile file('/Users/techgrowder/Archit Kheni/PDS_Flutter/PDS_Flutter/pds.jks')
-            storePassword 'pds@123'
-            keyAlias 'key0'
-            keyPassword 'pds@123'
-        }
-    }
     namespace "com.pds.app"
     compileSdkVersion 33
     // flutter.compileSdkVersion
