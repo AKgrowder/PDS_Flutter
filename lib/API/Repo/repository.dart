@@ -350,7 +350,7 @@ class Repository {
   }
 
   commentApi(String Room_ID, String pageNumber, BuildContext context) async {
-    final response = await apiServices.getApiCall(
+    final response = await apiServices.getApiCallWithToken(
         "${Config.coomment}/${Room_ID}/${pageNumber}/${20}", context);
     print(response);
     var jsonString = json.decode(response.body);
