@@ -17,12 +17,10 @@ import 'package:pds/core/utils/image_constant.dart';
 import 'package:pds/core/utils/sharedPreferences.dart';
 import 'package:pds/presentation/%20new/newbottembar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 import '../../theme/theme_helper.dart';
 import '../policy_of_company/policy_screen.dart';
 import '../policy_of_company/privecy_policy.dart';
-import 'package:image/image.dart' as img;
-import 'package:path/path.dart' as path;
-import 'package:path_provider/path_provider.dart';
 
 class CreateForamScreen extends StatefulWidget {
   const CreateForamScreen({Key? key}) : super(key: key);
@@ -834,6 +832,7 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
             }); */
             BlocProvider.of<CreatFourmCubit>(context).chooseDocumentprofile(
                 dopcument.toString(), croppedFile.path, context);
+                
           } else {
             BlocProvider.of<CreatFourmCubit>(context).chooseDocumentprofile(
                 dopcument.toString(), file1.path!, context);

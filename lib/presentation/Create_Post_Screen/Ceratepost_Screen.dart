@@ -645,19 +645,55 @@ class _CreateNewPostState extends State<CreateNewPost> {
                                               )
                                             : Container()
                                         : file12?.path != null
-                                            ? Container(
+                                            ? Stack(
+                                                children: [
+                                                  Container(
+                                                    height: 400,
+                                                    width: _width,
+                                                    color: Colors.transparent,
+                                                  ),
+                                                  GestureDetector(
+                                                    onTap: () {
+                                                      print(
+                                                          "objectobjectobjectobject");
+                                                      Navigator.push(context,
+                                                          MaterialPageRoute(
+                                                        builder: (context) {
+                                                          return DocumentViewScreen1(
+                                                            path: imageDataPost
+                                                                ?.object!
+                                                                .data!
+                                                                .first
+                                                                .toString(),
+                                                          );
+                                                        },
+                                                      ));
+                                                    },
+                                                    child: Container(
+                                                      child: CachedNetworkImage(
+                                                        imageUrl: imageDataPost
+                                                                ?.object
+                                                                ?.thumbnailImageUrl ??
+                                                            "",
+                                                        fit: BoxFit.cover,
+                                                      ),
+                                                    ),
+                                                  )
+                                                ],
+                                              ) /* Container(
                                                 height: 400,
                                                 width: _width,
-                                                child: /* CachedNetworkImage(
+                                                child: CachedNetworkImage(
                                                   imageUrl:
                                                       '${imageDataPost?.object?.thumbnailImageUrl}',
                                                   fit: BoxFit.cover,
-                                                ),  */
-                                                    DocumentViewScreen1(
+                                                ),
+                                                /*  DocumentViewScreen1(
                                                   path: imageDataPost
                                                       ?.object!.data!.first
                                                       .toString(),
-                                                ))
+                                                ) */
+                                              ) */
                                             : pickedImage.isNotEmpty
                                                 ? _loading
                                                     ? Center(
