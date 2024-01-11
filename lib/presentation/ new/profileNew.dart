@@ -201,6 +201,7 @@ class _ProfileScreenState extends State<ProfileScreen>
 
   @override
   void initState() {
+  
     _tabController = TabController(length: tabData.length, vsync: this);
     getAllAPI_Data();
     getUserSavedData();
@@ -3378,7 +3379,7 @@ class _ProfileScreenState extends State<ProfileScreen>
           ),
         ),
         Container(
-          height: _height / 1.3,
+          height:User_ID == NewProfileData?.object?.userUid?_height / 1.3: _height/1.5,
           width: _width,
           //  color: Colors.amber,
           child: Padding(
@@ -3698,6 +3699,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                 SizedBox(
                   height: 10,
                 ),
+                if(User_ID == NewProfileData?.object?.userUid)
                 Text(
                   "Document",
                   overflow: TextOverflow.ellipsis,
@@ -3707,6 +3709,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                     fontWeight: FontWeight.w500,
                   ),
                 ),
+               if(User_ID == NewProfileData?.object?.userUid)
                 Row(
                   children: [
                     Container(
@@ -3866,11 +3869,16 @@ class _ProfileScreenState extends State<ProfileScreen>
           padding: EdgeInsets.only(top: 10),
           itemCount: addWorkExperienceModel?.object?.length,
           itemBuilder: (context, index) {
+            
+            print("StatDate-${ addWorkExperienceModel?.object?[index].startDate}");
+            print("endData-${ addWorkExperienceModel?.object?[index].endDate}");
+
             formattedDateStart = DateFormat('dd-MM-yyyy').format(
                 DateFormat('yyyy-MM-dd').parse(
                     addWorkExperienceModel?.object?[index].startDate ??
                         DateTime.now().toIso8601String()));
             if (addWorkExperienceModel?.object?[index].endDate != 'Present') {
+              print("this is the Data Get-${addWorkExperienceModel?.object?[index].endDate}");
               formattedDateEnd = DateFormat('dd-MM-yyyy').format(
                   DateFormat('yyyy-MM-dd').parse(
                       addWorkExperienceModel?.object?[index].endDate ??
@@ -4008,7 +4016,7 @@ class _ProfileScreenState extends State<ProfileScreen>
         ),
         Container(
           // color: Colors.amber,
-          height: _height / 1.9,
+          height:User_ID == NewProfileData?.object?.userUid? _height / 1.9:400, 
           width: _width,
           child: Padding(
             padding: const EdgeInsets.only(right: 16, left: 16),
@@ -4153,6 +4161,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                 SizedBox(
                   height: 10,
                 ),
+                if(User_ID == NewProfileData?.object?.userUid)
                 Text(
                   "Document",
                   overflow: TextOverflow.ellipsis,
@@ -4162,6 +4171,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                     fontWeight: FontWeight.w500,
                   ),
                 ),
+                if(User_ID == NewProfileData?.object?.userUid)
                 Row(
                   children: [
                     Expanded(
