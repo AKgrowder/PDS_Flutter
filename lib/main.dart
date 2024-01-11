@@ -1,13 +1,11 @@
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter_downloader/flutter_downloader.dart';
-import 'package:flutter_mentions/flutter_mentions.dart';
-import 'package:pds/API/Bloc/BlogComment_BLoc/BlogComment_cubit.dart';
-import 'package:pds/API/Bloc/RoomExists_bloc/RoomExists_cubit.dart';
-import 'package:pds/API/Bloc/SelectChat_bloc/SelectChat_cubit.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_downloader/flutter_downloader.dart';
+import 'package:flutter_mentions/flutter_mentions.dart';
+import 'package:pds/API/Bloc/BlogComment_BLoc/BlogComment_cubit.dart';
 import 'package:pds/API/Bloc/CreateRoom_Bloc/CreateRoom_cubit.dart';
 import 'package:pds/API/Bloc/CreateStory_Bloc/CreateStory_Cubit.dart';
 import 'package:pds/API/Bloc/Edit_room_bloc/edit_room_cubit.dart';
@@ -24,8 +22,10 @@ import 'package:pds/API/Bloc/Invitation_Bloc/Invitation_cubit.dart';
 import 'package:pds/API/Bloc/NewProfileScreen_Bloc/NewProfileScreen_cubit.dart';
 import 'package:pds/API/Bloc/OpenSaveImagepost_Bloc/OpenSaveImagepost_cubit.dart';
 import 'package:pds/API/Bloc/PersonalChatList_Bloc/PersonalChatList_cubit.dart';
-import 'package:pds/API/Bloc/RePost_Bloc/RePost_cubit.dart';
 import 'package:pds/API/Bloc/PublicRoom_Bloc/CreatPublicRoom_cubit.dart';
+import 'package:pds/API/Bloc/RePost_Bloc/RePost_cubit.dart';
+import 'package:pds/API/Bloc/RoomExists_bloc/RoomExists_cubit.dart';
+import 'package:pds/API/Bloc/SelectChat_bloc/SelectChat_cubit.dart';
 import 'package:pds/API/Bloc/SelectRoom_Bloc/SelectRoom_cubit.dart';
 import 'package:pds/API/Bloc/System_Config_Bloc/system_config_cubit.dart';
 import 'package:pds/API/Bloc/ViewDetails_Bloc/ViewDetails_cubit.dart';
@@ -99,6 +99,11 @@ void main() async {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent,
+      statusBarBrightness: Brightness.light,
+      statusBarIconBrightness: Brightness.dark,
+    ));
     return MultiBlocProvider(
       providers: [
         BlocProvider<SystemConfigCubit>(
