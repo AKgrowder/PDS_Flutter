@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
@@ -1082,6 +1081,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
 
   @override
   Widget build(BuildContext context) {
+    
     var _height = MediaQuery.of(context).size.height;
     var _width = MediaQuery.of(context).size.width;
 
