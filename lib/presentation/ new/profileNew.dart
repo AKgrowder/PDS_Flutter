@@ -3378,7 +3378,7 @@ class _ProfileScreenState extends State<ProfileScreen>
           ),
         ),
         Container(
-          height: _height / 1.3,
+          height:User_ID == NewProfileData?.object?.userUid?_height / 1.3: _height/1.5,
           width: _width,
           //  color: Colors.amber,
           child: Padding(
@@ -3698,6 +3698,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                 SizedBox(
                   height: 10,
                 ),
+                if(User_ID == NewProfileData?.object?.userUid)
                 Text(
                   "Document",
                   overflow: TextOverflow.ellipsis,
@@ -3707,6 +3708,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                     fontWeight: FontWeight.w500,
                   ),
                 ),
+               if(User_ID == NewProfileData?.object?.userUid)
                 Row(
                   children: [
                     Container(
@@ -4008,7 +4010,7 @@ class _ProfileScreenState extends State<ProfileScreen>
         ),
         Container(
           // color: Colors.amber,
-          height: _height / 1.9,
+          height:User_ID == NewProfileData?.object?.userUid? _height / 1.9:1.5, 
           width: _width,
           child: Padding(
             padding: const EdgeInsets.only(right: 16, left: 16),
@@ -4153,6 +4155,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                 SizedBox(
                   height: 10,
                 ),
+                if(User_ID == NewProfileData?.object?.userUid)
                 Text(
                   "Document",
                   overflow: TextOverflow.ellipsis,
@@ -4162,6 +4165,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                     fontWeight: FontWeight.w500,
                   ),
                 ),
+                if(User_ID == NewProfileData?.object?.userUid)
                 Row(
                   children: [
                     Expanded(

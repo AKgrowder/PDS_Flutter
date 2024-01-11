@@ -165,7 +165,7 @@ class _BlogCommentBottomSheetState extends State<BlogCommentBottomSheet> {
                 Set<String> encounteredIds = Set<String>();
                 for (Map<String, dynamic> data in tageData) {
                   if (!encounteredIds.contains(data['id'])) {
-                    // If the ID hasn't been encountered, add to the result list
+                    //    If the ID hasn't been encountered, add to the result list
                     uniqueTageData.add(data);
 
                     // Mark the ID as encountered
