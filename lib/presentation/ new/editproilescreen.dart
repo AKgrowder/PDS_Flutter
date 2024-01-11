@@ -878,8 +878,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             "uuid": User_ID
           };
           print("parems--$params");
-          BlocProvider.of<MyAccountCubit>(context)
-              .UpdateProfileEmployee(params, context);
+          // BlocProvider.of<MyAccountCubit>(context)
+          //     .UpdateProfileEmployee(params, context);
         } else if (chooseDocumentuploded?.object.toString() != null) {
           var params = {
             "userProfilePic": chooseDocumentuploded?.object.toString(),
@@ -895,8 +895,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             "uuid": User_ID
           };
           print("parems--$params");
-          BlocProvider.of<MyAccountCubit>(context)
-              .UpdateProfileEmployee(params, context);
+          // BlocProvider.of<MyAccountCubit>(context)
+          //     .UpdateProfileEmployee(params, context);
         } else if (chooseDocumentuploded1?.object.toString() != null) {
           var params = {
             "userBackgroundPic": chooseDocumentuploded1?.object.toString(),
@@ -912,9 +912,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             "uuid": User_ID
           };
           print("parems--$params");
-          BlocProvider.of<MyAccountCubit>(context)
-              .UpdateProfileEmployee(params, context);
+          // BlocProvider.of<MyAccountCubit>(context)
+          //     .UpdateProfileEmployee(params, context);
         } else {
+          print("dfhgdgfdg");
           var params = {
             "userBackgroundPic": /* widget.newProfileData
                                               ?.object?.userBackgroundPic !=
@@ -932,8 +933,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             "uuid": User_ID
           };
           print("parems--$params");
-          BlocProvider.of<MyAccountCubit>(context)
-              .UpdateProfileEmployee(params, context);
+          // BlocProvider.of<MyAccountCubit>(context)
+          //     .UpdateProfileEmployee(params, context);
         }
       }
     }
@@ -1023,7 +1024,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         params['userProfilePic'] = "";
         params['userBackgroundPic'] = "";
       } else if (chooseDocumentuploded?.object.toString() != null) {
-        params['userProfilePic'] = chooseDocumentuploded?.object.toString();
+        params['userProfilePic'] = chooseDocumentuploded?.object.toString(); 
       } else if (chooseDocumentuploded1?.object.toString() != null) {
         params['userBackgroundPic'] = chooseDocumentuploded1?.object.toString();
       } else {
