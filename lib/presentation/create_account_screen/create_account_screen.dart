@@ -812,7 +812,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                                           ));
                                     },
                                     child: Text(
-                                      "Privacy & Policy  of PDS Terms",
+                                      "Privacy & Policy  of IP Terms",
                                       overflow: TextOverflow.ellipsis,
                                       style: TextStyle(
                                         color: theme.colorScheme.primary,

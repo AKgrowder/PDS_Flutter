@@ -684,7 +684,7 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
                                   ));
                             },
                             child: Text(
-                              "Privacy & Policy  of PDS Terms",
+                              "Privacy & Policy  of IP Terms",
                               style: TextStyle(
                                 color: theme.colorScheme.primary,
                                 fontSize: 14,
