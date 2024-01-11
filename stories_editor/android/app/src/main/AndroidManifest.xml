@@ -9,7 +9,7 @@
 
         
     <application
-        android:label="PDS"
+        android:label="IP"
         android:name="${applicationName}"
         android:usesCleartextTraffic="true"
         android:icon="@mipmap/ic_launcher">
