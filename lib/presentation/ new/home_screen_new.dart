@@ -52,6 +52,7 @@ import 'package:pds/presentation/%20new/ShowAllPostLike.dart';
 import 'package:pds/presentation/%20new/comment_bottom_sheet.dart';
 import 'package:pds/presentation/%20new/newbottembar.dart';
 import 'package:pds/presentation/%20new/profileNew.dart';
+import 'package:pds/presentation/%20new/videoScreen.dart';
 import 'package:pds/presentation/Create_Post_Screen/Ceratepost_Screen.dart';
 import 'package:pds/presentation/create_foram/create_foram_screen.dart';
 import 'package:pds/presentation/create_story/create_story.dart';
@@ -1081,7 +1082,6 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
 
   @override
   Widget build(BuildContext context) {
-    
     var _height = MediaQuery.of(context).size.height;
     var _width = MediaQuery.of(context).size.width;
 
@@ -2380,7 +2380,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                       );
                                                                     },
                                                                     child:
-                                                                        Container(
+                                                                         Container(
                                                                       height:
                                                                           25,
                                                                       alignment:
@@ -2395,31 +2395,36 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                               .primary_color,
                                                                           borderRadius:
                                                                               BorderRadius.circular(4)),
-                                                                      child: AllGuestPostRoomData?.object?.content?[index].userAccountType ==
-                                                                              "PUBLIC"
-                                                                          ? (AllGuestPostRoomData?.object?.content?[index].isFollowing == 'FOLLOW'
-                                                                              ? Text(
-                                                                                  'Follow',
-                                                                                  style: TextStyle(fontFamily: "outfit", fontSize: 12, fontWeight: FontWeight.bold, color: Colors.white),
-                                                                                )
-                                                                              : Text(
-                                                                                  'Following ',
-                                                                                  style: TextStyle(fontFamily: "outfit", fontSize: 12, fontWeight: FontWeight.bold, color: Colors.white),
-                                                                                ))
-                                                                          : AllGuestPostRoomData?.object?.content?[index].isFollowing == 'FOLLOW'
-                                                                              ? Text(
-                                                                                  'Follow',
-                                                                                  style: TextStyle(fontFamily: "outfit", fontSize: 12, fontWeight: FontWeight.bold, color: Colors.white),
-                                                                                )
-                                                                              : AllGuestPostRoomData?.object?.content?[index].isFollowing == 'REQUESTED'
+                                                                      child: uuid ==
+                                                                              null
+                                                                          ? Text(
+                                                                              'Follow',
+                                                                              style: TextStyle(fontFamily: "outfit", fontSize: 12, fontWeight: FontWeight.bold, color: Colors.white),
+                                                                            )
+                                                                          : AllGuestPostRoomData?.object?.content?[index].userAccountType == "PUBLIC"
+                                                                              ? (AllGuestPostRoomData?.object?.content?[index].isFollowing == 'FOLLOW'
                                                                                   ? Text(
-                                                                                      'Requested',
+                                                                                      'Follow',
                                                                                       style: TextStyle(fontFamily: "outfit", fontSize: 12, fontWeight: FontWeight.bold, color: Colors.white),
                                                                                     )
                                                                                   : Text(
                                                                                       'Following ',
                                                                                       style: TextStyle(fontFamily: "outfit", fontSize: 12, fontWeight: FontWeight.bold, color: Colors.white),
-                                                                                    ),
+                                                                                    ))
+                                                                              : AllGuestPostRoomData?.object?.content?[index].isFollowing == 'FOLLOW'
+                                                                                  ? Text(
+                                                                                      'Follow',
+                                                                                      style: TextStyle(fontFamily: "outfit", fontSize: 12, fontWeight: FontWeight.bold, color: Colors.white),
+                                                                                    )
+                                                                                  : AllGuestPostRoomData?.object?.content?[index].isFollowing == 'REQUESTED'
+                                                                                      ? Text(
+                                                                                          'Requested',
+                                                                                          style: TextStyle(fontFamily: "outfit", fontSize: 12, fontWeight: FontWeight.bold, color: Colors.white),
+                                                                                        )
+                                                                                      : Text(
+                                                                                          'Following ',
+                                                                                          style: TextStyle(fontFamily: "outfit", fontSize: 12, fontWeight: FontWeight.bold, color: Colors.white),
+                                                                                        ),
                                                                     ),
                                                                   ),
                                                           ),
@@ -2437,7 +2442,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                             ? Padding(
                                                                 padding:
                                                                     const EdgeInsets
-                                                                            .only(
+                                                                        .only(
                                                                         left:
                                                                             16),
                                                                 child:
@@ -2611,8 +2616,10 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                                         Container(
                                                                                           // height: 180,
                                                                                           width: _width,
-                                                                                          child: VideoListItem(
+                                                                                          child: VideoListItem1(
                                                                                             videoUrl: videoUrls[index],
+                                                                                            isData: User_ID ==null? false:true,
+
                                                                                           ),
                                                                                         ),
                                                                                       ],
@@ -2773,7 +2780,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                         Padding(
                                                           padding:
                                                               const EdgeInsets
-                                                                      .only(
+                                                                  .only(
                                                                   left: 10,
                                                                   right: 10,
                                                                   bottom: 10,
@@ -2909,7 +2916,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                             ?.description !=
                                                                         null
                                                                     ? Padding(
-                                                                        padding: const EdgeInsets.only(
+                                                                        padding: const EdgeInsets
+                                                                            .only(
                                                                             left:
                                                                                 16),
                                                                         child:
@@ -3055,9 +3063,10 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                                       child: Column(
                                                                                         mainAxisSize: MainAxisSize.min,
                                                                                         children: [
-                                                                                          VideoListItem(
+                                                                                          VideoListItem1(
                                                                                             videoUrl: videoUrls[index],
                                                                                             discrption: AllGuestPostRoomData?.object?.content?[index].repostOn?.description,
+                                                                                            isData: User_ID ==null? false:true,
                                                                                           )
                                                                                         ],
                                                                                       ),
@@ -3213,7 +3222,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                         Padding(
                                                           padding:
                                                               const EdgeInsets
-                                                                      .only(
+                                                                  .only(
                                                                   left: 13),
                                                           child: Divider(
                                                             thickness: 1,
@@ -3225,7 +3234,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                         Padding(
                                                           padding:
                                                               const EdgeInsets
-                                                                      .only(
+                                                                  .only(
                                                                   top: 0,
                                                                   right: 16),
                                                           child: Row(
@@ -3249,7 +3258,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                   child:
                                                                       Padding(
                                                                     padding:
-                                                                        const EdgeInsets.all(
+                                                                        const EdgeInsets
+                                                                            .all(
                                                                             5.0),
                                                                     child: AllGuestPostRoomData?.object?.content?[index].isLiked !=
                                                                             true
@@ -3303,8 +3313,9 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                             .transparent,
                                                                         child:
                                                                             Padding(
-                                                                          padding:
-                                                                              const EdgeInsets.all(5.0),
+                                                                          padding: const EdgeInsets
+                                                                              .all(
+                                                                              5.0),
                                                                           child:
                                                                               Text(
                                                                             "${AllGuestPostRoomData?.object?.content?[index].likedCount}",
@@ -3347,7 +3358,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                   child:
                                                                       Padding(
                                                                     padding:
-                                                                        const EdgeInsets.all(
+                                                                        const EdgeInsets
+                                                                            .all(
                                                                             5.0),
                                                                     child: Image
                                                                         .asset(
@@ -3441,7 +3453,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                   child:
                                                                       Padding(
                                                                     padding:
-                                                                        const EdgeInsets.all(
+                                                                        const EdgeInsets
+                                                                            .all(
                                                                             5.0),
                                                                     child: Image
                                                                         .asset(
@@ -3535,7 +3548,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                           index);
                                                                 },
                                                                 child:
-                                                                    Container(
+                                                                     Container(
                                                                   color: Colors
                                                                       .transparent,
                                                                   child:
@@ -3543,17 +3556,22 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                     padding:
                                                                         const EdgeInsets.all(
                                                                             5.0),
-                                                                    child: Image
-                                                                        .asset(
-                                                                      AllGuestPostRoomData?.object?.content?[index].isSaved ==
-                                                                              false
-                                                                          ? ImageConstant
-                                                                              .savePin
-                                                                          : ImageConstant
-                                                                              .Savefill,
-                                                                      height:
-                                                                          17,
-                                                                    ),
+                                                                    child: uuid ==
+                                                                            null
+                                                                        ? Image
+                                                                            .asset(
+                                                                            ImageConstant.savePin,
+                                                                            height:
+                                                                                17,
+                                                                          )
+                                                                        : Image
+                                                                            .asset(
+                                                                            AllGuestPostRoomData?.object?.content?[index].isSaved == false
+                                                                                ? ImageConstant.savePin
+                                                                                : ImageConstant.Savefill,
+                                                                            height:
+                                                                                17,
+                                                                          ),
                                                                   ),
                                                                 ),
                                                               ),
@@ -3881,7 +3899,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                             ? Padding(
                                                                 padding:
                                                                     const EdgeInsets
-                                                                            .only(
+                                                                        .only(
                                                                         left:
                                                                             16),
                                                                 child:
@@ -4070,8 +4088,9 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                                               controller: chewieController[index],
                                                                                             )), */
 
-                                                                                  VideoListItem(
+                                                                                  VideoListItem1(
                                                                                     videoUrl: videoUrls[index],
+                                                                                    isData: User_ID ==null? false:true,
                                                                                   ),
                                                                                 ],
                                                                               ),
@@ -4255,7 +4274,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                         Padding(
                                                           padding:
                                                               const EdgeInsets
-                                                                      .only(
+                                                                  .only(
                                                                   left: 13),
                                                           child: Divider(
                                                             thickness: 1,
@@ -4267,7 +4286,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                         Padding(
                                                           padding:
                                                               const EdgeInsets
-                                                                      .only(
+                                                                  .only(
                                                                   top: 0,
                                                                   right: 16),
                                                           child: Row(
@@ -4483,7 +4502,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                   child:
                                                                       Padding(
                                                                     padding:
-                                                                        const EdgeInsets.all(
+                                                                        const EdgeInsets
+                                                                            .all(
                                                                             5.0),
                                                                     child: Image
                                                                         .asset(
@@ -4585,7 +4605,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                   child:
                                                                       Padding(
                                                                     padding:
-                                                                        const EdgeInsets.all(
+                                                                        const EdgeInsets
+                                                                            .all(
                                                                             5.0),
                                                                     child: uuid ==
                                                                             null
@@ -5044,7 +5065,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                             BorderRadius.circular(10),
                                                                       ),
                                                                       Padding(
-                                                                        padding: const EdgeInsets.only(
+                                                                        padding: const EdgeInsets
+                                                                            .only(
                                                                             left:
                                                                                 9,
                                                                             top:
@@ -6037,8 +6059,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
     print(
         ":- %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    var url =
-         prefs.getString(PreferencesKey.AwsImageInPackagingLogoUrl) ??
+    var url = prefs.getString(PreferencesKey.AwsImageInPackagingLogoUrl) ??
         "https://pds-images-live.s3.ap-south-1.amazonaws.com/misc/Inpackaging+Without+Reward.jpg";
 
     if (url.isNotEmpty) {
@@ -6123,7 +6144,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
 class VideoListItem extends StatefulWidget {
   final String videoUrl;
   String? discrption;
-  VideoListItem({required this.videoUrl, this.discrption});
+  bool? isData;
+  VideoListItem({required this.videoUrl, this.discrption,this.isData});
 
   @override
   State<VideoListItem> createState() => _VideoListItemState();
@@ -6177,6 +6199,7 @@ class _VideoListItemState extends State<VideoListItem> {
                     controls: FlickPortraitControls(),
                   ),
                 ),
+
               // Add other information or controls as needed
             ],
           ),
@@ -6185,3 +6208,5 @@ class _VideoListItemState extends State<VideoListItem> {
     );
   }
 }
+
+
