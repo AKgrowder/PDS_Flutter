@@ -202,7 +202,6 @@ class DocumentViewScreen1 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    
     return Scaffold(
       appBar: AppBar(
         iconTheme: IconThemeData(),
