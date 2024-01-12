@@ -528,7 +528,9 @@ class _AllNotificationClassState extends State<AllNotificationClass> {
                                                             AllNotificationData
                                                                     ?.object?[index]
                                                                     .subject ==
-                                                                "PROFILE_REJECTED"
+                                                                "PROFILE_REJECTED" || AllNotificationData
+                                                                    ?.object?[index]
+                                                                    .subject == "PROFILE_VIEWED"
                                                         ? Navigator.push(context, MaterialPageRoute(builder: (context) {
                                                             return ProfileScreen(
                                                                 User_ID:
@@ -539,56 +541,6 @@ class _AllNotificationClassState extends State<AllNotificationClass> {
                                                         //  print("open User Profile FOLLOW_PUBLIC_ACCOUNT & FOLLOW_PRIVATE_ACCOUNT_REQUEST & FOLLOW_REQUEST_ACCEPTED")
                                                         : print("");
 
-//////////////////////////////////////////////////////////////////////////////////////////
-                                /*    AllNotificationData?.object?[index].subject == "TAG_POST" ||
-                            AllNotificationData?.object?[index].subject ==
-                                "RE_POST" ||
-                            AllNotificationData?.object?[index].subject ==
-                                "INVITE_ROOM"
-                        ? Image.asset(ImageConstant.InviteAcceptepLogo)
-                        : AllNotificationData?.object?[index].subject ==
-                                    "EXPERT_LEFT_ROOM" ||
-                                AllNotificationData?.object?[index].subject ==
-                                    "MEMBER_LEFT_ROOM" ||
-                                AllNotificationData?.object?[index].subject ==
-                                    "DELETE_ROOM"
-                            ? Image.asset(ImageConstant.RoomDeleteLogo)
-                            : AllNotificationData?.object?[index].subject ==
-                                    "LIKE_POST"
-                                ? Image.asset(ImageConstant.Like_Post)
-                                : AllNotificationData?.object?[index].subject ==
-                                        "COMMENT_POST"
-                                    ? Image.asset(ImageConstant.Comment_Post)
-                                    : AllNotificationData?.object?[index].subject ==
-                                            "TAG_COMMENT_POST"
-                                        ? Image.asset(
-                                            ImageConstant.Tag_Comment_Post)
-                                        : AllNotificationData?.object?[index].subject ==
-                                                "EXPERT_ACCEРТ_INVITE"
-                                            ? Image.asset(ImageConstant
-                                                .Expert_Accept_Invite)
-                                            : AllNotificationData
-                                                        ?.object?[index]
-                                                        .subject ==
-                                                    "EXPERT_REJECT_INVITE"
-                                                ? Image.asset(ImageConstant
-                                                    .Expert_Reject_Invite)
-                                                : AllNotificationData
-                                                            ?.object?[index]
-                                                            .subject ==
-                                                        "FOLLOW_PUBLIC_ACCOUNT"
-                                                    ? Image.asset(ImageConstant
-                                                        .Follow_Public_Account)
-                                                    : AllNotificationData
-                                                                ?.object?[index]
-                                                                .subject ==
-                                                            "FOLLOW_PRIVATE_ACCOUNT_REQUEST"
-                                                        ? Image.asset(ImageConstant.Follow_Private_Account_Request)
-                                                        : AllNotificationData?.object?[index].subject == "FOLLOW_REQUEST_ACCEPTED"
-                                                            ? Image.asset(ImageConstant.Follow_Request_Accept)
-                                                            : SizedBox(); */
-
-////////////////////////////////////////////////////////////////////////////////////////////////////
 
                                 // AllNotificationData?.object?[index].isSeen == true;
                                 BlocProvider.of<InvitationCubit>(context)
@@ -701,7 +653,7 @@ class _AllNotificationClassState extends State<AllNotificationClass> {
                                                                         ? Image.asset(ImageConstant.Expert_Accept_Invite)
                                                                         : AllNotificationData?.object?[index].subject == "EXPERT_REJECT_INVITE"
                                                                             ? Image.asset(ImageConstant.Expert_Reject_Invite)
-                                                                            : AllNotificationData?.object?[index].subject == "FOLLOW_PUBLIC_ACCOUNT"
+                                                                            : AllNotificationData?.object?[index].subject == "FOLLOW_PUBLIC_ACCOUNT" || AllNotificationData?.object?[index].subject == "PROFILE_VIEWED"
                                                                                 ? Image.asset(ImageConstant.Follow_Public_Account)
                                                                                 : AllNotificationData?.object?[index].subject == "FOLLOW_PRIVATE_ACCOUNT_REQUEST"
                                                                                     ? Image.asset(ImageConstant.Follow_Private_Account_Request)
