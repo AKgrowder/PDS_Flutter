@@ -25,12 +25,14 @@ import 'SearchBar_screen.dart';
 class NewBottomBar extends StatefulWidget {
   final int? buttomIndex;
   bool? isGuest = false;
+  // ScrollController? hometopcontroller;
 
-  NewBottomBar({required this.buttomIndex, this.isGuest});
+  NewBottomBar({required this.buttomIndex, this.isGuest,/* this.hometopcontroller */});
 
   @override
   State<NewBottomBar> createState() => _NewBottomBarState();
 }
+  ScrollController scrollController = ScrollController();
 
 class _NewBottomBarState extends State<NewBottomBar> {
   bool keyboardOpen = false;
@@ -41,10 +43,10 @@ class _NewBottomBarState extends State<NewBottomBar> {
   var UserLogin_ID;
   int NotificationCount = 0;
   int MessageCount = 0;
-
+  // ScrollController hometopcontroller = ScrollController();
   List widgetOptions = [
     // HomeScreen(),
-    HomeScreenNew(),
+    HomeScreenNew(scrollController: scrollController,),
     RoomsScreen(),
     // HistoryScreen(),
     SearchBarScreen(value2: 1),
@@ -60,9 +62,7 @@ class _NewBottomBarState extends State<NewBottomBar> {
     // RoomMembersScreen(),
     // RoomsScreen()
   ];
-
   late StreamSubscription _connectionChangeStream;
-
   bool isOffline = false;
   @override
   void initState() {
@@ -107,6 +107,8 @@ class _NewBottomBarState extends State<NewBottomBar> {
                       GestureDetector(
                         onTap: () {
                           setState(() {
+                            print("objecaaaaaaaaaaaaaaaaat");
+                          scrollController.animateTo(0, duration:Duration(milliseconds: 500), curve:  Curves.easeInOut);
                             // setUI();
                             selectedIndex = 0;
                           });

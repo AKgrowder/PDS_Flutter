@@ -178,7 +178,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                     );
                     ScaffoldMessenger.of(context).showSnackBar(snackBar);
                     SnackBar snackBar2 = SnackBar(
-                      content: Text('Signup Successfully'),
+                      content: Text('Signed Up Successfully'),
                       backgroundColor: ColorConstant.primary_color,
                     );
                     ScaffoldMessenger.of(context).showSnackBar(snackBar2);
