@@ -10,6 +10,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:pds/API/Bloc/auth/register_Block.dart';
 import 'package:pds/API/Bloc/auth/register_state.dart';
+import 'package:pds/API/Model/authModel/loginModel.dart';
 import 'package:pds/API/Model/createDocumentModel/createDocumentModel.dart';
 import 'package:pds/core/app_export.dart';
 import 'package:pds/core/utils/color_constant.dart';
@@ -56,6 +57,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
   double documentuploadsize = 0;
   double value2 = 0.0;
   bool isChecked = false;
+  LoginModel? loginModelData;
   Future<void> _checkPermissions() async {
     final cameraStatus = await Permission.camera.status;
     if (this.mounted) {
@@ -150,6 +152,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                         );
                       }
                       if (state is RegisterLoadedState) {
+                        loginModelData = state.registerClass;
                         /*           SnackBar snackBar = SnackBar(
                           content: Text(state.registerClass.message.toString()),
                           backgroundColor: ColorConstant.primary_color,
@@ -167,6 +170,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                               builder: (context) => OtpVerificationScreen(
                                     phonNumber: contectnumberController.text,
                                     flowCheck: 'Rgister',
+                                     loginModelData: loginModelData,
                                   )),
                         );
                       }
