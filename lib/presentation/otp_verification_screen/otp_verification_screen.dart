@@ -186,11 +186,21 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
 
                   print('wiget flowcheck-${widget.flowCheck}');
                   if (widget.flowCheck == "Rgister") {
-                    Navigator.push(context,
+                    /* Navigator.push(context,
                         MaterialPageRoute(builder: (context) {
                       return LoginScreen(
                         flagCheck: 'otp done',
                       );
+                    })); */
+                     getDataStroe(
+                        widget.loginModelData?.object?.uuid.toString() ?? "",
+                        widget.loginModelData?.object?.jwt.toString() ?? "",
+                        widget.loginModelData?.object?.module.toString() ?? ""
+                        // state.loginModel.object!.verified.toString(),
+                        );
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) {
+                      return NewBottomBar(buttomIndex: 0);
                     }));
                   } else if (widget.forgetpassword == true) {
                     SnackBar snackBar = SnackBar(
