@@ -1,3 +1,4 @@
+import 'package:pds/API/Model/authModel/loginModel.dart';
 import 'package:pds/API/Model/authModel/registerModel.dart';
 import 'package:pds/API/Model/createDocumentModel/createDocumentModel.dart';
 
@@ -8,7 +9,7 @@ class RegisterLoadingState extends RegisterState {}
 class RegisterInitialState extends RegisterState {}
 
 class RegisterLoadedState extends RegisterState {
-  final RegisterClass registerClass;
+  final LoginModel registerClass;
   RegisterLoadedState(this.registerClass);
 }
 

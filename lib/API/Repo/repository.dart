@@ -270,7 +270,8 @@ class Repository {
     print('jsonString-$jsonString');
     switch (response.statusCode) {
       case 200:
-        return RegisterClass.fromJson(jsonString);
+      // RegisterClass
+        return LoginModel.fromJson(jsonString);
       case 404:
         return Config.somethingWentWrong;
       case 400:
