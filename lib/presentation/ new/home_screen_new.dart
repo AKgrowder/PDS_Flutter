@@ -74,7 +74,8 @@ import '../../API/Model/UserTagModel/UserTag_model.dart';
 import '../become_an_expert_screen/become_an_expert_screen.dart';
 
 class HomeScreenNew extends StatefulWidget {
-  const HomeScreenNew({Key? key}) : super(key: key);
+  ScrollController scrollController;
+   HomeScreenNew({Key? key,  required this.scrollController}) : super(key: key);
 
   @override
   State<HomeScreenNew> createState() => _HomeScreenNewState();
@@ -1556,7 +1557,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                       color: Colors.white,
                       backgroundColor: ColorConstant.primary_color,
                       child: SingleChildScrollView(
-                        controller: scrollController,
+                        controller:widget. scrollController,
                         child: Column(
                           children: [
                             SizedBox(
@@ -2082,7 +2083,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                             ?.object?.content?.isNotEmpty ==
                                         true
                                 ? PaginationWidget(
-                                    scrollController: scrollController,
+                                    scrollController:widget. scrollController,
                                     totalSize: AllGuestPostRoomData
                                         ?.object?.totalElements,
                                     offSet: AllGuestPostRoomData
