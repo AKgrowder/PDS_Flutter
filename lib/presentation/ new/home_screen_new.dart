@@ -962,7 +962,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
       await BlocProvider.of<GetGuestAllPostCubit>(context)
           .getAllNoticationsCountAPI(context);
     });
-
+await BlocProvider.of<GetGuestAllPostCubit>(context)
+          .getAllNoticationsCountAPI(context);
     await BlocProvider.of<GetGuestAllPostCubit>(context)
         .ChatOnline(context, true);
 
