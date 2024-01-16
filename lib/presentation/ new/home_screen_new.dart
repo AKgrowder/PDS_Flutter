@@ -68,6 +68,7 @@ import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:video_player/video_player.dart';
+import 'package:visibility_detector/visibility_detector.dart';
 
 import '../../API/Model/Get_all_blog_Model/get_all_blog_model.dart';
 import '../../API/Model/UserTagModel/UserTag_model.dart';
