@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pds/fick_players/flick_video_player.dart';
 import 'package:video_player/video_player.dart';
+import 'package:visibility_detector/visibility_detector.dart';
 
 class VideoListItem1 extends StatefulWidget {
   final String videoUrl;
@@ -48,10 +49,14 @@ class _VideoListItem1State extends State<VideoListItem1> {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () {
-        print("asdgasgsdgf-${widget.videoUrl}");
-        print("asdgasgsdgf-${widget.discrption}");
+    return VisibilityDetector(
+      key: ObjectKey(flickManager),
+      onVisibilityChanged: (visiblityInfo) {
+        if (visiblityInfo.visibleFraction > 0.50) {
+          flickManager?.flickControlManager?.play();
+        } else {
+          flickManager?.flickControlManager?.pause();
+        }
       },
       child: Card(
         margin: EdgeInsets.only(
@@ -72,7 +77,7 @@ class _VideoListItem1State extends State<VideoListItem1> {
                     controls: FlickPortraitControls(),
                   ),
                 ),
-
+    
               if (widget.isData == false && widget.videoUrl.isNotEmpty)
                 videoPlayerController!.value.isInitialized
                     ? Stack(
