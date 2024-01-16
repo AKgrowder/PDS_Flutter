@@ -214,11 +214,11 @@ class _NewBottomBarState extends State<NewBottomBar> {
                       GestureDetector(
                         onTap: () {
                           setState(() {
-                            if (UserLogin_ID != null) {
+                            // if (UserLogin_ID != null) {
                               selectedIndex = 2;
-                            } else {
-                              NaviRegisterScreen();
-                            }
+                            // } else {
+                            //   NaviRegisterScreen();
+                            // }
                           });
                         },
                         child: Container(

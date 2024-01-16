@@ -14,6 +14,7 @@ import 'package:pds/core/utils/sharedPreferences.dart';
 import 'package:pds/presentation/%20new/HashTagView_screen.dart';
 import 'package:pds/presentation/%20new/newbottembar.dart';
 import 'package:pds/presentation/%20new/profileNew.dart';
+import 'package:pds/presentation/register_create_account_screen/register_create_account_screen.dart';
 import 'package:pds/widgets/pagenation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -53,6 +54,7 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
 
   int? indexxx;
   bool isSerch = false;
+  var UserLogin_ID;
   GetDataInSerch? getDataInSerch;
   int? length;
   HashtagModel? hashtagModel; /* 
@@ -63,33 +65,41 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     dataSetup = 0;
     indexxx = 0;
-    /*  dataSetup = prefs.getInt(
-      "tabSelction",
-    );
-    if (dataSetup != null) {
-      dataSetup = await dataSetup;
-    } else {
-      dataSetup = await widget.value2;
-    } */
-    if (mounted) {
-      // setState(() {
-      //   // Update the widget's state.
-      // });
-    }
 
-    await BlocProvider.of<HashTagCubit>(context).seetinonExpried(context);
+    /* await BlocProvider.of<HashTagCubit>(context).seetinonExpried(context);
     await BlocProvider.of<HashTagCubit>(context)
         .getAllNoticationsCountAPI(context);
     await BlocProvider.of<HashTagCubit>(context)
         .HashTagForYouAPI(context, 'FOR YOU', '1');
-    await BlocProvider.of<HashTagCubit>(context).serchDataGet(
+         await BlocProvider.of<HashTagCubit>(context).serchDataGet(
       context,
-    );
+    ); */
+    if (UserLogin_ID == null) {
+      // await BlocProvider.of<HashTagCubit>(context)
+      //     .getAllNoticationsCountAPI(context);
+      await BlocProvider.of<HashTagCubit>(context)
+          .HashTagForYouAPI(context, 'FOR YOU', '1');
+    } else {
+      await BlocProvider.of<HashTagCubit>(context).seetinonExpried(context);
+      await BlocProvider.of<HashTagCubit>(context)
+          .getAllNoticationsCountAPI(context);
+      await BlocProvider.of<HashTagCubit>(context)
+          .HashTagForYouAPI(context, 'FOR YOU', '1');
+      await BlocProvider.of<HashTagCubit>(context).serchDataGet(
+        context,
+      );
+    }
+  }
+
+  checkGuestUser() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    UserLogin_ID = prefs.getString(PreferencesKey.loginUserID);
   }
 
   @override
   void initState() {
     super.initState();
+    checkGuestUser();
     getUserData();
   }
 
@@ -129,14 +139,13 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
             }
             if (state is GetSerchData) {
               getDataInSerch = state.getDataInSerch;
-              if(getDataInSerch?.object !=null){
-                 if(getDataInSerch!.object!.length <=5){
+              if (getDataInSerch?.object != null) {
+                if (getDataInSerch!.object!.length <= 5) {
                   length = getDataInSerch!.object!.length;
-              }else{
-                length =5;
+                } else {
+                  length = 5;
+                }
               }
-              }
-             
             }
             if (state is HashTagLoadedState) {
               apiDataSetup = true;
@@ -395,7 +404,8 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                                           ? ColorConstant.primary_color
                                           : dataSetup == index
                                               ? ColorConstant.primary_color
-                                              : ColorConstant.primaryLight_color,
+                                              : ColorConstant
+                                                  .primaryLight_color,
                                       borderRadius: BorderRadius.circular(20)),
                                   child: Center(
                                       child: Text(
@@ -559,7 +569,8 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                                 width: _width,
                                 // color: Colors.amber,
                                 child: Column(
-                                  children:  List.generate((length ??0), (index) {
+                                  children:
+                                      List.generate((length ?? 0), (index) {
                                     return Padding(
                                       padding: const EdgeInsets.all(8.0),
                                       child: GestureDetector(
@@ -839,17 +850,21 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                                     color: Colors.black),
                                 onTap: (text) {
                                   print('sdshfsdfh');
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            BlocProvider<HashTagCubit>(
-                                          create: (context) => HashTagCubit(),
-                                          child: HashTagViewScreen(
-                                              title:
-                                                  "${hashtagModel?.object?.content?[index].hashtagName}"),
-                                        ),
-                                      ));
+                                  if (UserLogin_ID != null) {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              BlocProvider<HashTagCubit>(
+                                            create: (context) => HashTagCubit(),
+                                            child: HashTagViewScreen(
+                                                title:
+                                                    "${hashtagModel?.object?.content?[index].hashtagName}"),
+                                          ),
+                                        ));
+                                  } else {
+                                    NaviRegisterScreen();
+                                  }
                                 },
                               ),
                               Padding(
@@ -929,7 +944,8 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                                               color: Colors.black),
                                           onTap: (text) {
                                             print(text);
-                                            Navigator.push(
+                                             if (UserLogin_ID != null) {
+                        Navigator.push(
                                                 context,
                                                 MaterialPageRoute(
                                                   builder: (context) =>
@@ -942,6 +958,10 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                                                             "${hashtagModel?.object?.content?[index].hashtagName}"),
                                                   ),
                                                 ));
+                            } else {
+                              NaviRegisterScreen();
+                            }
+                                           
                                           },
                                         ),
                                         SizedBox(
@@ -1029,20 +1049,24 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                             padding: const EdgeInsets.all(8.0),
                             child: GestureDetector(
                               onTap: () {
-                                Navigator.push(context,
-                                    MaterialPageRoute(builder: (context) {
-                                  return MultiBlocProvider(
-                                      providers: [
-                                        BlocProvider<NewProfileSCubit>(
-                                          create: (context) =>
-                                              NewProfileSCubit(),
-                                        ),
-                                      ],
-                                      child: ProfileScreen(
-                                          User_ID:
-                                              "${getalluserlistModel?.object?.content?[index].userUid}",
-                                          isFollowing: "REQUESTED"));
-                                }));
+                                if (UserLogin_ID != null) {
+                                  Navigator.push(context,
+                                      MaterialPageRoute(builder: (context) {
+                                    return MultiBlocProvider(
+                                        providers: [
+                                          BlocProvider<NewProfileSCubit>(
+                                            create: (context) =>
+                                                NewProfileSCubit(),
+                                          ),
+                                        ],
+                                        child: ProfileScreen(
+                                            User_ID:
+                                                "${getalluserlistModel?.object?.content?[index].userUid}",
+                                            isFollowing: "REQUESTED"));
+                                  }));
+                                } else {
+                                  NaviRegisterScreen();
+                                }
                               },
                               child: Container(
                                 height: 55,
@@ -1110,17 +1134,21 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                             padding: const EdgeInsets.all(8.0),
                             child: GestureDetector(
                               onTap: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          BlocProvider<HashTagCubit>(
-                                        create: (context) => HashTagCubit(),
-                                        child: HashTagViewScreen(
-                                            title:
-                                                "${getalluserlistModel?.object?.content?[index].hashtagNamesDto?.hashtagName}"),
-                                      ),
-                                    ));
+                                if (UserLogin_ID != null) {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            BlocProvider<HashTagCubit>(
+                                          create: (context) => HashTagCubit(),
+                                          child: HashTagViewScreen(
+                                              title:
+                                                  "${getalluserlistModel?.object?.content?[index].hashtagNamesDto?.hashtagName}"),
+                                        ),
+                                      ));
+                                } else {
+                                  NaviRegisterScreen();
+                                }
                               },
                               child: Container(
                                 height: 50,
@@ -1205,7 +1233,8 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                           padding: const EdgeInsets.all(8.0),
                           child: GestureDetector(
                             onTap: () {
-                              Navigator.push(context,
+                               if (UserLogin_ID != null) {
+                                Navigator.push(context,
                                   MaterialPageRoute(builder: (context) {
                                 return MultiBlocProvider(
                                     providers: [
@@ -1218,6 +1247,10 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                                             "${getalluserlistModel?.object?.content?[index].userUid}",
                                         isFollowing: "REQUESTED"));
                               }));
+                            } else {
+                              NaviRegisterScreen();
+                            }
+                           
                             },
                             child: Container(
                               height: 55,
@@ -1282,17 +1315,21 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                           padding: const EdgeInsets.all(8.0),
                           child: GestureDetector(
                             onTap: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                        BlocProvider<HashTagCubit>(
-                                      create: (context) => HashTagCubit(),
-                                      child: HashTagViewScreen(
-                                          title:
-                                              "${getalluserlistModel?.object?.content?[index].hashtagNamesDto?.hashtagName}"),
-                                    ),
-                                  ));
+                              if (UserLogin_ID != null) {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          BlocProvider<HashTagCubit>(
+                                        create: (context) => HashTagCubit(),
+                                        child: HashTagViewScreen(
+                                            title:
+                                                "${getalluserlistModel?.object?.content?[index].hashtagNamesDto?.hashtagName}"),
+                                      ),
+                                    ));
+                              } else {
+                                NaviRegisterScreen();
+                              }
                             },
                             child: Container(
                               height: 50,
@@ -1352,5 +1389,10 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setInt(PreferencesKey.NotificationCount, NotificationCount);
     prefs.setInt(PreferencesKey.MessageCount, MessageCount);
+  }
+
+  NaviRegisterScreen() {
+    Navigator.of(context).push(
+        MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen(backSearch: true,)));
   }
 }

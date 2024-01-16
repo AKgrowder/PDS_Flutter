@@ -2048,7 +2048,7 @@ class Repository {
 
   HashTagForYouAPI(
       BuildContext context, String hashtagViewType, String pageNumber) async {
-    final response = await apiServices.getApiCallWithToken(
+    final response = await apiServices.getApiCall(
         '${Config.HashTagForYou}?hashtagViewType=$hashtagViewType&pageNumber=$pageNumber&pageSize=20',
         context);
 
@@ -2130,11 +2130,11 @@ class Repository {
   }) async {
     final response;
     if (filterModule != null) {
-      response = await apiServices.getApiCallWithToken(
+      response = await apiServices.getApiCall(
           "${Config.getalluser}?pageNumber=$pageNumber&numberOfRecords=20&searchName=$searchName&filterModule=$filterModule",
           context);
     } else {
-      response = await apiServices.getApiCallWithToken(
+      response = await apiServices.getApiCall(
           "${Config.getalluser}?pageNumber=$pageNumber&numberOfRecords=20&searchName=$searchName",
           context);
     }
