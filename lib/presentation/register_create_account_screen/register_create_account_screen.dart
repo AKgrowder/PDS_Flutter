@@ -8,6 +8,9 @@ import 'package:flutter/material.dart';
 import '../create_account_screen/create_account_screen.dart';
 
 class RegisterCreateAccountScreen extends StatefulWidget {
+  bool? backSearch;
+  RegisterCreateAccountScreen({this.backSearch});
+
   @override
   State<RegisterCreateAccountScreen> createState() =>
       _RegisterCreateAccountScreenState();
@@ -44,16 +47,23 @@ class _RegisterCreateAccountScreenState
                       top: 50,
                     ),
                     onTap: () {
-                     /*  Navigator.pushAndRemoveUntil(
+                      /*  Navigator.pushAndRemoveUntil(
                           context,
                           MaterialPageRoute(
                               builder: (context) =>
                                   NewBottomBar(buttomIndex: 0)),
                           (route) => false); */
-                       Navigator.push(context,
-                          MaterialPageRoute(builder: (context) {
-                        return NewBottomBar(buttomIndex: 0);
-                      }));
+                      if (widget.backSearch == true) {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) {
+                          return NewBottomBar(buttomIndex: 2);
+                        }));
+                      } else {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) {
+                          return NewBottomBar(buttomIndex: 0);
+                        }));
+                      }
                     }),
               ),
             ],
