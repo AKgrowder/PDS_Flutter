@@ -67,6 +67,7 @@ dependencies:
   path_provider: 
   video_thumbnail: ^0.5.3
   badges: ^3.1.2
+  widget_zoom: ^0.0.3
   # dio: ^5.3.4
   
   
