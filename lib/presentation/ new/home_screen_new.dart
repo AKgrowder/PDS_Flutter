@@ -75,7 +75,7 @@ import '../become_an_expert_screen/become_an_expert_screen.dart';
 
 class HomeScreenNew extends StatefulWidget {
   ScrollController scrollController;
-   HomeScreenNew({Key? key,  required this.scrollController}) : super(key: key);
+  HomeScreenNew({Key? key, required this.scrollController}) : super(key: key);
 
   @override
   State<HomeScreenNew> createState() => _HomeScreenNewState();
@@ -103,6 +103,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
   int imageCount = 1;
   int imageCount1 = 1;
   int imageCount2 = 1;
+  Timer? timer;
   Uint8List? firstPageImage;
   double documentuploadsize = 0;
   double finalFileSize = 0;
@@ -124,6 +125,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
   FetchAllExpertsModel? AllExperData;
   SystemConfigModel? systemConfigModel;
   bool apiCalingdone = false;
+  int? secound;
   int sliderCurrentPosition = 0;
   List<PageController> _pageControllers = [];
   List<int> _currentPages = [];
@@ -217,6 +219,12 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
     VersionControll();
     getDocumentSize();
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    timer?.cancel();
+    super.dispose();
   }
 
   AddCommentModel? addCommentModeldata;
@@ -955,15 +963,27 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
   }
 
   NewApi() async {
-    Timer.periodic(Duration(seconds: 15), (_) async {
-      // print("Room Socket ++++++++++++++++++++++++++++++++++++++++++++++++++++");
+    timer = Timer.periodic(Duration(seconds: 15), (timer) async {
+      setState(() {
+        secound = timer.tick;
+      });
       await BlocProvider.of<GetGuestAllPostCubit>(context)
           .seetinonExpried(context);
       await BlocProvider.of<GetGuestAllPostCubit>(context)
           .getAllNoticationsCountAPI(context);
     });
-await BlocProvider.of<GetGuestAllPostCubit>(context)
-          .getAllNoticationsCountAPI(context);
+    if (secound == 15) {
+      timer?.cancel();
+    }
+
+    // Timer.periodic(Duration(seconds: 15), (_) async {
+    //   // print("Room Socket ++++++++++++++++++++++++++++++++++++++++++++++++++++");
+    //   await BlocProvider.of<GetGuestAllPostCubit>(context)
+    //       .seetinonExpried(context);
+    //   await BlocProvider.of<GetGuestAllPostCubit>(context)
+    //       .getAllNoticationsCountAPI(context);
+    // });
+
     await BlocProvider.of<GetGuestAllPostCubit>(context)
         .ChatOnline(context, true);
 
@@ -1241,6 +1261,7 @@ await BlocProvider.of<GetGuestAllPostCubit>(context)
                             isWatch: element.storyData?.length == count,
                             timelineBackgroundColor: Colors.grey,
                             buttonDecoration: BoxDecoration(
+                              
                               shape: BoxShape.circle,
                               image: element.profilePic != null &&
                                       element.profilePic != ""
@@ -1558,7 +1579,7 @@ await BlocProvider.of<GetGuestAllPostCubit>(context)
                       color: Colors.white,
                       backgroundColor: ColorConstant.primary_color,
                       child: SingleChildScrollView(
-                        controller:widget. scrollController,
+                        controller: widget.scrollController,
                         child: Column(
                           children: [
                             SizedBox(
@@ -2084,7 +2105,7 @@ await BlocProvider.of<GetGuestAllPostCubit>(context)
                                             ?.object?.content?.isNotEmpty ==
                                         true
                                 ? PaginationWidget(
-                                    scrollController:widget. scrollController,
+                                    scrollController: widget.scrollController,
                                     totalSize: AllGuestPostRoomData
                                         ?.object?.totalElements,
                                     offSet: AllGuestPostRoomData
@@ -2382,7 +2403,7 @@ await BlocProvider.of<GetGuestAllPostCubit>(context)
                                                                       );
                                                                     },
                                                                     child:
-                                                                         Container(
+                                                                        Container(
                                                                       height:
                                                                           25,
                                                                       alignment:
@@ -2444,7 +2465,7 @@ await BlocProvider.of<GetGuestAllPostCubit>(context)
                                                             ? Padding(
                                                                 padding:
                                                                     const EdgeInsets
-                                                                        .only(
+                                                                            .only(
                                                                         left:
                                                                             16),
                                                                 child:
@@ -2620,8 +2641,7 @@ await BlocProvider.of<GetGuestAllPostCubit>(context)
                                                                                           width: _width,
                                                                                           child: VideoListItem1(
                                                                                             videoUrl: videoUrls[index],
-                                                                                            isData: User_ID ==null? false:true,
-
+                                                                                            isData: User_ID == null ? false : true,
                                                                                           ),
                                                                                         ),
                                                                                       ],
@@ -2782,7 +2802,7 @@ await BlocProvider.of<GetGuestAllPostCubit>(context)
                                                         Padding(
                                                           padding:
                                                               const EdgeInsets
-                                                                  .only(
+                                                                      .only(
                                                                   left: 10,
                                                                   right: 10,
                                                                   bottom: 10,
@@ -2918,8 +2938,7 @@ await BlocProvider.of<GetGuestAllPostCubit>(context)
                                                                             ?.description !=
                                                                         null
                                                                     ? Padding(
-                                                                        padding: const EdgeInsets
-                                                                            .only(
+                                                                        padding: const EdgeInsets.only(
                                                                             left:
                                                                                 16),
                                                                         child:
@@ -3068,7 +3087,7 @@ await BlocProvider.of<GetGuestAllPostCubit>(context)
                                                                                           VideoListItem1(
                                                                                             videoUrl: videoUrls[index],
                                                                                             discrption: AllGuestPostRoomData?.object?.content?[index].repostOn?.description,
-                                                                                            isData: User_ID ==null? false:true,
+                                                                                            isData: User_ID == null ? false : true,
                                                                                           )
                                                                                         ],
                                                                                       ),
@@ -3224,7 +3243,7 @@ await BlocProvider.of<GetGuestAllPostCubit>(context)
                                                         Padding(
                                                           padding:
                                                               const EdgeInsets
-                                                                  .only(
+                                                                      .only(
                                                                   left: 13),
                                                           child: Divider(
                                                             thickness: 1,
@@ -3236,7 +3255,7 @@ await BlocProvider.of<GetGuestAllPostCubit>(context)
                                                         Padding(
                                                           padding:
                                                               const EdgeInsets
-                                                                  .only(
+                                                                      .only(
                                                                   top: 0,
                                                                   right: 16),
                                                           child: Row(
@@ -3260,8 +3279,7 @@ await BlocProvider.of<GetGuestAllPostCubit>(context)
                                                                   child:
                                                                       Padding(
                                                                     padding:
-                                                                        const EdgeInsets
-                                                                            .all(
+                                                                        const EdgeInsets.all(
                                                                             5.0),
                                                                     child: AllGuestPostRoomData?.object?.content?[index].isLiked !=
                                                                             true
@@ -3315,9 +3333,8 @@ await BlocProvider.of<GetGuestAllPostCubit>(context)
                                                                             .transparent,
                                                                         child:
                                                                             Padding(
-                                                                          padding: const EdgeInsets
-                                                                              .all(
-                                                                              5.0),
+                                                                          padding:
+                                                                              const EdgeInsets.all(5.0),
                                                                           child:
                                                                               Text(
                                                                             "${AllGuestPostRoomData?.object?.content?[index].likedCount}",
@@ -3360,8 +3377,7 @@ await BlocProvider.of<GetGuestAllPostCubit>(context)
                                                                   child:
                                                                       Padding(
                                                                     padding:
-                                                                        const EdgeInsets
-                                                                            .all(
+                                                                        const EdgeInsets.all(
                                                                             5.0),
                                                                     child: Image
                                                                         .asset(
@@ -3455,8 +3471,7 @@ await BlocProvider.of<GetGuestAllPostCubit>(context)
                                                                   child:
                                                                       Padding(
                                                                     padding:
-                                                                        const EdgeInsets
-                                                                            .all(
+                                                                        const EdgeInsets.all(
                                                                             5.0),
                                                                     child: Image
                                                                         .asset(
@@ -3550,7 +3565,7 @@ await BlocProvider.of<GetGuestAllPostCubit>(context)
                                                                           index);
                                                                 },
                                                                 child:
-                                                                     Container(
+                                                                    Container(
                                                                   color: Colors
                                                                       .transparent,
                                                                   child:
@@ -3901,7 +3916,7 @@ await BlocProvider.of<GetGuestAllPostCubit>(context)
                                                             ? Padding(
                                                                 padding:
                                                                     const EdgeInsets
-                                                                        .only(
+                                                                            .only(
                                                                         left:
                                                                             16),
                                                                 child:
@@ -4092,7 +4107,7 @@ await BlocProvider.of<GetGuestAllPostCubit>(context)
 
                                                                                   VideoListItem1(
                                                                                     videoUrl: videoUrls[index],
-                                                                                    isData: User_ID ==null? false:true,
+                                                                                    isData: User_ID == null ? false : true,
                                                                                   ),
                                                                                 ],
                                                                               ),
@@ -4276,7 +4291,7 @@ await BlocProvider.of<GetGuestAllPostCubit>(context)
                                                         Padding(
                                                           padding:
                                                               const EdgeInsets
-                                                                  .only(
+                                                                      .only(
                                                                   left: 13),
                                                           child: Divider(
                                                             thickness: 1,
@@ -4288,7 +4303,7 @@ await BlocProvider.of<GetGuestAllPostCubit>(context)
                                                         Padding(
                                                           padding:
                                                               const EdgeInsets
-                                                                  .only(
+                                                                      .only(
                                                                   top: 0,
                                                                   right: 16),
                                                           child: Row(
@@ -4504,8 +4519,7 @@ await BlocProvider.of<GetGuestAllPostCubit>(context)
                                                                   child:
                                                                       Padding(
                                                                     padding:
-                                                                        const EdgeInsets
-                                                                            .all(
+                                                                        const EdgeInsets.all(
                                                                             5.0),
                                                                     child: Image
                                                                         .asset(
@@ -4607,8 +4621,7 @@ await BlocProvider.of<GetGuestAllPostCubit>(context)
                                                                   child:
                                                                       Padding(
                                                                     padding:
-                                                                        const EdgeInsets
-                                                                            .all(
+                                                                        const EdgeInsets.all(
                                                                             5.0),
                                                                     child: uuid ==
                                                                             null
@@ -5067,8 +5080,7 @@ await BlocProvider.of<GetGuestAllPostCubit>(context)
                                                                             BorderRadius.circular(10),
                                                                       ),
                                                                       Padding(
-                                                                        padding: const EdgeInsets
-                                                                            .only(
+                                                                        padding: const EdgeInsets.only(
                                                                             left:
                                                                                 9,
                                                                             top:
@@ -6142,12 +6154,10 @@ await BlocProvider.of<GetGuestAllPostCubit>(context)
     }
   }
 }
-
 class VideoListItem extends StatefulWidget {
   final String videoUrl;
   String? discrption;
-  bool? isData;
-  VideoListItem({required this.videoUrl, this.discrption,this.isData});
+  VideoListItem({required this.videoUrl, this.discrption});
 
   @override
   State<VideoListItem> createState() => _VideoListItemState();
@@ -6161,7 +6171,7 @@ class _VideoListItemState extends State<VideoListItem> {
     super.initState();
 
     flickManager = FlickManager(
-      autoPlay: false,
+      autoPlay: true,
       videoPlayerController: VideoPlayerController.networkUrl(
         Uri.parse(widget.videoUrl),
       ),
@@ -6177,10 +6187,14 @@ class _VideoListItemState extends State<VideoListItem> {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () {
-        print("asdgasgsdgf-${widget.videoUrl}");
-        print("asdgasgsdgf-${widget.discrption}");
+    return VisibilityDetector(
+      key: ObjectKey(flickManager),
+      onVisibilityChanged: (visiblityInfo) {
+        if (visiblityInfo.visibleFraction > 0.50) {
+          flickManager?.flickControlManager?.play();
+        } else {
+          flickManager?.flickControlManager?.pause();
+        }
       },
       child: Card(
         margin: EdgeInsets.only(
@@ -6201,7 +6215,6 @@ class _VideoListItemState extends State<VideoListItem> {
                     controls: FlickPortraitControls(),
                   ),
                 ),
-
               // Add other information or controls as needed
             ],
           ),
@@ -6210,5 +6223,3 @@ class _VideoListItemState extends State<VideoListItem> {
     );
   }
 }
-
-
