@@ -79,9 +79,9 @@ class Config {
       "user/api/get_list_of_post_with_comments";
   static const String GetSavePostAPI = "user/api/get_all_saved_posts";
   static const String uploadStroy = "user/api/upload_story";
-  static const String HashTagForYou = "user/api/hashtag_names_and_post_count";
+  static const String HashTagForYou = "guest/api/hashtag_names_and_post_count";
   static const String HashTagView = "user/api/get_posts_by_hashtag";
-  static const String getalluser = "user/api/get_all_user_list_for_hashtag";
+  static const String getalluser = "guest/api/get_all_user_list_for_hashtag";
   static const String add_update_about_me = "user/api/add_update_about_me";
   static const String get_about_me = "user/api/get_about_me";
   static const String get_all_request = "user/api/get_all_request";

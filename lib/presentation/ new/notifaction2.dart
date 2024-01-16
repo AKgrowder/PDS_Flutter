@@ -606,7 +606,20 @@ class _AllNotificationClassState extends State<AllNotificationClass> {
                                           child: Container(
                                             height: 60,
                                             width: 60,
-                                            child: AllNotificationData
+                                            child:  AllNotificationData
+                                                            ?.object?[index]
+                                                            .image != null ?
+                                                            CustomImageView(
+                                                                      url: "${AllNotificationData?.object?[index].image}",
+                                                                      height: 60,
+                                                                      width: 60,
+                                                                      fit: BoxFit
+                                                                          .fill,
+                                                                      radius: BorderRadius
+                                                                          .circular(
+                                                                              30),
+                                                                    )
+                                                           :  AllNotificationData
                                                             ?.object?[index]
                                                             .subject ==
                                                         "TAG_POST" ||
@@ -672,7 +685,7 @@ class _AllNotificationClassState extends State<AllNotificationClass> {
                                             SizedBox(
                                               height: 3,
                                             ),
-                                            Text(
+                                           /*  Text(
                                               "${AllNotificationData?.object?[index].title}",
                                               // "${AllNotificationData?.object?[index].title.toString()[0].toUpperCase()}${AllNotificationData?.object?[index].title?.toString().substring(1).toLowerCase()}",
                                               style: TextStyle(
@@ -682,7 +695,7 @@ class _AllNotificationClassState extends State<AllNotificationClass> {
                                             ),
                                             SizedBox(
                                               height: 3,
-                                            ),
+                                            ), */
                                             Container(
                                               // color: Colors.green,
                                               // height: 40,
@@ -692,10 +705,10 @@ class _AllNotificationClassState extends State<AllNotificationClass> {
                                                 // maxLines: 3,
                                                 // overflow: TextOverflow.ellipsis,
                                                 style: TextStyle(
-                                                    fontSize: 14,
+                                                    fontSize: 16,
                                                     fontFamily: "outfit",
                                                     fontWeight:
-                                                        FontWeight.normal),
+                                                        FontWeight.w500),
                                               ),
                                             ),
                                           ],
