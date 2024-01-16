@@ -148,7 +148,7 @@ class _MainViewState extends State<MainView> {
 
   @override
   Widget build(BuildContext context) {
-     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
       statusBarColor: Colors.white,
       statusBarBrightness: Brightness.dark,
       statusBarIconBrightness: Brightness.dark,
@@ -172,7 +172,7 @@ class _MainViewState extends State<MainView> {
             return SafeArea(
               //top: false,
               child: Container(
-                        color:Colors.black,
+                color: Colors.black,
                 child: ScrollablePageView(
                   scrollPhysics: controlNotifier.mediaPath.isEmpty &&
                       itemProvider.draggableWidget.isEmpty &&
@@ -249,7 +249,7 @@ class _MainViewState extends State<MainView> {
                                                               color: Colors
                                                                   .transparent),
                                                     ),
-                    
+
                                               ///list items
                                               ...itemProvider.draggableWidget
                                                   .map((editableItem) {
@@ -276,12 +276,13 @@ class _MainViewState extends State<MainView> {
                                                   },
                                                 );
                                               }),
-                    
+
                                               /// finger paint
                                               IgnorePointer(
                                                 ignoring: true,
                                                 child: Align(
-                                                  alignment: Alignment.topCenter,
+                                                  alignment:
+                                                      Alignment.topCenter,
                                                   child: Container(
                                                     decoration: BoxDecoration(
                                                       borderRadius:
@@ -293,7 +294,8 @@ class _MainViewState extends State<MainView> {
                                                         width: screenUtil
                                                             .screenWidth,
                                                         child: StreamBuilder<
-                                                            List<PaintingModel>>(
+                                                            List<
+                                                                PaintingModel>>(
                                                           stream: paintingProvider
                                                               .linesStreamController
                                                               .stream,
@@ -322,7 +324,7 @@ class _MainViewState extends State<MainView> {
                                 ),
                               ),
                             ),
-                    
+
                             /// middle text
                             if (itemProvider.draggableWidget.isEmpty &&
                                 !controlNotifier.isTextEditing &&
@@ -347,7 +349,7 @@ class _MainViewState extends State<MainView> {
                                           ])),
                                 ),
                               ),
-                    
+
                             /// top tools
                             Visibility(
                               visible: !controlNotifier.isTextEditing &&
@@ -359,7 +361,7 @@ class _MainViewState extends State<MainView> {
                                     context: context,
                                   )),
                             ),
-                    
+
                             /// delete item when the item is in position
                             DeleteItem(
                               activeItem: _activeItem,
@@ -367,7 +369,7 @@ class _MainViewState extends State<MainView> {
                                   const Duration(milliseconds: 300),
                               isDeletePosition: _isDeletePosition,
                             ),
-                    
+
                             /// show text editor
                             Visibility(
                               visible: controlNotifier.isTextEditing,
@@ -375,7 +377,7 @@ class _MainViewState extends State<MainView> {
                                 context: context,
                               ),
                             ),
-                    
+
                             /// show painting sketch
                             Visibility(
                               visible: controlNotifier.isPainting,
@@ -384,7 +386,7 @@ class _MainViewState extends State<MainView> {
                           ],
                         ),
                       ),
-                    
+
                       /// bottom tools
                       if (!kIsWeb)
                         /* BottomTools(
@@ -436,8 +438,8 @@ class _MainViewState extends State<MainView> {
                                                                   const Duration(
                                                                       milliseconds:
                                                                           300),
-                                                              curve:
-                                                                  Curves.easeIn);
+                                                              curve: Curves
+                                                                  .easeIn);
                                                       scrollProvider
                                                           .pageController
                                                           .animateToPage(1,
@@ -445,19 +447,21 @@ class _MainViewState extends State<MainView> {
                                                                   const Duration(
                                                                       milliseconds:
                                                                           300),
-                                                              curve: Curves.ease);
+                                                              curve:
+                                                                  Curves.ease);
                                                     }
                                                   },
                                                   child: const CoverThumbnail(
                                                     thumbnailQuality: 150,
                                                   ),
                                                 ))
-                    
+
                                             /// return clear [imagePath] provider
                                             : GestureDetector(
                                                 onTap: () {
                                                   /// clear image url variable
-                                                  controlNotifier.mediaPath = '';
+                                                  controlNotifier.mediaPath =
+                                                      '';
                                                   itemProvider.draggableWidget
                                                       .removeAt(0);
                                                   _controller?.dispose();
@@ -479,18 +483,18 @@ class _MainViewState extends State<MainView> {
                                     ),
                                   ),
                                 ),
-                    
+
                                 /// center logo
                                 if (controlNotifier.middleBottomWidget != null)
                                   Expanded(
                                     child: Center(
                                       child: Container(
                                           alignment: Alignment.bottomCenter,
-                                          child:
-                                              controlNotifier.middleBottomWidget),
+                                          child: controlNotifier
+                                              .middleBottomWidget),
                                     ),
                                   ),
-                    
+
                                 /// save final image to gallery
                                 Expanded(
                                   child: Container(
@@ -504,15 +508,16 @@ class _MainViewState extends State<MainView> {
                                                 true) {
                                             } else {
                                               // isData = false;
-                    
+
                                               String pngUri;
                                               print("check else condison");
                                               await takePicture(
                                                       isTextEditing:
                                                           controlNotifier
                                                               .isTextEditing,
-                                                      SelectPath: controlNotifier
-                                                          .mediaPath,
+                                                      SelectPath:
+                                                          controlNotifier
+                                                              .mediaPath,
                                                       contentKey: contentKey,
                                                       context: context,
                                                       saveToGallery: false)
@@ -522,7 +527,7 @@ class _MainViewState extends State<MainView> {
                                                   print(
                                                       "asdfasdasdasdasdasdad-$pngUri");
                                                   print(pngUri);
-                    
+
                                                   print(pngUri);
                                                   widget.onDone!(pngUri);
                                                 } else {}
@@ -553,7 +558,8 @@ class _MainViewState extends State<MainView> {
                                                   Text(
                                                     'Share',
                                                     style: TextStyle(
-                                                        color: isData == false &&
+                                                        color: isData ==
+                                                                    false &&
                                                                 controlNotifier
                                                                         .mediaPath
                                                                         .isEmpty ==
@@ -566,8 +572,8 @@ class _MainViewState extends State<MainView> {
                                                             FontWeight.w400),
                                                   ),
                                                   const Padding(
-                                                    padding:
-                                                        EdgeInsets.only(left: 5),
+                                                    padding: EdgeInsets.only(
+                                                        left: 5),
                                                     child: Icon(
                                                       Icons.arrow_forward_ios,
                                                       color: Colors.white,
@@ -593,20 +599,20 @@ class _MainViewState extends State<MainView> {
                     // gridViewPhysics: itemProvider.draggableWidget.isEmpty
                     //     ? const NeverScrollableScrollPhysics()
                     //     : const ScrollPhysics(),
-                    
+
                     pathList: (path) {
                       setState(() {
                         data = path;
-                    
+
                         if (data == null || data.isEmpty) {
                           print("this condsion is working");
-                    
+
                           itemProvider.draggableWidget = [];
                           controlNotifier.mediaPath = '';
                         }
                       });
-                    
-                      print("value Get Check222-${path}");
+
+                      print("value Get Check222-${path.first.path.toString()}");
                       print("path-$data");
                       print("value GetCheck-${path}");
                       if (path.first.path
@@ -620,12 +626,67 @@ class _MainViewState extends State<MainView> {
                         print('this is the Get');
                         getVideo(path.first.path.toString(), 1, context,
                             controlNotifier, itemProvider);
-                      } else {
+                      } else if (path.first.path
+                                  .toString()
+                                  .split('/')
+                                  .last
+                                  .toString()
+                                  .split('.')
+                                  .last ==
+                              'jpg' ||
+                          path.first.path
+                                  .toString()
+                                  .split('/')
+                                  .last
+                                  .toString()
+                                  .split('.')
+                                  .last ==
+                              'jpeg' ||
+                          path.first.path
+                                  .toString()
+                                  .split('/')
+                                  .last
+                                  .toString()
+                                  .split('.')
+                                  .last ==
+                              'JPEG' ||
+                          path.first.path
+                                  .toString()
+                                  .split('/')
+                                  .last
+                                  .toString()
+                                  .split('.')
+                                  .last ==
+                              'png') {
                         if (path.first.path.toString().isNotEmpty) {
                           getFileSize(path.first.path.toString(), 1, context,
                               controlNotifier, itemProvider);
                           Navigator.of(context);
                         }
+                      } else {
+                        if (path.first.path.toString().isNotEmpty) {
+                          showDialog(
+                            context: context,
+                            builder: (context) => AlertDialog(
+                              title: const Text('Invalid Media Format'),
+                              content: const Text(
+                                  'Please select a JPG, JPEG, PNG image, or MP4 video.'),
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: const Text('OK'),
+                                ),
+                              ],
+                            ),
+                          );
+                        }
+                        setState(() {
+                          data= '';
+                          itemProvider.draggableWidget = [];
+                          controlNotifier.mediaPath = '';
+                        });
                       }
                     },
                     appBarLeadingWidget: Padding(
@@ -661,15 +722,15 @@ class _MainViewState extends State<MainView> {
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) => VideoEditor(
-                                              file:
-                                                  File(controlNotifier.mediaPath),
+                                              file: File(
+                                                  controlNotifier.mediaPath),
                                             )));
                                 if (file.path.isNotEmpty) {
                                   controlNotifier.mediaPath = file.path;
-                    
-                                  _controller =
-                                      VideoPlayerController.file(File(file.path));
-                    
+
+                                  _controller = VideoPlayerController.file(
+                                      File(file.path));
+
                                   setState(() {});
                                   _controller
                                       ?.initialize()
@@ -683,13 +744,14 @@ class _MainViewState extends State<MainView> {
                                             print(
                                                 "check durationDataSet -${duration}");
                                           }));
-                    
+
                                   setState(() {
                                     _controller?.play();
                                     _controller?.setLooping(true);
                                   });
                                   scrollProvider.pageController.animateToPage(0,
-                                      duration: const Duration(milliseconds: 300),
+                                      duration:
+                                          const Duration(milliseconds: 300),
                                       curve: Curves.easeIn);
                                 }
                               }
@@ -710,7 +772,9 @@ class _MainViewState extends State<MainView> {
                                   width: 1.2,
                                 )),
                             child: Text(
-                              data == null || data.isEmpty ? 'Cancel' : 'Select',
+                              data == null || data.isEmpty
+                                  ? 'Cancel'
+                                  : 'Select',
                               style: const TextStyle(
                                   color: Colors.white,
                                   fontSize: 15,

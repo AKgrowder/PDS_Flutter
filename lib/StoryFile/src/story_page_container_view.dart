@@ -17,8 +17,10 @@ import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/core/utils/sharedPreferences.dart';
 import 'package:pds/presentation/%20new/newbottembar.dart';
 import 'package:pds/presentation/%20new/profileNew.dart';
+import 'package:photo_view/photo_view.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:video_player/video_player.dart';
+import 'package:widget_zoom/widget_zoom.dart';
 
 import '../../core/utils/image_constant.dart';
 import '../../widgets/custom_image_view.dart';
@@ -165,7 +167,6 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
             } else {
               _controller?.dispose();
               Navigator.of(context).pop();
-              
             }
           },
           shape: RoundedRectangleBorder(
@@ -356,11 +357,12 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
         StoryView = false;
 
         // if (User_ID != widget.buttonData.images[_curSegmentIndex].userUid) {
-            print("check ImageData-${widget.buttonData.images[_curSegmentIndex].storyUid}");
-          BlocProvider.of<ViewStoryCubit>(context).ViewStory(
-              context,
-              "${User_ID}",
-              "${widget.buttonData.images[_curSegmentIndex].storyUid}");
+        print(
+            "check ImageData-${widget.buttonData.images[_curSegmentIndex].storyUid}");
+        BlocProvider.of<ViewStoryCubit>(context).ViewStory(
+            context,
+            "${User_ID}",
+            "${widget.buttonData.images[_curSegmentIndex].storyUid}");
         // } else {
         //      BlocProvider.of<ViewStoryCubit>(context).ViewStory(
         //       context,
@@ -377,7 +379,69 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
             ),
           )
         : StoryPageScaffold(
-            body: Container(
+            body: widget.buttonData.images[_curSegmentIndex].image!
+                    .contains("car")
+                ? Container(
+                    width: double.infinity,
+                    height: double.infinity,
+                    decoration: BoxDecoration(
+                      image: widget.buttonData.images[_curSegmentIndex].image!
+                              .contains("car")
+                          ? DecorationImage(
+                              image: AssetImage(ImageConstant.pdslogo),
+                              fit: BoxFit.cover,
+                            )
+                          : DecorationImage(
+                              image: networkImage,
+                              fit: BoxFit.cover,
+                            ),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.max,
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Text(
+                            '',
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 30.0,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                  )
+                : Column(
+                    children: [
+                      Expanded(
+                        child: WidgetZoom(
+                            heroAnimationTag: 'tag',
+                            zoomWidget: Container(
+                              width: double.infinity,
+                              height: double.infinity,
+                              decoration: BoxDecoration(
+                                image: widget.buttonData
+                                        .images[_curSegmentIndex].image!
+                                        .contains("car")
+                                    ? DecorationImage(
+                                        image:
+                                            AssetImage(ImageConstant.pdslogo),
+                                        fit: BoxFit.cover,
+                                      )
+                                    : DecorationImage(
+                                        image: networkImage,
+                                        fit: BoxFit.cover,
+                                      ),
+                              ),
+                            )),
+                      ),
+                    ],
+                  )
+
+            /* Container(
               width: double.infinity,
               height: double.infinity,
               decoration: BoxDecoration(
@@ -409,8 +473,8 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
                   ],
                 ),
               ),
-            ),
-          );
+            ), */
+            );
   }
 
   Widget _buildPageContent1() {
@@ -454,14 +518,14 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
     if (imageLoaded == true) {
       if (StoryView == true) {
         StoryView = false;
-            print("check ImageData1-${widget.buttonData.images[_curSegmentIndex].storyUid}");
-
+        print(
+            "check ImageData1-${widget.buttonData.images[_curSegmentIndex].storyUid}");
 
         // if (User_ID != widget.buttonData.images[_curSegmentIndex].userUid) {
-          BlocProvider.of<ViewStoryCubit>(context).ViewStory(
-              context,
-              "${User_ID}",
-              "${widget.buttonData.images[_curSegmentIndex].storyUid}");
+        BlocProvider.of<ViewStoryCubit>(context).ViewStory(
+            context,
+            "${User_ID}",
+            "${widget.buttonData.images[_curSegmentIndex].storyUid}");
         // }else{
         //    BlocProvider.of<ViewStoryCubit>(context).ViewStory(
         //       context,
@@ -583,23 +647,11 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
                                                         ViewStoryCubit>(context)
                                                     .delete_story(context,
                                                         "${widget.buttonData.images[_curSegmentIndex].storyUid}");
-                                                Future.delayed(
-                                                    Duration(seconds: 3));
-                                                Navigator.of(context)
-                                                    .pushAndRemoveUntil(
-                                                        MaterialPageRoute(
-                                                            builder: (context) =>
-                                                                NewBottomBar(
-                                                                  buttomIndex:
-                                                                      0,
-                                                                )),
-                                                        (Route<dynamic>
-                                                                route) =>
-                                                            false);
                                               },
                                               child: Icon(
                                                 Icons.delete,
-                                                color: ColorConstant.primary_color,
+                                                color:
+                                                    ColorConstant.primary_color,
                                               ),
                                             ),
                                             SizedBox(
@@ -915,6 +967,12 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
             backgroundColor: ColorConstant.primary_color,
           );
           ScaffoldMessenger.of(context).showSnackBar(snackBar);
+          Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(
+                  builder: (context) => NewBottomBar(
+                        buttomIndex: 0,
+                      )),
+              (Route<dynamic> route) => false);
         }
       }, builder: (context, state) {
         return _buildPageStructure();
