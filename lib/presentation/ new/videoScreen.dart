@@ -36,8 +36,6 @@ class _VideoListItem1State extends State<VideoListItem1> {
               setState(() {});
             });
     }
-
-   
   }
 
   @override
@@ -77,7 +75,7 @@ class _VideoListItem1State extends State<VideoListItem1> {
                     controls: FlickPortraitControls(),
                   ),
                 ),
-    
+
               if (widget.isData == false && widget.videoUrl.isNotEmpty)
                 videoPlayerController!.value.isInitialized
                     ? Stack(
@@ -87,27 +85,28 @@ class _VideoListItem1State extends State<VideoListItem1> {
                                 videoPlayerController!.value.aspectRatio,
                             child: VideoPlayer(videoPlayerController!),
                           ),
-                          Positioned(
-                            top: 50,
-                            right: 50,
-                            left: 50,
-                            child: Container(
-                              child: InkWell(
-                                onTap: () {
-                                  if (videoPlayerController!.value.isPlaying) {
-                                    videoPlayerController!.pause();
-                                    setState(() {});
-                                  } else {
-                                    videoPlayerController!.play();
-                                    setState(() {});
-                                  }
-                                },
-                                child: Icon(
-                                  videoPlayerController!.value.isPlaying
-                                      ? Icons.pause
-                                      : Icons.play_arrow,
-                                  size: 50.0,
-                                  color: Colors.white,
+                          Positioned.fill(
+                            child: Align(
+                              alignment: Alignment.center,
+                              child: Container(
+                                child: InkWell(
+                                  onTap: () {
+                                    if (videoPlayerController!
+                                        .value.isPlaying) {
+                                      videoPlayerController!.pause();
+                                      setState(() {});
+                                    } else {
+                                      videoPlayerController!.play();
+                                      setState(() {});
+                                    }
+                                  },
+                                  child: Icon(
+                                    videoPlayerController!.value.isPlaying
+                                        ? Icons.pause
+                                        : Icons.play_arrow,
+                                    size: 50.0,
+                                    color: Colors.white,
+                                  ),
                                 ),
                               ),
                             ),
