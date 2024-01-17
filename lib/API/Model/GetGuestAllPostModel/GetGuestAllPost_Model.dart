@@ -113,6 +113,8 @@ class Content {
   int? repostCount;
   String? userAccountType;
   String? thumbnailImageUrl;
+  bool? isfalsegu;
+  bool? isfalsehin;
 
   Content({
     this.postUid,
@@ -134,6 +136,9 @@ class Content {
     this.repostCount,
     this.userAccountType,
     this.thumbnailImageUrl,
+    this.isfalsegu,
+    this.isfalsehin,
+
   });
 
   Content.fromJson(Map<String, dynamic> json) {
