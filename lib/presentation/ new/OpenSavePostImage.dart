@@ -20,6 +20,7 @@ import 'package:pds/widgets/commentPdf.dart';
 import 'package:pds/widgets/custom_image_view.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:widget_zoom/widget_zoom.dart';
 
 import '../../API/Bloc/OpenSaveImagepost_Bloc/OpenSaveImagepost_state.dart';
 import '../../API/Model/UserTagModel/UserTag_model.dart';
@@ -812,142 +813,162 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
                                                   ?.description ==
                                               null
                                           ? SizedBox()
-                                          : Padding(
-                                              padding: const EdgeInsets.only(
-                                                  left: 10, top: 10),
-                                              child: Align(
-                                                alignment: Alignment.centerLeft,
-                                                child: LinkifyText(
-                                                  "${OpenSaveModelData?.object?.repostOn?.description}",
-                                                  linkStyle: TextStyle(
-                                                    color: Colors.blue,
-                                                    fontFamily: 'outfit',
-                                                  ),
-                                                  textStyle: TextStyle(
-                                                    color: Colors.white,
-                                                    fontFamily: 'outfit',
-                                                  ),
-                                                  linkTypes: [
-                                                    LinkType.url,
-                                                    LinkType.userTag,
-                                                    LinkType.hashTag,
-                                                    // LinkType
-                                                    //     .email
-                                                  ],
-                                                  onTap: (link) async {
-                                                    var SelectedTest =
-                                                        link.value.toString();
-                                                    var Link =
-                                                        SelectedTest.startsWith(
-                                                            'https');
-                                                    var Link1 =
-                                                        SelectedTest.startsWith(
-                                                            'http');
-                                                    var Link2 =
-                                                        SelectedTest.startsWith(
-                                                            'www');
-                                                    var Link3 =
-                                                        SelectedTest.startsWith(
-                                                            'WWW');
-                                                    var Link4 =
-                                                        SelectedTest.startsWith(
-                                                            'HTTPS');
-                                                    var Link5 =
-                                                        SelectedTest.startsWith(
-                                                            'HTTP');
-                                                    var Link6 =
-                                                        SelectedTest.startsWith(
-                                                            'https://pdslink.page.link/');
-                                                    print(SelectedTest
-                                                        .toString());
+                                          : GestureDetector(
+                                              onTap: () {
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          OpenSavePostImage(
+                                                              PostID:
+                                                                  OpenSaveModelData
+                                                                      ?.object
+                                                                      ?.repostOn
+                                                                      ?.postUid)),
+                                                ).then((value) => BlocProvider
+                                                        .of<OpenSaveCubit>(
+                                                            context)
+                                                    .openSaveImagePostAPI(
+                                                        context,
+                                                        "${widget.PostID}"));
+                                              },
+                                              child: Padding(
+                                                padding: const EdgeInsets.only(
+                                                    left: 10, top: 10),
+                                                child: Align(
+                                                  alignment:
+                                                      Alignment.centerLeft,
+                                                  child: LinkifyText(
+                                                    "${OpenSaveModelData?.object?.repostOn?.description}",
+                                                    linkStyle: TextStyle(
+                                                      color: Colors.blue,
+                                                      fontFamily: 'outfit',
+                                                    ),
+                                                    textStyle: TextStyle(
+                                                      color: Colors.white,
+                                                      fontFamily: 'outfit',
+                                                    ),
+                                                    linkTypes: [
+                                                      LinkType.url,
+                                                      LinkType.userTag,
+                                                      LinkType.hashTag,
+                                                      // LinkType
+                                                      //     .email
+                                                    ],
+                                                    onTap: (link) async {
+                                                      var SelectedTest =
+                                                          link.value.toString();
+                                                      var Link = SelectedTest
+                                                          .startsWith('https');
+                                                      var Link1 = SelectedTest
+                                                          .startsWith('http');
+                                                      var Link2 = SelectedTest
+                                                          .startsWith('www');
+                                                      var Link3 = SelectedTest
+                                                          .startsWith('WWW');
+                                                      var Link4 = SelectedTest
+                                                          .startsWith('HTTPS');
+                                                      var Link5 = SelectedTest
+                                                          .startsWith('HTTP');
+                                                      var Link6 = SelectedTest
+                                                          .startsWith(
+                                                              'https://pdslink.page.link/');
+                                                      print(SelectedTest
+                                                          .toString());
 
-                                                    if (Link == true ||
-                                                        Link1 == true ||
-                                                        Link2 == true ||
-                                                        Link3 == true ||
-                                                        Link4 == true ||
-                                                        Link5 == true ||
-                                                        Link6 == true) {
-                                                      if (Link2 == true ||
-                                                          Link3 == true) {
-                                                        launchUrl(Uri.parse(
-                                                            "https://${link.value.toString()}"));
+                                                      if (Link == true ||
+                                                          Link1 == true ||
+                                                          Link2 == true ||
+                                                          Link3 == true ||
+                                                          Link4 == true ||
+                                                          Link5 == true ||
+                                                          Link6 == true) {
+                                                        if (Link2 == true ||
+                                                            Link3 == true) {
+                                                          launchUrl(Uri.parse(
+                                                              "https://${link.value.toString()}"));
+                                                        } else {
+                                                          if (Link6 == true) {
+                                                            print(
+                                                                "yes i am in room");
+                                                            Navigator.push(
+                                                                context,
+                                                                MaterialPageRoute(
+                                                              builder:
+                                                                  (context) {
+                                                                return NewBottomBar(
+                                                                  buttomIndex:
+                                                                      1,
+                                                                );
+                                                              },
+                                                            ));
+                                                          } else {
+                                                            launchUrl(Uri.parse(
+                                                                link.value
+                                                                    .toString()));
+                                                            print(
+                                                                "link.valuelink.value -- ${link.value}");
+                                                          }
+                                                        }
                                                       } else {
-                                                        if (Link6 == true) {
-                                                          print(
-                                                              "yes i am in room");
+                                                        if (link.value!
+                                                            .startsWith('#')) {
+                                                          print("${link}");
                                                           Navigator.push(
                                                               context,
                                                               MaterialPageRoute(
-                                                            builder: (context) {
-                                                              return NewBottomBar(
-                                                                buttomIndex: 1,
-                                                              );
-                                                            },
-                                                          ));
+                                                                builder: (context) =>
+                                                                    HashTagViewScreen(
+                                                                        title:
+                                                                            "${link.value}"),
+                                                              ));
+                                                        } else if (link.value!
+                                                            .startsWith('@')) {
+                                                          var name;
+                                                          var tagName;
+                                                          name = SelectedTest;
+                                                          tagName =
+                                                              name.replaceAll(
+                                                                  "@", "");
+                                                          await BlocProvider.of<
+                                                                      OpenSaveCubit>(
+                                                                  context)
+                                                              .UserTagAPI(
+                                                                  context,
+                                                                  tagName);
+
+                                                          Navigator.push(
+                                                              context,
+                                                              MaterialPageRoute(
+                                                                  builder:
+                                                                      (context) {
+                                                            return ProfileScreen(
+                                                                User_ID:
+                                                                    "${userTagModel?.object}",
+                                                                isFollowing:
+                                                                    "");
+                                                          }));
+
+                                                          print(
+                                                              "tagName -- ${tagName}");
+                                                          print(
+                                                              "user id -- ${userTagModel?.object}");
                                                         } else {
                                                           launchUrl(Uri.parse(
-                                                              link.value
-                                                                  .toString()));
-                                                          print(
-                                                              "link.valuelink.value -- ${link.value}");
+                                                              "https://${link.value.toString()}"));
                                                         }
                                                       }
-                                                    } else {
-                                                      if (link.value!
-                                                          .startsWith('#')) {
-                                                        print("${link}");
-                                                        Navigator.push(
-                                                            context,
-                                                            MaterialPageRoute(
-                                                              builder: (context) =>
-                                                                  HashTagViewScreen(
-                                                                      title:
-                                                                          "${link.value}"),
-                                                            ));
-                                                      } else if (link.value!
-                                                          .startsWith('@')) {
-                                                        var name;
-                                                        var tagName;
-                                                        name = SelectedTest;
-                                                        tagName =
-                                                            name.replaceAll(
-                                                                "@", "");
-                                                        await BlocProvider.of<
-                                                                    OpenSaveCubit>(
-                                                                context)
-                                                            .UserTagAPI(context,
-                                                                tagName);
-
-                                                        Navigator.push(context,
-                                                            MaterialPageRoute(
-                                                                builder:
-                                                                    (context) {
-                                                          return ProfileScreen(
-                                                              User_ID:
-                                                                  "${userTagModel?.object}",
-                                                              isFollowing: "");
-                                                        }));
-
-                                                        print(
-                                                            "tagName -- ${tagName}");
-                                                        print(
-                                                            "user id -- ${userTagModel?.object}");
-                                                      } else {
-                                                        launchUrl(Uri.parse(
-                                                            "https://${link.value.toString()}"));
-                                                      }
-                                                    }
-                                                  },
-                                                ), /* Text(
-                          "${OpenSaveModelData?.object?.description ?? ""}",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                            fontFamily: 'outfit',
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ) */
+                                                    },
+                                                  ), /* Text(
+                                                                    "${OpenSaveModelData?.object?.description ?? ""}",
+                                                                    style: TextStyle(
+                                                                      color: Colors.white,
+                                                                      fontSize: 16,
+                                                                      fontFamily: 'outfit',
+                                                                      fontWeight: FontWeight.w600,
+                                                                    ),
+                                                                  ) */
+                                                ),
                                               ),
                                             ),
                                       Container(
@@ -1574,12 +1595,36 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
                                                 ? OpenSaveModelData?.object
                                                             ?.postDataType ==
                                                         "IMAGE"
-                                                    ? Center(
+                                                    ? SizedBox(
+                                                        height: _height,
+                                                        width: _width,
+                                                        child: WidgetZoom(
+                                                          heroAnimationTag:
+                                                              'tag',
+                                                          zoomWidget: Container(
+                                                            width:
+                                                                double.infinity,
+                                                            height:
+                                                                double.infinity,
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              image:
+                                                                  DecorationImage(
+                                                                image: NetworkImage(
+                                                                    "${OpenSaveModelData?.object?.postData?[0]}"),
+                                                                fit: BoxFit
+                                                                    .cover,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      )
+                                                    /*  Center(ss
                                                         child: CustomImageView(
                                                         fit: BoxFit.cover,
                                                         url:
                                                             "${OpenSaveModelData?.object?.postData?[0]}",
-                                                      ))
+                                                      )) */
                                                     : OpenSaveModelData?.object
                                                                 ?.postDataType ==
                                                             "ATTACHMENT"
@@ -1652,8 +1697,22 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
                                                                           children: [
                                                                             Align(
                                                                               alignment: Alignment.topCenter,
-                                                                              child: CustomImageView(
-                                                                                url: "${OpenSaveModelData?.object?.postData?[index1]}",
+                                                                              child: Container(
+                                                                                height: 200,
+                                                                                width: 400,
+                                                                                child: WidgetZoom(
+                                                                                  heroAnimationTag: 'tag',
+                                                                                  zoomWidget: Container(
+                                                                                    width: double.infinity,
+                                                                                    height: double.infinity,
+                                                                                    decoration: BoxDecoration(
+                                                                                      image: DecorationImage(
+                                                                                        image: NetworkImage("${OpenSaveModelData?.object?.postData?[index1]}"),
+                                                                                        fit: BoxFit.cover,
+                                                                                      ),
+                                                                                    ),
+                                                                                  ),
+                                                                                ),
                                                                               ),
                                                                             ),
                                                                             Align(
