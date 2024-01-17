@@ -33,6 +33,7 @@ dependencies:
   syncfusion_flutter_pdfviewer: ^21.2.3
   url_launcher:
   share_plus: 
+  translator: 
   hashtagable: ^2.3.0+1
   carousel_slider: ^4.2.1
   dots_indicator: ^2.1.0
