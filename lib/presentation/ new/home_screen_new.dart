@@ -594,7 +594,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
   LoginCheck() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     AutoSetRoomID = prefs.getString(PreferencesKey.AutoSetRoomID);
-    if (AutoSetRoomID == "Done") {
+        if (AutoSetRoomID == "Done" || AutoSetRoomID == "" || AutoSetRoomID == null) {
       print("Auto Enter in Room");
     } else {
       if (User_ID != null) {

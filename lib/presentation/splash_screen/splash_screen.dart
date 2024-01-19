@@ -287,7 +287,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
       print('Deeplinks uri:${deepLink.path}');
       setState(() {
-        prefs.setString(PreferencesKey.AutoSetRoomID, deepLink1);
+        // prefs.setString(PreferencesKey.AutoSetRoomID, deepLink1);
       });
     }
   }

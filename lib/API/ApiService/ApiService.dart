@@ -30,8 +30,8 @@ class ApiServices {
           // "https://0b8e-2405-201-200b-a0cf-4523-3bc3-2996-dc22.ngrok.io/";
           // "https://uatapi.packagingdepot.store/";
           // "https://api.packagingdepot.store/";
-          "https://uatapi.inpackaging.com/";
-          // "https://api.inpackaging.com/";
+          // "https://uatapi.inpackaging.com/";
+          "https://api.inpackaging.com/";
       // "http://192.168.29.100:8081/";
     }
 
@@ -69,8 +69,8 @@ class ApiServices {
           // "https://0b8e-2405-201-200b-a0cf-4523-3bc3-2996-dc22.ngrok.io/";
           // "https://uatapi.packagingdepot.store/";
           // "https://api.packagingdepot.store/";
-          "https://uatapi.inpackaging.com/";
-          // "https://api.inpackaging.com/";
+          // "https://uatapi.inpackaging.com/";
+          "https://api.inpackaging.com/";
       // "http://192.168.29.100:8081/";
     }
     print("API => ******** ${baseURL + APIurl}");
