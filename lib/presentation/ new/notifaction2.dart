@@ -860,6 +860,12 @@ class _RequestOrderClassState extends State<RequestOrderClass> {
                         itemCount: widget.requestListModelData?.object?.length,
                         // itemCount: 5,
                         itemBuilder: (BuildContext context, int index) {
+                           DateTime? parsedDateTime1;
+                    if (widget.requestListModelData?.object?[index].createdAt !=
+                        null) {
+                      parsedDateTime1 = DateTime.parse(
+                          '${widget.requestListModelData?.object?[index].createdAt ?? ""}');
+                    }
                           return Container(
                             child: Column(
                               children: [
@@ -1035,9 +1041,10 @@ class _RequestOrderClassState extends State<RequestOrderClass> {
                                               ),
                                               Padding(
                                                 padding: const EdgeInsets.only(
-                                                    left: 100),
+                                                    left: 150),
                                                 child: Text(
-                                                  customFormat(DateTime.now()),
+                                                  getTimeDifference1(
+                                                  parsedDateTime1!),
                                                   overflow:
                                                       TextOverflow.ellipsis,
                                                   maxLines: 2,
@@ -1078,6 +1085,34 @@ class _RequestOrderClassState extends State<RequestOrderClass> {
                   ),
                 );
     });
+  }
+
+   String getTimeDifference1(DateTime dateTime) {
+    final difference = DateTime.now().difference(dateTime);
+    if (difference.inDays > 0) {
+      if (difference.inDays == 1) {
+        return '1 day ago';
+      } else if (difference.inDays < 7) {
+        return '${difference.inDays} days ago';
+      } else {
+        final weeks = (difference.inDays / 7).floor();
+        return '$weeks week${weeks == 1 ? '' : 's'} ago';
+      }
+    } else if (difference.inHours > 0) {
+      if (difference.inHours == 1) {
+        return '1 hour ago';
+      } else {
+        return '${difference.inHours} hours ago';
+      }
+    } else if (difference.inMinutes > 0) {
+      if (difference.inMinutes == 1) {
+        return '1 minute ago';
+      } else {
+        return '${difference.inMinutes} minutes ago';
+      }
+    } else {
+      return 'Just now';
+    }
   }
 }
 

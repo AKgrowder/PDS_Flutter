@@ -80,12 +80,14 @@ class _FollowersState extends State<Followers> {
           if (state is FollowersClass) {
             //get all follwers
             followersClassModel1 = state.followersClassModel;
+            print("check Klength0${followersClassModel1?.object?.length}");
 
             apiDataGet = true;
           }
           if (state is FollowersClass1) {
             //get all follwing
             followersClassModel1 = state.followersClassModel1;
+            print("check Klength0${followersClassModel1?.object?.length}");
             apiDataGet = true;
           }
           if (state is RemoveLoddingState) {
