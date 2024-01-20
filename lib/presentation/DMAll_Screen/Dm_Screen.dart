@@ -427,6 +427,21 @@ class _DmScreenState extends State<DmScreen> {
                                       ),
                                     ),
                                   ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(right: 5),
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        
+                                      },
+                                      child: Container(
+                                        height: 30,
+                                        width: 30,
+                                        // color: Colors.red,
+                                        child:
+                                            Center(child: Icon(Icons.videocam)),
+                                      ),
+                                    ),
+                                  ),
                                   /*     Padding(
                                     padding: const EdgeInsets.only(left: 7),
                                     child: GestureDetector(

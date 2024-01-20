@@ -6,6 +6,7 @@ import 'package:pds/API/Model/NewProfileScreenModel/GetSavePost_Model.dart';
 import 'package:pds/API/Model/NewProfileScreenModel/GetUserPostCommet_Model.dart';
 import 'package:pds/API/Model/NewProfileScreenModel/NewProfileScreen_Model.dart';
 import 'package:pds/API/Model/OnTimeDMModel/OnTimeDMModel.dart';
+import 'package:pds/API/Model/RePost_Model/RePost_model.dart';
 import 'package:pds/API/Model/UserTagModel/UserTag_model.dart';
 import 'package:pds/API/Model/WorkExperience_Model/ADDExperience_model.dart';
 import 'package:pds/API/Model/WorkExperience_Model/DeleteExperience_model.dart';
@@ -136,4 +137,9 @@ class AddPostErrorState extends NewProfileSState {
 class UserTagLoadedState extends NewProfileSState {
   final UserTagModel userTagModel;
   UserTagLoadedState(this.userTagModel);
+}
+
+class RePostLoadedState extends NewProfileSState {
+  final RePostModel RePost;
+  RePostLoadedState(this.RePost);
 }

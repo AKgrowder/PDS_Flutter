@@ -20,7 +20,6 @@ import 'package:pds/presentation/%20new/profileNew.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:video_player/video_player.dart';
-import 'package:widget_zoom/widget_zoom.dart';
 
 import '../../core/utils/image_constant.dart';
 import '../../widgets/custom_image_view.dart';
@@ -414,67 +413,9 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
                       ),
                     ),
                   )
-                : Column(
-                    children: [
-                      Expanded(
-                        child: WidgetZoom(
-                            heroAnimationTag: 'tag',
-                            zoomWidget: Container(
-                              width: double.infinity,
-                              height: double.infinity,
-                              decoration: BoxDecoration(
-                                image: widget.buttonData
-                                        .images[_curSegmentIndex].image!
-                                        .contains("car")
-                                    ? DecorationImage(
-                                        image:
-                                            AssetImage(ImageConstant.pdslogo),
-                                        fit: BoxFit.cover,
-                                      )
-                                    : DecorationImage(
-                                        image: networkImage,
-                                        fit: BoxFit.cover,
-                                      ),
-                              ),
-                            )),
-                      ),
-                    ],
-                  )
-
-            /* Container(
-              width: double.infinity,
-              height: double.infinity,
-              decoration: BoxDecoration(
-                image: widget.buttonData.images[_curSegmentIndex].image!
-                        .contains("car")
-                    ? DecorationImage(
-                        image: AssetImage(ImageConstant.pdslogo),
-                        fit: BoxFit.cover,
-                      )
-                    : DecorationImage(
-                        image: networkImage,
-                        fit: BoxFit.cover,
-                      ),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Column(
-                  mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Text(
-                      '',
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 30.0,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    )
-                  ],
-                ),
-              ),
-            ), */
-            );
+                : ZoomableImage(
+                    imageUrl: widget.buttonData.images[_curSegmentIndex].image!,
+                  ));
   }
 
   Widget _buildPageContent1() {
@@ -1296,5 +1237,26 @@ class _TimelinePainter extends CustomPainter {
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) {
     return true;
+  }
+}
+
+class ZoomableImage extends StatelessWidget {
+  final String imageUrl;
+  ZoomableImage({required this.imageUrl});
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: () {
+        print("this is the Data Get-${imageUrl}");
+      },
+      child: PhotoView(
+        imageProvider: NetworkImage(imageUrl),
+        minScale: PhotoViewComputedScale.contained,
+        maxScale: PhotoViewComputedScale.covered * 2,
+        backgroundDecoration: BoxDecoration(
+          color: Colors.black,
+        ),
+      ),
+    );
   }
 }
