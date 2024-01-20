@@ -20,6 +20,8 @@ import 'package:pds/widgets/commentPdf.dart';
 import 'package:pds/widgets/custom_image_view.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:photo_view/photo_view.dart';
+
 import 'package:widget_zoom/widget_zoom.dart';
 
 import '../../API/Bloc/OpenSaveImagepost_Bloc/OpenSaveImagepost_state.dart';
@@ -1595,7 +1597,29 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
                                                 ? OpenSaveModelData?.object
                                                             ?.postDataType ==
                                                         "IMAGE"
-                                                    ? SizedBox(
+                                                    ? Container(
+                                                        height: _height / 2,
+                                                        width: _width,
+                                                        child: PhotoView(
+                                                          imageProvider: NetworkImage(
+                                                              OpenSaveModelData
+                                                                      ?.object
+                                                                      ?.postData?[0] ??
+                                                                  ''),
+                                                          minScale:
+                                                              PhotoViewComputedScale
+                                                                  .contained,
+                                                          maxScale:
+                                                              PhotoViewComputedScale
+                                                                      .covered *
+                                                                  2,
+                                                          backgroundDecoration:
+                                                              BoxDecoration(
+                                                            color: Colors.black,
+                                                          ),
+                                                        ),
+                                                      )
+                                                    /*  SizedBox(
                                                         height: _height,
                                                         width: _width,
                                                         child: WidgetZoom(
@@ -1618,7 +1642,7 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
                                                             ),
                                                           ),
                                                         ),
-                                                      )
+                                                      ) */
                                                     /*  Center(ss
                                                         child: CustomImageView(
                                                         fit: BoxFit.cover,
@@ -1696,25 +1720,19 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
                                                                             Stack(
                                                                           children: [
                                                                             Align(
-                                                                              alignment: Alignment.topCenter,
-                                                                              child: Container(
-                                                                                height: 200,
-                                                                                width: 400,
-                                                                                child: WidgetZoom(
-                                                                                  heroAnimationTag: 'tag',
-                                                                                  zoomWidget: Container(
-                                                                                    width: double.infinity,
-                                                                                    height: double.infinity,
-                                                                                    decoration: BoxDecoration(
-                                                                                      image: DecorationImage(
-                                                                                        image: NetworkImage("${OpenSaveModelData?.object?.postData?[index1]}"),
-                                                                                        fit: BoxFit.cover,
-                                                                                      ),
+                                                                                alignment: Alignment.topCenter,
+                                                                                child: Container(
+                                                                                  height: _height / 2,
+                                                                                  width: _width,
+                                                                                  child: PhotoView(
+                                                                                    imageProvider: NetworkImage(OpenSaveModelData?.object?.postData?[0] ?? ''),
+                                                                                    minScale: PhotoViewComputedScale.contained,
+                                                                                    maxScale: PhotoViewComputedScale.covered * 2,
+                                                                                    backgroundDecoration: BoxDecoration(
+                                                                                      color: Colors.black,
                                                                                     ),
                                                                                   ),
-                                                                                ),
-                                                                              ),
-                                                                            ),
+                                                                                )),
                                                                             Align(
                                                                               alignment: Alignment.topRight,
                                                                               child: Card(

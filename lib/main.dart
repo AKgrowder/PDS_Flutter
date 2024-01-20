@@ -47,6 +47,8 @@ import 'package:pds/theme/theme_helper.dart';
 import 'API/Bloc/postData_Bloc/postData_Bloc.dart';
 import 'presentation/splash_screen/splash_screen.dart';
 
+import 'package:flutter_langdetect/flutter_langdetect.dart' as langdetect;
+
 Future<void> _messageHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
   print('background message ${message.notification!.body}');
@@ -57,6 +59,7 @@ void main() async {
   await FlutterDownloader.initialize();
   await WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+    await langdetect.initLangDetect();
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
   ]);
