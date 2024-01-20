@@ -113,8 +113,9 @@ class Content {
   int? repostCount;
   String? userAccountType;
   String? thumbnailImageUrl;
-  bool? isfalsegu;
-  bool? isfalsehin;
+  // bool? isfalsegu;
+  // bool? isfalsehin;
+  // bool? isTrsnalteoption;
 
   Content({
     this.postUid,
@@ -136,8 +137,9 @@ class Content {
     this.repostCount,
     this.userAccountType,
     this.thumbnailImageUrl,
-    this.isfalsegu,
-    this.isfalsehin,
+    // this.isfalsegu,
+    // this.isfalsehin,
+    // this.isTrsnalteoption
 
   });
 

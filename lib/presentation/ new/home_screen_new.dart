@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_langdetect/flutter_langdetect.dart' as langdetect;
 import 'package:intl/intl.dart';
 import 'package:linkfy_text/linkfy_text.dart';
 import 'package:path_provider/path_provider.dart';
@@ -71,6 +72,8 @@ import 'package:translator/translator.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:video_player/video_player.dart';
 import 'package:visibility_detector/visibility_detector.dart';
+
+// import 'package:flutter_langdetect/flutter_langdetect.dart' as langdetect;
 
 import '../../API/Model/Get_all_blog_Model/get_all_blog_model.dart';
 import '../../API/Model/UserTagModel/UserTag_model.dart';
@@ -162,7 +165,11 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
   String _translatedTextGujarati = '';
   String _translatedTextHindi = '';
   String _translatedTextenglish = '';
-
+  String language = "";
+  String tempdata1 = "";
+  String tempdata2 = "";
+  bool checkLun = false;
+  bool checkLun2 = false;
   // bool isDataSet = true;
   String? initalData;
 
@@ -1035,18 +1042,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
       await BlocProvider.of<GetGuestAllPostCubit>(context)
           .getAllNoticationsCountAPI(context);
     });
-    if (secound == 15) {
-      timer?.cancel();
-    }
-
-    // Timer.periodic(Duration(seconds: 15), (_) async {
-    //   // print("Room Socket ++++++++++++++++++++++++++++++++++++++++++++++++++++");
-    //   await BlocProvider.of<GetGuestAllPostCubit>(context)
-    //       .seetinonExpried(context);
-    //   await BlocProvider.of<GetGuestAllPostCubit>(context)
-    //       .getAllNoticationsCountAPI(context);
-    // });
-
+    await BlocProvider.of<GetGuestAllPostCubit>(context)
+        .getAllNoticationsCountAPI(context);
     await BlocProvider.of<GetGuestAllPostCubit>(context)
         .ChatOnline(context, true);
 
@@ -1163,6 +1160,20 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
     User_ID == null ? api() : NewApi();
 
     // await Future.delayed(Duration(seconds: 2));
+  }
+
+  LangDetect(String TextData, int index) async {
+// await langdetect.initLangDetect();
+// final language1 = langdetect.detect(TextData);
+// language = "${language1}";
+
+    //  LangIdResult result = await LangId.detectLanguage(inputString);
+
+    // Access the detected language and confidence
+    // language = result.language;
+    // double confidence = result.confidence;
+
+// print("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ :- ${index} :-  ${language}");
   }
 
   @override
@@ -2244,6 +2255,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                           DataGet = _isLink(
                                               '${AllGuestPostRoomData?.object?.content?[index].description}');
                                         }
+                                        // LangDetect("${AllGuestPostRoomData?.object?.content?[index].description}",index);
                                         // this is the data
                                         if (AllGuestPostRoomData
                                                 ?.object
@@ -2565,58 +2577,86 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                           crossAxisAlignment:
                                                                               CrossAxisAlignment.start,
                                                                           children: [
-                                                                            GestureDetector(
-                                                                              onTap: () async {
-                                                                                print("value cheak${AllGuestPostRoomData?.object?.content?[index].isfalsegu}");
-                                                                                print("value cheak${AllGuestPostRoomData?.object?.content?[index].isfalsehin}");
-                                                                                String inputText = "${AllGuestPostRoomData?.object?.content?[index].description}";
-                                                                                String translatedTextGujarati = await translateText(inputText, 'gu');
-                                                                                String translatedTextHindi = await translateText(inputText, 'hi');
-                                                                                String translatedTextenglish = await translateText(inputText, 'en');
+                                                                            language == 'gu' && language == 'hi'
+                                                                                ? GestureDetector(
+                                                                                    onTap: () async {
+                                                                                      // print("value cheak${AllGuestPostRoomData?.object?.content?[index].isfalsegu}");
+                                                                                      // print("value cheak${AllGuestPostRoomData?.object?.content?[index].isfalsehin}");
+                                                                                      String inputText = "${AllGuestPostRoomData?.object?.content?[index].description}";
+                                                                                      String translatedTextGujarati = await translateText(inputText, 'gu');
+                                                                                      // String translatedTextHindi = await translateText(inputText, 'hi');
+                                                                                      String translatedTextenglish = await translateText(inputText, 'en');
+                                                                                      /////////////////////
+                                                                                      // if (AllGuestPostRoomData?.object?.content?[index].isfalsehin == null && AllGuestPostRoomData?.object?.content?[index].isfalsegu == null) {
+                                                                                      //   // Translate from the original language to English
+                                                                                      //   translatedTextenglish = await translateText(inputText, 'en');
+                                                                                      //   setState(() {
+                                                                                      //     _translatedTextenglish = translatedTextenglish;
+                                                                                      //     AllGuestPostRoomData?.object?.content?[index].description = _translatedTextenglish;
+                                                                                      //     AllGuestPostRoomData?.object?.content?[index].isfalsehin = true;
+                                                                                      //   });
+                                                                                      // } else if (AllGuestPostRoomData?.object?.content?[index].isfalsehin == true && AllGuestPostRoomData?.object?.content?[index].isfalsegu == null) {
+                                                                                      //   // Translate from Hindi to English
+                                                                                      //   translatedTextenglish = await translateText(inputText, 'en');
+                                                                                      //   setState(() {
+                                                                                      //     _translatedTextenglish = translatedTextenglish;
+                                                                                      //     AllGuestPostRoomData?.object?.content?[index].description = _translatedTextenglish;
+                                                                                      //     AllGuestPostRoomData?.object?.content?[index].isfalsegu = true;
+                                                                                      //   });
+                                                                                      // } else if (AllGuestPostRoomData?.object?.content?[index].isfalsehin == true && AllGuestPostRoomData?.object?.content?[index].isfalsegu == true) {
+                                                                                      //   // No need to translate, as the text is already in English
+                                                                                      //   print("This condition is working");
+                                                                                      // }
 
-                                                                                if (AllGuestPostRoomData?.object?.content?[index].isfalsehin == null && AllGuestPostRoomData?.object?.content?[index].isfalsegu == null) {
-                                                                                  setState(() {
-                                                                                    // _translatedTextGujarati = translatedTextGujarati;
-
-                                                                                    _translatedTextHindi = translatedTextHindi;
-
-                                                                                    // AllGuestPostRoomData?.object?.content?[index].description = _translatedTextGujarati;
-                                                                                    AllGuestPostRoomData?.object?.content?[index].description = _translatedTextHindi;
-                                                                                    AllGuestPostRoomData?.object?.content?[index].isfalsehin = true;
-                                                                                  });
-                                                                                } else if (AllGuestPostRoomData?.object?.content?[index].isfalsehin == true && AllGuestPostRoomData?.object?.content?[index].isfalsegu == null) {
-                                                                                  setState(() {
-                                                                                    _translatedTextGujarati = translatedTextGujarati;
-                                                                                    // _translatedTextHindi = translatedTextHindi;
-
-                                                                                    // AllGuestPostRoomData?.object?.content?[index].description = _translatedTextGujarati;
-                                                                                    AllGuestPostRoomData?.object?.content?[index].description = _translatedTextGujarati;
-                                                                                    AllGuestPostRoomData?.object?.content?[index].isfalsegu = true;
-                                                                                  });
-                                                                                } else if (AllGuestPostRoomData?.object?.content?[index].isfalsehin == true && AllGuestPostRoomData?.object?.content?[index].isfalsehin == true) {
-                                                                                  print("this condison is working");
-
-                                                                                  setState(() {
-                                                                                    print("i'm cheaking dataa--------------------------------$initalData");
-                                                                                    _translatedTextenglish = translatedTextenglish;
-                                                                                    AllGuestPostRoomData?.object?.content?[index].description = _translatedTextenglish;
-                                                                                    AllGuestPostRoomData?.object?.content?[index].isfalsegu = null;
-                                                                                    AllGuestPostRoomData?.object?.content?[index].isfalsehin = null;
-                                                                                  });
-                                                                                }
-                                                                              },
-                                                                              child: Container(
-                                                                                  width: 80,
-                                                                                  decoration: BoxDecoration(color: ColorConstant.primaryLight_color, borderRadius: BorderRadius.circular(10)),
-                                                                                  child: Center(
-                                                                                      child: Text(
-                                                                                    "Translate",
-                                                                                    style: TextStyle(
-                                                                                      fontFamily: 'outfit',
-                                                                                      fontWeight: FontWeight.bold,
-                                                                                    ),
-                                                                                  ))),
-                                                                            ),
+                                                                                      language = langdetect.detect(AllGuestPostRoomData?.object?.content?[index].description ?? "");
+                                                                                      print("languagelanguagelanguagelanguage :--1 ${language}");
+                                                                                      if (language == 'gu' || language == 'hi' || language == 'en') {
+                                                                                        // if (tempdata2 == "") {
+                                                                                        // var tempdata3 = AllGuestPostRoomData?.object?.content?[index].description ?? "";
+                                                                                        // }
+                                                                                        if (language == 'gu' || language == 'hi') {
+                                                                                          // Translate from the original language to English
+                                                                                          translatedTextenglish = await translateText(inputText, 'en');
+                                                                                          setState(() {
+                                                                                            print("languagelanguagelanguagelanguage :--2 ${language}");
+                                                                                            _translatedTextenglish = translatedTextenglish;
+                                                                                            AllGuestPostRoomData?.object?.content?[index].description = _translatedTextenglish;
+                                                                                            checkLun = true;
+                                                                                            // AllGuestPostRoomData?.object?.content?[index].isfalsehin = true;
+                                                                                          });
+                                                                                        } else if (language == 'en') {
+                                                                                          // No need to translate, as the text is already in English 
+                                                                                          // setState(() {
+                                                                                          //   print("languagelanguagelanguagelanguage :--3 ${language}");
+                                                                                          //   checkLun = false;
+                                                                                          //   AllGuestPostRoomData?.object?.content?[index].description = tempdata2;
+                                                                                          // });
+                                                                                          // print("This condition is working");
+                                                                                     
+                                                                                          translatedTextenglish = await translateText(inputText, 'en');
+                                                                                          setState(() {
+                                                                                            print("languagelanguagelanguagelanguage :--3 ${language}");
+                                                                                            _translatedTextenglish = translatedTextenglish;
+                                                                                            AllGuestPostRoomData?.object?.content?[index].description = _translatedTextenglish;
+                                                                                            checkLun = true;
+                                                                                            // AllGuestPostRoomData?.object?.content?[index].isfalsehin = true;
+                                                                                          });
+                                                                                        }
+                                                                                      }
+                                                                                    },
+                                                                                    child: Container(
+                                                                                        width: 80,
+                                                                                        decoration: BoxDecoration(color: ColorConstant.primaryLight_color, borderRadius: BorderRadius.circular(10)),
+                                                                                        child: Center(
+                                                                                            child: Text(
+                                                                                          "Translate",
+                                                                                          style: TextStyle(
+                                                                                            fontFamily: 'outfit',
+                                                                                            fontWeight: FontWeight.bold,
+                                                                                          ),
+                                                                                        ))),
+                                                                                  )
+                                                                                : SizedBox(),
                                                                             SizedBox(
                                                                               height: 10,
                                                                             ),
@@ -4081,49 +4121,77 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                           children: [
                                                                             GestureDetector(
                                                                               onTap: () async {
-                                                                                print("value cheak${AllGuestPostRoomData?.object?.content?[index].isfalsegu}");
-                                                                                print("value cheak${AllGuestPostRoomData?.object?.content?[index].isfalsehin}");
+                                                                                // print("value cheak${AllGuestPostRoomData?.object?.content?[index].isfalsegu}");
+                                                                                // print("value cheak${AllGuestPostRoomData?.object?.content?[index].isfalsehin}");
                                                                                 String inputText = "${AllGuestPostRoomData?.object?.content?[index].description}";
                                                                                 String translatedTextGujarati = await translateText(inputText, 'gu');
                                                                                 String translatedTextHindi = await translateText(inputText, 'hi');
                                                                                 String translatedTextenglish = await translateText(inputText, 'en');
 
-                                                                                if (AllGuestPostRoomData?.object?.content?[index].isfalsehin == null && AllGuestPostRoomData?.object?.content?[index].isfalsegu == null) {
-                                                                                  setState(() {
-                                                                                    _translatedTextHindi = translatedTextHindi;
+                                                                                ////////////////////////////////////////////////////
+                                                                                // if (AllGuestPostRoomData?.object?.content?[index].isfalsehin == null && AllGuestPostRoomData?.object?.content?[index].isfalsegu == null) {
+                                                                                //   // Translate from the original language to English
+                                                                                //   translatedTextenglish = await translateText(inputText, 'en');
+                                                                                //   setState(() {
+                                                                                //     _translatedTextenglish = translatedTextenglish;
+                                                                                //     AllGuestPostRoomData?.object?.content?[index].description = _translatedTextenglish;
+                                                                                //     AllGuestPostRoomData?.object?.content?[index].isfalsehin = true;
+                                                                                //   });
+                                                                                // } else if (AllGuestPostRoomData?.object?.content?[index].isfalsehin == true && AllGuestPostRoomData?.object?.content?[index].isfalsegu == null) {
+                                                                                //   // Translate from Hindi to English
+                                                                                //   translatedTextenglish = await translateText(inputText, 'en');
+                                                                                //   setState(() {
+                                                                                //     _translatedTextenglish = translatedTextenglish;
+                                                                                //     AllGuestPostRoomData?.object?.content?[index].description = _translatedTextenglish;
+                                                                                //     AllGuestPostRoomData?.object?.content?[index].isfalsegu = true;
+                                                                                //   });
+                                                                                // } else if (AllGuestPostRoomData?.object?.content?[index].isfalsehin == true && AllGuestPostRoomData?.object?.content?[index].isfalsegu == true) {
+                                                                                //   // No need to translate, as the text is already in English
+                                                                                //   print("This condition is working");
+                                                                                // }
 
-                                                                                    // AllGuestPostRoomData?.object?.content?[index].description = _translatedTextGujarati;
-                                                                                    AllGuestPostRoomData?.object?.content?[index].description = _translatedTextHindi;
-                                                                                    AllGuestPostRoomData?.object?.content?[index].isfalsehin = true;
-                                                                                  });
-                                                                                } else if (AllGuestPostRoomData?.object?.content?[index].isfalsehin == true && AllGuestPostRoomData?.object?.content?[index].isfalsegu == null) {
-                                                                                  setState(() {
-                                                                                    // isDataSet = false;
-                                                                                    _translatedTextGujarati = translatedTextGujarati;
-                                                                                    // _translatedTextHindi = translatedTextHindi;
+                                                                                language = langdetect.detect(AllGuestPostRoomData?.object?.content?[index].description ?? "");
+                                                                                print("languagelanguagelanguagelanguage :--4 ${language}");
+                                                                                if (language == 'gu' || language == 'hi' || language == 'en') {
+                                                                                  // if (tempdata2 == "") {
+                                                                                  // var tempdata3 = AllGuestPostRoomData?.object?.content?[index].description ?? "";
+                                                                                  // }
+                                                                                  if (language == 'gu' || language == 'hi') {
+                                                                                    // Translate from the original language to English
+                                                                                    translatedTextenglish = await translateText(inputText, 'en');
+                                                                                    setState(() {
+                                                                                      print("languagelanguagelanguagelanguage :--5 ${language}");
+                                                                                      _translatedTextenglish = translatedTextenglish;
+                                                                                      tempdata2 = _translatedTextenglish;
+                                                                                      checkLun2 = true;
+                                                                                      // AllGuestPostRoomData?.object?.content?[index].isfalsehin = true;
+                                                                                    });
+                                                                                  } else if (language == 'en') {
+                                                                                    // No need to translate, as the text is already in English
+                                                                                    // setState(() {
+                                                                                    //   print("languagelanguagelanguagelanguage :--6 ${language}");
+                                                                                    //   checkLun2 = false;
+                                                                                    //   // AllGuestPostRoomData?.object?.content?[index].description = tempdata2;
+                                                                                    // });
+                                                                                    // print("This condition is working");
 
-                                                                                    // AllGuestPostRoomData?.object?.content?[index].description = _translatedTextGujarati;
-                                                                                    AllGuestPostRoomData?.object?.content?[index].description = _translatedTextGujarati;
-                                                                                    AllGuestPostRoomData?.object?.content?[index].isfalsegu = true;
-                                                                                    //  isDataSet = true;
-                                                                                  });
-                                                                                } else if (AllGuestPostRoomData?.object?.content?[index].isfalsehin == true && AllGuestPostRoomData?.object?.content?[index].isfalsehin == true) {
-                                                                                  print("this condison is working");
-
-                                                                                  setState(() {
-                                                                                    print("i'm cheaking dataa--------------------------------$initalData");
-                                                                                    // isDataSet = false;
-                                                                                    _translatedTextenglish = translatedTextenglish;
-                                                                                    AllGuestPostRoomData?.object?.content?[index].description = _translatedTextenglish;
-                                                                                    AllGuestPostRoomData?.object?.content?[index].isfalsegu = null;
-                                                                                    AllGuestPostRoomData?.object?.content?[index].isfalsehin = null;
-                                                                                    // isDataSet = true;
-                                                                                  });
+                                                                                          translatedTextenglish = await translateText(inputText,'en');
+                                                                                          setState(() {
+                                                                                            print("languagelanguagelanguagelanguage :--6 ${language}");
+                                                                                            _translatedTextenglish = translatedTextenglish;
+                                                                                            AllGuestPostRoomData?.object?.content?[index].description = _translatedTextenglish;
+                                                                                            checkLun = true;
+                                                                                            // AllGuestPostRoomData?.object?.content?[index].isfalsehin = true;
+                                                                                          });
+                                                                                  }
                                                                                 }
                                                                               },
                                                                               child: Container(
                                                                                   width: 80,
-                                                                                  decoration: BoxDecoration(color: ColorConstant.primaryLight_color, borderRadius: BorderRadius.circular(10)),
+                                                                                  decoration: BoxDecoration(
+                                                                                    color: ColorConstant.primaryLight_color,
+                                                                                    borderRadius: BorderRadius.circular(10),
+                                                                                  ),
                                                                                   child: Center(
                                                                                       child: Text(
                                                                                     "Translate",
@@ -4138,9 +4206,17 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                             ),
                                                                             Row(
                                                                               children: [
+                                                                                ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+                                                                                /*  Expanded(
+                                                                                  child: GestureDetector(onTap: () {
+                                                                                  print("cheakkkkkkkkkkkkkkkk${AllGuestPostRoomData?.object?.content?[index].description ?? ''}");
+                                                                                  print("index-$index");
+                                                                                },
+                                                                                  child: Text(AllGuestPostRoomData?.object?.content?[index].description ?? '',))) */
+                                                                                //////////////////////////////////////////////////////////////////////////////////////////////////////////
                                                                                 Expanded(
                                                                                   child: Container(
-                                                                                    // color: Colors.amber,
+                                                                                    // color: Colors.red,
                                                                                     child: LinkifyText(
                                                                                       /*    utf8.decode(AllGuestPostRoomData?.object?.content?[index].description?.runes.toList() ??
                                                                                           []), */
@@ -4230,7 +4306,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                                 ),
                                                                                 // InkWell(
                                                                                 //     onTap: () async {
-                                                                                //       ss
+
                                                                                 //       String inputText = "${AllGuestPostRoomData?.object?.content?[index].description}";
                                                                                 //       String translatedTextGujarati = await translateText(inputText, 'gu');
                                                                                 //       setState(() {
@@ -6264,19 +6340,19 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
 
   void _onShareXFileFromAssets(BuildContext context,
       {String? androidLink}) async {
-    RenderBox? box = context.findAncestorRenderObjectOfType();
+    // RenderBox? box = context.findAncestorRenderObjectOfType();
 
     var directory = await getApplicationDocumentsDirectory();
 
     if (Platform.isAndroid) {
-      await Share.shareXFiles(
+        Share.shareXFiles(
         [XFile("/sdcard/download/IP_Image.jpg")],
         subject: "Share",
         text: "Try This Awesome App \n\n Android :- ${androidLink}",
-        sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size,
+        // sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size,
       );
     } else {
-      await Share.shareXFiles(
+        Share.shareXFiles(
         [
           XFile(directory.path +
               Platform.pathSeparator +
@@ -6284,7 +6360,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
         ],
         subject: "Share",
         text: "Try This Awesome App \n\n Android :- ${androidLink}",
-        sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size,
+        // sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size,
       );
     }
   }
