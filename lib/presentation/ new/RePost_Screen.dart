@@ -32,6 +32,8 @@ import 'package:transparent_image/transparent_image.dart';
 import 'package:video_player/video_player.dart';
 
 import '../../API/Model/HashTage_Model/HashTagView_model.dart';
+import '../../API/Model/NewProfileScreenModel/GetAppUserPost_Model.dart';
+import '../../API/Model/NewProfileScreenModel/GetSavePost_Model.dart';
 import '../Create_Post_Screen/CreatePostShow_ImageRow/photo_gallery-master/lib/photo_gallery.dart';
 import 'home_screen_new.dart';
 
@@ -48,6 +50,8 @@ class RePostScreen extends StatefulWidget {
   HashtagViewDataModel? hashTagViewData;
   OpenSaveImagepostModel? OpenSaveModelData;
   String? thumbNailURL;
+  GetSavePostModel? GetSavePostData;
+  GetAppUserPostModel? GetAllPostData;
   RePostScreen(
       {Key? key,
       this.username,
@@ -61,7 +65,9 @@ class RePostScreen extends StatefulWidget {
       this.postUid,
       this.hashTagViewData,
       this.OpenSaveModelData,
-      this.thumbNailURL})
+      this.thumbNailURL,
+      this.GetSavePostData,
+      this.GetAllPostData})
       : super(key: key);
 
   @override
@@ -157,6 +163,14 @@ class _RePostScreenState extends State<RePostScreen> {
         currentPages.add(0);
       });
       widget.hashTagViewData?.object?.posts?.forEach((element) {
+        pageControllers.add(PageController());
+        currentPages.add(0);
+      });
+      widget.GetSavePostData?.object?.forEach((element) {
+        pageControllers.add(PageController());
+        currentPages.add(0);
+      });
+      widget.GetAllPostData?.object?.forEach((element) {
         pageControllers.add(PageController());
         currentPages.add(0);
       });
