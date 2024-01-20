@@ -33,13 +33,14 @@ class Object {
   String? followedByUserProfilePic;
   String? followedByUserUid;
   String? followStatus;
+  String? createdAt;
 
   Object(
       {this.followedByUserName,
       this.followUuid,
       this.followedByUserProfilePic,
       this.followedByUserUid,
-      this.followStatus});
+      this.followStatus,this.createdAt});
 
   Object.fromJson(Map<String, dynamic> json) {
     followedByUserName = json['followedByUserName'];
@@ -47,6 +48,7 @@ class Object {
     followedByUserProfilePic = json['followedByUserProfilePic'];
     followedByUserUid = json['followedByUserUid'];
     followStatus = json['followStatus'];
+    createdAt = json['createdAt'];
   }
 
   Map<String, dynamic> toJson() {
@@ -56,6 +58,7 @@ class Object {
     data['followedByUserProfilePic'] = this.followedByUserProfilePic;
     data['followedByUserUid'] = this.followedByUserUid;
     data['followStatus'] = this.followStatus;
+    data['createdAt'] = this.createdAt;
     return data;
   }
 }

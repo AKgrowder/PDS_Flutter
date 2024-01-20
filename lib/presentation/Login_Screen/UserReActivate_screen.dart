@@ -8,7 +8,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:pds/API/Bloc/UserReActivate_Bloc/UserReActivate_state.dart';
 import 'package:pds/core/utils/color_constant.dart';
-import 'package:pds/core/utils/image_constant.dart'; 
+import 'package:pds/core/utils/image_constant.dart';
 import 'package:pds/presentation/%20new/newbottembar.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
@@ -103,6 +103,11 @@ class UserReActivateDailogState extends State<UserReActivateDailog>
                         if (saveDeviceInfo == true) {
                           savePhoneData();
                         }
+                        SnackBar snackBar = SnackBar(
+                            content: Text("Logged In"),
+                            backgroundColor: ColorConstant.primary_color,
+                          );
+                          ScaffoldMessenger.of(context).showSnackBar(snackBar);
 
                         Navigator.pushAndRemoveUntil(context,
                             MaterialPageRoute(builder: (context) {
