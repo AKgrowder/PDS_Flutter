@@ -83,7 +83,7 @@ class _NewBottomBarState extends State<NewBottomBar> {
     _connectionChangeStream =
         connectionStatus.connectionChange.listen(connectionChanged);
     selectedIndex = widget.buttomIndex!;
-    
+    myScroll();
   }
 
   void connectionChanged(dynamic hasConnection) {
@@ -104,7 +104,26 @@ class _NewBottomBarState extends State<NewBottomBar> {
     });
   }
 
- 
+  void myScroll() async {
+    scrollController.addListener(() {
+      if (scrollController.position.userScrollDirection ==
+          ScrollDirection.reverse) {
+        if (!isScrollingDown) {
+          isScrollingDown = true;
+
+          hideBottomBar();
+        }
+      }
+      if (scrollController.position.userScrollDirection ==
+          ScrollDirection.forward) {
+        if (isScrollingDown) {
+          isScrollingDown = false;
+
+          showBottomBar();
+        }
+      }
+    });
+  }
 
   @override
   void dispose() {
