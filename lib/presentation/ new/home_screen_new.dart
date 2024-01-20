@@ -6255,19 +6255,19 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
 
   void _onShareXFileFromAssets(BuildContext context,
       {String? androidLink}) async {
-    RenderBox? box = context.findAncestorRenderObjectOfType();
+    // RenderBox? box = context.findAncestorRenderObjectOfType();
 
     var directory = await getApplicationDocumentsDirectory();
 
     if (Platform.isAndroid) {
-      await Share.shareXFiles(
+        Share.shareXFiles(
         [XFile("/sdcard/download/IP_Image.jpg")],
         subject: "Share",
         text: "Try This Awesome App \n\n Android :- ${androidLink}",
-        sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size,
+        // sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size,
       );
     } else {
-      await Share.shareXFiles(
+        Share.shareXFiles(
         [
           XFile(directory.path +
               Platform.pathSeparator +
@@ -6275,7 +6275,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
         ],
         subject: "Share",
         text: "Try This Awesome App \n\n Android :- ${androidLink}",
-        sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size,
+        // sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size,
       );
     }
   }
