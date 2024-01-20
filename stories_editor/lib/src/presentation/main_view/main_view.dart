@@ -245,10 +245,18 @@ class _MainViewState extends State<MainView> {
                                                   : PhotoView.customChild(
                                                       child: Container(),
                                                       backgroundDecoration:
-                                                          const BoxDecoration(
-                                                              color: Colors
-                                                                  .transparent),
-                                                    ),
+                                                          BoxDecoration(
+                                                              gradient:
+                                                                  LinearGradient(
+                                                        colors: controlNotifier
+                                                                .gradientColors![
+                                                            controlNotifier
+                                                                .gradientIndex],
+                                                        begin:
+                                                            Alignment.topLeft,
+                                                        end: Alignment
+                                                            .bottomRight,
+                                                      ))),
 
                                               ///list items
                                               ...itemProvider.draggableWidget
@@ -512,9 +520,7 @@ class _MainViewState extends State<MainView> {
                                               String pngUri;
                                               print("check else condison");
                                               await takePicture(
-                                                      isTextEditing:
-                                                          controlNotifier
-                                                              .isTextEditing,
+                                                 
                                                       SelectPath:
                                                           controlNotifier
                                                               .mediaPath,
@@ -683,7 +689,7 @@ class _MainViewState extends State<MainView> {
                           );
                         }
                         setState(() {
-                          data= '';
+                          data = '';
                           itemProvider.draggableWidget = [];
                           controlNotifier.mediaPath = '';
                         });
@@ -1044,8 +1050,11 @@ class _MainViewState extends State<MainView> {
 
     /// show close dialog
     else if (!controlNotifier.isTextEditing && !controlNotifier.isPainting) {
+      print("else if -${controlNotifier.isTextEditing }");
+      print("else if -${controlNotifier.isPainting }");
+
       return widget.onBackPress ??
-          exitDialog(context: context, contentKey: contentKey);
+          exitDialog(context: context, contentKey: contentKey, isTextEditing: controlNotifier.isTextEditing,selctedparth: controlNotifier.mediaPath);
     }
     return false;
   }
