@@ -133,8 +133,7 @@ class BottomTools extends StatelessWidget {
                               String pngUri;
 
                               await takePicture(
-                                      isTextEditing:
-                                          controlNotifier.isTextEditing,
+                                  
                                       SelectPath: controlNotifier.mediaPath,
                                       contentKey: contentKey,
                                       context: context,

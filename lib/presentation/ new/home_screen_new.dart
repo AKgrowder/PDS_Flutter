@@ -78,6 +78,7 @@ import 'package:visibility_detector/visibility_detector.dart';
 import '../../API/Model/Get_all_blog_Model/get_all_blog_model.dart';
 import '../../API/Model/UserTagModel/UserTag_model.dart';
 import '../become_an_expert_screen/become_an_expert_screen.dart';
+import 'package:flutter_langdetect/flutter_langdetect.dart' as langdetect;
 
 class HomeScreenNew extends StatefulWidget {
   ScrollController scrollController;
@@ -182,6 +183,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
   List<ChewieController> chewieController = [];
   ChewieController? inList;
   Map<String, bool> _videoVisibility = {};
+
   bool isWatch = false;
   getDocumentSize() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -668,7 +670,9 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
   LoginCheck() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     AutoSetRoomID = prefs.getString(PreferencesKey.AutoSetRoomID);
-    if (AutoSetRoomID == "Done") {
+    if (AutoSetRoomID == "Done" ||
+        AutoSetRoomID == "" ||
+        AutoSetRoomID == null) {
       print("Auto Enter in Room");
     } else {
       if (User_ID != null) {
@@ -1598,19 +1602,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                     VideoPlayerController.networkUrl(Uri.parse(''));
                 apiCalingdone = true;
                 AllGuestPostRoomData = state.GetGuestAllPostRoomData;
-                /* AllGuestPostRoomData?.object?.content?.forEach((element) {
-                  if (element.description != null) {
-                     language =
-                        langdetect.detect(element.description ?? "");
-                      if(language =='gu' && language=='en' ){
 
-
-
-                      }  
-
-                    print('apiData:$language');
-                  }
-                }); */
                 AllGuestPostRoomData?.object?.content?.forEach((element) {
                   if (element.postDataType == 'VIDEO') {
                     if (element.postData?.isNotEmpty == true) {
@@ -4868,6 +4860,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                             builder: (context) =>
                                                                                 RegisterCreateAccountScreen()));
                                                                   } else {
+                                                                    print(
+                                                                        "check Data Get-${AllGuestPostRoomData?.object?.content?[index].postLink}");
                                                                     _onShareXFileFromAssets(
                                                                       context,
                                                                       androidLink:
