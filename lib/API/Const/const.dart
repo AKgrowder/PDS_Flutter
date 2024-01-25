@@ -106,8 +106,7 @@ class Config {
   static const String get_all_followings = "user/api/get_all_followings";
   static const String remove_follower = "user/api/remove_follower";
   static const String SelectChatMember = "user/search_user_for_inbox";
-  static const String validateTokenCheck = "auth/auth/validateTokenCheck"
-  ;
+  static const String validateTokenCheck = "auth/auth/validateTokenCheck";
   static const String logOutUserSttionExperied = "auth/auth/isTokenExpired";
   static const String roomExists = "user/api/assignAdminToOtherRoomMember";
   static const String search_user_for_inboxUrl = "user/search_user_for_inbox";
@@ -127,19 +126,18 @@ class Config {
   static const String userTag = "user/api/get_uuid_by_username";
   static const String selectMultipleUsers_Chat =
       "user/selectMultipleUsers_Chat";
-  static const String chatImageDM = "user/send_image_in_user_chat"; // ankur 
-  static const String get_all_inbox_images = "user/get_all_inbox_images"; 
-  static const String delete_user_chat = "user/delete_user_chat"; 
-  static const String getAllNotifications = "user/api/getAllNotifications"; 
+  static const String chatImageDM = "user/send_image_in_user_chat"; // ankur
+  static const String get_all_inbox_images = "user/get_all_inbox_images";
+  static const String delete_user_chat = "user/delete_user_chat";
+  static const String getAllNotifications = "user/api/getAllNotifications";
   static const String insearch_user_for_inboxUrl1 = "user/search_user_for_tag";
   static const String SeenNotification = "user/api/notificationSeenByUser";
-  static const String getAllNoticationsCount = "user/api/getAllNotificationsCount";
+  static const String getAllNoticationsCount =
+      "user/api/getAllNotificationsCount";
   static const String getPostUidOrUserUid = "user/api/getPostUidOrUserUid";
   static const String message_seen_by_user = "user/message_seen_by_user";
   static const String online_offline_status = "user/online_offline_status";
-
-
-
-
-
+  static const String reaction_message_added_on_story =
+      "user/reaction_message_added_on_story";
+       static const String OpenSaveImagePostGuest = "guest/api/get_post_by_uid";
 }
