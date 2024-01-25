@@ -878,8 +878,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             "uuid": User_ID
           };
           print("parems--$params");
-          // BlocProvider.of<MyAccountCubit>(context)
-          //     .UpdateProfileEmployee(params, context);
+          BlocProvider.of<MyAccountCubit>(context)
+              .UpdateProfileEmployee(params, context);
         } else if (chooseDocumentuploded?.object.toString() != null) {
           var params = {
             "userProfilePic": chooseDocumentuploded?.object.toString(),
@@ -895,8 +895,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             "uuid": User_ID
           };
           print("parems--$params");
-          // BlocProvider.of<MyAccountCubit>(context)
-          //     .UpdateProfileEmployee(params, context);
+          BlocProvider.of<MyAccountCubit>(context)
+              .UpdateProfileEmployee(params, context);
         } else if (chooseDocumentuploded1?.object.toString() != null) {
           var params = {
             "userBackgroundPic": chooseDocumentuploded1?.object.toString(),
@@ -912,8 +912,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             "uuid": User_ID
           };
           print("parems--$params");
-          // BlocProvider.of<MyAccountCubit>(context)
-          //     .UpdateProfileEmployee(params, context);
+          BlocProvider.of<MyAccountCubit>(context)
+              .UpdateProfileEmployee(params, context);
         } else {
           print("dfhgdgfdg");
           var params = {
@@ -933,8 +933,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             "uuid": User_ID
           };
           print("parems--$params");
-          // BlocProvider.of<MyAccountCubit>(context)
-          //     .UpdateProfileEmployee(params, context);
+          BlocProvider.of<MyAccountCubit>(context)
+              .UpdateProfileEmployee(params, context);
         }
       }
     }

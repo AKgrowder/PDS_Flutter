@@ -48,13 +48,12 @@ import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:translator/translator.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:video_thumbnail/video_thumbnail.dart';
 
 import '../../API/Model/HasTagModel/hasTagModel.dart';
 import '../../API/Model/UserTagModel/UserTag_model.dart';
 import '../../API/Model/WorkExperience_Model/WorkExperience_model.dart';
 import '../../API/Model/serchForInboxModel/serchForinboxModel.dart';
-
+import '../Create_Post_Screen/Ceratepost_Screen.dart';
 import 'comment_bottom_sheet.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -148,7 +147,6 @@ class _ProfileScreenState extends State<ProfileScreen>
   HasDataModel? getAllHashtag;
   List<Map<String, dynamic>> tageData = [];
   List<Map<String, dynamic>> heshTageData = [];
-
   Map<String, Uint8List> thumbnailDataMap = {};
   Uint8List? thumbnailData;
   List<Uint8List?> thumbnailData1 = [];
@@ -859,7 +857,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                 color: Color(0xff444444)),
                           ),
                         ),
-                    
+
                         SizedBox(
                           height: 10,
                         ),
@@ -3061,6 +3059,8 @@ class _ProfileScreenState extends State<ProfileScreen>
       itemCount: getAllPostData?.object?.length ?? 0,
       shrinkWrap: true,
       itemBuilder: (context, index) {
+        GlobalKey buttonKey = GlobalKey();
+
         if (!added) {
           getAllPostData?.object?.forEach((element) {
             _pageControllers.add(PageController());
@@ -3861,7 +3861,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                           },
                                           child: Container(
                                             // color:
-                                            //     Colors.amber,
+                                            // Colors.amber,
                                             child: Text(
                                               "${getAllPostData.object?[index].repostOn?.postUserName}",
                                               style: TextStyle(
@@ -4625,15 +4625,32 @@ class _ProfileScreenState extends State<ProfileScreen>
                                     })).then((value) => Get_UserToken());
                                     //
                                   },
-                                  child: Container(
-                                    // color: Colors.amber,
-                                    child: Text(
-                                      "${getAllPostData.object?[index].postUserName}",
-                                      style: TextStyle(
-                                          fontSize: 20,
-                                          fontFamily: "outfit",
-                                          fontWeight: FontWeight.bold),
-                                    ),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Container(
+                                        // color: Colors.amber,
+                                        child: Text(
+                                          "${getAllPostData.object?[index].postUserName}",
+                                          style: TextStyle(
+                                              fontSize: 20,
+                                              fontFamily: "outfit",
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                      ),
+                                      GestureDetector(
+                                        key: buttonKey,
+                                        onTap: () {
+
+                                          showPopupMenu(context, index,
+                                              buttonKey, getAllPostData);
+                                        },
+                                        child: Icon(
+                                          Icons.more_vert_rounded,
+                                        ),
+                                      )
+                                    ],
                                   ),
                                 ),
                                 //FIndText
@@ -9314,6 +9331,202 @@ class _ProfileScreenState extends State<ProfileScreen>
         _endTime = pickedTime;
       });
     }
+  }
+
+  void showPopupMenu(BuildContext context, int index, buttonKey,
+      GetAppUserPostModel? getAllPostData) {
+    final RenderBox button =
+        buttonKey.currentContext!.findRenderObject() as RenderBox;
+    final RenderBox overlay =
+        Overlay.of(context).context.findRenderObject() as RenderBox;
+
+    final RelativeRect position = RelativeRect.fromRect(
+      Rect.fromPoints(
+        button.localToGlobal(Offset.zero, ancestor: overlay),
+        button.localToGlobal(button.size.bottomLeft(Offset.zero),
+            ancestor: overlay),
+      ),
+      Offset.zero & overlay.size,
+    );
+
+    showMenu(context: context, position: position, items: <PopupMenuItem<
+        String>>[
+      PopupMenuItem<String>(
+        value: 'edit',
+        child: GestureDetector(
+          onTap: () {
+            print(getAllPostData?.object?[index].description);
+            if (getAllPostData?.object?[index].postType == "IMAGE" &&
+                getAllPostData?.object?[index].postData?.length == 1) {
+              print("sdfgsdvfsdfgsdfg");
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => CreateNewPost(
+                      PostID: getAllPostData?.object?[index].postUid,
+                      edittextdata: getAllPostData?.object?[index].description,
+                      editImage: getAllPostData?.object?[index].postData?.first,
+                    ),
+                  )).then((value) {
+                    Navigator.pop(context);
+                BlocProvider.of<NewProfileSCubit>(context).GetAppPostAPI(
+                    context, "${NewProfileData?.object?.userUid}");
+              });
+            } else if (getAllPostData?.object?[index].postDataType == "IMAGE") {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => CreateNewPost(
+                      PostID: getAllPostData?.object?[index].postUid,
+                      edittextdata: getAllPostData?.object?[index].description,
+                      mutliplePost: getAllPostData?.object?[index].postData,
+                    ),
+                  )).then((value) {
+                    Navigator.pop(context);
+                BlocProvider.of<NewProfileSCubit>(context).GetAppPostAPI(
+                    context, "${NewProfileData?.object?.userUid}");
+              });
+            } else {
+              print(
+                  "dfhsdfhsdfhsdfh-${getAllPostData?.object?[index].postData?.length}");
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => CreateNewPost(
+                      PostID: getAllPostData?.object?[index].postUid,
+                      edittextdata: getAllPostData?.object?[index].description,
+                    ),
+                  )).then((value) {
+                    Navigator.pop(context);
+                BlocProvider.of<NewProfileSCubit>(context).GetAppPostAPI(
+                    context, "${NewProfileData?.object?.userUid}");
+              });
+            }
+          },
+          child: Container(
+            width: 130,
+            height: 40,
+            child: Center(
+              child: Text(
+                'Edit',
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+            decoration: BoxDecoration(
+                color: ColorConstant.primary_color,
+                borderRadius: BorderRadius.circular(5)),
+          ),
+        ),
+      ),
+      PopupMenuItem<String>(
+        value: 'delete',
+        child: Container(
+          width: 130,
+          height: 40,
+          child: Center(
+            child: Text(
+              'Delete',
+              style: TextStyle(color: Colors.white),
+            ),
+          ),
+          decoration: BoxDecoration(
+              color: ColorConstant.primary_color,
+              borderRadius: BorderRadius.circular(5)),
+        ),
+      ),
+    ]).then((value) {
+      if (value == 'delete') {
+        showDeleteConfirmationDialog(context, getAllPostData, index);
+      }
+    });
+  }
+
+  void showDeleteConfirmationDialog(
+      BuildContext context, GetAppUserPostModel? getAllPostData, int index) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          contentPadding: EdgeInsets.all(10),
+          title: Text('Confirm Delete'),
+          titlePadding: EdgeInsets.all(10),
+          content: Container(
+            height: 100,
+            child: Column(
+              children: [
+                Text('Are you sure you want to delete this Post?'),
+                SizedBox(
+                  height: 20,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    GestureDetector(
+                      onTap: () async {
+                        print(
+                            "--------------------------------------------------${NewProfileData?.object?.userUid}");
+                        getAllPostData?.object?.removeAt(index);
+                        setState(() {});
+                        await BlocProvider.of<NewProfileSCubit>(context)
+                            .DeletePost(
+                                '${getAllPostData?.object?[index].postData}',
+                                context);
+                        Navigator.of(context).pop();
+                      },
+                      child: Container(
+                        height: 30,
+                        width: 80,
+                        decoration: BoxDecoration(
+                            // color: Colors.green,
+                            color: ColorConstant.primary_color,
+                            borderRadius: BorderRadius.circular(5)),
+                        child: Center(
+                          child: Text(
+                            "Yes",
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ),
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.of(context).pop();
+                        print('Not deleted.');
+                      },
+                      child: Container(
+                        margin: EdgeInsets.only(left: 10),
+                        height: 30,
+                        width: 80,
+                        decoration: BoxDecoration(
+                            border:
+                                Border.all(color: ColorConstant.primary_color),
+                            borderRadius: BorderRadius.circular(5)),
+                        // color: Colors.green,
+                        child: Center(
+                          child: Text(
+                            "No",
+                            style:
+                                TextStyle(color: ColorConstant.primary_color),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                )
+              ],
+            ),
+          ),
+          actionsPadding: EdgeInsets.all(5),
+          /* actions: <Widget>[
+           
+            SizedBox(
+              width: 40,
+              height: 50,
+            ),
+          ], */
+        );
+      },
+    );
   }
 
   prepareTestPdf(

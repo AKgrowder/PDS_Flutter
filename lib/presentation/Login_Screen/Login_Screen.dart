@@ -551,7 +551,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 GestureDetector(
                                   onTap: () async {
                                     String email = Uri.encodeComponent(
-                                        "info@packagingdepot.store");
+                                        "Connect@inpackaging.com");
                                     launchEmail(email);
                                   },
                                   child: Text(

@@ -28,8 +28,8 @@ class AppColors {
 
   static List<List<Color>> gradientBackgroundColors = [
     [
-      const Color.fromRGBO(31, 179, 237, 1),
-      const Color.fromRGBO(17, 106, 197, 1)
+      Color.fromRGBO(174, 64, 52, 1),
+      Color.fromRGBO(49, 33, 31, 1),
     ],
     [
       const Color.fromRGBO(240, 19, 77, 1),

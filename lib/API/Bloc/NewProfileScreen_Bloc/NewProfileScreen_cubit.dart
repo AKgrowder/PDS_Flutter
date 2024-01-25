@@ -462,4 +462,24 @@ class NewProfileSCubit extends Cubit<NewProfileSState> {
       emit(NewProfileSErrorState(addPostData));
     }
   }
+
+  Future<void> DeletePost(String postUid, BuildContext context) async {
+    dynamic Deletepost;
+    try {
+      emit(NewProfileSLoadingState());
+      Deletepost = await Repository().Deletepost(postUid, context);
+      if (Deletepost == "Something Went Wrong, Try After Some Time.") {
+        emit(NewProfileSErrorState("${Deletepost}"));
+      } else {
+        if (Deletepost.success == true) {
+          emit(DeletePostLoadedState(Deletepost));
+          Navigator.pop(context);
+        } else {
+          emit(NewProfileSErrorState(Deletepost.message));
+        }
+      }
+    } catch (e) {
+      emit(NewProfileSErrorState(Deletepost));
+    }
+  }
 }
