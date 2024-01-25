@@ -259,7 +259,7 @@ class _SupportScreenState extends State<SupportScreen> {
                                       name: "Email",
                                       onTap: () async {
                                         String email = Uri.encodeComponent(
-                                            "info@packagingdepot.store");
+                                            "Connect@inpackaging.com");
 
                                         Uri mailto = Uri.parse("mailto:$email");
                                         if (Platform.isAndroid) {

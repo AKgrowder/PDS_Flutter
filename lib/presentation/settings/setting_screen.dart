@@ -606,7 +606,7 @@ class _SettingScreenState extends State<SettingScreen> {
     try {
       Uri email = Uri(
         scheme: 'mailto',
-        path: "info@packagingdepot.store",
+        path: "Connect@inpackaging.com",
       );
 
       await launchUrl(email);

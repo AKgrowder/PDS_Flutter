@@ -269,7 +269,7 @@ class Repository {
     print('jsonString-$jsonString');
     switch (response.statusCode) {
       case 200:
-      // RegisterClass
+        // RegisterClass
         return LoginModel.fromJson(jsonString);
       case 404:
         return Config.somethingWentWrong;
@@ -627,9 +627,10 @@ class Repository {
     }
   }
 
-  ChatOnline(BuildContext context,bool onlineStatus) async {
+  ChatOnline(BuildContext context, bool onlineStatus) async {
     final response = await apiServices.getApiCallWithToken(
-        '${Config.online_offline_status}?onlineStatus=${onlineStatus}', context);
+        '${Config.online_offline_status}?onlineStatus=${onlineStatus}',
+        context);
     print(response);
     var jsonString = json.decode(response.body);
     switch (response.statusCode) {
@@ -647,7 +648,6 @@ class Repository {
         return jsonString;
     }
   }
-  
 
   HashTagBanner(BuildContext context) async {
     final response =
@@ -1603,7 +1603,8 @@ class Repository {
     final responce = await apiServices.getApiCall(
         '${Config.GuestGetAllPost}?pageNumber=$pageNumber&numberOfRecords=10',
         context);
-    var jsonString = json.decode(responce.body);
+    // var jsonString = json.decode(responce.body);
+    var jsonString = json.decode(utf8.decode(responce.bodyBytes));
     print('jasonnString$jsonString');
     print('respnse ${responce.statusCode}');
     switch (responce.statusCode) {
@@ -1809,7 +1810,8 @@ class Repository {
   Addcomment(BuildContext context, String PostUID) async {
     final responce = await apiServices.getApiCallWithToken(
         '${Config.Addcomments}?postUid=${PostUID}', context);
-    var jsonString = json.decode(responce.body);
+    // var jsonString = json.decode(responce.body);
+    var jsonString = json.decode(utf8.decode(responce.bodyBytes));
     print('jasonnString$jsonString');
     print('respnse ${responce.statusCode}');
     switch (responce.statusCode) {
@@ -1835,7 +1837,8 @@ class Repository {
     final response =
         await apiServices.postApiCall(Config.getcomments, params, context);
     print('AddPost$response');
-    var jsonString = json.decode(response.body);
+    // var jsonString = json.decode(response.body);
+    var jsonString = json.decode(utf8.decode(response.bodyBytes));
     switch (response.statusCode) {
       case 200:
         return jsonString;
@@ -1902,7 +1905,8 @@ class Repository {
     final response = await apiServices.getApiCallWithToken(
         "${Config.GetAppPost}?userUid=${userUid}", context);
     print('AddPost$response');
-    var jsonString = json.decode(response.body);
+    // var jsonString = json.decode(response.body);
+    var jsonString = json.decode(utf8.decode(response.bodyBytes));
     switch (response.statusCode) {
       case 200:
         return GetAppUserPostModel.fromJson(jsonString);
@@ -1924,7 +1928,8 @@ class Repository {
         "${Config.GetPostCommetAPI}?userUid=${userUid}&orderBy=${orderBy}",
         context);
     print('AddPost$response');
-    var jsonString = json.decode(response.body);
+    // var jsonString = json.decode(response.body);
+    var jsonString = json.decode(utf8.decode(response.bodyBytes));
     switch (response.statusCode) {
       case 200:
         return GetUserPostCommetModel.fromJson(jsonString);
@@ -1945,7 +1950,8 @@ class Repository {
     final response = await apiServices.getApiCallWithToken(
         "${Config.GetSavePostAPI}?userUid=${userUid}", context);
     print('AddPost$response');
-    var jsonString = json.decode(response.body);
+    // var jsonString = json.decode(response.body);
+    var jsonString = json.decode(utf8.decode(response.bodyBytes));
     switch (response.statusCode) {
       case 200:
         return GetSavePostModel.fromJson(jsonString);
@@ -2077,7 +2083,9 @@ class Repository {
         '${Config.HashTagView}?hashtagName=${hashTag.replaceAll("#", "%23")}',
         context);
     print(response);
-    var jsonString = json.decode(response.body);
+    // var jsonString = json.decode(response.body);
+
+    var jsonString = json.decode(utf8.decode(response.bodyBytes));
     switch (response.statusCode) {
       case 200:
         return HashtagViewDataModel.fromJson(jsonString);
@@ -2202,14 +2210,17 @@ class Repository {
     }
   }
 
-  openSaveImagePost(BuildContext context, String PostUID) async {
+openSaveImagePost(BuildContext context, String PostUID) async {
+     final SharedPreferences prefs = await SharedPreferences.getInstance();
+  
+  String?  uuid = prefs.getString(PreferencesKey.loginUserID);
     final response = /* PostUID == ""
         ? await apiServices.getApiCallWithToken(
             '${Config.OpenSaveImagePost}?postLink=${PostLink}', context)
         : */
         await apiServices.getApiCallWithToken(
-            '${Config.OpenSaveImagePost}?postUid=$PostUID', context);
-    var jsonString = json.decode(response.body);
+           uuid == null ?'${Config.OpenSaveImagePostGuest}?postUid=$PostUID' : '${Config.OpenSaveImagePost}?postUid=$PostUID', context);
+    var jsonString = json.decode(utf8.decode(response.bodyBytes));
     switch (response.statusCode) {
       case 200:
         return OpenSaveImagepostModel.fromJson(jsonString);
@@ -2225,7 +2236,6 @@ class Repository {
         return jsonString;
     }
   }
-
   getAllDataGet(BuildContext context, String userUid) async {
     print("shdsdgfgsdfgfg-$userUid");
     final response = await apiServices.getApiCallWithToken(
@@ -2298,7 +2308,7 @@ class Repository {
     final response = await apiServices.getApiCallWithToken(
         '${Config.PersonalChatList}', context);
     print(response);
-    var jsonString = json.decode(response.body);
+    var jsonString = json.decode(utf8.decode(response.bodyBytes));
     switch (response.statusCode) {
       case 200:
         return PersonalChatListModel.fromJson(jsonString);
@@ -2606,7 +2616,7 @@ class Repository {
     final responce = await apiServices.getApiCallWithToken(
         '${Config.DMChatList}?userChatInboxUid=${userChatInboxUid}&pageNumber=${pageNumber}&numberOfRecords=${numberOfRecords}',
         context);
-    var jsonString = json.decode(responce.body);
+    var jsonString = json.decode(utf8.decode(responce.bodyBytes));
 
     switch (responce.statusCode) {
       case 200:
@@ -2627,7 +2637,8 @@ class Repository {
   Blogcomment(BuildContext context, String blogID) async {
     final responce = await apiServices.getApiCallWithToken(
         '${Config.blogComment}?blogUid=${blogID}', context);
-    var jsonString = json.decode(responce.body);
+    // var jsonString = json.decode(responce.body);
+    var jsonString = json.decode(utf8.decode(responce.bodyBytes));
     print('jasonnString$jsonString');
     print('respnse ${responce.statusCode}');
     switch (responce.statusCode) {
@@ -2677,7 +2688,8 @@ class Repository {
     final response =
         await apiServices.postApiCall(Config.addBlogcomments, params, context);
     print('AddPost$response');
-    var jsonString = json.decode(response.body);
+    // var jsonString = json.decode(response.body);
+    var jsonString = json.decode(utf8.decode(response.bodyBytes));
     switch (response.statusCode) {
       case 200:
         return jsonString;
@@ -2852,6 +2864,35 @@ class Repository {
         return jsonString;
     }
   }
+   reactionMessageAddedOnStory(
+      BuildContext context, String reactionMessage, String storyUid,
+      {bool? emojiReaction}) async {
+    print("emojireaction-$emojiReaction");
+
+    final responce = await apiServices.getApiCallWithToken(
+        emojiReaction == true
+            ? '${Config.reaction_message_added_on_story}?reactionMessage=$reactionMessage&storyUid=$storyUid&emojiReaction=$emojiReaction'
+            : '${Config.reaction_message_added_on_story}?reactionMessage=$reactionMessage&storyUid=$storyUid',
+        context);
+    var jsonString = json.decode(responce.body);
+    print('reactionMessageAddedOnStory$jsonString');
+    print('respnse ${responce.statusCode}');
+    switch (responce.statusCode) {
+      case 200:
+        return jsonString;
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+      case 400:
+        return Config.somethingWentWrong;
+      case 701:
+        return Config.somethingWentWrong;
+      default:
+        return jsonString;
+    }
+  }
+
 }
 // var headers = {
 //   'Authorization': 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJpc1ZlcmlmaWVkIjp0cnVlLCJtb2R1bGUiOiJFTVBMT1lFRSIsImlzQWN0aXZlIjp0cnVlLCJ1dWlkIjoiODYwMWViNTItNzk4NS00MWU3LTgwOTAtYmMyMjQ0MjkwZjkzIiwidXNlcm5hbWUiOiJBTiIsInN1YiI6IkFOIiwiaWF0IjoxNjkxMTUyODIxLCJleHAiOjE2OTIyMzI4MjF9.AjSlFxHlTU9opgsyXaqVh_sMQuv7f-fKGmIGle6879MD-OAGTNcPN5r9ZW8Go1124YE2BbSrc1Lj5GuspgilWg'

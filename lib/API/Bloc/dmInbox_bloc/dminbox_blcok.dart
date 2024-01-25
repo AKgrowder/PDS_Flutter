@@ -121,12 +121,13 @@ class DmInboxCubit extends Cubit<getInboxState> {
     }
   }
 
-  Future<void> SeenMessage(BuildContext context,String inboxUid) async {
+  Future<void> SeenMessage(BuildContext context, String inboxUid) async {
     dynamic SeenMessgaeModelData;
     try {
       emit(getInboxLoadingState());
-      SeenMessgaeModelData = await Repository().SeenMessage(context,inboxUid);
-      if (SeenMessgaeModelData == "Something Went Wrong, Try After Some Time.") {
+      SeenMessgaeModelData = await Repository().SeenMessage(context, inboxUid);
+      if (SeenMessgaeModelData ==
+          "Something Went Wrong, Try After Some Time.") {
         emit(getInboxErrorState("${SeenMessgaeModelData}"));
       } else {
         if (SeenMessgaeModelData.success == true) {
@@ -141,7 +142,7 @@ class DmInboxCubit extends Cubit<getInboxState> {
     }
   }
 
-      Future<void> getAllNoticationsCountAPI(BuildContext context) async {
+  Future<void> getAllNoticationsCountAPI(BuildContext context) async {
     dynamic acceptRejectInvitationModel;
     try {
       emit(getInboxLoadingState());
@@ -157,6 +158,25 @@ class DmInboxCubit extends Cubit<getInboxState> {
       }
     } catch (e) {
       emit(getInboxErrorState(acceptRejectInvitationModel));
+    }
+  }
+
+  Future<void> get_all_story(BuildContext context,
+      {bool showAlert = false}) async {
+    dynamic getAllStory;
+    try {
+      emit(getInboxLoadingState());
+      getAllStory = await Repository().GetAllStory(context);
+      if (getAllStory == "Something Went Wrong, Try After Some Time.") {
+        emit(getInboxErrorState("${getAllStory}"));
+      } else {
+        if (getAllStory.success == true) {
+          emit(GetAllStoryLoadedState(getAllStory));
+        }
+      }
+    } catch (e) {
+      print('errorstate-$e');
+      emit(getInboxErrorState(e));
     }
   }
 }

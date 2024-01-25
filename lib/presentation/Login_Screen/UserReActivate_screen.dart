@@ -104,10 +104,10 @@ class UserReActivateDailogState extends State<UserReActivateDailog>
                           savePhoneData();
                         }
                         SnackBar snackBar = SnackBar(
-                            content: Text("Logged In"),
-                            backgroundColor: ColorConstant.primary_color,
-                          );
-                          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                          content: Text("Logged In"),
+                          backgroundColor: ColorConstant.primary_color,
+                        );
+                        ScaffoldMessenger.of(context).showSnackBar(snackBar);
 
                         Navigator.pushAndRemoveUntil(context,
                             MaterialPageRoute(builder: (context) {
