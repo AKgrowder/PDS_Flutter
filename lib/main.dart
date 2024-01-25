@@ -43,15 +43,14 @@ import 'package:pds/API/Bloc/senMSG_Bloc/senMSG_cubit.dart';
 import 'package:pds/API/Bloc/sherinvite_Block/sherinvite_cubit.dart';
 import 'package:pds/API/Bloc/viewStory_Bloc/viewStory_cubit.dart';
 import 'package:pds/theme/theme_helper.dart';
-
 import 'API/Bloc/postData_Bloc/postData_Bloc.dart';
 import 'presentation/splash_screen/splash_screen.dart';
-
 import 'package:flutter_langdetect/flutter_langdetect.dart' as langdetect;
 
 Future<void> _messageHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
   print('background message ${message.notification!.body}');
+  print("value Gey-${message.data}");
 }
 
 void main() async {
@@ -59,7 +58,7 @@ void main() async {
   await FlutterDownloader.initialize();
   await WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-    await langdetect.initLangDetect();
+  await langdetect.initLangDetect();
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
   ]);
@@ -69,7 +68,7 @@ void main() async {
 
   FirebaseMessaging.onBackgroundMessage(_messageHandler);
   FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) async {
-    print("/* onMessageOpenedApp: */ $message");
+    print("/* onMessageOpenedApp: */ ${message}");
     // if (message.data["navigation"] == "/your_route") {
     //   int _yourId = int.tryParse(message.data["id"]) ?? 0;
     //   Navigator.push(

@@ -1411,7 +1411,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                       storyButtons[0] = (StoryButton(
                           onPressed: (data) {
                             Navigator.of(storycontext!).push(
-                              StoryRoute(
+                              StoryRoute( // hii working Date
                                 onTap: () async {
                                   await BlocProvider.of<GetGuestAllPostCubit>(
                                           context)
@@ -2780,9 +2780,9 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                                 "IMAGE"
                                                                             ? GestureDetector(
                                                                                 onTap: () {
-                                                                                  if (uuid == null) {
+                                                                                 /*  if (uuid == null) {
                                                                                     Navigator.of(context).push(MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
-                                                                                  } else {
+                                                                                  } else { */
                                                                                     Navigator.push(
                                                                                       context,
                                                                                       MaterialPageRoute(
@@ -2791,7 +2791,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                                                 index: index,
                                                                                               )),
                                                                                     );
-                                                                                  }
+                                                                                  // }
                                                                                 },
                                                                                 child: Container(
                                                                                   height: 200,
@@ -2889,9 +2889,9 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                                               child: Center(
                                                                                                   child: GestureDetector(
                                                                                                 onTap: () {
-                                                                                                  if (uuid == null) {
+                                                                                                /*   if (uuid == null) {
                                                                                                     Navigator.of(context).push(MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
-                                                                                                  } else {
+                                                                                                  } else { */
                                                                                                     Navigator.push(
                                                                                                       context,
                                                                                                       MaterialPageRoute(
@@ -2900,7 +2900,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                                                                 index: index1,
                                                                                                               )),
                                                                                                     );
-                                                                                                  }
+                                                                                                  // }
                                                                                                 },
                                                                                                 child: Stack(
                                                                                                   children: [
@@ -3228,9 +3228,9 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                           ? (AllGuestPostRoomData?.object?.content?[index].repostOn?.postDataType == "IMAGE"
                                                                               ? GestureDetector(
                                                                                   onTap: () {
-                                                                                    if (uuid == null) {
+                                                                                   /*  if (uuid == null) {
                                                                                       Navigator.of(context).push(MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
-                                                                                    } else {
+                                                                                    } else { */
                                                                                       Navigator.push(
                                                                                         context,
                                                                                         MaterialPageRoute(
@@ -3239,7 +3239,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                                                   index: index,
                                                                                                 )),
                                                                                       );
-                                                                                    }
+                                                                                    // }
                                                                                   },
                                                                                   child: Container(
                                                                                     width: _width,
@@ -3322,9 +3322,9 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                                               return GestureDetector(
                                                                                                 onTap: () {
                                                                                                   print("Repost Opne Full screen");
-                                                                                                  if (uuid == null) {
+                                                                                                /*   if (uuid == null) {
                                                                                                     Navigator.of(context).push(MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
-                                                                                                  } else {
+                                                                                                  } else { */
                                                                                                     Navigator.push(
                                                                                                       context,
                                                                                                       MaterialPageRoute(
@@ -3333,7 +3333,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                                                                 index: index1,
                                                                                                               )),
                                                                                                     );
-                                                                                                  }
+                                                                                                  // }
                                                                                                 },
                                                                                                 child: Container(
                                                                                                   width: _width,
@@ -4354,10 +4354,10 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                       ? GestureDetector(
                                                                           onTap:
                                                                               () {
-                                                                            if (uuid ==
+                                                                            /* f (uuid ==
                                                                                 null) {
                                                                               Navigator.of(context).push(MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
-                                                                            } else {
+                                                                            } else { */
                                                                               Navigator.push(
                                                                                 context,
                                                                                 MaterialPageRoute(
@@ -4366,7 +4366,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                                           index: index,
                                                                                         )),
                                                                               );
-                                                                            }
+                                                                            // }
                                                                           },
                                                                           child:
                                                                               Container(
@@ -4471,9 +4471,9 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                                         child: Center(
                                                                                             child: GestureDetector(
                                                                                           onTap: () {
-                                                                                            if (uuid == null) {
+                                                                                          /*   if (uuid == null) {
                                                                                               Navigator.of(context).push(MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
-                                                                                            } else {
+                                                                                            } else { */
                                                                                               Navigator.push(
                                                                                                 context,
                                                                                                 MaterialPageRoute(
@@ -4482,7 +4482,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                                                           index: index1,
                                                                                                         )),
                                                                                               );
-                                                                                            }
+                                                                                            // }
                                                                                           },
                                                                                           //this is the cusotmImageView
                                                                                           /* child: Container(
