@@ -347,7 +347,7 @@ class _MainViewState extends State<MainView> {
                                           package: 'stories_editor',
                                           fontWeight: FontWeight.w500,
                                           fontSize: 30,
-                                          color: Colors.white.withOpacity(0.5),
+                                          color: Colors.black,
                                           shadows: <Shadow>[
                                             Shadow(
                                                 offset: const Offset(1.0, 1.0),

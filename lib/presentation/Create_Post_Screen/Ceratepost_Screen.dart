@@ -475,7 +475,7 @@ class _CreateNewPostState extends State<CreateNewPost> {
                                     suggestionPosition:
                                         SuggestionPosition.values.last,
                                     maxLines: 10,
-                                    // style: TextStyle(fontFamily: ),
+                                    // style: TextStyle(fontFamily:'' ),
                                     style: TextStyle(
                                       fontFamily: 'outfit',
                                       fontSize: 16,
@@ -488,6 +488,7 @@ class _CreateNewPostState extends State<CreateNewPost> {
                                       focusedBorder: InputBorder.none,
                                     ),
                                     mentions: [
+                                                
                                       Mention(
                                           trigger: "@",
                                           data: tageData,

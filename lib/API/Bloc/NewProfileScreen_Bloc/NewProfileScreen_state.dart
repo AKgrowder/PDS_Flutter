@@ -17,6 +17,7 @@ import 'package:pds/API/Model/like_Post_Model/like_Post_Model.dart';
 import 'package:pds/API/Model/saveAllBlogModel/saveAllBlog_Model.dart';
 import 'package:pds/API/Model/saveBlogModel/saveBlog_Model.dart';
 
+import '../../Model/Delete_Api_model/delete_api_model.dart';
 import '../../Model/HasTagModel/hasTagModel.dart';
 import '../../Model/serchForInboxModel/serchForinboxModel.dart';
 
@@ -142,4 +143,8 @@ class UserTagLoadedState extends NewProfileSState {
 class RePostLoadedState extends NewProfileSState {
   final RePostModel RePost;
   RePostLoadedState(this.RePost);
+}
+class DeletePostLoadedState extends NewProfileSState {
+  final DeletePostModel DeletePost;
+  DeletePostLoadedState(this.DeletePost);
 }
