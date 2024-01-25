@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
@@ -16,16 +18,18 @@ import 'package:pds/presentation/%20new/ShowAllPostLike.dart';
 import 'package:pds/presentation/%20new/comment_bottom_sheet.dart';
 import 'package:pds/presentation/%20new/newbottembar.dart';
 import 'package:pds/presentation/%20new/profileNew.dart';
+import 'package:pds/presentation/register_create_account_screen/register_create_account_screen.dart';
 import 'package:pds/widgets/commentPdf.dart';
 import 'package:pds/widgets/custom_image_view.dart';
-import 'package:share_plus/share_plus.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:photo_view/photo_view.dart';
 
-import 'package:widget_zoom/widget_zoom.dart';
+import 'package:http/http.dart' as http;
 
 import '../../API/Bloc/OpenSaveImagepost_Bloc/OpenSaveImagepost_state.dart';
 import '../../API/Model/UserTagModel/UserTag_model.dart';
+import '../../core/utils/sharedPreferences.dart';
 import 'home_screen_new.dart';
 
 // ignore: must_be_immutable
@@ -56,7 +60,7 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
   List<PageController> pageControllers = [];
   List<int> currentPagesRepost = [];
   List<PageController> pageControllersRepost = [];
-
+  String? uuid;
   bool added = false;
   int imageCount = 1;
   UserTagModel? userTagModel;
@@ -66,7 +70,15 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
     print("dfgdfgdgf-  ${widget.profileTure}");
     BlocProvider.of<OpenSaveCubit>(context)
         .openSaveImagePostAPI(context, "${widget.PostID}");
+    userIdFun();
+
     super.initState();
+  }
+
+  userIdFun() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    uuid = prefs.getString(PreferencesKey.loginUserID);
   }
 
   @override
@@ -1267,9 +1279,16 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
                                       ),
                                       GestureDetector(
                                         onTap: () async {
-                                          await soicalFunation(
-                                            apiName: 'like_post',
-                                          );
+                                          if (uuid == null) {
+                                            Navigator.of(context).push(
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        RegisterCreateAccountScreen()));
+                                          } else {
+                                            await soicalFunation(
+                                              apiName: 'like_post',
+                                            );
+                                          }
                                         },
                                         child: Container(
                                           color: Colors.transparent,
@@ -1304,13 +1323,20 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
                                                     
                                                         ShowAllPostLike("${AllGuestPostRoomData?.object?[index].postUid}"))); */
 
-                                                Navigator.push(context,
-                                                    MaterialPageRoute(
-                                                  builder: (context) {
-                                                    return ShowAllPostLike(
-                                                        "${OpenSaveModelData?.object?.postUid}");
-                                                  },
-                                                ));
+                                                if (uuid == null) {
+                                                  Navigator.of(context).push(
+                                                      MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              RegisterCreateAccountScreen()));
+                                                } else {
+                                                  Navigator.push(context,
+                                                      MaterialPageRoute(
+                                                    builder: (context) {
+                                                      return ShowAllPostLike(
+                                                          "${OpenSaveModelData?.object?.postUid}");
+                                                    },
+                                                  ));
+                                                }
                                               },
                                               child: Container(
                                                 color: Colors.transparent,
@@ -1333,13 +1359,20 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
                                       ),
                                       GestureDetector(
                                         onTap: () async {
-                                          BlocProvider.of<AddcommentCubit>(
-                                                  context)
-                                              .Addcomment(context,
-                                                  '${OpenSaveModelData?.object?.postUid}');
+                                          if (uuid == null) {
+                                            Navigator.of(context).push(
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        RegisterCreateAccountScreen()));
+                                          } else {
+                                            BlocProvider.of<AddcommentCubit>(
+                                                    context)
+                                                .Addcomment(context,
+                                                    '${OpenSaveModelData?.object?.postUid}');
 
-                                          _settingModalBottomSheet1(
-                                              context, 0, _width);
+                                            _settingModalBottomSheet1(
+                                                context, 0, _width);
+                                          }
 
                                           /*     await Navigator.push(
                                                             context,
@@ -1405,9 +1438,16 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
                                             ),
                                       GestureDetector(
                                         onTap: () {
-                                          rePostBottomSheet(
-                                            context,
-                                          );
+                                          if (uuid == null) {
+                                            Navigator.of(context).push(
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        RegisterCreateAccountScreen()));
+                                          } else {
+                                            rePostBottomSheet(
+                                              context,
+                                            );
+                                          }
                                         },
                                         child: Container(
                                           color: Colors.transparent,
@@ -1437,9 +1477,16 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
                                       Spacer(),
                                       GestureDetector(
                                         onTap: () async {
-                                          await soicalFunation(
-                                            apiName: 'savedata',
-                                          );
+                                          if (uuid == null) {
+                                            Navigator.of(context).push(
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        RegisterCreateAccountScreen()));
+                                          } else {
+                                            await soicalFunation(
+                                              apiName: 'savedata',
+                                            );
+                                          }
                                         },
                                         child: Container(
                                           color: Colors.transparent,
@@ -1600,7 +1647,15 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
                                                     ? Container(
                                                         height: _height / 2,
                                                         width: _width,
-                                                        child: PhotoView(
+                                                        child: ZoomableImage(
+                                                          imageUrl:
+                                                              OpenSaveModelData
+                                                                      ?.object
+                                                                      ?.postData?[0] ??
+                                                                  '',
+                                                        )
+
+                                                        /* PhotoView(
                                                           imageProvider: NetworkImage(
                                                               OpenSaveModelData
                                                                       ?.object
@@ -1617,8 +1672,8 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
                                                               BoxDecoration(
                                                             color: Colors.black,
                                                           ),
-                                                        ),
-                                                      )
+                                                        ), */
+                                                        )
                                                     /*  SizedBox(
                                                         height: _height,
                                                         width: _width,
@@ -1721,18 +1776,17 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
                                                                           children: [
                                                                             Align(
                                                                                 alignment: Alignment.topCenter,
-                                                                                child: Container(
-                                                                                  height: _height / 2,
-                                                                                  width: _width,
-                                                                                  child: PhotoView(
+                                                                                child: Container(height: _height / 2, width: _width, child: ZoomableImage(imageUrl: OpenSaveModelData?.object?.postData?[0] ?? '')
+
+                                                                                    /*  PhotoView(
                                                                                     imageProvider: NetworkImage(OpenSaveModelData?.object?.postData?[0] ?? ''),
                                                                                     minScale: PhotoViewComputedScale.contained,
                                                                                     maxScale: PhotoViewComputedScale.covered * 2,
                                                                                     backgroundDecoration: BoxDecoration(
                                                                                       color: Colors.black,
                                                                                     ),
-                                                                                  ),
-                                                                                )),
+                                                                                  ), */
+                                                                                    )),
                                                                             Align(
                                                                               alignment: Alignment.topRight,
                                                                               child: Card(
@@ -1954,9 +2008,16 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
                                     ),
                                     GestureDetector(
                                       onTap: () async {
-                                        await soicalFunation(
-                                          apiName: 'like_post',
-                                        );
+                                        if (uuid == null) {
+                                          Navigator.of(context).push(
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      RegisterCreateAccountScreen()));
+                                        } else {
+                                          await soicalFunation(
+                                            apiName: 'like_post',
+                                          );
+                                        }
                                       },
                                       child: Container(
                                         color: Colors.transparent,
@@ -1990,14 +2051,20 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
                                                         builder: (context) =>
                                                         
                                                             ShowAllPostLike("${AllGuestPostRoomData?.object?[index].postUid}"))); */
-
-                                              Navigator.push(context,
-                                                  MaterialPageRoute(
-                                                builder: (context) {
-                                                  return ShowAllPostLike(
-                                                      "${OpenSaveModelData?.object?.postUid}");
-                                                },
-                                              ));
+                                              if (uuid == null) {
+                                                Navigator.of(context).push(
+                                                    MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            RegisterCreateAccountScreen()));
+                                              } else {
+                                                Navigator.push(context,
+                                                    MaterialPageRoute(
+                                                  builder: (context) {
+                                                    return ShowAllPostLike(
+                                                        "${OpenSaveModelData?.object?.postUid}");
+                                                  },
+                                                ));
+                                              }
                                             },
                                             child: Container(
                                               color: Colors.transparent,
@@ -2020,13 +2087,20 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
                                     ),
                                     GestureDetector(
                                       onTap: () async {
-                                        BlocProvider.of<AddcommentCubit>(
-                                                context)
-                                            .Addcomment(context,
-                                                '${OpenSaveModelData?.object?.postUid}');
+                                        if (uuid == null) {
+                                          Navigator.of(context).push(
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      RegisterCreateAccountScreen()));
+                                        } else {
+                                          BlocProvider.of<AddcommentCubit>(
+                                                  context)
+                                              .Addcomment(context,
+                                                  '${OpenSaveModelData?.object?.postUid}');
 
-                                        _settingModalBottomSheet1(
-                                            context, 0, _width);
+                                          _settingModalBottomSheet1(
+                                              context, 0, _width);
+                                        }
 
                                         /*     await Navigator.push(
                                                                 context,
@@ -2091,9 +2165,16 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
                                           ),
                                     GestureDetector(
                                       onTap: () {
-                                        rePostBottomSheet(
-                                          context,
-                                        );
+                                        if (uuid == null) {
+                                          Navigator.of(context).push(
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      RegisterCreateAccountScreen()));
+                                        } else {
+                                          rePostBottomSheet(
+                                            context,
+                                          );
+                                        }
                                       },
                                       child: Container(
                                         color: Colors.transparent,
@@ -2122,9 +2203,16 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
                                     Spacer(),
                                     GestureDetector(
                                       onTap: () async {
-                                        await soicalFunation(
-                                          apiName: 'savedata',
-                                        );
+                                        if (uuid == null) {
+                                          Navigator.of(context).push(
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      RegisterCreateAccountScreen()));
+                                        } else {
+                                          await soicalFunation(
+                                            apiName: 'savedata',
+                                          );
+                                        }
                                       },
                                       child: Container(
                                         color: Colors.transparent,
@@ -2376,5 +2464,50 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
             ),
           );
         });
+  }
+}
+
+class ZoomableImage extends StatefulWidget {
+  final String imageUrl;
+  ZoomableImage({required this.imageUrl});
+
+  @override
+  State<ZoomableImage> createState() => _ZoomableImageState();
+}
+
+class _ZoomableImageState extends State<ZoomableImage> {
+  MemoryImage? _memoryImage;
+  Uint8List? bytes;
+  @override
+  void initState() {
+    super.initState();
+    loadImage();
+  }
+
+  @override
+  Future<void> loadImage() async {
+    final http.Response response = await http.get(Uri.parse(widget.imageUrl));
+    bytes = response.bodyBytes;
+
+    final memoryImage = MemoryImage(Uint8List.fromList(bytes!));
+
+    setState(() {
+      _memoryImage = memoryImage;
+    });
+  }
+
+  Widget build(BuildContext context) {
+    return _memoryImage != null
+        ? PhotoView(
+            imageProvider: MemoryImage(bytes!),
+            minScale: PhotoViewComputedScale.contained,
+            maxScale: PhotoViewComputedScale.covered * 2,
+            backgroundDecoration: BoxDecoration(
+              color: Colors.black,
+            ),
+          )
+        : Center(
+            child: CircularProgressIndicator(),
+          );
   }
 }

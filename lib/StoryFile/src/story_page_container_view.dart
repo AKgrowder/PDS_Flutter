@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:collection';
+import 'dart:typed_data';
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -10,6 +11,7 @@ import 'package:pds/API/Bloc/viewStory_Bloc/viewStory_cubit.dart';
 import 'package:pds/API/Bloc/viewStory_Bloc/viewStory_state.dart';
 import 'package:pds/API/Model/ViewStoryModel/StoryViewList_Model.dart';
 import 'package:pds/API/Model/storyDeleteModel/storyDeleteModel.dart';
+import 'package:pds/API/Repo/repository.dart';
 import 'package:pds/StoryFile/src/first_build_mixin.dart';
 import 'package:pds/StoryFile/src/story_button.dart';
 import 'package:pds/StoryFile/src/story_page_scaffold.dart';
@@ -20,6 +22,8 @@ import 'package:pds/presentation/%20new/profileNew.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:video_player/video_player.dart';
+import 'dart:ui' as ui;
+import 'package:http/http.dart' as http;
 
 import '../../core/utils/image_constant.dart';
 import '../../widgets/custom_image_view.dart';
@@ -65,23 +69,29 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
   String lastLoggedTime = "";
   Duration? durationOfVideo;
   int countcheck = 0;
+  TextEditingController reactionData = TextEditingController();
+
   dataFunctionSetup() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     User_ID = prefs.getString(PreferencesKey.loginUserID);
     setState(() {});
   }
 
+  FocusNode? _focusNode;
+  bool isDataGet = false;
   bool isStoryViewData = false;
 
   @override
   void initState() {
     // blockFunction();
+    _focusNode = FocusNode();
     dataFunctionSetup();
     _storyController =
         widget.buttonData.storyController ?? StoryTimelineController();
     _stopwatch.start();
     // GetUserID();
     _storyController!.addListener(_onTimelineEvent);
+
     imageLoads =
         List.generate(widget.buttonData.images.length, (index) => false);
 
@@ -526,334 +536,527 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
 
         _storyController!.unpause();
       },
-      child: SizedBox(
-        width: double.infinity,
-        height: double.infinity,
-        child: Stack(
-          children: [
-            ifVideoPlayer == true ? _buildPageContent1() : _buildPageContent(),
-            SafeArea(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  _buildTimeline(),
-                  _buildCloseButton(),
-                  // print(widget.buttonData.images[_curSegmentIndex].storyUid);
-                  Spacer(),
-                  widget.buttonData.images[_curSegmentIndex].userUid == User_ID
-                      ? GestureDetector(
-                          onTapDown: (details) {
-                            _pointerDownMillis = _stopwatch.elapsedMilliseconds;
-                            _pointerDownPosition = details.localPosition;
-                            _storyController!.pause();
-                            setState(() {
-                              isBottomSheetOpen = true;
-                            });
-                            showModalBottomSheet(
-                                isScrollControlled: true,
-                                useSafeArea: true,
-                                isDismissible: true,
-                                showDragHandle: false,
-                                enableDrag: true,
-                                constraints:
-                                    BoxConstraints.tight(Size.infinite),
-                                context: context,
-                                builder: (BuildContext bc) {
-                                  return Column(
-                                    children: [
-                                      SizedBox(
-                                        height: 30,
-                                      ),
-                                      Container(
-                                        width: _width,
-                                        child: Row(
-                                          children: [
-                                            SizedBox(
-                                              width: _width / 2.3,
-                                            ),
-                                            // Spacer(),
-                                            Container(
-                                              height: 2,
-                                              width: 50,
-                                              alignment: Alignment.center,
-                                              padding: EdgeInsets.all(8.0),
-                                              decoration: BoxDecoration(
-                                                color: Colors.grey,
-                                              ),
-                                            ),
-                                            Spacer(),
-                                            GestureDetector(
-                                              onTap: () async {
-                                                await BlocProvider.of<
-                                                        ViewStoryCubit>(context)
-                                                    .delete_story(context,
-                                                        "${widget.buttonData.images[_curSegmentIndex].storyUid}");
-                                              },
-                                              child: Icon(
-                                                Icons.delete,
-                                                color:
-                                                    ColorConstant.primary_color,
-                                              ),
-                                            ),
-                                            SizedBox(
-                                              width: 30,
-                                            )
-                                          ],
-                                        ),
-                                      ),
-                                      Expanded(
-                                        child: ListView.separated(
-                                            shrinkWrap: true,
-                                            primary: true,
-                                            itemCount: StoryViewListModelData
-                                                    ?.object?.length ??
-                                                0,
-                                            separatorBuilder:
-                                                (BuildContext context,
-                                                        int index) =>
-                                                    const Divider(),
-                                            itemBuilder: (BuildContext context,
-                                                int index) {
-                                              return Container(
-                                                // height: 40,
-                                                width: _width,
-                                                // color: Colors.green,
-                                                child: ListTile(
-                                                  leading: GestureDetector(
-                                                    onTap: () {
-                                                      Navigator.push(context,
-                                                          MaterialPageRoute(
-                                                              builder:
-                                                                  (context) {
-                                                        return MultiBlocProvider(
-                                                            providers: [
-                                                              BlocProvider<
-                                                                  NewProfileSCubit>(
-                                                                create: (context) =>
-                                                                    NewProfileSCubit(),
-                                                              ),
-                                                            ],
-                                                            child:
-                                                                ProfileScreen(
-                                                              User_ID:
-                                                                  "${StoryViewListModelData?.object?[index].userUid}",
-                                                              isFollowing:
-                                                                  "${StoryViewListModelData?.object?[index].isFollowing}",
-                                                            ));
-                                                      }));
+      child: GestureDetector(
+        onVerticalDragStart: (details) {
+          if (User_ID != widget.buttonData.images[_curSegmentIndex].userUid) {
+            final pointerUpMillis = _stopwatch.elapsedMilliseconds;
+            final maxPressMillis = kPressTimeout.inMilliseconds * 2;
+            final diffMillis = pointerUpMillis - _pointerDownMillis;
+            if (diffMillis <= maxPressMillis) {
+              final position = event1.position;
+              final distance = (position - _pointerDownPosition).distance;
+              if (distance < 5.0) {
+                final isLeft = _isLeftPartOfStory(position);
+                if (isLeft) {
+                  _storyController!.previousSegment();
+                } else {
+                  _storyController!.nextSegment();
+                }
+              }
+            }
+            FocusScope.of(context).requestFocus(_focusNode);
+            WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+              setState(() {
+                isDataGet = true;
+                isBottomSheetOpen = true;
+              });
+            });
+          }
+        },
+        onHorizontalDragCancel: () {
+          _pointerDownMillis = _stopwatch.elapsedMilliseconds;
+          _pointerDownPosition = event1.position;
+          _storyController?.pause();
+          _focusNode?.unfocus();
+          WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+            setState(() {
+              isDataGet = false;
+              isBottomSheetOpen = false;
+            });
+          });
+        },
+        /* onVerticalDragEnd: (details) {
+           final pointerUpMillis = _stopwatch.elapsedMilliseconds;
+        final maxPressMillis = kPressTimeout.inMilliseconds * 2;
+        final diffMillis = pointerUpMillis - _pointerDownMillis;
+        if (diffMillis <= maxPressMillis) {
+          final position = event1.position;
+          final distance = (position - _pointerDownPosition).distance;
+          if (distance < 5.0) {
+            final isLeft = _isLeftPartOfStory(position);
+            if (isLeft) {
+              _storyController!.previousSegment();
+            } else {
+              _storyController!.nextSegment();
+            }
+          }
+        }
 
-                                                      // Navigator.push(
-                                                      //     context,
-                                                      //     MaterialPageRoute(
-                                                      //         builder: (context) =>
-                                                      //             ProfileScreen(
-                                                      //               User_ID:
-                                                      //                   "${StoryViewListModelData?.object?[index].userUid}",
-                                                      //               isFollowing:
-                                                      //                   "${StoryViewListModelData?.object?[index].isFollowing}",
-                                                      //             )));
-                                                    },
-                                                    child: StoryViewListModelData
-                                                                    ?.object?[
-                                                                        index]
-                                                                    .profilePic !=
-                                                                null &&
-                                                            StoryViewListModelData
-                                                                    ?.object?[
-                                                                        index]
-                                                                    .profilePic !=
-                                                                ""
-                                                        ? CircleAvatar(
-                                                            backgroundColor:
-                                                                Colors.white,
-                                                            backgroundImage:
-                                                                NetworkImage(
-                                                                    "${StoryViewListModelData?.object?[index].profilePic}"),
-                                                            radius: 25,
-                                                          )
-                                                        : CustomImageView(
-                                                            imagePath:
-                                                                (ImageConstant
-                                                                    .tomcruse)),
-                                                  ),
-                                                  title: Column(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    children: [
-                                                      SizedBox(
-                                                        height: 6,
-                                                      ),
-                                                      Container(
-                                                        // color: Colors.amber,
-                                                        child: Text(
-                                                          "${StoryViewListModelData?.object?[index].userName}",
-                                                          style: TextStyle(
-                                                              fontSize: 20,
-                                                              fontFamily:
-                                                                  "outfit",
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold),
+        _storyController!.unpause();
+        FocusScope.of(context).unfocus();
+        WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+              setState(() {
+                isDataGet = false;
+                
+              });
+            }); 
+      } */
+        child: SizedBox(
+          width: double.infinity,
+          height: double.infinity,
+          child: Stack(
+            children: [
+              ifVideoPlayer == true
+                  ? _buildPageContent1()
+                  : _buildPageContent(),
+              SafeArea(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    _buildTimeline(),
+                    _buildCloseButton(),
+                    // print(widget.buttonData.images[_curSegmentIndex].storyUid);
+                    Spacer(),
+                    widget.buttonData.images[_curSegmentIndex].userUid ==
+                            User_ID
+                        ? GestureDetector(
+                            onTapDown: (details) {
+                              _pointerDownMillis =
+                                  _stopwatch.elapsedMilliseconds;
+                              _pointerDownPosition = details.localPosition;
+                              _storyController!.pause();
+                              setState(() {
+                                isBottomSheetOpen = true;
+                              });
+                              showModalBottomSheet(
+                                  isScrollControlled: true,
+                                  useSafeArea: true,
+                                  isDismissible: true,
+                                  showDragHandle: false,
+                                  enableDrag: true,
+                                  constraints:
+                                      BoxConstraints.tight(Size.infinite),
+                                  context: context,
+                                  builder: (BuildContext bc) {
+                                    return Column(
+                                      children: [
+                                        SizedBox(
+                                          height: 30,
+                                        ),
+                                        Container(
+                                          width: _width,
+                                          child: Row(
+                                            children: [
+                                              SizedBox(
+                                                width: _width / 2.3,
+                                              ),
+                                              // Spacer(),
+                                              Container(
+                                                height: 2,
+                                                width: 50,
+                                                alignment: Alignment.center,
+                                                padding: EdgeInsets.all(8.0),
+                                                decoration: BoxDecoration(
+                                                  color: Colors.grey,
+                                                ),
+                                              ),
+                                              Spacer(),
+                                              GestureDetector(
+                                                onTap: () async {
+                                                  await BlocProvider.of<
+                                                              ViewStoryCubit>(
+                                                          context)
+                                                      .delete_story(context,
+                                                          "${widget.buttonData.images[_curSegmentIndex].storyUid}");
+                                                },
+                                                child: Icon(
+                                                  Icons.delete,
+                                                  color: ColorConstant
+                                                      .primary_color,
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                width: 30,
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                        Expanded(
+                                          child: ListView.separated(
+                                              shrinkWrap: true,
+                                              primary: true,
+                                              itemCount: StoryViewListModelData
+                                                      ?.object?.length ??
+                                                  0,
+                                              separatorBuilder:
+                                                  (BuildContext context,
+                                                          int index) =>
+                                                      const Divider(),
+                                              itemBuilder:
+                                                  (BuildContext context,
+                                                      int index) {
+                                                return Container(
+                                                  // height: 40,
+                                                  width: _width,
+                                                  // color: Colors.green,
+                                                  child: ListTile(
+                                                    leading: GestureDetector(
+                                                      onTap: () {
+                                                        Navigator.push(context,
+                                                            MaterialPageRoute(
+                                                                builder:
+                                                                    (context) {
+                                                          return MultiBlocProvider(
+                                                              providers: [
+                                                                BlocProvider<
+                                                                    NewProfileSCubit>(
+                                                                  create: (context) =>
+                                                                      NewProfileSCubit(),
+                                                                ),
+                                                              ],
+                                                              child:
+                                                                  ProfileScreen(
+                                                                User_ID:
+                                                                    "${StoryViewListModelData?.object?[index].userUid}",
+                                                                isFollowing:
+                                                                    "${StoryViewListModelData?.object?[index].isFollowing}",
+                                                              ));
+                                                        }));
+
+                                                        // Navigator.push(
+                                                        //     context,
+                                                        //     MaterialPageRoute(
+                                                        //         builder: (context) =>
+                                                        //             ProfileScreen(
+                                                        //               User_ID:
+                                                        //                   "${StoryViewListModelData?.object?[index].userUid}",
+                                                        //               isFollowing:
+                                                        //                   "${StoryViewListModelData?.object?[index].isFollowing}",
+                                                        //             )));
+                                                      },
+                                                      child: StoryViewListModelData
+                                                                      ?.object?[
+                                                                          index]
+                                                                      .profilePic !=
+                                                                  null &&
+                                                              StoryViewListModelData
+                                                                      ?.object?[
+                                                                          index]
+                                                                      .profilePic !=
+                                                                  ""
+                                                          ? CircleAvatar(
+                                                              backgroundColor:
+                                                                  Colors.white,
+                                                              backgroundImage:
+                                                                  NetworkImage(
+                                                                      "${StoryViewListModelData?.object?[index].profilePic}"),
+                                                              radius: 25,
+                                                            )
+                                                          : CustomImageView(
+                                                              imagePath:
+                                                                  (ImageConstant
+                                                                      .tomcruse)),
+                                                    ),
+                                                    title: Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        SizedBox(
+                                                          height: 6,
                                                         ),
-                                                      ),
-                                                      // Text(
-                                                      //   customFormat(
-                                                      //       parsedDateTime),
-                                                      //   style: TextStyle(
-                                                      //     fontSize: 12,
-                                                      //     fontFamily: "outfit",
-                                                      //   ),
-                                                      // ),
-                                                    ],
-                                                  ),
-                                                  trailing: User_ID ==
-                                                          StoryViewListModelData
-                                                              ?.object?[index]
-                                                              .userUid
-                                                      ? SizedBox()
-                                                      : GestureDetector(
-                                                          onTap: () {
-                                                            // followFunction(
-                                                            //   apiName: 'Follow',
-                                                            //   index: index,
-                                                            // );
-                                                          },
-                                                          child: Container(
-                                                            height: 25,
-                                                            alignment: Alignment
-                                                                .center,
-                                                            width: 65,
-                                                            margin:
-                                                                EdgeInsets.only(
-                                                                    bottom: 5),
-                                                            decoration: BoxDecoration(
-                                                                color: ColorConstant
-                                                                    .primary_color,
-                                                                borderRadius:
-                                                                    BorderRadius
-                                                                        .circular(
-                                                                            4)),
-                                                            child: StoryViewListModelData
-                                                                        ?.object?[
-                                                                            index]
-                                                                        .isFollowing ==
-                                                                    'FOLLOW'
-                                                                ? Text(
-                                                                    'Follow',
-                                                                    style: TextStyle(
-                                                                        fontFamily:
-                                                                            "outfit",
-                                                                        fontSize:
-                                                                            12,
-                                                                        fontWeight:
-                                                                            FontWeight
-                                                                                .bold,
-                                                                        color: Colors
-                                                                            .white),
-                                                                  )
-                                                                : StoryViewListModelData
-                                                                            ?.object?[index]
-                                                                            .isFollowing ==
-                                                                        'REQUESTED'
-                                                                    ? Text(
-                                                                        'Requested',
-                                                                        style: TextStyle(
-                                                                            fontFamily:
-                                                                                "outfit",
-                                                                            fontSize:
-                                                                                12,
-                                                                            fontWeight:
-                                                                                FontWeight.bold,
-                                                                            color: Colors.white),
-                                                                      )
-                                                                    : Text(
-                                                                        'Following ',
-                                                                        style: TextStyle(
-                                                                            fontFamily:
-                                                                                "outfit",
-                                                                            fontSize:
-                                                                                12,
-                                                                            fontWeight:
-                                                                                FontWeight.bold,
-                                                                            color: Colors.white),
-                                                                      ),
+                                                        Container(
+                                                          // color: Colors.amber,
+                                                          child: Text(
+                                                            "${StoryViewListModelData?.object?[index].userName}",
+                                                            style: TextStyle(
+                                                                fontSize: 20,
+                                                                fontFamily:
+                                                                    "outfit",
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold),
                                                           ),
                                                         ),
-                                                ),
-                                              );
-                                            }),
-                                      ),
-                                    ],
-                                  );
-                                }).then((value) {
-                              final pointerUpMillis =
-                                  _stopwatch.elapsedMilliseconds;
-                              final maxPressMillis =
-                                  kPressTimeout.inMilliseconds * 2;
-                              final diffMillis =
-                                  pointerUpMillis - _pointerDownMillis;
-                              if (diffMillis <= maxPressMillis) {
-                                final position = event1.position;
-                                final distance =
-                                    (position - _pointerDownPosition).distance;
-                                if (distance < 5.0) {
-                                  final isLeft = _isLeftPartOfStory(position);
-                                  if (isLeft) {
-                                    _storyController!.previousSegment();
-                                  } else {
-                                    _storyController!.nextSegment();
+                                                        // Text(
+                                                        //   customFormat(
+                                                        //       parsedDateTime),
+                                                        //   style: TextStyle(
+                                                        //     fontSize: 12,
+                                                        //     fontFamily: "outfit",
+                                                        //   ),
+                                                        // ),
+                                                      ],
+                                                    ),
+                                                    trailing: User_ID ==
+                                                            StoryViewListModelData
+                                                                ?.object?[index]
+                                                                .userUid
+                                                        ? SizedBox()
+                                                        : GestureDetector(
+                                                            onTap: () {
+                                                              // followFunction(
+                                                              //   apiName: 'Follow',
+                                                              //   index: index,
+                                                              // );
+                                                            },
+                                                            child: Container(
+                                                              height: 25,
+                                                              alignment:
+                                                                  Alignment
+                                                                      .center,
+                                                              width: 65,
+                                                              margin: EdgeInsets
+                                                                  .only(
+                                                                      bottom:
+                                                                          5),
+                                                              decoration: BoxDecoration(
+                                                                  color: ColorConstant
+                                                                      .primary_color,
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              4)),
+                                                              child: StoryViewListModelData
+                                                                          ?.object?[
+                                                                              index]
+                                                                          .isFollowing ==
+                                                                      'FOLLOW'
+                                                                  ? Text(
+                                                                      'Follow',
+                                                                      style: TextStyle(
+                                                                          fontFamily:
+                                                                              "outfit",
+                                                                          fontSize:
+                                                                              12,
+                                                                          fontWeight: FontWeight
+                                                                              .bold,
+                                                                          color:
+                                                                              Colors.white),
+                                                                    )
+                                                                  : StoryViewListModelData
+                                                                              ?.object?[index]
+                                                                              .isFollowing ==
+                                                                          'REQUESTED'
+                                                                      ? Text(
+                                                                          'Requested',
+                                                                          style: TextStyle(
+                                                                              fontFamily: "outfit",
+                                                                              fontSize: 12,
+                                                                              fontWeight: FontWeight.bold,
+                                                                              color: Colors.white),
+                                                                        )
+                                                                      : Text(
+                                                                          'Following ',
+                                                                          style: TextStyle(
+                                                                              fontFamily: "outfit",
+                                                                              fontSize: 12,
+                                                                              fontWeight: FontWeight.bold,
+                                                                              color: Colors.white),
+                                                                        ),
+                                                            ),
+                                                          ),
+                                                  ),
+                                                );
+                                              }),
+                                        ),
+                                      ],
+                                    );
+                                  }).then((value) {
+                                final pointerUpMillis =
+                                    _stopwatch.elapsedMilliseconds;
+                                final maxPressMillis =
+                                    kPressTimeout.inMilliseconds * 2;
+                                final diffMillis =
+                                    pointerUpMillis - _pointerDownMillis;
+                                if (diffMillis <= maxPressMillis) {
+                                  final position = event1.position;
+                                  final distance =
+                                      (position - _pointerDownPosition)
+                                          .distance;
+                                  if (distance < 5.0) {
+                                    final isLeft = _isLeftPartOfStory(position);
+                                    if (isLeft) {
+                                      _storyController!.previousSegment();
+                                    } else {
+                                      _storyController!.nextSegment();
+                                    }
                                   }
                                 }
-                              }
-                              print("bottom sheet closed : unpause");
-                              setState(() {
-                                isBottomSheetOpen = false;
+                                print("bottom sheet closed : unpause");
+                                setState(() {
+                                  isBottomSheetOpen = false;
+                                });
+                                _storyController!.unpause();
                               });
-                              _storyController!.unpause();
-                            });
-                          },
-                          //this is the view counet
-                          child: Container(
-                            height: 50,
-                            width: 150,
-                            color: Colors.transparent,
-                            child: Row(
-                              children: [
-                                Spacer(),
-                                Image.asset(
-                                  ImageConstant.StoryViewListeye,
-                                  height: 14,
-                                ),
-                                SizedBox(
-                                  width: 5,
-                                ),
-                                Text(
-                                  "${widget.buttonData.images[_curSegmentIndex].storyViewCount}",
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontFamily: "outfit",
-                                      fontSize: 14),
-                                ),
-                                Spacer()
-                              ],
+                            },
+                            //this is the view counet
+                            child: Container(
+                              height: 50,
+                              width: 150,
+                              color: Colors.transparent,
+                              child: Row(
+                                children: [
+                                  Spacer(),
+                                  Image.asset(
+                                    ImageConstant.StoryViewListeye,
+                                    height: 14,
+                                  ),
+                                  SizedBox(
+                                    width: 5,
+                                  ),
+                                  Text(
+                                    "${widget.buttonData.images[_curSegmentIndex].storyViewCount}",
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontFamily: "outfit",
+                                        fontSize: 14),
+                                  ),
+                                  Spacer()
+                                ],
+                              ),
+                            ),
+                          )
+                        : SizedBox()
+                  ],
+                ),
+              ),
+              //this is the sortyViewSetup
+              _storyController == null
+                  ? Center(
+                      child: CircularProgressIndicator(
+                        color: ColorConstant.primary_color,
+                        strokeWidth: 2,
+                      ),
+                    )
+                  : SizedBox(),
+              if (User_ID != widget.buttonData.images[_curSegmentIndex].userUid)
+                Positioned(
+                    bottom: 0,
+                    child: Container(
+                      height: 50,
+                      margin: EdgeInsets.only(left: 10, right: 10),
+                      width: MediaQuery.of(context).size.height / 2.4,
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                          border: Border.all(color: Colors.white)),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: TextField(
+                              controller: reactionData,
+                              focusNode: _focusNode,
+                              minLines: 1,
+                              maxLines: null,
+                              onChanged: (value) {
+                                print("value Get-$value");
+                              },
+                              style: TextStyle(color: Colors.white),
+                              decoration: InputDecoration(
+                                  contentPadding: EdgeInsets.only(
+                                    left: 10,
+                                    right: 10,
+                                  ),
+                                  hintText: 'Send Meesage',
+                                  hintStyle: TextStyle(color: Colors.white),
+                                  border: InputBorder.none),
                             ),
                           ),
-                        )
-                      : SizedBox()
-                ],
-              ),
-            ),
-            //this is the sortyViewSetup
-            _storyController == null
-                ? Center(
-                    child: CircularProgressIndicator(
-                      color: ColorConstant.primary_color,
-                      strokeWidth: 2,
+                          TextButton(
+                            onPressed: () {
+                              Repository().reactionMessageAddedOnStory(
+                                  context,
+                                  reactionData.text,
+                                  widget.buttonData.images[_curSegmentIndex]
+                                      .storyUid
+                                      .toString());
+
+                              Navigator.of(context).pop();
+                            },
+                            child: Text(
+                              'Send',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                        ],
+                      ),
+                    )),
+              if (isDataGet == true)
+                Positioned.fill(
+                  child: Align(
+                    alignment: Alignment.center,
+                    child: Container(
+                      height: 200,
+                      width: 300,
+                      color: Colors.transparent,
+                      child: Column(
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              GestureDetector(
+                                  onTap: () {
+                                    handleEmojiSelection('❤️', context);
+                                  },
+                                  child: Text(
+                                    '❤️',
+                                    style: TextStyle(fontSize: 30),
+                                  )
+                                  /* Text('😊', style: TextStyle(fontSize: 30)), */
+                                  ),
+                              GestureDetector(
+                                onTap: () {
+                                  handleEmojiSelection('😂', context);
+                                },
+                                child:
+                                    Text('😂', style: TextStyle(fontSize: 30)),
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  handleEmojiSelection('🔥', context);
+                                },
+                                child:
+                                    Text('🔥', style: TextStyle(fontSize: 30)),
+                              ),
+                            ],
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              GestureDetector(
+                                onTap: () {
+                                  handleEmojiSelection('👏', context);
+                                },
+                                child:
+                                    Text('👏', style: TextStyle(fontSize: 30)),
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  handleEmojiSelection('😮', context);
+                                },
+                                child:
+                                    Text('😮', style: TextStyle(fontSize: 30)),
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  handleEmojiSelection('😥', context);
+                                },
+                                child:
+                                    Text('😥', style: TextStyle(fontSize: 30)),
+                              ),
+                            ],
+                          )
+                        ],
+                      ),
                     ),
-                  )
-                : SizedBox()
-          ],
+                  ),
+                ),
+            ],
+          ),
         ),
       ),
     );
@@ -872,55 +1075,68 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
   Widget build(BuildContext context) {
     var _height = MediaQuery.of(context).size.height;
     var _width = MediaQuery.of(context).size.width;
-    return Scaffold(
-      backgroundColor: Colors.transparent,
-      body: BlocConsumer<ViewStoryCubit, ViewStoryState>(
-          listener: (context, state) async {
-        if (state is ViewStoryErrorState) {
-          SnackBar snackBar = SnackBar(
-            content: Text(state.error),
-            backgroundColor: ColorConstant.primary_color,
-          );
-          ScaffoldMessenger.of(context).showSnackBar(snackBar);
-        }
+    return WillPopScope(
+      onWillPop: () async {
+        return false;
+      },
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        body: BlocConsumer<ViewStoryCubit, ViewStoryState>(
+            listener: (context, state) async {
+          if (state is ViewStoryErrorState) {
+            SnackBar snackBar = SnackBar(
+              content: Text(state.error),
+              backgroundColor: ColorConstant.primary_color,
+            );
+            ScaffoldMessenger.of(context).showSnackBar(snackBar);
+          }
 
-        if (state is ViewStoryLoadingState) {
-          Center(
-            child: Container(
-              margin: EdgeInsets.only(bottom: 100),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(20),
-                child: Image.asset(ImageConstant.loader,
-                    fit: BoxFit.cover, height: 100.0, width: 100),
+          if (state is ViewStoryLoadingState) {
+            Center(
+              child: Container(
+                margin: EdgeInsets.only(bottom: 100),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(20),
+                  child: Image.asset(ImageConstant.loader,
+                      fit: BoxFit.cover, height: 100.0, width: 100),
+                ),
               ),
-            ),
-          );
-        }
-        if (state is ViewStoryLoadedState) {}
-        if (state is StoryViewListLoadedState) {
-          StoryViewListModelData = state.StoryViewListModelData;
-        }
-        if (state is DeleteSotryLodedState) {
-          deleteStory = state.deleteStory;
+            );
+          }
+          if (state is ViewStoryLoadedState) {}
+          if (state is StoryViewListLoadedState) {
+            StoryViewListModelData = state.StoryViewListModelData;
+          }
+          if (state is DeleteSotryLodedState) {
+            deleteStory = state.deleteStory;
 
-          SnackBar snackBar = SnackBar(
-            content: Text(state.deleteStory.object.toString()),
-            backgroundColor: ColorConstant.primary_color,
-          );
-          ScaffoldMessenger.of(context).showSnackBar(snackBar);
-          Navigator.of(context).pushAndRemoveUntil(
-              MaterialPageRoute(
-                  builder: (context) => NewBottomBar(
-                        buttomIndex: 0,
-                      )),
-              (Route<dynamic> route) => false);
-        }
-      }, builder: (context, state) {
-        return _buildPageStructure();
-      }),
+            SnackBar snackBar = SnackBar(
+              content: Text(state.deleteStory.object.toString()),
+              backgroundColor: ColorConstant.primary_color,
+            );
+            ScaffoldMessenger.of(context).showSnackBar(snackBar);
+            Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(
+                    builder: (context) => NewBottomBar(
+                          buttomIndex: 0,
+                        )),
+                (Route<dynamic> route) => false);
+          }
+        }, builder: (context, state) {
+          return _buildPageStructure();
+        }),
 
-      ///  Show Count API Data
+        ///  Show Count API Data
+      ),
     );
+  }
+
+  void handleEmojiSelection(String emoji, BuildContext context) {
+    print('Selected Emoji: $emoji');
+    Repository().reactionMessageAddedOnStory(context, emoji,
+        widget.buttonData.images[_curSegmentIndex].storyUid.toString(),
+        emojiReaction: true);
+    // Navigator.of(context).pop(); // Close the dialog
   }
 
   GetUserID() async {
@@ -1240,23 +1456,47 @@ class _TimelinePainter extends CustomPainter {
   }
 }
 
-class ZoomableImage extends StatelessWidget {
+class ZoomableImage extends StatefulWidget {
   final String imageUrl;
   ZoomableImage({required this.imageUrl});
+
   @override
+  State<ZoomableImage> createState() => _ZoomableImageState();
+}
+
+class _ZoomableImageState extends State<ZoomableImage> {
+  MemoryImage? _memoryImage;
+  Uint8List? bytes;
+  @override
+  void initState() {
+    super.initState();
+    loadImage();
+  }
+
+  @override
+  Future<void> loadImage() async {
+    final http.Response response = await http.get(Uri.parse(widget.imageUrl));
+    bytes = response.bodyBytes;
+
+    final memoryImage = MemoryImage(Uint8List.fromList(bytes!));
+
+    setState(() {
+      _memoryImage = memoryImage;
+    });
+  }
+
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () {
-        print("this is the Data Get-${imageUrl}");
-      },
-      child: PhotoView(
-        imageProvider: NetworkImage(imageUrl),
-        minScale: PhotoViewComputedScale.contained,
-        maxScale: PhotoViewComputedScale.covered * 2,
-        backgroundDecoration: BoxDecoration(
-          color: Colors.black,
-        ),
-      ),
-    );
+    return _memoryImage != null
+        ? PhotoView(
+            imageProvider: MemoryImage(bytes!),
+            minScale: PhotoViewComputedScale.contained,
+            maxScale: PhotoViewComputedScale.covered * 2,
+            backgroundDecoration: BoxDecoration(
+              color: Colors.black,
+            ),
+          )
+        : Center(
+            child: CircularProgressIndicator(),
+          );
   }
 }
