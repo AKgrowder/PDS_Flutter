@@ -536,6 +536,16 @@ class _ProfileScreenState extends State<ProfileScreen>
           print("check heshTageData -$heshTageData");
         }
       }
+      if (state is DeletePostLoadedState) {
+        SnackBar snackBar = SnackBar(
+          content: Text(state.DeletePost.object.toString()),
+          backgroundColor: ColorConstant.primary_color,
+        );
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        BlocProvider.of<NewProfileSCubit>(context)
+            .GetAppPostAPI(context, "${NewProfileData?.object?.userUid}");
+
+      }
     }, builder: (context, state) {
       return DefaultTabController(
           length: 4,
@@ -3179,15 +3189,31 @@ class _ProfileScreenState extends State<ProfileScreen>
 
                                     //
                                   },
-                                  child: Container(
-                                    // color: Colors.amber,
-                                    child: Text(
-                                      "${getAllPostData.object?[index].postUserName}",
-                                      style: TextStyle(
-                                          fontSize: 20,
-                                          fontFamily: "outfit",
-                                          fontWeight: FontWeight.bold),
-                                    ),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Container(
+                                        // color: Colors.amber,
+                                        child: Text(
+                                          "${getAllPostData.object?[index].postUserName}",
+                                          style: TextStyle(
+                                              fontSize: 20,
+                                              fontFamily: "outfit",
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                      ),
+                                      GestureDetector(
+                                        key: buttonKey,
+                                        onTap: () {
+                                          showPopupMenu(context, index,
+                                              buttonKey, getAllPostData);
+                                        },
+                                        child: Icon(
+                                          Icons.more_vert_rounded,
+                                        ),
+                                      )
+                                    ],
                                   ),
                                 ),
                                 Text(
@@ -3514,10 +3540,10 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                           child: VideoListItem1(
                                                             videoUrl: videoUrls[
                                                                 index],
-                                                            isData:
+                                                           /*  isData:
                                                                 User_ID == null
                                                                     ? false
-                                                                    : true,
+                                                                    : true, */
                                                           ),
                                                         ),
                                                       ],
@@ -4093,10 +4119,10 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                         index]
                                                                     .repostOn
                                                                     ?.description,
-                                                            isData:
+                                                           /*  isData:
                                                                 User_ID == null
                                                                     ? false
-                                                                    : true,
+                                                                    : true, */
                                                           )
                                                         ],
                                                       ),
@@ -4642,7 +4668,6 @@ class _ProfileScreenState extends State<ProfileScreen>
                                       GestureDetector(
                                         key: buttonKey,
                                         onTap: () {
-
                                           showPopupMenu(context, index,
                                               buttonKey, getAllPostData);
                                         },
@@ -4982,9 +5007,9 @@ class _ProfileScreenState extends State<ProfileScreen>
 
                                                   VideoListItem1(
                                                     videoUrl: videoUrls[index],
-                                                    isData: User_ID == null
+                                                    /* isData: User_ID == null
                                                         ? false
-                                                        : true,
+                                                        : true, */
                                                   ),
                                                 ],
                                               ),
@@ -6209,10 +6234,10 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                               videoUrl:
                                                                   videoUrls[
                                                                       index],
-                                                              isData: User_ID ==
+                                                              /* isData: User_ID ==
                                                                       null
                                                                   ? false
-                                                                  : true,
+                                                                  : true, */
                                                             ),
                                                           ),
                                                         ],
@@ -6810,10 +6835,10 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                           index]
                                                                       .repostOn
                                                                       ?.description,
-                                                              isData: User_ID ==
+                                                              /* isData: User_ID ==
                                                                       null
                                                                   ? false
-                                                                  : true,
+                                                                  : true, */
                                                             )
                                                           ],
                                                         ),
@@ -7704,9 +7729,9 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                     VideoListItem1(
                                                       videoUrl:
                                                           videoUrls[index],
-                                                      isData: User_ID == null
+                                                      /* isData: User_ID == null
                                                           ? false
-                                                          : true,
+                                                          : true, */
                                                     ),
                                                   ],
                                                 ),
@@ -9368,7 +9393,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                       editImage: getAllPostData?.object?[index].postData?.first,
                     ),
                   )).then((value) {
-                    Navigator.pop(context);
+                Navigator.pop(context);
                 BlocProvider.of<NewProfileSCubit>(context).GetAppPostAPI(
                     context, "${NewProfileData?.object?.userUid}");
               });
@@ -9382,7 +9407,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                       mutliplePost: getAllPostData?.object?[index].postData,
                     ),
                   )).then((value) {
-                    Navigator.pop(context);
+                Navigator.pop(context);
                 BlocProvider.of<NewProfileSCubit>(context).GetAppPostAPI(
                     context, "${NewProfileData?.object?.userUid}");
               });
@@ -9397,7 +9422,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                       edittextdata: getAllPostData?.object?[index].description,
                     ),
                   )).then((value) {
-                    Navigator.pop(context);
+                Navigator.pop(context);
                 BlocProvider.of<NewProfileSCubit>(context).GetAppPostAPI(
                     context, "${NewProfileData?.object?.userUid}");
               });
@@ -9462,16 +9487,16 @@ class _ProfileScreenState extends State<ProfileScreen>
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     GestureDetector(
-                      onTap: () async {
+                      onTap: () {
                         print(
                             "--------------------------------------------------${NewProfileData?.object?.userUid}");
-                        getAllPostData?.object?.removeAt(index);
+
                         setState(() {});
-                        await BlocProvider.of<NewProfileSCubit>(context)
-                            .DeletePost(
-                                '${getAllPostData?.object?[index].postData}',
-                                context);
-                        Navigator.of(context).pop();
+                        BlocProvider.of<NewProfileSCubit>(context).DeletePost(
+                            '${getAllPostData?.object?[index].postUid}',
+                            context);
+                        getAllPostData?.object?.removeAt(index);
+                        // Navigator.of(context).pop();
                       },
                       child: Container(
                         height: 30,
