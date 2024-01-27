@@ -760,10 +760,7 @@ class _DmScreenState extends State<DmScreen> {
                                                                     .userName !=
                                                                 User_Name
                                                             ? Container(
-                                                                height: 300,
-                                                                width: 300,
-                                                                color: Colors
-                                                                    .amber,
+                                                                
                                                                 child: Padding(
                                                                   padding: const EdgeInsets
                                                                           .symmetric(
