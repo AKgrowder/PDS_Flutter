@@ -8,8 +8,12 @@ import 'package:visibility_detector/visibility_detector.dart';
 class VideoListItem1 extends StatefulWidget {
   final String videoUrl;
   String? discrption;
-  bool? isData;
-  VideoListItem1({required this.videoUrl, this.discrption, this.isData});
+  /*  bool? isData; */
+  VideoListItem1({
+    required this.videoUrl,
+    this.discrption,
+    /* this.isData */
+  });
 
   @override
   State<VideoListItem1> createState() => _VideoListItem1State();
@@ -21,22 +25,22 @@ class _VideoListItem1State extends State<VideoListItem1> {
   @override
   void initState() {
     super.initState();
-    if (widget.isData == true) {
-      flickManager = FlickManager(
-        autoPlay: false,
-        videoPlayerController: VideoPlayerController.networkUrl(
-          Uri.parse(widget.videoUrl),
-        ),
-      );
-    } else {
-      videoPlayerController =
-          VideoPlayerController.networkUrl(Uri.parse(widget.videoUrl))
-            ..initialize().then((_) {
-              // Ensure the first frame is shown after the video is initialized, even before the play button has been pressed.
-              setState(() {});
-            });
-    }
-  }
+    /*   if (widget.isData == true) { */
+    flickManager = FlickManager(
+      autoPlay: false,
+      videoPlayerController: VideoPlayerController.networkUrl(
+        Uri.parse(widget.videoUrl),
+      ),
+    );
+    /* } else { */
+   /*  videoPlayerController =
+        VideoPlayerController.networkUrl(Uri.parse(widget.videoUrl))
+          ..initialize().then((_) {
+            // Ensure the first frame is shown after the video is initialized, even before the play button has been pressed.
+            setState(() {});
+          }); */
+    /*  } */
+  } 
 
   @override
   void dispose() {
@@ -63,7 +67,7 @@ class _VideoListItem1State extends State<VideoListItem1> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              if (widget.videoUrl.isNotEmpty && widget.isData == true)
+              if (widget.videoUrl.isNotEmpty /*  && widget.isData == true */)
                 FlickVideoPlayer(
                   preferredDeviceOrientationFullscreen: [
                     DeviceOrientation.portraitUp,
@@ -76,7 +80,7 @@ class _VideoListItem1State extends State<VideoListItem1> {
                   ),
                 ),
 
-              if (widget.isData == false && widget.videoUrl.isNotEmpty)
+              /*    if (/* widget.isData == false && */ widget.videoUrl.isNotEmpty)
                 videoPlayerController!.value.isInitialized
                     ? Stack(
                         children: [
@@ -113,7 +117,7 @@ class _VideoListItem1State extends State<VideoListItem1> {
                           ),
                         ],
                       )
-                    : Container(),
+                    : Container(), */
               // Add other information or controls as needed
             ],
           ),
