@@ -68,16 +68,9 @@ void main() async {
 
   FirebaseMessaging.onBackgroundMessage(_messageHandler);
   FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) async {
-    print("/* onMessageOpenedApp: */ ${message}");
-    // if (message.data["navigation"] == "/your_route") {
-    //   int _yourId = int.tryParse(message.data["id"]) ?? 0;
-    //   Navigator.push(
-    //       navigatorKey.currentState.context,
-    //       MaterialPageRoute(
-    //           builder: (context) => YourScreen(
-    //                 yourId: _yourId,
-    //               )));
-    // }
+    print("/* onMessageOpenedApp: */ ${message.notification?.body}");
+    print("/* onMessageOpenedApp: */ ${message.notification?.title}");
+    print("/* onMessageOpenedApp: */ ${message.data}");
   });
 
   FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
