@@ -33,9 +33,11 @@ import 'package:pds/widgets/animatedwiget.dart';
 import 'package:pds/widgets/custom_image_view.dart';
 import 'package:pds/widgets/pagenation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:stomp_dart_client/stomp.dart';
 import 'package:stomp_dart_client/stomp_frame.dart';
 import 'package:url_launcher/url_launcher.dart';
-
+import 'package:stomp_dart_client/stomp_config.dart';
+import 'package:stomp_dart_client/stomp_frame.dart';
 import '../../API/Bloc/dmInbox_bloc/dminbox_blcok.dart';
 import '../register_create_account_screen/register_create_account_screen.dart';
 
@@ -97,6 +99,7 @@ class _DmScreenState extends State<DmScreen> {
 
   void _goToElement() {
     scrollController.jumpTo(scrollController.position.maxScrollExtent + 100);
+    print("msgUUIDmsgUUIDmsgUUID :- 1 ${widget.ChatInboxUid}");
   }
 
   Offset? get centerPosition {
@@ -760,7 +763,6 @@ class _DmScreenState extends State<DmScreen> {
                                                                     .userName !=
                                                                 User_Name
                                                             ? Container(
-                                                                
                                                                 child: Padding(
                                                                   padding: const EdgeInsets
                                                                           .symmetric(
@@ -1356,7 +1358,7 @@ class _DmScreenState extends State<DmScreen> {
                                         )),
                             ),
                           ),
-                        /*   _image != null
+                          /*   _image != null
                               ? Container(
                                   height: 90,
                                   /* color:
@@ -1404,9 +1406,9 @@ class _DmScreenState extends State<DmScreen> {
                                 )
                               : SizedBox(), */
                           Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                                  _image != null
+                              _image != null
                                   ? Container(
                                       height: 90,
                                       /* color:
@@ -1417,7 +1419,7 @@ class _DmScreenState extends State<DmScreen> {
                                           Container(
                                             height: 90,
                                             width: 150,
-                                            child: Stack( 
+                                            child: Stack(
                                               children: [
                                                 Image.file(
                                                   _image!,
@@ -1455,25 +1457,25 @@ class _DmScreenState extends State<DmScreen> {
                                         ],
                                       ),
                                     )
-                                  :
-                              Container(
-                                height: 50,
-                                // width: _width - 90,
-                                decoration: BoxDecoration(
-                                    color: Color(0xFFF5F5F5),
-                                    borderRadius: BorderRadius.circular(20)),
-                                child: Row(children: [
-                                  SizedBox(
-                                    width: 10,
-                                  ),
-                                  Container(
-                                    width: _width / 1.32,
-                                    // color: Colors.amber,
-                                    child: Row(
-                                      children: [
+                                  : Container(
+                                      height: 50,
+                                      // width: _width - 90,
+                                      decoration: BoxDecoration(
+                                          color: Color(0xFFF5F5F5),
+                                          borderRadius:
+                                              BorderRadius.circular(20)),
+                                      child: Row(children: [
+                                        SizedBox(
+                                          width: 10,
+                                        ),
                                         Container(
-                                            // color: Colors.amber,
-                                            /* child: IconButton(
+                                          width: _width / 1.32,
+                                          // color: Colors.amber,
+                                          child: Row(
+                                            children: [
+                                              Container(
+                                                  // color: Colors.amber,
+                                                  /* child: IconButton(
                                             icon: Icon(
                                               isEmojiVisible
                                                   ? Icons.keyboard_rounded
@@ -1482,56 +1484,56 @@ class _DmScreenState extends State<DmScreen> {
                                             ),
                                             onPressed: onClickedEmoji,
                                           ), */
-                                            ),
-                                        SizedBox(
-                                          width: 5,
-                                        ),
-                                        Container(
-                                          width: _width / 1.8,
-                                          // color: Colors.red,
-                                          child: TextField(
-                                            controller: Add_Comment,
-                                            cursorColor: Colors.grey,
-                                            decoration: InputDecoration(
-                                              border: InputBorder.none,
-                                              hintText: "Type Message",
-                                            ),
+                                                  ),
+                                              SizedBox(
+                                                width: 5,
+                                              ),
+                                              Container(
+                                                width: _width / 1.8,
+                                                // color: Colors.red,
+                                                child: TextField(
+                                                  controller: Add_Comment,
+                                                  cursorColor: Colors.grey,
+                                                  decoration: InputDecoration(
+                                                    border: InputBorder.none,
+                                                    hintText: "Type Message",
+                                                  ),
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                width: 5,
+                                              ),
+                                              // Spacer(),
+                                              GestureDetector(
+                                                onTap: () {
+                                                  // pickProfileImage();
+                                                  prepareTestPdf(0);
+                                                },
+                                                child: Image.asset(
+                                                  "assets/images/paperclip-2.png",
+                                                  height: 23,
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                width: 13,
+                                              ),
+                                              GestureDetector(
+                                                onTap: () {
+                                                  camerapicker();
+                                                },
+                                                child: Image.asset(
+                                                  "assets/images/Vector (12).png",
+                                                  height: 20,
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                width: 8,
+                                              ),
+                                            ],
                                           ),
                                         ),
-                                        SizedBox(
-                                          width: 5,
-                                        ),
-                                        // Spacer(),
-                                        GestureDetector(
-                                          onTap: () {
-                                            // pickProfileImage();
-                                            prepareTestPdf(0);
-                                          },
-                                          child: Image.asset(
-                                            "assets/images/paperclip-2.png",
-                                            height: 23,
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          width: 13,
-                                        ),
-                                        GestureDetector(
-                                          onTap: () {
-                                            camerapicker();
-                                          },
-                                          child: Image.asset(
-                                            "assets/images/Vector (12).png",
-                                            height: 20,
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          width: 8,
-                                        ),
-                                      ],
+                                      ]),
                                     ),
-                                  ),
-                                ]),
-                              ),
                               GestureDetector(
                                 onTap: () async {
                                   if (_image != null) {
