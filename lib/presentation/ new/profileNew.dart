@@ -5596,7 +5596,7 @@ class _ProfileScreenState extends State<ProfileScreen>
 
     if (Platform.isAndroid) {
       await Share.shareXFiles(
-        [XFile("/sdcard/download/IP_Image.jpg")],
+        [XFile("/sdcard/download/IPImage.jpg")],
         subject: "Share",
         text: "Try This Awesome App \n\n Android :- ${androidLink}",
         sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size,
@@ -5606,7 +5606,7 @@ class _ProfileScreenState extends State<ProfileScreen>
         [
           XFile(directory.path +
               Platform.pathSeparator +
-              'Growder_Image/IP_Image.jpg')
+              'Growder_Image/IPImage.jpg')
         ],
         subject: "Share",
         text: "Try This Awesome App \n\n Android :- ${androidLink}",
