@@ -544,7 +544,6 @@ class _ProfileScreenState extends State<ProfileScreen>
         ScaffoldMessenger.of(context).showSnackBar(snackBar);
         BlocProvider.of<NewProfileSCubit>(context)
             .GetAppPostAPI(context, "${NewProfileData?.object?.userUid}");
-
       }
     }, builder: (context, state) {
       return DefaultTabController(
@@ -3540,7 +3539,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                           child: VideoListItem1(
                                                             videoUrl: videoUrls[
                                                                 index],
-                                                           /*  isData:
+                                                            /*  isData:
                                                                 User_ID == null
                                                                     ? false
                                                                     : true, */
@@ -4119,7 +4118,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                         index]
                                                                     .repostOn
                                                                     ?.description,
-                                                           /*  isData:
+                                                            /*  isData:
                                                                 User_ID == null
                                                                     ? false
                                                                     : true, */
@@ -4473,7 +4472,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                               getAllPostData.object?[index].commentCount == 0
                                   ? SizedBox()
                                   : Text(
-                                      "${getAllPostData.object?[index].commentCount}",
+                                      "${getAllPostData.object?[index].commentCount}-1",
                                       style: TextStyle(
                                           fontFamily: "outfit", fontSize: 14),
                                     ),
@@ -5337,7 +5336,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                               getAllPostData.object?[index].commentCount == 0
                                   ? SizedBox()
                                   : Text(
-                                      "${getAllPostData.object?[index].commentCount}",
+                                      "${getAllPostData.object?[index].commentCount}-2",
                                       style: TextStyle(
                                           fontFamily: "outfit", fontSize: 14),
                                     ),
@@ -7188,7 +7187,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                         0
                                     ? SizedBox()
                                     : Text(
-                                        "${GetSavePostData?.object?[index].commentCount}",
+                                        "${GetSavePostData?.object?[index].commentCount}-3",
                                         style: TextStyle(
                                             fontFamily: "outfit", fontSize: 14),
                                       ),
@@ -8064,7 +8063,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                         0
                                     ? SizedBox()
                                     : Text(
-                                        "${GetSavePostData?.object?[index].commentCount}",
+                                        "${GetSavePostData?.object?[index].commentCount}-4",
                                         style: TextStyle(
                                             fontFamily: "outfit", fontSize: 14),
                                       ),
@@ -9373,97 +9372,129 @@ class _ProfileScreenState extends State<ProfileScreen>
       ),
       Offset.zero & overlay.size,
     );
-
-    showMenu(context: context, position: position, items: <PopupMenuItem<
-        String>>[
-      PopupMenuItem<String>(
-        value: 'edit',
-        child: GestureDetector(
-          onTap: () {
-            print(getAllPostData?.object?[index].description);
-            if (getAllPostData?.object?[index].postType == "IMAGE" &&
-                getAllPostData?.object?[index].postData?.length == 1) {
-              print("sdfgsdvfsdfgsdfg");
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => CreateNewPost(
-                      PostID: getAllPostData?.object?[index].postUid,
-                      edittextdata: getAllPostData?.object?[index].description,
-                      editImage: getAllPostData?.object?[index].postData?.first,
+    getAllPostData?.object?[index].description == null ||
+            getAllPostData?.object?[index].description == ""
+        ? showMenu(
+            context: context,
+            position: position,
+            items: <PopupMenuItem<String>>[
+                PopupMenuItem<String>(
+                  value: 'delete',
+                  child: Container(
+                    width: 130,
+                    height: 40,
+                    child: Center(
+                      child: Text(
+                        'Delete',
+                        style: TextStyle(color: Colors.white),
+                      ),
                     ),
-                  )).then((value) {
-                Navigator.pop(context);
-                BlocProvider.of<NewProfileSCubit>(context).GetAppPostAPI(
-                    context, "${NewProfileData?.object?.userUid}");
-              });
-            } else if (getAllPostData?.object?[index].postDataType == "IMAGE") {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => CreateNewPost(
-                      PostID: getAllPostData?.object?[index].postUid,
-                      edittextdata: getAllPostData?.object?[index].description,
-                      mutliplePost: getAllPostData?.object?[index].postData,
-                    ),
-                  )).then((value) {
-                Navigator.pop(context);
-                BlocProvider.of<NewProfileSCubit>(context).GetAppPostAPI(
-                    context, "${NewProfileData?.object?.userUid}");
-              });
-            } else {
-              print(
-                  "dfhsdfhsdfhsdfh-${getAllPostData?.object?[index].postData?.length}");
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => CreateNewPost(
-                      PostID: getAllPostData?.object?[index].postUid,
-                      edittextdata: getAllPostData?.object?[index].description,
-                    ),
-                  )).then((value) {
-                Navigator.pop(context);
-                BlocProvider.of<NewProfileSCubit>(context).GetAppPostAPI(
-                    context, "${NewProfileData?.object?.userUid}");
-              });
+                    decoration: BoxDecoration(
+                        color: ColorConstant.primary_color,
+                        borderRadius: BorderRadius.circular(5)),
+                  ),
+                ),
+              ]).then((value) {
+            if (value == 'delete') {
+              showDeleteConfirmationDialog(context, getAllPostData, index);
             }
-          },
-          child: Container(
-            width: 130,
-            height: 40,
-            child: Center(
-              child: Text(
-                'Edit',
-                style: TextStyle(color: Colors.white),
+          })
+        : showMenu(context: context, position: position, items: <PopupMenuItem<
+            String>>[
+            PopupMenuItem<String>(
+              value: 'edit',
+              child: GestureDetector(
+                onTap: () {
+                  print(getAllPostData?.object?[index].description);
+                  if (getAllPostData?.object?[index].postType == "IMAGE" &&
+                      getAllPostData?.object?[index].postData?.length == 1) {
+                    print("sdfgsdvfsdfgsdfg");
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => CreateNewPost(
+                            PostID: getAllPostData?.object?[index].postUid,
+                            edittextdata:
+                                getAllPostData?.object?[index].description,
+                            editImage:
+                                getAllPostData?.object?[index].postData?.first,
+                          ),
+                        )).then((value) {
+                      Navigator.pop(context);
+                      BlocProvider.of<NewProfileSCubit>(context).GetAppPostAPI(
+                          context, "${NewProfileData?.object?.userUid}");
+                    });
+                  } else if (getAllPostData?.object?[index].postDataType ==
+                      "IMAGE") {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => CreateNewPost(
+                            PostID: getAllPostData?.object?[index].postUid,
+                            edittextdata:
+                                getAllPostData?.object?[index].description,
+                            mutliplePost:
+                                getAllPostData?.object?[index].postData,
+                          ),
+                        )).then((value) {
+                      Navigator.pop(context);
+                      BlocProvider.of<NewProfileSCubit>(context).GetAppPostAPI(
+                          context, "${NewProfileData?.object?.userUid}");
+                    });
+                  } else {
+                    print(
+                        "dfhsdfhsdfhsdfh-${getAllPostData?.object?[index].postData?.length}");
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => CreateNewPost(
+                            PostID: getAllPostData?.object?[index].postUid,
+                            edittextdata:
+                                getAllPostData?.object?[index].description,
+                          ),
+                        )).then((value) {
+                      Navigator.pop(context);
+                      BlocProvider.of<NewProfileSCubit>(context).GetAppPostAPI(
+                          context, "${NewProfileData?.object?.userUid}");
+                    });
+                  }
+                },
+                child: Container(
+                  width: 130,
+                  height: 40,
+                  child: Center(
+                    child: Text(
+                      'Edit',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                  decoration: BoxDecoration(
+                      color: ColorConstant.primary_color,
+                      borderRadius: BorderRadius.circular(5)),
+                ),
               ),
             ),
-            decoration: BoxDecoration(
-                color: ColorConstant.primary_color,
-                borderRadius: BorderRadius.circular(5)),
-          ),
-        ),
-      ),
-      PopupMenuItem<String>(
-        value: 'delete',
-        child: Container(
-          width: 130,
-          height: 40,
-          child: Center(
-            child: Text(
-              'Delete',
-              style: TextStyle(color: Colors.white),
+            PopupMenuItem<String>(
+              value: 'delete',
+              child: Container(
+                width: 130,
+                height: 40,
+                child: Center(
+                  child: Text(
+                    'Delete',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+                decoration: BoxDecoration(
+                    color: ColorConstant.primary_color,
+                    borderRadius: BorderRadius.circular(5)),
+              ),
             ),
-          ),
-          decoration: BoxDecoration(
-              color: ColorConstant.primary_color,
-              borderRadius: BorderRadius.circular(5)),
-        ),
-      ),
-    ]).then((value) {
-      if (value == 'delete') {
-        showDeleteConfirmationDialog(context, getAllPostData, index);
-      }
-    });
+          ]).then((value) {
+            if (value == 'delete') {
+              showDeleteConfirmationDialog(context, getAllPostData, index);
+            }
+          });
   }
 
   void showDeleteConfirmationDialog(
