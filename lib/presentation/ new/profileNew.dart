@@ -3202,16 +3202,19 @@ class _ProfileScreenState extends State<ProfileScreen>
                                               fontWeight: FontWeight.bold),
                                         ),
                                       ),
-                                      GestureDetector(
-                                        key: buttonKey,
-                                        onTap: () {
-                                          showPopupMenu(context, index,
-                                              buttonKey, getAllPostData);
-                                        },
-                                        child: Icon(
-                                          Icons.more_vert_rounded,
-                                        ),
-                                      )
+                                      getAllPostData.object?[index].userUid ==
+                                              User_ID
+                                          ? GestureDetector(
+                                              key: buttonKey,
+                                              onTap: () {
+                                                showPopupMenu(context, index,
+                                                    buttonKey, getAllPostData);
+                                              },
+                                              child: Icon(
+                                                Icons.more_vert_rounded,
+                                              ),
+                                            )
+                                          : SizedBox()
                                     ],
                                   ),
                                 ),
@@ -4472,7 +4475,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                               getAllPostData.object?[index].commentCount == 0
                                   ? SizedBox()
                                   : Text(
-                                      "${getAllPostData.object?[index].commentCount}-1",
+                                      "${getAllPostData.object?[index].commentCount}",
                                       style: TextStyle(
                                           fontFamily: "outfit", fontSize: 14),
                                     ),
@@ -4664,16 +4667,19 @@ class _ProfileScreenState extends State<ProfileScreen>
                                               fontWeight: FontWeight.bold),
                                         ),
                                       ),
-                                      GestureDetector(
-                                        key: buttonKey,
-                                        onTap: () {
-                                          showPopupMenu(context, index,
-                                              buttonKey, getAllPostData);
-                                        },
-                                        child: Icon(
-                                          Icons.more_vert_rounded,
-                                        ),
-                                      )
+                                      getAllPostData.object?[index].userUid ==
+                                              User_ID
+                                          ? GestureDetector(
+                                              key: buttonKey,
+                                              onTap: () {
+                                                showPopupMenu(context, index,
+                                                    buttonKey, getAllPostData);
+                                              },
+                                              child: Icon(
+                                                Icons.more_vert_rounded,
+                                              ),
+                                            )
+                                          : SizedBox()
                                     ],
                                   ),
                                 ),
@@ -5336,7 +5342,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                               getAllPostData.object?[index].commentCount == 0
                                   ? SizedBox()
                                   : Text(
-                                      "${getAllPostData.object?[index].commentCount}-2",
+                                      "${getAllPostData.object?[index].commentCount}",
                                       style: TextStyle(
                                           fontFamily: "outfit", fontSize: 14),
                                     ),
@@ -7187,7 +7193,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                         0
                                     ? SizedBox()
                                     : Text(
-                                        "${GetSavePostData?.object?[index].commentCount}-3",
+                                        "${GetSavePostData?.object?[index].commentCount}",
                                         style: TextStyle(
                                             fontFamily: "outfit", fontSize: 14),
                                       ),
@@ -8063,7 +8069,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                         0
                                     ? SizedBox()
                                     : Text(
-                                        "${GetSavePostData?.object?[index].commentCount}-4",
+                                        "${GetSavePostData?.object?[index].commentCount}",
                                         style: TextStyle(
                                             fontFamily: "outfit", fontSize: 14),
                                       ),

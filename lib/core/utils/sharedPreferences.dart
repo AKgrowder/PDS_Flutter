@@ -57,10 +57,8 @@ class PreferencesKey {
   static String StroyLengthCheck = "StroyLengthCheck";
   static String AwsImageInPackagingLogoUrl = "AwsImageInPackagingLogoUrl";
 
-
-
-
-
+  static String PushNotificationUID = "PushNotificationUID";
+  static String PushNotificationSubject = "PushNotificationSubject";
 
   
 }
