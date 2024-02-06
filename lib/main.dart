@@ -42,7 +42,9 @@ import 'package:pds/API/Bloc/my_account_Bloc/my_account_cubit.dart';
 import 'package:pds/API/Bloc/senMSG_Bloc/senMSG_cubit.dart';
 import 'package:pds/API/Bloc/sherinvite_Block/sherinvite_cubit.dart';
 import 'package:pds/API/Bloc/viewStory_Bloc/viewStory_cubit.dart';
+import 'package:pds/core/utils/sharedPreferences.dart';
 import 'package:pds/theme/theme_helper.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'API/Bloc/postData_Bloc/postData_Bloc.dart';
 import 'presentation/splash_screen/splash_screen.dart';
 import 'package:flutter_langdetect/flutter_langdetect.dart' as langdetect;
@@ -68,9 +70,16 @@ void main() async {
 
   FirebaseMessaging.onBackgroundMessage(_messageHandler);
   FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
     print("/* onMessageOpenedApp: */ ${message.notification?.body}");
     print("/* onMessageOpenedApp: */ ${message.notification?.title}");
     print("/* onMessageOpenedApp: */ ${message.data}");
+    print("/* onMessageOpenedApp: */ ${message.data['uid']}");
+    print("/* onMessageOpenedApp: */ ${message.data['Subject']}");
+    prefs.setString(
+        PreferencesKey.PushNotificationUID, "${message.data['uid']}");
+    prefs.setString(
+        PreferencesKey.PushNotificationSubject, "${message.data['Subject']}");
   });
 
   FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
