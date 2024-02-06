@@ -100,6 +100,7 @@ class Content {
   String? postUserName;
   String? userProfilePic;
   String? postLink;
+  String? translatedDescription;
   String? description;
   List<String>? postData;
   String? postDataType;
@@ -124,6 +125,7 @@ class Content {
     this.postUserName,
     this.userProfilePic,
     this.postLink,
+    this.translatedDescription,
     this.description,
     this.postData,
     this.postDataType,
@@ -149,6 +151,7 @@ class Content {
     userUid = json['userUid'];
     postUserName = json['postUserName'];
     userProfilePic = json['userProfilePic'];
+    translatedDescription = json['translatedDescription'];
     postLink = json['postLink'];
     description = json['description'];
     postData = json['postData'].cast<String>();
@@ -174,6 +177,7 @@ class Content {
     data['userUid'] = this.userUid;
     data['postUserName'] = this.postUserName;
     data['userProfilePic'] = this.userProfilePic;
+    data['translatedDescription'] = this.translatedDescription;
     data['postLink'] = this.postLink;
     data['description'] = this.description;
     data['postData'] = this.postData;

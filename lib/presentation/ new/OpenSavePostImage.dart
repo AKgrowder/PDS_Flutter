@@ -1842,19 +1842,28 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
                                                                           child:
                                                                               Stack(
                                                                             children: [
-                                                                              Align(
-                                                                                  alignment: Alignment.topCenter,
-                                                                                  child: Container(height: _height / 2, width: _width, child: ZoomableImage(imageUrl: OpenSaveModelData?.object?.postData?[0] ?? '')
+                                                                            GestureDetector(
+                                                                                onTap: () {
+                                                                                  Navigator.push(
+                                                                                      context,
+                                                                                      MaterialPageRoute(
+                                                                                        builder: (context) => ZoomableImage(imageUrl: '${OpenSaveModelData?.object?.postData?[index1]}'),
+                                                                                      ));
+                                                                                },
+                                                                                child: Align(
+                                                                                    alignment: Alignment.topCenter,
+                                                                                    child: Container(height: _height / 2, width: _width, child: CustomImageView(url: OpenSaveModelData?.object?.postData?[index1] ?? '')
 
-                                                                                      /*  PhotoView(
-                                                                                      imageProvider: NetworkImage(OpenSaveModelData?.object?.postData?[0] ?? ''),
-                                                                                      minScale: PhotoViewComputedScale.contained,
-                                                                                      maxScale: PhotoViewComputedScale.covered * 2,
-                                                                                      backgroundDecoration: BoxDecoration(
-                                                                                        color: Colors.black,
-                                                                                      ),
-                                                                                    ), */
-                                                                                      )),
+                                                                                        /*  PhotoView(
+                                                                                        imageProvider: NetworkImage(OpenSaveModelData?.object?.postData?[0] ?? ''),
+                                                                                        minScale: PhotoViewComputedScale.contained,
+                                                                                        maxScale: PhotoViewComputedScale.covered * 2,
+                                                                                        backgroundDecoration: BoxDecoration(
+                                                                                          color: Colors.black,
+                                                                                        ),
+                                                                                      ), */
+                                                                                        )),
+                                                                              ),
                                                                               Align(
                                                                                 alignment: Alignment.topRight,
                                                                                 child: Card(
