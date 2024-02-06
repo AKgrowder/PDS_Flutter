@@ -74,7 +74,6 @@ import 'package:video_player/video_player.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 
 // import 'package:flutter_langdetect/flutter_langdetect.dart' as langdetect;
-
 import '../../API/Model/Get_all_blog_Model/get_all_blog_model.dart';
 import '../../API/Model/UserTagModel/UserTag_model.dart';
 import '../become_an_expert_screen/become_an_expert_screen.dart';
@@ -92,7 +91,8 @@ class HomeScreenNew extends StatefulWidget {
   State<HomeScreenNew> createState() => _HomeScreenNewState();
 }
 
-class _HomeScreenNewState extends State<HomeScreenNew> {
+class _HomeScreenNewState extends State<HomeScreenNew>
+    with WidgetsBindingObserver {
   late String _localPath;
   late bool _permissionReady;
   int? version;
@@ -170,6 +170,12 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
   String tempdata2 = "";
   bool checkLun = false;
   bool checkLun2 = false;
+  bool Translate1Bool = false;
+  bool Translate2Bool = false;
+  int? Selected1Value = 0;
+  int? Selected2Value = 0;
+  String NotificationUID = "";
+  String NotificationSubject = "";
   // bool isDataSet = true;
   String? initalData;
 
@@ -244,6 +250,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
     storycontext = context;
     VersionControll();
     getDocumentSize();
+    WidgetsBinding.instance!.addObserver(this);
     super.initState();
   }
 
@@ -251,6 +258,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
   void dispose() {
     timer?.cancel();
     scrollController.removeListener(() {});
+    WidgetsBinding.instance!.removeObserver(this);
+
     super.dispose();
   }
 
@@ -264,6 +273,25 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
     setState(() {
       _show = true;
     });
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    switch (state) {
+      case AppLifecycleState.resumed:
+        Get_UserToken();
+        print('1111111:-- Resumed');
+        break;
+      case AppLifecycleState.inactive:
+        print('1111111:-- Inactive');
+        break;
+      case AppLifecycleState.paused:
+        print('1111111:-- Paused');
+        break;
+      case AppLifecycleState.detached:
+        print('1111111:-- Detached');
+        break;
+    }
   }
 
   void myScroll() async {
@@ -1015,6 +1043,86 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                 )),
       ); */
     }
+    if (User_ID != null) {
+      PushNotificationAutoOpen();
+    }
+  }
+
+  PushNotificationAutoOpen() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    NotificationUID = prefs.getString(PreferencesKey.PushNotificationUID) ?? "";
+    NotificationSubject =
+        prefs.getString(PreferencesKey.PushNotificationSubject) ?? "";
+    print("objectobjecobjecobjec-1:- ${NotificationUID}");
+    print("objectobjecobjecobjec-2:- ${NotificationSubject}");
+
+    /// ----------------------------------------------------------------------------------------------------------
+
+    if (NotificationUID != "" || NotificationSubject != "") {
+      print("objectobjecobjecobjec-3:- ${NotificationUID}");
+      print("objectobjecobjecobjec-4:- ${NotificationSubject}");
+      NotificationSubject == "TAG_POST" || NotificationSubject == "RE_POST"
+          ? Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => OpenSavePostImage(
+                        PostID: NotificationUID,
+                        index: 0,
+                      )),
+            )
+          // print("opne Save Image screen RE_POST & TAG_POST");
+
+          : NotificationSubject == "INVITE_ROOM"
+              ? print("Notification Seen INVITE_ROOM")
+              : NotificationSubject == "EXPERT_LEFT_ROOM" ||
+                      NotificationSubject == "MEMBER_LEFT_ROOM" ||
+                      NotificationSubject == "DELETE_ROOM" ||
+                      NotificationSubject == "EXPERT_ACCEРТ_INVITE" ||
+                      NotificationSubject == "EXPERT_REJECT_INVITE"
+                  ? print(
+                      "Notification Seen  EXPERT_LEFT_ROOM & MEMBER_LEFT_ROOM & DELETE_ROOM & EXPERT_ACCEРТ_INVITE & EXPERT_REJECT_INVITE")
+                  : NotificationSubject == "EXPERT_REJECT_INVITE"
+                      ? print("Seen Notification EXPERT_REJECT_INVITE")
+                      : NotificationSubject == "LIKE_POST" ||
+                              NotificationSubject == "COMMENT_POST" ||
+                              NotificationSubject == "TAG_COMMENT_POST"
+                          ? Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => OpenSavePostImage(
+                                        PostID: NotificationUID,
+                                        index: 0,
+                                        profileTure: NotificationSubject ==
+                                                    "COMMENT_POST" ||
+                                                NotificationSubject ==
+                                                    "TAG_COMMENT_POST"
+                                            ? true
+                                            : false,
+                                      )),
+                            )
+                          // print("opne Save Image screen LIKE_POST & COMMENT_POST & TAG_COMMENT_POST")
+                          : NotificationSubject == "FOLLOW_PUBLIC_ACCOUNT" ||
+                                  NotificationSubject ==
+                                      "FOLLOW_PRIVATE_ACCOUNT_REQUEST" ||
+                                  NotificationSubject ==
+                                      "FOLLOW_REQUEST_ACCEPTED" ||
+                                  NotificationSubject == "PROFILE_APPROVED" ||
+                                  NotificationSubject == "PROFILE_REJECTED" ||
+                                  NotificationSubject == "PROFILE_VIEWED"
+                              ? Navigator.push(context,
+                                  MaterialPageRoute(builder: (context) {
+                                  return ProfileScreen(
+                                      User_ID: "${NotificationUID}",
+                                      isFollowing: "");
+                                }))
+                              //  print("open User Profile FOLLOW_PUBLIC_ACCOUNT & FOLLOW_PRIVATE_ACCOUNT_REQUEST & FOLLOW_REQUEST_ACCEPTED")
+                              : print("");
+
+      prefs.remove(PreferencesKey.PushNotificationUID);
+      prefs.remove(PreferencesKey.PushNotificationSubject);
+    }
+
+    /// ----------------------------------------------------------------------------------------------------------
   }
 
   Save_UserData() async {
@@ -2273,7 +2381,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                 padding: EdgeInsets.only(
                                                     left: 16, right: 16),
                                                 child: GestureDetector(
-                                                   onTap: () {
+                                                  onTap: () {
                                                     Navigator.push(
                                                         context,
                                                         MaterialPageRoute(
@@ -2591,72 +2699,81 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                           crossAxisAlignment:
                                                                               CrossAxisAlignment.start,
                                                                           children: [
-                                                                            /* language == 'gu' && language == 'hi'
+                                                                            AllGuestPostRoomData?.object?.content?[index].translatedDescription != null
                                                                                 ? GestureDetector(
                                                                                     onTap: () async {
-                                                                                      // print("value cheak${AllGuestPostRoomData?.object?.content?[index].isfalsegu}");
-                                                                                      // print("value cheak${AllGuestPostRoomData?.object?.content?[index].isfalsehin}");
-                                                                                      String inputText = "${AllGuestPostRoomData?.object?.content?[index].description}";
-                                                                                      String translatedTextGujarati = await translateText(inputText, 'gu');
-                                                                                      // String translatedTextHindi = await translateText(inputText, 'hi');
-                                                                                      String translatedTextenglish = await translateText(inputText, 'en');
-                                                                                      /////////////////////
-                                                                                      // if (AllGuestPostRoomData?.object?.content?[index].isfalsehin == null && AllGuestPostRoomData?.object?.content?[index].isfalsegu == null) {
-                                                                                      //   // Translate from the original language to English
-                                                                                      //   translatedTextenglish = await translateText(inputText, 'en');
-                                                                                      //   setState(() {
-                                                                                      //     _translatedTextenglish = translatedTextenglish;
-                                                                                      //     AllGuestPostRoomData?.object?.content?[index].description = _translatedTextenglish;
-                                                                                      //     AllGuestPostRoomData?.object?.content?[index].isfalsehin = true;
-                                                                                      //   });
-                                                                                      // } else if (AllGuestPostRoomData?.object?.content?[index].isfalsehin == true && AllGuestPostRoomData?.object?.content?[index].isfalsegu == null) {
-                                                                                      //   // Translate from Hindi to English
-                                                                                      //   translatedTextenglish = await translateText(inputText, 'en');
-                                                                                      //   setState(() {
-                                                                                      //     _translatedTextenglish = translatedTextenglish;
-                                                                                      //     AllGuestPostRoomData?.object?.content?[index].description = _translatedTextenglish;
-                                                                                      //     AllGuestPostRoomData?.object?.content?[index].isfalsegu = true;
-                                                                                      //   });
-                                                                                      // } else if (AllGuestPostRoomData?.object?.content?[index].isfalsehin == true && AllGuestPostRoomData?.object?.content?[index].isfalsegu == true) {
-                                                                                      //   // No need to translate, as the text is already in English
-                                                                                      //   print("This condition is working");
-                                                                                      // }
+                                                                                      /*  // print("value cheak${AllGuestPostRoomData?.object?.content?[index].isfalsegu}");
+                                                                                          // print("value cheak${AllGuestPostRoomData?.object?.content?[index].isfalsehin}");
+                                                                                          String inputText = "${AllGuestPostRoomData?.object?.content?[index].description}";
+                                                                                          String translatedTextGujarati = await translateText(inputText, 'gu');
+                                                                                          // String translatedTextHindi = await translateText(inputText, 'hi');
+                                                                                          String translatedTextenglish = await translateText(inputText, 'en');
+                                                                                          /////////////////////
+                                                                                          // if (AllGuestPostRoomData?.object?.content?[index].isfalsehin == null && AllGuestPostRoomData?.object?.content?[index].isfalsegu == null) {
+                                                                                          //   // Translate from the original language to English
+                                                                                          //   translatedTextenglish = await translateText(inputText, 'en');
+                                                                                          //   setState(() {
+                                                                                          //     _translatedTextenglish = translatedTextenglish;
+                                                                                          //     AllGuestPostRoomData?.object?.content?[index].description = _translatedTextenglish;
+                                                                                          //     AllGuestPostRoomData?.object?.content?[index].isfalsehin = true;
+                                                                                          //   });
+                                                                                          // } else if (AllGuestPostRoomData?.object?.content?[index].isfalsehin == true && AllGuestPostRoomData?.object?.content?[index].isfalsegu == null) {
+                                                                                          //   // Translate from Hindi to English
+                                                                                          //   translatedTextenglish = await translateText(inputText, 'en');
+                                                                                          //   setState(() {
+                                                                                          //     _translatedTextenglish = translatedTextenglish;
+                                                                                          //     AllGuestPostRoomData?.object?.content?[index].description = _translatedTextenglish;
+                                                                                          //     AllGuestPostRoomData?.object?.content?[index].isfalsegu = true;
+                                                                                          //   });
+                                                                                          // } else if (AllGuestPostRoomData?.object?.content?[index].isfalsehin == true && AllGuestPostRoomData?.object?.content?[index].isfalsegu == true) {
+                                                                                          //   // No need to translate, as the text is already in English
+                                                                                          //   print("This condition is working");
+                                                                                          // }
 
-                                                                                      language = langdetect.detect(AllGuestPostRoomData?.object?.content?[index].description ?? "");
-                                                                                      print("languagelanguagelanguagelanguage :--1 ${language}");
-                                                                                      if (language == 'gu' || language == 'hi' || language == 'en') {
-                                                                                        // if (tempdata2 == "") {
-                                                                                        // var tempdata3 = AllGuestPostRoomData?.object?.content?[index].description ?? "";
-                                                                                        // }
-                                                                                        if (language == 'gu' || language == 'hi') {
-                                                                                          // Translate from the original language to English
-                                                                                          translatedTextenglish = await translateText(inputText, 'en');
-                                                                                          setState(() {
-                                                                                            print("languagelanguagelanguagelanguage :--2 ${language}");
-                                                                                            _translatedTextenglish = translatedTextenglish;
-                                                                                            AllGuestPostRoomData?.object?.content?[index].description = _translatedTextenglish;
-                                                                                            checkLun = true;
-                                                                                            // AllGuestPostRoomData?.object?.content?[index].isfalsehin = true;
-                                                                                          });
-                                                                                        } else if (language == 'en') {
-                                                                                          // No need to translate, as the text is already in English
-                                                                                          // setState(() {
-                                                                                          //   print("languagelanguagelanguagelanguage :--3 ${language}");
-                                                                                          //   checkLun = false;
-                                                                                          //   AllGuestPostRoomData?.object?.content?[index].description = tempdata2;
-                                                                                          // });
-                                                                                          // print("This condition is working");
+                                                                                          language = langdetect.detect(AllGuestPostRoomData?.object?.content?[index].description ?? "");
+                                                                                          print("languagelanguagelanguagelanguage :--1 ${language}");
+                                                                                          if (language == 'gu' || language == 'hi' || language == 'en') {
+                                                                                            // if (tempdata2 == "") {
+                                                                                            // var tempdata3 = AllGuestPostRoomData?.object?.content?[index].description ?? "";
+                                                                                            // }
+                                                                                            if (language == 'gu' || language == 'hi') {
+                                                                                              // Translate from the original language to English
+                                                                                              translatedTextenglish = await translateText(inputText, 'en');
+                                                                                              setState(() {
+                                                                                                print("languagelanguagelanguagelanguage :--2 ${language}");
+                                                                                                _translatedTextenglish = translatedTextenglish;
+                                                                                                AllGuestPostRoomData?.object?.content?[index].description = _translatedTextenglish;
+                                                                                                checkLun = true;
+                                                                                                // AllGuestPostRoomData?.object?.content?[index].isfalsehin = true;
+                                                                                              });
+                                                                                            } else if (language == 'en') {
+                                                                                              // No need to translate, as the text is already in English
+                                                                                              // setState(() {
+                                                                                              //   print("languagelanguagelanguagelanguage :--3 ${language}");
+                                                                                              //   checkLun = false;
+                                                                                              //   AllGuestPostRoomData?.object?.content?[index].description = tempdata2;
+                                                                                              // });
+                                                                                              // print("This condition is working");
 
-                                                                                          translatedTextenglish = await translateText(inputText, 'en');
-                                                                                          setState(() {
-                                                                                            print("languagelanguagelanguagelanguage :--3 ${language}");
-                                                                                            _translatedTextenglish = translatedTextenglish;
-                                                                                            AllGuestPostRoomData?.object?.content?[index].description = _translatedTextenglish;
-                                                                                            checkLun = true;
-                                                                                            // AllGuestPostRoomData?.object?.content?[index].isfalsehin = true;
-                                                                                          });
+                                                                                              translatedTextenglish = await translateText(inputText, 'en');
+                                                                                              setState(() {
+                                                                                                print("languagelanguagelanguagelanguage :--3 ${language}");
+                                                                                                _translatedTextenglish = translatedTextenglish;
+                                                                                                AllGuestPostRoomData?.object?.content?[index].description = _translatedTextenglish;
+                                                                                                checkLun = true;
+                                                                                                // AllGuestPostRoomData?.object?.content?[index].isfalsehin = true;
+                                                                                              });
+                                                                                            }
+                                                                                          } */
+                                                                                      setState(() {
+                                                                                        if (Translate1Bool == false) {
+                                                                                          Translate1Bool = true;
+                                                                                          Selected1Value = index;
+                                                                                        } else {
+                                                                                          Translate1Bool = false;
+                                                                                          Selected1Value = 0;
                                                                                         }
-                                                                                      }
+                                                                                      });
                                                                                     },
                                                                                     child: Container(
                                                                                         width: 80,
@@ -2673,14 +2790,18 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                                 : SizedBox(),
                                                                             SizedBox(
                                                                               height: 10,
-                                                                            ), */
+                                                                            ),
                                                                             Row(
                                                                               children: [
                                                                                 Expanded(
                                                                                   child: Container(
                                                                                     // color: Colors.amber,
                                                                                     child: LinkifyText(
-                                                                                      "${AllGuestPostRoomData?.object?.content?[index].description}",
+                                                                                      Translate1Bool == false
+                                                                                          ? "${AllGuestPostRoomData?.object?.content?[index].description}"
+                                                                                          : Selected1Value == index
+                                                                                              ? "${AllGuestPostRoomData?.object?.content?[index].translatedDescription}"
+                                                                                              : "${AllGuestPostRoomData?.object?.content?[index].description}",
                                                                                       linkStyle: TextStyle(
                                                                                         color: Colors.blue,
                                                                                         fontFamily: 'outfit',
@@ -2986,7 +3107,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                             ],
                                                                           ),
                                                               ),
-                                                        // inner post portion & repost 
+                                                        // inner post portion & repost
 
                                                         Padding(
                                                           padding:
@@ -2996,21 +3117,24 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                   right: 10,
                                                                   bottom: 10,
                                                                   top: 20),
-                                                          child: GestureDetector(
-                                                             onTap: () {
-                                                                                    /*  if (uuid == null) {
+                                                          child:
+                                                              GestureDetector(
+                                                            onTap: () {
+                                                              /*  if (uuid == null) {
                                                                                       Navigator.of(context).push(MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
                                                                                     } else { */
-                                                                                    Navigator.push(
-                                                                                      context,
-                                                                                      MaterialPageRoute(
-                                                                                          builder: (context) => OpenSavePostImage(
-                                                                                                PostID: AllGuestPostRoomData?.object?.content?[index].repostOn?.postUid,
-                                                                                                index: index,
-                                                                                              )),
-                                                                                    );
-                                                                                    // }
-                                                                                  },
+                                                              Navigator.push(
+                                                                context,
+                                                                MaterialPageRoute(
+                                                                    builder:
+                                                                        (context) =>
+                                                                            OpenSavePostImage(
+                                                                              PostID: AllGuestPostRoomData?.object?.content?[index].repostOn?.postUid,
+                                                                              index: index,
+                                                                            )),
+                                                              );
+                                                              // }
+                                                            },
                                                             child: Container(
                                                               decoration: BoxDecoration(
                                                                   color: Colors
@@ -3046,15 +3170,11 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                             () async {
                                                                           if (uuid ==
                                                                               null) {
-                                                                            Navigator.of(context)
-                                                                                .push(MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
+                                                                            Navigator.of(context).push(MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
                                                                           } else {
-                                                                            await BlocProvider.of<GetGuestAllPostCubit>(context)
-                                                                                .seetinonExpried(context);
-                                                                            Navigator.push(
-                                                                                context,
-                                                                                MaterialPageRoute(builder:
-                                                                                    (context) {
+                                                                            await BlocProvider.of<GetGuestAllPostCubit>(context).seetinonExpried(context);
+                                                                            Navigator.push(context, MaterialPageRoute(builder:
+                                                                                (context) {
                                                                               return MultiBlocProvider(providers: [
                                                                                 BlocProvider<NewProfileSCubit>(
                                                                                   create: (context) => NewProfileSCubit(),
@@ -3083,14 +3203,12 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                       title:
                                                                           Column(
                                                                         crossAxisAlignment:
-                                                                            CrossAxisAlignment
-                                                                                .start,
+                                                                            CrossAxisAlignment.start,
                                                                         children: [
                                                                           GestureDetector(
                                                                             onTap:
                                                                                 () async {
-                                                                              if (uuid ==
-                                                                                  null) {
+                                                                              if (uuid == null) {
                                                                                 Navigator.of(context).push(MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
                                                                               } else {
                                                                                 await BlocProvider.of<GetGuestAllPostCubit>(context).seetinonExpried(context);
@@ -3108,8 +3226,7 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                                 Container(
                                                                               // color:
                                                                               //     Colors.amber,
-                                                                              child:
-                                                                                  Text(
+                                                                              child: Text(
                                                                                 "${AllGuestPostRoomData?.object?.content?[index].repostOn?.postUserName}",
                                                                                 style: TextStyle(fontSize: 20, fontFamily: "outfit", fontWeight: FontWeight.bold),
                                                                               ),
@@ -3121,10 +3238,8 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                                 : getTimeDifference(repostTime!),
                                                                             style:
                                                                                 TextStyle(
-                                                                              fontSize:
-                                                                                  12,
-                                                                              fontFamily:
-                                                                                  "outfit",
+                                                                              fontSize: 12,
+                                                                              fontFamily: "outfit",
                                                                             ),
                                                                           ),
                                                                         ],
@@ -3150,17 +3265,13 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                             "${AllGuestPostRoomData?.object?.content?[index].repostOn?.description}",
                                                                             linkStyle:
                                                                                 TextStyle(
-                                                                              color:
-                                                                                  Colors.blue,
-                                                                              fontFamily:
-                                                                                  'outfit',
+                                                                              color: Colors.blue,
+                                                                              fontFamily: 'outfit',
                                                                             ),
                                                                             textStyle:
                                                                                 TextStyle(
-                                                                              color:
-                                                                                  Colors.black,
-                                                                              fontFamily:
-                                                                                  'outfit',
+                                                                              color: Colors.black,
+                                                                              fontFamily: 'outfit',
                                                                             ),
                                                                             linkTypes: [
                                                                               LinkType.url,
@@ -3173,27 +3284,18 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                                 (link) async {
                                                                               /// do stuff with `link` like
                                                                               /// if(link.type == Link.url) launchUrl(link.value);
-                                                          
-                                                                              var SelectedTest =
-                                                                                  link.value.toString();
-                                                                              var Link =
-                                                                                  SelectedTest.startsWith('https');
-                                                                              var Link1 =
-                                                                                  SelectedTest.startsWith('http');
-                                                                              var Link2 =
-                                                                                  SelectedTest.startsWith('www');
-                                                                              var Link3 =
-                                                                                  SelectedTest.startsWith('WWW');
-                                                                              var Link4 =
-                                                                                  SelectedTest.startsWith('HTTPS');
-                                                                              var Link5 =
-                                                                                  SelectedTest.startsWith('HTTP');
-                                                                              var Link6 =
-                                                                                  SelectedTest.startsWith('https://pdslink.page.link/');
+
+                                                                              var SelectedTest = link.value.toString();
+                                                                              var Link = SelectedTest.startsWith('https');
+                                                                              var Link1 = SelectedTest.startsWith('http');
+                                                                              var Link2 = SelectedTest.startsWith('www');
+                                                                              var Link3 = SelectedTest.startsWith('WWW');
+                                                                              var Link4 = SelectedTest.startsWith('HTTPS');
+                                                                              var Link5 = SelectedTest.startsWith('HTTP');
+                                                                              var Link6 = SelectedTest.startsWith('https://pdslink.page.link/');
                                                                               print(SelectedTest.toString());
-                                                          
-                                                                              if (User_ID ==
-                                                                                  null) {
+
+                                                                              if (User_ID == null) {
                                                                                 Navigator.of(context).push(MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
                                                                               } else {
                                                                                 if (Link == true || Link1 == true || Link2 == true || Link3 == true || Link4 == true || Link5 == true || Link6 == true) {
@@ -3231,11 +3333,11 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                                     name = SelectedTest;
                                                                                     tagName = name.replaceAll("@", "");
                                                                                     await BlocProvider.of<GetGuestAllPostCubit>(context).UserTagAPI(context, tagName);
-                                                          
+
                                                                                     Navigator.push(context, MaterialPageRoute(builder: (context) {
                                                                                       return ProfileScreen(User_ID: "${userTagModel?.object}", isFollowing: "");
                                                                                     })).then((value) => Get_UserToken());
-                                                          
+
                                                                                     print("tagName -- ${tagName}");
                                                                                     print("user id -- ${userTagModel?.object}");
                                                                                   }
@@ -3245,15 +3347,13 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                           ))
                                                                       : SizedBox(),
                                                                   Container(
-                                                                    width: _width,
-                                                                    child: AllGuestPostRoomData
-                                                                                ?.object
-                                                                                ?.content?[index]
-                                                                                .repostOn
-                                                                                ?.postDataType ==
+                                                                    width:
+                                                                        _width,
+                                                                    child: AllGuestPostRoomData?.object?.content?[index].repostOn?.postDataType ==
                                                                             null
                                                                         ? SizedBox()
-                                                                        : AllGuestPostRoomData?.object?.content?[index].repostOn?.postData?.length == 1
+                                                                        : AllGuestPostRoomData?.object?.content?[index].repostOn?.postData?.length ==
+                                                                                1
                                                                             ? (AllGuestPostRoomData?.object?.content?[index].repostOn?.postDataType == "IMAGE"
                                                                                 ? GestureDetector(
                                                                                     onTap: () {
@@ -4162,9 +4262,10 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                           crossAxisAlignment:
                                                                               CrossAxisAlignment.start,
                                                                           children: [
-                                                                           /*  GestureDetector(
-                                                                              onTap: () async {
-                                                                                // print("value cheak${AllGuestPostRoomData?.object?.content?[index].isfalsegu}");
+                                                                            AllGuestPostRoomData?.object?.content?[index].translatedDescription != null
+                                                                                ? GestureDetector(
+                                                                                    onTap: () async {
+                                                                                      /*  // print("value cheak${AllGuestPostRoomData?.object?.content?[index].isfalsegu}");
                                                                                 // print("value cheak${AllGuestPostRoomData?.object?.content?[index].isfalsehin}");
                                                                                 String inputText = "${AllGuestPostRoomData?.object?.content?[index].description}";
                                                                                 String translatedTextGujarati = await translateText(inputText, 'gu');
@@ -4227,26 +4328,36 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                                       // AllGuestPostRoomData?.object?.content?[index].isfalsehin = true;
                                                                                     });
                                                                                   }
-                                                                                }
-                                                                              },
-                                                                              child: Container(
-                                                                                  width: 80,
-                                                                                  decoration: BoxDecoration(
-                                                                                    color: ColorConstant.primaryLight_color,
-                                                                                    borderRadius: BorderRadius.circular(10),
-                                                                                  ),
-                                                                                  child: Center(
-                                                                                      child: Text(
-                                                                                    "Translate",
-                                                                                    style: TextStyle(
-                                                                                      fontFamily: 'outfit',
-                                                                                      fontWeight: FontWeight.bold,
-                                                                                    ),
-                                                                                  ))),
-                                                                            ),
+                                                                                } */
+                                                                                      setState(() {
+                                                                                        if (Translate2Bool == false) {
+                                                                                          Translate2Bool = true;
+                                                                                          Selected2Value = index;
+                                                                                        } else {
+                                                                                          Translate2Bool = false;
+                                                                                          Selected2Value = 0;
+                                                                                        }
+                                                                                      });
+                                                                                    },
+                                                                                    child: Container(
+                                                                                        width: 80,
+                                                                                        decoration: BoxDecoration(
+                                                                                          color: ColorConstant.primaryLight_color,
+                                                                                          borderRadius: BorderRadius.circular(10),
+                                                                                        ),
+                                                                                        child: Center(
+                                                                                            child: Text(
+                                                                                          "Translate",
+                                                                                          style: TextStyle(
+                                                                                            fontFamily: 'outfit',
+                                                                                            fontWeight: FontWeight.bold,
+                                                                                          ),
+                                                                                        ))),
+                                                                                  )
+                                                                                : SizedBox(),
                                                                             SizedBox(
                                                                               height: 10,
-                                                                            ), */
+                                                                            ),
                                                                             Row(
                                                                               children: [
                                                                                 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -4263,7 +4374,11 @@ class _HomeScreenNewState extends State<HomeScreenNew> {
                                                                                     child: LinkifyText(
                                                                                       /*    utf8.decode(AllGuestPostRoomData?.object?.content?[index].description?.runes.toList() ??
                                                                                           []), */
-                                                                                      "${AllGuestPostRoomData?.object?.content?[index].description}",
+                                                                                      Translate2Bool == false
+                                                                                          ? "${AllGuestPostRoomData?.object?.content?[index].description}"
+                                                                                          : Selected2Value == index
+                                                                                              ? "${AllGuestPostRoomData?.object?.content?[index].translatedDescription}"
+                                                                                              : "${AllGuestPostRoomData?.object?.content?[index].description}",
                                                                                       linkStyle: TextStyle(
                                                                                         color: Colors.blue,
                                                                                         fontFamily: 'outfit',
