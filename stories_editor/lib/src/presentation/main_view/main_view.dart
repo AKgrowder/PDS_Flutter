@@ -150,7 +150,6 @@ class _MainViewState extends State<MainView> {
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
       statusBarColor: Colors.white,
-      statusBarBrightness: Brightness.dark,
       statusBarIconBrightness: Brightness.dark,
     ));
     final ScreenUtil screenUtil = ScreenUtil();
