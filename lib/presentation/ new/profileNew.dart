@@ -3260,16 +3260,16 @@ class _ProfileScreenState extends State<ProfileScreen>
                                           CrossAxisAlignment.start,
                                       children: [
                                         /*                  GestureDetector(
-                                                                              onTap: () async {
-                                                                               
+                                                onTap: () async {
+
                                                                                 String inputText = "${getAllPostData.object?[index].description}";
                                                                                 String translatedTextGujarati = await translateText(inputText, 'gu');
                                                                                 String translatedTextHindi = await translateText(inputText, 'hi');
                                                                                 String translatedTextenglish = await translateText(inputText, 'en');
 
                                                                                 if (getAllPostData.object?[index].isfalsehin == null && getAllPostData?.object?[index].isfalsegu == null) {
-                                                                                  setState(() {
-                                                                                    // _translatedTextGujarati = translatedTextGujarati;
+                                                  setState(() {
+                                                    // _translatedTextGujarati = translatedTextGujarati;
 
                                                                                     _translatedTextHindi = translatedTextHindi;
 
@@ -3310,6 +3310,33 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                                     ),
                                                                                   ))),
                                                                             ), */
+                                                                            getAllPostData.object?[index].translatedDescription != null
+                                                                                ? GestureDetector(
+                                                                                    onTap: () async {
+                                                                                         setState(() {
+                                                                                        if ( getAllPostData.object?[index].isTrsnalteoption  == false || getAllPostData.object?[index].isTrsnalteoption  == null) {
+                                                                                           getAllPostData.object?[index].isTrsnalteoption = true;
+                                                                                        } else {
+                                                                                          getAllPostData.object?[index].isTrsnalteoption = false;
+                                                                                        }
+                                                                                      });
+                                                                                    },
+                                                                                    child: Container(
+                                                                                        width: 80,
+                                                                                        decoration: BoxDecoration(
+                                                                                          color: ColorConstant.primaryLight_color,
+                                                                                          borderRadius: BorderRadius.circular(10),
+                                                                                        ),
+                                                                                        child: Center(
+                                                                                            child: Text(
+                                                                                          "Translate",
+                                                                                          style: TextStyle(
+                                                                                            fontFamily: 'outfit',
+                                                                                            fontWeight: FontWeight.bold,
+                                                                                          ),
+                                                                                        ))),
+                                                                                  )
+                                                                                : SizedBox(),
                                         SizedBox(
                                           height: 10,
                                         ),
@@ -3319,7 +3346,8 @@ class _ProfileScreenState extends State<ProfileScreen>
                                               child: Container(
                                                 // color: Colors.amber,
                                                 child: LinkifyText(
-                                                  "${getAllPostData.object?[index].description}",
+                                                    getAllPostData.object?[index].isTrsnalteoption  == false || getAllPostData.object?[index].isTrsnalteoption  == null ?
+                                                      "${getAllPostData.object?[index].description}":"${getAllPostData.object?[index].translatedDescription}",
                                                   linkStyle: TextStyle(
                                                     color: Colors.blue,
                                                     fontFamily: 'outfit',
@@ -4515,7 +4543,6 @@ class _ProfileScreenState extends State<ProfileScreen>
                                 onTap: () {
                                   _onShareXFileFromAssets(context,
                                       androidLink:
-                                          // "https://play.google.com/store/apps/details?id=com.pds.app",
                                           '${getAllPostData.object?[index].postLink}'
                                       /* iosLink:
                                                       "https://apps.apple.com/inList =  /app/growder-b2b-platform/id6451333863" */
@@ -4781,7 +4808,35 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                                     ),
                                                                                   ))),
                                                                             ), */
+                                                                            getAllPostData.object?[index].translatedDescription != null
+                                                                                ? GestureDetector(
+                                                                                    onTap: () async {
+                                                                                         setState(() {
+                                                                                        if ( getAllPostData.object?[index].isTrsnalteoption  == false || getAllPostData.object?[index].isTrsnalteoption  == null) {
+                                                                                           getAllPostData.object?[index].isTrsnalteoption = true;
+                                                                                        } else {
+                                                                                          getAllPostData.object?[index].isTrsnalteoption = false;
+                                                                                        }
+                                                                                      });
+                                                                                    },
+                                                                                    child: Container(
+                                                                                        width: 80,
+                                                                                        decoration: BoxDecoration(
+                                                                                          color: ColorConstant.primaryLight_color,
+                                                                                          borderRadius: BorderRadius.circular(10),
+                                                                                        ),
+                                                                                        child: Center(
+                                                                                            child: Text(
+                                                                                          "Translate",
+                                                                                          style: TextStyle(
+                                                                                            fontFamily: 'outfit',
+                                                                                            fontWeight: FontWeight.bold,
+                                                                                          ),
+                                                                                        ))),
+                                                                                  )
+                                                                                : SizedBox(),
                                             SizedBox(
+                                              // color: Colors.red,
                                               height: 10,
                                             ),
                                             Row(
@@ -4789,7 +4844,8 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                 Expanded(
                                                   child: Container(
                                                     child: LinkifyText(
-                                                      "${getAllPostData.object?[index].description}",
+                                                      getAllPostData.object?[index].isTrsnalteoption  == false || getAllPostData.object?[index].isTrsnalteoption  == null ?
+                                                      "${getAllPostData.object?[index].description}":"${getAllPostData.object?[index].translatedDescription}",
                                                       linkStyle: TextStyle(
                                                         color: Colors.blue,
                                                         fontFamily: 'outfit',
@@ -5383,7 +5439,6 @@ class _ProfileScreenState extends State<ProfileScreen>
                                   _onShareXFileFromAssets(
                                     context,
                                     androidLink:
-                                        // "https://play.google.com/store/apps/details?id=com.pds.app",
                                         '${getAllPostData.object?[index].postLink}',
                                     /* iosLink:
                                                       "https://apps.apple.com/inList =  /app/growder-b2b-platform/id6451333863" */
@@ -6007,6 +6062,34 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                             ),
                                                                           ))),
                                                                     ), */
+                                                                     GetSavePostData?.object?[index].translatedDescription != null
+                                                                                ? GestureDetector(
+                                                                                    onTap: () async {
+                                                                                         setState(() {
+                                                                                        if ( GetSavePostData?.object?[index].isTrsnalteoption  == false || GetSavePostData?.object?[index].isTrsnalteoption  == null) {
+                                                                                           GetSavePostData?.object?[index].isTrsnalteoption = true;
+                                                                                        } else {
+                                                                                          GetSavePostData?.object?[index].isTrsnalteoption = false;
+                                                                                        }
+                                                                                      });
+                                                                                    },
+                                                                                    child: Container(
+                                                                                        width: 80,
+                                                                                        decoration: BoxDecoration(
+                                                                                          color: ColorConstant.primaryLight_color,
+                                                                                          borderRadius: BorderRadius.circular(10),
+                                                                                        ),
+                                                                                        child: Center(
+                                                                                            child: Text(
+                                                                                          "Translate",
+                                                                                          style: TextStyle(
+                                                                                            fontFamily: 'outfit',
+                                                                                            fontWeight: FontWeight.bold,
+                                                                                          ),
+                                                                                        ))),
+                                                                                  )
+                                                                                : SizedBox(),
+
                                           SizedBox(
                                             height: 10,
                                           ),
@@ -6016,7 +6099,8 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                 child: Container(
                                                   // color: Colors.amber,
                                                   child: LinkifyText(
-                                                    "${GetSavePostData?.object?[index].description}",
+                                                      GetSavePostData?.object?[index].isTrsnalteoption  == false || GetSavePostData?.object?[index].isTrsnalteoption  == null ?
+                                                      "${GetSavePostData?.object?[index].description}":"${GetSavePostData?.object?[index].translatedDescription}",
                                                     linkStyle: TextStyle(
                                                       color: Colors.blue,
                                                       fontFamily: 'outfit',
@@ -7233,7 +7317,6 @@ class _ProfileScreenState extends State<ProfileScreen>
                                   onTap: () {
                                     _onShareXFileFromAssets(context,
                                         androidLink:
-                                            // "https://play.google.com/store/apps/details?id=com.pds.app",
                                             '${GetSavePostData?.object?[index].postLink}'
                                         /* iosLink:
                                               "https://apps.apple.com/inList =  /app/growder-b2b-platform/id6451333863" */
@@ -7485,6 +7568,33 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                             ),
                                                                           ))),
                                                                     ), */
+                                                                      GetSavePostData?.object?[index].translatedDescription != null
+                                                                                ? GestureDetector(
+                                                                                    onTap: () async {
+                                                                                         setState(() {
+                                                                                        if ( GetSavePostData?.object?[index].isTrsnalteoption  == false || GetSavePostData?.object?[index].isTrsnalteoption  == null) {
+                                                                                           GetSavePostData?.object?[index].isTrsnalteoption = true;
+                                                                                        } else {
+                                                                                          GetSavePostData?.object?[index].isTrsnalteoption = false;
+                                                                                        }
+                                                                                      });
+                                                                                    },
+                                                                                    child: Container(
+                                                                                        width: 80,
+                                                                                        decoration: BoxDecoration(
+                                                                                          color: ColorConstant.primaryLight_color,
+                                                                                          borderRadius: BorderRadius.circular(10),
+                                                                                        ),
+                                                                                        child: Center(
+                                                                                            child: Text(
+                                                                                          "Translate",
+                                                                                          style: TextStyle(
+                                                                                            fontFamily: 'outfit',
+                                                                                            fontWeight: FontWeight.bold,
+                                                                                          ),
+                                                                                        ))),
+                                                                                  )
+                                                                                : SizedBox(),
                                               SizedBox(
                                                 height: 10,
                                               ),
@@ -7493,7 +7603,8 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                   Expanded(
                                                     child: Container(
                                                       child: LinkifyText(
-                                                        "${GetSavePostData?.object?[index].description}",
+                                                           GetSavePostData?.object?[index].isTrsnalteoption  == false || GetSavePostData?.object?[index].isTrsnalteoption  == null ?
+                                                      "${GetSavePostData?.object?[index].description}":"${GetSavePostData?.object?[index].translatedDescription}",
                                                         linkStyle: TextStyle(
                                                           color: Colors.blue,
                                                           fontFamily: 'outfit',
@@ -8110,7 +8221,6 @@ class _ProfileScreenState extends State<ProfileScreen>
                                     _onShareXFileFromAssets(
                                       context,
                                       androidLink:
-                                          // "https://play.google.com/store/apps/details?id=com.pds.app",
                                           '${GetSavePostData?.object?[index].postLink}',
                                       /* iosLink:
                                               "https://apps.apple.com/inList =  /app/growder-b2b-platform/id6451333863" */

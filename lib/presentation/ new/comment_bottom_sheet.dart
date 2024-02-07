@@ -406,7 +406,7 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                                                 MainAxisAlignment.center,
                                             children: [
                                               Container(
-                                                width: 280,
+                                                // width: 280,
                                                 // color: Colors.amber,
                                                 child: Row(
                                                   children: [
@@ -479,6 +479,59 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                                                             : SizedBox(),
                                                       ),
                                                     ),
+                                                    SizedBox(
+                                                      width: 5,
+                                                    ),
+                                                    addCommentModeldata
+                                                                ?.object?[index]
+                                                                .translatedComment !=
+                                                            null
+                                                        ? GestureDetector(
+                                                            onTap: () async {
+                                                              setState(() {
+                                                                if (addCommentModeldata
+                                                                            ?.object?[
+                                                                                index]
+                                                                            .isTrsnalteoption ==
+                                                                        false ||
+                                                                    addCommentModeldata
+                                                                            ?.object?[index]
+                                                                            .isTrsnalteoption ==
+                                                                        null) {
+                                                                  addCommentModeldata
+                                                                      ?.object?[
+                                                                          index]
+                                                                      .isTrsnalteoption = true;
+                                                                } else {
+                                                                  addCommentModeldata
+                                                                      ?.object?[
+                                                                          index]
+                                                                      .isTrsnalteoption = false;
+                                                                }
+                                                              });
+                                                            },
+                                                            child: Container(
+                                                                width: 80,
+                                                                decoration: BoxDecoration(
+                                                                    color: ColorConstant
+                                                                        .primaryLight_color,
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                            10)),
+                                                                child: Center(
+                                                                    child: Text(
+                                                                  "Translate",
+                                                                  style:
+                                                                      TextStyle(
+                                                                    fontFamily:
+                                                                        'outfit',
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold,
+                                                                  ),
+                                                                ))),
+                                                          )
+                                                        : SizedBox(),
                                                   ],
                                                 ),
                                               ),
@@ -487,7 +540,18 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                                                 // height: 50,
                                                 // color: Colors.amber,
                                                 child: LinkifyText(
-                                                  "${addCommentModeldata?.object?[index].comment}",
+                                                  addCommentModeldata
+                                                                  ?.object?[
+                                                                      index]
+                                                                  .isTrsnalteoption ==
+                                                              false ||
+                                                          addCommentModeldata
+                                                                  ?.object?[
+                                                                      index]
+                                                                  .isTrsnalteoption ==
+                                                              null
+                                                      ? "${addCommentModeldata?.object?[index].comment}"
+                                                      : "${addCommentModeldata?.object?[index].translatedComment}",
                                                   linkStyle: TextStyle(
                                                     color: Colors.blue,
                                                     fontFamily: 'outfit',

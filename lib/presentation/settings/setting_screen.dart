@@ -403,7 +403,6 @@ class _SettingScreenState extends State<SettingScreen> {
 
                                   _onShareXFileFromAssets(context,
                                       androidLink:
-                                          // "https://play.google.com/store/apps/details?id=com.pds.app",
                                           'https://play.google.com/store/apps/details?id=com.pds.app'
                                       /* iosLink:
                                                       "https://apps.apple.com/inList =  /app/growder-b2b-platform/id6451333863" */
