@@ -51,6 +51,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
   int _secondsRemaining = 0;
   int otpTimer = 0;
   bool tm = false;
+  bool noMoveNext = false;
 
   timer() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -127,13 +128,18 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
               title: AppbarImage(
                   height: 37,
                   width: 140,
-                  imagePath: ImageConstant.imgImage248)),
+                  imagePath: ImageConstant.splashImage)),
           body: BlocProvider<OtpCubit>(
             create: (context) => OtpCubit(),
             child: BlocConsumer<OtpCubit, OtpState>(
               listener: (context, state) async {
                 if (state is OtpErrorState) {
                   print("error");
+                  if (state.error.contains("Maximum try over,")) {
+                    noMoveNext = true;
+                  } else {
+                    noMoveNext = false;
+                  }
                   SnackBar snackBar = SnackBar(
                     content: Text(state.error),
                     backgroundColor: ColorConstant.primary_color,
@@ -172,7 +178,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                     );
                     ScaffoldMessenger.of(context).showSnackBar(snackBar);
                     SnackBar snackBar2 = SnackBar(
-                      content: Text('Signup Successfully'),
+                      content: Text('Signed Up Successfully'),
                       backgroundColor: ColorConstant.primary_color,
                     );
                     ScaffoldMessenger.of(context).showSnackBar(snackBar2);
@@ -180,11 +186,21 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
 
                   print('wiget flowcheck-${widget.flowCheck}');
                   if (widget.flowCheck == "Rgister") {
-                    Navigator.push(context,
+                    /* Navigator.push(context,
                         MaterialPageRoute(builder: (context) {
                       return LoginScreen(
                         flagCheck: 'otp done',
                       );
+                    })); */
+                     getDataStroe(
+                        widget.loginModelData?.object?.uuid.toString() ?? "",
+                        widget.loginModelData?.object?.jwt.toString() ?? "",
+                        widget.loginModelData?.object?.module.toString() ?? ""
+                        // state.loginModel.object!.verified.toString(),
+                        );
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) {
+                      return NewBottomBar(buttomIndex: 0);
                     }));
                   } else if (widget.forgetpassword == true) {
                     SnackBar snackBar = SnackBar(
@@ -328,7 +344,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                                 height: _height / 16,
                                 width: _width,
                                 decoration: BoxDecoration(
-                                  color: Color(0XFFED1C25),
+                                  color: ColorConstant.primary_color,
                                   borderRadius:
                                       BorderRadiusStyle.roundedBorder6,
                                 ),
@@ -361,9 +377,12 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                                       ? GestureDetector(
                                           onTap: () {
                                             setState(() {
-                                              OTPController.clear();
-                                              tm = false;
-                                              _startTimer();
+                                              if (noMoveNext == false) {
+                                                OTPController.clear();
+                                                tm = false;
+                                                _startTimer();
+                                              }
+
                                               BlocProvider.of<OtpCubit>(context)
                                                   .resendOtpApi(
                                                       widget.phonNumber

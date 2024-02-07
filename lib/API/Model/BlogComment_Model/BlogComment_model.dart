@@ -32,7 +32,7 @@ class ObjectBlog {
   String? commentUid;
   String? userUid;
   String? comment;
-  String? image;
+  String? userProfilePic;
   String? userName;
   String? createdAt;
 
@@ -41,7 +41,7 @@ class ObjectBlog {
       this.commentUid,
       this.userUid,
       this.comment,
-      this.image,
+      this.userProfilePic,
       this.userName,
       this.createdAt});
 
@@ -50,7 +50,7 @@ class ObjectBlog {
     commentUid = json['commentUid'];
     userUid = json['userUid'];
     comment = json['comment'];
-    image = json['image'];
+    userProfilePic = json['userProfilePic'];
     userName = json['userName'];
     createdAt = json['createdAt'];
   }
@@ -61,7 +61,7 @@ class ObjectBlog {
     data['commentUid'] = this.commentUid;
     data['userUid'] = this.userUid;
     data['comment'] = this.comment;
-    data['image'] = this.image;
+    data['userProfilePic'] = this.userProfilePic;
     data['userName'] = this.userName;
     data['createdAt'] = this.createdAt;
     return data;

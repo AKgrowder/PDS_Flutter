@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pds/API/Bloc/BlogComment_BLoc/BlogComment_state.dart';
-import 'package:pds/API/Model/BlogComment_Model/BlogComment_model.dart';
 import 'package:pds/API/Repo/repository.dart';
 
 class BlogcommentCubit extends Cubit<BlogCommentState> {
@@ -11,13 +10,15 @@ class BlogcommentCubit extends Cubit<BlogCommentState> {
     try {
       emit(BlogCommentLoadingState());
       commentdata = await Repository().Blogcomment(context, blogID);
-      BlogCommentModel commentModel1 = BlogCommentModel.fromJson(commentdata);
-      print("commetData-${commentModel1.success}");
-      if (commentModel1.success == true) {
-        emit(BlogCommentLoadedState(commentModel1));
+
+      if (commentdata == "Something Went Wrong, Try After Some Time.") {
+        emit(BlogCommentErrorState("${commentdata}"));
       } else {
-        print("else working-$commentdata");
-        emit(BlogCommentLoadedState1(commentdata));
+        if (commentdata.success == true) {
+          emit(BlogCommentLoadedState(commentdata));
+        } else {
+          emit(BlogCommentLoadedState(commentdata));
+        }
       }
     } catch (e) {
       emit(BlogCommentErrorState(commentdata));
@@ -47,11 +48,13 @@ class BlogcommentCubit extends Cubit<BlogCommentState> {
     }
   }
 
-  Future<void> DeletecommentAPI(String commentuid, BuildContext context) async {
+  Future<void> DeletecommentAPI(
+      String commentuid, String loginuser, BuildContext context) async {
     dynamic Deletecomment;
     try {
       emit(BlogCommentLoadingState());
-      Deletecomment = await Repository().DeleteBlogcomment(commentuid, context);
+      Deletecomment =
+          await Repository().DeleteBlogcomment(commentuid, loginuser, context);
       if (Deletecomment == "Something Went Wrong, Try After Some Time.") {
         emit(BlogCommentErrorState("${Deletecomment}"));
       } else {
@@ -60,6 +63,92 @@ class BlogcommentCubit extends Cubit<BlogCommentState> {
         }
       }
     } catch (e) {
+      emit(BlogCommentErrorState(e.toString()));
+    }
+  }
+
+  Future<void> BlogLikeList(
+      BuildContext context, String blogID, String uuId) async {
+    dynamic likeListData;
+    try {
+      emit(BlogCommentLoadingState());
+      likeListData = await Repository().BlogLikeList(context, blogID, uuId);
+
+      if (likeListData == "Something Went Wrong, Try After Some Time.") {
+        emit(BlogCommentErrorState("${likeListData}"));
+      } else {
+        if (likeListData.success == true) {
+          emit(BlogLikelistLoadedState(likeListData));
+        }
+      }
+    } catch (e) {
+      emit(BlogCommentErrorState(likeListData));
+    }
+  }
+
+  Future<void> followWIngMethod(String? followedToUid, BuildContext context,
+      {bool showAlert = false}) async {
+    dynamic likepost;
+    try {
+      // showAlert == true ? emit(GetGuestAllPostLoadingState()) : SizedBox();
+      likepost = await Repository().folliwingMethod(followedToUid, context);
+      if (likepost == "Something Went Wrong, Try After Some Time.") {
+        emit(BlogCommentErrorState("${likepost}"));
+      } else {
+        if (likepost.success == true) {
+          emit(PostLikeBlogLoadedState(likepost));
+        }
+      }
+    } catch (e) {
+      // print('errorstate-$e');
+      emit(BlogCommentErrorState(likepost));
+    }
+  }
+
+  Future<void> UserTagAPI(BuildContext context, String? name) async {
+    dynamic userTagData;
+    try {
+      emit(BlogCommentLoadingState());
+      userTagData = await Repository().UserTag(context, name);
+      print("userTagDataaaaaaaaaaaa-->${userTagData}");
+      if (userTagData == "Something Went Wrong, Try After Some Time.") {
+        emit(BlogCommentErrorState("${userTagData}"));
+      } else {
+        if (userTagData.success == true) {
+          emit(UserTagBlogLoadedState(userTagData));
+        }
+      }
+    } catch (e) {
+      emit(BlogCommentErrorState(userTagData));
+    }
+  }
+
+  Future<void> GetAllHashtag(
+      BuildContext context, String pageNumber, String searchHashtag) async {
+    dynamic addPostImageUploded;
+    try {
+      addPostImageUploded = await Repository()
+          .get_all_hashtag(context, pageNumber, searchHashtag);
+
+      if (addPostImageUploded.success == true) {
+        emit(GetAllHashtagState1(addPostImageUploded));
+      }
+    } catch (e) {
+      emit(BlogCommentErrorState(e.toString()));
+    }
+  }
+
+  Future<void> search_user_for_inbox(
+      BuildContext context, String typeWord, String pageNumber) async {
+    dynamic searchHistoryDataAdd;
+    try {
+      searchHistoryDataAdd = await Repository()
+          .search_user_for_inbox(typeWord, pageNumber, context);
+      if (searchHistoryDataAdd.success == true) {
+        emit(SearchHistoryDataAddxtends1(searchHistoryDataAdd));
+      }
+    } catch (e) {
+      print("eeerrror-${e.toString()}");
       emit(BlogCommentErrorState(e.toString()));
     }
   }

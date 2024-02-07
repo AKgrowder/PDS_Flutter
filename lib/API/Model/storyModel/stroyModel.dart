@@ -1,14 +1,18 @@
+import 'dart:developer';
+
 class ImageDataPostOne {
   String? message;
   String? object;
   bool? success;
-
-  ImageDataPostOne({this.message, this.object, this.success});
+  int? videodurationGet; 
+  ImageDataPostOne({this.message, this.object, this.success,this.videodurationGet});
 
   ImageDataPostOne.fromJson(Map<String, dynamic> json) {
+    log("messagecheck-$json");
     message = json['message'];
     object = json['object'];
     success = json['success'];
+    videodurationGet = json['videodurationGet'];
   }
 
   Map<String, dynamic> toJson() {

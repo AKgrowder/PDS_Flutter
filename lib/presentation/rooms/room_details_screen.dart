@@ -107,7 +107,7 @@ class _RoomDetailScreenState extends State<RoomDetailScreen> {
                     height: _height / 9,
                     width: _width / 1.2,
                     decoration: BoxDecoration(
-                      color: Color(0xFFFFE7E7),
+                      color:ColorConstant.primaryLight_color,
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: Column(
@@ -298,7 +298,7 @@ class _RoomDetailScreenState extends State<RoomDetailScreen> {
                               // color: Colors.amber,
                               width: _width / 1.5,
                               child: Text(
-                                "${fetchRoomDetailModel?.object?.document}",
+                                "${fetchRoomDetailModel?.object?.documentName}",
                                 style: TextStyle(
                                     overflow: TextOverflow.ellipsis,
                                     fontWeight: FontWeight.w400,

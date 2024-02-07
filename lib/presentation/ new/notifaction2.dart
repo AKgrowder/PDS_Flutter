@@ -5,14 +5,18 @@ import 'package:pds/API/Bloc/Invitation_Bloc/Invitation_cubit.dart';
 import 'package:pds/API/Bloc/Invitation_Bloc/Invitation_state.dart';
 import 'package:pds/API/Bloc/NewProfileScreen_Bloc/NewProfileScreen_cubit.dart';
 import 'package:pds/API/Model/InvitationModel/Invitation_Model.dart';
+import 'package:pds/API/Model/acceptRejectInvitaionModel/GetAllNotificationModel.dart';
 import 'package:pds/API/Model/acceptRejectInvitaionModel/RequestList_Model.dart';
 import 'package:pds/API/Model/acceptRejectInvitaionModel/accept_rejectModel.dart';
 import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/core/utils/image_constant.dart';
+import 'package:pds/presentation/%20new/OpenSavePostImage.dart';
 import 'package:pds/presentation/%20new/newbottembar.dart';
 import 'package:pds/presentation/%20new/profileNew.dart';
 import 'package:pds/presentation/room_members/room_members_screen.dart';
 import 'package:pds/widgets/custom_image_view.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:pds/core/utils/sharedPreferences.dart';
 
 import '../rooms/room_details_screen.dart';
 
@@ -28,16 +32,23 @@ class _NewNotifactionScreenState extends State<NewNotifactionScreen>
   TabController? _tabController;
   RequestListModel? RequestListModelData;
   InvitationModel? invitationRoomData;
-
+  GetAllNotificationModel? AllNotificationData;
+  int NotificationCount = 0;
   bool apiDataGet = false;
   bool dataGet = false;
   bool? Show_NoData_Image;
 
   void initState() {
-    BlocProvider.of<InvitationCubit>(context).seetinonExpried(context);
-    BlocProvider.of<InvitationCubit>(context).RequestListAPI(context);
-    BlocProvider.of<InvitationCubit>(context).InvitationAPI(context);
-    super.initState();
+    AllAPICall();
+    super.initState();   
+  }
+
+  AllAPICall() async {
+    await BlocProvider.of<InvitationCubit>(context).seetinonExpried(context);
+    await BlocProvider.of<InvitationCubit>(context).AllNotification(context);
+    await BlocProvider.of<InvitationCubit>(context).RequestListAPI(context);
+    await BlocProvider.of<InvitationCubit>(context).InvitationAPI(context);
+    await BlocProvider.of<InvitationCubit>(context).getAllNoticationsCountAPI(context);
   }
 
   @override
@@ -70,6 +81,20 @@ class _NewNotifactionScreenState extends State<NewNotifactionScreen>
               );
               ScaffoldMessenger.of(context).showSnackBar(snackBar);
             }
+          }
+           if (state is GetNotificationCountLoadedState) {
+                print(state.GetNotificationCountData.object);
+                saveNotificationCount(state.GetNotificationCountData.object?.notificationCount ?? 0,state.GetNotificationCountData.object?.messageCount ?? 0);
+              }
+
+          if (state is GetAllNotificationLoadedState) {
+            NotificationCount = 0;
+            AllNotificationData = state.AllNotificationData;
+            AllNotificationData?.object?.forEach((element) async {
+              if (element.isSeen == false) {
+                NotificationCount = NotificationCount + 1;
+              }
+            });
           }
           if (state is InvitationLoadedState) {
             dataGet = true;
@@ -138,17 +163,17 @@ class _NewNotifactionScreenState extends State<NewNotifactionScreen>
                         unselectedLabelColor: Colors.black,
                         indicator: BoxDecoration(
                             // borderRadius: BorderRadius.circular(8.0),
-                            color: Color(0xFFED1C25)),
+                            color: ColorConstant.primary_color,),
                         tabs: [
                           Container(
                             width: 150,
                             height: 50,
-                            // color: Color(0xFFED1C25),
+                            // color: ColorConstant.primary_color,
                             child: Center(
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  Spacer(),
+                                  // Spacer(),
                                   Text(
                                     "All",
                                     textScaleFactor: 1.0,
@@ -157,14 +182,34 @@ class _NewNotifactionScreenState extends State<NewNotifactionScreen>
                                         fontFamily: 'Outfit',
                                         fontWeight: FontWeight.bold),
                                   ),
-                                  Spacer(),
+                                  SizedBox(
+                                    width: 4,
+                                  ),
+                                  AllNotificationData?.object?.length == 0 ||
+                                          AllNotificationData?.object?.length ==
+                                              null
+                                      ? SizedBox()
+                                      : Container(
+                                          child: Text(
+                                            '${NotificationCount}',
+                                            style: TextStyle(
+                                                overflow: TextOverflow.ellipsis,
+                                                fontFamily: "outfit",
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 13),
+                                          ),
+                                        ),
+                                  SizedBox(
+                                    width: 1,
+                                  ),
+                                  // Spacer(),
                                 ],
                               ),
                             ),
                           ),
                           Container(
                             height: 50,
-                            // color: Color(0xFFED1C25),
+                            // color: ColorConstant.primary_color,
                             child: Center(
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
@@ -180,7 +225,9 @@ class _NewNotifactionScreenState extends State<NewNotifactionScreen>
                                   SizedBox(
                                     width: 4,
                                   ),
-                                  RequestListModelData?.object?.length == 0 || RequestListModelData?.object?.length ==
+                                  RequestListModelData?.object?.length == 0 ||
+                                          RequestListModelData
+                                                  ?.object?.length ==
                                               null
                                       ? SizedBox()
                                       : Container(
@@ -202,7 +249,7 @@ class _NewNotifactionScreenState extends State<NewNotifactionScreen>
                           ),
                           Container(
                             height: 50,
-                            // color: Color(0xFFED1C25),
+                            // color: ColorConstant.primary_color,
                             child: Center(
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
@@ -223,13 +270,13 @@ class _NewNotifactionScreenState extends State<NewNotifactionScreen>
                                               null
                                       ? SizedBox()
                                       : Text(
-                                        '${invitationRoomData?.object?.length}',
-                                        style: TextStyle(
-                                            overflow: TextOverflow.ellipsis,
-                                            fontFamily: "outfit",
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 13),
-                                      ),
+                                          '${invitationRoomData?.object?.length}',
+                                          style: TextStyle(
+                                              overflow: TextOverflow.ellipsis,
+                                              fontFamily: "outfit",
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 13),
+                                        ),
                                   SizedBox(
                                     width: 1,
                                   ),
@@ -242,16 +289,19 @@ class _NewNotifactionScreenState extends State<NewNotifactionScreen>
                     ),
                     Expanded(
                       child: TabBarView(children: [
-                        Center(
-                            child: Text(
-                          'No Record Available',
-                          style: TextStyle(
-                            fontFamily: 'outfit',
-                            fontSize: 20,
-                            color: Color(0XFFED1C25),
-                            fontWeight: FontWeight.bold,
-                          ),
-                        )),
+                        // Center(
+                        //     child: Text(
+                        //   'No Record Available',
+                        //   style: TextStyle(
+                        //     fontFamily: 'outfit',
+                        //     fontSize: 20,
+                        //     color: ColorConstant.primary_color,
+                        //     fontWeight: FontWeight.bold,
+                        //   ),
+                        // )),
+                        SingleChildScrollView(
+                          child: AllNotificationClass(),
+                        ),
                         SingleChildScrollView(
                           child: RequestOrderClass(
                               apiDataGet: apiDataGet,
@@ -275,6 +325,435 @@ class _NewNotifactionScreenState extends State<NewNotifactionScreen>
       ),
     );
   }
+  
+  saveNotificationCount(int NotificationCount,int MessageCount) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setInt(PreferencesKey.NotificationCount, NotificationCount);
+    prefs.setInt(PreferencesKey.MessageCount, MessageCount);
+  }
+}
+
+class AllNotificationClass extends StatefulWidget {
+  const AllNotificationClass();
+
+  @override
+  State<AllNotificationClass> createState() => _AllNotificationClassState();
+}
+
+class _AllNotificationClassState extends State<AllNotificationClass> {
+  String getTimeDifference(DateTime dateTime) {
+    final difference = DateTime.now().difference(dateTime);
+    if (difference.inDays > 0) {
+      if (difference.inDays == 1) {
+        return '1 day ago';
+      } else if (difference.inDays < 7) {
+        return '${difference.inDays} days ago';
+      } else {
+        final weeks = (difference.inDays / 7).floor();
+        return '$weeks week${weeks == 1 ? '' : 's'} ago';
+      }
+    } else if (difference.inHours > 0) {
+      if (difference.inHours == 1) {
+        return '1 hour ago';
+      } else {
+        return '${difference.inHours} hours ago';
+      }
+    } else if (difference.inMinutes > 0) {
+      if (difference.inMinutes == 1) {
+        return '1 minute ago';
+      } else {
+        return '${difference.inMinutes} minutes ago';
+      }
+    } else {
+      return 'Just now';
+    }
+  }
+
+  @override
+  void initState() {
+    
+    AllAPICall();
+    // BlocProvider.of<InvitationCubit>(context).RequestListAPI(context);
+    super.initState();
+  }
+
+    AllAPICall() async {
+    await BlocProvider.of<InvitationCubit>(context).seetinonExpried(context);
+    await BlocProvider.of<InvitationCubit>(context).AllNotification(context);
+  }
+
+  bool? isdata = false;
+  GetAllNotificationModel? AllNotificationData;
+  @override
+  Widget build(BuildContext context) {
+    var _height = MediaQuery.of(context).size.height;
+    var _width = MediaQuery.of(context).size.width;
+
+    return BlocConsumer<InvitationCubit, InvitationState>(
+        listener: (context, state) {
+      if (state is InvitationErrorState) {
+        if (state.error == "not found") {
+        } else {
+          SnackBar snackBar = SnackBar(
+            content: Text(state.error),
+            backgroundColor: ColorConstant.primary_color,
+          );
+          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        }
+      }
+
+      if (state is InvitationLoadingState) {
+        Center(
+          child: Container(
+            margin: EdgeInsets.only(bottom: 100),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(20),
+              child: Image.asset(ImageConstant.loader,
+                  fit: BoxFit.cover, height: 100.0, width: 100),
+            ),
+          ),
+        );
+      }
+
+      if (state is GetAllNotificationLoadedState) {
+        isdata = true;
+        AllNotificationData = state.AllNotificationData;
+      }
+
+      if (state is SeenNotificationLoadedState) {
+        BlocProvider.of<InvitationCubit>(context).AllNotification(context);
+      }
+    }, builder: (context, state) {
+      return isdata == false
+          ? Center(
+              child: Container(
+                margin: EdgeInsets.only(bottom: 100),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(20),
+                  child: Image.asset(ImageConstant.loader,
+                      fit: BoxFit.cover, height: 100.0, width: 100),
+                ),
+              ),
+            )
+          : AllNotificationData?.object?.isNotEmpty == true
+              ? ListView.builder(
+                  itemCount: AllNotificationData?.object?.length,
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
+                  itemBuilder: (context, index) {
+                    DateTime? parsedDateTime;
+                    if (AllNotificationData?.object?[index].receivedAt !=
+                        null) {
+                      parsedDateTime = DateTime.parse(
+                          '${AllNotificationData?.object?[index].receivedAt ?? ""}');
+                    }
+
+                    return AllNotificationData?.object?[index].receivedAt !=
+                            null
+                        ? Padding(
+                            padding: const EdgeInsets.only(
+                                top: 16, left: 16, right: 16),
+                            child: GestureDetector(
+                              onTap: () {
+                                AllNotificationData?.object?[index].subject == "TAG_POST" ||
+                                        AllNotificationData?.object?[index].subject ==
+                                            "RE_POST"
+                                    ? Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                OpenSavePostImage(
+                                                  PostID: AllNotificationData
+                                                      ?.object?[index]
+                                                      .accessCode,
+                                                  index: 0,
+                                                )),
+                                      )
+                                    // print("opne Save Image screen RE_POST & TAG_POST");
+
+                                    : AllNotificationData?.object?[index].subject ==
+                                            "INVITE_ROOM"
+                                        ? print("Notification Seen INVITE_ROOM")
+                                        : AllNotificationData?.object?[index].subject == "EXPERT_LEFT_ROOM" ||
+                                                AllNotificationData?.object?[index].subject ==
+                                                    "MEMBER_LEFT_ROOM" ||
+                                                AllNotificationData?.object?[index].subject ==
+                                                    "DELETE_ROOM" ||
+                                                AllNotificationData?.object?[index].subject ==
+                                                    "EXPERT_ACCEРТ_INVITE" ||
+                                                AllNotificationData?.object?[index].subject ==
+                                                    "EXPERT_REJECT_INVITE"
+                                            ? print(
+                                                "Notification Seen  EXPERT_LEFT_ROOM & MEMBER_LEFT_ROOM & DELETE_ROOM & EXPERT_ACCEРТ_INVITE & EXPERT_REJECT_INVITE")
+                                            : AllNotificationData?.object?[index].subject ==
+                                                    "EXPERT_REJECT_INVITE"
+                                                ? print(
+                                                    "Seen Notification EXPERT_REJECT_INVITE")
+                                                : AllNotificationData?.object?[index].subject ==
+                                                            "LIKE_POST" ||
+                                                        AllNotificationData
+                                                                ?.object?[index]
+                                                                .subject ==
+                                                            "COMMENT_POST" ||
+                                                        AllNotificationData
+                                                                ?.object?[index]
+                                                                .subject ==
+                                                            "TAG_COMMENT_POST"
+                                                    ? Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                OpenSavePostImage(
+                                                                  PostID: AllNotificationData
+                                                                      ?.object?[
+                                                                          index]
+                                                                      .accessCode,
+                                                                  index: 0,
+                                                                  profileTure: AllNotificationData?.object?[index].subject ==
+                                                                              "COMMENT_POST" ||
+                                                                          AllNotificationData?.object?[index].subject ==
+                                                                              "TAG_COMMENT_POST"
+                                                                      ? true
+                                                                      : false,
+                                                                )),
+                                                      )
+                                                    // print("opne Save Image screen LIKE_POST & COMMENT_POST & TAG_COMMENT_POST")
+                                                    : AllNotificationData?.object?[index].subject == "FOLLOW_PUBLIC_ACCOUNT" ||
+                                                            AllNotificationData?.object?[index].subject ==
+                                                                "FOLLOW_PRIVATE_ACCOUNT_REQUEST" ||
+                                                            AllNotificationData?.object?[index].subject ==
+                                                                "FOLLOW_REQUEST_ACCEPTED" ||
+                                                            AllNotificationData?.object?[index].subject ==
+                                                                "PROFILE_APPROVED" ||
+                                                            AllNotificationData
+                                                                    ?.object?[index]
+                                                                    .subject ==
+                                                                "PROFILE_REJECTED" || AllNotificationData
+                                                                    ?.object?[index]
+                                                                    .subject == "PROFILE_VIEWED"
+                                                        ? Navigator.push(context, MaterialPageRoute(builder: (context) {
+                                                            return ProfileScreen(
+                                                                User_ID:
+                                                                    "${AllNotificationData?.object?[index].accessCode}",
+                                                                isFollowing:
+                                                                    "");
+                                                          }))
+                                                        //  print("open User Profile FOLLOW_PUBLIC_ACCOUNT & FOLLOW_PRIVATE_ACCOUNT_REQUEST & FOLLOW_REQUEST_ACCEPTED")
+                                                        : print("");
+
+
+                                // AllNotificationData?.object?[index].isSeen == true;
+                                BlocProvider.of<InvitationCubit>(context)
+                                    .SeenNotification(context,
+                                        "${AllNotificationData?.object?[index].postNotificationUid}");
+    BlocProvider.of<InvitationCubit>(context).getAllNoticationsCountAPI(context);
+
+                              },
+                              child: Container(
+                                // height: 90,
+                                // color: const Color.fromARGB(255, 232, 207, 207),
+                                decoration: BoxDecoration(
+                                    // color: Colors.green[100],
+                                    border: Border.all(
+                                        color: const Color(0XFFF1F1F1),
+                                        width: 1),
+                                    borderRadius: BorderRadius.circular(5)),
+                                child: Column(
+                                  children: [
+                                    Row(
+                                      children: [
+                                        AllNotificationData
+                                                    ?.object?[index].isSeen ==
+                                                false
+                                            ? Padding(
+                                                padding: const EdgeInsets.only(
+                                                    left: 2, right: 3, top: 5),
+                                                child: Align(
+                                                  alignment: Alignment.topLeft,
+                                                  child: Container(
+                                                    height: 10,
+                                                    width: 10,
+                                                    decoration: BoxDecoration(
+                                                      color: ColorConstant
+                                                          .primary_color,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              12),
+                                                    ),
+                                                  ),
+                                                ),
+                                              )
+                                            : Padding(
+                                                padding: const EdgeInsets.only(
+                                                    left: 2, right: 3, top: 5),
+                                                child: Align(
+                                                  alignment: Alignment.topLeft,
+                                                  child: Container(
+                                                    height: 10,
+                                                    width: 10,
+                                                    decoration: BoxDecoration(
+                                                      color: Colors.transparent,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              12),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                        Padding(
+                                          padding:
+                                              const EdgeInsets.only(top: 3),
+                                          child: Container(
+                                            height: 60,
+                                            width: 60,
+                                            child:  AllNotificationData
+                                                            ?.object?[index]
+                                                            .image != null ?
+                                                            CustomImageView(
+                                                                      url: "${AllNotificationData?.object?[index].image}",
+                                                                      height: 60,
+                                                                      width: 60,
+                                                                      fit: BoxFit
+                                                                          .fill,
+                                                                      radius: BorderRadius
+                                                                          .circular(
+                                                                              30),
+                                                                    )
+                                                           :  AllNotificationData
+                                                            ?.object?[index]
+                                                            .subject ==
+                                                        "TAG_POST" ||
+                                                    AllNotificationData
+                                                            ?.object?[index]
+                                                            .subject ==
+                                                        "RE_POST" ||
+                                                    AllNotificationData
+                                                            ?.object?[index]
+                                                            .subject ==
+                                                        "INVITE_ROOM" ||
+                                                    AllNotificationData
+                                                            ?.object?[index]
+                                                            .subject ==
+                                                        "PROFILE_APPROVED" ||
+                                                    AllNotificationData
+                                                            ?.object?[index]
+                                                            .subject ==
+                                                        "PROFILE_REJECTED"
+                                                ? Image.asset(ImageConstant
+                                                    .InviteAcceptepLogo)
+                                                : AllNotificationData
+                                                                ?.object?[index]
+                                                                .subject ==
+                                                            "EXPERT_LEFT_ROOM" ||
+                                                        AllNotificationData
+                                                                ?.object?[index]
+                                                                .subject ==
+                                                            "MEMBER_LEFT_ROOM" ||
+                                                        AllNotificationData
+                                                                ?.object?[index]
+                                                                .subject ==
+                                                            "DELETE_ROOM"
+                                                    ? Image.asset(ImageConstant.RoomDeleteLogo)
+                                                    : AllNotificationData?.object?[index].subject == "EXPERT_REJECT_INVITE"
+                                                        ? Image.asset(ImageConstant.Invite_Rejected)
+                                                        : AllNotificationData?.object?[index].subject == "LIKE_POST"
+                                                            ? Image.asset(ImageConstant.Like_Post)
+                                                            : AllNotificationData?.object?[index].subject == "COMMENT_POST"
+                                                                ? Image.asset(ImageConstant.Comment_Post)
+                                                                : AllNotificationData?.object?[index].subject == "TAG_COMMENT_POST"
+                                                                    ? Image.asset(ImageConstant.Tag_Comment_Post)
+                                                                    : AllNotificationData?.object?[index].subject == "EXPERT_ACCEРТ_INVITE" || AllNotificationData?.object?[index].subject == "INVITE_EXPERT_ROOM"
+                                                                        ? Image.asset(ImageConstant.Expert_Accept_Invite)
+                                                                        : AllNotificationData?.object?[index].subject == "EXPERT_REJECT_INVITE"
+                                                                            ? Image.asset(ImageConstant.Expert_Reject_Invite)
+                                                                            : AllNotificationData?.object?[index].subject == "FOLLOW_PUBLIC_ACCOUNT" || AllNotificationData?.object?[index].subject == "PROFILE_VIEWED"
+                                                                                ? Image.asset(ImageConstant.Follow_Public_Account)
+                                                                                : AllNotificationData?.object?[index].subject == "FOLLOW_PRIVATE_ACCOUNT_REQUEST"
+                                                                                    ? Image.asset(ImageConstant.Follow_Private_Account_Request)
+                                                                                    : AllNotificationData?.object?[index].subject == "FOLLOW_REQUEST_ACCEPTED"
+                                                                                        ? Image.asset(ImageConstant.Follow_Request_Accept)
+                                                                                        : SizedBox(),
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          width: 5,
+                                        ),
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            SizedBox(
+                                              height: 3,
+                                            ),
+                                           /*  Text(
+                                              "${AllNotificationData?.object?[index].title}",
+                                              // "${AllNotificationData?.object?[index].title.toString()[0].toUpperCase()}${AllNotificationData?.object?[index].title?.toString().substring(1).toLowerCase()}",
+                                              style: TextStyle(
+                                                  fontSize: 17,
+                                                  fontFamily: "outfit",
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            SizedBox(
+                                              height: 3,
+                                            ), */
+                                            Container(
+                                              // color: Colors.green,
+                                              // height: 40,
+                                              width: _width / 1.4,
+                                              child: Text(
+                                                "${AllNotificationData?.object?[index].notificationMessage}",
+                                                // maxLines: 3,
+                                                // overflow: TextOverflow.ellipsis,
+                                                style: TextStyle(
+                                                    fontSize: 16,
+                                                    fontFamily: "outfit",
+                                                    fontWeight:
+                                                        FontWeight.w500),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                    Padding(
+                                        padding: const EdgeInsets.only(
+                                            top: 5, bottom: 5, right: 2),
+                                        child: Align(
+                                          alignment: Alignment.bottomRight,
+                                          child: Container(
+                                            height: 15,
+                                            // width: 130,
+                                            // color: Colors.red,
+                                            child: Text(
+                                              getTimeDifference(
+                                                  parsedDateTime!),
+                                              style: TextStyle(
+                                                fontSize: 12,
+                                                fontFamily: "outfit",
+                                              ),
+                                            ),
+                                          ),
+                                        )),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          )
+                        : SizedBox();
+                  })
+              : Center(
+                  child: Text(
+                    "No New Notification",
+                    style: TextStyle(
+                      fontFamily: 'outfit',
+                      fontSize: 20,
+                      color: ColorConstant.primary_color,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                );
+    });
+  }
 }
 
 class RequestOrderClass extends StatefulWidget {
@@ -289,9 +768,13 @@ class RequestOrderClass extends StatefulWidget {
 class _RequestOrderClassState extends State<RequestOrderClass> {
   @override
   void initState() {
-    BlocProvider.of<InvitationCubit>(context).seetinonExpried(context);
+    AllAPICall();
     // BlocProvider.of<InvitationCubit>(context).RequestListAPI(context);
     super.initState();
+  }
+    AllAPICall() async {
+    await BlocProvider.of<InvitationCubit>(context).seetinonExpried(context);
+    
   }
 
   accept_rejectModel? accept_rejectData;
@@ -377,6 +860,12 @@ class _RequestOrderClassState extends State<RequestOrderClass> {
                         itemCount: widget.requestListModelData?.object?.length,
                         // itemCount: 5,
                         itemBuilder: (BuildContext context, int index) {
+                           DateTime? parsedDateTime1;
+                    if (widget.requestListModelData?.object?[index].createdAt !=
+                        null) {
+                      parsedDateTime1 = DateTime.parse(
+                          '${widget.requestListModelData?.object?[index].createdAt ?? ""}');
+                    }
                           return Container(
                             child: Column(
                               children: [
@@ -498,7 +987,7 @@ class _RequestOrderClassState extends State<RequestOrderClass> {
                                                       width: 100,
                                                       decoration: BoxDecoration(
                                                           color:
-                                                              Color(0xFFED1C25),
+                                                              ColorConstant.primary_color,
                                                           borderRadius:
                                                               BorderRadius
                                                                   .circular(6)),
@@ -534,16 +1023,14 @@ class _RequestOrderClassState extends State<RequestOrderClass> {
                                                               BorderRadius
                                                                   .circular(6),
                                                           border: Border.all(
-                                                              color: Color(
-                                                                  0xFFED1C25))),
+                                                              color: ColorConstant.primary_color,)),
                                                       child: Center(
                                                           child: Text(
                                                         "Reject",
                                                         style: TextStyle(
                                                             fontFamily:
                                                                 'outfit',
-                                                            color: Color(
-                                                                0xFFED1C25)),
+                                                            color: ColorConstant.primary_color,),
                                                       )),
                                                     ),
                                                   )
@@ -554,9 +1041,10 @@ class _RequestOrderClassState extends State<RequestOrderClass> {
                                               ),
                                               Padding(
                                                 padding: const EdgeInsets.only(
-                                                    left: 100),
+                                                    left: 150),
                                                 child: Text(
-                                                  customFormat(DateTime.now()),
+                                                  getTimeDifference1(
+                                                  parsedDateTime1!),
                                                   overflow:
                                                       TextOverflow.ellipsis,
                                                   maxLines: 2,
@@ -591,12 +1079,40 @@ class _RequestOrderClassState extends State<RequestOrderClass> {
                     style: TextStyle(
                       fontFamily: 'outfit',
                       fontSize: 20,
-                      color: Color(0XFFED1C25),
+                      color: ColorConstant.primary_color,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                 );
     });
+  }
+
+   String getTimeDifference1(DateTime dateTime) {
+    final difference = DateTime.now().difference(dateTime);
+    if (difference.inDays > 0) {
+      if (difference.inDays == 1) {
+        return '1 day ago';
+      } else if (difference.inDays < 7) {
+        return '${difference.inDays} days ago';
+      } else {
+        final weeks = (difference.inDays / 7).floor();
+        return '$weeks week${weeks == 1 ? '' : 's'} ago';
+      }
+    } else if (difference.inHours > 0) {
+      if (difference.inHours == 1) {
+        return '1 hour ago';
+      } else {
+        return '${difference.inHours} hours ago';
+      }
+    } else if (difference.inMinutes > 0) {
+      if (difference.inMinutes == 1) {
+        return '1 minute ago';
+      } else {
+        return '${difference.inMinutes} minutes ago';
+      }
+    } else {
+      return 'Just now';
+    }
   }
 }
 
@@ -617,10 +1133,14 @@ class _InviationClassState extends State<InviationClass> {
   String? User_Mood;
   @override
   void initState() {
-    BlocProvider.of<InvitationCubit>(context).seetinonExpried(context);
-
-    BlocProvider.of<InvitationCubit>(context).InvitationAPI(context);
+AllAPICall();
     super.initState();
+  }
+
+
+  AllAPICall() async {
+    await BlocProvider.of<InvitationCubit>(context).seetinonExpried(context);
+    await BlocProvider.of<InvitationCubit>(context).InvitationAPI(context);
   }
 
   Widget build(BuildContext context) {
@@ -671,7 +1191,7 @@ class _InviationClassState extends State<InviationClass> {
                       style: TextStyle(
                         fontFamily: 'outfit',
                         fontSize: 20,
-                        color: Color(0XFFED1C25),
+                        color: ColorConstant.primary_color,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -696,7 +1216,7 @@ class _InviationClassState extends State<InviationClass> {
                                 width: _width / 1.2,
                                 decoration: BoxDecoration(
                                     border: Border.all(
-                                        color: const Color(0XFFED1C25),
+                                        color:   ColorConstant.primary_color,
                                         width: 1),
                                     borderRadius: BorderRadius.circular(5)),
                                 child: Column(
@@ -813,8 +1333,8 @@ class _InviationClassState extends State<InviationClass> {
                                             MaterialPageRoute(
                                           builder: (context) {
                                             return RoomMembersScreen(
-                                              MoveNotification:true,
-                                              RoomOwnerCount: 0,
+                                                MoveNotification: true,
+                                                RoomOwnerCount: 0,
                                                 roomname:
                                                     "${widget.InvitationRoomData?.object?[index].roomQuestion}",
                                                 RoomOwner: false,
@@ -1229,7 +1749,7 @@ class _InviationClassState extends State<InviationClass> {
                                                   bottomRight:
                                                       Radius.circular(4),
                                                 ),
-                                                color: Color(0xFFED1C25),
+                                                color: ColorConstant.primary_color,
                                               ),
                                               child: Center(
                                                 child: Text(
@@ -1298,6 +1818,47 @@ String _getMonthName(int month) {
       return 'Nov';
     case 12:
       return 'Dec';
+    default:
+      return '';
+  }
+}
+
+String customFormat1(DateTime date) {
+  String day = date.day.toString();
+  String month = _getMonthName1(date.month);
+  String year = date.year.toString();
+  String time = DateFormat('h:mm a').format(date);
+
+  String formattedDate = '$day$month $year | $time';
+  return formattedDate;
+}
+
+String _getMonthName1(int month) {
+  switch (month) {
+    case 1:
+      return ' January';
+    case 2:
+      return ' February';
+    case 3:
+      return ' March';
+    case 4:
+      return ' April';
+    case 5:
+      return ' May';
+    case 6:
+      return ' June';
+    case 7:
+      return ' July';
+    case 8:
+      return ' August';
+    case 9:
+      return ' September';
+    case 10:
+      return ' October';
+    case 11:
+      return ' November';
+    case 12:
+      return ' December';
     default:
       return '';
   }

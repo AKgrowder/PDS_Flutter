@@ -14,16 +14,21 @@ class HashTagCubit extends Cubit<HashTagState> {
       emit(HashTagLoadingState());
       dynamic settionExperied =
           await Repository().logOutSettionexperied(context);
+      print("checkDatWant--$settionExperied");
+      // if (settionExperied == "Something Went Wrong, Try After Some Time.") {
+      //     emit(GetGuestAllPostErrorState("${settionExperied}"));
+      //   } else {
       if (settionExperied.success == true) {
         await setLOGOUT(context);
       } else {
         print("failed--check---${settionExperied}");
       }
+      // }
     } catch (e) {
       print('errorstate-$e');
+      // emit(GetGuestAllPostErrorState(e.toString()));
     }
   }
-
   Future<void> HashTagForYouAPI(
       BuildContext context, String hashtagViewType, String pageNumber) async {
     try {
@@ -279,6 +284,44 @@ class HashTagCubit extends Cubit<HashTagState> {
       }
     } catch (e) {
       emit(HashTagErrorState(e.toString()));
+    }
+  }
+
+  Future<void> UserTagAPI(BuildContext context, String? name) async {
+    dynamic userTagData;
+    try {
+      emit(HashTagLoadingState());
+      userTagData = await Repository().UserTag(context, name);
+      print("userTagDataaaaaaaaaaaa-->${userTagData}");
+      if (userTagData == "Something Went Wrong, Try After Some Time.") {
+        emit(HashTagErrorState("${userTagData}"));
+      } else {
+        if (userTagData.success == true) {
+          emit(UserTagHashTagLoadedState(userTagData));
+        }
+      }
+    } catch (e) {
+      emit(HashTagErrorState(userTagData));
+    }
+  }
+
+
+  Future<void> getAllNoticationsCountAPI(BuildContext context) async {
+    dynamic acceptRejectInvitationModel;
+    try {
+      emit(HashTagLoadingState());
+      acceptRejectInvitationModel =
+          await Repository().getAllNoticationsCountAPI(context);
+      if (acceptRejectInvitationModel ==
+          "Something Went Wrong, Try After Some Time.") {
+        emit(HashTagErrorState("${acceptRejectInvitationModel}"));
+      } else {
+        if (acceptRejectInvitationModel.success == true) {
+          emit(GetNotificationCountLoadedState(acceptRejectInvitationModel));
+        }
+      }
+    } catch (e) {
+      emit(HashTagErrorState(acceptRejectInvitationModel));
     }
   }
 }

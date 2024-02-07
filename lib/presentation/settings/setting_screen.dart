@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_switch/flutter_switch.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:pds/API/Bloc/DeleteUser_Bloc/DeleteUser_cubit.dart';
 import 'package:pds/API/Bloc/RateUs_Bloc/RateUs_cubit.dart';
 import 'package:pds/API/Bloc/accounttype_bloc/account_cubit.dart';
@@ -29,7 +32,7 @@ class SettingScreen extends StatefulWidget {
 }
 
 var status;
-
+var directory = getApplicationDocumentsDirectory();
 var Setting_Array = [
   // "My Details",
   "Saved Threads",
@@ -88,6 +91,7 @@ var businessName;
 var accountUrl;
 var IsGuestUserEnabled;
 var GetTimeSplash;
+late String _localPath;
 
 class _SettingScreenState extends State<SettingScreen> {
   bool? isSwitched;
@@ -172,7 +176,7 @@ class _SettingScreenState extends State<SettingScreen> {
                               alignment: Alignment.center,
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(10),
-                                  color: Color(0xffED1C25)),
+                                  color: ColorConstant.primary_color),
                               child: Text(
                                 'Please update',
                                 style: TextStyle(
@@ -394,8 +398,15 @@ class _SettingScreenState extends State<SettingScreen> {
                                   }));
                                   break;
                                 case 6:
-                                  Share.share(
-                                      'https://play.google.com/store/apps/details?id=com.pds.app');
+                                  // Share.share(
+                                  //     'https://play.google.com/store/apps/details?id=com.pds.app');
+
+                                  _onShareXFileFromAssets(context,
+                                      androidLink:
+                                          'https://play.google.com/store/apps/details?id=com.pds.app'
+                                      /* iosLink:
+                                                      "https://apps.apple.com/inList =  /app/growder-b2b-platform/id6451333863" */
+                                      );
                                   // Navigator.push(context,
                                   //     MaterialPageRoute(builder: (context) {
                                   //   return RoomDetailScreen();
@@ -490,7 +501,7 @@ class _SettingScreenState extends State<SettingScreen> {
                                     decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(8),
                                         // color: ColorConstant.CategoriesBackColor,
-                                        color: Color(0XFFFBD8D9),
+                                        color: ColorConstant.primaryLight_color,
                                         border: Border.all(
                                             width: 1,
                                             // color: ColorConstant.gray200,
@@ -594,7 +605,7 @@ class _SettingScreenState extends State<SettingScreen> {
     try {
       Uri email = Uri(
         scheme: 'mailto',
-        path: "info@packagingdepot.store",
+        path: "Connect@inpackaging.com",
       );
 
       await launchUrl(email);
@@ -619,5 +630,32 @@ class _SettingScreenState extends State<SettingScreen> {
         userStatus != 'APPROVED' ? userStatus?.split('-').first : userStatus;
 
     setState(() {});
+  }
+
+  void _onShareXFileFromAssets(BuildContext context,
+      {String? androidLink}) async {
+    RenderBox? box = context.findAncestorRenderObjectOfType();
+
+    var directory = await getApplicationDocumentsDirectory();
+
+    if (Platform.isAndroid) {
+      await Share.shareXFiles(
+        [XFile("/sdcard/download/IPImage.jpg")],
+        subject: "Share",
+        text: "Try This Awesome App \n\n Android :- ${androidLink}",
+        sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size,
+      );
+    } else {
+      await Share.shareXFiles(
+        [
+          XFile(directory.path +
+              Platform.pathSeparator +
+              'Growder_Image/IPImage.jpg')
+        ],
+        subject: "Share",
+        text: "Try This Awesome App \n\n Android :- ${androidLink}",
+        sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size,
+      );
+    }
   }
 }

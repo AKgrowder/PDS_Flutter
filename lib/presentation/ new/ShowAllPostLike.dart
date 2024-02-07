@@ -179,12 +179,34 @@ class _ShowAllPostLikeState extends State<ShowAllPostLike> {
                             SizedBox(
                               height: 6,
                             ),
-                            Text(
-                              "${GetPostAllLikeRoomData?.object?[index].userName}",
-                              style: TextStyle(
-                                  fontSize: 20,
-                                  fontFamily: "outfit",
-                                  fontWeight: FontWeight.bold),
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.push(context,
+                                    MaterialPageRoute(builder: (context) {
+                                  return MultiBlocProvider(
+                                      providers: [
+                                        BlocProvider<NewProfileSCubit>(
+                                          create: (context) =>
+                                              NewProfileSCubit(),
+                                        ),
+                                      ],
+                                      child: ProfileScreen(
+                                        User_ID:
+                                            "${GetPostAllLikeRoomData?.object?[index].userUid}",
+                                        isFollowing:
+                                            "${GetPostAllLikeRoomData?.object?[index].isFollowing}",
+                                      ));
+                                }));
+                              },
+                              child: Container(
+                                child: Text(
+                                  "${GetPostAllLikeRoomData?.object?[index].userName}",
+                                  style: TextStyle(
+                                      fontSize: 20,
+                                      fontFamily: "outfit",
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ),
                             ),
                             // Text(
                             //   customFormat(
@@ -213,7 +235,7 @@ class _ShowAllPostLikeState extends State<ShowAllPostLike> {
                                   width: 65,
                                   margin: EdgeInsets.only(bottom: 5),
                                   decoration: BoxDecoration(
-                                      color: Color(0xffED1C25),
+                                      color: ColorConstant.primary_color,
                                       borderRadius: BorderRadius.circular(4)),
                                   child: GetPostAllLikeRoomData
                                               ?.object?[index].isFollowing ==

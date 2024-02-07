@@ -339,4 +339,147 @@ class NewProfileSCubit extends Cubit<NewProfileSState> {
       emit(NewProfileSErrorState(industryType));
     }
   }
+
+  Future<void> DMChatListm(String userWithUid, BuildContext context) async {
+    dynamic DMChatList;
+    try {
+      emit(NewProfileSLoadingState());
+      DMChatList = await Repository().FirstTimeChat(context, userWithUid);
+      if (DMChatList == "Something Went Wrong, Try After Some Time.") {
+        emit(NewProfileSErrorState("${DMChatList}"));
+      } else {
+        if (DMChatList.success == true) {
+          emit(DMChatListLoadedState(DMChatList));
+        } else {
+          emit(NewProfileSErrorState(DMChatList.message));
+        }
+      }
+    } catch (e) {
+      emit(NewProfileSErrorState(DMChatList));
+    }
+  }
+
+  Future<void> search_user_for_inbox(
+      BuildContext context, String typeWord, String pageNumber) async {
+    try {
+      dynamic searchHistoryDataAdd = await Repository()
+          .search_user_for_inbox(typeWord, pageNumber, context);
+      if (searchHistoryDataAdd.success == true) {
+        emit(SearchHistoryDataAddxtends(searchHistoryDataAdd));
+      }
+    } catch (e) {
+      print("eeerrror-${e.toString()}");
+      emit(NewProfileSErrorState(e.toString()));
+    }
+  }
+
+  Future<void> GetAllHashtag(
+      BuildContext context, String pageNumber, String searchHashtag) async {
+    dynamic addPostImageUploded;
+    try {
+      addPostImageUploded = await Repository()
+          .get_all_hashtag(context, pageNumber, searchHashtag);
+
+      if (addPostImageUploded.success == true) {
+        emit(GetAllHashtagState(addPostImageUploded));
+      }
+    } catch (e) {
+      emit(AddPostErrorState(addPostImageUploded));
+    }
+  }
+
+  Future<void> UserTagAPI(BuildContext context, String? name) async {
+    dynamic userTagData;
+    try {
+      emit(NewProfileSLoadingState());
+      userTagData = await Repository().UserTag(context, name);
+      print("userTagDataaaaaaaaaaaa-->${userTagData}");
+      if (userTagData == "Something Went Wrong, Try After Some Time.") {
+        emit(NewProfileSErrorState("${userTagData}"));
+      } else {
+        if (userTagData.success == true) {
+          emit(UserTagLoadedState(userTagData));
+        }
+      }
+    } catch (e) {
+      emit(NewProfileSErrorState(userTagData));
+    }
+  }
+
+  Future<void> like_post(String? postUid, BuildContext context,
+      {bool showAlert = false}) async {
+    dynamic likepost;
+    try {
+      // showAlert == true ? emit(GetGuestAllPostLoadingState()) : SizedBox();
+      likepost = await Repository().likePostMethod(postUid, context);
+      if (likepost == "Something Went Wrong, Try After Some Time.") {
+        emit(NewProfileSErrorState("${likepost}"));
+      } else {
+        if (likepost.success == true) {
+          emit(PostLikeLoadedState(likepost));
+        }
+      }
+    } catch (e) {
+      // print('errorstate-$e');
+      emit(NewProfileSErrorState(likepost));
+    }
+  }
+
+  Future<void> savedData(String? postUid, BuildContext context,
+      {bool showAlert = false}) async {
+    dynamic likepost;
+    try {
+      // showAlert == true ? emit(GetGuestAllPostLoadingState()) : SizedBox();
+      likepost = await Repository().savedPostMethod(postUid, context);
+      if (likepost == "Something Went Wrong, Try After Some Time.") {
+        emit(NewProfileSErrorState("${likepost}"));
+      } else {
+        if (likepost.success == true) {
+          emit(PostLikeLoadedState(likepost));
+        }
+      }
+    } catch (e) {
+      // print('errorstate-$e');
+      emit(NewProfileSErrorState(likepost));
+    }
+  }
+
+  Future<void> RePostAPI(BuildContext context, Map<String, dynamic> params,
+      String? uuid, String? name) async {
+    dynamic addPostData;
+    try {
+      emit(NewProfileSLoadingState());
+      addPostData = await Repository().RePost(context, params, uuid, name);
+      print("addPostDataaaaaaaaaaaa-->${addPostData}");
+      if (addPostData == "Something Went Wrong, Try After Some Time.") {
+        emit(NewProfileSErrorState("${addPostData}"));
+      } else {
+        if (addPostData.success == true) {
+          emit(RePostLoadedState(addPostData));
+        }
+      }
+    } catch (e) {
+      emit(NewProfileSErrorState(addPostData));
+    }
+  }
+
+  Future<void> DeletePost(String postUid, BuildContext context) async {
+    dynamic Deletepost;
+    try {
+      emit(NewProfileSLoadingState());
+      Deletepost = await Repository().Deletepost(postUid, context);
+      if (Deletepost == "Something Went Wrong, Try After Some Time.") {
+        emit(NewProfileSErrorState("${Deletepost}"));
+      } else {
+        if (Deletepost.success == true) {
+          emit(DeletePostLoadedState(Deletepost));
+          Navigator.pop(context);
+        } else {
+          emit(NewProfileSErrorState(Deletepost.message));
+        }
+      }
+    } catch (e) {
+      emit(NewProfileSErrorState(Deletepost));
+    }
+  }
 }

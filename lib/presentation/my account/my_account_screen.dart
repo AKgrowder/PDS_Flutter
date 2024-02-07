@@ -1480,7 +1480,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                                 .showSnackBar(snackBar);
                           } else if (!emailRegExp.hasMatch(email.text)) {
                             SnackBar snackBar = SnackBar(
-                              content: Text('please Enter vaild Email'),
+                              content: Text('Please Enter Vaild Email'),
                               backgroundColor: ColorConstant.primary_color,
                             );
                             ScaffoldMessenger.of(context)
@@ -1671,7 +1671,9 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                                         ? chooseDocumentuploded?.object
                                             .toString()
                                         : null,
-                                "email": email.text
+                                "email": email.text,
+          "documentName" : dopcument
+                                
                               };
 
                               BlocProvider.of<MyAccountCubit>(context)
@@ -1704,7 +1706,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                                 height: 50,
                                 width: _width / 3,
                                 decoration: BoxDecoration(
-                                    color: Color(0xFFED1C25),
+                                    color: ColorConstant.primary_color,
                                     borderRadius: BorderRadius.circular(5)),
                                 child: Center(
                                   child: Text(

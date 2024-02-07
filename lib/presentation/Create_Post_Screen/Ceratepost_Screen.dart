@@ -7,6 +7,7 @@ import 'package:dots_indicator/dots_indicator.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_mentions/flutter_mentions.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
@@ -21,8 +22,8 @@ import 'package:pds/presentation/%20new/profileNew.dart';
 import 'package:pds/presentation/Create_Post_Screen/CreatePostShow_ImageRow/photo_gallery-master/example/lib/main.dart';
 import 'package:pds/presentation/Create_Post_Screen/CreatePostShow_ImageRow/photo_gallery-master/lib/photo_gallery.dart';
 import 'package:pds/widgets/commentPdf.dart';
+import 'package:pds/widgets/custom_image_view.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:pinput/pinput.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:transparent_image/transparent_image.dart';
 import 'package:video_player/video_player.dart';
@@ -31,7 +32,12 @@ import '../../API/Model/serchForInboxModel/serchForinboxModel.dart';
 import '../../core/utils/image_constant.dart';
 
 class CreateNewPost extends StatefulWidget {
-  const CreateNewPost({key});
+  String? edittextdata;
+  String? editImage;
+  String? PostID;
+  List<String>? mutliplePost;
+  CreateNewPost(
+      {key, this.edittextdata, this.PostID, this.editImage, this.mutliplePost});
 
   @override
   State<CreateNewPost> createState() => _CreateNewPostState();
@@ -46,6 +52,8 @@ class _CreateNewPostState extends State<CreateNewPost> {
   MediaPage? page;
   double finalFileSize = 0;
   double documentuploadsize = 0;
+  double videoUplodeSize = 0;
+
   PlatformFile? file12;
   XFile? pickedFile;
   ImagePicker _imagePicker = ImagePicker();
@@ -73,12 +81,23 @@ class _CreateNewPostState extends State<CreateNewPost> {
   String? UserProfileImage;
   List<TextSpan> _textSpans = [];
   bool isHeshTegData = false;
-  bool isTagData = false;
+  bool isDataSet = true;
   SearchUserForInbox? searchUserForInbox1;
   List<File> galleryFile = [];
   bool isVideodata = false;
   VideoPlayerController? _controller;
   HasDataModel? getAllHashtag;
+  String enteredText = '';
+  List<String> postTexHashContrlloer = [];
+  GlobalKey<FlutterMentionsState> key = GlobalKey<FlutterMentionsState>();
+  List<Map<String, dynamic>> tageData = [];
+  List<Map<String, dynamic>> heshTageData = [];
+
+  bool istageData = false;
+
+  ScrollController scrollController = ScrollController();
+
+  String? data;
 /*   void _onTextChanged() {
     String text = postText.text;
 
@@ -105,17 +124,22 @@ class _CreateNewPostState extends State<CreateNewPost> {
   } */
 
   getDocumentSize() async {
+    await BlocProvider.of<AddPostCubit>(context).seetinonExpried(context);
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     documentuploadsize = await double.parse(
         prefs.getString(PreferencesKey.MaxPostUploadSizeInMB) ?? "0");
 
     finalFileSize = documentuploadsize;
+    videoUplodeSize = await double.parse(
+        prefs.getString(PreferencesKey.MaxPostUploadSizeInMB) ?? "0");
     setState(() {});
   }
 
   @override
   void initState() {
+    print("check data -${widget.editImage}");
     _loading = true;
+    postText.text = widget.edittextdata ?? "";
     getDocumentSize();
     initAsync();
     Future.delayed(Duration(milliseconds: 150), () {
@@ -136,8 +160,16 @@ class _CreateNewPostState extends State<CreateNewPost> {
     UserProfileImage = prefs.getString(PreferencesKey.UserProfile);
   }
 
+  void dispose() {
+    postText.dispose(); // Dispose of TextEditingController
+    _focusNode.dispose();
+    _controller?.dispose();
+    super.dispose();
+  }
+
 //Public
 // Following
+//  List<String> postTexHashContrlloer = [];
   List<String> soicalData = ["Public", "Follower"];
   bool _isLink(String input) {
     RegExp linkRegex = RegExp(
@@ -149,938 +181,1043 @@ class _CreateNewPostState extends State<CreateNewPost> {
   Widget build(BuildContext context) {
     var _height = MediaQuery.of(context).size.height;
     var _width = MediaQuery.of(context).size.width;
-    return BlocConsumer<AddPostCubit, AddPostState>(
-      listener: (context, state) {
-        if (state is AddPostImaegState) {
-          imageDataPost?.object?.data?.clear();
-          imageDataPost = state.imageDataPost;
-          print(" check Data-${imageDataPost?.object?.data}");
-          if (imageDataPost?.object?.data?.isNotEmpty == true) {
-            if (imageDataPost!.object!.data!.first.endsWith('.mp4')) {
-              isVideodata = true;
+    return BlocConsumer<AddPostCubit, AddPostState>(listener: (context, state) {
+      if (state is AddPostImaegState) {
+        imageDataPost?.object?.data?.clear();
+        imageDataPost = state.imageDataPost;
+        print(" check Data-${imageDataPost?.object?.data}");
+        if (imageDataPost?.object?.data?.isNotEmpty == true) {
+          if (imageDataPost!.object!.data!.first.endsWith('.mp4')) {
+            isVideodata = true;
+          }
+        }
+
+        if (state.imageDataPost.object?.status == 'failed') {
+          isTrue = true;
+          imageDataPost?.object?.data = null;
+        } else {
+          isTrue = true;
+
+          print("imageDataPost-->${imageDataPost?.object?.data}");
+        }
+        if (isVideodata == true) {
+          print("this condison is working");
+          _controller = VideoPlayerController.networkUrl(
+              Uri.parse('${imageDataPost!.object!.data!.first}'));
+          _controller?.initialize().then((value) => setState(() {}));
+          setState(() {
+            _controller?.play();
+            _controller?.setLooping(true);
+          });
+        }
+      }
+      if (state is GetAllHashtagState) {
+        getAllHashtag = state.getAllHashtag;
+
+        for (int i = 0;
+            i < (getAllHashtag?.object?.content?.length ?? 0);
+            i++) {
+          // getAllHashtag?.object?.content?[i].split('#').last;
+          Map<String, dynamic> dataSetup = {
+            'id': '${i}',
+            'display': '${getAllHashtag?.object?.content?[i].split('#').last}',
+            'style': TextStyle(color: Colors.blue)
+          };
+          heshTageData.add(dataSetup);
+          if (heshTageData.isNotEmpty == true) {
+            isHeshTegData = true;
+          }
+          print("check heshTageData -$heshTageData");
+        }
+      }
+      if (state is AddPostLoadedState) {
+        isDataSet = true;
+        if (state.addPost.object.toString() ==
+            'Comment contains a restricted word') {
+        } else {
+          Navigator.pop(context);
+        }
+        SnackBar snackBar = SnackBar(
+          content: Text(state.addPost.object.toString()),
+          backgroundColor: ColorConstant.primary_color,
+        );
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        //
+      }
+      if (state is SearchHistoryDataAddxtends) {
+        searchUserForInbox1 = state.searchUserForInbox;
+
+        /*  isTagData = true;
+          isHeshTegData = false; */
+        searchUserForInbox1?.object?.content?.forEach((element) {
+          Map<String, dynamic> dataSetup = {
+            'id': element.userUid,
+            'display': element.userName,
+            'photo': element.userProfilePic,
+          };
+
+          tageData.add(dataSetup);
+          List<Map<String, dynamic>> uniqueTageData = [];
+          Set<String> encounteredIds = Set<String>();
+          for (Map<String, dynamic> data in tageData) {
+            if (!encounteredIds.contains(data['id'])) {
+              // If the ID hasn't been encountered, add to the result list
+              uniqueTageData.add(data);
+
+              // Mark the ID as encountered
+              encounteredIds.add(data['id']);
             }
+            tageData = uniqueTageData;
           }
-
-          if (state.imageDataPost.object?.status == 'failed') {
-            isTrue = true;
-            imageDataPost?.object?.data = null;
-          } else {
-            isTrue = true;
-
-            print("imageDataPost-->${imageDataPost?.object?.data}");
+          if (tageData.isNotEmpty == true) {
+            istageData = true;
           }
-          if (isVideodata == true) {
-            print("this condison is working");
-            _controller = VideoPlayerController.networkUrl(
-                Uri.parse('${imageDataPost!.object!.data!.first}'));
-            _controller?.initialize().then((value) => setState(() {}));
-            setState(() {
-              _controller?.play();
-            });
-          }
-        }
-        if (state is GetAllHashtagState) {
-          getAllHashtag = state.getAllHashtag;
-          isHeshTegData = true;
-          isTagData = false;
-
-        }
-        if (state is AddPostLoadedState) {
-          print(
-              "lodedSate--> i want check respoce--${state.addPost.object.toString()}");
-          if (state.addPost.object.toString() ==
-              'Comment contains a restricted word') {
-          } else {
-            Navigator.pop(context);
-          }
-          SnackBar snackBar = SnackBar(
-            content: Text(state.addPost.object.toString()),
-            backgroundColor: ColorConstant.primary_color,
-          );
-          ScaffoldMessenger.of(context).showSnackBar(snackBar);
-          //
-        }
-        if (state is SearchHistoryDataAddxtends) {
-          searchUserForInbox1 = state.searchUserForInbox;
-          isTagData = true;
-          isHeshTegData = false;
-        }
-      },
-      builder: (context, state) {
-        return SafeArea(
-            child: Scaffold(
-          resizeToAvoidBottomInset: true,
-          body: Container(
-            color: Colors.white,
-            child: Stack(
-              children: [
-                SingleChildScrollView(
-                  child: Container(
-                    color: Colors.white,
-                    child: Column(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(left: 16, right: 16),
-                          child: Container(
-                            height: 70,
-                            width: _width,
-                            child: Row(
-                              children: [
-                                GestureDetector(
-                                  onTap: () {
-                                    Navigator.pop(context);
-                                  },
-                                  child: Image.asset(
-                                    ImageConstant.Post_Close,
-                                    height: 20,
-                                  ),
-                                ),
-                                Spacer(),
-                                GestureDetector(
-                                  onTap: () {
-                                    HasetagList = [];
-                                    CreatePostDone = true;
-                                    dataPostFucntion();
-                                  },
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                        color: primaryColor,
-                                        borderRadius:
-                                            BorderRadius.circular(14)),
-                                    height: 40,
-                                    width: 70,
-                                    child: Center(
-                                        child: Text(
-                                      "Post",
-                                      style: TextStyle(
-                                        fontFamily: "outfit",
-                                        fontSize: 15,
-                                        color: textColor,
-                                      ),
-                                    )),
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 16, right: 16),
+        });
+      }
+    }, builder: (context, state) {
+      return SafeArea(
+          child: Scaffold(
+        resizeToAvoidBottomInset: true,
+        backgroundColor: Colors.white,
+        body: Container(
+          color: Colors.white,
+          child: Stack(
+            children: [
+              SingleChildScrollView(
+                child: Container(
+                  color: Colors.white,
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(left: 16, right: 16),
+                        child: Container(
+                          height: 70,
+                          width: _width,
                           child: Row(
                             children: [
-                              Container(
-                                child: GestureDetector(
-                                  onTap: () {
-                                    Navigator.push(context,
-                                        MaterialPageRoute(builder: (context) {
-                                      return MultiBlocProvider(
-                                          providers: [
-                                            BlocProvider<NewProfileSCubit>(
-                                              create: (context) =>
-                                                  NewProfileSCubit(),
-                                            ),
-                                          ],
-                                          child: ProfileScreen(
-                                            User_ID: "${User_ID}",
-                                            isFollowing: 'FOLLOW',
-                                          ));
-                                    }));
-                                  },
-                                  child: UserProfileImage?.isEmpty == true
-                                      ? SizedBox(
-                                          height: 50,
-                                          width: 50,
-                                          child: CircleAvatar(
-                                            backgroundColor: Colors.white,
-                                            backgroundImage: AssetImage(
-                                                ImageConstant.tomcruse),
-                                          ),
-                                        )
-                                      : SizedBox(
-                                          height: 50,
-                                          width: 50,
-                                          child: CircleAvatar(
-                                            backgroundColor: Colors.white,
-                                            backgroundImage: NetworkImage(
-                                                UserProfileImage.toString()),
-                                          ),
-                                        ),
+                              GestureDetector(
+                                onTap: () {
+                                  Navigator.pop(context);
+                                },
+                                child: Image.asset(
+                                  ImageConstant.Post_Close,
+                                  height: 20,
                                 ),
                               ),
-                              Padding(
-                                padding: EdgeInsets.only(bottom: 15, left: 10),
-                                child: GestureDetector(
-                                  onTapDown: (TapDownDetails details) {
-                                    _showPopupMenu(
-                                      details.globalPosition,
-                                      context,
-                                    );
-                                  },
-                                  child: Container(
-                                    height: 30,
-                                    width: _width / 2.5,
-                                    decoration: BoxDecoration(
-                                        border: Border.all(
-                                          width: 1.5,
-                                          color: Color(0xffED1C25),
-                                        ),
-                                        color: ColorConstant.primaryLight_color,
-                                        borderRadius:
-                                            BorderRadius.circular(10)),
-                                    child: Row(
-                                      children: [
-                                        Padding(
-                                          padding: EdgeInsets.only(left: 7),
-                                          child: Center(
+                              Spacer(),
+                              widget.edittextdata != null
+                                  ? GestureDetector(
+                                      onTap: () {
+                                        HasetagList = [];
+                                        CreatePostDone = true;
+
+                                        dataPostFucntion();
+                                      },
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                            color: primaryColor,
+                                            borderRadius:
+                                                BorderRadius.circular(14)),
+                                        height: 40,
+                                        width: 70,
+                                        child: Center(
                                             child: Text(
-                                              soicalData[indexx].toString(),
-                                              style: TextStyle(
-                                                fontFamily: "outfit",
-                                                fontSize: 15,
-                                                color:
-                                                    ColorConstant.primary_color,
-                                              ),
-                                            ),
+                                          "Save",
+                                          style: TextStyle(
+                                            fontFamily: "outfit",
+                                            fontSize: 15,
+                                            color: textColor,
                                           ),
-                                        ),
-                                        Spacer(),
-                                        Padding(
-                                          padding: EdgeInsets.only(right: 7),
-                                          child: Image.asset(
-                                            ImageConstant.downarrow,
-                                            height: 10,
-                                            width: 10,
+                                        )),
+                                      ),
+                                    )
+                                  : GestureDetector(
+                                      onTap: () {
+                                        print("DSfsdhfsdhfshd");
+                                        HasetagList = [];
+                                        CreatePostDone = true;
+
+                                        if (isDataSet == true) {
+                                          dataPostFucntion();
+                                        }
+                                      },
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                            color: primaryColor,
+                                            borderRadius:
+                                                BorderRadius.circular(14)),
+                                        height: 40,
+                                        width: 70,
+                                        child: Center(
+                                            child: Text(
+                                          "Post",
+                                          style: TextStyle(
+                                            fontFamily: "outfit",
+                                            fontSize: 15,
+                                            color: textColor,
                                           ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              )
+                                        )),
+                                      ),
+                                    )
                             ],
                           ),
                         ),
-                        Padding(
-                          padding:
-                              EdgeInsets.only(left: 16, right: 16, top: 15),
-                          child: Stack(
-                            children: [
-                              Column(
-                                children: [
-                                  TextFormField(
-                                    controller: postText,
-                                    maxLines: null,
-                                    cursorColor: Colors.grey,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 16, right: 16),
+                        child: Row(
+                          children: [
+                            Container(
+                              child: GestureDetector(
+                                onTap: () {
+                                  Navigator.push(context,
+                                      MaterialPageRoute(builder: (context) {
+                                    return MultiBlocProvider(
+                                        providers: [
+                                          BlocProvider<NewProfileSCubit>(
+                                            create: (context) =>
+                                                NewProfileSCubit(),
+                                          ),
+                                        ],
+                                        child: ProfileScreen(
+                                          User_ID: "${User_ID}",
+                                          isFollowing: 'FOLLOW',
+                                        ));
+                                  }));
+                                },
+                                child: UserProfileImage?.isEmpty == true
+                                    ? SizedBox(
+                                        height: 50,
+                                        width: 50,
+                                        child: CircleAvatar(
+                                          backgroundColor: Colors.white,
+                                          backgroundImage: AssetImage(
+                                              ImageConstant.tomcruse),
+                                        ),
+                                      )
+                                    : SizedBox(
+                                        height: 50,
+                                        width: 50,
+                                        child: CircleAvatar(
+                                          backgroundColor: Colors.white,
+                                          backgroundImage: NetworkImage(
+                                              UserProfileImage.toString()),
+                                        ),
+                                      ),
+                              ),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.only(bottom: 15, left: 10),
+                              child: GestureDetector(
+                                onTapDown: (TapDownDetails details) {
+                                  _showPopupMenu(
+                                    details.globalPosition,
+                                    context,
+                                  );
+                                },
+                                child: Container(
+                                  height: 30,
+                                  width: _width / 2.5,
+                                  decoration: BoxDecoration(
+                                      border: Border.all(
+                                        width: 1.5,
+                                        color: ColorConstant.primary_color,
+                                      ),
+                                      color: ColorConstant.primaryLight_color,
+                                      borderRadius: BorderRadius.circular(10)),
+                                  child: Row(
+                                    children: [
+                                      Padding(
+                                        padding: EdgeInsets.only(left: 7),
+                                        child: Center(
+                                          child: Text(
+                                            soicalData[indexx].toString(),
+                                            style: TextStyle(
+                                              fontFamily: "outfit",
+                                              fontSize: 15,
+                                              color:
+                                                  ColorConstant.primary_color,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      Spacer(),
+                                      Padding(
+                                        padding: EdgeInsets.only(right: 7),
+                                        child: Image.asset(
+                                          ImageConstant.downarrow,
+                                          color: ColorConstant.primary_color,
+                                          height: 10,
+                                          width: 10,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(left: 16, right: 16, top: 15),
+                        child: Stack(
+                          children: [
+                            Column(
+                              children: [
+                                SizedBox(
+                                  height: 80,
+                                  child: FlutterMentions(
+                                    defaultText: widget.edittextdata,
+                                    onChanged: (value) {
+                                      onChangeMethod(value);
+                                    },
+                                    suggestionPosition:
+                                        SuggestionPosition.values.last,
+                                    maxLines: 10,
+                                    // style: TextStyle(fontFamily:'' ),
+                                    style: TextStyle(
+                                      fontFamily: 'outfit',
+                                      fontSize: 16,
+                                      color: Colors.black,
+                                      // fontWeight: FontWeight.bold,
+                                    ),
                                     decoration: InputDecoration(
                                       hintText: 'What’s on your head?',
                                       border: InputBorder.none,
                                       focusedBorder: InputBorder.none,
                                     ),
-                                    inputFormatters: [
-                                      // Custom formatter to trim leading spaces
-                                    ],
-                                    onChanged: (value) async {
-                                      (value);
-                                      onChangeMethod(value);
-                                      //this is the link
-                                    },
-                                    onTap: () async {
-                                      //this is the link
-                                    },
-                                    style: TextStyle(
-                                        decoration: TextDecoration.none,
-                                        decorationColor: Colors.white),
-                                    /* style: TextStyle(
-                                      color: colorVaralble == true
-                                          ? Colors.blue
-                                      decoration: TextDecoration.underline,
-                                      decorationColor: colorVaralble == true
-                                          ? Colors.blue
-                                          : Colors.transparent,
-                                    ), */
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsets.only(
-                                        top: isHeshTegData == true ||
-                                                isTagData == true
-                                            ? 330
-                                            : 5),
-                                    child: SizedBox(
-                                      child: isVideodata == true
-                                          ? _controller!.value.isInitialized
-                                              ? Container(
-                                                  // color: Colors.amber,
-                                                  height: _height / 2,
-                                                  child: Column(
-                                                    children: [
-                                                      AspectRatio(
-                                                        aspectRatio:
-                                                            _controller!.value
-                                                                .aspectRatio,
-                                                        child: VideoPlayer(
-                                                            _controller!),
-                                                      ),
-                                                      // GestureDetector(
-                                                      //   onTap: () {
-                                                      //     if (_controller!.value
-                                                      //         .isPlaying) {
-                                                      //       setState(() {
-                                                      //         _controller
-                                                      //             ?.pause();
-                                                      //       });
-                                                      //     } else {
-                                                      //       setState(() {
-                                                      //         _controller
-                                                      //             ?.play();
-                                                      //       });
-                                                      //     }
-                                                      //   },
-                                                      //   child: Icon(
-                                                      //     _controller!.value
-                                                      //             .isPlaying
-                                                      //         ? Icons.pause
-                                                      //         : Icons
-                                                      //             .play_arrow,
-                                                      //   ),
-                                                      // ),
-                                                    ],
-                                                  ),
-                                                )
-                                              : Container()
-                                          : file12?.path != null
-                                              ? Container(
-                                                  height: 400,
-                                                  width: _width,
-                                                  child: DocumentViewScreen1(
-                                                    path: imageDataPost
-                                                        ?.object!.data!.first
-                                                        .toString(),
-                                                  ))
-                                              : pickedImage.isNotEmpty
-                                                  ? _loading
-                                                      ? Center(
-                                                          child: Container(
-                                                            margin:
-                                                                EdgeInsets.only(
-                                                                    bottom:
-                                                                        100),
-                                                            child: ClipRRect(
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          20),
-                                                              child: Image.asset(
-                                                                  ImageConstant
-                                                                      .loader,
-                                                                  fit: BoxFit
-                                                                      .cover,
-                                                                  height: 100,
-                                                                  width: 100),
-                                                            ),
-                                                          ),
-                                                        )
-                                                      : isTrue == true
-                                                          ? imageDataPost
-                                                                      ?.object
-                                                                      ?.data !=
-                                                                  null
-                                                              ? SizedBox(
-                                                                  height:
-                                                                      _height /
-                                                                          2,
-                                                                  width: _width,
-                                                                  child: PageView
-                                                                      .builder(
-                                                                    onPageChanged:
-                                                                        (value) {
-                                                                      setState(
-                                                                          () {
-                                                                        _currentPages =
-                                                                            value;
-                                                                      });
-                                                                    },
-                                                                    itemCount: imageDataPost
-                                                                        ?.object
-                                                                        ?.data
-                                                                        ?.length,
-                                                                    controller:
-                                                                        _pageControllers,
-                                                                    itemBuilder:
-                                                                        (context,
-                                                                            index) {
-                                                                      return SizedBox(
-                                                                          height: _height /
-                                                                              2,
-                                                                          width:
-                                                                              _width,
-                                                                          child:
-                                                                              Padding(
-                                                                            padding:
-                                                                                const EdgeInsets.all(8.0),
-                                                                            child:
-                                                                                CachedNetworkImage(
-                                                                              imageUrl: '${imageDataPost?.object?.data?[index]}',
-                                                                              fit: BoxFit.cover,
-                                                                            ),
-                                                                          ));
-                                                                    },
-                                                                  ),
-                                                                )
-                                                              : Container()
-                                                          : Center(
-                                                              child: GFLoader(
-                                                                  type:
-                                                                      GFLoaderType
-                                                                          .ios),
-                                                            )
-                                                  : selectImage == true
-                                                      ? medium1?.mediumType ==
-                                                              MediumType.image
-                                                          ? GestureDetector(
-                                                              onTap: () async {
-                                                                print(
-                                                                    "this is the Medium");
-                                                              },
-                                                              child: imageDataPost
-                                                                          ?.object
-                                                                          ?.data?[0] !=
-                                                                      null
-                                                                  ? CachedNetworkImage(
-                                                                      imageUrl:
-                                                                          '${imageDataPost?.object?.data?[0]}',
-                                                                      fit: BoxFit
-                                                                          .cover,
-                                                                    )
-                                                                  : SizedBox(),
-                                                              /*    child: FadeInImage(
-                                                            fit: BoxFit.cover,
-                                                            placeholder: MemoryImage(
-                                                                kTransparentImage),
-                                                            image: PhotoProvider(
-                                                                mediumId:
-                                                                    medium1!.id),
-                                                          ), */
-                                                            )
-                                                          : VideoProvider(
-                                                              mediumId:
-                                                                  medium1!.id,
-                                                            )
-                                                      : Container(
-                                                          color: Colors.white,
-                                                        ),
-                                    ),
-                                  ),
-                                  imageDataPost?.object?.data != null &&
-                                          imageDataPost?.object?.data?.length !=
-                                              1
-                                      ? Container(
-                                          height: 20,
-                                          child: DotsIndicator(
-                                            dotsCount: imageDataPost
-                                                    ?.object?.data?.length ??
-                                                0,
-                                            position: _currentPages.toDouble(),
-                                            decorator: DotsDecorator(
-                                              size: const Size(10.0, 7.0),
-                                              activeSize:
-                                                  const Size(10.0, 10.0),
-                                              spacing:
-                                                  const EdgeInsets.symmetric(
-                                                      horizontal: 2),
-                                              activeColor: Color(0xffED1C25),
-                                              color: Color(0xff6A6A6A),
-                                            ),
-                                          ),
-                                        )
-                                      : SizedBox(),
-                                ],
-                              ),
-                              if (isHeshTegData)
-                                Container(
-                                  margin: EdgeInsets.only(
-                                       top:postText.length>=100?(postText.length +0) :100),
-                                  height: imageDataPost?.object?.data != null
-                                      ? _height / 3
-                                      : _height,
-                                  width: _width,
-                                  // color: Colors.amber,
-                                  child: ListView.builder(
-                                    // physics: NeverScrollableScrollPhysics(),
-                                    shrinkWrap: true,
-                                    itemCount:
-                                        getAllHashtag?.object?.content?.length,
-                                    itemBuilder: (context, index) {
-                                      return Container(
-                                        margin: EdgeInsets.all(10),
-                                        height: 70,
-                                        width: _width,
-
-                                        decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(20),
-                                            border: Border.all(
-                                                color: Color(0xffE6E6E6))),
-                                        child: GestureDetector(
-                                          onTap: (){
-                                               setState(() {
-                                              if (postText.text.isNotEmpty) {
-                                                /*   postText.text =
-                                                  '${postText.text} @${searchUserForInbox1?.object?.content?[index].userName}'; */
-                                                postTexContrlloer.add(
-                                                    '${getAllHashtag?.object?.content?[index]}');
-                                              }
-                                              postText.text =
-                                                  postTexContrlloer.join(' ,');
-
-                                              // postText.text = '${postText.text}@${searchUserForInbox1?.object?.content?[index].userName}';
-                                             
-                                            });
-                                          },
-                                          child: Row(
-                                            children: [
-                                              Container(
-                                                width: _width / 1.6,
-                                                child: Padding(
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                          left: 10),
-                                                  child: Text(
-                                                    '${getAllHashtag?.object?.content?[index]}',
-                                                    style: TextStyle(
-                                                      overflow:
-                                                          TextOverflow.ellipsis,
-                                                      color: Colors.black,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                    ),
-                                                  ),
-                                                ),
-                                              )
-                                            ],
-                                          ),
-                                        ),
-                                        // color: Colors.green,
-                                      );
-                                    },
-                                  ),
-                                ),
-                              if (isTagData)
-                                Container(
-                                  margin: EdgeInsets.only(
-                                      top:postText.length>=100?(postText.length +0) :100),
-                                  height: imageDataPost?.object?.data != null
-                                      ? _height / 3
-                                      : _height,
-                                  width: _width,
-                                  // color: Colors.amber,
-                                  child: ListView.builder(
-                                    // physics: NeverScrollableScrollPhysics(),
-                                    shrinkWrap: true,
-                                    itemCount: searchUserForInbox1
-                                        ?.object?.content?.length,
-                                    itemBuilder: (context, index) {
-                                      return Container(
-                                        margin: EdgeInsets.all(10),
-                                        height: 70,
-                                        width: _width,
-                                        // color: Colors.green,
-                                        decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(20),
-                                            border: Border.all(
-                                                color: Color(0xffE6E6E6))),
-                                        child: GestureDetector(
-                                          onTap: () {
-                                            setState(() {
-                                              if (postText.text.isNotEmpty) {
-                                                /*   postText.text =
-                                                  '${postText.text} @${searchUserForInbox1?.object?.content?[index].userName}'; */
-                                                postTexContrlloer.add(
-                                                    '@${searchUserForInbox1?.object?.content?[index].userName}');
-                                              }
-                                              postText.text =
-                                                  postTexContrlloer.join(' ,');
-
-                                              // postText.text = '${postText.text}@${searchUserForInbox1?.object?.content?[index].userName}';
-                                             
-                                            });
-                                          },
-                                          child: Row(
-                                            children: [
-                                              searchUserForInbox1
-                                                              ?.object
-                                                              ?.content?[index]
-                                                              .userProfilePic !=
-                                                          null &&
-                                                      searchUserForInbox1
-                                                              ?.object
-                                                              ?.content?[index]
-                                                              .userProfilePic
-                                                              ?.isNotEmpty ==
-                                                          true
-                                                  ? Padding(
-                                                      padding:
-                                                          const EdgeInsets.only(
-                                                              left: 10),
-                                                      child: CircleAvatar(
-                                                        radius: 30.0,
-                                                        backgroundImage:
-                                                            NetworkImage(
-                                                                "${searchUserForInbox1?.object?.content?[index].userProfilePic}"),
-                                                        backgroundColor:
-                                                            Colors.transparent,
-                                                      ),
-                                                    )
-                                                  : Padding(
-                                                      padding:
-                                                          const EdgeInsets.only(
-                                                              left: 10),
-                                                      child: CircleAvatar(
-                                                        radius: 30.0,
-                                                        backgroundImage:
-                                                            AssetImage(
-                                                                ImageConstant
-                                                                    .tomcruse),
-                                                        backgroundColor:
-                                                            Colors.transparent,
-                                                      ),
-                                                    ),
-                                              Container(
-                                                width: _width / 1.6,
-                                                child: Padding(
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                          left: 10),
-                                                  child: Text(
-                                                    searchUserForInbox1
-                                                            ?.object
-                                                            ?.content?[index]
-                                                            .userName ??
-                                                        '',
-                                                    style: TextStyle(
-                                                      overflow:
-                                                          TextOverflow.ellipsis,
-                                                      color: Colors.black,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                    ),
-                                                  ),
-                                                ),
-                                              )
-                                            ],
-                                          ),
-                                        ),
-                                        // color: Colors.green,
-                                      );
-                                    },
-                                  ),
-                                ),
-                            ],
-                          ),
-                        ),
-                        Container(
-                          color: Color.fromARGB(255, 255, 255, 255),
-                          height: 120,
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Column(
-                    children: [
-                      Spacer(),
-                      Padding(
-                        padding: EdgeInsets.only(left: 16, right: 0),
-                        child: Container(
-                          color: Colors.white,
-                          child: Row(
-                            children: [
-                              SizedBox(
-                                // margin: EdgeInsets.all(8),
-                                height: 90,
-                                width: 90,
-                                child: Center(
-                                  child: GestureDetector(
-                                    onTap: () async {
-                                      print("asdfdfgdfg");
-                                      _getImageFromCamera();
-                                    },
-                                    child: Container(
-                                      // margin: EdgeInsets.all(8),
-                                      height: 80,
-                                      width: 80,
-                                      decoration: BoxDecoration(
-                                        // color: Color.fromARGB(255, 0, 0, 0),
-                                        border: Border.all(
-                                            color: Color.fromARGB(
-                                                255, 174, 174, 174),
-                                            width: 2),
-                                        borderRadius: BorderRadius.circular(20),
-                                      ),
-                                      child: Center(
-                                        child: Image.asset(
-                                          ImageConstant.Cameraicon,
-                                          height: 30,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              Container(
-                                height: 90,
-                                width: _width - 106,
-                                // color: Colors.green,
-                                child: _loading
-                                    ? Center(
-                                        child: Container(
-                                          margin: EdgeInsets.only(bottom: 100),
-                                          child: ClipRRect(
-                                            borderRadius:
-                                                BorderRadius.circular(20),
-                                            child: Image.asset(
-                                                ImageConstant.loader,
-                                                fit: BoxFit.cover,
-                                                height: 100,
-                                                width: 100),
-                                          ),
-                                        ),
-                                      )
-                                    : LayoutBuilder(
-                                        builder: (context, constraints) {
-                                          double gridWidth =
-                                              (constraints.maxWidth - 20) / 3;
-                                          double gridHeight = gridWidth + 33;
-                                          double ratio = gridWidth / gridHeight;
-                                          return Padding(
-                                            padding: const EdgeInsets.only(
-                                                top: 5, bottom: 5),
-                                            child: Container(
-                                              // padding: EdgeInsets.all(5),
-                                              child: SizedBox(
-                                                height: 100,
-                                                child: GridView.count(
-                                                  crossAxisCount: 1,
-                                                  mainAxisSpacing: 5.0,
-                                                  crossAxisSpacing: 10.0,
-                                                  scrollDirection:
-                                                      Axis.horizontal,
+                                    mentions: [
+                                                
+                                      Mention(
+                                          trigger: "@",
+                                          data: tageData,
+                                          matchAll: true,
+                                          style: TextStyle(color: Colors.blue),
+                                          suggestionBuilder: (tageData) {
+                                            if (istageData) {
+                                              return Container(
+                                                padding: EdgeInsets.all(10.0),
+                                                child: Row(
                                                   children: <Widget>[
-                                                    ...page!.items.map(
-                                                      (medium) =>
-                                                          GestureDetector(
-                                                        onTap: () async {
-                                                          medium1 = medium;
-                                                          file =
-                                                              await PhotoGallery
-                                                                  .getFile(
-                                                            mediumId:
-                                                                medium1!.id,
-                                                            mediumType:
-                                                                MediumType
-                                                                    .image,
-                                                          );
+                                                    tageData['photo'] != null
+                                                        ? CircleAvatar(
+                                                            backgroundImage:
+                                                                NetworkImage(
+                                                              tageData['photo'],
+                                                            ),
+                                                          )
+                                                        : CircleAvatar(
+                                                            backgroundImage:
+                                                                AssetImage(
+                                                                    ImageConstant
+                                                                        .tomcruse),
+                                                          ),
+                                                    SizedBox(
+                                                      width: 20.0,
+                                                    ),
+                                                    Column(
+                                                      children: <Widget>[
+                                                        Text(
+                                                            '@${tageData['display']}'),
+                                                      ],
+                                                    )
+                                                  ],
+                                                ),
+                                              );
+                                            }
 
-                                                          selectImage = true;
+                                            return Container(
+                                              color: Colors.amber,
+                                            );
+                                          }),
+                                      Mention(
+                                          trigger: "#",
+                                          style: TextStyle(color: Colors.blue),
+                                          disableMarkup: true,
+                                          data: heshTageData,
+                                          // matchAll: true,
+                                          suggestionBuilder: (tageData) {
+                                            if (isHeshTegData) {
+                                              return Container(
+                                                  padding: EdgeInsets.all(10.0),
+                                                  child: ListTile(
+                                                    leading: CircleAvatar(
+                                                      child: Text('#'),
+                                                    ),
+                                                    title: Text(
+                                                        '${tageData['display']}'),
+                                                  )
+                                                  /* Column(
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
+                                                        children: <Widget>[
+                                                          Text(
+                                                              '${tageData['display']}'),
+                                                        ],
+                                                      ), */
+                                                  );
+                                            }
 
-                                                          file12 = null;
-                                                          pickedImage.isEmpty;
-                                                          setState(() {});
+                                            return Container(
+                                              color: Colors.amber,
+                                            );
+                                          }),
+                                    ],
+                                  ),
+                                ),
 
-                                                          CroppedFile?
-                                                              croppedFile =
-                                                              await ImageCropper()
-                                                                  .cropImage(
-                                                            sourcePath: file!
-                                                                .path
+                                /* TextFormField(
+                                        controller: postText,
+                                        maxLines: null,
+                                        cursorColor: Colors.grey,
+                                        decoration: InputDecoration(
+                                          hintText: 'What’s on your head?',
+                                          border: InputBorder.none,
+                                          focusedBorder: InputBorder.none,
+                                        ),
+                                        inputFormatters: [
+                                          // Custom formatter to trim leading spaces
+                                        ],
+                                        onChanged: (value) async {
+                                          (value);
+                                          onChangeMethod(value);
+          
+                                          //this is the link
+                                          print("controller text ${postText}");
+                                        },
+                                        onTap: () async {
+                                          //this is the link
+                                        },
+                                        style: TextStyle(
+                                            decoration: TextDecoration.none,
+                                            decorationColor: Colors.white),
+                                        /* style: TextStyle(
+                                          color: colorVaralble == true
+                                              ? Colors.blue
+                                          decoration: TextDecoration.underline,
+                                          decorationColor: colorVaralble == true
+                                              ? Colors.blue
+                                              : Colors.transparent,
+                                        ), */
+                                      ), */
+                                Padding(
+                                  padding: EdgeInsets.only(top: 5),
+                                  child: SizedBox(
+                                    child: isVideodata == true
+                                        ? _controller!.value.isInitialized
+                                            ? Container(
+                                                // color: Colors.amber,
+                                                height: _height / 2,
+                                                child: Column(
+                                                  children: [
+                                                    AspectRatio(
+                                                      aspectRatio: _controller!
+                                                          .value.aspectRatio,
+                                                      child: VideoPlayer(
+                                                          _controller!),
+                                                    ),
+                                                    // GestureDetector(
+                                                    //   onTap: () {
+                                                    //     if (_controller!.value
+                                                    //         .isPlaying) {
+                                                    //       setState(() {
+                                                    //         _controller
+                                                    //             ?.pause();
+                                                    //       });
+                                                    //     } else {
+                                                    //       setState(() {
+                                                    //         _controller
+                                                    //             ?.play();
+                                                    //       });
+                                                    //     }
+                                                    //   },
+                                                    //   child: Icon(
+                                                    //     _controller!.value
+                                                    //             .isPlaying
+                                                    //         ? Icons.pause
+                                                    //         : Icons
+                                                    //             .play_arrow,
+                                                    //   ),
+                                                    // ),
+                                                  ],
+                                                ),
+                                              )
+                                            : Container()
+                                        : file12?.path != null
+                                            ? Stack(
+                                                children: [
+                                                  Container(
+                                                    height: 400,
+                                                    width: _width,
+                                                    color: Colors.transparent,
+                                                  ),
+                                                  GestureDetector(
+                                                    onTap: () {
+                                                      print(
+                                                          "objectobjectobjectobject");
+                                                      Navigator.push(context,
+                                                          MaterialPageRoute(
+                                                        builder: (context) {
+                                                          return DocumentViewScreen1(
+                                                            path: imageDataPost
+                                                                ?.object!
+                                                                .data!
+                                                                .first
                                                                 .toString(),
-                                                            aspectRatioPresets: [
-                                                              CropAspectRatioPreset
-                                                                  .square,
-                                                              CropAspectRatioPreset
-                                                                  .ratio3x2,
-                                                              CropAspectRatioPreset
-                                                                  .original,
-                                                              CropAspectRatioPreset
-                                                                  .ratio4x3,
-                                                              CropAspectRatioPreset
-                                                                  .ratio16x9
-                                                            ],
-                                                            uiSettings: [
-                                                              AndroidUiSettings(
-                                                                  toolbarTitle:
-                                                                      'Cropper',
-                                                                  activeControlsWidgetColor:
-                                                                      Color(
-                                                                          0xffED1C25),
-                                                                  toolbarColor:
-                                                                      Color(
-                                                                          0xffED1C25),
-                                                                  toolbarWidgetColor:
-                                                                      Colors
-                                                                          .white,
-                                                                  initAspectRatio:
-                                                                      CropAspectRatioPreset
-                                                                          .original,
-                                                                  lockAspectRatio:
-                                                                      false),
-                                                              IOSUiSettings(
-                                                                title:
-                                                                    'Cropper',
-                                                              ),
-                                                              WebUiSettings(
-                                                                context:
-                                                                    context,
-                                                              ),
-                                                            ],
                                                           );
-
-                                                          if (croppedFile !=
-                                                              null) {
-                                                            print(
-                                                                'Image cropped and saved at: ${croppedFile.path}');
-                                                            BlocProvider.of<
-                                                                        AddPostCubit>(
-                                                                    context)
-                                                                .UplodeImageAPI(
-                                                                    context,
-                                                                    medium1?.filename ??
-                                                                        '',
-                                                                    croppedFile
-                                                                        .path);
-                                                          } else {
-                                                            BlocProvider.of<
-                                                                        AddPostCubit>(
-                                                                    context)
-                                                                .UplodeImageAPI(
-                                                                    context,
-                                                                    medium1?.filename ??
-                                                                        '',
-                                                                    file?.path ??
-                                                                        '');
-                                                          }
                                                         },
+                                                      ));
+                                                    },
+                                                    child: Container(
+                                                      child: CachedNetworkImage(
+                                                        imageUrl: imageDataPost
+                                                                ?.object
+                                                                ?.thumbnailImageUrl ??
+                                                            "",
+                                                        fit: BoxFit.cover,
+                                                      ),
+                                                    ),
+                                                  )
+                                                ],
+                                              ) /* Container(
+                                                height: 400,
+                                                width: _width,
+                                                child: CachedNetworkImage(
+                                                  imageUrl:
+                                                      '${imageDataPost?.object?.thumbnailImageUrl}',
+                                                  fit: BoxFit.cover,
+                                                ),
+                                                /*  DocumentViewScreen1(
+                                                  path: imageDataPost
+                                                      ?.object!.data!.first
+                                                      .toString(),
+                                                ) */
+                                              ) */
+                                            : pickedImage.isNotEmpty
+                                                ? _loading
+                                                    ? Center(
                                                         child: Container(
-                                                          height: 100,
-                                                          width: 100,
-                                                          decoration: BoxDecoration(
-                                                              color: Colors
-                                                                  .grey[300],
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          10)),
+                                                          margin:
+                                                              EdgeInsets.only(
+                                                                  bottom: 100),
                                                           child: ClipRRect(
                                                             borderRadius:
                                                                 BorderRadius
                                                                     .circular(
-                                                                        10),
-                                                            child: FadeInImage(
-                                                              fit: BoxFit.cover,
-                                                              placeholder:
-                                                                  MemoryImage(
-                                                                      kTransparentImage),
-                                                              image:
-                                                                  ThumbnailProvider(
+                                                                        20),
+                                                            child: Image.asset(
+                                                                ImageConstant
+                                                                    .loader,
+                                                                fit: BoxFit
+                                                                    .cover,
+                                                                height: 100,
+                                                                width: 100),
+                                                          ),
+                                                        ),
+                                                      )
+                                                    : isTrue == true
+                                                        ? imageDataPost?.object
+                                                                    ?.data !=
+                                                                null
+                                                            ? SizedBox(
+                                                                height:
+                                                                    _height / 2,
+                                                                width: _width,
+                                                                child: PageView
+                                                                    .builder(
+                                                                  onPageChanged:
+                                                                      (value) {
+                                                                    setState(
+                                                                        () {
+                                                                      _currentPages =
+                                                                          value;
+                                                                    });
+                                                                  },
+                                                                  itemCount:
+                                                                      imageDataPost
+                                                                          ?.object
+                                                                          ?.data
+                                                                          ?.length,
+                                                                  controller:
+                                                                      _pageControllers,
+                                                                  itemBuilder:
+                                                                      (context,
+                                                                          index) {
+                                                                    return SizedBox(
+                                                                        height:
+                                                                            _height /
+                                                                                2,
+                                                                        width:
+                                                                            _width,
+                                                                        child:
+                                                                            Padding(
+                                                                          padding:
+                                                                              const EdgeInsets.all(8.0),
+                                                                          child:
+                                                                              CachedNetworkImage(
+                                                                            imageUrl:
+                                                                                '${imageDataPost?.object?.data?[index]}',
+                                                                            fit:
+                                                                                BoxFit.cover,
+                                                                          ),
+                                                                        ));
+                                                                  },
+                                                                ),
+                                                              )
+                                                            : Container()
+                                                        : Center(
+                                                            child: GFLoader(
+                                                                type:
+                                                                    GFLoaderType
+                                                                        .ios),
+                                                          )
+                                                : selectImage == true
+                                                    ? medium1?.mediumType ==
+                                                            MediumType.image
+                                                        ? GestureDetector(
+                                                            onTap: () async {
+                                                              print(
+                                                                  "this is the Medium");
+                                                            },
+                                                            child: imageDataPost
+                                                                        ?.object
+                                                                        ?.data?[0] !=
+                                                                    null
+                                                                ? CachedNetworkImage(
+                                                                    imageUrl:
+                                                                        '${imageDataPost?.object?.data?[0]}',
+                                                                    fit: BoxFit
+                                                                        .cover,
+                                                                  )
+                                                                : SizedBox(),
+                                                            /*    child: FadeInImage(
+                                                                fit: BoxFit.cover,
+                                                                placeholder: MemoryImage(
+                                                                    kTransparentImage),
+                                                                image: PhotoProvider(
+                                                                    mediumId:
+                                                                        medium1!.id),
+                                                              ), */
+                                                          )
+                                                        : VideoProvider(
+                                                            mediumId:
+                                                                medium1!.id,
+                                                          )
+                                                    : Container(
+                                                        color: Colors.white,
+                                                      ),
+                                  ),
+                                ),
+                                imageDataPost?.object?.data != null &&
+                                        imageDataPost?.object?.data?.length != 1
+                                    ? Container(
+                                        height: 20,
+                                        child: DotsIndicator(
+                                          dotsCount: imageDataPost
+                                                  ?.object?.data?.length ??
+                                              0,
+                                          position: _currentPages.toDouble(),
+                                          decorator: DotsDecorator(
+                                            size: const Size(10.0, 7.0),
+                                            activeSize: const Size(10.0, 10.0),
+                                            spacing: const EdgeInsets.symmetric(
+                                                horizontal: 2),
+                                            activeColor:
+                                                ColorConstant.primary_color,
+                                            color: Color(0xff6A6A6A),
+                                          ),
+                                        ),
+                                      )
+                                    : SizedBox(),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                      Container(
+                        color: Color.fromARGB(255, 255, 255, 255),
+                        height: 120,
+                      )
+                    ],
+                  ),
+                ),
+              ),
+              widget.edittextdata == null
+                  ? Align(
+                      alignment: Alignment.bottomCenter,
+                      child: Column(
+                        children: [
+                          Spacer(),
+                          Padding(
+                            padding: EdgeInsets.only(left: 16, right: 0),
+                            child: Container(
+                              color: Colors.white,
+                              child: Row(
+                                children: [
+                                  SizedBox(
+                                    // margin: EdgeInsets.all(8),
+                                    height: 90,
+                                    width: 90,
+                                    child: Center(
+                                      child: GestureDetector(
+                                        onTap: () async {
+                                          print("asdfdfgdfg");
+                                          _getImageFromCamera();
+                                        },
+                                        child: Container(
+                                          // margin: EdgeInsets.all(8),
+                                          height: 80,
+                                          width: 80,
+                                          decoration: BoxDecoration(
+                                            // color: Color.fromARGB(255, 0, 0, 0),
+                                            border: Border.all(
+                                                color: Color.fromARGB(
+                                                    255, 174, 174, 174),
+                                                width: 2),
+                                            borderRadius:
+                                                BorderRadius.circular(20),
+                                          ),
+                                          child: Center(
+                                            child: Image.asset(
+                                              ImageConstant.Cameraicon,
+                                              height: 30,
+                                              color:
+                                                  ColorConstant.primary_color,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  Container(
+                                    height: 90,
+                                    width: _width - 106,
+                                    // color: Colors.green,
+                                    child: _loading
+                                        ? Center(
+                                            child: Container(
+                                              margin:
+                                                  EdgeInsets.only(bottom: 100),
+                                              child: ClipRRect(
+                                                borderRadius:
+                                                    BorderRadius.circular(20),
+                                                child: Image.asset(
+                                                    ImageConstant.loader,
+                                                    fit: BoxFit.cover,
+                                                    height: 100,
+                                                    width: 100),
+                                              ),
+                                            ),
+                                          )
+                                        : LayoutBuilder(
+                                            builder: (context, constraints) {
+                                              double gridWidth =
+                                                  (constraints.maxWidth - 20) /
+                                                      3;
+                                              double gridHeight =
+                                                  gridWidth + 33;
+                                              double ratio =
+                                                  gridWidth / gridHeight;
+                                              return Padding(
+                                                padding: const EdgeInsets.only(
+                                                    top: 5, bottom: 5),
+                                                child: Container(
+                                                  // padding: EdgeInsets.all(5),
+                                                  child: SizedBox(
+                                                    height: 100,
+                                                    child: GridView.count(
+                                                      crossAxisCount: 1,
+                                                      mainAxisSpacing: 5.0,
+                                                      crossAxisSpacing: 10.0,
+                                                      scrollDirection:
+                                                          Axis.horizontal,
+                                                      children: <Widget>[
+                                                        ...page!.items.map(
+                                                          (medium) =>
+                                                              GestureDetector(
+                                                            onTap: () async {
+                                                              medium1 = medium;
+                                                              file =
+                                                                  await PhotoGallery
+                                                                      .getFile(
                                                                 mediumId:
-                                                                    medium.id,
-                                                                mediumType: medium
-                                                                    .mediumType,
-                                                                highQuality:
-                                                                    true,
+                                                                    medium1!.id,
+                                                                mediumType:
+                                                                    MediumType
+                                                                        .image,
+                                                              );
+
+                                                              selectImage =
+                                                                  true;
+
+                                                              file12 = null;
+                                                              pickedImage
+                                                                  .isEmpty;
+                                                              setState(() {});
+
+                                                              CroppedFile?
+                                                                  croppedFile =
+                                                                  await ImageCropper()
+                                                                      .cropImage(
+                                                                sourcePath: file!
+                                                                    .path
+                                                                    .toString(),
+                                                                aspectRatioPresets: [
+                                                                  CropAspectRatioPreset
+                                                                      .square,
+                                                                  CropAspectRatioPreset
+                                                                      .ratio3x2,
+                                                                  CropAspectRatioPreset
+                                                                      .original,
+                                                                  CropAspectRatioPreset
+                                                                      .ratio4x3,
+                                                                  CropAspectRatioPreset
+                                                                      .ratio16x9
+                                                                ],
+                                                                uiSettings: [
+                                                                  AndroidUiSettings(
+                                                                      toolbarTitle:
+                                                                          'Cropper',
+                                                                      activeControlsWidgetColor:
+                                                                          ColorConstant
+                                                                              .primary_color,
+                                                                      toolbarColor:
+                                                                          ColorConstant
+                                                                              .primary_color,
+                                                                      toolbarWidgetColor:
+                                                                          Colors
+                                                                              .white,
+                                                                      initAspectRatio:
+                                                                          CropAspectRatioPreset
+                                                                              .original,
+                                                                      lockAspectRatio:
+                                                                          false),
+                                                                  IOSUiSettings(
+                                                                    title:
+                                                                        'Cropper',
+                                                                  ),
+                                                                  WebUiSettings(
+                                                                    context:
+                                                                        context,
+                                                                  ),
+                                                                ],
+                                                              );
+
+                                                              if (croppedFile !=
+                                                                  null) {
+                                                                print(
+                                                                    'Image cropped and saved at: ${croppedFile.path}');
+                                                                BlocProvider.of<
+                                                                            AddPostCubit>(
+                                                                        context)
+                                                                    .UplodeImageAPI(
+                                                                        context,
+                                                                        medium1?.filename ??
+                                                                            '',
+                                                                        croppedFile
+                                                                            .path);
+                                                              } else {
+                                                                BlocProvider.of<
+                                                                            AddPostCubit>(
+                                                                        context)
+                                                                    .UplodeImageAPI(
+                                                                        context,
+                                                                        medium1?.filename ??
+                                                                            '',
+                                                                        file?.path ??
+                                                                            '');
+                                                              }
+                                                            },
+                                                            child: Container(
+                                                              height: 100,
+                                                              width: 100,
+                                                              decoration: BoxDecoration(
+                                                                  color: Colors
+                                                                          .grey[
+                                                                      300],
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              10)),
+                                                              child: ClipRRect(
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            10),
+                                                                child:
+                                                                    FadeInImage(
+                                                                  fit: BoxFit
+                                                                      .cover,
+                                                                  placeholder:
+                                                                      MemoryImage(
+                                                                          kTransparentImage),
+                                                                  image:
+                                                                      ThumbnailProvider(
+                                                                    mediumId:
+                                                                        medium
+                                                                            .id,
+                                                                    mediumType:
+                                                                        medium
+                                                                            .mediumType,
+                                                                    highQuality:
+                                                                        true,
+                                                                  ),
+                                                                ),
                                                               ),
                                                             ),
                                                           ),
                                                         ),
-                                                      ),
+                                                      ],
                                                     ),
-                                                  ],
+                                                  ),
                                                 ),
-                                              ),
-                                            ),
-                                          );
-                                        },
+                                              );
+                                            },
+                                          ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          if (widget.edittextdata == null)
+                            Container(
+                              height: 30,
+                              color: Colors.white,
+                              child: Padding(
+                                padding: EdgeInsets.only(left: 20, right: 16),
+                                child: Row(
+                                  children: [
+                                    GestureDetector(
+                                      onTap: () async {
+                                        prepareTestPdf(0);
+                                      },
+                                      child: Image.asset(
+                                        ImageConstant.aTTACHMENT,
+                                        height: 20,
+                                        color: ColorConstant.primary_color,
                                       ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      Container(
-                        height: 30,
-                        color: Colors.white,
-                        child: Padding(
-                          padding: EdgeInsets.only(left: 20, right: 16),
-                          child: Row(
-                            children: [
-                              GestureDetector(
-                                onTap: () async {
-                                  prepareTestPdf(0);
-                                },
-                                child: Image.asset(
-                                  ImageConstant.aTTACHMENT,
-                                  height: 20,
-                                ),
-                              ),
-                              SizedBox(
-                                width: 30,
-                              ),
-                              GestureDetector(
-                                onTap: () {
-                                  _getImageFromSource();
-                                },
-                                child: Image.asset(
-                                  ImageConstant.gallery,
-                                  height: 20,
-                                ),
-                              ),
-                              SizedBox(
-                                width: 30,
-                              ),
-                              GestureDetector(
-                                onTap: () {
-                                  getVideo();
-                                },
-                                child: Icon(
-                                  Icons.play_circle_outline_sharp,
-                                  color: ColorConstant.primary_color,
-                                ),
-                              )
-                              /*   GestureDetector(
-                                  onTap: () {},
-                                  child: Icon(
-                                    Icons.videocam,
-                                    color: Colors.red,
-                                  )), */
+                                    ),
+                                    SizedBox(
+                                      width: 30,
+                                    ),
+                                    GestureDetector(
+                                      onTap: () {
+                                        _getImageFromSource();
+                                      },
+                                      child: Image.asset(
+                                        ImageConstant.gallery,
+                                        height: 20,
+                                        color: ColorConstant.primary_color,
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: 30,
+                                    ),
+                                    GestureDetector(
+                                      onTap: () {
+                                        getVideo();
+                                      },
+                                      child: Icon(
+                                        Icons.play_circle_outline_sharp,
+                                        color: ColorConstant.primary_color,
+                                      ),
+                                    )
+                                    /*   GestureDetector(
+                                      onTap: () {},
+                                      child: Icon(
+                                        Icons.videocam,
+                                        color: Colors.red,
+                                      )), */
 
-                              /*  SizedBox(
-                                width: 30,
+                                    /*  SizedBox(
+                                    width: 30,
+                                  ),
+                                  Image.asset(
+                                    ImageConstant.Gif_icon,
+                                    height: 20,
+                                  ), */
+                                  ],
+                                ),
                               ),
-                              Image.asset(
-                                ImageConstant.Gif_icon,
-                                height: 20,
-                              ), */
-                            ],
-                          ),
-                        ),
+                            ),
+                        ],
                       ),
-                    ],
-                  ),
-                )
-              ],
-            ),
+                    )
+                  : Column(
+                      children: [
+                        if (widget.editImage != null)
+                          Container(
+                              margin: EdgeInsets.only(top: 250),
+                              height: 400,
+                              width: _width,
+                              color: Colors.white,
+                              child: CustomImageView(
+                                url: "${widget.editImage}",
+                              )),
+                        if (widget.mutliplePost != null)
+                          Padding(
+                            padding: const EdgeInsets.only(top: 250),
+                            child: SizedBox(
+                              height: _height / 2,
+                              width: _width,
+                              child: PageView.builder(
+                                onPageChanged: (value) {
+                                  setState(() {
+                                    _currentPages = value;
+                                  });
+                                },
+                                itemCount: widget.mutliplePost?.length,
+                                controller: _pageControllers,
+                                itemBuilder: (context, index) {
+                                  return Container(
+                                      // margin: EdgeInsets.only(top: 250),
+                                      child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: CachedNetworkImage(
+                                      imageUrl:
+                                          '${widget.mutliplePost?[index]}',
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ));
+                                },
+                              ),
+                            ),
+                          ),
+                        if (widget.mutliplePost != null)
+                          Container(
+                            height: 20,
+                            child: DotsIndicator(
+                              dotsCount: widget.mutliplePost?.length ?? 0,
+                              position: _currentPages.toDouble(),
+                              decorator: DotsDecorator(
+                                size: const Size(10.0, 7.0),
+                                activeSize: const Size(10.0, 10.0),
+                                spacing:
+                                    const EdgeInsets.symmetric(horizontal: 2),
+                                activeColor: ColorConstant.primary_color,
+                                color: Color(0xff6A6A6A),
+                              ),
+                            ),
+                          )
+                      ],
+                    )
+            ],
           ),
-        ));
-      },
-    );
+        ),
+      ));
+    });
   }
 
   onChangeMethod(String value) {
+    setState(() {
+      postText.text = value;
+    });
+
     if (value.contains('@')) {
       print("if this condison is working-${value}");
-      if (value.length >= 3 && value.contains('@')) {
+      if (value.length >= 1 && value.contains('@')) {
         print("value check --${value.endsWith(' #')}");
         if (value.endsWith(' #')) {
           String data1 = value.split(' #').last.replaceAll('#', '');
@@ -1096,16 +1233,15 @@ class _CreateNewPostState extends State<CreateNewPost> {
       } else {
         print("check lenth else-${value.length}");
       }
-    }
-    else if(value.contains('#')){
+    } else if (value.contains('#')) {
       print("check length-${value}");
-       String data1 = value.split(' #').last.replaceAll('#', '');
-          BlocProvider.of<AddPostCubit>(context)
-              .GetAllHashtag(context, '10', '#${data1.trim()}');
-    }
-    else {
+      String data1 = value.split(' #').last.replaceAll('#', '');
+      BlocProvider.of<AddPostCubit>(context)
+          .GetAllHashtag(context, '10', '#${data1.trim()}');
+    } else {
       setState(() {
-        isTagData = false;
+        // postText.text = postText.text + ' ' + postTexContrlloer.join(' ,');
+        istageData = false;
         isHeshTegData = false;
       });
     }
@@ -1370,7 +1506,60 @@ class _CreateNewPostState extends State<CreateNewPost> {
         source: ImageSource.gallery,
         preferredCameraDevice: CameraDevice.front,
         maxDuration: const Duration(minutes: 10));
-    XFile? xfilePick = pickedFile;
+    if (pickedFile != null) {
+      File videoFile = File(pickedFile.path);
+      int fileSizeInBytes = videoFile.lengthSync();
+      double fileSizeInMB = fileSizeInBytes / (1024 * 1024);
+      print("check Video endswith-${videoFile.path}");
+      if (videoFile.path.toLowerCase().endsWith('.mp4')) {
+        if (fileSizeInMB > videoUplodeSize) {
+          showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+              title: Text('File Size Exceeded'),
+              content: Text(
+                  'The selected video size ${fileSizeInMB.toStringAsFixed(2)}MB exceeds the allowed size limit of ${videoUplodeSize}MB.'),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context); // Close the dialog
+                  },
+                  child: Text('OK'),
+                ),
+              ],
+            ),
+          );
+        } else {
+          XFile? xfilePick = pickedFile;
+          if (xfilePick != null) {
+            galleryFile.clear();
+            galleryFile.add(File(pickedFile!.path));
+            BlocProvider.of<AddPostCubit>(context).UplodeImageAPIImane(
+              context,
+              galleryFile,
+            );
+          }
+        }
+      } else {
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text('Invalid File Type'),
+            content: Text('Please select a valid MP4 video file.'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context); // Close the dialog
+                },
+                child: Text('OK'),
+              ),
+            ],
+          ),
+        );
+      }
+    }
+    /* XFile? xfilePick = pickedFile;
+      
     setState(
       () {
         galleryFile.clear();
@@ -1385,7 +1574,7 @@ class _CreateNewPostState extends State<CreateNewPost> {
               const SnackBar(content: Text('Nothing is selected')));
         }
       },
-    );
+    ); */
   }
 
   prepareTestPdf(
@@ -1663,109 +1852,137 @@ class _CreateNewPostState extends State<CreateNewPost> {
       });
 
       print(HasetagList?.length);
-      if ((HasetagList?.length)! <= 25) {
-        /* if (postText.text.length >= 1000) {
+      // if ((HasetagList?.length)! <= 25) {
+      /* if (postText.text.length >= 1000) {
           SnackBar snackBar = SnackBar(
             content: Text('Please enter less than 1000 letter!!'),
             backgroundColor: ColorConstant.primary_color,
           );
           ScaffoldMessenger.of(context).showSnackBar(snackBar);
         } else { */
-        if (CreatePostDone == true) {
-          if (postText.text.isNotEmpty && file?.path != null) {
+      if (CreatePostDone == true) {
+        setState(() {
+          isDataSet = false;
+        });
+        if (postText.text.isNotEmpty && file?.path != null) {
+          Map<String, dynamic> param = {
+            "description": postText.text,
+            "postData": imageDataPost?.object?.data,
+            "postDataType": "IMAGE",
+            "postType": soicalData[indexx].toString().toUpperCase()
+          };
+          BlocProvider.of<AddPostCubit>(context).InvitationAPI(context, param);
+        } else if (postText.text.isNotEmpty && file12?.path != null) {
+          Map<String, dynamic> param = {
+            "description": postText.text,
+            "postData": imageDataPost?.object?.data,
+            "postDataType": "ATTACHMENT",
+            "postType": soicalData[indexx].toString().toUpperCase(),
+            "thumbnailImageUrl": imageDataPost?.object?.thumbnailImageUrl,
+          };
+          BlocProvider.of<AddPostCubit>(context).InvitationAPI(context, param);
+        } else if (postText.text.isNotEmpty && pickedImage.isNotEmpty) {
+          Map<String, dynamic> param = {
+            "description": postText.text,
+            "postData": imageDataPost?.object?.data,
+            "postDataType": "IMAGE",
+            "postType": soicalData[indexx].toString().toUpperCase()
+          };
+          BlocProvider.of<AddPostCubit>(context).InvitationAPI(context, param);
+        } else if (pickedFile?.path != null && postText.text.isNotEmpty) {
+          Map<String, dynamic> param = {
+            "description": postText.text,
+            "postData": imageDataPost?.object?.data,
+            "postDataType": "IMAGE",
+            "postType": soicalData[indexx].toString().toUpperCase()
+          };
+          BlocProvider.of<AddPostCubit>(context).InvitationAPI(context, param);
+        } else if (postText.text.isNotEmpty &&
+            _controller?.value.isPlaying == true) {
+          Map<String, dynamic> param = {
+            "description": postText.text,
+            "postData": imageDataPost?.object?.data,
+            "postDataType": "VIDEO",
+            "postType": soicalData[indexx].toString().toUpperCase()
+          };
+          BlocProvider.of<AddPostCubit>(context).InvitationAPI(context, param);
+        } else {
+          if (postText.text.isNotEmpty) {
+            Map<String, dynamic> param = {};
+            if (widget.edittextdata != "" || widget.edittextdata != null) {
+              param = {
+                "description": postText.text,
+                "postType": soicalData[indexx].toString().toUpperCase(),
+                "postUid": widget.PostID
+              };
+            } else {
+              param = {
+                "description": postText.text,
+                "postType": soicalData[indexx].toString().toUpperCase()
+              };
+            }
+
+            BlocProvider.of<AddPostCubit>(context)
+                .InvitationAPI(context, param);
+          } else if (file?.path != null) {
             Map<String, dynamic> param = {
-              "description": postText.text,
               "postData": imageDataPost?.object?.data,
               "postDataType": "IMAGE",
-              "postType": soicalData[indexx].toString().toUpperCase()
+              "postType": soicalData[indexx].toString().toUpperCase(),
             };
             BlocProvider.of<AddPostCubit>(context)
                 .InvitationAPI(context, param);
-          } else if (postText.text.isNotEmpty && file12?.path != null) {
+          } else if (pickedFile?.path != null) {
             Map<String, dynamic> param = {
-              "description": postText.text,
+              "postData": imageDataPost?.object?.data,
+              "postDataType": "IMAGE",
+              "postType": soicalData[indexx].toString().toUpperCase(),
+            };
+            BlocProvider.of<AddPostCubit>(context)
+                .InvitationAPI(context, param);
+          } else if (file12?.path != null) {
+            Map<String, dynamic> param = {
               "postData": imageDataPost?.object?.data,
               "postDataType": "ATTACHMENT",
-              "postType": soicalData[indexx].toString().toUpperCase()
+              "postType": soicalData[indexx].toString().toUpperCase(),
+              "thumbnailImageUrl": imageDataPost?.object?.thumbnailImageUrl,
             };
             BlocProvider.of<AddPostCubit>(context)
                 .InvitationAPI(context, param);
-          } else if (postText.text.isNotEmpty && pickedImage.isNotEmpty) {
+          } else if (pickedImage.isNotEmpty) {
             Map<String, dynamic> param = {
-              "description": postText.text,
               "postData": imageDataPost?.object?.data,
               "postDataType": "IMAGE",
-              "postType": soicalData[indexx].toString().toUpperCase()
+              "postType": soicalData[indexx].toString().toUpperCase(),
             };
             BlocProvider.of<AddPostCubit>(context)
                 .InvitationAPI(context, param);
-          } else if (pickedFile?.path != null && postText.text.isNotEmpty) {
+          } else if (_controller?.value.isPlaying == true) {
             Map<String, dynamic> param = {
-              "description": postText.text,
               "postData": imageDataPost?.object?.data,
-              "postDataType": "IMAGE",
-              "postType": soicalData[indexx].toString().toUpperCase()
+              "postDataType": "VIDEO",
+              "postType": soicalData[indexx].toString().toUpperCase(),
             };
             BlocProvider.of<AddPostCubit>(context)
                 .InvitationAPI(context, param);
           } else {
-            if (postText.text.isNotEmpty) {
-              Map<String, dynamic> param = {
-                "description": postText.text,
-                "postType": soicalData[indexx].toString().toUpperCase()
-              };
-              BlocProvider.of<AddPostCubit>(context)
-                  .InvitationAPI(context, param);
-            } else if (file?.path != null) {
-              Map<String, dynamic> param = {
-                "postData": imageDataPost?.object?.data,
-                "postDataType": "IMAGE",
-                "postType": soicalData[indexx].toString().toUpperCase(),
-              };
-              BlocProvider.of<AddPostCubit>(context)
-                  .InvitationAPI(context, param);
-            } else if (pickedFile?.path != null) {
-              Map<String, dynamic> param = {
-                "postData": imageDataPost?.object?.data,
-                "postDataType": "IMAGE",
-                "postType": soicalData[indexx].toString().toUpperCase(),
-              };
-              BlocProvider.of<AddPostCubit>(context)
-                  .InvitationAPI(context, param);
-            } else if (file12?.path != null) {
-              Map<String, dynamic> param = {
-                "postData": imageDataPost?.object?.data,
-                "postDataType": "ATTACHMENT",
-                "postType": soicalData[indexx].toString().toUpperCase(),
-              };
-              BlocProvider.of<AddPostCubit>(context)
-                  .InvitationAPI(context, param);
-            } else if (pickedImage.isNotEmpty) {
-              Map<String, dynamic> param = {
-                "postData": imageDataPost?.object?.data,
-                "postDataType": "IMAGE",
-                "postType": soicalData[indexx].toString().toUpperCase(),
-              };
-              BlocProvider.of<AddPostCubit>(context)
-                  .InvitationAPI(context, param);
-            } else {
-              SnackBar snackBar = SnackBar(
-                content: Text('Please Select Image either fill Text'),
-                backgroundColor: ColorConstant.primary_color,
-              );
-              ScaffoldMessenger.of(context).showSnackBar(snackBar);
-            }
+            SnackBar snackBar = SnackBar(
+              content: Text('Please Select Image either fill Text'),
+              backgroundColor: ColorConstant.primary_color,
+            );
+            ScaffoldMessenger.of(context).showSnackBar(snackBar);
           }
         }
-        /* } */
-      } else {
-        CreatePostDone = false;
+      }
+      /* } */
+      // } else {
+      /*   CreatePostDone = false;
         SnackBar snackBar = SnackBar(
           content: Text('Please HaseTag less than 25 letter!!'),
           backgroundColor: ColorConstant.primary_color,
         );
         ScaffoldMessenger.of(context).showSnackBar(snackBar);
-      }
+      } */
     }
   }
 
@@ -1799,7 +2016,7 @@ class _CreateNewPostState extends State<CreateNewPost> {
                 child: Container(
                   decoration: BoxDecoration(
                       color: indexx == index
-                          ? Color(0xffED1C25)
+                          ? ColorConstant.primary_color
                           : Colors.transparent,
                       borderRadius: BorderRadius.circular(5)),
                   width: 130,

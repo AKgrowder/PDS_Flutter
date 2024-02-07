@@ -44,8 +44,21 @@ class PreferencesKey {
   static String MaxPublicRoomSave = "MaxPublicRoomSave";
   static String RoomPageCount = "RoomPageCount";
   static String AutoSetRoomID = "AutoSetRoomID";
+  static String AutoOpenPostID = "AutoOpenPostID";
+
+  static String AutoOpenPostBool = "AutoOpenPostBool";
+
   static String tabSelction = "tabSelction";
   static String MaxPostUploadSizeInMB = "MaxPostUploadSizeInMB";
   static String MaxStoryUploadSizeInMB = "MaxStoryUploadSizeInMB";
+  static String MaxInboxUploadSizeInMB = "MaxInboxUploadSizeInMB";
+  static String NotificationCount = "NotificationCount";
+  static String MessageCount = "MessageCount";
+  static String StroyLengthCheck = "StroyLengthCheck";
+  static String AwsImageInPackagingLogoUrl = "AwsImageInPackagingLogoUrl";
 
+  static String PushNotificationUID = "PushNotificationUID";
+  static String PushNotificationSubject = "PushNotificationSubject";
+
+  
 }

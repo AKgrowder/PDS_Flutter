@@ -3,7 +3,6 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http/http.dart';
 import 'package:http/http.dart' as http;
 import 'package:pds/core/utils/color_constant.dart';
@@ -31,6 +30,8 @@ class ApiServices {
           // "https://0b8e-2405-201-200b-a0cf-4523-3bc3-2996-dc22.ngrok.io/";
           // "https://uatapi.packagingdepot.store/";
           // "https://api.packagingdepot.store/";
+          // "https://uatapi.inpackaging.com/";
+          // "https://api.inpackaging.com/";
           "http://192.168.29.100:8081/";
     }
 
@@ -68,6 +69,8 @@ class ApiServices {
           // "https://0b8e-2405-201-200b-a0cf-4523-3bc3-2996-dc22.ngrok.io/";
           // "https://uatapi.packagingdepot.store/";
           // "https://api.packagingdepot.store/";
+          // "https://uatapi.inpackaging.com/";
+          // "https://api.inpackaging.com/";
           "http://192.168.29.100:8081/";
     }
     print("API => ******** ${baseURL + APIurl}");
@@ -123,6 +126,44 @@ class ApiServices {
     print("API =>******${baseURL + APIurl}");
     final response = await delete(Uri.parse(baseURL + APIurl),
         headers: headers1, body: json.encode(params));
+
+    if (response.statusCode == 602) {
+      await setLOGOUT(context);
+    } else {
+      return response;
+    }
+  }
+
+  Future<Response?> deleteApiCall1(String APIurl, BuildContext context) async {
+    await UpdateBaseURL();
+
+    print("API =>******${baseURL + APIurl}");
+    final response = await delete(
+      Uri.parse(baseURL + APIurl),
+    );
+
+    if (response.statusCode == 602) {
+      await setLOGOUT(context);
+    } else {
+      return response;
+    }
+  }
+
+  Future<Response?> deleteApiCallWithToken(
+      String APIurl, BuildContext context) async {
+    await UpdateBaseURL();
+
+    await UpdateBaseURL();
+
+    final headers1 = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ${Token}'
+    };
+    print("API =>******${baseURL + APIurl}");
+    final response = await delete(
+      Uri.parse(baseURL + APIurl),
+      headers: headers1,
+    );
 
     if (response.statusCode == 602) {
       await setLOGOUT(context);
@@ -207,10 +248,13 @@ class ApiServices {
         response.fields["userBackgroundPic"] = params['userBackgroundPic'];
       } else if (params['userProfilePic'] != null) {
         response.fields["userProfilePic"] = params['userProfilePic'];
+      } else if (params['documentName'] != null) {
+        response.fields["documentName"] = params['documentName'];
       } else {
         print("multipartFile2 else condions working on--");
       }
       response.fields["document"] = params['document'];
+
       response.fields["companyName"] = params['companyName'];
       response.fields["jobProfile"] = params['jobProfile'];
       response.fields["profileUid"] = params['profileUid'];
@@ -263,6 +307,7 @@ class ApiServices {
       if (apiName != 'create forum') {
         response.fields["document"] = params['document'] ?? "";
         response.fields["companyName"] = params['companyName'] ?? "";
+        response.fields["documentName"] = params['documentName'] ?? "";
         response.fields["jobProfile"] = params['jobProfile'] ?? "";
         response.fields["industryTypesUid"] = params['industryTypesUid'] ?? [];
 
@@ -320,11 +365,16 @@ class ApiServices {
     }
   }
 
-  multipartFileWithSoket(String APIurl, File imageFile, BuildContext context,
-      String roomId, String UserUid) async {
+  multipartFileWithSoket(
+    String APIurl,
+    File imageFile,
+    BuildContext context,
+  ) async {
     await UpdateBaseURL();
+    final headers1 = {'Authorization': 'Bearer ${Token}'};
     final response =
         await http.MultipartRequest('POST', Uri.parse(baseURL + APIurl));
+    response.headers.addAll(headers1);
     print("API =>******${baseURL + APIurl}");
     if (imageFile != null) {
       response.files

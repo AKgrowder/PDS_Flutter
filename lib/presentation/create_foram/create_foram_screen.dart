@@ -17,12 +17,10 @@ import 'package:pds/core/utils/image_constant.dart';
 import 'package:pds/core/utils/sharedPreferences.dart';
 import 'package:pds/presentation/%20new/newbottembar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 import '../../theme/theme_helper.dart';
 import '../policy_of_company/policy_screen.dart';
 import '../policy_of_company/privecy_policy.dart';
-import 'package:image/image.dart' as img;
-import 'package:path/path.dart' as path;
-import 'package:path_provider/path_provider.dart';
 
 class CreateForamScreen extends StatefulWidget {
   const CreateForamScreen({Key? key}) : super(key: key);
@@ -65,6 +63,7 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
   List<String> industryUUID = [];
 
   getDocumentSize() async {
+    await BlocProvider.of<CreatFourmCubit>(context).seetinonExpried(context);
     final SharedPreferences prefs = await SharedPreferences.getInstance();
 
     documentuploadsize =
@@ -156,7 +155,7 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
           }
           if (state is CreatFourmLoadedState) {
             SnackBar snackBar = SnackBar(
-              content: Text(state.createForm.message ?? ""),
+              content: Text(state.createForm.object ?? ""),
               backgroundColor: ColorConstant.primary_color,
             );
             String industryType = industryUUID.join(', ');
@@ -164,7 +163,8 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
               'document': chooseDocument?.object.toString(),
               'companyName': name.text,
               'jobProfile': profile.text,
-              'industryTypesUid': industryType
+              'industryTypesUid': industryType,
+              'documentName' : dopcument
             };
 
             // Navigator.pushAndRemoveUntil(context, MaterialPageRoute(
@@ -185,6 +185,7 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
                     params, uplopdfile.text, filepath.toString(), context));
             ScaffoldMessenger.of(context).showSnackBar(snackBar);
             print('check Status--${state.createForm.success}');
+            print("${dopcument} :- dopcumentdopcumentdopcumentdopcumentdopcumentdopcument");
           }
         },
         builder: (context, state) {
@@ -566,12 +567,15 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
                             'document': chooseDocument?.object.toString(),
                             'companyName': name.text,
                             'jobProfile': profile.text,
-                            'industryTypesUid': industryType
+                            'industryTypesUid': industryType,
+                            'documentName' : dopcument
                           };
 
                           print('button-$params');
 
                           if (SubmitOneTime == false) {
+                            print(
+                                "${dopcument} :- dopcumentdopcumentdopcumentdopcumentdopcumentdopcument");
                             SubmitOneTime = true;
                             BlocProvider.of<CreatFourmCubit>(context)
                                 .CreatFourm(params, uplopdfile.text,
@@ -584,7 +588,7 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
                           height: 50,
                           width: _width / 1.2,
                           decoration: BoxDecoration(
-                              color: Color(0XFFED1C25),
+                              color: ColorConstant.primary_color,
                               borderRadius: BorderRadius.circular(5)),
                           child: Center(
                             child: Text(
@@ -680,7 +684,7 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
                                   ));
                             },
                             child: Text(
-                              "Privacy & Policy  of PDS Terms",
+                              "Privacy & Policy  of IP Terms",
                               style: TextStyle(
                                 color: theme.colorScheme.primary,
                                 fontSize: 14,
@@ -807,10 +811,10 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
             uiSettings: [
               AndroidUiSettings(
                   toolbarTitle: 'Cropper',
-                  toolbarColor: Color(0xffED1C25),
+                  toolbarColor: ColorConstant.primary_color,
                   toolbarWidgetColor: Colors.white,
                   initAspectRatio: CropAspectRatioPreset.original,
-                  activeControlsWidgetColor: Color(0xffED1C25),
+                  activeControlsWidgetColor: ColorConstant.primary_color,
                   lockAspectRatio: false),
               IOSUiSettings(
                 title: 'Cropper',
@@ -821,12 +825,14 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
             ],
           );
           if (croppedFile != null) {
+            dopcument = file1.name;
             /* setState(() {
               uplopdfile.text = croppedFile.path.split('/').last;
               dopcument = file1.name;
             }); */
             BlocProvider.of<CreatFourmCubit>(context).chooseDocumentprofile(
                 dopcument.toString(), croppedFile.path, context);
+                
           } else {
             BlocProvider.of<CreatFourmCubit>(context).chooseDocumentprofile(
                 dopcument.toString(), file1.path!, context);

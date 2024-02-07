@@ -21,7 +21,7 @@ void onConnect(StompFrame frame) {
   );
 
   DMstompClient.subscribe(
-    destination: "/topic/getDeletedMessage/${DMChatInboxUid}",
+    destination: "/topic/getDeletedInboxMessage/${DMChatInboxUid}",
     callback: (StompFrame frame) {
       print('Received message Delete-: ${frame.body}');
       // Process the received message
@@ -39,7 +39,7 @@ void onConnect(StompFrame frame) {
     );
 
     DMstompClient.subscribe(
-      destination: "/topic/getDeletedMessage/${DMChatInboxUid}",
+      destination: "/topic/getDeletedInboxMessage/${DMChatInboxUid}",
       callback: (StompFrame frame) {
         print("Delete Meassge --------------------------------------------------------------------");
         print('Received message Delete --->: ${frame.body}');
@@ -49,7 +49,7 @@ void onConnect(StompFrame frame) {
   });
 }
 
-final DMstompClient = StompClient(
+var  DMstompClient = StompClient(
   config: StompConfig(
     url:
         // "ws://d91d-2405-201-200b-a0cf-d0c7-a57a-7eba-c736.ngrok.io/user/pdsChat",

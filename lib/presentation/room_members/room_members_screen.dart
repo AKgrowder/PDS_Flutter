@@ -166,7 +166,7 @@ class _RoomMembersScreenState extends State<RoomMembersScreen> {
                     height: _height / 8,
                     width: _width / 1.2,
                     decoration: BoxDecoration(
-                      color: Color(0xFFFFE7E7),
+                      color:ColorConstant.primaryLight_color,
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: Column(
@@ -306,13 +306,26 @@ class _RoomMembersScreenState extends State<RoomMembersScreen> {
                               SizedBox(
                                 width: 10,
                               ),
-                              Text(
-                                "${_data?.object?[index].fullName ?? ""}",
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.black,
-                                    fontFamily: "outfit",
-                                    fontSize: 15),
+                              GestureDetector(
+                                onTap: () {
+                                  Navigator.push(context,
+                                      MaterialPageRoute(builder: (context) {
+                                    return ProfileScreen(
+                                        User_ID:
+                                            "${_data?.object?[index].userUuid}",
+                                        isFollowing: "");
+                                  }));
+                                },
+                                child: Container(
+                                  child: Text(
+                                    "${_data?.object?[index].fullName ?? ""}",
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.black,
+                                        fontFamily: "outfit",
+                                        fontSize: 15),
+                                  ),
+                                ),
                               ),
                               // _data?.object?[index].isExpert == true
                               //     ? Container(
@@ -460,7 +473,7 @@ class _RoomMembersScreenState extends State<RoomMembersScreen> {
                                                                                   style: TextStyle(
                                                                                     fontFamily: 'outfit',
                                                                                     fontSize: 15,
-                                                                                    color: Color(0xFFED1C25),
+                                                                                    color: ColorConstant.primary_color,
                                                                                     fontWeight: FontWeight.w400,
                                                                                   ),
                                                                                 )),
@@ -475,7 +488,7 @@ class _RoomMembersScreenState extends State<RoomMembersScreen> {
                                                                               child: Container(
                                                                                 height: 43,
                                                                                 width: _width / 3.5,
-                                                                                decoration: BoxDecoration(color: Color(0xFFED1C25), borderRadius: BorderRadius.circular(10)),
+                                                                                decoration: BoxDecoration(color: ColorConstant.primary_color, borderRadius: BorderRadius.circular(10)),
                                                                                 child: Center(
                                                                                     child: Text(
                                                                                   "Exit",
@@ -599,7 +612,7 @@ class _RoomMembersScreenState extends State<RoomMembersScreen> {
                                                                                     style: TextStyle(
                                                                                       fontFamily: 'outfit',
                                                                                       fontSize: 15,
-                                                                                      color: Color(0xFFED1C25),
+                                                                                      color: ColorConstant.primary_color,
                                                                                       fontWeight: FontWeight.w400,
                                                                                     ),
                                                                                   )),
@@ -614,7 +627,7 @@ class _RoomMembersScreenState extends State<RoomMembersScreen> {
                                                                                 child: Container(
                                                                                   height: 43,
                                                                                   width: _width / 3.5,
-                                                                                  decoration: BoxDecoration(color: Color(0xFFED1C25), borderRadius: BorderRadius.circular(10)),
+                                                                                  decoration: BoxDecoration(color: ColorConstant.primary_color, borderRadius: BorderRadius.circular(10)),
                                                                                   child: Center(
                                                                                       child: Text(
                                                                                     "Exit",
@@ -661,7 +674,7 @@ class _RoomMembersScreenState extends State<RoomMembersScreen> {
                                                         bottom: 5),
                                                     decoration: BoxDecoration(
                                                         color:
-                                                            Color(0xffED1C25),
+                                                            ColorConstant.primary_color,
                                                         borderRadius:
                                                             BorderRadius
                                                                 .circular(4)),
@@ -894,7 +907,7 @@ class _RoomMembersScreenState extends State<RoomMembersScreen> {
                                                                                       style: TextStyle(
                                                                                         fontFamily: 'outfit',
                                                                                         fontSize: 15,
-                                                                                        color: Color(0xFFED1C25),
+                                                                                        color: ColorConstant.primary_color,
                                                                                         fontWeight: FontWeight.w400,
                                                                                       ),
                                                                                     )),
@@ -909,7 +922,7 @@ class _RoomMembersScreenState extends State<RoomMembersScreen> {
                                                                                   child: Container(
                                                                                     height: 43,
                                                                                     width: _width / 3.5,
-                                                                                    decoration: BoxDecoration(color: Color(0xFFED1C25), borderRadius: BorderRadius.circular(10)),
+                                                                                    decoration: BoxDecoration(color: ColorConstant.primary_color, borderRadius: BorderRadius.circular(10)),
                                                                                     child: Center(
                                                                                         child: Text(
                                                                                       "Exit",
@@ -956,8 +969,7 @@ class _RoomMembersScreenState extends State<RoomMembersScreen> {
                                                         margin: EdgeInsets.only(
                                                             bottom: 5),
                                                         decoration: BoxDecoration(
-                                                            color: Color(
-                                                                0xffED1C25),
+                                                            color: ColorConstant.primary_color,
                                                             borderRadius:
                                                                 BorderRadius
                                                                     .circular(
@@ -1129,8 +1141,7 @@ class _RoomMembersScreenState extends State<RoomMembersScreen> {
                                                             fontFamily:
                                                                 'outfit',
                                                             fontSize: 15,
-                                                            color: Color(
-                                                                0xFFED1C25),
+                                                            color:ColorConstant.primary_color,
                                                             fontWeight:
                                                                 FontWeight.w400,
                                                           ),
@@ -1156,8 +1167,7 @@ class _RoomMembersScreenState extends State<RoomMembersScreen> {
                                                         height: 43,
                                                         width: _width / 3.5,
                                                         decoration: BoxDecoration(
-                                                            color: Color(
-                                                                0xFFED1C25),
+                                                            color:ColorConstant.primary_color,
                                                             borderRadius:
                                                                 BorderRadius
                                                                     .circular(
@@ -1368,7 +1378,7 @@ class _RoomMembersScreenState extends State<RoomMembersScreen> {
                                       style: TextStyle(
                                         fontFamily: 'outfit',
                                         fontSize: 15,
-                                        color: Color(0xFFED1C25),
+                                        color: ColorConstant.primary_color,
                                         fontWeight: FontWeight.w400,
                                       ),
                                     )),
@@ -1391,7 +1401,7 @@ class _RoomMembersScreenState extends State<RoomMembersScreen> {
                                     height: 43,
                                     width: _width / 3.5,
                                     decoration: BoxDecoration(
-                                        color: Color(0xFFED1C25),
+                                        color: ColorConstant.primary_color,
                                         borderRadius:
                                             BorderRadius.circular(10)),
                                     child: Center(
@@ -1618,7 +1628,7 @@ class _RoomMembersScreenState extends State<RoomMembersScreen> {
                                     height: 43,
                                     width: _width / 3.5,
                                     decoration: BoxDecoration(
-                                        color: Color(0xFFED1C25),
+                                        color: ColorConstant.primary_color,
                                         borderRadius:
                                             BorderRadius.circular(10)),
                                     child: Center(
@@ -1650,7 +1660,7 @@ class _RoomMembersScreenState extends State<RoomMembersScreen> {
                                       style: TextStyle(
                                         fontFamily: 'outfit',
                                         fontSize: 15,
-                                        color: Color(0xFFED1C25),
+                                        color: ColorConstant.primary_color,
                                         fontWeight: FontWeight.w400,
                                       ),
                                     )),
@@ -1895,7 +1905,7 @@ class _RoomMembersScreenState extends State<RoomMembersScreen> {
                                     height: 43,
                                     width: _width / 3.5,
                                     decoration: BoxDecoration(
-                                        color: Color(0xFFED1C25),
+                                        color: ColorConstant.primary_color,
                                         borderRadius:
                                             BorderRadius.circular(10)),
                                     child: Center(
@@ -1927,7 +1937,7 @@ class _RoomMembersScreenState extends State<RoomMembersScreen> {
                                       style: TextStyle(
                                         fontFamily: 'outfit',
                                         fontSize: 15,
-                                        color: Color(0xFFED1C25),
+                                        color: ColorConstant.primary_color,
                                         fontWeight: FontWeight.w400,
                                       ),
                                     )),

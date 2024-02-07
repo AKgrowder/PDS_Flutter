@@ -1,8 +1,9 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hashtagable/widgets/hashtag_text.dart';
 import 'package:intl/intl.dart';
+import 'package:linkfy_text/linkfy_text.dart';
 import 'package:pds/API/Bloc/HashTag_Bloc/HashTag_cubit.dart';
 import 'package:pds/API/Bloc/HashTag_Bloc/HashTag_state.dart';
 import 'package:pds/API/Bloc/NewProfileScreen_Bloc/NewProfileScreen_cubit.dart';
@@ -12,13 +13,17 @@ import 'package:pds/core/utils/image_constant.dart';
 import 'package:pds/presentation/%20new/OpenSavePostImage.dart';
 import 'package:pds/presentation/%20new/ShowAllPostLike.dart';
 import 'package:pds/presentation/%20new/comment_bottom_sheet.dart';
+import 'package:pds/presentation/%20new/home_screen_new.dart';
+import 'package:pds/presentation/%20new/newbottembar.dart';
 import 'package:pds/presentation/%20new/profileNew.dart';
 import 'package:pds/widgets/commentPdf.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../API/Bloc/GuestAllPost_Bloc/GuestAllPost_cubit.dart';
 import '../../API/Model/GetGuestAllPostModel/GetGuestAllPost_Model.dart';
 import '../../API/Model/HashTage_Model/HashTagView_model.dart';
+import '../../API/Model/UserTagModel/UserTag_model.dart';
 import '../../core/utils/sharedPreferences.dart';
 import '../../widgets/custom_image_view.dart';
 import '../register_create_account_screen/register_create_account_screen.dart';
@@ -42,7 +47,7 @@ class _HashTagViewScreenState extends State<HashTagViewScreen> {
   List<PageController> _pageControllers = [];
   List<int> _currentPages = [];
   int imageCount = 1;
-
+  UserTagModel? userTagModel;
   @override
   void initState() {
     super.initState();
@@ -94,7 +99,7 @@ class _HashTagViewScreenState extends State<HashTagViewScreen> {
           //   ),
           // ),
           body: BlocConsumer<HashTagCubit, HashTagState>(
-        listener: (context, state) {
+        listener: (context, state) async {
           if (state is HashTagErrorState) {
             SnackBar snackBar = SnackBar(
               content: Text(state.error),
@@ -105,6 +110,23 @@ class _HashTagViewScreenState extends State<HashTagViewScreen> {
           if (state is HashTagViewDataLoadedState) {
             hashTagViewData = state.HashTagViewData;
             print("HashTagViewDataLoadedState${hashTagViewData}");
+          }
+          if (state is PostLikeLoadedState) {
+            SnackBar snackBar = SnackBar(
+              content: Text(state.likePost.object.toString()),
+              backgroundColor: ColorConstant.primary_color,
+            );
+            ScaffoldMessenger.of(context).showSnackBar(snackBar);
+            BlocProvider.of<HashTagCubit>(context)
+                .HashTagViewDataAPI(context, widget.title.toString());
+          }
+          if (state is UserTagHashTagLoadedState) {
+            userTagModel = await state.userTagModel;
+            print("hey i am comming in profilr screen !!");
+            Navigator.push(context, MaterialPageRoute(builder: (context) {
+              return ProfileScreen(
+                  User_ID: "${userTagModel?.object}", isFollowing: "");
+            }));
           }
         },
         builder: (context, state) {
@@ -246,13 +268,46 @@ class _HashTagViewScreenState extends State<HashTagViewScreen> {
                                                     ImageConstant.tomcruse),
                                               ),
                                       ),
-                                      title: Text(
-                                        "${hashTagViewData?.object?.posts?[index].postUserName}",
-                                        style: TextStyle(
-                                          color: Colors.black,
-                                          fontSize: 16,
-                                          fontFamily: 'outfit',
-                                          fontWeight: FontWeight.w600,
+                                      title: GestureDetector(
+                                        onTap: () {
+                                          if (uuid == null) {
+                                            Navigator.of(context).push(
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        RegisterCreateAccountScreen()));
+                                          } else {
+                                            Navigator.push(context,
+                                                MaterialPageRoute(
+                                                    builder: (context) {
+                                              return MultiBlocProvider(
+                                                  providers: [
+                                                    BlocProvider<
+                                                        NewProfileSCubit>(
+                                                      create: (context) =>
+                                                          NewProfileSCubit(),
+                                                    ),
+                                                  ],
+                                                  child: ProfileScreen(
+                                                      User_ID:
+                                                          "${hashTagViewData?.object?.posts?[index].userUid}",
+                                                      isFollowing:
+                                                          hashTagViewData
+                                                              ?.object
+                                                              ?.posts?[index]
+                                                              .isFollowing));
+                                            }));
+                                          }
+                                        },
+                                        child: Container(
+                                          child: Text(
+                                            "${hashTagViewData?.object?.posts?[index].postUserName}",
+                                            style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 16,
+                                              fontFamily: 'outfit',
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                          ),
                                         ),
                                       ),
                                       subtitle: Text(
@@ -291,7 +346,8 @@ class _HashTagViewScreenState extends State<HashTagViewScreen> {
                                                 margin:
                                                     EdgeInsets.only(bottom: 5),
                                                 decoration: BoxDecoration(
-                                                    color: Color(0xffED1C25),
+                                                    color: ColorConstant
+                                                        .primary_color,
                                                     borderRadius:
                                                         BorderRadius.circular(
                                                             4)),
@@ -352,35 +408,148 @@ class _HashTagViewScreenState extends State<HashTagViewScreen> {
                                               left: 20, right: 20),
                                           child: Align(
                                             alignment: Alignment.topLeft,
-                                            child: HashTagText(
-                                              text:
-                                                  "${hashTagViewData?.object?.posts?[index].description}",
-                                              decoratedStyle: TextStyle(
-                                                  fontFamily: "outfit",
-                                                  fontSize: 14,
-                                                  fontWeight: FontWeight.bold,
-                                                  color: ColorConstant
-                                                      .HasTagColor),
-                                              basicStyle: TextStyle(
-                                                  fontFamily: "outfit",
-                                                  fontSize: 14,
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Colors.black),
-                                              onTap: (text) {
-                                                print(text);
-                                                if (widget.title == text) {
-                                                } else {
-                                                  Navigator.push(
-                                                      context,
-                                                      MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            HashTagViewScreen(
-                                                                title:
-                                                                    "${text}"),
+                                            child: LinkifyText(
+                                              "${hashTagViewData?.object?.posts?[index].description}",
+                                              linkStyle: TextStyle(
+                                                color: Colors.blue,
+                                                fontFamily: 'outfit',
+                                              ),
+                                              textStyle: TextStyle(
+                                                color: Colors.black,
+                                                fontFamily: 'outfit',
+                                              ),
+                                              linkTypes: [
+                                                LinkType.url,
+                                                LinkType.userTag,
+                                                LinkType.hashTag,
+                                                // LinkType
+                                                //     .email
+                                              ],
+                                              onTap: (link) async {
+                                                var SelectedTest =
+                                                    link.value.toString();
+                                                var Link =
+                                                    SelectedTest.startsWith(
+                                                        'https');
+                                                var Link1 =
+                                                    SelectedTest.startsWith(
+                                                        'http');
+                                                var Link2 =
+                                                    SelectedTest.startsWith(
+                                                        'www');
+                                                var Link3 =
+                                                    SelectedTest.startsWith(
+                                                        'WWW');
+                                                var Link4 =
+                                                    SelectedTest.startsWith(
+                                                        'HTTPS');
+                                                var Link5 =
+                                                    SelectedTest.startsWith(
+                                                        'HTTP');
+                                                var Link6 = SelectedTest.startsWith(
+                                                    'https://pdslink.page.link/');
+                                                print(SelectedTest.toString());
+
+                                                if (Link == true ||
+                                                    Link1 == true ||
+                                                    Link2 == true ||
+                                                    Link3 == true ||
+                                                    Link4 == true ||
+                                                    Link5 == true ||
+                                                    Link6 == true) {
+                                                  if (Link2 == true ||
+                                                      Link3 == true) {
+                                                    launchUrl(Uri.parse(
+                                                        "https://${link.value.toString()}"));
+                                                  } else {
+                                                    if (Link6 == true) {
+                                                      print("yes i am in room");
+                                                      Navigator.push(context,
+                                                          MaterialPageRoute(
+                                                        builder: (context) {
+                                                          return NewBottomBar(
+                                                            buttomIndex: 1,
+                                                          );
+                                                        },
                                                       ));
+                                                    } else {
+                                                      launchUrl(Uri.parse(link
+                                                          .value
+                                                          .toString()));
+                                                      print(
+                                                          "link.valuelink.value -- ${link.value}");
+                                                    }
+                                                  }
+                                                } else {
+                                                  if (link.value!
+                                                      .startsWith('#')) {
+                                                    print("${link}");
+                                                    if (widget.title ==
+                                                        link.value) {
+                                                    } else {
+                                                      Navigator.push(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                HashTagViewScreen(
+                                                                    title:
+                                                                        "${link.value}"),
+                                                          ));
+                                                    }
+                                                  } else if (link.value!
+                                                      .startsWith('@')) {
+                                                    var name;
+                                                    var tagName;
+                                                    name = SelectedTest;
+                                                    tagName = name.replaceAll(
+                                                        "@", "");
+                                                    await BlocProvider.of<
+                                                                HashTagCubit>(
+                                                            context)
+                                                        .UserTagAPI(
+                                                            context, tagName);
+
+                                                    print(
+                                                        "tagName -- ${tagName}");
+                                                    print(
+                                                        "user id -- ${userTagModel?.object}");
+                                                  } else {
+                                                    launchUrl(Uri.parse(
+                                                        "https://${link.value.toString()}"));
+                                                  }
                                                 }
                                               },
                                             ),
+
+                                            // HashTagText(
+                                            //   text:
+                                            //       "${hashTagViewData?.object?.posts?[index].description}",
+                                            //   decoratedStyle: TextStyle(
+                                            //       fontFamily: "outfit",
+                                            //       fontSize: 14,
+                                            //       fontWeight: FontWeight.bold,
+                                            //       color: ColorConstant
+                                            //           .HasTagColor),
+                                            //   basicStyle: TextStyle(
+                                            //       fontFamily: "outfit",
+                                            //       fontSize: 14,
+                                            //       fontWeight: FontWeight.bold,
+                                            //       color: Colors.black),
+                                            //   onTap: (text) {
+                                            //     print(text);
+                                            //     if (widget.title == text) {
+                                            //     } else {
+                                            //       Navigator.push(
+                                            //           context,
+                                            //           MaterialPageRoute(
+                                            //             builder: (context) =>
+                                            //                 HashTagViewScreen(
+                                            //                     title:
+                                            //                         "${text}"),
+                                            //           ));
+                                            //     }
+                                            //   },
+                                            // ),
                                           ),
                                         )
                                       : SizedBox(),
@@ -389,254 +558,293 @@ class _HashTagViewScreenState extends State<HashTagViewScreen> {
                                           null
                                       ? SizedBox()
                                       : hashTagViewData?.object?.posts?[index]
-                                                  .postData?.length ==
-                                              1
-                                          ? (hashTagViewData
+                                                  .postDataType ==
+                                              "VIDEO"
+                                          ? Padding(
+                                              padding: const EdgeInsets.only(
+                                                  right: 20, top: 15),
+                                              child: VideoListItem(
+                                                videoUrl: hashTagViewData
+                                                        ?.object
+                                                        ?.posts?[index]
+                                                        .postData
+                                                        ?.first ??
+                                                    '',
+                                              ),
+                                            )
+                                          : hashTagViewData
                                                       ?.object
                                                       ?.posts?[index]
-                                                      .postDataType ==
-                                                  "IMAGE"
-                                              ? GestureDetector(
-                                                  onTap: () {
-                                                    Navigator.push(
-                                                      context,
-                                                      MaterialPageRoute(
-                                                          builder: (context) =>
-                                                              OpenSavePostImage(
+                                                      .postData
+                                                      ?.length ==
+                                                  1
+                                              ? (hashTagViewData
+                                                          ?.object
+                                                          ?.posts?[index]
+                                                          .postDataType ==
+                                                      "IMAGE"
+                                                  ? GestureDetector(
+                                                      onTap: () {
+                                                        Navigator.push(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                              builder: (context) => OpenSavePostImage(
                                                                   PostID: hashTagViewData
                                                                           ?.object
                                                                           ?.posts?[
                                                                               index]
                                                                           .postUid ??
                                                                       "")),
-                                                    );
-                                                  },
-                                                  child: Container(
-                                                    // height: 230,
-                                                    // width: _width,
-                                                    margin: EdgeInsets.only(
-                                                        left: 16,
-                                                        top: 15,
-                                                        right: 16),
-                                                    child: Center(
-                                                        child: CustomImageView(
-                                                      url:
-                                                          "${hashTagViewData?.object?.posts?[index].postData?[0]}",
-                                                    )),
-                                                  ),
-                                                )
-                                              : hashTagViewData
-                                                          ?.object
-                                                          ?.posts?[index]
-                                                          .postDataType ==
-                                                      "ATTACHMENT"
-                                                  ? (hashTagViewData
+                                                        );
+                                                      },
+                                                      child: Container(
+                                                        // height: 230,
+                                                        // width: _width,
+                                                        margin: EdgeInsets.only(
+                                                            left: 16,
+                                                            top: 15,
+                                                            right: 16),
+                                                        child: Center(
+                                                            child:
+                                                                CustomImageView(
+                                                          url:
+                                                              "${hashTagViewData?.object?.posts?[index].postData?[0]}",
+                                                        )),
+                                                      ),
+                                                    )
+                                                  : hashTagViewData
                                                               ?.object
                                                               ?.posts?[index]
-                                                              .postData
-                                                              ?.isNotEmpty ==
-                                                          true)
-                                                      ? Container(
-                                                          height: 230,
-                                                          width: _width,
-                                                          child:
-                                                              DocumentViewScreen1(
-                                                            path:
-                                                                hashTagViewData
-                                                                    ?.object
-                                                                    ?.posts?[
-                                                                        index]
-                                                                    .postData?[
-                                                                        0]
-                                                                    .toString(),
-                                                          ))
-                                                      : SizedBox()
-                                                  : SizedBox())
-                                          : Column(
-                                              children: [
-                                                Stack(
-                                                  children: [
-                                                    if ((hashTagViewData
-                                                            ?.object
-                                                            ?.posts?[index]
-                                                            .postData
-                                                            ?.isNotEmpty ==
-                                                        true))
-                                                      SizedBox(
-                                                        height: 230,
-                                                        child: PageView.builder(
-                                                          onPageChanged:
-                                                              (page) {
-                                                            setState(() {
-                                                              _currentPages[
-                                                                  index] = page;
-                                                              imageCount =
-                                                                  page + 1;
-                                                            });
-                                                          },
-                                                          controller:
-                                                              _pageControllers[
-                                                                  index],
-                                                          itemCount:
-                                                              hashTagViewData
+                                                              .postDataType ==
+                                                          "ATTACHMENT"
+                                                      ? (hashTagViewData
                                                                   ?.object
                                                                   ?.posts?[
                                                                       index]
                                                                   .postData
-                                                                  ?.length,
-                                                          itemBuilder:
-                                                              (BuildContext
-                                                                      context,
-                                                                  int index1) {
-                                                            if (hashTagViewData
-                                                                    ?.object
-                                                                    ?.posts?[
-                                                                        index]
-                                                                    .postDataType ==
-                                                                "IMAGE") {
-                                                              return GestureDetector(
-                                                                onTap: () {
-                                                                  Navigator
-                                                                      .push(
-                                                                    context,
-                                                                    MaterialPageRoute(
-                                                                        builder: (context) =>
-                                                                            OpenSavePostImage(
-                                                                              PostID: hashTagViewData?.object?.posts?[index].postUid,
-                                                                              index: index,
-                                                                            )),
-                                                                  );
-                                                                },
-                                                                child:
-                                                                    Container(
+                                                                  ?.isNotEmpty ==
+                                                              true)
+                                                          ? Stack(
+                                                              children: [
+                                                                Container(
                                                                   width: _width,
-                                                                  margin: EdgeInsets
-                                                                      .only(
+                                                                  color: Colors
+                                                                       .transparent,
+                                                                  /* child: DocumentViewScreen1(
+                                                                                            path: AllGuestPostRoomData?.object?.content?[index].postData?[0].toString(),
+                                                                                          ) */
+                                                                ),
+                                                                GestureDetector(
+                                                                  onTap: () {
+                                                                    print(
+                                                                        "objectobjectobjectobject");
+                                                                    Navigator.push(
+                                                                        context,
+                                                                        MaterialPageRoute(
+                                                                      builder:
+                                                                          (context) {
+                                                                        return DocumentViewScreen1(
+                                                                            path:
+                                                                                hashTagViewData?.object?.posts?[index].postData?[0].toString());
+                                                                      },
+                                                                    ));
+                                                                  },
+                                                                  child:
+                                                                      Container(
+                                                                    child:
+                                                                        CachedNetworkImage(
+                                                                      imageUrl: hashTagViewData
+                                                                              ?.object
+                                                                              ?.posts?[index]
+                                                                              .thumbnailImageUrl ??
+                                                                          "",
+                                                                      fit: BoxFit
+                                                                          .cover,
+                                                                    ),
+                                                                  ),
+                                                                )
+                                                              ],
+                                                            )
+                                                          : SizedBox()
+                                                      : SizedBox())
+                                              : Column(
+                                                  children: [
+                                                    Stack(
+                                                      children: [
+                                                        if ((hashTagViewData
+                                                                ?.object
+                                                                ?.posts?[index]
+                                                                .postData
+                                                                ?.isNotEmpty ==
+                                                            true))
+                                                          SizedBox(
+                                                            height: 230,
+                                                            child: PageView
+                                                                .builder(
+                                                              onPageChanged:
+                                                                  (page) {
+                                                                setState(() {
+                                                                  _currentPages[
+                                                                          index] =
+                                                                      page;
+                                                                  imageCount =
+                                                                      page + 1;
+                                                                });
+                                                              },
+                                                              controller:
+                                                                  _pageControllers[
+                                                                      index],
+                                                              itemCount:
+                                                                  hashTagViewData
+                                                                      ?.object
+                                                                      ?.posts?[
+                                                                          index]
+                                                                      .postData
+                                                                      ?.length,
+                                                              itemBuilder:
+                                                                  (BuildContext
+                                                                          context,
+                                                                      int index1) {
+                                                                if (hashTagViewData
+                                                                        ?.object
+                                                                        ?.posts?[
+                                                                            index]
+                                                                        .postDataType ==
+                                                                    "IMAGE") {
+                                                                  return GestureDetector(
+                                                                    onTap: () {
+                                                                      Navigator
+                                                                          .push(
+                                                                        context,
+                                                                        MaterialPageRoute(
+                                                                            builder: (context) =>
+                                                                                OpenSavePostImage(
+                                                                                  PostID: hashTagViewData?.object?.posts?[index].postUid,
+                                                                                  index: index,
+                                                                                )),
+                                                                      );
+                                                                    },
+                                                                    child:
+                                                                        Container(
+                                                                      width:
+                                                                          _width,
+                                                                      margin: EdgeInsets.only(
                                                                           left:
                                                                               16,
                                                                           top:
                                                                               15,
                                                                           right:
                                                                               16),
-                                                                  child: Center(
-                                                                      child:
-                                                                          Stack(
-                                                                    children: [
-                                                                      Align(
-                                                                        alignment:
-                                                                            Alignment.topCenter,
-                                                                        child:
-                                                                            CustomImageView(
-                                                                          url:
-                                                                              "${hashTagViewData?.object?.posts?[index].postData?[index1]}",
-                                                                        ),
-                                                                      ),
-                                                                      Align(
-                                                                        alignment:
-                                                                            Alignment.topRight,
-                                                                        child:
-                                                                            Card(
-                                                                          color:
-                                                                              Colors.transparent,
-                                                                          elevation:
-                                                                              0,
-                                                                          child: Container(
-                                                                              alignment: Alignment.center,
-                                                                              height: 30,
-                                                                              width: 50,
-                                                                              decoration: BoxDecoration(
-                                                                                color: Color.fromARGB(255, 2, 1, 1),
-                                                                                borderRadius: BorderRadius.all(Radius.circular(50)),
-                                                                              ),
-                                                                              child: Text(
-                                                                                imageCount.toString() + '/' + '${hashTagViewData?.object?.posts?[index].postData?.length}',
-                                                                                style: TextStyle(color: Colors.white),
-                                                                              )),
-                                                                        ),
-                                                                      )
-                                                                    ],
-                                                                  )),
-                                                                ),
-                                                              );
-                                                            } else if (hashTagViewData
-                                                                    ?.object
-                                                                    ?.posts?[
-                                                                        index]
-                                                                    .postDataType ==
-                                                                "ATTACHMENT") {
-                                                              return Container(
-                                                                  // height: 100,
-                                                                  width: _width,
-                                                                  child:
-                                                                      DocumentViewScreen1(
-                                                                    path: hashTagViewData
+                                                                      child: Center(
+                                                                          child: Stack(
+                                                                        children: [
+                                                                          Align(
+                                                                            alignment:
+                                                                                Alignment.topCenter,
+                                                                            child:
+                                                                                CustomImageView(
+                                                                              url: "${hashTagViewData?.object?.posts?[index].postData?[index1]}",
+                                                                            ),
+                                                                          ),
+                                                                          Align(
+                                                                            alignment:
+                                                                                Alignment.topRight,
+                                                                            child:
+                                                                                Card(
+                                                                              color: Colors.transparent,
+                                                                              elevation: 0,
+                                                                              child: Container(
+                                                                                  alignment: Alignment.center,
+                                                                                  height: 30,
+                                                                                  width: 50,
+                                                                                  decoration: BoxDecoration(
+                                                                                    color: Color.fromARGB(255, 2, 1, 1),
+                                                                                    borderRadius: BorderRadius.all(Radius.circular(50)),
+                                                                                  ),
+                                                                                  child: Text(
+                                                                                    imageCount.toString() + '/' + '${hashTagViewData?.object?.posts?[index].postData?.length}',
+                                                                                    style: TextStyle(color: Colors.white),
+                                                                                  )),
+                                                                            ),
+                                                                          )
+                                                                        ],
+                                                                      )),
+                                                                    ),
+                                                                  );
+                                                                } else if (hashTagViewData
                                                                         ?.object
                                                                         ?.posts?[
                                                                             index]
-                                                                        .postData?[
-                                                                            index1]
-                                                                        .toString(),
-                                                                  ));
-                                                            }
-                                                          },
-                                                        ),
-                                                      ),
-                                                    (hashTagViewData
-                                                                ?.object
-                                                                ?.posts?[index]
-                                                                .postData
-                                                                ?.isNotEmpty ==
-                                                            true)
-                                                        ? Positioned(
-                                                            bottom: 5,
-                                                            left: 0,
-                                                            right: 0,
-                                                            child: Padding(
-                                                              padding:
-                                                                  const EdgeInsets
+                                                                        .postDataType ==
+                                                                    "ATTACHMENT") {
+                                                                  return Container(
+                                                                      // height: 100,
+                                                                      width:
+                                                                          _width,
+                                                                      child:
+                                                                          DocumentViewScreen1(
+                                                                        path: hashTagViewData
+                                                                            ?.object
+                                                                            ?.posts?[index]
+                                                                            .postData?[index1]
+                                                                            .toString(),
+                                                                      ));
+                                                                }
+                                                              },
+                                                            ),
+                                                          ),
+                                                        (hashTagViewData
+                                                                    ?.object
+                                                                    ?.posts?[
+                                                                        index]
+                                                                    .postData
+                                                                    ?.isNotEmpty ==
+                                                                true)
+                                                            ? Positioned(
+                                                                bottom: 5,
+                                                                left: 0,
+                                                                right: 0,
+                                                                child: Padding(
+                                                                  padding: const EdgeInsets
                                                                           .only(
                                                                       top: 0),
-                                                              child: Container(
-                                                                height: 20,
-                                                                child:
-                                                                    DotsIndicator(
-                                                                  dotsCount: hashTagViewData
-                                                                          ?.object
-                                                                          ?.posts?[
-                                                                              index]
-                                                                          .postData
-                                                                          ?.length ??
-                                                                      0,
-                                                                  position: _currentPages[
-                                                                          index]
-                                                                      .toDouble(),
-                                                                  decorator:
-                                                                      DotsDecorator(
-                                                                    size: const Size(
-                                                                        10.0,
-                                                                        7.0),
-                                                                    activeSize:
-                                                                        const Size(
+                                                                  child:
+                                                                      Container(
+                                                                    height: 20,
+                                                                    child:
+                                                                        DotsIndicator(
+                                                                      dotsCount: hashTagViewData
+                                                                              ?.object
+                                                                              ?.posts?[index]
+                                                                              .postData
+                                                                              ?.length ??
+                                                                          0,
+                                                                      position:
+                                                                          _currentPages[index]
+                                                                              .toDouble(),
+                                                                      decorator:
+                                                                          DotsDecorator(
+                                                                        size: const Size(
+                                                                            10.0,
+                                                                            7.0),
+                                                                        activeSize: const Size(
                                                                             10.0,
                                                                             10.0),
-                                                                    spacing: const EdgeInsets
-                                                                            .symmetric(
-                                                                        horizontal:
-                                                                            2),
-                                                                    activeColor:
-                                                                        Color(
-                                                                            0xffED1C25),
-                                                                    color: Color(
-                                                                        0xff6A6A6A),
+                                                                        spacing:
+                                                                            const EdgeInsets.symmetric(horizontal: 2),
+                                                                        activeColor:
+                                                                            ColorConstant.primary_color,
+                                                                        color: Color(
+                                                                            0xff6A6A6A),
+                                                                      ),
+                                                                    ),
                                                                   ),
-                                                                ),
-                                                              ),
-                                                            ))
-                                                        : SizedBox()
+                                                                ))
+                                                            : SizedBox()
+                                                      ],
+                                                    ),
                                                   ],
                                                 ),
-                                              ],
-                                            ),
                                   Padding(
                                     padding: const EdgeInsets.only(left: 13),
                                     child: Divider(
@@ -976,7 +1184,7 @@ class _HashTagViewScreenState extends State<HashTagViewScreen> {
                   child: Container(
                     decoration: BoxDecoration(
                         color: indexx == index
-                            ? Color(0xffED1C25)
+                            ? ColorConstant.primary_color
                             : Colors.transparent,
                         borderRadius: BorderRadius.circular(5)),
                     width: 130,
@@ -1085,7 +1293,8 @@ class _HashTagViewScreenState extends State<HashTagViewScreen> {
                                 context,
                                 param,
                                 AllGuestPostRoomData
-                                    ?.object?.content?[index].postUid);
+                                    ?.object?.content?[index].postUid,
+                                "Repost");
                         Navigator.pop(context);
                       }),
                 ),
@@ -1123,6 +1332,7 @@ class _HashTagViewScreenState extends State<HashTagViewScreen> {
                             hashTagViewData: hashTagViewData,
                             postUid:
                                 hashTagViewData?.object?.posts?[index].postUid,
+                                thumbNailURL:hashTagViewData?.object?.posts?[index].thumbnailImageUrl ,
                           );
                         },
                       ));

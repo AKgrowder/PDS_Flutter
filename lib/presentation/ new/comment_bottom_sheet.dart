@@ -1,9 +1,10 @@
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:flutter/foundation.dart' as foundation;
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_mentions/flutter_mentions.dart';
 import 'package:intl/intl.dart';
+import 'package:linkfy_text/linkfy_text.dart';
 import 'package:pds/API/Bloc/add_comment_bloc/add_comment_cubit.dart';
 import 'package:pds/API/Bloc/add_comment_bloc/add_comment_state.dart';
 import 'package:pds/API/Model/Add_comment_model/add_comment_model.dart';
@@ -14,10 +15,14 @@ import 'package:pds/API/Model/serchForInboxModel/serchForinboxModel.dart';
 import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/core/utils/image_constant.dart';
 import 'package:pds/core/utils/sharedPreferences.dart';
+import 'package:pds/presentation/%20new/HashTagView_screen.dart';
+import 'package:pds/presentation/%20new/newbottembar.dart';
 import 'package:pds/presentation/%20new/profileNew.dart';
-import 'package:pds/theme/theme_helper.dart';
 import 'package:pds/widgets/custom_image_view.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+import '../../API/Model/UserTagModel/UserTag_model.dart';
 
 class CommentBottomSheet extends StatefulWidget {
   String userProfile;
@@ -52,14 +57,20 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
   FocusNode focusNode = FocusNode();
   List<String> postTexContrlloer = [];
   HasDataModel? getAllHashtag;
-
-  bool isHeshTegData = false;
-  bool isTagData = false;
+  GlobalKey<FlutterMentionsState> key = GlobalKey<FlutterMentionsState>();
+  bool OneTimeSend = false;
   SearchUserForInbox? searchUserForInbox1;
   bool isKeyboardVisible = false;
   String? uuid;
   String? User_ID1;
+  String? TeampData;
+  UserTagModel? userTagModel;
 
+  bool istageData = false;
+  bool isHeshTegData = false;
+
+  List<Map<String, dynamic>> tageData = [];
+  List<Map<String, dynamic>> heshTageData = [];
   void _goToElement() {
     scroll.animateTo((1000 * 20),
         duration: const Duration(milliseconds: 300), curve: Curves.easeOut);
@@ -93,7 +104,7 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
       },
       child: Scaffold(
         resizeToAvoidBottomInset: true,
-        backgroundColor: theme.colorScheme.onPrimary,
+        backgroundColor: Colors.white,
         appBar: AppBar(
           backgroundColor: Colors.white,
           elevation: 0,
@@ -114,13 +125,50 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
             }
             if (state is GetAllHashtagState) {
               getAllHashtag = state.getAllHashtag;
-              isHeshTegData = true;
-              isTagData = false;
+              for (int i = 0;
+                  i < (getAllHashtag?.object?.content?.length ?? 0);
+                  i++) {
+                // getAllHashtag?.object?.content?[i].split('#').last;
+                Map<String, dynamic> dataSetup = {
+                  'id': '${i}',
+                  'display':
+                      '${getAllHashtag?.object?.content?[i].split('#').last}',
+                };
+                heshTageData.add(dataSetup);
+                if (heshTageData.isNotEmpty == true) {
+                  isHeshTegData = true;
+                }
+              }
             }
             if (state is SearchHistoryDataAddxtends) {
               searchUserForInbox1 = state.searchUserForInbox;
-              isTagData = true;
-              isHeshTegData = false;
+
+              /*  isTagData = true;
+          isHeshTegData = false; */
+              searchUserForInbox1?.object?.content?.forEach((element) {
+                Map<String, dynamic> dataSetup = {
+                  'id': element.userUid,
+                  'display': element.userName,
+                  'photo': element.userProfilePic,
+                };
+
+                tageData.add(dataSetup);
+                List<Map<String, dynamic>> uniqueTageData = [];
+                Set<String> encounteredIds = Set<String>();
+                for (Map<String, dynamic> data in tageData) {
+                  if (!encounteredIds.contains(data['id'])) {
+                    // If the ID hasn't been encountered, add to the result list
+                    uniqueTageData.add(data);
+
+                    // Mark the ID as encountered
+                    encounteredIds.add(data['id']);
+                  }
+                  tageData = uniqueTageData;
+                }
+                if (tageData.isNotEmpty == true) {
+                  istageData = true;
+                }
+              });
             }
             if (state is AddCommentErrorState) {
               SnackBar snackBar = SnackBar(
@@ -132,6 +180,7 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
 
             if (state is AddnewCommentLoadedState) {
               print("dgdfhgdfhdfghhdfgh-${state.addnewCommentsModeldata}");
+              OneTimeSend = false;
               if (state.addnewCommentsModeldata['message'] ==
                   'Comment contains a restricted word') {
                 SnackBar snackBar = SnackBar(
@@ -140,15 +189,20 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                 );
                 ScaffoldMessenger.of(context).showSnackBar(snackBar);
               } else {
-                addcomment.clear();
-
                 Object1 object =
                     Object1.fromJson(state.addnewCommentsModeldata['object']);
-
+                key.currentState!.controller!.clear();
                 addCommentModeldata?.object?.add(object);
 
                 _goToElement();
               }
+            }
+            if (state is UserTagCommentLoadedState) {
+              userTagModel = await state.userTagModel;
+              Navigator.push(context, MaterialPageRoute(builder: (context) {
+                return ProfileScreen(
+                    User_ID: "${userTagModel?.object}", isFollowing: "");
+              }));
             }
             if (state is DeletecommentLoadedState) {
               DeletecommentDataa = state.Deletecomment;
@@ -167,10 +221,7 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
               }
             }
           },
-          builder: (
-            context,
-            state,
-          ) {
+          builder: (context, state) {
             if (state is AddCommentLoadingState) {
               return Center(
                 child: Container(
@@ -189,247 +240,91 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                   physics: BouncingScrollPhysics(),
                   child: Column(
                     children: [
-                      if (isHeshTegData)
-                        Container(
-                          height: MediaQuery.of(context).size.height,
-                          width: _width,
-                          // color: Colors.amber,
-                          child: ListView.builder(
-                            // physics: NeverScrollableScrollPhysics(),
-                            shrinkWrap: true,
-                            itemCount: getAllHashtag?.object?.content?.length,
-                            itemBuilder: (context, index) {
-                              return Container(
-                                margin: EdgeInsets.all(10),
-                                height: 70,
-                                width: _width,
-
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(20),
-                                    border:
-                                        Border.all(color: Color(0xffE6E6E6))),
-                                child: GestureDetector(
-                                  onTap: () {
-                                    setState(() {
-                                      if (addcomment.text.isNotEmpty) {
-                                        /*   postText.text =
-                                                  '${postText.text} @${searchUserForInbox1?.object?.content?[index].userName}'; */
-                                        postTexContrlloer.add(
-                                            '${getAllHashtag?.object?.content?[index]}');
-                                      }
-                                      addcomment.text =
-                                          postTexContrlloer.join(' ,');
-
-                                      // postText.text = '${postText.text}@${searchUserForInbox1?.object?.content?[index].userName}';
-                                    });
-                                  },
-                                  child: Row(
-                                    children: [
-                                      Container(
-                                        width: _width / 1.6,
-                                        child: Padding(
-                                          padding:
-                                              const EdgeInsets.only(left: 10),
-                                          child: Text(
-                                            '${getAllHashtag?.object?.content?[index]}',
-                                            style: TextStyle(
-                                              overflow: TextOverflow.ellipsis,
-                                              color: Colors.black,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                ),
-                                // color: Colors.green,
-                              );
-                            },
-                          ),
-                        ),
-                      if (isTagData)
-                        Container(
-                          height: MediaQuery.of(context).size.height,
-                          width: _width,
-                          // color: Colors.amber,
-                          child: ListView.builder(
-                            // physics: NeverScrollableScrollPhysics(),
-                            shrinkWrap: true,
-                            itemCount:
-                                searchUserForInbox1?.object?.content?.length,
-                            itemBuilder: (context, index) {
-                              return Container(
-                                margin: EdgeInsets.all(10),
-                                height: 70,
-                                width: _width,
-                                // color: Colors.green,
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(20),
-                                    border:
-                                        Border.all(color: Color(0xffE6E6E6))),
-                                child: GestureDetector(
-                                  onTap: () {
-                                    setState(() {
-                                      if (addcomment.text.isNotEmpty) {
-                                        /*   postText.text =
-                                                  '${postText.text} @${searchUserForInbox1?.object?.content?[index].userName}'; */
-                                        postTexContrlloer.add(
-                                            '@${searchUserForInbox1?.object?.content?[index].userName}');
-                                      }
-                                      addcomment.text =
-                                          postTexContrlloer.join(' ,');
-
-                                      // postText.text = '${postText.text}@${searchUserForInbox1?.object?.content?[index].userName}';
-                                    });
-                                  },
-                                  child: Row(
-                                    children: [
-                                      searchUserForInbox1
-                                                      ?.object
-                                                      ?.content?[index]
-                                                      .userProfilePic !=
-                                                  null &&
-                                              searchUserForInbox1
-                                                      ?.object
-                                                      ?.content?[index]
-                                                      .userProfilePic
-                                                      ?.isNotEmpty ==
-                                                  true
-                                          ? Padding(
-                                              padding: const EdgeInsets.only(
-                                                  left: 10),
-                                              child: CircleAvatar(
-                                                radius: 30.0,
-                                                backgroundImage: NetworkImage(
-                                                    "${searchUserForInbox1?.object?.content?[index].userProfilePic}"),
-                                                backgroundColor:
-                                                    Colors.transparent,
-                                              ),
-                                            )
-                                          : Padding(
-                                              padding: const EdgeInsets.only(
-                                                  left: 10),
-                                              child: CircleAvatar(
-                                                radius: 30.0,
-                                                backgroundImage: AssetImage(
-                                                    ImageConstant.tomcruse),
-                                                backgroundColor:
-                                                    Colors.transparent,
-                                              ),
-                                            ),
-                                      Container(
-                                        width: _width / 1.6,
-                                        child: Padding(
-                                          padding:
-                                              const EdgeInsets.only(left: 10),
-                                          child: Text(
-                                            searchUserForInbox1
-                                                    ?.object
-                                                    ?.content?[index]
-                                                    .userName ??
-                                                '',
-                                            style: TextStyle(
-                                              overflow: TextOverflow.ellipsis,
-                                              color: Colors.black,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                ),
-                                // color: Colors.green,
-                              );
-                            },
-                          ),
-                        ),
                       /*    Container(
-                        child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              GestureDetector(
-                                onTap: () {
-                                  if (User_ID1 == null) {
-                                    Navigator.of(context).push(
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                RegisterCreateAccountScreen()));
-                                  } else {
-                                    Navigator.push(context,
-                                        MaterialPageRoute(builder: (
-                                      context,
-                                    ) {
-                                      return ProfileScreen(
-                                          User_ID: widget.useruid ?? "",
-                                          isFollowing: widget.isFoollinng);
-                                    }));
-                                  }
-                                },
-                                child: Padding(
-                                  padding: EdgeInsets.only(left: 16),
-                                  child: widget.userProfile != null
-                                      ? CircleAvatar(
-                                          backgroundImage: NetworkImage(
-                                              "${widget.userProfile}"),
-                                          radius: 25,
-                                        )
-                                      : CustomImageView(
-                                          imagePath: ImageConstant.tomcruse,
-                                          height: 50,
-                                          width: 50,
-                                          fit: BoxFit.fill,
-                                          radius: BorderRadius.circular(25),
-                                        ),
-                                ),
-                              ),
-                              SizedBox(
-                                width: 10,
-                              ),
-                              Expanded(
-                                child: Column(
-                                  // crossAxisAlignment: CrossAxisAlignment.start,
-                                  // mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    Row(
+                            child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  GestureDetector(
+                                    onTap: () {
+                                      if (User_ID1 == null) {
+                                        Navigator.of(context).push(
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    RegisterCreateAccountScreen()));
+                                      } else {
+                                        Navigator.push(context,
+                                            MaterialPageRoute(builder: (
+                                          context,
+                                        ) {
+                                          return ProfileScreen(
+                                              User_ID: widget.useruid ?? "",
+                                              isFollowing: widget.isFoollinng);
+                                        }));
+                                      }
+                                    },
+                                    child: Padding(
+                                      padding: EdgeInsets.only(left: 16),
+                                      child: widget.userProfile != null
+                                          ? CircleAvatar(
+                                              backgroundImage: NetworkImage(
+                                                  "${widget.userProfile}"),
+                                              radius: 25,
+                                            )
+                                          : CustomImageView(
+                                              imagePath: ImageConstant.tomcruse,
+                                              height: 50,
+                                              width: 50,
+                                              fit: BoxFit.fill,
+                                              radius: BorderRadius.circular(25),
+                                            ),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: 10,
+                                  ),
+                                  Expanded(
+                                    child: Column(
+                                      // crossAxisAlignment: CrossAxisAlignment.start,
+                                      // mainAxisAlignment: MainAxisAlignment.start,
                                       children: [
-                                        Text(
-                                          '${widget.UserName}',
-                                          style: TextStyle(
-                                              fontFamily: 'outfit',
-                                              fontSize: 18,
-                                              fontWeight: FontWeight.bold),
+                                        Row(
+                                          children: [
+                                            Text(
+                                              '${widget.UserName}',
+                                              style: TextStyle(
+                                                  fontFamily: 'outfit',
+                                                  fontSize: 18,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            SizedBox(
+                                              width: 5,
+                                            ),
+                                            Text("1w",
+                                                // customFormat(parsedDateTime),
+                                                style: TextStyle(
+                                                    fontFamily: 'outfit',
+                                                    fontSize: 13,
+                                                    fontWeight: FontWeight.w500)),
+                                          ],
                                         ),
-                                        SizedBox(
-                                          width: 5,
+                                        Padding(
+                                          padding: const EdgeInsets.only(bottom: 5),
+                                          child: Align(
+                                            alignment: Alignment.centerLeft,
+                                            child: Text(' ${widget.desc ?? ""}',
+                                                // maxLines: 2,
+                                                style: TextStyle(
+                                                    fontFamily: 'outfit',
+                                                    // overflow: TextOverflow.ellipsis,
+                                                    fontSize: 16,
+                                                    fontWeight: FontWeight.w400)),
+                                          ),
                                         ),
-                                        Text("1w",
-                                            // customFormat(parsedDateTime),
-                                            style: TextStyle(
-                                                fontFamily: 'outfit',
-                                                fontSize: 13,
-                                                fontWeight: FontWeight.w500)),
                                       ],
                                     ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(bottom: 5),
-                                      child: Align(
-                                        alignment: Alignment.centerLeft,
-                                        child: Text(' ${widget.desc ?? ""}',
-                                            // maxLines: 2,
-                                            style: TextStyle(
-                                                fontFamily: 'outfit',
-                                                // overflow: TextOverflow.ellipsis,
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.w400)),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ]),
-                      ), */
+                                  ),
+                                ]),
+                          ), */
                       Padding(
                         padding: const EdgeInsets.only(bottom: 70),
                         child: ListView.builder(
@@ -511,17 +406,35 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                                                 MainAxisAlignment.center,
                                             children: [
                                               Container(
-                                                width: 280,
+                                                // width: 280,
                                                 // color: Colors.amber,
                                                 child: Row(
                                                   children: [
-                                                    Text(
-                                                      "${addCommentModeldata?.object?[index].userName}",
-                                                      style: TextStyle(
-                                                          fontFamily: 'outfit',
-                                                          fontSize: 18,
-                                                          fontWeight:
-                                                              FontWeight.bold),
+                                                    GestureDetector(
+                                                      onTap: () {
+                                                        Navigator.push(context,
+                                                            MaterialPageRoute(
+                                                                builder:
+                                                                    (context) {
+                                                          return ProfileScreen(
+                                                              User_ID:
+                                                                  "${addCommentModeldata?.object?[index].userUid}",
+                                                              isFollowing: widget
+                                                                  .isFoollinng);
+                                                        }));
+                                                      },
+                                                      child: Container(
+                                                        child: Text(
+                                                          "${addCommentModeldata?.object?[index].userName}",
+                                                          style: TextStyle(
+                                                              fontFamily:
+                                                                  'outfit',
+                                                              fontSize: 18,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold),
+                                                        ),
+                                                      ),
                                                     ),
                                                     SizedBox(
                                                       width: 5,
@@ -566,6 +479,59 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                                                             : SizedBox(),
                                                       ),
                                                     ),
+                                                    SizedBox(
+                                                      width: 5,
+                                                    ),
+                                                    addCommentModeldata
+                                                                ?.object?[index]
+                                                                .translatedComment !=
+                                                            null
+                                                        ? GestureDetector(
+                                                            onTap: () async {
+                                                              setState(() {
+                                                                if (addCommentModeldata
+                                                                            ?.object?[
+                                                                                index]
+                                                                            .isTrsnalteoption ==
+                                                                        false ||
+                                                                    addCommentModeldata
+                                                                            ?.object?[index]
+                                                                            .isTrsnalteoption ==
+                                                                        null) {
+                                                                  addCommentModeldata
+                                                                      ?.object?[
+                                                                          index]
+                                                                      .isTrsnalteoption = true;
+                                                                } else {
+                                                                  addCommentModeldata
+                                                                      ?.object?[
+                                                                          index]
+                                                                      .isTrsnalteoption = false;
+                                                                }
+                                                              });
+                                                            },
+                                                            child: Container(
+                                                                width: 80,
+                                                                decoration: BoxDecoration(
+                                                                    color: ColorConstant
+                                                                        .primaryLight_color,
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                            10)),
+                                                                child: Center(
+                                                                    child: Text(
+                                                                  "Translate",
+                                                                  style:
+                                                                      TextStyle(
+                                                                    fontFamily:
+                                                                        'outfit',
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold,
+                                                                  ),
+                                                                ))),
+                                                          )
+                                                        : SizedBox(),
                                                   ],
                                                 ),
                                               ),
@@ -573,17 +539,146 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                                                 width: _width / 1.4,
                                                 // height: 50,
                                                 // color: Colors.amber,
-                                                child: Text(
-                                                    "${addCommentModeldata?.object?[index].comment}",
-                                                    // maxLines: 2,
+                                                child: LinkifyText(
+                                                  addCommentModeldata
+                                                                  ?.object?[
+                                                                      index]
+                                                                  .isTrsnalteoption ==
+                                                              false ||
+                                                          addCommentModeldata
+                                                                  ?.object?[
+                                                                      index]
+                                                                  .isTrsnalteoption ==
+                                                              null
+                                                      ? "${addCommentModeldata?.object?[index].comment}"
+                                                      : "${addCommentModeldata?.object?[index].translatedComment}",
+                                                  linkStyle: TextStyle(
+                                                    color: Colors.blue,
+                                                    fontFamily: 'outfit',
+                                                  ),
+                                                  textStyle: TextStyle(
+                                                    color: Colors.black,
+                                                    fontFamily: 'outfit',
+                                                  ),
+                                                  linkTypes: [
+                                                    LinkType.url,
+                                                    LinkType.userTag,
+                                                    LinkType.hashTag,
+                                                    // LinkType
+                                                    //     .email
+                                                  ],
+                                                  onTap: (link) async {
+                                                    /// do stuff with `link` like
+                                                    /// if(link.type == Link.url) launchUrl(link.value);
 
-                                                    style: TextStyle(
-                                                        fontFamily: 'outfit',
-                                                        overflow: TextOverflow
-                                                            .visible,
-                                                        fontSize: 16,
-                                                        fontWeight:
-                                                            FontWeight.w400)),
+                                                    var SelectedTest =
+                                                        link.value.toString();
+                                                    var Link =
+                                                        SelectedTest.startsWith(
+                                                            'https');
+                                                    var Link1 =
+                                                        SelectedTest.startsWith(
+                                                            'http');
+                                                    var Link2 =
+                                                        SelectedTest.startsWith(
+                                                            'www');
+                                                    var Link3 =
+                                                        SelectedTest.startsWith(
+                                                            'WWW');
+                                                    var Link4 =
+                                                        SelectedTest.startsWith(
+                                                            'HTTPS');
+                                                    var Link5 =
+                                                        SelectedTest.startsWith(
+                                                            'HTTP');
+                                                    var Link6 =
+                                                        SelectedTest.startsWith(
+                                                            'https://pdslink.page.link/');
+                                                    print(SelectedTest
+                                                        .toString());
+
+                                                    if (Link == true ||
+                                                        Link1 == true ||
+                                                        Link2 == true ||
+                                                        Link3 == true ||
+                                                        Link4 == true ||
+                                                        Link5 == true ||
+                                                        Link6 == true) {
+                                                      if (Link2 == true ||
+                                                          Link3 == true) {
+                                                        launchUrl(Uri.parse(
+                                                            "https://${link.value.toString()}"));
+                                                      } else {
+                                                        if (Link6 == true) {
+                                                          print(
+                                                              "yes i am in room");
+                                                          Navigator.push(
+                                                              context,
+                                                              MaterialPageRoute(
+                                                            builder: (context) {
+                                                              return NewBottomBar(
+                                                                buttomIndex: 1,
+                                                              );
+                                                            },
+                                                          ));
+                                                        } else {
+                                                          launchUrl(Uri.parse(
+                                                              link.value
+                                                                  .toString()));
+                                                          print(
+                                                              "link.valuelink.value -- ${link.value}");
+                                                        }
+                                                      }
+                                                    } else {
+                                                      if (link.value!
+                                                          .startsWith('#')) {
+                                                        print("${link}");
+                                                        Navigator.push(
+                                                            context,
+                                                            MaterialPageRoute(
+                                                              builder: (context) =>
+                                                                  HashTagViewScreen(
+                                                                      title:
+                                                                          "${link.value}"),
+                                                            ));
+                                                      } else if (link.value!
+                                                          .startsWith('@')) {
+                                                        var name;
+                                                        var tagName;
+                                                        name = SelectedTest;
+                                                        tagName =
+                                                            name.replaceAll(
+                                                                "@", "");
+                                                        await BlocProvider.of<
+                                                                    AddcommentCubit>(
+                                                                context)
+                                                            .UserTagAPI(context,
+                                                                tagName);
+
+                                                        print(
+                                                            "tagName -- ${tagName}");
+                                                        print(
+                                                            "user id -- ${userTagModel?.object}");
+                                                      } else {
+                                                        launchUrl(Uri.parse(
+                                                            "https://${link.value.toString()}"));
+                                                      }
+                                                    }
+                                                  },
+                                                )
+
+                                                /*  Text(
+                                                        "${addCommentModeldata?.object?[index].comment}",
+                                                        // maxLines: 2,
+        
+                                                        style: TextStyle(
+                                                            fontFamily: 'outfit',
+                                                            overflow: TextOverflow
+                                                                .visible,
+                                                            fontSize: 16,
+                                                            fontWeight:
+                                                                FontWeight.w400)) */
+                                                ,
                                               ),
                                             ],
                                           ),
@@ -609,68 +704,178 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                       Row(
                         children: [
                           Flexible(
-                              child: Padding(
-                            padding:
-                                const EdgeInsets.only(left: 10, bottom: 10),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(30)),
-                              child: TextFormField(
-                                onChanged: (value) {
-                                  onChangeMethod(value);
-                                },
-                                inputFormatters: [
-                                  LengthLimitingTextInputFormatter(300),
-                                ],
-                                minLines: 1,
-                                maxLines: 5,
-                                controller: addcomment,
-                                decoration: InputDecoration(
-                                  hintText: "Add Comment",
-                                  prefixIcon: IconButton(
-                                    icon: Icon(
-                                      isEmojiVisible
-                                          ? Icons.keyboard_alt_outlined
-                                          : Icons.emoji_emotions_outlined,
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.only(left: 10, bottom: 10),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(30)),
+                                child: FlutterMentions(
+                                  key: key,
+                                  minLines: 1,
+                                  maxLines: 5,
+                                  onChanged: (value) {
+                                    onChangeMethod(value);
+                                  },
+                                  suggestionPosition: SuggestionPosition.Top,
+                                  decoration: InputDecoration(
+                                    hintText: 'Add Comment',
+                                    enabledBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                          width: 2,
+                                          color: Colors.red), //<-- SEE HERE
+                                      borderRadius: BorderRadius.circular(30.0),
                                     ),
-                                    onPressed: () async {
-                                      print("this is ontap");
+                                    focusedBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                          width: 2,
+                                          color: Colors.red), //<-- SEE HERE
+                                      borderRadius: BorderRadius.circular(30.0),
+                                    ),
+                                  ),
+                                  mentions: [
+                                    Mention(
+                                        trigger: "@",
+                                        style: TextStyle(color: Colors.blue),
+                                        data: tageData,
+                                        matchAll: false,
+                                        disableMarkup: true,
+                                        suggestionBuilder: (tageData) {
+                                          if (istageData) {
+                                            return Container(
+                                              margin: EdgeInsets.only(
+                                                  left: 50, bottom: 10),
+                                              child: Row(
+                                                children: <Widget>[
+                                                  tageData['photo'] != null
+                                                      ? CircleAvatar(
+                                                          backgroundImage:
+                                                              NetworkImage(
+                                                            tageData['photo'],
+                                                          ),
+                                                        )
+                                                      : CircleAvatar(
+                                                          backgroundImage:
+                                                              AssetImage(
+                                                                  ImageConstant
+                                                                      .tomcruse),
+                                                        ),
+                                                  SizedBox(
+                                                    width: 20.0,
+                                                  ),
+                                                  Column(
+                                                    children: <Widget>[
+                                                      Text(
+                                                          '@${tageData['display']}'),
+                                                    ],
+                                                  )
+                                                ],
+                                              ),
+                                            );
+                                          }
 
-                                      if (isEmojiVisible) {
-                                        FocusScope.of(context)
-                                            .requestFocus(FocusNode());
-                                      } else if (isKeyboardVisible) {
-                                        await SystemChannels.textInput
-                                            .invokeMethod('TextInput.hide');
-                                        await Future.delayed(
-                                            Duration(milliseconds: 100));
-                                      }
-                                      if (isKeyboardVisible) {
-                                        FocusScope.of(context).unfocus();
-                                      }
-
-                                      setState(() {
-                                        isEmojiVisible = !isEmojiVisible;
-                                      });
-                                    },
-                                  ),
-                                  enabledBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                        width: 2,
-                                        color: Colors.red), //<-- SEE HERE
-                                    borderRadius: BorderRadius.circular(30.0),
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                        width: 2,
-                                        color: Colors.red), //<-- SEE HERE
-                                    borderRadius: BorderRadius.circular(30.0),
-                                  ),
+                                          return Container(
+                                            color: Colors.amber,
+                                          );
+                                        }),
+                                    Mention(
+                                        trigger: "#",
+                                        style: TextStyle(color: Colors.blue),
+                                        data: heshTageData,
+                                        suggestionBuilder: (heshTageData) {
+                                          print("sdfgfgdgh-$heshTageData");
+                                          if (isHeshTegData) {
+                                            return Container(
+                                              height: 50,
+                                              width: 110,
+                                              margin: EdgeInsets.only(
+                                                  left: 40, bottom: 10),
+                                              child: ListTile(
+                                                  leading: CircleAvatar(
+                                                    child: Text('#'),
+                                                  ),
+                                                  title: Text(
+                                                    '${heshTageData['display']}',
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                  )),
+                                            );
+                                          }
+                                          return Container(
+                                            height: 30,
+                                            width: 110,
+                                            color: Colors.green,
+                                          );
+                                        }),
+                                  ],
                                 ),
                               ),
                             ),
-                          )),
+                          ),
+                          /* Flexible(
+                                  child: Padding(
+                                padding:
+                                    const EdgeInsets.only(left: 10, bottom: 10),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(30)),
+                                  child: TextFormField(
+                                    onChanged: (value) {
+                                      // onChangeMethod(value);
+                                    },
+                                    inputFormatters: [
+                                      LengthLimitingTextInputFormatter(300),
+                                    ],
+                                    minLines: 1,
+                                    maxLines: 5,
+                                    controller: addcomment,
+                                    decoration: InputDecoration(
+                                      hintText: "Add Comment",
+                                      prefixIcon: IconButton(
+                                        icon: Icon(
+                                          isEmojiVisible
+                                              ? Icons.keyboard_alt_outlined
+                                              : Icons.emoji_emotions_outlined,
+                                        ),
+                                        onPressed: () async {
+                                          print("this is ontap");
+        
+                                          if (isEmojiVisible) {
+                                            FocusScope.of(context)
+                                                .requestFocus(FocusNode());
+                                          } else if (isKeyboardVisible) {
+                                            await SystemChannels.textInput
+                                                .invokeMethod('TextInput.hide');
+                                            await Future.delayed(
+                                                Duration(milliseconds: 100));
+                                          }
+                                          if (isKeyboardVisible) {
+                                            FocusScope.of(context).unfocus();
+                                          }
+        
+                                          setState(() {
+                                            isEmojiVisible = !isEmojiVisible;
+                                          });
+                                        },
+                                      ),
+                                      enabledBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                            width: 2,
+                                            color: Colors.red), //<-- SEE HERE
+                                        borderRadius: BorderRadius.circular(30.0),
+                                      ),
+                                      focusedBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                            width: 2,
+                                            color: Colors.red), //<-- SEE HERE
+                                        borderRadius: BorderRadius.circular(30.0),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              )), */
                           Padding(
                             padding: const EdgeInsets.only(
                                 right: 10, left: 10, bottom: 10),
@@ -697,13 +902,19 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                                     ScaffoldMessenger.of(context)
                                         .showSnackBar(snackBar);
                                   } else {
-                                    Map<String, dynamic> params = {
-                                      "comment": addcomment.text,
-                                      "postUid": '${widget.postUuID}',
-                                    };
+                                    if (OneTimeSend == false) {
+                                      OneTimeSend = true;
+                                      print(
+                                          "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
+                                      addcomment.text.isEmpty;
+                                      Map<String, dynamic> params = {
+                                        "comment": addcomment.text,
+                                        "postUid": '${widget.postUuID}',
+                                      };
 
-                                    BlocProvider.of<AddcommentCubit>(context)
-                                        .AddPostApiCalling(context, params);
+                                      BlocProvider.of<AddcommentCubit>(context)
+                                          .AddPostApiCalling(context, params);
+                                    }
                                   }
                                 }
                               },
@@ -722,110 +933,110 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                         ],
                       ),
                       /*   Container(
-                        height: 70,
-                        color: Colors.white,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Container(
-                              height: 50,
-                              width: _width / 1.3,
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(25),
-                                  border: Border.all(
-                                    color: Colors.red,
-                                    width: 2,
-                                  ),
-                                  color: Colors.white),
-                              child: Padding(
-                                padding: const EdgeInsets.only(right: 10),
-                                child: TextField(
-                                  expands: true,
-                                    maxLines: null,
-                                  onTap: () {
-                                    if (isEmojiVisible) {
-                                      setState(() {
-                                        isEmojiVisible = !isEmojiVisible;
-                                      });
-                                    }
-                                  },
-
-                                  controller: addcomment,
-                                  maxLength: 300,
-                                  //
-                                  cursorColor: ColorConstant.primary_color,
-                                  decoration: InputDecoration(
-                                    counterText: "",
-                                    
-                                    border: InputBorder.none,
-                                    hintText: "Add Comment",
-                                    icon: Container(
-                                      child: IconButton(
-                                        icon: Icon(
-                                          isEmojiVisible
-                                              ? Icons.keyboard_alt_outlined
-                                              : Icons.emoji_emotions_outlined,
-                                        ),
-                                        onPressed: () async {
-                                          if (isEmojiVisible) {
-                                            focusNode.requestFocus();
-                                          } else if (isKeyboardVisible) {
-                                            await SystemChannels.textInput
-                                                .invokeMethod('TextInput.hide');
-                                            await Future.delayed(
-                                                Duration(milliseconds: 100));
-                                          }
-                                          if (isKeyboardVisible) {
-                                            FocusScope.of(context).unfocus();
-                                          }
-
+                            height: 70,
+                            color: Colors.white,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Container(
+                                  height: 50,
+                                  width: _width / 1.3,
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(25),
+                                      border: Border.all(
+                                        color: Colors.red,
+                                        width: 2,
+                                      ),
+                                      color: Colors.white),
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(right: 10),
+                                    child: TextField(
+                                      expands: true,
+                                        maxLines: null,
+                                      onTap: () {
+                                        if (isEmojiVisible) {
                                           setState(() {
                                             isEmojiVisible = !isEmojiVisible;
                                           });
-                                        },
+                                        }
+                                      },
+        
+                                      controller: addcomment,
+                                      maxLength: 300,
+                                      //
+                                      cursorColor: ColorConstant.primary_color,
+                                      decoration: InputDecoration(
+                                        counterText: "",
+                                        
+                                        border: InputBorder.none,
+                                        hintText: "Add Comment",
+                                        icon: Container(
+                                          child: IconButton(
+                                            icon: Icon(
+                                              isEmojiVisible
+                                                  ? Icons.keyboard_alt_outlined
+                                                  : Icons.emoji_emotions_outlined,
+                                            ),
+                                            onPressed: () async {
+                                              if (isEmojiVisible) {
+                                                focusNode.requestFocus();
+                                              } else if (isKeyboardVisible) {
+                                                await SystemChannels.textInput
+                                                    .invokeMethod('TextInput.hide');
+                                                await Future.delayed(
+                                                    Duration(milliseconds: 100));
+                                              }
+                                              if (isKeyboardVisible) {
+                                                FocusScope.of(context).unfocus();
+                                              }
+        
+                                              setState(() {
+                                                isEmojiVisible = !isEmojiVisible;
+                                              });
+                                            },
+                                          ),
+                                        ),
                                       ),
                                     ),
                                   ),
                                 ),
-                              ),
-                            ),
-                            SizedBox(
-                              width: 8,
-                            ),
-                            GestureDetector(
-                              onTap: () {
-                                if (addcomment.text.isEmpty) {
-                                  SnackBar snackBar = SnackBar(
-                                    content: Text('Please Add Comment'),
-                                    backgroundColor:
-                                        ColorConstant.primary_color,
-                                  );
-                                  ScaffoldMessenger.of(context)
-                                      .showSnackBar(snackBar);
-                                } else {
-                                  Map<String, dynamic> params = {
-                                    "comment": addcomment.text,
-                                    "postUid": '${widget.postUuID}',
-                                  };
-
-                                  BlocProvider.of<AddcommentCubit>(context)
-                                      .AddPostApiCalling(context, params);
-                                }
-                              },
-                              child: CircleAvatar(
-                                maxRadius: 25,
-                                backgroundColor: ColorConstant.primary_color,
-                                child: Center(
-                                  child: Image.asset(
-                                    ImageConstant.commentarrow,
-                                    height: 18,
-                                  ),
+                                SizedBox(
+                                  width: 8,
                                 ),
-                              ),
-                            )
-                          ],
-                        ),
-                      ), */
+                                GestureDetector(
+                                  onTap: () {
+                                    if (addcomment.text.isEmpty) {
+                                      SnackBar snackBar = SnackBar(
+                                        content: Text('Please Add Comment'),
+                                        backgroundColor:
+                                            ColorConstant.primary_color,
+                                      );
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(snackBar);
+                                    } else {
+                                      Map<String, dynamic> params = {
+                                        "comment": addcomment.text,
+                                        "postUid": '${widget.postUuID}',
+                                      };
+        
+                                      BlocProvider.of<AddcommentCubit>(context)
+                                          .AddPostApiCalling(context, params);
+                                    }
+                                  },
+                                  child: CircleAvatar(
+                                    maxRadius: 25,
+                                    backgroundColor: ColorConstant.primary_color,
+                                    child: Center(
+                                      child: Image.asset(
+                                        ImageConstant.commentarrow,
+                                        height: 18,
+                                      ),
+                                    ),
+                                  ),
+                                )
+                              ],
+                            ),
+                          ), */
                       Offstage(
                         offstage: !isEmojiVisible,
                         child: SizedBox(
@@ -892,6 +1103,9 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
   }
 
   onChangeMethod(String value) {
+    setState(() {
+      addcomment.text = value;
+    });
     if (value.contains('@')) {
       print("if this condison is working-${value}");
       if (value.length >= 3 && value.contains('@')) {
@@ -917,7 +1131,7 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
           .GetAllHashtag(context, '10', '#${data1.trim()}');
     } else {
       setState(() {
-        isTagData = false;
+        istageData = false;
         isHeshTegData = false;
       });
     }

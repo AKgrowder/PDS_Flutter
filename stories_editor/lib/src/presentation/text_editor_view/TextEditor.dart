@@ -47,6 +47,12 @@ class _TextEditorState extends State<TextEditor> {
         color: Colors.transparent,
         child: Consumer2<ControlNotifier, TextEditingNotifier>(
           builder: (_, controlNotifier, editorNotifier, __) {
+              final _editorNotifier =
+          Provider.of<TextEditingNotifier>(widget.context, listen: false);
+      // editorNotifier
+      //   ..textController.text = _editorNotifier.text
+        
+      //   ..fontFamilyController = PageController(viewportFraction: .125);
             return Scaffold(
               backgroundColor: Colors.transparent,
               body: GestureDetector(
@@ -135,6 +141,8 @@ class _TextEditorState extends State<TextEditor> {
 
   void _onTap(context, ControlNotifier controlNotifier,
       TextEditingNotifier editorNotifier) {
+        print("----------------------------------------------------------------------------------------------------------");
+        print(editorNotifier.text);
     final _editableItemNotifier =
         Provider.of<DraggableWidgetNotifier>(context, listen: false);
 

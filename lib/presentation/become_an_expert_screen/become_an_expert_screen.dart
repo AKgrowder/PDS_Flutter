@@ -104,6 +104,13 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
   }
 
   getDocumentSize() async {
+    await BlocProvider.of<FetchExprtiseRoomCubit>(context)
+        .seetinonExpried(context);
+
+    await BlocProvider.of<FetchExprtiseRoomCubit>(context)
+        .fetchExprties(context);
+    await BlocProvider.of<FetchExprtiseRoomCubit>(context)
+        .IndustryTypeAPI(context);
     final SharedPreferences prefs = await SharedPreferences.getInstance();
 
     documentuploadsize =
@@ -116,8 +123,6 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
   void initState() {
     super.initState();
     getDocumentSize();
-    BlocProvider.of<FetchExprtiseRoomCubit>(context).fetchExprties(context);
-    BlocProvider.of<FetchExprtiseRoomCubit>(context).IndustryTypeAPI(context);
     dopcument = 'Upload Document';
   }
 
@@ -722,25 +727,27 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                                     ),
                                   ),
                                 )
-                              : Container(
-                                  height: 50,
-                                  width: _width / 4.5,
-                                  decoration: BoxDecoration(
-                                      color: Color.fromARGB(255, 228, 228, 228),
-                                      borderRadius: BorderRadius.only(
-                                          topRight: Radius.circular(5),
-                                          bottomRight: Radius.circular(5))),
-                                  child: GestureDetector(
-                                      onTap: () {
-                                        dopcument = "Upload Document";
-                                        chooseDocument?.object = null;
+                              : GestureDetector(
+                                  onTap: () {
+                                    dopcument = "Upload Document";
+                                    chooseDocument?.object = null;
 
-                                        setState(() {});
-                                      },
-                                      child: Icon(
-                                        Icons.delete_forever,
-                                        color: ColorConstant.primary_color,
-                                      )),
+                                    setState(() {});
+                                  },
+                                  child: Container(
+                                    height: 50,
+                                    width: _width / 4.5,
+                                    decoration: BoxDecoration(
+                                        color:
+                                            Color.fromARGB(255, 228, 228, 228),
+                                        borderRadius: BorderRadius.only(
+                                            topRight: Radius.circular(5),
+                                            bottomRight: Radius.circular(5))),
+                                    child: Icon(
+                                      Icons.delete_forever,
+                                      color: ColorConstant.primary_color,
+                                    ),
+                                  ),
                                 ),
                         ],
                       ),
@@ -991,7 +998,7 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                           height: 50,
                           width: _width,
                           decoration: BoxDecoration(
-                              color: Color(0xffED1C25),
+                              color: ColorConstant.primary_color,
                               borderRadius: BorderRadius.circular(5)),
                           child: Text(
                             'Submit',
@@ -1179,7 +1186,7 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
     // "${fileparth}";
   }
 
-  getFileSize(
+  /* getFileSize(
       String filepath, int decimals, PlatformFile file1, int Index) async {
     var file = File(filepath);
     int bytes = await file.length();
@@ -1233,10 +1240,10 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
             uiSettings: [
               AndroidUiSettings(
                   toolbarTitle: 'Cropper',
-                  toolbarColor: Color(0xffED1C25),
+                  toolbarColor: ColorConstant.primary_color,
                   toolbarWidgetColor: Colors.white,
                   initAspectRatio: CropAspectRatioPreset.original,
-                  activeControlsWidgetColor: Color(0xffED1C25),
+                  activeControlsWidgetColor: ColorConstant.primary_color,
                   lockAspectRatio: false),
               IOSUiSettings(
                 title: 'Cropper',
@@ -1363,6 +1370,152 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
               });
             }
           }
+        }
+
+        break;
+      default:
+    }
+
+    return STR;
+  } */
+  getFileSize(
+      String filepath, int decimals, PlatformFile file1, int Index) async {
+    var file = File(filepath);
+    int bytes = await file.length();
+    if (bytes <= 0) return "0 B";
+    const suffixes = ["B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"];
+    var i = (log(bytes) / log(1024)).floor();
+    var STR = ((bytes / pow(1024, i)).toStringAsFixed(decimals));
+    print('getFileSizevariable-${file1.path.toString().split('.').last}');
+
+    value2 = double.parse(STR);
+
+    print(value2);
+    switch (i) {
+      case 0:
+        print("Done file size B");
+        switch (Index) {
+          case 1:
+            setState(() {
+              uplopdfile.text = file1.name;
+              dopcument = file1.name;
+            });
+            break;
+          default:
+        }
+
+        break;
+      case 1:
+        print("Done file size KB");
+        switch (Index) {
+          case 0:
+            print('filenamecheckdocmenut-${dopcument}');
+            setState(() {
+              uplopdfile.text = file1.name;
+              dopcument = file1.name;
+            });
+            break;
+          default:
+        }
+        if (file1.path?.split('.') != 'pdf') {
+          print("this fucntion is caaling");
+
+          CroppedFile? croppedFile = await ImageCropper().cropImage(
+            sourcePath:
+                // "",
+                file1.path.toString(),
+            aspectRatioPresets: [
+              CropAspectRatioPreset.square,
+              CropAspectRatioPreset.ratio3x2,
+              CropAspectRatioPreset.original,
+              CropAspectRatioPreset.ratio4x3,
+              CropAspectRatioPreset.ratio16x9
+            ],
+            uiSettings: [
+              AndroidUiSettings(
+                  toolbarTitle: 'Cropper',
+                  toolbarColor: ColorConstant.primary_color,
+                  toolbarWidgetColor: Colors.white,
+                  initAspectRatio: CropAspectRatioPreset.original,
+                  activeControlsWidgetColor: ColorConstant.primary_color,
+                  lockAspectRatio: false),
+              IOSUiSettings(
+                title: 'Cropper',
+              ),
+              WebUiSettings(
+                context: context,
+              ),
+            ],
+          );
+          if (croppedFile != null) {
+            dopcument = file1.name;
+            /* setState(() {
+              uplopdfile.text = croppedFile.path.split('/').last;
+              dopcument = file1.name;
+            }); */
+            BlocProvider.of<FetchExprtiseRoomCubit>(context)
+                .chooseDocumentprofile(
+                    dopcument.toString(), croppedFile.path, context);
+          } else {
+            BlocProvider.of<FetchExprtiseRoomCubit>(context)
+                .chooseDocumentprofile(
+                    dopcument.toString(), file1.path!, context);
+            setState(() {
+              uplopdfile.text = file1.name;
+              dopcument = file1.name;
+            });
+            print("cheeck wihout cutting--${file1.name}");
+          }
+        }
+
+        setState(() {});
+        break;
+      case 2:
+        if (value2 > finalFileSize) {
+          print(
+              "this file size ${value2} ${suffixes[i]} Selected Max size ${finalFileSize}MB");
+
+          showDialog(
+            context: context,
+            builder: (ctx) => AlertDialog(
+              title: Text("Max Size ${finalFileSize}MB"),
+              content: Text(
+                  "This file size ${value2} ${suffixes[i]} Selected Max size ${finalFileSize}MB"),
+              actions: <Widget>[
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(ctx).pop();
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.all(10),
+                    child: const Text("Okay"),
+                  ),
+                ),
+              ],
+            ),
+          );
+        } else {
+          print("Done file Size 12MB");
+
+          switch (Index) {
+            case 1:
+              setState(() {
+                uplopdfile.text = file1.name;
+                dopcument = file1.name;
+              });
+              break;
+
+            default:
+          }
+
+          /*    setState(() {
+            uplopdfile.text = file1.name;
+            dopcument = file1.name;
+          }); */
+          print('filecheckPath-${file1.path}');
+          BlocProvider.of<FetchExprtiseRoomCubit>(context)
+              .chooseDocumentprofile(
+                  dopcument.toString(), file1.path!, context);
         }
 
         break;

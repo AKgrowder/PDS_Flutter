@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:pds/core/utils/color_constant.dart';
 
 import '../../theme/theme_helper.dart';
 import 'experts_details_screen.dart';
@@ -129,7 +130,7 @@ class _RateingScreenState extends State<RateingScreen> {
                           style: TextStyle(
                             fontFamily: 'outfit',
                             fontSize: 15,
-                            color: Color(0xFFED1C25),
+                            color: ColorConstant.primary_color,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -142,9 +143,9 @@ class _RateingScreenState extends State<RateingScreen> {
                       height: 40,
                       width: 120,
                       decoration: BoxDecoration(
-                          color: Color(0xFFED1C25),
+                          color: ColorConstant.primary_color,
                           borderRadius: BorderRadius.circular(5),
-                          border: Border.all(color: Color(0XFFED1C25))),
+                          border: Border.all(color: ColorConstant.primary_color)),
                       child: Center(
                         child: Text(
                           "Submit",

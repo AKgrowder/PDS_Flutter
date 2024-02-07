@@ -97,8 +97,9 @@ class Content {
   String? userUid;
   String? userName;
   String? userProfilePic;
+   bool? isSelected; 
 
-  Content({this.userUid, this.userName, this.userProfilePic});
+  Content({this.userUid, this.userName, this.userProfilePic,this.isSelected});
 
   Content.fromJson(Map<String, dynamic> json) {
     userUid = json['userUid'];

@@ -146,9 +146,9 @@ class _SplashScreenState extends State<SplashScreen> {
 
   SetUi() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setString(PreferencesKey.appApkMinVersion, "4");
+    prefs.setString(PreferencesKey.appApkMinVersion, "8");
     prefs.setString(PreferencesKey.appApkLatestVersion, "1");
-    prefs.setString(PreferencesKey.appApkRouteVersion, "3");
+    prefs.setString(PreferencesKey.appApkRouteVersion, "7");
 
     prefs.setString(PreferencesKey.IPAIosMainversion, "1");
     prefs.setString(PreferencesKey.IPAIosLatestVersion, "1");
@@ -183,7 +183,17 @@ class _SplashScreenState extends State<SplashScreen> {
         print(" ApkRouteVersion  ${ApkRouteVersion}");
         prefs.setString(
             PreferencesKey.MaxPostUploadSizeInMB, element.value ?? '');
+      }else if (element.name == "MaxInboxUploadSizeInMB") {
+        print(" ApkRouteVersion  ${ApkRouteVersion}");
+        prefs.setString(
+            PreferencesKey.MaxInboxUploadSizeInMB, element.value ?? '');
+      }else if (element.name == "AwsImageInPackagingLogoUrl") {
+        print(" ApkRouteVersion  ${ApkRouteVersion}");
+        prefs.setString(
+            PreferencesKey.AwsImageInPackagingLogoUrl, element.value ?? '');
       }
+
+      
 
       /// -----
 
@@ -261,12 +271,23 @@ class _SplashScreenState extends State<SplashScreen> {
         await FirebaseDynamicLinks.instance.getInitialLink();
     if (initialLink != null) {
       final Uri deepLink = initialLink.link;
-      deepLink1 = deepLink.toString().split("=")[1];
+      print("${deepLink } :- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ ");
+      if (deepLink.toString().contains("room_link=")) {
+        deepLink1 = deepLink.toString().split("room_link=")[1];
+        print("${deepLink1} :- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+        prefs.setString(PreferencesKey.AutoSetRoomID, deepLink1);
+        prefs.setBool(PreferencesKey.AutoOpenPostBool, false);
+      } else if (deepLink.toString().contains("post_link=")) {
+        deepLink1 = deepLink.toString().split("post_link=")[1];
+        prefs.setString(PreferencesKey.AutoOpenPostID, deepLink1);
+        prefs.setBool(PreferencesKey.AutoOpenPostBool, true);
+      }
+
       // deepLink2 = deepLink1.toString().split("&")[0];
 
       print('Deeplinks uri:${deepLink.path}');
       setState(() {
-        prefs.setString(PreferencesKey.AutoSetRoomID, deepLink1);
+        // prefs.setString(PreferencesKey.AutoSetRoomID, deepLink1);
       });
     }
   }

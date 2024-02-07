@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 class StoryViewListModel {
   String? message;
   List<Object>? object;
@@ -44,6 +46,7 @@ class Object {
       this.isFollowing});
 
   Object.fromJson(Map<String, dynamic> json) {
+    log("message-$json");
     viewUid = json['viewUid'];
     profilePic = json['profilePic'];
     userUid = json['userUid'];

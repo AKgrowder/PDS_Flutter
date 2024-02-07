@@ -289,11 +289,7 @@ class StoryButtonData {
       ),
     ),
     this.borderOffset = 2.0,
-  }) : assert(
-          segmentDuration.inMilliseconds % kStoryTimerTickMillis == 0 &&
-              segmentDuration.inMilliseconds >= 1000,
-          'Segment duration in milliseconds must be a multiple of $kStoryTimerTickMillis and not less than 1000 milliseconds',
-        );
+  }) ;
   void markAsWatched() {
     isWatch = true;
     _isWatched = isWatch ?? false;

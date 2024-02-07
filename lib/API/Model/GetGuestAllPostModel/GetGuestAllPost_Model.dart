@@ -99,6 +99,8 @@ class Content {
   String? userUid;
   String? postUserName;
   String? userProfilePic;
+  String? postLink;
+  String? translatedDescription;
   String? description;
   List<String>? postData;
   String? postDataType;
@@ -111,6 +113,10 @@ class Content {
   RepostOn? repostOn;
   int? repostCount;
   String? userAccountType;
+  String? thumbnailImageUrl;
+  // bool? isfalsegu;
+  // bool? isfalsehin;
+  bool? isTrsnalteoption;
 
   Content({
     this.postUid,
@@ -118,6 +124,8 @@ class Content {
     this.userUid,
     this.postUserName,
     this.userProfilePic,
+    this.postLink,
+    this.translatedDescription,
     this.description,
     this.postData,
     this.postDataType,
@@ -130,6 +138,11 @@ class Content {
     this.repostOn,
     this.repostCount,
     this.userAccountType,
+    this.thumbnailImageUrl,
+    // this.isfalsegu,
+    // this.isfalsehin,
+    this.isTrsnalteoption
+
   });
 
   Content.fromJson(Map<String, dynamic> json) {
@@ -138,6 +151,8 @@ class Content {
     userUid = json['userUid'];
     postUserName = json['postUserName'];
     userProfilePic = json['userProfilePic'];
+    translatedDescription = json['translatedDescription'];
+    postLink = json['postLink'];
     description = json['description'];
     postData = json['postData'].cast<String>();
     postDataType = json['postDataType'];
@@ -152,6 +167,8 @@ class Content {
         : null;
     repostCount = json['repostCount'];
     userAccountType = json['userAccountType'];
+    thumbnailImageUrl = json['thumbnailImageUrl'];
+    isTrsnalteoption = json['isTrsnalteoption'];
   }
 
   Map<String, dynamic> toJson() {
@@ -161,6 +178,8 @@ class Content {
     data['userUid'] = this.userUid;
     data['postUserName'] = this.postUserName;
     data['userProfilePic'] = this.userProfilePic;
+    data['translatedDescription'] = this.translatedDescription;
+    data['postLink'] = this.postLink;
     data['description'] = this.description;
     data['postData'] = this.postData;
     data['postDataType'] = this.postDataType;
@@ -175,6 +194,8 @@ class Content {
     }
     data['repostCount'] = this.repostCount;
     data['userAccountType'] = this.userAccountType;
+    data['thumbnailImageUrl'] = this.thumbnailImageUrl;
+    data['isTrsnalteoption'] = this.isTrsnalteoption;
     return data;
   }
 }
@@ -185,6 +206,7 @@ class RepostOn {
   String? userUid;
   String? postUserName;
   String? userProfilePic;
+  String? postLink;
   String? description;
   List<String>? postData;
   String? postDataType;
@@ -197,6 +219,7 @@ class RepostOn {
   Null? repostOn;
   int? repostCount;
   String? userAccountType;
+  String? thumbnailImageUrl;
 
   RepostOn({
     this.postUid,
@@ -204,6 +227,7 @@ class RepostOn {
     this.userUid,
     this.postUserName,
     this.userProfilePic,
+    this.postLink,
     this.description,
     this.postData,
     this.postDataType,
@@ -216,6 +240,7 @@ class RepostOn {
     this.repostOn,
     this.repostCount,
     this.userAccountType,
+    this.thumbnailImageUrl,
   });
 
   RepostOn.fromJson(Map<String, dynamic> json) {
@@ -224,6 +249,7 @@ class RepostOn {
     userUid = json['userUid'];
     postUserName = json['postUserName'];
     userProfilePic = json['userProfilePic'];
+    postLink = json['postLink'];
     description = json['description'];
     postData = json['postData'].cast<String>();
     postDataType = json['postDataType'];
@@ -236,6 +262,7 @@ class RepostOn {
     repostCount = json['repostCount'];
     repostOn = json['repostOn'];
     userAccountType = json['userAccountType'];
+    thumbnailImageUrl = json['thumbnailImageUrl'];
   }
 
   Map<String, dynamic> toJson() {
@@ -245,6 +272,7 @@ class RepostOn {
     data['userUid'] = this.userUid;
     data['postUserName'] = this.postUserName;
     data['userProfilePic'] = this.userProfilePic;
+    data['postLink'] = this.postLink;
     data['description'] = this.description;
     data['postData'] = this.postData;
     data['postDataType'] = this.postDataType;
@@ -257,6 +285,7 @@ class RepostOn {
     data['repostCount'] = this.repostCount;
     data['repostOn'] = this.repostOn;
     data['userAccountType'] = this.userAccountType;
+    data['thumbnailImageUrl'] = this.thumbnailImageUrl;
     return data;
   }
 }

@@ -169,13 +169,25 @@ class _ExpertMemberScreenState extends State<ExpertMemberScreen> {
                           SizedBox(
                             width: 10,
                           ),
-                          Text(
-                            "${widget.list?[index].userName}",
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black,
-                                fontFamily: "outfit",
-                                fontSize: 15),
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (context) {
+                                return ProfileScreen(
+                                    User_ID: "${widget.list?[index].uuid}",
+                                    isFollowing: "");
+                              }));
+                            },
+                            child: Container(
+                              child: Text(
+                                "${widget.list?[index].userName}",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black,
+                                    fontFamily: "outfit",
+                                    fontSize: 15),
+                              ),
+                            ),
                           ),
                           Spacer(),
                           GestureDetector(

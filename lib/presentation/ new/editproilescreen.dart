@@ -18,12 +18,11 @@ import 'package:pds/API/Model/createDocumentModel/createDocumentModel.dart';
 import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/core/utils/image_constant.dart';
 import 'package:pds/core/utils/sharedPreferences.dart';
-import 'package:pds/presentation/%20new/newbottembar.dart';
+import 'package:pds/presentation/%20new/view_profile_background.dart';
 import 'package:pds/presentation/my%20account/my_account_screen.dart';
 import 'package:pds/widgets/commentPdf.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../Create_Post_Screen/CreatePostShow_ImageRow/photo_gallery-master/lib/photo_gallery.dart';
 import '../create_foram/create_foram_screen.dart';
 
 class EditProfileScreen extends StatefulWidget {
@@ -53,6 +52,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   List<IndustryType> selectedIndustryTypes3 = [];
 
   String? dopcument;
+  String? dopcumentNameUpdate;
+
   var crop;
   File? _image;
   File? _image1;
@@ -79,6 +80,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   List<String> industryUUID = [];
   ImagePicker picker = ImagePicker();
   List<String> industryUUIDinApi = [];
+  bool removeProfilePic = false;
+  bool removeCoverPic = false;
   dataSetUpMethod() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     User_Module = prefs.getString(PreferencesKey.module);
@@ -423,7 +426,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                           Radius.circular(20))),
                                   // color: Colors.red,
                                   child: Image.asset(
-                                    ImageConstant.pdslogo,
+                                    ImageConstant.splashImage,
                                     // fit: BoxFit.fill,
                                     height: 150,
                                     width: 150,
@@ -469,7 +472,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                     ),
                                     child: Icon(
                                       Icons.camera_alt_outlined,
-                                      color: Colors.red,
+                                      color: ColorConstant.primary_color,
                                     ),
                                   ),
                                 )
@@ -557,7 +560,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                           ),
                                           child: Icon(
                                             Icons.camera_alt_outlined,
-                                            color: Colors.red,
+                                            color: ColorConstant.primary_color,
                                           ),
                                         ),
                                       ),
@@ -762,94 +765,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                 "Dfsdfsdhgfsdgfg-${widget.newProfileData?.object?.module}");
                             print("i want to check UserId-${User_ID}");
                             userAllRqureidData();
-                            if (widget.newProfileData?.object?.module ==
-                                'COMPANY') {
-                              companyUserData();
-                            } else if (widget.newProfileData?.object?.module ==
-                                'EXPERT') {
-                              await expertUserData();
-                            } else {
-                              if (chooseDocumentuploded?.object.toString() !=
-                                      null &&
-                                  chooseDocumentuploded1?.object.toString() !=
-                                      null) {
-                                var params = {
-                                  "userProfilePic":
-                                      chooseDocumentuploded?.object.toString(),
-                                  "userBackgroundPic":
-                                      chooseDocumentuploded1?.object.toString(),
-                                  "email": emailController.text,
-                                  "name": nameController.text,
-                                  // "userName": userNameController.text,
-                                  "uuid": User_ID
-                                };
-                                print("parems--$params");
-                                BlocProvider.of<MyAccountCubit>(context)
-                                    .UpdateProfileEmployee(params, context);
-                              } else if (chooseDocumentuploded?.object
-                                      .toString() !=
-                                  null) {
-                                var params = {
-                                  "userProfilePic":
-                                      chooseDocumentuploded?.object.toString(),
-                                  "userBackgroundPic": widget.newProfileData
-                                              ?.object?.userBackgroundPic !=
-                                          null
-                                      ? widget.newProfileData?.object
-                                          ?.userBackgroundPic
-                                      : null,
-                                  "email": emailController.text,
-                                  "name": nameController.text,
-                                  // "userName": userNameController.text,
-                                  "uuid": User_ID
-                                };
-                                print("parems--$params");
-                                BlocProvider.of<MyAccountCubit>(context)
-                                    .UpdateProfileEmployee(params, context);
-                              } else if (chooseDocumentuploded1?.object
-                                      .toString() !=
-                                  null) {
-                                var params = {
-                                  "userBackgroundPic":
-                                      chooseDocumentuploded1?.object.toString(),
-                                  "email": emailController.text,
-                                  "userProfilePic": widget.newProfileData
-                                              ?.object?.userProfilePic !=
-                                          null
-                                      ? widget.newProfileData?.object
-                                          ?.userProfilePic
-                                      : null,
-                                  "name": nameController.text,
-                                  // "userName": userNameController.text,
-                                  "uuid": User_ID
-                                };
-                                print("parems--$params");
-                                BlocProvider.of<MyAccountCubit>(context)
-                                    .UpdateProfileEmployee(params, context);
-                              } else {
-                                var params = {
-                                  "userBackgroundPic": widget.newProfileData
-                                              ?.object?.userBackgroundPic !=
-                                          null
-                                      ? widget.newProfileData?.object
-                                          ?.userBackgroundPic
-                                      : null,
-                                  "userProfilePic": widget.newProfileData
-                                              ?.object?.userProfilePic !=
-                                          null
-                                      ? widget.newProfileData?.object
-                                          ?.userProfilePic
-                                      : null,
-                                  "email": emailController.text,
-                                  "name": nameController.text,
-                                  // "userName": userNameController.text,
-                                  "uuid": User_ID
-                                };
-                                print("parems--$params");
-                                BlocProvider.of<MyAccountCubit>(context)
-                                    .UpdateProfileEmployee(params, context);
-                              }
-                            }
                           },
                           child: Padding(
                             padding: const EdgeInsets.only(top: 20, bottom: 20),
@@ -886,7 +801,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     );
   }
 
-  userAllRqureidData() {
+  userAllRqureidData() async {
     RegExp nameRegExp = RegExp(r"^[a-zA-Z0-9\s'@]+$");
     final RegExp emailRegExp =
         RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$');
@@ -930,7 +845,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
     } else if (!emailRegExp.hasMatch(emailController.text)) {
       SnackBar snackBar = SnackBar(
-        content: Text('please Enter vaild Email'),
+        content: Text('Please Enter Vaild Email'),
         backgroundColor: ColorConstant.primary_color,
       );
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
@@ -946,10 +861,86 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         backgroundColor: ColorConstant.primary_color,
       );
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    } else {
+      if (widget.newProfileData?.object?.module == 'COMPANY') {
+        companyUserData();
+      } else if (widget.newProfileData?.object?.module == 'EXPERT') {
+        await expertUserData();
+      } else {
+        if (chooseDocumentuploded?.object.toString() != null &&
+            chooseDocumentuploded1?.object.toString() != null) {
+          var params = {
+            "userProfilePic": chooseDocumentuploded?.object.toString(),
+            "userBackgroundPic": chooseDocumentuploded1?.object.toString(),
+            "email": emailController.text,
+            "name": nameController.text,
+            // "userName": userNameController.text,
+            "uuid": User_ID
+          };
+          print("parems--$params");
+          BlocProvider.of<MyAccountCubit>(context)
+              .UpdateProfileEmployee(params, context);
+        } else if (chooseDocumentuploded?.object.toString() != null) {
+          var params = {
+            "userProfilePic": chooseDocumentuploded?.object.toString(),
+            "userBackgroundPic": /* widget.newProfileData
+                                              ?.object?.userBackgroundPic !=
+                                          null */
+                removeCoverPic == false
+                    ? widget.newProfileData?.object?.userBackgroundPic
+                    : null,
+            "email": emailController.text,
+            "name": nameController.text,
+            // "userName": userNameController.text,
+            "uuid": User_ID
+          };
+          print("parems--$params");
+          BlocProvider.of<MyAccountCubit>(context)
+              .UpdateProfileEmployee(params, context);
+        } else if (chooseDocumentuploded1?.object.toString() != null) {
+          var params = {
+            "userBackgroundPic": chooseDocumentuploded1?.object.toString(),
+            "email": emailController.text,
+            "userProfilePic": /* widget.newProfileData
+                                              ?.object?.userProfilePic !=
+                                          null */
+                removeProfilePic == false
+                    ? widget.newProfileData?.object?.userProfilePic
+                    : null,
+            "name": nameController.text,
+            // "userName": userNameController.text,
+            "uuid": User_ID
+          };
+          print("parems--$params");
+          BlocProvider.of<MyAccountCubit>(context)
+              .UpdateProfileEmployee(params, context);
+        } else {
+          print("dfhgdgfdg");
+          var params = {
+            "userBackgroundPic": /* widget.newProfileData
+                                              ?.object?.userBackgroundPic !=
+                                          null */
+                removeCoverPic == false
+                    ? widget.newProfileData?.object?.userBackgroundPic
+                    : null,
+            "userProfilePic":
+                widget.newProfileData?.object?.userProfilePic != null
+                    ? widget.newProfileData?.object?.userProfilePic
+                    : null,
+            "email": emailController.text,
+            "name": nameController.text,
+            // "userName": userNameController.text,
+            "uuid": User_ID
+          };
+          print("parems--$params");
+          BlocProvider.of<MyAccountCubit>(context)
+              .UpdateProfileEmployee(params, context);
+        }
+      }
     }
   }
 
-  companyUserData() {
+  companyUserData() async {
     if (jobProfile.text == null || jobProfile.text == '') {
       SnackBar snackBar = SnackBar(
         content: Text('Please Enter Job profile '),
@@ -1018,21 +1009,33 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         params['document'] =
             widget.newProfileData?.object?.userDocument?.toString();
       }
+      params['documentName'] = dopcumentNameUpdate;
       print("userProfiePicture---${chooseDocumentuploded?.object.toString()}");
       print("userBackgroundPic---${chooseDocumentuploded1?.object.toString()}");
       if (chooseDocumentuploded1?.object.toString() != null &&
           chooseDocumentuploded?.object.toString() != null) {
         params['userProfilePic'] = chooseDocumentuploded?.object.toString();
         params['userBackgroundPic'] = chooseDocumentuploded1?.object.toString();
+      } else if (removeProfilePic == true) {
+        params['userProfilePic'] = "";
+      } else if (removeCoverPic == true) {
+        params['userBackgroundPic'] = "";
+      } else if (removeProfilePic == true && removeCoverPic == true) {
+        params['userProfilePic'] = "";
+        params['userBackgroundPic'] = "";
       } else if (chooseDocumentuploded?.object.toString() != null) {
-        params['userProfilePic'] = chooseDocumentuploded?.object.toString();
+        params['userProfilePic'] = chooseDocumentuploded?.object.toString(); 
       } else if (chooseDocumentuploded1?.object.toString() != null) {
         params['userBackgroundPic'] = chooseDocumentuploded1?.object.toString();
       } else {
         print("else dataPassing condiosn");
       }
+      print(
+          "${dopcumentNameUpdate} :- 1 555555555555555555555555555555555555555555555555555555");
+
+      print("RonakRonakRonakRonakRonakRonakRonakRonakRonakRonak");
       print(params);
-      BlocProvider.of<MyAccountCubit>(context).cretaForumUpdate(
+      await BlocProvider.of<MyAccountCubit>(context).cretaForumUpdate(
         params,
         context,
       );
@@ -1101,7 +1104,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       print("userBackgroundPic");
 
       print(chooseDocumentuploded1?.object);
-
+      print(
+          "${dopcumentNameUpdate} :- 2 555555555555555555555555555555555555555555555555555555");
       if (chooseDocumentuploded?.object.toString() != null &&
           chooseDocumentuploded1?.object.toString() != null) {
         print("both condison");
@@ -1120,14 +1124,27 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           "userBackgroundPic": chooseDocumentuploded1?.object.toString(),
           //  "userName":"AnkurTestTest17",
           "uid": User_ID,
-          "name": nameController.text
+          "name": nameController.text,
+          "documentName": dopcumentNameUpdate
         };
+
+        if (removeProfilePic == true) {
+          params['userProfilePic'] = "";
+        } else if (removeCoverPic == true) {
+          params['userBackgroundPic'] = "";
+        } else if (removeCoverPic == true || removeProfilePic == true) {
+          params['userProfilePic'] = "";
+          params['userBackgroundPic'] = "";
+        }
 
         print("parmas-$params");
         BlocProvider.of<MyAccountCubit>(context)
             .addExpertProfile(params, context);
       } else if (chooseDocumentuploded?.object.toString() != null) {
         // "userProfilePic": chooseDocumentuploded?.object.toString(),
+        print(
+            "${dopcumentNameUpdate} :- 3 555555555555555555555555555555555555555555555555555555");
+
         var params = {
           "document": chooseDocumentuploded2?.object != null
               ? chooseDocumentuploded2?.object.toString()
@@ -1140,19 +1157,30 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           "email": emailController.text,
           "userProfilePic": chooseDocumentuploded?.object.toString(),
           "userBackgroundPic":
-              widget.newProfileData?.object?.userBackgroundPic != null
+              // widget.newProfileData?.object?.userBackgroundPic != null
+              removeCoverPic == false
                   ? widget.newProfileData?.object?.userBackgroundPic
                   : null,
           //  "userName":"AnkurTestTest17",
           "uid": User_ID,
-          "name": nameController.text
+          "name": nameController.text, "documentName": dopcumentNameUpdate
         };
+        if (removeProfilePic == true) {
+          params['userProfilePic'] = "";
+        } else if (removeCoverPic == true) {
+          params['userBackgroundPic'] = "";
+        } else if (removeCoverPic == true || removeProfilePic == true) {
+          params['userProfilePic'] = "";
+          params['userBackgroundPic'] = "";
+        }
         print("parmas-$params");
         //asssss
         BlocProvider.of<MyAccountCubit>(context)
             .addExpertProfile(params, context);
       } else if (chooseDocumentuploded1?.object.toString() != null) {
         print("userBackgroundPic condiosn working");
+        print(
+            "${dopcumentNameUpdate} :- 4 555555555555555555555555555555555555555555555555555555");
 
         var params = {
           "document": chooseDocumentuploded2?.object != null
@@ -1161,7 +1189,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           "expertUId": ["${selectedExpertise?.uid}"],
           "userBackgroundPic": chooseDocumentuploded1?.object.toString(),
           "userProfilePic":
-              widget.newProfileData?.object?.userProfilePic != null
+              // widget.newProfileData?.object?.userProfilePic != null
+              removeProfilePic == false
                   ? widget.newProfileData?.object?.userProfilePic
                   : null,
           "fees": fees.text,
@@ -1172,19 +1201,33 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           "name": nameController.text,
           "email": emailController.text,
           "uid": User_ID,
+          "documentName": dopcumentNameUpdate
         };
+        if (removeProfilePic == true) {
+          params['userProfilePic'] = "";
+        } else if (removeCoverPic == true) {
+          params['userBackgroundPic'] = "";
+        } else if (removeCoverPic == true || removeProfilePic == true) {
+          params['userProfilePic'] = "";
+          params['userBackgroundPic'] = "";
+        }
         print("parmas-$params");
         BlocProvider.of<MyAccountCubit>(context)
             .addExpertProfile(params, context);
       } else {
         print("else working on");
+        print(
+            "${dopcumentNameUpdate} :- 5 555555555555555555555555555555555555555555555555555555");
+
         var params = {
           "userProfilePic":
-              widget.newProfileData?.object?.userProfilePic != null
+              // widget.newProfileData?.object?.userProfilePic != null
+              removeProfilePic == false
                   ? widget.newProfileData?.object?.userProfilePic
                   : null,
           "userBackgroundPic":
-              widget.newProfileData?.object?.userBackgroundPic != null
+              // widget.newProfileData?.object?.userBackgroundPic != null
+              removeCoverPic == false
                   ? widget.newProfileData?.object?.userBackgroundPic
                   : null,
           "document": chooseDocumentuploded2?.object != null
@@ -1199,7 +1242,16 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           "name": nameController.text,
           "email": emailController.text,
           "uid": User_ID,
+          "documentName": dopcumentNameUpdate
         };
+        if (removeProfilePic == true) {
+          params['userProfilePic'] = "";
+        } else if (removeCoverPic == true) {
+          params['userBackgroundPic'] = "";
+        } else if (removeCoverPic == true || removeProfilePic == true) {
+          params['userProfilePic'] = "";
+          params['userBackgroundPic'] = "";
+        }
         BlocProvider.of<MyAccountCubit>(context)
             .addExpertProfile(params, context);
         print("else condison working--$industryUUID11");
@@ -1509,22 +1561,33 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Container(
-                  height: 50,
-                  width: _width / 1.6,
-                  decoration: BoxDecoration(
-                      color: Color(0XFFF6F6F6),
-                      borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(5),
-                          bottomLeft: Radius.circular(5))),
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 15, left: 20),
-                    child: Text(
-                      '${dopcument}',
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(fontSize: 16),
-                    ),
-                  )),
+              GestureDetector(
+                onTap: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => DocumentViewScreen(
+                            path: /* widget.newProfileData?.object?.documentName */
+                                '${widget.newProfileData?.object?.userDocument}',
+                            title: 'Pdf',
+                          )));
+                },
+                child: Container(
+                    height: 50,
+                    width: _width / 1.6,
+                    decoration: BoxDecoration(
+                        color: Color(0XFFF6F6F6),
+                        borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(5),
+                            bottomLeft: Radius.circular(5))),
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 15, left: 20),
+                      child: Text(
+                        // main Display Name
+                        '${dopcument}',
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(fontSize: 16),
+                      ),
+                    )),
+              ),
               dopcument == "Upload Document"
                   ? GestureDetector(
                       onTap: () async {
@@ -1540,13 +1603,16 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                 topRight: Radius.circular(5),
                                 bottomRight: Radius.circular(5))),
                         child: Center(
-                          child: Text(
-                            "Choose",
-                            style: TextStyle(
-                              fontFamily: 'outfit',
-                              fontSize: 15,
-                              color: Colors.white,
-                              fontWeight: FontWeight.w500,
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              "Choose",
+                              style: TextStyle(
+                                fontFamily: 'outfit',
+                                fontSize: 15,
+                                color: Colors.white,
+                                fontWeight: FontWeight.w500,
+                              ),
                             ),
                           ),
                         ),
@@ -1745,17 +1811,17 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             widget.newProfileData?.object?.userProfilePic !=
                                 "") {
                           Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => DocumentViewScreen1(
+                              builder: (context) => ProfileandDocumentScreen(
                                     path:
                                         '${widget.newProfileData?.object?.userProfilePic}',
-                                    title: 'Pdf',
+                                    title: '',
                                   )));
                         } else {
                           Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => DocumentViewScreen1(
+                              builder: (context) => ProfileandDocumentScreen(
                                     path:
-                                        'https://pds-images-live.s3.ap-south-1.amazonaws.com/misc/pds+logo.png',
-                                    title: 'Pdf',
+                                        'https://pds-images-live.s3.ap-south-1.amazonaws.com/misc/logo.png',
+                                    title: '',
                                   )));
                         }
                       }),
@@ -1783,7 +1849,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       leading: Icon(
                         Icons.delete,
                         size: 40,
-                        color: Colors.red,
+                        color: ColorConstant.primary_color,
                       ),
                       title: new Text('Remove Profile Picture'),
                       onTap: () => removeuserProfilePic()),
@@ -1795,12 +1861,14 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   }
 
   removeuserProfilePic() async {
+    removeProfilePic = true;
     widget.newProfileData?.object?.userProfilePic = null;
     setState(() {});
     Navigator.pop(context);
   }
 
   removeUserCover() async {
+    removeCoverPic = true;
     widget.newProfileData?.object?.userBackgroundPic = null;
     setState(() {});
     Navigator.pop(context);
@@ -1846,19 +1914,21 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                     "")
                               {
                                 Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (context) => DocumentViewScreen1(
+                                    builder: (context) =>
+                                        ProfileandDocumentScreen(
                                           path:
                                               '${widget.newProfileData?.object?.userBackgroundPic}',
-                                          title: 'Pdf',
+                                          title: '',
                                         )))
                               }
                             else
                               {
                                 Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (context) => DocumentViewScreen1(
+                                    builder: (context) =>
+                                        ProfileandDocumentScreen(
                                           path:
-                                              'https://pds-images-live.s3.ap-south-1.amazonaws.com/misc/pds+logo.png',
-                                          title: 'Pdf',
+                                              'https://pds-images-live.s3.ap-south-1.amazonaws.com/misc/logo.png',
+                                          title: '',
                                         )))
                               }
                             /* Navigator.of(context).push(MaterialPageRoute(
@@ -1896,7 +1966,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       leading: Icon(
                         Icons.delete,
                         size: 40,
-                        color: Colors.red,
+                        color: ColorConstant.primary_color,
                       ),
                       title: new Text('Remove Cover Picture'),
                       onTap: () => removeUserCover()),
@@ -1984,40 +2054,45 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   getFileSize(String filepath, int decimals, PlatformFile file1, int Index,
       context) async {
+    CroppedFile? croppedFile;
     var file = File(filepath);
     int bytes = await file.length();
     if (bytes <= 0) return "0 B";
     const suffixes = ["B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"];
     var i = (log(bytes) / log(1024)).floor();
     var STR = ((bytes / pow(1024, i)).toStringAsFixed(decimals));
-    print('getFileSizevariable-${file1.path}');
+    print(
+        'getFileSizevariable1-${file1.path?.split('/').last.split('.').last}');
     value2 = double.parse(STR);
+    // if(file1.path?.split('/').last.split('.').last.)
+    if (file1.path?.split('/').last.split('.').last != 'pdf') {
+      croppedFile = await ImageCropper().cropImage(
+        sourcePath: file.path.toString(),
+        aspectRatioPresets: [
+          CropAspectRatioPreset.square,
+          CropAspectRatioPreset.ratio3x2,
+          CropAspectRatioPreset.original,
+          CropAspectRatioPreset.ratio4x3,
+          CropAspectRatioPreset.ratio16x9
+        ],
+        uiSettings: [
+          AndroidUiSettings(
+              toolbarTitle: 'Cropper',
+              activeControlsWidgetColor: ColorConstant.primary_color,
+              toolbarColor: ColorConstant.primary_color,
+              toolbarWidgetColor: Colors.white,
+              initAspectRatio: CropAspectRatioPreset.original,
+              lockAspectRatio: false),
+          IOSUiSettings(
+            title: 'Cropper',
+          ),
+          WebUiSettings(
+            context: context,
+          ),
+        ],
+      );
+    }
 
-    CroppedFile? croppedFile = await ImageCropper().cropImage(
-      sourcePath: file.path.toString(),
-      aspectRatioPresets: [
-        CropAspectRatioPreset.square,
-        CropAspectRatioPreset.ratio3x2,
-        CropAspectRatioPreset.original,
-        CropAspectRatioPreset.ratio4x3,
-        CropAspectRatioPreset.ratio16x9
-      ],
-      uiSettings: [
-        AndroidUiSettings(
-            toolbarTitle: 'Cropper',
-            activeControlsWidgetColor: Color(0xffED1C25),
-            toolbarColor: Color(0xffED1C25),
-            toolbarWidgetColor: Colors.white,
-            initAspectRatio: CropAspectRatioPreset.original,
-            lockAspectRatio: false),
-        IOSUiSettings(
-          title: 'Cropper',
-        ),
-        WebUiSettings(
-          context: context,
-        ),
-      ],
-    );
     print(value2);
     switch (i) {
       case 0:
@@ -2028,6 +2103,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               setState(() {
                 uplopdfile.text = file1.name;
                 dopcument = file1.name;
+                dopcumentNameUpdate = dopcument;
                 crop = file1.path;
               });
             }
@@ -2046,6 +2122,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               setState(() {
                 uplopdfile.text = file1.name;
                 dopcument = file1.name;
+                dopcumentNameUpdate = dopcument;
               });
             }
             print('filenamecheckdocmenut-${dopcument}');
@@ -2095,6 +2172,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               setState(() {
                 uplopdfile.text = file1.name;
                 dopcument = file1.name;
+                dopcumentNameUpdate = dopcument;
               });
               break;
 
@@ -2105,6 +2183,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           setState(() {
             uplopdfile.text = file1.name;
             dopcument = file1.name;
+            dopcumentNameUpdate = dopcument;
           });
           BlocProvider.of<MyAccountCubit>(context).chooseDocumentprofile(
               dopcument.toString(),

@@ -2,13 +2,14 @@
 
 import 'dart:io';
 import 'dart:math';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:gallery_media_picker/gallery_media_picker.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stories_editor/src/domain/models/editable_items.dart';
 import 'package:stories_editor/src/domain/models/painting_model.dart';
 import 'package:stories_editor/src/domain/providers/notifiers/control_provider.dart';
@@ -17,10 +18,13 @@ import 'package:stories_editor/src/domain/providers/notifiers/gradient_notifier.
 import 'package:stories_editor/src/domain/providers/notifiers/painting_notifier.dart';
 import 'package:stories_editor/src/domain/providers/notifiers/scroll_notifier.dart';
 import 'package:stories_editor/src/domain/providers/notifiers/text_editing_notifier.dart';
+import 'package:stories_editor/src/domain/sevices/save_as_image.dart';
+import 'package:stories_editor/src/gallery_media_picker/gallery_media_picker.dart';
 import 'package:stories_editor/src/presentation/bar_tools/bottom_tools.dart';
 import 'package:stories_editor/src/presentation/bar_tools/top_tools.dart';
 import 'package:stories_editor/src/presentation/draggable_items/delete_item.dart';
 import 'package:stories_editor/src/presentation/draggable_items/draggable_widget.dart';
+import 'package:stories_editor/src/presentation/main_view/trimervideo.dart';
 import 'package:stories_editor/src/presentation/painting_view/painting.dart';
 import 'package:stories_editor/src/presentation/painting_view/widgets/sketcher.dart';
 import 'package:stories_editor/src/presentation/text_editor_view/TextEditor.dart';
@@ -29,6 +33,7 @@ import 'package:stories_editor/src/presentation/utils/modal_sheets.dart';
 import 'package:stories_editor/src/presentation/widgets/animated_onTap_button.dart';
 import 'package:stories_editor/src/presentation/widgets/scrollable_pageView.dart';
 import 'package:video_player/video_player.dart';
+// import 'package:video_trimmer/video_trimmer.dart';
 
 class MainView extends StatefulWidget {
   /// editor custom font families
@@ -101,17 +106,22 @@ class _MainViewState extends State<MainView> {
   double _currentScale = 1;
   double _currentRotation = 0;
   double value2 = 0.0;
+  // Initialize your trimmer instance
 
   /// delete position
+  ///
+  dynamic data;
   bool _isDeletePosition = false;
   bool _inAction = false;
-
+  bool nodatainTextfiled = false;
+  Duration? duration;
+  int? totalhoures;
+  int? totalminuert;
+  int? totalSeconds;
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       var _control = Provider.of<ControlNotifier>(context, listen: false);
-
-      /// initialize control variable provider
       _control.giphyKey = widget.giphyKey;
       _control.middleBottomWidget = widget.middleBottomWidget;
       _control.isCustomFontList = widget.isCustomFontList ?? false;
@@ -131,18 +141,24 @@ class _MainViewState extends State<MainView> {
   @override
   void dispose() {
     _controller?.pause();
+    _controller?.dispose();
+
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+      statusBarColor: Colors.white,
+      statusBarIconBrightness: Brightness.dark,
+    ));
     final ScreenUtil screenUtil = ScreenUtil();
     return WillPopScope(
       onWillPop: _popScope,
       child: Material(
-        color: widget.editorBackgroundColor == Colors.transparent
-            ? Colors.black
-            : widget.editorBackgroundColor ?? Colors.black,
+        // color: widget.editorBackgroundColor == Colors.transparent
+        //     ? Colors.black
+        //     : widget.editorBackgroundColor ?? Colors.black,
         child: Consumer6<
             ControlNotifier,
             DraggableWidgetNotifier,
@@ -154,147 +170,160 @@ class _MainViewState extends State<MainView> {
               colorProvider, paintingProvider, editingProvider, child) {
             return SafeArea(
               //top: false,
-              child: ScrollablePageView(
-                scrollPhysics: controlNotifier.mediaPath.isEmpty &&
-                    itemProvider.draggableWidget.isEmpty &&
-                    !controlNotifier.isPainting &&
-                    !controlNotifier.isTextEditing,
-                pageController: scrollProvider.pageController,
-                gridController: scrollProvider.gridController,
-                mainView: Column(
-                  children: [
-                    Expanded(
-                      child: Stack(
-                        alignment: Alignment.center,
-                        children: [
-                          GestureDetector(
-                            onScaleStart: _onScaleStart,
-                            onScaleUpdate: _onScaleUpdate,
-                            onTap: () {
-                              controlNotifier.isTextEditing =
-                                  !controlNotifier.isTextEditing;
-                                  
-                            },
-                            child: Align(
-                              alignment: Alignment.topCenter,
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(25),
-                                child: SizedBox(
-                                  width: screenUtil.screenWidth,
-                                  child: RepaintBoundary(
-                                    key: contentKey,
-                                    child: AnimatedContainer(
-                                      duration:
-                                          const Duration(milliseconds: 200),
-                                      decoration: BoxDecoration(
-                                          gradient: controlNotifier
-                                                  .mediaPath.isEmpty
-                                              ? LinearGradient(
-                                                  colors: controlNotifier
-                                                          .gradientColors![
-                                                      controlNotifier
-                                                          .gradientIndex],
-                                                  begin: Alignment.topLeft,
-                                                  end: Alignment.bottomRight,
-                                                )
-                                              : LinearGradient(
-                                                  colors: [
-                                                    colorProvider.color1,
-                                                    colorProvider.color2
-                                                  ],
-                                                  begin: Alignment.topCenter,
-                                                  end: Alignment.bottomCenter,
-                                                )),
-                                      child: GestureDetector(
-                                        onScaleStart: _onScaleStart,
-                                        onScaleUpdate: _onScaleUpdate,
-                                        child: Stack(
-                                          alignment: Alignment.center,
-                                          children: [
-                                            /// in this case photo view works as a main background container to manage
-                                            /// the gestures of all movable items.
-                                            controlNotifier.mediaPath
-                                                        .endsWith('.mp4') &&
-                                                    _controller!
-                                                        .value.isInitialized
-                                                ? AspectRatio(
-                                                    aspectRatio: _controller!
-                                                        .value.aspectRatio,
-                                                    child: VideoPlayer(
-                                                        _controller!),
+              child: Container(
+                color: Colors.black,
+                child: ScrollablePageView(
+                  scrollPhysics: controlNotifier.mediaPath.isEmpty &&
+                      itemProvider.draggableWidget.isEmpty &&
+                      !controlNotifier.isPainting &&
+                      !controlNotifier.isTextEditing,
+                  pageController: scrollProvider.pageController,
+                  gridController: scrollProvider.gridController,
+                  mainView: Column(
+                    children: [
+                      Expanded(
+                        child: Stack(
+                          alignment: Alignment.center,
+                          children: [
+                            GestureDetector(
+                              onScaleStart: _onScaleStart,
+                              onScaleUpdate: _onScaleUpdate,
+                              onTap: () {
+                                controlNotifier.isTextEditing =
+                                    !controlNotifier.isTextEditing;
+                              },
+                              child: Align(
+                                alignment: Alignment.topCenter,
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(25),
+                                  child: SizedBox(
+                                    width: screenUtil.screenWidth,
+                                    child: RepaintBoundary(
+                                      key: contentKey,
+                                      child: AnimatedContainer(
+                                        duration:
+                                            const Duration(milliseconds: 200),
+                                        decoration: BoxDecoration(
+                                            gradient: controlNotifier
+                                                    .mediaPath.isEmpty
+                                                ? LinearGradient(
+                                                    colors: controlNotifier
+                                                            .gradientColors![
+                                                        controlNotifier
+                                                            .gradientIndex],
+                                                    begin: Alignment.topLeft,
+                                                    end: Alignment.bottomRight,
                                                   )
-                                                : PhotoView.customChild(
-                                                    child: Container(),
-                                                    backgroundDecoration:
-                                                        const BoxDecoration(
-                                                            color: Colors
-                                                                .transparent),
-                                                  ),
+                                                : LinearGradient(
+                                                    colors: [
+                                                      colorProvider.color1,
+                                                      colorProvider.color2
+                                                    ],
+                                                    begin: Alignment.topCenter,
+                                                    end: Alignment.bottomCenter,
+                                                  )),
+                                        child: GestureDetector(
+                                          onScaleStart: _onScaleStart,
+                                          onScaleUpdate: _onScaleUpdate,
+                                          child: Stack(
+                                            alignment: Alignment.center,
+                                            children: [
+                                              /// in this case photo view works as a main background container to manage
+                                              /// the gestures of all movable items.
+                                              controlNotifier.mediaPath
+                                                          .endsWith('.mp4') &&
+                                                      _controller != null &&
+                                                      _controller!
+                                                          .value.isInitialized
+                                                  ? AspectRatio(
+                                                      aspectRatio: _controller!
+                                                          .value.aspectRatio,
+                                                      child: VideoPlayer(
+                                                          _controller!),
+                                                    )
+                                                  : PhotoView.customChild(
+                                                      child: Container(),
+                                                      backgroundDecoration:
+                                                          BoxDecoration(
+                                                              gradient:
+                                                                  LinearGradient(
+                                                        colors: controlNotifier
+                                                                .gradientColors![
+                                                            controlNotifier
+                                                                .gradientIndex],
+                                                        begin:
+                                                            Alignment.topLeft,
+                                                        end: Alignment
+                                                            .bottomRight,
+                                                      ))),
 
-                                            ///list items
-                                            ...itemProvider.draggableWidget
-                                                .map((editableItem) {
-                                              return DraggableWidget(
-                                                context: context,
-                                                draggableWidget: editableItem,
-                                                onPointerDown: (details) {
-                                                  _updateItemPosition(
-                                                    editableItem,
-                                                    details,
-                                                  );
-                                                },
-                                                onPointerUp: (details) {
-                                                  _deleteItemOnCoordinates(
-                                                    editableItem,
-                                                    details,
-                                                  );
-                                                },
-                                                onPointerMove: (details) {
-                                                  _deletePosition(
-                                                    editableItem,
-                                                    details,
-                                                  );
-                                                },
-                                              );
-                                            }),
+                                              ///list items
+                                              ...itemProvider.draggableWidget
+                                                  .map((editableItem) {
+                                                return DraggableWidget(
+                                                  context: context,
+                                                  draggableWidget: editableItem,
+                                                  onPointerDown: (details) {
+                                                    _updateItemPosition(
+                                                      editableItem,
+                                                      details,
+                                                    );
+                                                  },
+                                                  onPointerUp: (details) {
+                                                    _deleteItemOnCoordinates(
+                                                      editableItem,
+                                                      details,
+                                                    );
+                                                  },
+                                                  onPointerMove: (details) {
+                                                    _deletePosition(
+                                                      editableItem,
+                                                      details,
+                                                    );
+                                                  },
+                                                );
+                                              }),
 
-                                            /// finger paint
-                                            IgnorePointer(
-                                              ignoring: true,
-                                              child: Align(
-                                                alignment: Alignment.topCenter,
-                                                child: Container(
-                                                  decoration: BoxDecoration(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            25),
-                                                  ),
-                                                  child: RepaintBoundary(
-                                                    child: SizedBox(
-                                                      width: screenUtil
-                                                          .screenWidth,
-                                                      child: StreamBuilder<
-                                                          List<PaintingModel>>(
-                                                        stream: paintingProvider
-                                                            .linesStreamController
-                                                            .stream,
-                                                        builder: (context,
-                                                            snapshot) {
-                                                          return CustomPaint(
-                                                            painter: Sketcher(
-                                                              lines:
-                                                                  paintingProvider
-                                                                      .lines,
-                                                            ),
-                                                          );
-                                                        },
+                                              /// finger paint
+                                              IgnorePointer(
+                                                ignoring: true,
+                                                child: Align(
+                                                  alignment:
+                                                      Alignment.topCenter,
+                                                  child: Container(
+                                                    decoration: BoxDecoration(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              25),
+                                                    ),
+                                                    child: RepaintBoundary(
+                                                      child: SizedBox(
+                                                        width: screenUtil
+                                                            .screenWidth,
+                                                        child: StreamBuilder<
+                                                            List<
+                                                                PaintingModel>>(
+                                                          stream: paintingProvider
+                                                              .linesStreamController
+                                                              .stream,
+                                                          builder: (context,
+                                                              snapshot) {
+                                                            return CustomPaint(
+                                                              painter: Sketcher(
+                                                                lines:
+                                                                    paintingProvider
+                                                                        .lines,
+                                                              ),
+                                                            );
+                                                          },
+                                                        ),
                                                       ),
                                                     ),
                                                   ),
                                                 ),
                                               ),
-                                            ),
-                                          ],
+                                            ],
+                                          ),
                                         ),
                                       ),
                                     ),
@@ -302,141 +331,460 @@ class _MainViewState extends State<MainView> {
                                 ),
                               ),
                             ),
-                          ),
 
-                          /// middle text
-                          if (itemProvider.draggableWidget.isEmpty &&
-                              !controlNotifier.isTextEditing &&
-                              paintingProvider.lines.isEmpty)
-                            IgnorePointer(
-                              ignoring: true,
+                            /// middle text
+                            if (itemProvider.draggableWidget.isEmpty &&
+                                !controlNotifier.isTextEditing &&
+                                paintingProvider.lines.isEmpty)
+                              IgnorePointer(
+                                ignoring: true,
+                                child: Align(
+                                  alignment: const Alignment(0, -0.1),
+                                  child: Text('Tap to type',
+                                      style: TextStyle(
+                                          fontFamily: 'Alegreya',
+                                          package: 'stories_editor',
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 30,
+                                          color: Colors.black,
+                                          shadows: <Shadow>[
+                                            Shadow(
+                                                offset: const Offset(1.0, 1.0),
+                                                blurRadius: 3.0,
+                                                color: Colors.black45
+                                                    .withOpacity(0.3))
+                                          ])),
+                                ),
+                              ),
+
+                            /// top tools
+                            Visibility(
+                              visible: !controlNotifier.isTextEditing &&
+                                  !controlNotifier.isPainting,
                               child: Align(
-                                alignment: const Alignment(0, -0.1),
-                                child: Text('Tap to type',
-                                    style: TextStyle(
-                                        fontFamily: 'Alegreya',
-                                        package: 'stories_editor',
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 30,
-                                        color: Colors.white.withOpacity(0.5),
-                                        shadows: <Shadow>[
-                                          Shadow(
-                                              offset: const Offset(1.0, 1.0),
-                                              blurRadius: 3.0,
-                                              color: Colors.black45
-                                                  .withOpacity(0.3))
-                                        ])),
+                                  alignment: Alignment.topCenter,
+                                  child: TopTools(
+                                    contentKey: contentKey,
+                                    context: context,
+                                  )),
+                            ),
+
+                            /// delete item when the item is in position
+                            DeleteItem(
+                              activeItem: _activeItem,
+                              animationsDuration:
+                                  const Duration(milliseconds: 300),
+                              isDeletePosition: _isDeletePosition,
+                            ),
+
+                            /// show text editor
+                            Visibility(
+                              visible: controlNotifier.isTextEditing,
+                              child: TextEditor(
+                                context: context,
                               ),
                             ),
 
-                          /// top tools
-                          Visibility(
-                            visible: !controlNotifier.isTextEditing &&
-                                !controlNotifier.isPainting,
-                            child: Align(
-                                alignment: Alignment.topCenter,
-                                child: TopTools(
-                                  contentKey: contentKey,
-                                  context: context,
-                                )),
-                          ),
+                            /// show painting sketch
+                            Visibility(
+                              visible: controlNotifier.isPainting,
+                              child: const Painting(),
+                            ),
+                          ],
+                        ),
+                      ),
 
-                          /// delete item when the item is in position
-                          DeleteItem(
-                            activeItem: _activeItem,
-                            animationsDuration:
-                                const Duration(milliseconds: 300),
-                            isDeletePosition: _isDeletePosition,
-                          ),
+                      /// bottom tools
+                      if (!kIsWeb)
+                        /* BottomTools(
+                          contentKey: contentKey,
+                          onDone: (bytes) {
+                            print("this is the new data set-$bytes");
+                            print(
+                                "check the Data-${controlNotifier.isTextEditing}");
+                            setState(() {
+                              widget.onDone!(bytes);
+                            });
+                          },
+                          onDoneButtonStyle: widget.onDoneButtonStyle,
+                          editorBackgroundColor: widget.editorBackgroundColor,
+                          context1: context,
+                        ), */
+                        Container(
+                          decoration:
+                              const BoxDecoration(color: Colors.transparent),
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 30.w, vertical: 40.h),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.max,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                /// preview gallery
+                                Expanded(
+                                  child: Container(
+                                    alignment: Alignment.centerLeft,
+                                    child: SizedBox(
+                                      child: _preViewContainer(
+                                        /// if [model.imagePath] is null/empty return preview image
+                                        child: controlNotifier.mediaPath.isEmpty
+                                            ? ClipRRect(
+                                                borderRadius:
+                                                    BorderRadius.circular(8),
+                                                child: GestureDetector(
+                                                  onTap: () {
+                                                    print("hey i am comming!!");
+                                                    controlNotifier.isDataGet =
+                                                        true;
+                                                    if (controlNotifier
+                                                        .mediaPath.isEmpty) {
+                                                      scrollProvider
+                                                          .pageController
+                                                          .animateToPage(0,
+                                                              duration:
+                                                                  const Duration(
+                                                                      milliseconds:
+                                                                          300),
+                                                              curve: Curves
+                                                                  .easeIn);
+                                                      scrollProvider
+                                                          .pageController
+                                                          .animateToPage(1,
+                                                              duration:
+                                                                  const Duration(
+                                                                      milliseconds:
+                                                                          300),
+                                                              curve:
+                                                                  Curves.ease);
+                                                    }
+                                                  },
+                                                  child: const CoverThumbnail(
+                                                    thumbnailQuality: 150,
+                                                  ),
+                                                ))
 
-                          /// show text editor
-                          Visibility(
-                            visible: controlNotifier.isTextEditing,
-                            child: TextEditor(
-                              context: context,
+                                            /// return clear [imagePath] provider
+                                            : GestureDetector(
+                                                onTap: () {
+                                                  /// clear image url variable
+                                                  controlNotifier.mediaPath =
+                                                      '';
+                                                  itemProvider.draggableWidget
+                                                      .removeAt(0);
+                                                  _controller?.dispose();
+                                                },
+                                                child: Container(
+                                                  height: 45,
+                                                  width: 45,
+                                                  color: Colors.transparent,
+                                                  child: Transform.scale(
+                                                    scale: 0.7,
+                                                    child: const Icon(
+                                                      Icons.delete,
+                                                      color: Colors.white,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+
+                                /// center logo
+                                if (controlNotifier.middleBottomWidget != null)
+                                  Expanded(
+                                    child: Center(
+                                      child: Container(
+                                          alignment: Alignment.bottomCenter,
+                                          child: controlNotifier
+                                              .middleBottomWidget),
+                                    ),
+                                  ),
+
+                                /// save final image to gallery
+                                Expanded(
+                                  child: Container(
+                                    alignment: Alignment.centerRight,
+                                    child: Transform.scale(
+                                      scale: 0.9,
+                                      child: AnimatedOnTapButton(
+                                          onTap: () async {
+                                            if (controlNotifier
+                                                    .mediaPath.isEmpty ==
+                                                true) {
+                                            } else {
+                                              // isData = false;
+
+                                              String pngUri;
+                                              print("check else condison");
+                                              await takePicture(
+                                                 
+                                                      SelectPath:
+                                                          controlNotifier
+                                                              .mediaPath,
+                                                      contentKey: contentKey,
+                                                      context: context,
+                                                      saveToGallery: false)
+                                                  .then((bytes) {
+                                                if (bytes != null) {
+                                                  pngUri = bytes;
+                                                  print(
+                                                      "asdfasdasdasdasdasdad-$pngUri");
+                                                  print(pngUri);
+
+                                                  print(pngUri);
+                                                  widget.onDone!(pngUri);
+                                                } else {}
+                                              });
+                                            }
+                                          },
+                                          child: Container(
+                                            padding: const EdgeInsets.only(
+                                                left: 12,
+                                                right: 5,
+                                                top: 4,
+                                                bottom: 4),
+                                            decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(15),
+                                                border: Border.all(
+                                                    color: isData == false &&
+                                                            controlNotifier
+                                                                    .mediaPath
+                                                                    .isEmpty ==
+                                                                true
+                                                        ? Colors.grey
+                                                        : Colors.white,
+                                                    width: 1.5)),
+                                            child: Row(
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: [
+                                                  Text(
+                                                    'Share',
+                                                    style: TextStyle(
+                                                        color: isData ==
+                                                                    false &&
+                                                                controlNotifier
+                                                                        .mediaPath
+                                                                        .isEmpty ==
+                                                                    true
+                                                            ? Colors.grey
+                                                            : Colors.white,
+                                                        letterSpacing: 1.5,
+                                                        fontSize: 16,
+                                                        fontWeight:
+                                                            FontWeight.w400),
+                                                  ),
+                                                  const Padding(
+                                                    padding: EdgeInsets.only(
+                                                        left: 5),
+                                                    child: Icon(
+                                                      Icons.arrow_forward_ios,
+                                                      color: Colors.white,
+                                                      size: 15,
+                                                    ),
+                                                  ),
+                                                ]),
+                                          )),
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
+                        )
+                    ],
+                  ),
+                  gallery: GalleryMediaPicker(
+                    gridViewController: scrollProvider.gridController,
+                    thumbnailQuality: widget.galleryThumbnailQuality,
+                    singlePick: true,
+                    appBarColor: widget.editorBackgroundColor ?? Colors.black,
+                    // gridViewPhysics: itemProvider.draggableWidget.isEmpty
+                    //     ? const NeverScrollableScrollPhysics()
+                    //     : const ScrollPhysics(),
 
-                          /// show painting sketch
-                          Visibility(
-                            visible: controlNotifier.isPainting,
-                            child: const Painting(),
-                          ),
-                        ],
-                      ),
-                    ),
+                    pathList: (path) {
+                      setState(() {
+                        data = path;
 
-                    /// bottom tools
-                    if (!kIsWeb)
-                      BottomTools(
-                        contentKey: contentKey,
-                        onDone: (bytes) {
-                          print("this is the new data set-$bytes");
-                          print(
-                              "check the Data-${controlNotifier.isTextEditing}");
-                          setState(() {
-                            widget.onDone!(bytes);
-                          });
-                        },
-                        onDoneButtonStyle: widget.onDoneButtonStyle,
-                        editorBackgroundColor: widget.editorBackgroundColor, context1: context,
-                      ),
-                  ],
-                ),
-                gallery: GalleryMediaPicker(
-                  gridViewController: scrollProvider.gridController,
-                  thumbnailQuality: widget.galleryThumbnailQuality,
-                  singlePick: true,
-                  appBarColor: widget.editorBackgroundColor ?? Colors.black,
-                  // gridViewPhysics: itemProvider.draggableWidget.isEmpty
-                  //     ? const NeverScrollableScrollPhysics()
-                  //     : const ScrollPhysics(),
+                        if (data == null || data.isEmpty) {
+                          print("this condsion is working");
 
-                  pathList: (path) {
-                    if (path.first.path
-                            .toString()
-                            .split('/')
-                            .last
-                            .toString()
-                            .split('.')
-                            .last ==
-                        'mp4') {
-                      getVideo(path.first.path.toString(), 1, context,
-                          controlNotifier, itemProvider);
-                    } else {
-                      if (path.first.path.toString().isNotEmpty) {
-                        getFileSize(path.first.path.toString(), 1, context,
+                          itemProvider.draggableWidget = [];
+                          controlNotifier.mediaPath = '';
+                        }
+                      });
+
+                      print("value Get Check222-${path.first.path.toString()}");
+                      print("path-$data");
+                      print("value GetCheck-${path}");
+                      if (path.first.path
+                              .toString()
+                              .split('/')
+                              .last
+                              .toString()
+                              .split('.')
+                              .last ==
+                          'mp4') {
+                        print('this is the Get');
+                        getVideo(path.first.path.toString(), 1, context,
                             controlNotifier, itemProvider);
-                        Navigator.of(context);
+                      } else if (path.first.path
+                                  .toString()
+                                  .split('/')
+                                  .last
+                                  .toString()
+                                  .split('.')
+                                  .last ==
+                              'jpg' ||
+                          path.first.path
+                                  .toString()
+                                  .split('/')
+                                  .last
+                                  .toString()
+                                  .split('.')
+                                  .last ==
+                              'jpeg' ||
+                          path.first.path
+                                  .toString()
+                                  .split('/')
+                                  .last
+                                  .toString()
+                                  .split('.')
+                                  .last ==
+                              'JPEG' ||
+                          path.first.path
+                                  .toString()
+                                  .split('/')
+                                  .last
+                                  .toString()
+                                  .split('.')
+                                  .last ==
+                              'png') {
+                        if (path.first.path.toString().isNotEmpty) {
+                          getFileSize(path.first.path.toString(), 1, context,
+                              controlNotifier, itemProvider);
+                          Navigator.of(context);
+                        }
+                      } else {
+                        if (path.first.path.toString().isNotEmpty) {
+                          showDialog(
+                            context: context,
+                            builder: (context) => AlertDialog(
+                              title: const Text('Invalid Media Format'),
+                              content: const Text(
+                                  'Please select a JPG, JPEG, PNG image, or MP4 video.'),
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: const Text('OK'),
+                                ),
+                              ],
+                            ),
+                          );
+                        }
+                        setState(() {
+                          data = '';
+                          itemProvider.draggableWidget = [];
+                          controlNotifier.mediaPath = '';
+                        });
                       }
-                    }
-                  },
-                  appBarLeadingWidget: Padding(
-                    padding: const EdgeInsets.only(bottom: 15, right: 15),
-                    child: Align(
-                      alignment: Alignment.bottomRight,
-                      child: AnimatedOnTapButton(
-                        onTap: () {
-                          scrollProvider.pageController.animateToPage(0,
-                              duration: const Duration(milliseconds: 300),
-                              curve: Curves.easeIn);
-                        },
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 8, vertical: 2),
-                          decoration: BoxDecoration(
-                              color: Colors.transparent,
-                              borderRadius: BorderRadius.circular(10),
-                              border: Border.all(
-                                color: Colors.white,
-                                width: 1.2,
-                              )),
-                          child: const Text(
-                            'Selected',
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 15,
-                                fontWeight: FontWeight.w400),
+                    },
+                    appBarLeadingWidget: Padding(
+                      padding: const EdgeInsets.only(bottom: 15, right: 15),
+                      child: Align(
+                        alignment: Alignment.bottomRight,
+                        child: AnimatedOnTapButton(
+                          onTap: () async {
+                            print("dataaaa-${data}");
+                            print(
+                                "check  controller  pathh -${controlNotifier.mediaPath}");
+                            if (controlNotifier.mediaPath.endsWith('.mp4')) {
+                              if ((duration?.inSeconds ?? 0) <= 30) {
+                                final SharedPreferences prefs =
+                                    await SharedPreferences.getInstance();
+                                print(
+                                    "check video duration -${duration?.inSeconds}");
+                                prefs.setInt(
+                                    "videoduration", duration?.inSeconds ?? 0);
+                                scrollProvider.pageController.animateToPage(0,
+                                    duration: const Duration(milliseconds: 300),
+                                    curve: Curves.easeIn);
+                                setState(() {
+                                  _controller?.play();
+                                  _controller?.setLooping(true);
+                                });
+                              } else {
+                                _controller = null;
+                                duration = null;
+                                final SharedPreferences prefs =
+                                    await SharedPreferences.getInstance();
+                                File file = await Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => VideoEditor(
+                                              file: File(
+                                                  controlNotifier.mediaPath),
+                                            )));
+                                if (file.path.isNotEmpty) {
+                                  controlNotifier.mediaPath = file.path;
+
+                                  _controller = VideoPlayerController.file(
+                                      File(file.path));
+
+                                  setState(() {});
+                                  _controller
+                                      ?.initialize()
+                                      .then((value) => setState(() {
+                                            duration =
+                                                _controller!.value.duration;
+                                            controlNotifier.durationofvideo =
+                                                duration!;
+                                            prefs.setInt("videoduration",
+                                                duration?.inSeconds ?? 0);
+                                            print(
+                                                "check durationDataSet -${duration}");
+                                          }));
+
+                                  setState(() {
+                                    _controller?.play();
+                                    _controller?.setLooping(true);
+                                  });
+                                  scrollProvider.pageController.animateToPage(0,
+                                      duration:
+                                          const Duration(milliseconds: 300),
+                                      curve: Curves.easeIn);
+                                }
+                              }
+                            } else {
+                              scrollProvider.pageController.animateToPage(0,
+                                  duration: const Duration(milliseconds: 300),
+                                  curve: Curves.easeIn);
+                            }
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 8, vertical: 2),
+                            decoration: BoxDecoration(
+                                color: Colors.transparent,
+                                borderRadius: BorderRadius.circular(10),
+                                border: Border.all(
+                                  color: Colors.white,
+                                  width: 1.2,
+                                )),
+                            child: Text(
+                              data == null || data.isEmpty
+                                  ? 'Cancel'
+                                  : 'Select',
+                              style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w400),
+                            ),
                           ),
                         ),
                       ),
@@ -451,7 +799,23 @@ class _MainViewState extends State<MainView> {
     );
   }
 
+  Widget _preViewContainer({child}) {
+    return Container(
+      height: 45,
+      width: 45,
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(width: 1.4, color: Colors.white)),
+      child: child,
+    );
+  }
+
+  String _formatDuration(Duration duration) {
+    return duration.toString().split('.').first;
+  }
+
   getVideo(
+      // this is the me ankur is working
       String filepath,
       int decimals,
       context,
@@ -466,6 +830,7 @@ class _MainViewState extends State<MainView> {
     value2 = double.parse(STR);
     print("viedo check-${widget.finalvideoSize}");
     print(value2);
+
     switch (i) {
       case 0:
         print("Done file size B");
@@ -478,11 +843,22 @@ class _MainViewState extends State<MainView> {
         _controller =
             VideoPlayerController.file(File(controlNotifier.mediaPath));
 
-        _controller?.initialize().then((value) => setState(() {}));
-        setState(() {
-          _controller?.play();
-          _controller?.setLooping(true);
-        });
+        _controller?.initialize().then((value) => setState(() {
+              duration = _controller!.value.duration;
+              print("check duration-${duration}");
+
+              print(
+                  "check data-${totalhoures}-${totalminuert}-${totalSeconds}");
+            }));
+        /*  if (duration!.inSeconds <= 30) {
+          _controller =
+              VideoPlayerController.file(File(controlNotifier.mediaPath));
+
+          setState(() {
+            _controller?.play();
+            _controller?.setLooping(true);
+          });
+        } */
 
         break;
       case 1:
@@ -497,11 +873,13 @@ class _MainViewState extends State<MainView> {
         _controller =
             VideoPlayerController.file(File(controlNotifier.mediaPath));
 
-        _controller?.initialize().then((value) => setState(() {}));
-        setState(() {
-          _controller?.play();
-          _controller?.setLooping(true);
-        });
+        _controller?.initialize().then((value) => setState(() {
+              duration = _controller!.value.duration;
+              // print("check duration -${duration}");
+
+              print(
+                  "check data-${totalhoures}-${totalminuert}-${totalSeconds}");
+            }));
 
         break;
       case 2:
@@ -540,11 +918,20 @@ class _MainViewState extends State<MainView> {
           _controller =
               VideoPlayerController.file(File(controlNotifier.mediaPath));
 
-          _controller?.initialize().then((value) => setState(() {}));
-          setState(() {
-            _controller?.play();
-            _controller?.setLooping(true);
-          });
+          _controller?.initialize().then((value) => setState(() {
+                duration = _controller!.value.duration;
+                print("check duration-${duration}");
+              }));
+
+          /*  if (duration!.inSeconds <= 30) {
+            _controller =
+                VideoPlayerController.file(File(controlNotifier.mediaPath));
+
+            setState(() {
+              _controller?.play();
+              _controller?.setLooping(true);
+            });
+          } */
         }
 
         break;
@@ -662,8 +1049,11 @@ class _MainViewState extends State<MainView> {
 
     /// show close dialog
     else if (!controlNotifier.isTextEditing && !controlNotifier.isPainting) {
+      print("else if -${controlNotifier.isTextEditing }");
+      print("else if -${controlNotifier.isPainting }");
+
       return widget.onBackPress ??
-          exitDialog(context: context, contentKey: contentKey);
+          exitDialog(context: context, contentKey: contentKey, isTextEditing: controlNotifier.isTextEditing,selctedparth: controlNotifier.mediaPath);
     }
     return false;
   }

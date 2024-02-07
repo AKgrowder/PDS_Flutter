@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/core/utils/image_constant.dart';
 
 class NewExpertScreen extends StatefulWidget {
@@ -90,7 +91,7 @@ class _NewExpertScreenState extends State<NewExpertScreen>
                       height: 35,
                       width: 120,
                       decoration: BoxDecoration(
-                          color: Color(0xFFED1C25),
+                          color: ColorConstant.primary_color,
                           borderRadius: BorderRadius.circular(20)),
                       child: Tab(
                         child: Text(
