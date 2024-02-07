@@ -47,6 +47,8 @@ class Object {
   int? commentCount;
   int? repostCount;
   RepostOn? repostOn;
+  bool? isTrsnalteoption;
+  String? translatedDescription;
 
   Object(
       {this.postUid,
@@ -67,6 +69,8 @@ class Object {
       this.likedCount,
       this.commentCount,
       this.repostCount,
+      this.isTrsnalteoption,
+      this.translatedDescription,
       this.repostOn});
 
   Object.fromJson(Map<String, dynamic> json) {
@@ -88,6 +92,8 @@ class Object {
     likedCount = json['likedCount'];
     commentCount = json['commentCount'];
     repostCount = json['repostCount'];
+    isTrsnalteoption = json['isTrsnalteoption'];
+    translatedDescription = json['translatedDescription'];
     repostOn = json['repostOn'] != null
         ? new RepostOn.fromJson(json['repostOn'])
         : null;
@@ -113,6 +119,8 @@ class Object {
     data['likedCount'] = this.likedCount;
     data['commentCount'] = this.commentCount;
     data['repostCount'] = this.repostCount;
+    data['isTrsnalteoption'] = this.isTrsnalteoption;
+    data['translatedDescription'] = this.translatedDescription;
     if (this.repostOn != null) {
       data['repostOn'] = this.repostOn!.toJson();
     }
