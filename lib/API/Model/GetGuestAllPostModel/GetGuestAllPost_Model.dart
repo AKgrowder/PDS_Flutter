@@ -116,7 +116,7 @@ class Content {
   String? thumbnailImageUrl;
   // bool? isfalsegu;
   // bool? isfalsehin;
-  // bool? isTrsnalteoption;
+  bool? isTrsnalteoption;
 
   Content({
     this.postUid,
@@ -141,7 +141,7 @@ class Content {
     this.thumbnailImageUrl,
     // this.isfalsegu,
     // this.isfalsehin,
-    // this.isTrsnalteoption
+    this.isTrsnalteoption
 
   });
 
@@ -168,6 +168,7 @@ class Content {
     repostCount = json['repostCount'];
     userAccountType = json['userAccountType'];
     thumbnailImageUrl = json['thumbnailImageUrl'];
+    isTrsnalteoption = json['isTrsnalteoption'];
   }
 
   Map<String, dynamic> toJson() {
@@ -194,6 +195,7 @@ class Content {
     data['repostCount'] = this.repostCount;
     data['userAccountType'] = this.userAccountType;
     data['thumbnailImageUrl'] = this.thumbnailImageUrl;
+    data['isTrsnalteoption'] = this.isTrsnalteoption;
     return data;
   }
 }
