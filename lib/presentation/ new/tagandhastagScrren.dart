@@ -72,7 +72,7 @@ if (isHeshTegData)
                                                 color: Color(0xffE6E6E6))),
                                         child: GestureDetector(
                                           onTap: () {
-                                            setState(() {
+                                            super.setState(() {
                                               if (postText.text.isNotEmpty) {
                                                 postTexHashContrlloer.add(
                                                     '${getAllHashtag?.object?.content?[index]}');
@@ -149,7 +149,7 @@ if (isHeshTegData)
                                                 color: Color(0xffE6E6E6))),
                                         child: GestureDetector(
                                           onTap: () {
-                                            setState(() {
+                                            super.setState(() {
                                               if (postText.text.isNotEmpty) {
                                                 // postText.text =
                                                 //     '${postText.text} @${searchUserForInbox1?.object?.content?[index].userName}';

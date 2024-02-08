@@ -45,7 +45,7 @@ class _StoryPageContainerBuilderState extends State<StoryPageContainerBuilder>
       initialPage: _currentPage,
     );
     _pageController.addListener(() {
-      setState(() {
+      super.setState(() {
         _currentPage = _pageController.page!.floor();
         _pageDelta = _pageController.page! - _currentPage;
         final isFirst = _currentPage == 0;

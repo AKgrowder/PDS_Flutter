@@ -50,7 +50,7 @@ class _CreateFolderExampleState extends State<CreateFolderExample> {
                     await path.getSubPathList();
                 subDir = subPath;
                 parent = null;
-                setState(() {});
+                super.setState(() {});
               },
               icon: const Icon(Icons.refresh),
               label: const Text('Refresh sub path'),
@@ -85,7 +85,7 @@ class _CreateFolderExampleState extends State<CreateFolderExample> {
           .toList(),
       onChanged: (AssetPathEntity? path) {
         parent = path;
-        setState(() {});
+        super.setState(() {});
       },
       value: parent,
       hint: const Text('Select parent path.'),

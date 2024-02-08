@@ -18,7 +18,7 @@ class DevicesInfoCubit extends Cubit<DevicesInfoState> {
       } else {
       if (DeviceinfoModelData.success == true) {
         emit(DevicesInfoLoadedState(DeviceinfoModelData));
-        print("+++++++++++++++++++++++++++++++++++++");
+       
         print(DeviceinfoModelData.message);
       }}
     } catch (e) {

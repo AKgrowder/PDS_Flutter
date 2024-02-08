@@ -38,8 +38,6 @@ class BottomTools extends StatelessWidget {
         /* final editorNotifier =
             Provider.of<TextEditingNotifier>(context1, listen: false);
         // editorNotifier..textController.text = editorNotifier.text;
-        print(
-            "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
         print(editorNotifier.text);
         if (editorNotifier.text != "" ||
             editorNotifier.text.isEmpty != true ||

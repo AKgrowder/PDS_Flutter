@@ -83,6 +83,6 @@ class _EditAssetPageState extends State<EditAssetPage> {
         await pathList[0].getAssetListRange(start: 0, end: 1);
     final AssetEntity asset = list[0];
     entity = asset;
-    setState(() {});
+    super.setState(() {});
   }
 }

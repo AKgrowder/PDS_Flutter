@@ -37,7 +37,7 @@ class _DetailPageState extends State<DetailPage> {
               title: const Text('Use origin file.'),
               onChanged: (bool? value) {
                 useOrigin = value;
-                setState(() {});
+                super.setState(() {});
               },
               value: useOrigin,
             ),
@@ -47,7 +47,7 @@ class _DetailPageState extends State<DetailPage> {
               value: useMediaUrl,
               onChanged: (bool? value) {
                 useMediaUrl = value;
-                setState(() {});
+                super.setState(() {});
               },
             ),
           Expanded(

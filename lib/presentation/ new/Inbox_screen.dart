@@ -61,7 +61,7 @@ class _InboxScreenState extends State<InboxScreen> {
 
     userID = prefs.getString(PreferencesKey.loginUserID);
     print("userid-chelc-${userID}");
-    setState(() {});
+    super.setState(() {});
   }
 
   @override
@@ -80,7 +80,7 @@ class _InboxScreenState extends State<InboxScreen> {
     } else {
       isDataGet = false;
       searchController.clear();
-      setState(() {});
+      super.setState(() {});
       return false;
     }
   }
@@ -161,7 +161,7 @@ class _InboxScreenState extends State<InboxScreen> {
                 })).then((value) => CallBackFunc());
               }
 
-              setState(() {});
+              super.setState(() {});
             }
             if (state is UserChatDeleteLoaded) {
               print(state.DeleteUserChatData.object);
@@ -172,7 +172,7 @@ class _InboxScreenState extends State<InboxScreen> {
               ScaffoldMessenger.of(context).showSnackBar(snackBar);
               if (state.DeleteUserChatData.object ==
                   "Chat Deleted Successfully") {
-                setState(() {
+                super.setState(() {
                   BlocProvider.of<PersonalChatListCubit>(context)
                       .PersonalChatList(context);
                 });
@@ -244,7 +244,7 @@ class _InboxScreenState extends State<InboxScreen> {
                                       );
                                     } else if (value.isEmpty) {
                                       isDataGet = false;
-                                      setState(() {});
+                                      super.setState(() {});
                                     }
                                   },
                                   focusNode: _focusNode,
@@ -256,7 +256,7 @@ class _InboxScreenState extends State<InboxScreen> {
                                             searchController.clear();
                                             isDataGet = false;
                                             _focusNode.unfocus();
-                                            setState(() {});
+                                            super.setState(() {});
                                           },
                                           icon: Icon(
                                             Icons.close,
@@ -324,7 +324,7 @@ class _InboxScreenState extends State<InboxScreen> {
                       extentRatio: 0.2,
                       motion: ScrollMotion(),
                       // dismissible: DismissiblePane(onDismissed: () {
-                      //   setState(() {
+                      //   super.setState(() {
                       //     BlocProvider.of<PersonalChatListCubit>(context)
                       //         .UserChatDelete(
                       //             "${PersonalChatListModelData?.object?[index].userChatInboxUid}",
@@ -336,7 +336,7 @@ class _InboxScreenState extends State<InboxScreen> {
                         SlidableAction(
                           borderRadius: BorderRadius.circular(10),
                           onPressed: (context) {
-                            setState(() {
+                            super.setState(() {
                               BlocProvider.of<PersonalChatListCubit>(context)
                                   .UserChatDelete(
                                       "${PersonalChatListModelData?.object?[index].userChatInboxUid}",
@@ -351,7 +351,7 @@ class _InboxScreenState extends State<InboxScreen> {
                         ),
                         /*  GestureDetector(
                           onTap: () {
-                            setState(() {
+                            super.setState(() {
                               BlocProvider.of<PersonalChatListCubit>(context)
                                   .UserChatDelete(
                                       "${PersonalChatListModelData?.object?[index].userChatInboxUid}",
@@ -579,9 +579,7 @@ class _InboxScreenState extends State<InboxScreen> {
                 // DMChatListm
                 print(
                     "${getUsersChatByUsername?.object?.content?[index].userUuid}");
-                print(
-                    "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
-                Index = index;
+                  Index = index;
                 BlocProvider.of<PersonalChatListCubit>(context).DMChatListm(
                     "${getUsersChatByUsername?.object?.content?[index].userUuid}",
                     context);

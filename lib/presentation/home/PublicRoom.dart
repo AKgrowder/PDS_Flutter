@@ -49,7 +49,7 @@ class _PublicRoomListState extends State<PublicRoomList> {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     userId = prefs.getString(PreferencesKey.loginUserID);
     maxPublicRoomSave = prefs.getString(PreferencesKey.MaxPublicRoomSave);
-    setState(() {});
+    super.setState(() {});
     print("userId check-->$userId");
     if (userId != '' || userId != null) {
       BlocProvider.of<FetchAllPublicRoomCubit>(context)

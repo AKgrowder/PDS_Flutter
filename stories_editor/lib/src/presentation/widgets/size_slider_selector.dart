@@ -80,13 +80,13 @@ class _SizeSliderWidgetState extends State<SizeSliderWidget> {
                           }
                         },
                         onChangeStart: (start) {
-                          setState(() {
+                          super.setState(() {
                             _isChange = true;
                             _showIndicator = true;
                           });
                         },
                         onChangeEnd: (end) {
-                          setState(() {
+                          super.setState(() {
                             _isChange = false;
                             _showIndicator = false;
                           });

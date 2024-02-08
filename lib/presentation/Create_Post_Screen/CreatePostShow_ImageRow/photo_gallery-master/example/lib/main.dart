@@ -34,12 +34,12 @@ class _MyAppState extends State<MyApp> {
       if(albums!.isNotEmpty){
         page = await albums!.first.listMedia();
       }
-      setState(() {
+      super.setState(() {
         _albums = albums;
         _loading = false;
       });
     }
-    setState(() {
+    super.setState(() {
       _loading = false;
     });
   }
@@ -197,7 +197,7 @@ class AlbumPageState extends State<AlbumPage> {
 
   void initAsync() async {
     MediaPage mediaPage = await widget.album.listMedia();
-    setState(() {
+    super.setState(() {
       _media = mediaPage.items;
     });
   }
@@ -318,7 +318,7 @@ class _VideoProviderState extends State<VideoProvider> {
       _controller = VideoPlayerController.file(_file!);
       _controller?.initialize().then((_) {
         // Ensure the first frame is shown after the video is initialized, even before the play button has been pressed.
-        setState(() {});
+        super.setState(() {});
       });
     } catch (e) {
       print("Failed : $e");
@@ -338,7 +338,7 @@ class _VideoProviderState extends State<VideoProvider> {
               ),
               TextButton(
                 onPressed: () {
-                  setState(() {
+                  super.setState(() {
                     _controller!.value.isPlaying ? _controller!.pause() : _controller!.play();
                   });
                 },

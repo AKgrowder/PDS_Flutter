@@ -81,7 +81,7 @@ class _SimpleExamplePageState extends State<_SimpleExamplePage> {
   bool _hasMoreToLoad = true;
 
   Future<void> _requestAssets() async {
-    setState(() {
+    super.setState(() {
       _isLoading = true;
     });
     // Request permissions.
@@ -91,7 +91,7 @@ class _SimpleExamplePageState extends State<_SimpleExamplePage> {
     }
     // Further requests can be only proceed with authorized or limited.
     if (!ps.hasAccess) {
-      setState(() {
+      super.setState(() {
         _isLoading = false;
       });
       showToast('Permission is not accessible.');
@@ -107,13 +107,13 @@ class _SimpleExamplePageState extends State<_SimpleExamplePage> {
     }
     // Return if not paths found.
     if (paths.isEmpty) {
-      setState(() {
+      super.setState(() {
         _isLoading = false;
       });
       showToast('No paths found.');
       return;
     }
-    setState(() {
+    super.setState(() {
       _path = paths.first;
     });
     _totalEntitiesCount = await _path!.assetCountAsync;
@@ -124,7 +124,7 @@ class _SimpleExamplePageState extends State<_SimpleExamplePage> {
     if (!mounted) {
       return;
     }
-    setState(() {
+    super.setState(() {
       _entities = entities;
       _isLoading = false;
       _hasMoreToLoad = _entities!.length < _totalEntitiesCount;
@@ -139,7 +139,7 @@ class _SimpleExamplePageState extends State<_SimpleExamplePage> {
     if (!mounted) {
       return;
     }
-    setState(() {
+    super.setState(() {
       _entities!.addAll(entities);
       _page++;
       _hasMoreToLoad = _entities!.length < _totalEntitiesCount;

@@ -51,7 +51,7 @@ class _AdvancedCustomFilterPageState extends State<AdvancedCustomFilterPage> {
             where: _where,
             onChanged: (value) {
               if (!mounted) return;
-              setState(() {
+              super.setState(() {
                 _where.clear();
                 _where.addAll(value);
               });
@@ -61,7 +61,7 @@ class _AdvancedCustomFilterPageState extends State<AdvancedCustomFilterPage> {
             items: _orderBy,
             onChanged: (values) {
               if (!mounted) return;
-              setState(() {
+              super.setState(() {
                 _orderBy.clear();
                 _orderBy.addAll(values);
               });
@@ -196,7 +196,7 @@ class _WhereConditionPageState extends State<_WhereConditionPage> {
       },
     );
     if (result != null) {
-      setState(() {
+      super.setState(() {
         isChanged = true;
         _where.add(result);
       });
@@ -213,7 +213,7 @@ class _WhereConditionPageState extends State<_WhereConditionPage> {
           trailing: IconButton(
             icon: const Icon(Icons.delete),
             onPressed: () {
-              setState(() {
+              super.setState(() {
                 isChanged = true;
                 _where.removeAt(index);
               });
@@ -283,7 +283,7 @@ class _CreateWhereDialogState extends State<_CreateWhereDialog> {
               }).toList(),
               onChanged: (value) {
                 if (value == null) return;
-                setState(() {
+                super.setState(() {
                   column = value;
                 });
               },
@@ -299,7 +299,7 @@ class _CreateWhereDialogState extends State<_CreateWhereDialog> {
               }).toList(),
               onChanged: (value) {
                 if (value == null) return;
-                setState(() {
+                super.setState(() {
                   condition = value;
                 });
               },
@@ -312,7 +312,7 @@ class _CreateWhereDialogState extends State<_CreateWhereDialog> {
                   hintText: 'Input condition',
                 ),
                 onChanged: (value) {
-                  setState(() {});
+                  super.setState(() {});
                 },
               )
             else
@@ -359,7 +359,7 @@ class _CreateWhereDialogState extends State<_CreateWhereDialog> {
               lastDate: DateTime(2100),
             );
             if (date == null) return;
-            setState(() {
+            super.setState(() {
               _date = date;
             });
           },

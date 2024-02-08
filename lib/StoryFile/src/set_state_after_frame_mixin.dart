@@ -4,7 +4,7 @@ mixin SetStateAfterFrame<T extends StatefulWidget> on State<T> {
   void safeSetState(VoidCallback? closure) {
     try {
       if (mounted) {
-        setState(() {
+        super.setState(() {
           closure?.call();
         });
       }
@@ -23,7 +23,7 @@ mixin SetStateAfterFrame<T extends StatefulWidget> on State<T> {
     _widgetsBinding?.addPostFrameCallback(
       (timeStamp) {
         if (mounted) {
-          setState(() {
+          super.setState(() {
             closure?.call();
           });
         }

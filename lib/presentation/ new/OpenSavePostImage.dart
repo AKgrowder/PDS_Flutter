@@ -135,7 +135,7 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
             currentPagesRepost.add(0);
           });
           WidgetsBinding.instance
-              .addPostFrameCallback((timeStamp) => setState(() {
+              .addPostFrameCallback((timeStamp) => super.setState(() {
                     added = true;
                   }));
         }
@@ -597,7 +597,7 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
                                                                   .builder(
                                                                 onPageChanged:
                                                                     (page) {
-                                                                  setState(() {
+                                                                  super.setState(() {
                                                                     currentPages[
                                                                         widget.index ??
                                                                             0] = page;
@@ -1160,7 +1160,7 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
                                                                   .builder(
                                                                 onPageChanged:
                                                                     (page) {
-                                                                  setState(() {
+                                                                  super.setState(() {
                                                                     currentPagesRepost[
                                                                         widget.index ??
                                                                             0] = page;
@@ -1801,7 +1801,7 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
                                                                     .builder(
                                                                   onPageChanged:
                                                                       (page) {
-                                                                    setState(
+                                                                    super.setState(
                                                                         () {
                                                                       currentPages[widget.index ??
                                                                               0] =
@@ -2568,7 +2568,7 @@ class _ZoomableImageState extends State<ZoomableImage> {
 
     final memoryImage = MemoryImage(Uint8List.fromList(bytes!));
 
-    setState(() {
+    super.setState(() {
       _memoryImage = memoryImage;
     });
   }

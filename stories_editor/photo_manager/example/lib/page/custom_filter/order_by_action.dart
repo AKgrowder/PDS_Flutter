@@ -160,7 +160,7 @@ class _OrderByActionPageState extends State<OrderByActionPage> {
       subtitle: Text(item.isAsc ? 'ASC' : 'DESC'),
       trailing: IconButton(
         onPressed: () {
-          setState(() {
+          super.setState(() {
             isEdit = true;
             _items.removeAt(index);
           });
@@ -176,7 +176,7 @@ class _OrderByActionPageState extends State<OrderByActionPage> {
       builder: _buildDialog,
     );
     if (result != null) {
-      setState(() {
+      super.setState(() {
         isEdit = true;
         _items.add(result);
       });
