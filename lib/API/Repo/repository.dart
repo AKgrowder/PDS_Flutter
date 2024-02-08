@@ -894,7 +894,7 @@ class Repository {
     final response = await apiServices.getApiCall(
         '${Config.get_all_hashtag}?numberOfRecords=30&pageNumber=${'1'}&searchHashtag=${searchHashtag.replaceAll("#", "%23")}',
         context);
-    var jsonString = json.decode(response.body);
+    var jsonString = json.decode(utf8.decode(response.bodyBytes));
     log("jsonString-$jsonString");
     switch (response.statusCode) {
       case 200:
@@ -2057,7 +2057,7 @@ class Repository {
         '${Config.HashTagForYou}?hashtagViewType=$hashtagViewType&pageNumber=$pageNumber&pageSize=20',
         context);
 
-    var jsonString = json.decode(response.body);
+    var jsonString = json.decode(utf8.decode(response.bodyBytes));
     print("jasonnStingview-${jsonString}");
     switch (response.statusCode) {
       case 200:
@@ -2145,7 +2145,7 @@ class Repository {
           "${Config.getalluser}?pageNumber=$pageNumber&numberOfRecords=20&searchName=$searchName",
           context);
     }
-    var jsonString = json.decode(response.body);
+    var jsonString = json.decode(utf8.decode(response.bodyBytes));
     print(jsonString);
     switch (response.statusCode) {
       case 200:
