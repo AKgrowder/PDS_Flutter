@@ -183,11 +183,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 emailAndMobileController.text.isEmpty ||
                                 !regex
                                     .hasMatch(emailAndMobileController.text)) {
-                              setState(() {
+                              super.setState(() {
                                 isPhone = true;
                               });
                             } else {
-                              setState(() {
+                              super.setState(() {
                                 isPhone = false;
                               });
                             }
@@ -268,7 +268,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             ),
                             child: GestureDetector(
                               onTap: () {
-                                setState(() {
+                                super.setState(() {
                                   Show_Password = !Show_Password;
                                 });
                               },

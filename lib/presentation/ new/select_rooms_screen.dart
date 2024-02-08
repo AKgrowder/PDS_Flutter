@@ -45,7 +45,7 @@ class _SelectRoomsScreenState extends State<SelectRoomsScreen> {
                       left: 15, right: 15, top: 10, bottom: 10),
                   child: GestureDetector(
                     onTap: () {
-                      setState(() {
+                      super.setState(() {
                         indexx = index;
                       });
                     },

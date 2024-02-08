@@ -62,7 +62,7 @@ class _AssignAdminScreennState extends State<AssignAdminScreenn>
         CurvedAnimation(parent: controller, curve: Curves.elasticInOut);
 
     controller.addListener(() {
-      setState(() {});
+      super.setState(() {});
     });
 
     controller.forward();

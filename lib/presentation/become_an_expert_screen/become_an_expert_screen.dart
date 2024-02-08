@@ -82,7 +82,7 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
     );
 
     if (pickedTime != null && pickedTime != _startTime) {
-      setState(() {
+      super.setState(() {
         _startTime = pickedTime;
       });
     }
@@ -97,7 +97,7 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
     );
 
     if (pickedTime != null && pickedTime != _endTime) {
-      setState(() {
+      super.setState(() {
         _endTime = pickedTime;
       });
     }
@@ -117,7 +117,7 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
         await double.parse(prefs.getString(PreferencesKey.fileSize) ?? "0");
 
     finalFileSize = documentuploadsize;
-    setState(() {});
+    super.setState(() {});
   }
 
   void initState() {
@@ -354,7 +354,7 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                               onChanged: (Expertise? newValue) {
                                 // When the user selects an option from the dropdown.
                                 if (newValue != null) {
-                                  setState(() {
+                                  super.setState(() {
                                     selectedExpertise = newValue;
                                     print("Selectedexpertise: ${newValue.uid}");
                                   });
@@ -411,7 +411,7 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                                   industryUUID
                                       .add("${element.industryTypeUid}");
                                 });
-                                setState(() {});
+                                super.setState(() {});
                               },
                             ),
                           ),
@@ -652,7 +652,7 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                       //           if (newValue != null) {
                       //             selectedWorkingHoures = newValue;
                       //             // Refresh the UI to reflect the selected item.
-                      //             setState(() {});
+                      //             super.setState(() {});
                       //           }
                       //         },
                       //         items: working_houres
@@ -732,7 +732,7 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                                     dopcument = "Upload Document";
                                     chooseDocument?.object = null;
 
-                                    setState(() {});
+                                    super.setState(() {});
                                   },
                                   child: Container(
                                     height: 50,
@@ -1157,7 +1157,7 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
           getFileSize(file.path!, 1, result.files.first, Index);
         }
 
-        /*     setState(() {
+        /*     super.setState(() {
           // fileparth = file.path!;
 
           switch (Index) {
@@ -1204,7 +1204,7 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
         switch (Index) {
           case 1:
             if (file1.name.isNotEmpty || file1.name.toString() == null) {
-              setState(() {
+              super.setState(() {
                 uplopdfile.text = file1.name;
                 dopcument = file1.name;
               });
@@ -1261,7 +1261,7 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
             print("cropendfileNamessss-${croppedFile.path}");
             print("dsghdfhdfghdf-$dopcument");
 
-            setState(() {
+            super.setState(() {
               uplopdfile.text = file1.name;
               dopcument = file1.name;
             });
@@ -1269,14 +1269,14 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
             BlocProvider.of<FetchExprtiseRoomCubit>(context)
                 .chooseDocumentprofile(
                     dopcument.toString(), file1.path!, context);
-            setState(() {
+            super.setState(() {
               uplopdfile.text = file1.name;
               dopcument = file1.name;
             });
           }
         }
 
-        setState(() {});
+        super.setState(() {});
 
         break;
       case 2:
@@ -1312,7 +1312,7 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
           print("file1.namedata-->${file1.name}");
           switch (Index) {
             case 1:
-              setState(() {
+              super.setState(() {
                 uplopdfile.text = file1.name;
                 dopcument = file1.name;
               });
@@ -1356,7 +1356,7 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                   .chooseDocumentprofile(
                       dopcument.toString(), croppedFile.path, context);
 
-              setState(() {
+              super.setState(() {
                 uplopdfile.text = file1.name;
                 dopcument = file1.name;
               });
@@ -1364,7 +1364,7 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
               BlocProvider.of<FetchExprtiseRoomCubit>(context)
                   .chooseDocumentprofile(
                       dopcument.toString(), file1.path!, context);
-              setState(() {
+              super.setState(() {
                 uplopdfile.text = file1.name;
                 dopcument = file1.name;
               });
@@ -1396,7 +1396,7 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
         print("Done file size B");
         switch (Index) {
           case 1:
-            setState(() {
+            super.setState(() {
               uplopdfile.text = file1.name;
               dopcument = file1.name;
             });
@@ -1410,7 +1410,7 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
         switch (Index) {
           case 0:
             print('filenamecheckdocmenut-${dopcument}');
-            setState(() {
+            super.setState(() {
               uplopdfile.text = file1.name;
               dopcument = file1.name;
             });
@@ -1449,7 +1449,7 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
           );
           if (croppedFile != null) {
             dopcument = file1.name;
-            /* setState(() {
+            /* super.setState(() {
               uplopdfile.text = croppedFile.path.split('/').last;
               dopcument = file1.name;
             }); */
@@ -1460,7 +1460,7 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
             BlocProvider.of<FetchExprtiseRoomCubit>(context)
                 .chooseDocumentprofile(
                     dopcument.toString(), file1.path!, context);
-            setState(() {
+            super.setState(() {
               uplopdfile.text = file1.name;
               dopcument = file1.name;
             });
@@ -1468,7 +1468,7 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
           }
         }
 
-        setState(() {});
+        super.setState(() {});
         break;
       case 2:
         if (value2 > finalFileSize) {
@@ -1499,7 +1499,7 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
 
           switch (Index) {
             case 1:
-              setState(() {
+              super.setState(() {
                 uplopdfile.text = file1.name;
                 dopcument = file1.name;
               });
@@ -1508,7 +1508,7 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
             default:
           }
 
-          /*    setState(() {
+          /*    super.setState(() {
             uplopdfile.text = file1.name;
             dopcument = file1.name;
           }); */

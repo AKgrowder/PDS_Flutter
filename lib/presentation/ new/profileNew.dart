@@ -213,7 +213,7 @@ class _ProfileScreenState extends State<ProfileScreen>
   savedataFuntion(String userId) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     User_Module = prefs.getString(PreferencesKey.module);
-    setState(() {});
+    super.setState(() {});
 
     BlocProvider.of<NewProfileSCubit>(context).get_about_me(context, userId);
 
@@ -1059,7 +1059,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                               children: [
                                 GestureDetector(
                                   onTap: () {
-                                    setState(() {
+                                    super.setState(() {
                                       updateType();
                                       arrNotiyTypeList[1].isSelected = true;
                                     });
@@ -1335,7 +1335,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                       ],
                                     ),
                                     onTap: () {
-                                      setState(() {
+                                      super.setState(() {
                                         updateType();
                                         arrNotiyTypeList[0].isSelected = true;
                                         selectedIndex = 0;
@@ -1386,7 +1386,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                       ],
                                     ),
                                     onTap: () {
-                                      setState(() {
+                                      super.setState(() {
                                         updateType();
                                         arrNotiyTypeList[1].isSelected = true;
                                         selectedIndex = 1;
@@ -1445,7 +1445,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                       ],
                                     ),
                                     onTap: () {
-                                      setState(() {
+                                      super.setState(() {
                                         updateType();
                                         arrNotiyTypeList[2].isSelected = true;
                                         selectedIndex = 2;
@@ -1499,7 +1499,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                 ),
                                               )),
                                           onTap: () {
-                                            setState(() {
+                                            super.setState(() {
                                               updateType();
                                               arrNotiyTypeList[3].isSelected =
                                                   true;
@@ -1550,13 +1550,13 @@ class _ProfileScreenState extends State<ProfileScreen>
                             child: GestureDetector(
                               onHorizontalDragUpdate: (details) {
                                 if (details.delta.dx > 0) {
-                                  setState(() {
+                                  super.setState(() {
                                     swipLeft = false;
                                     swipeRigth = true;
                                   });
                                   print("Swiped right");
                                 } else if (details.delta.dx < 0) {
-                                  setState(() {
+                                  super.setState(() {
                                     swipLeft = true;
                                     swipeRigth = false;
                                   });
@@ -1570,7 +1570,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                 if (swipLeft == false && swipeRigth == true) {
                                   if (selectedIndex != 0) {
                                     selectedIndex--;
-                                    setState(() {
+                                    super.setState(() {
                                       updateType();
                                       arrNotiyTypeList[selectedIndex]
                                           .isSelected = true;
@@ -1581,7 +1581,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                     swipeRigth == false) {
                                   if (selectedIndex != 3) {
                                     selectedIndex++;
-                                    setState(() {
+                                    super.setState(() {
                                       updateType();
                                       arrNotiyTypeList[selectedIndex]
                                           .isSelected = true;
@@ -1813,7 +1813,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                       : GestureDetector(
                                                                           onTap:
                                                                               () {
-                                                                            setState(() {
+                                                                            super.setState(() {
                                                                               isUpDate = true;
                                                                               isAbourtMe = false;
                                                                               AbboutMeShow = false;
@@ -2517,7 +2517,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                               // Step 5.
                                                               onChanged: (String?
                                                                   newValue) {
-                                                                setState(() {
+                                                                super.setState(() {
                                                                   if (newValue ==
                                                                       "Newest to oldest") {
                                                                     BlocProvider.of<NewProfileSCubit>(context).GetPostCommetAPI(
@@ -2586,7 +2586,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                     }).toList(),
                                                     // Step 5.
                                                     onChanged: (String? newValue) {
-                                                      setState(() {
+                                                      super.setState(() {
                                                         selctedValue1 = newValue!;
                                                       });
                                                     },
@@ -2641,7 +2641,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                     }).toList(),
                                                     // Step 5.
                                                     onChanged: (String? newValue) {
-                                                      setState(() {
+                                                      super.setState(() {
                                                         selctedValue = newValue!;
                                                       });
                                                     },
@@ -2933,7 +2933,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                     SharedPreferencesFunction(
                                                                         value1 ??
                                                                             0);
-                                                                    setState(
+                                                                    super.setState(
                                                                         () {});
                                                                   },
                                                                   child:
@@ -3076,7 +3076,7 @@ class _ProfileScreenState extends State<ProfileScreen>
             _currentPages.add(0);
           });
           WidgetsBinding.instance
-              .addPostFrameCallback((timeStamp) => setState(() {
+              .addPostFrameCallback((timeStamp) => super.setState(() {
                     added = true;
                   }));
         }
@@ -3268,7 +3268,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                                 String translatedTextenglish = await translateText(inputText, 'en');
 
                                                                                 if (getAllPostData.object?[index].isfalsehin == null && getAllPostData?.object?[index].isfalsegu == null) {
-                                                  setState(() {
+                                                  super.setState(() {
                                                     // _translatedTextGujarati = translatedTextGujarati;
 
                                                                                     _translatedTextHindi = translatedTextHindi;
@@ -3278,7 +3278,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                                     getAllPostData?.object?[index].isfalsehin = true;
                                                                                   });
                                                                                 } else if (getAllPostData?.object?[index].isfalsehin == true && getAllPostData?.object?[index].isfalsegu == null) {
-                                                                                  setState(() {
+                                                                                  super.setState(() {
                                                                                     _translatedTextGujarati = translatedTextGujarati;
                                                                                     // _translatedTextHindi = translatedTextHindi;
 
@@ -3289,7 +3289,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                                 } else if (getAllPostData?.object?[index].isfalsehin == true && getAllPostData?.object?[index].isfalsehin == true) {
                                                                                   print("this condison is working");
 
-                                                                                  setState(() {
+                                                                                  super.setState(() {
                                                                                     print("i'm cheaking dataa--------------------------------$initalData");
                                                                                     _translatedTextenglish = translatedTextenglish;
                                                                                     getAllPostData?.object?[index].description = _translatedTextenglish;
@@ -3313,7 +3313,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                             getAllPostData.object?[index].translatedDescription != null
                                                                                 ? GestureDetector(
                                                                                     onTap: () async {
-                                                                                         setState(() {
+                                                                                         super.setState(() {
                                                                                         if ( getAllPostData.object?[index].isTrsnalteoption  == false || getAllPostData.object?[index].isTrsnalteoption  == null) {
                                                                                            getAllPostData.object?[index].isTrsnalteoption = true;
                                                                                         } else {
@@ -3651,7 +3651,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                       height: 200,
                                                       child: PageView.builder(
                                                         onPageChanged: (page) {
-                                                          setState(() {
+                                                          super.setState(() {
                                                             _currentPages[
                                                                 index] = page;
                                                             imageCount1 =
@@ -4224,7 +4224,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                         child: PageView.builder(
                                                           onPageChanged:
                                                               (page) {
-                                                            setState(() {
+                                                            super.setState(() {
                                                               _currentPages[
                                                                   index] = page;
                                                               imageCount2 =
@@ -4764,7 +4764,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                                 String translatedTextenglish = await translateText(inputText, 'en');
 
                                                                                 if (getAllPostData?.object?[index].isfalsehin == null && getAllPostData?.object?[index].isfalsegu == null) {
-                                                                                  setState(() {
+                                                                                  super.setState(() {
                                                                                     _translatedTextHindi = translatedTextHindi;
 
                                                                                     // getAllPostData?.object?[index].description = _translatedTextGujarati;
@@ -4772,7 +4772,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                                     getAllPostData?.object?[index].isfalsehin = true;
                                                                                   });
                                                                                 } else if (getAllPostData?.object?[index].isfalsehin == true && getAllPostData?.object?[index].isfalsegu == null) {
-                                                                                  setState(() {
+                                                                                  super.setState(() {
                                                                                     // isDataSet = false;
                                                                                     _translatedTextGujarati = translatedTextGujarati;
                                                                                     // _translatedTextHindi = translatedTextHindi;
@@ -4785,7 +4785,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                                 } else if (getAllPostData?.object?[index].isfalsehin == true && getAllPostData?.object?[index].isfalsehin == true) {
                                                                                   print("this condison is working");
 
-                                                                                  setState(() {
+                                                                                  super.setState(() {
                                                                                     print("i'm cheaking dataa--------------------------------$initalData");
                                                                                     // isDataSet = false;
                                                                                     _translatedTextenglish = translatedTextenglish;
@@ -4811,7 +4811,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                             getAllPostData.object?[index].translatedDescription != null
                                                                                 ? GestureDetector(
                                                                                     onTap: () async {
-                                                                                         setState(() {
+                                                                                         super.setState(() {
                                                                                         if ( getAllPostData.object?[index].isTrsnalteoption  == false || getAllPostData.object?[index].isTrsnalteoption  == null) {
                                                                                            getAllPostData.object?[index].isTrsnalteoption = true;
                                                                                         } else {
@@ -5143,7 +5143,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                 height: 300,
                                                 child: PageView.builder(
                                                   onPageChanged: (page) {
-                                                    setState(() {
+                                                    super.setState(() {
                                                       _currentPages[index] =
                                                           page;
                                                       imageCount = page + 1;
@@ -5519,7 +5519,7 @@ class _ProfileScreenState extends State<ProfileScreen>
   }
 
   onChangeMethod(String value) {
-    setState(() {
+    super.setState(() {
       aboutMe.text = value;
     });
 
@@ -5547,7 +5547,7 @@ class _ProfileScreenState extends State<ProfileScreen>
       BlocProvider.of<NewProfileSCubit>(context)
           .GetAllHashtag(context, '10', '#${data1.trim()}');
     } else {
-      setState(() {
+      super.setState(() {
         // postText.text = postText.text + ' ' + postTexContrlloer.join(' ,');
         istageData = false;
         isHeshTegData = false;
@@ -5844,7 +5844,7 @@ class _ProfileScreenState extends State<ProfileScreen>
               _currentPages.add(0);
             });
             WidgetsBinding.instance
-                .addPostFrameCallback((timeStamp) => setState(() {
+                .addPostFrameCallback((timeStamp) => super.setState(() {
                       added = true;
                     }));
           }
@@ -6020,7 +6020,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                         String translatedTextenglish = await translateText(inputText, 'en');
 
                                                                         if (GetSavePostData?.object?[index].isfalsehin == null && GetSavePostData??.object?[index].isfalsegu == null) {
-                                                                          setState(() {
+                                                                          super.setState(() {
                                                                             // _translatedTextGujarati = translatedTextGujarati;
 
                                                                             _translatedTextHindi = translatedTextHindi;
@@ -6030,7 +6030,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                             GetSavePostData??.object?[index].isfalsehin = true;
                                                                           });
                                                                         } else if (GetSavePostData??.object?[index].isfalsehin == true && GetSavePostData??.object?[index].isfalsegu == null) {
-                                                                          setState(() {
+                                                                          super.setState(() {
                                                                             _translatedTextGujarati = translatedTextGujarati;
                                                                             // _translatedTextHindi = translatedTextHindi;
 
@@ -6041,7 +6041,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                         } else if (GetSavePostData??.object?[index].isfalsehin == true && GetSavePostData??.object?[index].isfalsehin == true) {
                                                                           print("this condison is working");
 
-                                                                          setState(() {
+                                                                          super.setState(() {
                                                                             print("i'm cheaking dataa--------------------------------$initalData");
                                                                             _translatedTextenglish = translatedTextenglish;
                                                                             GetSavePostData??.object?[index].description = _translatedTextenglish;
@@ -6065,7 +6065,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                      GetSavePostData?.object?[index].translatedDescription != null
                                                                                 ? GestureDetector(
                                                                                     onTap: () async {
-                                                                                         setState(() {
+                                                                                         super.setState(() {
                                                                                         if ( GetSavePostData?.object?[index].isTrsnalteoption  == false || GetSavePostData?.object?[index].isTrsnalteoption  == null) {
                                                                                            GetSavePostData?.object?[index].isTrsnalteoption = true;
                                                                                         } else {
@@ -6406,7 +6406,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                         child: PageView.builder(
                                                           onPageChanged:
                                                               (page) {
-                                                            setState(() {
+                                                            super.setState(() {
                                                               _currentPages[
                                                                   index] = page;
                                                               imageCount1 =
@@ -6998,7 +6998,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                               PageView.builder(
                                                             onPageChanged:
                                                                 (page) {
-                                                              setState(() {
+                                                              super.setState(() {
                                                                 _currentPages[
                                                                         index] =
                                                                     page;
@@ -7524,7 +7524,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                         String translatedTextenglish = await translateText(inputText, 'en');
 
                                                                         if (GetSavePostData??.object?[index].isfalsehin == null && GetSavePostData??.object?[index].isfalsegu == null) {
-                                                                          setState(() {
+                                                                          super.setState(() {
                                                                             _translatedTextHindi = translatedTextHindi;
 
                                                                             // GetSavePostData??.object?[index].description = _translatedTextGujarati;
@@ -7532,7 +7532,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                             GetSavePostData??.object?[index].isfalsehin = true;
                                                                           });
                                                                         } else if (GetSavePostData??.object?[index].isfalsehin == true && GetSavePostData??.object?[index].isfalsegu == null) {
-                                                                          setState(() {
+                                                                          super.setState(() {
                                                                             // isDataSet = false;
                                                                             _translatedTextGujarati = translatedTextGujarati;
                                                                             // _translatedTextHindi = translatedTextHindi;
@@ -7545,7 +7545,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                         } else if (GetSavePostData??.object?[index].isfalsehin == true && GetSavePostData??.object?[index].isfalsehin == true) {
                                                                           print("this condison is working");
 
-                                                                          setState(() {
+                                                                          super.setState(() {
                                                                             print("i'm cheaking dataa--------------------------------$initalData");
                                                                             // isDataSet = false;
                                                                             _translatedTextenglish = translatedTextenglish;
@@ -7571,7 +7571,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                       GetSavePostData?.object?[index].translatedDescription != null
                                                                                 ? GestureDetector(
                                                                                     onTap: () async {
-                                                                                         setState(() {
+                                                                                         super.setState(() {
                                                                                         if ( GetSavePostData?.object?[index].isTrsnalteoption  == false || GetSavePostData?.object?[index].isTrsnalteoption  == null) {
                                                                                            GetSavePostData?.object?[index].isTrsnalteoption = true;
                                                                                         } else {
@@ -7923,7 +7923,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                   height: 300,
                                                   child: PageView.builder(
                                                     onPageChanged: (page) {
-                                                      setState(() {
+                                                      super.setState(() {
                                                         _currentPages[index] =
                                                             page;
                                                         imageCount = page + 1;
@@ -8439,7 +8439,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                     //           true) {
                                     //         saveAllBlogModelData?.object
                                     //             ?.removeAt(index);
-                                    //         setState(() {
+                                    //         super.setState(() {
                                     //           SaveBlogCount =
                                     //               saveAllBlogModelData
                                     //                       ?.object?.length ??
@@ -9374,7 +9374,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                               onTap: () async {
                                 // dopcument = "Upload Image";
 
-                                // setState(() {});
+                                // super.setState(() {});
                                 print("dfsdfgsdfgdfg-${dopcument}");
                                 Navigator.of(context).push(MaterialPageRoute(
                                     builder: (context) => DocumentViewScreen1(
@@ -9415,7 +9415,7 @@ class _ProfileScreenState extends State<ProfileScreen>
   }
 
   Future<void> _selectStartTime(BuildContext context) async {
-    setState(() {
+    super.setState(() {
       isDataSet = true;
     });
     TimeOfDay initialTime = TimeOfDay(hour: 0, minute: 0);
@@ -9438,14 +9438,14 @@ class _ProfileScreenState extends State<ProfileScreen>
     }
 
     if (pickedTime != null && pickedTime != _startTime) {
-      setState(() {
+      super.setState(() {
         _startTime = pickedTime;
       });
     }
   }
 
   Future<void> _selectEndTime(BuildContext context) async {
-    setState(() {
+    super.setState(() {
       isDataSet = true;
     });
     TimeOfDay initialTime = TimeOfDay(hour: 0, minute: 0);
@@ -9467,7 +9467,7 @@ class _ProfileScreenState extends State<ProfileScreen>
     }
 
     if (pickedTime != null && pickedTime != _endTime) {
-      setState(() {
+      super.setState(() {
         _endTime = pickedTime;
       });
     }
@@ -9638,7 +9638,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                         print(
                             "--------------------------------------------------${NewProfileData?.object?.userUid}");
 
-                        setState(() {});
+                        super.setState(() {});
                         BlocProvider.of<NewProfileSCubit>(context).DeletePost(
                             '${getAllPostData?.object?[index].postUid}',
                             context);
@@ -9779,7 +9779,7 @@ class _ProfileScreenState extends State<ProfileScreen>
         switch (Index) {
           case 1:
             if (file1.name.isNotEmpty || file1.name.toString() == null) {
-              setState(() {
+              super.setState(() {
                 uplopdfile.text = file1.name;
                 dopcument = file1.name;
               });
@@ -9797,7 +9797,7 @@ class _ProfileScreenState extends State<ProfileScreen>
           case 0:
             print("file1.name-->${file1.name}");
             if (file1.name.isNotEmpty || file1.name.toString() == null) {
-              setState(() {
+              super.setState(() {
                 uplopdfile.text = file1.name;
                 dopcument = file1.name;
               });
@@ -9810,7 +9810,7 @@ class _ProfileScreenState extends State<ProfileScreen>
         print('filenamecheckKB-${file1.path}');
         /* BlocProvider.of<FetchExprtiseRoomCubit>(context)
             .chooseDocumentprofile(dopcument.toString(), file1.path!, context); */
-        setState(() {});
+        super.setState(() {});
 
         break;
       case 2:
@@ -9840,7 +9840,7 @@ class _ProfileScreenState extends State<ProfileScreen>
           print("file1.namedata-->${file1.name}");
           switch (Index) {
             case 1:
-              setState(() {
+              super.setState(() {
                 uplopdfile.text = file1.name;
                 dopcument = file1.name;
               });
@@ -9849,7 +9849,7 @@ class _ProfileScreenState extends State<ProfileScreen>
             default:
           }
           print('filecheckPath1-${file1.name}');
-          setState(() {
+          super.setState(() {
             uplopdfile.text = file1.name;
             dopcument = file1.name;
           });

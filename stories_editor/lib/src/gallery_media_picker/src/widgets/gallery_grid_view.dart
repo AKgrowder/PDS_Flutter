@@ -207,7 +207,7 @@ class _GalleryGridViewState extends State<GalleryGridView> {
       cacheMap.clear();
       scrolling.value = false;
       if (mounted) {
-        setState(() {});
+        super.setState(() {});
       }
     }
   }

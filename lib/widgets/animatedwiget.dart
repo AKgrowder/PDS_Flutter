@@ -25,7 +25,7 @@ class _AnimatedNetworkImageState extends State<AnimatedNetworkImage> {
     _mounted = true;
     Future.delayed(Duration(milliseconds: 150), () {
       if (_mounted) {
-        setState(() {
+        super.setState(() {
           _opacity = 1.0;
         });
       }

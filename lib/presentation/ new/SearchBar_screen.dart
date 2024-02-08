@@ -205,7 +205,7 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                                 onEditingComplete: () {},
                                 onTap: () {
                                   if (mounted) {
-                                    setState(() {
+                                    super.setState(() {
                                       isSerch = true;
                                     });
                                   }
@@ -251,7 +251,7 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                                   } else {
                                     dataget = false;
                                     if (mounted) {
-                                      setState(() {
+                                      super.setState(() {
                                         // Update the widget's state.
                                       });
                                     }
@@ -298,7 +298,7 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                           child: TextFormField(
                             onTap: () {
                               if (mounted) {
-                                setState(() {
+                                super.setState(() {
                                   isSerch = true;
                                 });
                               }
@@ -317,7 +317,7 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                               } else {
                                 dataget = false;
                                 if (mounted) {
-                                  setState(() {
+                                  super.setState(() {
                                     // Update the widget's state.
                                   });
                                 }
@@ -354,7 +354,7 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
 
                                   SharedPreferencesFunction(indexxx ?? 0);
                                   if (mounted) {
-                                    setState(() {
+                                    super.setState(() {
                                       // Update the widget's state.
                                     });
                                   }
@@ -449,7 +449,7 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                                                 context, 'FOR YOU', '1');
                                       }
                                       if (mounted) {
-                                        setState(() {
+                                        super.setState(() {
                                           // Update the widget's state.
                                         });
                                       }
@@ -575,7 +575,7 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                                       padding: const EdgeInsets.all(8.0),
                                       child: GestureDetector(
                                         onTap: () {
-                                          setState(() {
+                                          super.setState(() {
                                             _focusNode.requestFocus();
 
                                             isSerch = true;
@@ -682,7 +682,7 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                                 searchController.text =
                                     getDataInSerch?.object?[index].toString() ??
                                         '';
-                                setState(() {});
+                                super.setState(() {});
 
                                 if (searchController.text.contains('#')) {
                                   String hashTageValue = searchController.text
@@ -737,7 +737,7 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                           onPageChanged: (index, reason) {
                             WidgetsBinding.instance.addPostFrameCallback((_) {
                               if (mounted) {
-                                setState(() {
+                                super.setState(() {
                                   sliderCurrentPosition = index;
                                 });
                               }

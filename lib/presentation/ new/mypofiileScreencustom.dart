@@ -540,7 +540,7 @@
 //     pickedImageFile = await picker.pickImage(source: ImageSource.camera);
 //     // if (pickedImageFile != null) {
 //     //   if (!_isGifOrSvg(pickedImageFile!.path)) {
-//     //     setState(() {
+//     //     super.setState(() {
 //     //       _image = File(pickedImageFile!.path);
 //     //     });
 //     //     final sizeInBytes = await _image!.length();
@@ -601,7 +601,7 @@
 //   pickedImageFile = await picker.pickImage(source: ImageSource.gallery);
 //   // if (pickedImageFile != null) {
 //   //   if (!_isGifOrSvg(pickedImageFile!.path)) {
-//   //     setState(() {
+//   //     super.setState(() {
 //   //       _image = File(pickedImageFile!.path);
 //   //     });
 //   //     final sizeInBytes = await _image!.length();

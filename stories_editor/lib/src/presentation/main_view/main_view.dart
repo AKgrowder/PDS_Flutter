@@ -150,7 +150,6 @@ class _MainViewState extends State<MainView> {
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
       statusBarColor: Colors.white,
-      statusBarBrightness: Brightness.dark,
       statusBarIconBrightness: Brightness.dark,
     ));
     final ScreenUtil screenUtil = ScreenUtil();
@@ -403,7 +402,7 @@ class _MainViewState extends State<MainView> {
                             print("this is the new data set-$bytes");
                             print(
                                 "check the Data-${controlNotifier.isTextEditing}");
-                            setState(() {
+                            super.setState(() {
                               widget.onDone!(bytes);
                             });
                           },
@@ -607,7 +606,7 @@ class _MainViewState extends State<MainView> {
                     //     : const ScrollPhysics(),
 
                     pathList: (path) {
-                      setState(() {
+                      super.setState(() {
                         data = path;
 
                         if (data == null || data.isEmpty) {
@@ -688,7 +687,7 @@ class _MainViewState extends State<MainView> {
                             ),
                           );
                         }
-                        setState(() {
+                        super.setState(() {
                           data = '';
                           itemProvider.draggableWidget = [];
                           controlNotifier.mediaPath = '';
@@ -715,7 +714,7 @@ class _MainViewState extends State<MainView> {
                                 scrollProvider.pageController.animateToPage(0,
                                     duration: const Duration(milliseconds: 300),
                                     curve: Curves.easeIn);
-                                setState(() {
+                                super.setState(() {
                                   _controller?.play();
                                   _controller?.setLooping(true);
                                 });
@@ -737,10 +736,10 @@ class _MainViewState extends State<MainView> {
                                   _controller = VideoPlayerController.file(
                                       File(file.path));
 
-                                  setState(() {});
+                                  super.setState(() {});
                                   _controller
                                       ?.initialize()
-                                      .then((value) => setState(() {
+                                      .then((value) => super.setState(() {
                                             duration =
                                                 _controller!.value.duration;
                                             controlNotifier.durationofvideo =
@@ -751,7 +750,7 @@ class _MainViewState extends State<MainView> {
                                                 "check durationDataSet -${duration}");
                                           }));
 
-                                  setState(() {
+                                  super.setState(() {
                                     _controller?.play();
                                     _controller?.setLooping(true);
                                   });
@@ -844,7 +843,7 @@ class _MainViewState extends State<MainView> {
         _controller =
             VideoPlayerController.file(File(controlNotifier.mediaPath));
 
-        _controller?.initialize().then((value) => setState(() {
+        _controller?.initialize().then((value) => super.setState(() {
               duration = _controller!.value.duration;
               print("check duration-${duration}");
 
@@ -855,7 +854,7 @@ class _MainViewState extends State<MainView> {
           _controller =
               VideoPlayerController.file(File(controlNotifier.mediaPath));
 
-          setState(() {
+          super.setState(() {
             _controller?.play();
             _controller?.setLooping(true);
           });
@@ -874,7 +873,7 @@ class _MainViewState extends State<MainView> {
         _controller =
             VideoPlayerController.file(File(controlNotifier.mediaPath));
 
-        _controller?.initialize().then((value) => setState(() {
+        _controller?.initialize().then((value) => super.setState(() {
               duration = _controller!.value.duration;
               // print("check duration -${duration}");
 
@@ -919,7 +918,7 @@ class _MainViewState extends State<MainView> {
           _controller =
               VideoPlayerController.file(File(controlNotifier.mediaPath));
 
-          _controller?.initialize().then((value) => setState(() {
+          _controller?.initialize().then((value) => super.setState(() {
                 duration = _controller!.value.duration;
                 print("check duration-${duration}");
               }));
@@ -928,7 +927,7 @@ class _MainViewState extends State<MainView> {
             _controller =
                 VideoPlayerController.file(File(controlNotifier.mediaPath));
 
-            setState(() {
+            super.setState(() {
               _controller?.play();
               _controller?.setLooping(true);
             });
@@ -967,7 +966,7 @@ class _MainViewState extends State<MainView> {
               ..position = const Offset(0.0, 0));
 
         print("value _controller-$_controller");
-        setState(() {});
+        super.setState(() {});
 
         break;
       case 1:
@@ -982,7 +981,7 @@ class _MainViewState extends State<MainView> {
 
         print("value _controller-$_controller");
 
-        setState(() {});
+        super.setState(() {});
 
         break;
       case 2:
@@ -1021,7 +1020,7 @@ class _MainViewState extends State<MainView> {
 
           print("value _controller-$_controller");
 
-          setState(() {});
+          super.setState(() {});
         }
 
         break;
@@ -1081,7 +1080,7 @@ class _MainViewState extends State<MainView> {
     final left = (delta.dx / screenUtil.screenWidth) + _currentPos.dx;
     final top = (delta.dy / screenUtil.screenHeight) + _currentPos.dy;
 
-    setState(() {
+    super.setState(() {
       _activeItem!.position = Offset(left, top);
       _activeItem!.rotation = details.rotation + _currentRotation;
       _activeItem!.scale = details.scale * _currentScale;
@@ -1094,7 +1093,7 @@ class _MainViewState extends State<MainView> {
         item.position.dy >= 0.75.h &&
         item.position.dx >= -0.4.w &&
         item.position.dx <= 0.2.w) {
-      setState(() {
+      super.setState(() {
         _isDeletePosition = true;
         item.deletePosition = true;
       });
@@ -1102,12 +1101,12 @@ class _MainViewState extends State<MainView> {
         item.position.dy >= 0.62.h &&
         item.position.dx >= -0.35.w &&
         item.position.dx <= 0.15) {
-      setState(() {
+      super.setState(() {
         _isDeletePosition = true;
         item.deletePosition = true;
       });
     } else {
-      setState(() {
+      super.setState(() {
         _isDeletePosition = false;
         item.deletePosition = false;
       });
@@ -1129,16 +1128,16 @@ class _MainViewState extends State<MainView> {
             item.position.dy >= 0.62.h &&
             item.position.dx >= -0.35.w &&
             item.position.dx <= 0.15) {
-      setState(() {
+      super.setState(() {
         _itemProvider.removeAt(_itemProvider.indexOf(item));
         HapticFeedback.heavyImpact();
       });
     } else {
-      setState(() {
+      super.setState(() {
         _activeItem = null;
       });
     }
-    setState(() {
+    super.setState(() {
       _activeItem = null;
     });
   }

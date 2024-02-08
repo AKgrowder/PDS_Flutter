@@ -29,7 +29,7 @@ void onConnect(StompFrame frame) {
   );
 
   Timer.periodic(Duration(seconds: 5), (_) {
-    print("Room Socket ++++++++++++++++++++++++++++++++++++++++++++++++++++");
+    
 
     stompClient.subscribe(
       destination: "/topic/getMessage/${Room_ID_stomp}",

@@ -126,7 +126,7 @@ class _DmScreenState extends State<DmScreen> {
         prefs.getString(PreferencesKey.MaxInboxUploadSizeInMB) ?? "0");
 
     finalFileSize = documentuploadsize;
-    setState(() {});
+    super.setState(() {});
   }
 
   TapDownDetails? dataGet;
@@ -147,7 +147,7 @@ class _DmScreenState extends State<DmScreen> {
       FocusScope.of(context).unfocus();
     }
 
-    setState(() {
+    super.setState(() {
       isEmojiVisible = !isEmojiVisible;
     });
   }
@@ -171,7 +171,7 @@ class _DmScreenState extends State<DmScreen> {
     if (UserLogin_ID != null) {
       // print("user login Mood");
       if (Add_Comment.text.isNotEmpty) {
-        // setState(() {
+        // super.setState(() {
         addmsg = "";
         Add_Comment.text = '';
         // });
@@ -181,7 +181,7 @@ class _DmScreenState extends State<DmScreen> {
         print("check this condiosn");
         BlocProvider.of<DmInboxCubit>(context).send_image_in_user_chat(context,
             widget.ChatInboxUid, UserLogin_ID.toString(), File(_image!.path));
-        setState(() {
+        super.setState(() {
           SubmitOneTime = true;
         });
       } else {
@@ -236,7 +236,7 @@ class _DmScreenState extends State<DmScreen> {
         print("CCCCCCCC ->>>>>> ${content1}");
         var msgUUID = content1.userUid;
         /* if (content1.isDeleted == true) {
-          setState(() {
+          super.setState(() {
             /*  AllChatmodelData?.object?.messageOutputList?.content =
                 AllChatmodelData?.object?.messageOutputList?.content?.reversed
                     .toList(); */
@@ -749,7 +749,7 @@ class _DmScreenState extends State<DmScreen> {
                                                                       .maxScrollExtent,
                                                                 );
                                                             }
-                                                            // setState(() {
+                                                            // super.setState(() {
                                                             isScroll = true;
                                                             // });
                                                           });
@@ -995,7 +995,7 @@ class _DmScreenState extends State<DmScreen> {
 
                                                                                       if (OneTimeDelete == false) {
                                                                                         OneTimeDelete = true;
-                                                                                        setState(() {
+                                                                                        super.setState(() {
                                                                                           AllChatmodelData?.object?.messageOutputList?.content = AllChatmodelData?.object?.messageOutputList?.content?.reversed.toList();
                                                                                           ReverseBool = false;
                                                                                           // BlocProvider.of<senMSGCubit>(context).coomentPage(widget.Room_ID, context, "${0}", ShowLoader: true);
@@ -1050,7 +1050,7 @@ class _DmScreenState extends State<DmScreen> {
                                                                                               if (content1.isDeleted == true) {
                                                                                                 if (OneTimeDelete == false) {
                                                                                                   OneTimeDelete = true;
-                                                                                                  setState(() {
+                                                                                                  super.setState(() {
                                                                                                     AllChatmodelData?.object?.messageOutputList?.content = AllChatmodelData?.object?.messageOutputList?.content?.reversed.toList();
                                                                                                     ReverseBool = false;
                                                                                                     // BlocProvider.of<senMSGCubit>(context).coomentPage(widget.Room_ID, context, "${0}", ShowLoader: true);
@@ -1104,7 +1104,7 @@ class _DmScreenState extends State<DmScreen> {
                                                                                                 if (content1.isDeleted == true) {
                                                                                                   if (OneTimeDelete == false) {
                                                                                                     OneTimeDelete = true;
-                                                                                                    setState(() {
+                                                                                                    super.setState(() {
                                                                                                       AllChatmodelData?.object?.messageOutputList?.content = AllChatmodelData?.object?.messageOutputList?.content?.reversed.toList();
                                                                                                       ReverseBool = false;
                                                                                                       // BlocProvider.of<senMSGCubit>(context).coomentPage(widget.Room_ID, context, "${0}", ShowLoader: true);
@@ -1379,7 +1379,7 @@ class _DmScreenState extends State<DmScreen> {
                                             ),
                                             GestureDetector(
                                               onTap: () {
-                                                setState(() {
+                                                super.setState(() {
                                                   _image = null;
                                                 });
                                               },
@@ -1429,7 +1429,7 @@ class _DmScreenState extends State<DmScreen> {
                                                 ),
                                                 GestureDetector(
                                                   onTap: () {
-                                                    setState(() {
+                                                    super.setState(() {
                                                       _image = null;
                                                     });
                                                   },
@@ -1637,7 +1637,7 @@ class _DmScreenState extends State<DmScreen> {
                                                             ?.length ??
                                                         0); */
 
-                                                      setState(() {
+                                                      super.setState(() {
                                                         addDataSccesfully =
                                                             true;
                                                         addmsg =
@@ -1795,7 +1795,7 @@ class _DmScreenState extends State<DmScreen> {
     pickedImageFile = await picker.pickImage(source: ImageSource.gallery);
     if (pickedImageFile != null) {
       if (!_isGifOrSvg(pickedImageFile!.path)) {
-        setState(() {
+        super.setState(() {
           _image = File(pickedImageFile!.path);
         });
         final sizeInBytes = await _image!.length();
@@ -1803,7 +1803,7 @@ class _DmScreenState extends State<DmScreen> {
         // print('documentuploadsize-$documentuploadsize');
 
         if (sizeInMB > documentuploadsize) {
-          setState(() {
+          super.setState(() {
             _image = null;
           });
           showDialog(
@@ -1865,7 +1865,7 @@ class _DmScreenState extends State<DmScreen> {
     pickedImageFile = await picker.pickImage(source: ImageSource.camera);
     if (pickedImageFile != null) {
       _image = File(pickedImageFile!.path);
-      setState(() {});
+      super.setState(() {});
       final int fileSizeInBytes = await _image!.length();
       if (fileSizeInBytes <= finalFileSize * 1024 * 1024) {
         BlocProvider.of<DmInboxCubit>(context)
@@ -1896,7 +1896,7 @@ class _DmScreenState extends State<DmScreen> {
 
     /*    if (pickedImageFile != null) {
       if (!_isGifOrSvg(pickedImageFile!.path)) {
-        setState(() {
+        super.setState(() {
           _image = File(pickedImageFile!.path);
         });
           
@@ -2022,7 +2022,7 @@ class _DmScreenState extends State<DmScreen> {
         switch (Index) {
           case 1:
             if (file1.name.isNotEmpty || file1.name.toString() == null) {
-              setState(() {
+              super.setState(() {
                 file12 = file1;
                 _image = File(file1.path.toString());
               });
@@ -2040,7 +2040,7 @@ class _DmScreenState extends State<DmScreen> {
           case 0:
             print("file1.name-->${file1.name}");
             if (file1.name.isNotEmpty || file1.name.toString() == null) {
-              setState(() {
+              super.setState(() {
                 file12 = file1;
                 _image = File(file1.path.toString());
               });
@@ -2054,7 +2054,7 @@ class _DmScreenState extends State<DmScreen> {
         BlocProvider.of<DmInboxCubit>(context)
             .UplodeImageAPI(context, File(_image!.path));
 
-        setState(() {});
+        super.setState(() {});
 
         break;
       case 2:
@@ -2095,7 +2095,7 @@ class _DmScreenState extends State<DmScreen> {
           }
           print('filecheckPath1111-${file1.name}');
           print("file222.name-->${file1.name}");
-          setState(() {
+          super.setState(() {
             file12 = file1;
             _image = File(file1.path.toString());
           });

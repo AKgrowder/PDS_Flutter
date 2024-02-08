@@ -162,9 +162,6 @@ class _HomeScreenNewState extends State<HomeScreenNew>
   String? IosLatestVersion;
   String? IosRoutVersion;
   String? IosMainversion;
-  String _translatedTextGujarati = '';
-  String _translatedTextHindi = '';
-  String _translatedTextenglish = '';
   String language = "";
   String tempdata1 = "";
   String tempdata2 = "";
@@ -188,7 +185,6 @@ class _HomeScreenNewState extends State<HomeScreenNew>
   UserTagModel? userTagModel;
   List<ChewieController> chewieController = [];
   ChewieController? inList;
-  Map<String, bool> _videoVisibility = {};
 
   bool isWatch = false;
   getDocumentSize() async {
@@ -200,7 +196,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
     documentVideosize = await double.parse(
         prefs.getString(PreferencesKey.MaxStoryUploadSizeInMB) ?? "0");
     finalvideoSize = documentVideosize;
-    setState(() {});
+    super.setState(() {});
   }
 
   bool _isLink(String input) {
@@ -209,9 +205,6 @@ class _HomeScreenNewState extends State<HomeScreenNew>
     return linkRegex.hasMatch(input);
   }
 
-  thubMethod() async {
-    Directory tempDir = await getTemporaryDirectory();
-  }
 
   final focusNode = FocusNode();
   String getTimeDifference(DateTime dateTime) {
@@ -250,7 +243,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
     storycontext = context;
     VersionControll();
     getDocumentSize();
-    WidgetsBinding.instance!.addObserver(this);
+    WidgetsBinding.instance.addObserver(this);
     super.initState();
   }
 
@@ -258,19 +251,19 @@ class _HomeScreenNewState extends State<HomeScreenNew>
   void dispose() {
     timer?.cancel();
     scrollController.removeListener(() {});
-    WidgetsBinding.instance!.removeObserver(this);
+    WidgetsBinding.instance.removeObserver(this);
 
     super.dispose();
   }
 
   void hideFloting() {
-    setState(() {
+    super.setState(() {
       _show = false;
     });
   }
 
   void showFloting() {
-    setState(() {
+    super.setState(() {
       _show = true;
     });
   }
@@ -1142,7 +1135,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
 
   NewApi() async {
     timer = Timer.periodic(Duration(seconds: 15), (timer) async {
-      setState(() {
+      super.setState(() {
         secound = timer.tick;
       });
       await BlocProvider.of<GetGuestAllPostCubit>(context)
@@ -1281,8 +1274,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
     // language = result.language;
     // double confidence = result.confidence;
 
-// print("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ :- ${index} :-  ${language}");
-  }
+ }
 
   @override
   Widget build(BuildContext context) {
@@ -1451,7 +1443,8 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                               image: element.profilePic != null &&
                                       element.profilePic != ""
                                   ? DecorationImage(
-                                      image: NetworkImage(element.profilePic),
+                                      image:
+                                          NetworkImage("${element.profilePic}"),
                                       fit: BoxFit.fill)
                                   : DecorationImage(
                                       image: AssetImage(
@@ -1573,8 +1566,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                           image: element.profilePic != null &&
                                   element.profilePic != ''
                               ? DecorationImage(
-                                  image: NetworkImage(
-                                      element.profilePic.toString()),
+                                  image: NetworkImage("${element.profilePic}"),
                                   fit: BoxFit.fill)
                               : DecorationImage(
                                   image: AssetImage(
@@ -2018,6 +2010,123 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                 }
                                               }
                                             }
+                                            if (Platform.isIOS) {
+// final info =
+//                                                   await DeviceInfoPlugin()
+//                                                       .androidInfo;
+                                              // if (num.parse(await info
+                                              //             .version.release)
+                                              //         .toInt() >=
+                                              //     13) {
+                                              //   if (await permissionHandler(
+                                              //           context,
+                                              //           Permission.photos) ??
+                                              //       false) {
+                                              //     imageDataPost =
+                                              //         await Navigator.push(
+                                              //             context,
+                                              //             MaterialPageRoute(
+                                              //                 builder:
+                                              //                     (context) {
+                                              //       return CreateStoryPage(
+                                              //         finalFileSize:
+                                              //             finalFileSize,
+                                              //         finalvideoSize:
+                                              //             finalvideoSize,
+                                              //       );
+                                              //     }));
+
+                                              //     print("this is the 1");
+                                              //     if (imageDataPost?.object
+                                              //             ?.split('.')
+                                              //             .last ==
+                                              //         'mp4') {
+                                              //       var parmes = {
+                                              //         "storyData":
+                                              //             imageDataPost?.object,
+                                              //         "storyType": "VIDEO",
+                                              //         "videoDuration":
+                                              //             imageDataPost
+                                              //                 ?.videodurationGet
+                                              //       };
+                                              //       print(
+                                              //           "scdfhgsdfhsd-${parmes}");
+                                              //       Repository()
+                                              //           .cretateStoryApi(
+                                              //               context, parmes);
+                                              //       isWatch = true;
+                                              //       Get_UserToken();
+                                              //     } else {
+                                              //       var parmes = {
+                                              //         "storyData": imageDataPost
+                                              //             ?.object
+                                              //             .toString(),
+                                              //         "storyType": "TEXT",
+                                              //         "videoDuration": ''
+                                              //       };
+                                              //       print(
+                                              //           "CHECK:--------${parmes}");
+                                              //       Repository()
+                                              //           .cretateStoryApi(
+                                              //               context, parmes);
+                                              //       isWatch = true;
+                                              //       Get_UserToken();
+                                              //     }
+                                              //   }
+                                              // } else if (await permissionHandler(
+                                              //         context,
+                                              //         Permission.storage) ??
+                                              //     false) {
+                                                print("this is the 3");
+
+                                                imageDataPost =
+                                                    await Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                            builder: (context) {
+                                                  return CreateStoryPage(
+                                                    finalFileSize:
+                                                        finalFileSize,
+                                                    finalvideoSize:
+                                                        finalvideoSize,
+                                                  );
+                                                }));
+
+                                                if (imageDataPost?.object
+                                                        ?.split('.')
+                                                        .last ==
+                                                    'mp4') {
+                                                  var parmes = {
+                                                    "storyData":
+                                                        imageDataPost?.object,
+                                                    "storyType": "VIDEO",
+                                                    "videoDuration":
+                                                        imageDataPost
+                                                            ?.videodurationGet
+                                                  };
+                                                  print(
+                                                      "scdfhgsdfhsd-${parmes}");
+                                                  Repository().cretateStoryApi(
+                                                      context, parmes);
+                                                  isWatch = true;
+                                                  Get_UserToken();
+                                                } else {
+                                                  var parmes = {
+                                                    "storyData": imageDataPost
+                                                        ?.object
+                                                        .toString(),
+                                                    "storyType": "TEXT",
+                                                    "videoDuration": ''
+                                                  };
+                                                  print(
+                                                      "CHECK:--------${parmes}");
+                                                  Repository().cretateStoryApi(
+                                                      context, parmes);
+                                                  isWatch = true;
+                                                  Get_UserToken();
+                                                }
+                                              // }
+                                            }
                                           } else {
                                             Navigator.of(context).push(
                                                 MaterialPageRoute(
@@ -2173,7 +2282,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
 
                                             userName.add(User_Name!);
                                             if (mounted)
-                                              setState(() {
+                                              super.setState(() {
                                                 storyAdded = true;
                                               });
                                           }
@@ -2329,7 +2438,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                           });
                                           WidgetsBinding.instance
                                               .addPostFrameCallback(
-                                                  (timeStamp) => setState(() {
+                                                  (timeStamp) => super.setState(() {
                                                         added = true;
                                                       }));
                                         }
@@ -2712,7 +2821,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                           // if (AllGuestPostRoomData?.object?.content?[index].isfalsehin == null && AllGuestPostRoomData?.object?.content?[index].isfalsegu == null) {
                                                                                           //   // Translate from the original language to English
                                                                                           //   translatedTextenglish = await translateText(inputText, 'en');
-                                                                                          //   setState(() {
+                                                                                          //   super.setState(() {
                                                                                           //     _translatedTextenglish = translatedTextenglish;
                                                                                           //     AllGuestPostRoomData?.object?.content?[index].description = _translatedTextenglish;
                                                                                           //     AllGuestPostRoomData?.object?.content?[index].isfalsehin = true;
@@ -2720,7 +2829,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                           // } else if (AllGuestPostRoomData?.object?.content?[index].isfalsehin == true && AllGuestPostRoomData?.object?.content?[index].isfalsegu == null) {
                                                                                           //   // Translate from Hindi to English
                                                                                           //   translatedTextenglish = await translateText(inputText, 'en');
-                                                                                          //   setState(() {
+                                                                                          //   super.setState(() {
                                                                                           //     _translatedTextenglish = translatedTextenglish;
                                                                                           //     AllGuestPostRoomData?.object?.content?[index].description = _translatedTextenglish;
                                                                                           //     AllGuestPostRoomData?.object?.content?[index].isfalsegu = true;
@@ -2739,7 +2848,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                             if (language == 'gu' || language == 'hi') {
                                                                                               // Translate from the original language to English
                                                                                               translatedTextenglish = await translateText(inputText, 'en');
-                                                                                              setState(() {
+                                                                                              super.setState(() {
                                                                                                 print("languagelanguagelanguagelanguage :--2 ${language}");
                                                                                                 _translatedTextenglish = translatedTextenglish;
                                                                                                 AllGuestPostRoomData?.object?.content?[index].description = _translatedTextenglish;
@@ -2748,7 +2857,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                               });
                                                                                             } else if (language == 'en') {
                                                                                               // No need to translate, as the text is already in English
-                                                                                              // setState(() {
+                                                                                              // super.setState(() {
                                                                                               //   print("languagelanguagelanguagelanguage :--3 ${language}");
                                                                                               //   checkLun = false;
                                                                                               //   AllGuestPostRoomData?.object?.content?[index].description = tempdata2;
@@ -2756,7 +2865,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                               // print("This condition is working");
 
                                                                                               translatedTextenglish = await translateText(inputText, 'en');
-                                                                                              setState(() {
+                                                                                              super.setState(() {
                                                                                                 print("languagelanguagelanguagelanguage :--3 ${language}");
                                                                                                 _translatedTextenglish = translatedTextenglish;
                                                                                                 AllGuestPostRoomData?.object?.content?[index].description = _translatedTextenglish;
@@ -2765,12 +2874,11 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                               });
                                                                                             }
                                                                                           } */
-                                                                                      setState(() {
-                                                                                        if (AllGuestPostRoomData?.object?.content?[index].isTrsnalteoption == false || AllGuestPostRoomData?.object?.content?[index].isTrsnalteoption  == null) {
-                                                                                         
-                                                                                          AllGuestPostRoomData?.object?.content?[index].isTrsnalteoption = true; 
+                                                                                      super.setState(() {
+                                                                                        if (AllGuestPostRoomData?.object?.content?[index].isTrsnalteoption == false || AllGuestPostRoomData?.object?.content?[index].isTrsnalteoption == null) {
+                                                                                          AllGuestPostRoomData?.object?.content?[index].isTrsnalteoption = true;
                                                                                         } else {
-                                                                                          AllGuestPostRoomData?.object?.content?[index].isTrsnalteoption = false; 
+                                                                                          AllGuestPostRoomData?.object?.content?[index].isTrsnalteoption = false;
                                                                                         }
                                                                                       });
                                                                                     },
@@ -2796,9 +2904,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                   child: Container(
                                                                                     // color: Colors.amber,
                                                                                     child: LinkifyText(
-                                                                                       AllGuestPostRoomData?.object?.content?[index].isTrsnalteoption  == false || AllGuestPostRoomData?.object?.content?[index].isTrsnalteoption  == null
-                                                                                          ? "${AllGuestPostRoomData?.object?.content?[index].description}"
-                                                                                          :  "${AllGuestPostRoomData?.object?.content?[index].translatedDescription}",
+                                                                                      AllGuestPostRoomData?.object?.content?[index].isTrsnalteoption == false || AllGuestPostRoomData?.object?.content?[index].isTrsnalteoption == null ? "${AllGuestPostRoomData?.object?.content?[index].description}" : "${AllGuestPostRoomData?.object?.content?[index].translatedDescription}",
                                                                                       linkStyle: TextStyle(
                                                                                         color: Colors.blue,
                                                                                         fontFamily: 'outfit',
@@ -2987,10 +3093,14 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                                   }
                                                                                                 },
                                                                                                 child: Container(
-                                                                                                  child: CachedNetworkImage(
-                                                                                                    imageUrl: AllGuestPostRoomData?.object?.content?[index].thumbnailImageUrl ?? "",
+                                                                                                  child: CustomImageView(
+                                                                                                    url: "${AllGuestPostRoomData?.object?.content?[index].thumbnailImageUrl}",
                                                                                                     fit: BoxFit.cover,
                                                                                                   ),
+                                                                                                  // CachedNetworkImage(
+                                                                                                  //   imageUrl: "${AllGuestPostRoomData?.object?.content?[index].thumbnailImageUrl}",
+                                                                                                  //   fit: BoxFit.cover,
+                                                                                                  // ),
                                                                                                 ),
                                                                                               )
                                                                                             ],
@@ -3006,7 +3116,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                       height: 200,
                                                                                       child: PageView.builder(
                                                                                         onPageChanged: (page) {
-                                                                                          setState(() {
+                                                                                          super.setState(() {
                                                                                             _currentPages[index] = page;
                                                                                             imageCount1 = page + 1;
                                                                                           });
@@ -3418,10 +3528,14 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                                   }
                                                                                                 },
                                                                                                 child: Container(
-                                                                                                  child: CachedNetworkImage(
-                                                                                                    imageUrl: AllGuestPostRoomData?.object?.content?[index].repostOn?.thumbnailImageUrl ?? "",
+                                                                                                  child: CustomImageView(
+                                                                                                    url: "${AllGuestPostRoomData?.object?.content?[index].repostOn?.thumbnailImageUrl}",
                                                                                                     fit: BoxFit.cover,
                                                                                                   ),
+                                                                                                  //  CachedNetworkImage(
+                                                                                                  //   imageUrl: "${AllGuestPostRoomData?.object?.content?[index].repostOn?.thumbnailImageUrl}",
+                                                                                                  //   fit: BoxFit.cover,
+                                                                                                  // ),
                                                                                                 ),
                                                                                               )
                                                                                             ],
@@ -3436,7 +3550,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                           height: 300,
                                                                                           child: PageView.builder(
                                                                                             onPageChanged: (page) {
-                                                                                              setState(() {
+                                                                                              super.setState(() {
                                                                                                 _currentPages[index] = page;
                                                                                                 imageCount2 = page + 1;
                                                                                               });
@@ -4261,11 +4375,11 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                             AllGuestPostRoomData?.object?.content?[index].translatedDescription != null
                                                                                 ? GestureDetector(
                                                                                     onTap: () async {
-                                                                                         setState(() {
-                                                                                        if ( AllGuestPostRoomData?.object?.content?[index].isTrsnalteoption  == false || AllGuestPostRoomData?.object?.content?[index].isTrsnalteoption  == null) {
-                                                                                           AllGuestPostRoomData?.object?.content?[index].isTrsnalteoption = true;
+                                                                                      super.setState(() {
+                                                                                        if (AllGuestPostRoomData?.object?.content?[index].isTrsnalteoption == false || AllGuestPostRoomData?.object?.content?[index].isTrsnalteoption == null) {
+                                                                                          AllGuestPostRoomData?.object?.content?[index].isTrsnalteoption = true;
                                                                                         } else {
-                                                                                           AllGuestPostRoomData?.object?.content?[index].isTrsnalteoption = false;
+                                                                                          AllGuestPostRoomData?.object?.content?[index].isTrsnalteoption = false;
                                                                                         }
                                                                                       });
                                                                                     },
@@ -4304,9 +4418,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                     child: LinkifyText(
                                                                                       /*    utf8.decode(AllGuestPostRoomData?.object?.content?[index].description?.runes.toList() ??
                                                                                           []), */
-                                                                                      AllGuestPostRoomData?.object?.content?[index].isTrsnalteoption == false || AllGuestPostRoomData?.object?.content?[index].isTrsnalteoption  == null
-                                                                                          ? "${AllGuestPostRoomData?.object?.content?[index].description}"
-                                                                                          :  "${AllGuestPostRoomData?.object?.content?[index].translatedDescription}",
+                                                                                      AllGuestPostRoomData?.object?.content?[index].isTrsnalteoption == false || AllGuestPostRoomData?.object?.content?[index].isTrsnalteoption == null ? "${AllGuestPostRoomData?.object?.content?[index].description}" : "${AllGuestPostRoomData?.object?.content?[index].translatedDescription}",
                                                                                       linkStyle: TextStyle(
                                                                                         color: Colors.blue,
                                                                                         fontFamily: 'outfit',
@@ -4395,7 +4507,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
 
                                                                                 //       String inputText = "${AllGuestPostRoomData?.object?.content?[index].description}";
                                                                                 //       String translatedTextGujarati = await translateText(inputText, 'gu');
-                                                                                //       setState(() {
+                                                                                //       super.setState(() {
                                                                                 //         _translatedTextGujarati = translatedTextGujarati;
                                                                                 //       });
                                                                                 //     },
@@ -4522,10 +4634,14 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                             }
                                                                                           },
                                                                                           child: Container(
-                                                                                            child: CachedNetworkImage(
-                                                                                              imageUrl: AllGuestPostRoomData?.object?.content?[index].thumbnailImageUrl ?? "",
+                                                                                            child: CustomImageView(
+                                                                                              url: "${AllGuestPostRoomData?.object?.content?[index].thumbnailImageUrl}",
                                                                                               fit: BoxFit.cover,
                                                                                             ),
+                                                                                            //  CachedNetworkImage(
+                                                                                            //   imageUrl: "${AllGuestPostRoomData?.object?.content?[index].thumbnailImageUrl}",
+                                                                                            //   fit: BoxFit.cover,
+                                                                                            // ),
                                                                                           ),
                                                                                         )
                                                                                       ],
@@ -4542,7 +4658,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                 height: 300,
                                                                                 child: PageView.builder(
                                                                                   onPageChanged: (page) {
-                                                                                    setState(() {
+                                                                                    super.setState(() {
                                                                                       _currentPages[index] = page;
                                                                                       imageCount = page + 1;
                                                                                     });
@@ -4579,7 +4695,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                               children: [
                                                                                                 PhotoViewGallery(
                                                                                                   onPageChanged: (value) {
-                                                                                                    setState(() {
+                                                                                                    super.setState(() {
                                                                                                       imageCount = value + 1;
                                                                                                     });
                                                                                                     print("imageCountcheck--${imageCount}");
@@ -5119,7 +5235,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                               // ExpertsScreen(RoomUUID:  PriveateRoomData?.object?[index].uid),
                                                                             )).then(
                                                                         (value) =>
-                                                                            setState(() {
+                                                                            super.setState(() {
                                                                               // refresh = true;
                                                                             }));
                                                                   },
@@ -5297,7 +5413,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                             ),
                                                                                           ], child: ExpertsScreen(RoomUUID: "")),
                                                                                           // ExpertsScreen(RoomUUID:  PriveateRoomData?.object?[index].uid),
-                                                                                        )).then((value) => setState(() {
+                                                                                        )).then((value) => super.setState(() {
                                                                                       // refresh = true;
                                                                                     }));
                                                                               },
@@ -5740,7 +5856,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
             ankur.length,
             (index) => PopupMenuItem(
                 onTap: () {
-                  setState(() {
+                  super.setState(() {
                     indexx = index;
                   });
                   index == 0 ? CreateForum() : becomeAnExport();
@@ -5892,7 +6008,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
             (index) => PopupMenuItem(
                 enabled: true,
                 onTap: () {
-                  setState(() {
+                  super.setState(() {
                     indexx = index;
                   });
                 },
@@ -5927,7 +6043,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
     print("method caling");
     ImageDataPostOne? imageDataPost;
 
-    if (Platform.isAndroid) {
+    // if (Platform.isAndroid) {
       print("tHIS iS THE dATA gET");
       final info = await DeviceInfoPlugin().androidInfo;
       if (num.parse(await info.version.release).toInt() >= 13) {
@@ -5994,7 +6110,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
           Get_UserToken();
         }
       }
-    }
+    // }
     buttonDatas[0].images.add(StoryModel(
         imageDataPost?.object,
         DateTime.now().toIso8601String(),
@@ -6009,7 +6125,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
             imageName: '${imageDataPost?.object}',
           ));
       if (mounted)
-        setState(() {
+        super.setState(() {
           storyAdded = true;
         });
     }
@@ -6281,13 +6397,13 @@ class _HomeScreenNewState extends State<HomeScreenNew>
       FocusScope.of(context).unfocus();
     }
 
-    // setState(() {
+    // super.setState(() {
     isEmojiVisible = !isEmojiVisible;
 
     // });
   }
 
-  void onEmojiSelected(String emoji) => setState(() {
+  void onEmojiSelected(String emoji) => super.setState(() {
         addcomment.text = addcomment.text + emoji;
       });
 
@@ -6557,8 +6673,7 @@ class _VideoListItemState extends State<VideoListItem> {
       videoPlayerController: VideoPlayerController.networkUrl(
         Uri.parse(widget.videoUrl),
       ),
-    );
-    setState(() {});
+    ); 
   }
 
   @override

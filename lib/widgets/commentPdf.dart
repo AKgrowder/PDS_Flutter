@@ -89,7 +89,7 @@ class _DocumentViewScreenState extends State<DocumentViewScreen> {
     if (!hasExisted) {
       savedDir.create();
       print('first vvvvvvvvvvvvvvvvvvv');
-      setState(() {
+      super.setState(() {
         pathExists = false;
       });
     }

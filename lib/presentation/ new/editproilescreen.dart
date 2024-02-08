@@ -96,7 +96,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     contactController.text =
         widget.newProfileData?.object?.mobileNo?.toString() ?? '';
 
-    setState(() {});
+    super.setState(() {});
   }
 
   userStatusGet() async {
@@ -168,7 +168,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     }
 
     if (pickedTime != null && pickedTime != _endTime) {
-      setState(() {
+      super.setState(() {
         _endTime = pickedTime;
       });
     }
@@ -197,7 +197,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     }
 
     if (pickedTime != null && pickedTime != _startTime) {
-      setState(() {
+      super.setState(() {
         _startTime = pickedTime;
       });
     }
@@ -341,7 +341,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   .toList();
 
               WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-                setState(() {});
+                super.setState(() {});
               });
               selectedIndustryTypes2.forEach((element) {
                 industryUUIDinApi.add(element.industryTypeUid);
@@ -1049,7 +1049,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         industryUUID11.add("${element.industryTypeUid}");
       },
     );
-    setState(() {});
+    super.setState(() {});
     print("this is the expertDetials");
     if (jobProfile.text == null || jobProfile.text == "") {
       SnackBar snackBar = SnackBar(
@@ -1332,7 +1332,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     selectedIndustryTypes2.forEach((element) {
                       industryUUIDinApi.add("${element.industryTypeUid}");
                     });
-                    setState(() {});
+                    super.setState(() {});
                   },
                 ),
               ),
@@ -1365,7 +1365,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       industryUUIDinApi.add(element.industryTypeUid);
                       selectedIndustryTypes3.add(element);
                     });
-                    setState(() {});
+                    super.setState(() {});
                   },
                 ),
               ),
@@ -1400,7 +1400,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   /*  onChanged: (Expertiseclass? newValue) {
                     // When the user selects an option from the dropdown.
                     if (newValue != null) {
-                      setState(() {
+                      super.setState(() {
                         selectedExpertise = newValue;
                         print("Selectedexpertise: ${newValue.uid}");
                       });
@@ -1409,7 +1409,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   onChanged: (Expertiseclass? newValue) {
                     // When the user selects an option from the dropdown.
                     if (newValue != null) {
-                      setState(() {
+                      super.setState(() {
                         selectedExpertise = newValue;
                         print("Selectedexpertise: ${newValue.uid}");
                       });
@@ -1631,7 +1631,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             dopcument = "Upload Document";
                             // chooseDocument2?.object = null;
 
-                            setState(() {});
+                            super.setState(() {});
                           },
                           child: Icon(
                             Icons.delete_forever,
@@ -1697,7 +1697,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         child: GestureDetector(
                             onTap: () {
                               dopcument = "Upload Image";
-                              setState(() {});
+                              super.setState(() {});
                             },
                             child: Icon(
                               Icons.delete_forever,
@@ -1863,14 +1863,14 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   removeuserProfilePic() async {
     removeProfilePic = true;
     widget.newProfileData?.object?.userProfilePic = null;
-    setState(() {});
+    super.setState(() {});
     Navigator.pop(context);
   }
 
   removeUserCover() async {
     removeCoverPic = true;
     widget.newProfileData?.object?.userBackgroundPic = null;
-    setState(() {});
+    super.setState(() {});
     Navigator.pop(context);
   }
 
@@ -2023,7 +2023,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           getFileSize(file.path!, 1, result.files.first, Index, context);
         }
 
-        /*     setState(() {
+        /*     super.setState(() {
           // fileparth = file.path!;
 
           switch (Index) {
@@ -2100,7 +2100,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         switch (Index) {
           case 1:
             if (file1.name.isNotEmpty || file1.name.toString() == null) {
-              setState(() {
+              super.setState(() {
                 uplopdfile.text = file1.name;
                 dopcument = file1.name;
                 dopcumentNameUpdate = dopcument;
@@ -2119,7 +2119,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         switch (Index) {
           case 0:
             if (file1.name.isNotEmpty || file1.name.toString() == null) {
-              setState(() {
+              super.setState(() {
                 uplopdfile.text = file1.name;
                 dopcument = file1.name;
                 dopcumentNameUpdate = dopcument;
@@ -2136,7 +2136,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             croppedFile != null ? croppedFile.path : file1.path!,
             context);
 
-        setState(() {});
+        super.setState(() {});
 
         break;
       case 2:
@@ -2169,7 +2169,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
           switch (Index) {
             case 1:
-              setState(() {
+              super.setState(() {
                 uplopdfile.text = file1.name;
                 dopcument = file1.name;
                 dopcumentNameUpdate = dopcument;
@@ -2180,7 +2180,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           }
           print('filecheckPath-${file1.path}');
           print('filecheckPath-${file1.path}');
-          setState(() {
+          super.setState(() {
             uplopdfile.text = file1.name;
             dopcument = file1.name;
             dopcumentNameUpdate = dopcument;
@@ -2214,13 +2214,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   Future<void> gallerypicker() async {
     print("this is the gallerypicker");
     var pickedImageFile = await picker.pickImage(source: ImageSource.gallery);
-    setState(() {
+    super.setState(() {
       _image = File(pickedImageFile?.path ?? '');
     });
     if (_image != null) {
       if (!_isGifOrSvg(_image!.path)) {
         _image = File(_image!.path);
-        setState(() {});
+        super.setState(() {});
         getUploadeProfile(_image!.path, 1, _image!, 0);
       }
     }
@@ -2232,12 +2232,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
     var pickedImageFile = await picker.pickImage(source: ImageSource.gallery);
     _image1 = File(pickedImageFile?.path ?? '');
-    setState(() {});
+    super.setState(() {});
 
     if (_image1 != null) {
       if (!_isGifOrSvg(_image1!.path)) {
         _image1 = File(_image1!.path);
-        setState(() {});
+        super.setState(() {});
         getUploadeProfile1(_image1!.path, 1, _image1!, 0);
       }
     }
@@ -2266,7 +2266,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         print('filenamecheckKB-${file1.path}');
         BlocProvider.of<MyAccountCubit>(context)
             .upoldeProfilePic(_image!, context);
-        setState(() {});
+        super.setState(() {});
 
         break;
       case 2:
@@ -2332,7 +2332,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         print('filenamecheckKB-${file1.path}');
         BlocProvider.of<MyAccountCubit>(context)
             .upoldeProfilePic1(_image1!, context);
-        setState(() {});
+        super.setState(() {});
 
         break;
       case 2:

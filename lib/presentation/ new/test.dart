@@ -135,7 +135,7 @@
 //   savedataFuntion(String userId) async {
 //     final SharedPreferences prefs = await SharedPreferences.getInstance();
 //     User_Module = prefs.getString(PreferencesKey.module);
-//     setState(() {});
+//     super.setState(() {});
 
 //     BlocProvider.of<NewProfileSCubit>(context).get_about_me(context, userId);
 
@@ -192,7 +192,7 @@
 //       curve: Curves.ease,
 //     );
 
-//     setState(() {
+//     super.setState(() {
 //       fixedScroll = _tabController.index == 2;
 //     });
 //   }
