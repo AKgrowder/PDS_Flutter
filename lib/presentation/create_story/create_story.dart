@@ -166,7 +166,7 @@ class _CreateStoryPageState extends State<CreateStoryPage> {
         switch (Index) {
           case 1:
             if (file1.name.isNotEmpty || file1.name.toString() == null) {
-              setState(() {
+              super.setState(() {
                 file12 = file1;
               });
             }
@@ -183,7 +183,7 @@ class _CreateStoryPageState extends State<CreateStoryPage> {
           case 0:
             print("file1.name-->${file1.name}");
             if (file1.name.isNotEmpty || file1.name.toString() == null) {
-              setState(() {
+              super.setState(() {
                 file12 = file1;
               });
             }
@@ -196,7 +196,7 @@ class _CreateStoryPageState extends State<CreateStoryPage> {
         BlocProvider.of<CreateStoryCubit>(context)
             .UplodeImageAPI(context, file1.name, file1.path.toString());
 
-        setState(() {});
+        super.setState(() {});
 
         break;
       case 2:
@@ -237,7 +237,7 @@ class _CreateStoryPageState extends State<CreateStoryPage> {
           }
           print('filecheckPath1111-${file1.name}');
           print("file222.name-->${file1.name}");
-          setState(() {
+          super.setState(() {
             file12 = file1;
           });
 

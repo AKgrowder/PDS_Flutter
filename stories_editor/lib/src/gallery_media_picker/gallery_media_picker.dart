@@ -165,7 +165,7 @@ class _GalleryMediaPickerState extends State<GalleryMediaPicker> {
         .then((pathList) {
       /// don't delete setState
       Future.delayed(Duration.zero, () {
-        setState(() {
+        super.setState(() {
           provider.resetPathList(pathList);
         });
       });

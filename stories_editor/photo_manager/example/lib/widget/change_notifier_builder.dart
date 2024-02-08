@@ -30,7 +30,7 @@ class _ChangeNotifierBuilderState<T extends ChangeNotifier>
 
   void _onChange() {
     if (mounted) {
-      setState(() {});
+      super.setState(() {});
     }
   }
 

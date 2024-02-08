@@ -64,7 +64,7 @@
 //   }
 
 //   void connectionChanged(dynamic hasConnection) {
-//     setState(() {
+//     super.setState(() {
 //       isOffline = !hasConnection;
 //     });
 //   }
@@ -94,7 +94,7 @@
 //                     children: [
 //                       GestureDetector(
 //                         onTap: () {
-//                           setState(() {
+//                           super.setState(() {
 //                             // setUI();
 //                             selectedIndex = 0;
 //                           });
@@ -162,7 +162,7 @@
 //                       ),
 //                       GestureDetector(
 //                         onTap: () {
-//                           setState(() {
+//                           super.setState(() {
 //                             if (UserLogin_ID != null) {
 //                               selectedIndex = 1;
 //                             } else {
@@ -242,7 +242,7 @@
 //                       ),
 //                       GestureDetector(
 //                         onTap: () {
-//                           setState(() {
+//                           super.setState(() {
 //                             if (UserLogin_ID != null) {
 //                               selectedIndex = 2;
 //                             } else {
@@ -320,7 +320,7 @@
 //                       ),
 //                       GestureDetector(
 //                         onTap: () {
-//                           setState(() {
+//                           super.setState(() {
 //                             if (UserLogin_ID != null) {
 //                               selectedIndex = 3;
 //                             } else {
@@ -398,7 +398,7 @@
 //                       // / ------------------------------------------------------------------
 //                       GestureDetector(
 //                         onTap: () {
-//                           setState(() {
+//                           super.setState(() {
 //                             if (UserLogin_ID != null) {
 //                               selectedIndex = 4;
 //                             } else {

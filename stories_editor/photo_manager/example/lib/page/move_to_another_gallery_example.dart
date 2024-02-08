@@ -23,7 +23,7 @@ class _MoveToAnotherExampleState extends State<MoveToAnotherExample> {
     PhotoManager.getAssetPathList(hasAll: false).then(
       (List<AssetPathEntity> value) {
         targetPathList = value;
-        setState(() {});
+        super.setState(() {});
       },
     );
   }
@@ -81,7 +81,7 @@ class _MoveToAnotherExampleState extends State<MoveToAnotherExample> {
       value: target,
       onChanged: (AssetPathEntity? value) {
         target = value;
-        setState(() {});
+        super.setState(() {});
       },
     );
   }

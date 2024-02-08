@@ -102,11 +102,11 @@ class _SettingScreenState extends State<SettingScreen> {
   void initState() {
     print("accountcheck--${widget.accountType}");
     if (widget.accountType == 'PUBLIC') {
-      setState(() {
+      super.setState(() {
         isSwitched = false;
       });
     } else {
-      setState(() {
+      super.setState(() {
         isSwitched = true;
       });
     }
@@ -548,7 +548,7 @@ class _SettingScreenState extends State<SettingScreen> {
                                                   onToggle: (val) async {
                                                     print(
                                                         "check after--$isSwitched");
-                                                    setState(() {
+                                                    super.setState(() {
                                                       isSwitched = val;
                                                     });
                                                     print(
@@ -629,7 +629,7 @@ class _SettingScreenState extends State<SettingScreen> {
     userStatus =
         userStatus != 'APPROVED' ? userStatus?.split('-').first : userStatus;
 
-    setState(() {});
+    super.setState(() {});
   }
 
   void _onShareXFileFromAssets(BuildContext context,

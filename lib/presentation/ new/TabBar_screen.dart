@@ -318,7 +318,7 @@ class _CameraAccsessScreenState extends State<CameraAccsessScreen> {
             ankur.length,
             (index) => PopupMenuItem(
                 onTap: () {
-                  setState(() {
+                  super.setState(() {
                     indexx = index;
                   });
                   print("indexx--->$indexx");

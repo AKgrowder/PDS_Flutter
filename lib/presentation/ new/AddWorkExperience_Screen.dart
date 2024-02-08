@@ -264,7 +264,7 @@ class _AddWorkExperienceScreenState extends State<AddWorkExperienceScreen> {
                                   onChanged: (IndustryType? newValue) {
                                     // When the user selects an option from the dropdown.
                                     if (newValue != null) {
-                                      setState(() {
+                                      super.setState(() {
                                         selectedIndustryTypes = newValue;
                                         print(
                                             "SelectedIndustryType: ${newValue.industryTypeUid}");
@@ -304,7 +304,7 @@ class _AddWorkExperienceScreenState extends State<AddWorkExperienceScreen> {
                                                   industryUUID.add(
                                                       "${element.industryTypeUid}");
                                                 });
-                                                setState(() {});
+                                                super.setState(() {});
                                               },
                                             ),
                                           ),
@@ -343,7 +343,7 @@ class _AddWorkExperienceScreenState extends State<AddWorkExperienceScreen> {
                                         onChanged: (Expertise? newValue) {
                                           // When the user selects an option from the dropdown.
                                           if (newValue != null) {
-                                            setState(() {
+                                            super.setState(() {
                                               selectedExpertise = newValue;
                                               print(
                                                   "Selectedexpertise: ${newValue.uid}");
@@ -371,7 +371,7 @@ class _AddWorkExperienceScreenState extends State<AddWorkExperienceScreen> {
                                 activeColor: ColorConstant.primary_color,
                                 value: this.valuesecond,
                                 onChanged: (bool? value) {
-                                  setState(() {
+                                  super.setState(() {
                                     this.valuesecond = value!;
 
                                     if (valuesecond == true) {
@@ -430,7 +430,7 @@ class _AddWorkExperienceScreenState extends State<AddWorkExperienceScreen> {
                                         print(
                                             "formattedDate Start--${apiDateStart}");
 
-                                        setState(() {
+                                        super.setState(() {
                                           StartDateController.text =
                                               formattedDateStart.toString();
                                         });
@@ -495,7 +495,7 @@ class _AddWorkExperienceScreenState extends State<AddWorkExperienceScreen> {
                                             print(
                                                 "formattedDate end--${formattedDateEnd}");
 
-                                            setState(() {
+                                            super.setState(() {
                                               EndDateController.text =
                                                   formattedDateEnd.toString();
                                             });

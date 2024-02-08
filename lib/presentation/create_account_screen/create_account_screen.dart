@@ -61,7 +61,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
   Future<void> _checkPermissions() async {
     final cameraStatus = await Permission.camera.status;
     if (this.mounted) {
-      setState(() {
+      super.setState(() {
         _cameraPermissionStatus = cameraStatus;
       });
     }
@@ -70,7 +70,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
   Future<void> _requestPermissions() async {
     final cameraStatus = await Permission.camera.request();
     if (this.mounted) {
-      setState(() {
+      super.setState(() {
         _cameraPermissionStatus = cameraStatus;
       });
     }
@@ -82,7 +82,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
       PreferencesKey.userPrfoile,
     );
     if (this.mounted) {
-      setState(() {});
+      super.setState(() {});
     }
   }
 
@@ -104,7 +104,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
     int? a = prefs.getInt(PreferencesKey.mediaSize);
     documentuploadsize = double.parse("${a}");
     print('scdhfggfgdf-$documentuploadsize.');
-    setState(() {});
+    super.setState(() {});
   }
 
   @override
@@ -504,13 +504,13 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                                 !regex.hasMatch(
                                     emailAndMobileController.text)) {
                               if (this.mounted) {
-                                setState(() {
+                                super.setState(() {
                                   isPhone = true;
                                 });
                               }
                             } else {
                               if (this.mounted) {
-                                setState(() {
+                                super.setState(() {
                                   isPhone = false;
                                 });
                               }
@@ -593,13 +593,13 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                                       !regex.hasMatch(
                                           contectnumberController.text)) {
                                     if (this.mounted) {
-                                      setState(() {
+                                      super.setState(() {
                                         isPhonee = true;
                                       });
                                     }
                                   } else {
                                     if (this.mounted) {
-                                      setState(() {
+                                      super.setState(() {
                                         isPhonee = false;
                                       });
                                     }
@@ -635,7 +635,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                         //         country: selectedCountry,
                         //         controller: phoneNumberController,
                         //         onTap: (Country country) {
-                        //           // setState(() {
+                        //           // super.setState(() {
                         //           //   selectedCountry = country;
                         //           // });
                         //         },
@@ -700,7 +700,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                             child: GestureDetector(
                               onTap: () {
                                 if (this.mounted) {
-                                  setState(() {
+                                  super.setState(() {
                                     Show_Password = !Show_Password;
                                   });
                                 }
@@ -777,7 +777,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                                 checkColor: ColorConstant.primary_color,
                                 value: isChecked,
                                 onChanged: (bool? value) {
-                                  setState(() {
+                                  super.setState(() {
                                     isChecked = value!;
                                   });
                                 },
@@ -1007,7 +1007,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
         print('filenamecheckKB-${file1.path}');
         BlocProvider.of<RegisterCubit>(context)
             .upoldeProfilePic(pickedImage!, context);
-        setState(() {});
+        super.setState(() {});
 
         break;
       case 2:

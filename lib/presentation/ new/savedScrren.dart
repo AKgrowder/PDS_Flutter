@@ -31,7 +31,7 @@
 //     } else {
 //       dataSetup = await widget.value2;
 //     }
-//     setState(() {});
+//     super.setState(() {});
 //   }
 
 //   void initState() {
@@ -59,7 +59,7 @@
 //                           value1 = index;
 
 //                           SharedPreferencesFunction(value1 ?? 0);
-//                           setState(() {});
+//                           super.setState(() {});
 //                         },
 //                         child: Container(
 //                           alignment: Alignment.center,

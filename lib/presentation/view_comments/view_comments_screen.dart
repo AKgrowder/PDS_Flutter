@@ -162,7 +162,7 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     int? a = prefs.getInt(PreferencesKey.mediaSize);
     documentuploadsize = double.parse("${a}");
-    setState(() {});
+    super.setState(() {});
   }
 
   //  @override
@@ -405,7 +405,7 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                                                       .maxScrollExtent,
                                                                 );
                                                             }
-                                                            // setState(() {
+                                                            // super.setState(() {
                                                             isScroll = true;
                                                             // });
                                                           });
@@ -648,7 +648,7 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
 
                                                                                       if (OneTimeDelete == false) {
                                                                                         OneTimeDelete = true;
-                                                                                        setState(() {
+                                                                                        super.setState(() {
                                                                                           AllChatmodelData?.object?.messageOutputList?.content = AllChatmodelData?.object?.messageOutputList?.content?.reversed.toList();
                                                                                           ReverseBool = false;
                                                                                           BlocProvider.of<senMSGCubit>(context).coomentPage(widget.Room_ID, context, "${0}", ShowLoader: true);
@@ -700,7 +700,7 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                                                                               if (content1.isDeleted == true) {
                                                                                                 if (OneTimeDelete == false) {
                                                                                                   OneTimeDelete = true;
-                                                                                                  setState(() {
+                                                                                                  super.setState(() {
                                                                                                     AllChatmodelData?.object?.messageOutputList?.content = AllChatmodelData?.object?.messageOutputList?.content?.reversed.toList();
                                                                                                     ReverseBool = false;
                                                                                                     BlocProvider.of<senMSGCubit>(context).coomentPage(widget.Room_ID, context, "${0}", ShowLoader: true);
@@ -752,7 +752,7 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                                                                                 if (content1.isDeleted == true) {
                                                                                                   if (OneTimeDelete == false) {
                                                                                                     OneTimeDelete = true;
-                                                                                                    setState(() {
+                                                                                                    super.setState(() {
                                                                                                       AllChatmodelData?.object?.messageOutputList?.content = AllChatmodelData?.object?.messageOutputList?.content?.reversed.toList();
                                                                                                       ReverseBool = false;
                                                                                                       BlocProvider.of<senMSGCubit>(context).coomentPage(widget.Room_ID, context, "${0}", ShowLoader: true);
@@ -859,7 +859,7 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                           ),
                                           GestureDetector(
                                             onTap: () {
-                                              setState(() {
+                                              super.setState(() {
                                                 _image = null;
                                               });
                                             },
@@ -1024,7 +1024,7 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                                             ?.length ??
                                                         0);
 
-                                                    setState(() {
+                                                    super.setState(() {
                                                       addDataSccesfully = true;
                                                       addmsg =
                                                           content.uid ?? "";
@@ -1215,7 +1215,7 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                                           ?.length ??
                                                       0);
 
-                                                  setState(() {
+                                                  super.setState(() {
                                                     addDataSccesfully = true;
                                                     addmsg = content.uid ?? "";
                                                   });
@@ -1361,7 +1361,7 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
     if (UserLogin_ID != null) {
       // print("user login Mood");
       if (Add_Comment.text.isNotEmpty) {
-        // setState(() {
+        // super.setState(() {
         addmsg = "";
         Add_Comment.text = '';
         // });
@@ -1422,7 +1422,7 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
         print("CCCCCCCC ->>>>>> ${content1}");
         var msgUUID = content1.uid;
         if (content1.isDeleted == true) {
-          setState(() {
+          super.setState(() {
             AllChatmodelData?.object?.messageOutputList?.content =
                 AllChatmodelData?.object?.messageOutputList?.content?.reversed
                     .toList();
@@ -1439,7 +1439,7 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
     pickedImageFile = await picker.pickImage(source: ImageSource.camera);
     if (pickedImageFile != null) {
       if (!_isGifOrSvg(pickedImageFile!.path)) {
-        setState(() {
+        super.setState(() {
           _image = File(pickedImageFile!.path);
         });
         final sizeInBytes = await _image!.length();
@@ -1511,7 +1511,7 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
     pickedImageFile = await picker.pickImage(source: ImageSource.gallery);
     if (pickedImageFile != null) {
       if (!_isGifOrSvg(pickedImageFile!.path)) {
-        setState(() {
+        super.setState(() {
           _image = File(pickedImageFile!.path);
         });
         final sizeInBytes = await _image!.length();
@@ -1519,7 +1519,7 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
         // print('documentuploadsize-$documentuploadsize');
 
         if (sizeInMB > documentuploadsize) {
-          setState(() {
+          super.setState(() {
             _image = null;
           });
           showDialog(
@@ -1585,12 +1585,12 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
       FocusScope.of(context).unfocus();
     }
 
-    setState(() {
+    super.setState(() {
       isEmojiVisible = !isEmojiVisible;
     });
   }
 
-  void onEmojiSelected(String emoji) => setState(() {
+  void onEmojiSelected(String emoji) => super.setState(() {
         Add_Comment.text = Add_Comment.text + emoji;
       });
 

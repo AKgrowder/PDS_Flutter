@@ -102,7 +102,7 @@ class _SaveMediaExampleState extends State<SaveMediaExample> {
                   PhotoManager.stopChangeNotify();
                   PhotoManager.removeChangeCallback(_onChange);
                 }
-                setState(() {
+                super.setState(() {
                   isNotify = v;
                 });
               },
