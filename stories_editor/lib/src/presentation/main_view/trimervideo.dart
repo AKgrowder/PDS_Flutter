@@ -31,7 +31,7 @@ class _VideoEditorState extends State<VideoEditor> {
   @override
   void initState() {
     super.initState();
-    _controller.initialize().then((_) => setState(() {})).catchError((error) {
+    _controller.initialize().then((_) => super.setState(() {})).catchError((error) {
       Navigator.pop(context);
     }, test: (e) => e is VideoMinDurationError);
   }
@@ -381,7 +381,7 @@ class _VideoEditorState extends State<VideoEditor> {
 //   bool _progressVisibility = false;
 
 //   Future<String?> _saveVideo() async {
-//     setState(() {
+//     super.setState(() {
 //       _progressVisibility = true;
 //     });
 
@@ -390,7 +390,7 @@ class _VideoEditorState extends State<VideoEditor> {
 //     await _trimmer
 //         .saveTrimmedVideo(startValue: _startValue, endValue: _endValue, onSave: (String? outputPath) {  })
 //         .then((value) {
-//       setState(() {
+//       super.setState(() {
 //         _progressVisibility = false;
 //         // _value = value;
 //       });
@@ -461,7 +461,7 @@ class _VideoEditorState extends State<VideoEditor> {
 //                     onChangeStart: (value) => _startValue = value,
 //                     onChangeEnd: (value) => _endValue = value,
 //                     onChangePlaybackState: (value) =>
-//                         setState(() => _isPlaying = value),
+//                         super.setState(() => _isPlaying = value),
 //                   ),
 //                 ),
 //                 TextButton(
@@ -481,7 +481,7 @@ class _VideoEditorState extends State<VideoEditor> {
 //                       startValue: _startValue,
 //                       endValue: _endValue,
 //                     );
-//                     setState(() {
+//                     super.setState(() {
 //                       _isPlaying = playbackState;
 //                     });
 //                   },

@@ -66,7 +66,7 @@ class _InviteMeesageState extends State<InviteMeesage> {
     finalFileSize = documentuploadsize;
     userID = prefs.getString(PreferencesKey.loginUserID);
     print("userid-chelc-${userID}");
-    setState(() {});
+    super.setState(() {});
   }
 
   @override
@@ -105,7 +105,7 @@ class _InviteMeesageState extends State<InviteMeesage> {
       FocusScope.of(context).unfocus();
     }
 
-    setState(() {
+    super.setState(() {
       isEmojiVisible = !isEmojiVisible;
     });
   }
@@ -261,7 +261,7 @@ class _InviteMeesageState extends State<InviteMeesage> {
                                             ),
                                             GestureDetector(
                                                 onTap: () {
-                                                  setState(() {
+                                                  super.setState(() {
                                                     MultiUser.forEach(
                                                         (element) {
                                                       if (element ==
@@ -365,7 +365,7 @@ class _InviteMeesageState extends State<InviteMeesage> {
                         } else if (value.isEmpty) {
                           print("Check value-${value}");
                           searchController.clear();
-                          setState(() {
+                          super.setState(() {
                             isDataGet = false;
                           });
                         }
@@ -377,7 +377,7 @@ class _InviteMeesageState extends State<InviteMeesage> {
                               onPressed: () {
                                 print("vgfdghdfgh");
                                 searchController.clear();
-                                setState(() {
+                                super.setState(() {
                                   _focusNode.unfocus();
                                   isDataGet = false;
                                 });
@@ -427,7 +427,7 @@ class _InviteMeesageState extends State<InviteMeesage> {
                                       ),
                                       GestureDetector(
                                         onTap: () {
-                                          setState(() {
+                                          super.setState(() {
                                             _image = null;
                                           });
                                         },
@@ -752,7 +752,7 @@ class _InviteMeesageState extends State<InviteMeesage> {
                             MultiUsermap.add(map);
                           }
 
-                          setState(() {});
+                          super.setState(() {});
                         },
                         child: Container(
                           height: 20,
@@ -818,7 +818,7 @@ class _InviteMeesageState extends State<InviteMeesage> {
     pickedImageFile = await picker.pickImage(source: ImageSource.gallery);
     if (pickedImageFile != null) {
       if (!_isGifOrSvg(pickedImageFile!.path)) {
-        setState(() {
+        super.setState(() {
           _image = File(pickedImageFile!.path);
         });
         final sizeInBytes = await _image!.length();
@@ -826,7 +826,7 @@ class _InviteMeesageState extends State<InviteMeesage> {
         // print('documentuploadsize-$documentuploadsize');
 
         if (sizeInMB > documentuploadsize) {
-          setState(() {
+          super.setState(() {
             _image = null;
           });
           showDialog(
@@ -923,7 +923,7 @@ class _InviteMeesageState extends State<InviteMeesage> {
           getFileSize(file.path!, 1, result.files.first, Index);
         }
 
-        /*     setState(() {
+        /*     super.setState(() {
           // fileparth = file.path!;
 
           switch (Index) {
@@ -956,7 +956,7 @@ class _InviteMeesageState extends State<InviteMeesage> {
     pickedImageFile = await picker.pickImage(source: ImageSource.camera);
     if (pickedImageFile != null) {
       _image = File(pickedImageFile!.path);
-      setState(() {});
+      super.setState(() {});
       final int fileSizeInBytes = await _image!.length();
       if (fileSizeInBytes <= finalFileSize * 1024 * 1024) {
         BlocProvider.of<PersonalChatListCubit>(context)
@@ -987,7 +987,7 @@ class _InviteMeesageState extends State<InviteMeesage> {
 
     /*    if (pickedImageFile != null) {
       if (!_isGifOrSvg(pickedImageFile!.path)) {
-        setState(() {
+        super.setState(() {
           _image = File(pickedImageFile!.path);
         });
           
@@ -1062,7 +1062,7 @@ class _InviteMeesageState extends State<InviteMeesage> {
         switch (Index) {
           case 1:
             if (file1.name.isNotEmpty || file1.name.toString() == null) {
-              setState(() {
+              super.setState(() {
                 file12 = file1;
                 _image = File(file1.path.toString());
               });
@@ -1080,7 +1080,7 @@ class _InviteMeesageState extends State<InviteMeesage> {
           case 0:
             print("file1.name-->${file1.name}");
             if (file1.name.isNotEmpty || file1.name.toString() == null) {
-              setState(() {
+              super.setState(() {
                 file12 = file1;
                 _image = File(file1.path.toString());
               });
@@ -1094,7 +1094,7 @@ class _InviteMeesageState extends State<InviteMeesage> {
         BlocProvider.of<PersonalChatListCubit>(context)
             .UplodeImageAPI(context, File(_image!.path));
 
-        setState(() {});
+        super.setState(() {});
 
         break;
       case 2:
@@ -1135,7 +1135,7 @@ class _InviteMeesageState extends State<InviteMeesage> {
           }
           print('filecheckPath1111-${file1.name}');
           print("file222.name-->${file1.name}");
-          setState(() {
+          super.setState(() {
             file12 = file1;
             _image = File(file1.path.toString());
           });

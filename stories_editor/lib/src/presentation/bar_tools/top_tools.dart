@@ -63,11 +63,11 @@ class _TopToolsState extends State<TopTools> {
                       onTap: () {
                         if (controlNotifier.gradientIndex >=
                             controlNotifier.gradientColors!.length - 1) {
-                          setState(() {
+                          super.setState(() {
                             controlNotifier.gradientIndex = 0;
                           });
                         } else {
-                          setState(() {
+                          super.setState(() {
                             controlNotifier.gradientIndex += 1;
                           });
                         }

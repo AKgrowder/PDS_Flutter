@@ -87,19 +87,19 @@ class _NewBottomBarState extends State<NewBottomBar> {
   }
 
   void connectionChanged(dynamic hasConnection) {
-    setState(() {
+    super.setState(() {
       isOffline = !hasConnection;
     });
   }
 
   void hideBottomBar() {
-    setState(() {
+    super.setState(() {
       _show = false;
     });
   }
 
   void showBottomBar() {
-    setState(() {
+    super.setState(() {
       _show = true;
     });
   }
@@ -157,7 +157,7 @@ class _NewBottomBarState extends State<NewBottomBar> {
                           children: [
                             GestureDetector(
                               onTap: () {
-                                setState(() {
+                                super.setState(() {
                                   print("objecaaaaaaaaaaaaaaaaat");
                                   scrollController.animateTo(0,
                                       duration: Duration(milliseconds: 500),
@@ -214,7 +214,7 @@ class _NewBottomBarState extends State<NewBottomBar> {
                             ),
                             GestureDetector(
                               onTap: () {
-                                setState(() {
+                                super.setState(() {
                                   if (UserLogin_ID != null) {
                                     selectedIndex = 1;
                                   } else {
@@ -269,7 +269,7 @@ class _NewBottomBarState extends State<NewBottomBar> {
                             ),
                             GestureDetector(
                               onTap: () {
-                                setState(() {
+                                super.setState(() {
                                   // if (UserLogin_ID != null) {
                                   selectedIndex = 2;
                                   // } else {
@@ -327,7 +327,7 @@ class _NewBottomBarState extends State<NewBottomBar> {
                             ),
                             GestureDetector(
                               onTap: () {
-                                setState(() {
+                                super.setState(() {
                                   if (UserLogin_ID != null) {
                                     selectedIndex = 3;
                                   } else {
@@ -429,7 +429,7 @@ class _NewBottomBarState extends State<NewBottomBar> {
                             ),
                             GestureDetector(
                               onTap: () {
-                                setState(() {
+                                super.setState(() {
                                   if (UserLogin_ID != null) {
                                     selectedIndex = 4;
                                   } else {
@@ -551,7 +551,7 @@ class _NewBottomBarState extends State<NewBottomBar> {
     Timer.periodic(Duration(seconds: 2), (_) {
       NotificationCount = prefs.getInt(PreferencesKey.NotificationCount) ?? 0;
       MessageCount = prefs.getInt(PreferencesKey.MessageCount) ?? 0;
-      setState(() {});
+      super.setState(() {});
     });
   }
 

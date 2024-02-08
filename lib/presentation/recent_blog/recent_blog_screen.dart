@@ -186,7 +186,7 @@ class _RecentBlogScrenState extends State<RecentBlogScren> {
                                               0) -
                                           1;
                                     }
-                                    setState(() {});
+                                    super.setState(() {});
                                   },
                                   child: widget
                                               .saveAllBlogModelData
@@ -275,7 +275,7 @@ class _RecentBlogScrenState extends State<RecentBlogScren> {
                                               0) -
                                           1;
                                     }
-                                    setState(() {});
+                                    super.setState(() {});
                                   },
                                   child: widget
                                               .getallBlogModel1
@@ -442,7 +442,7 @@ class _RecentBlogScrenState extends State<RecentBlogScren> {
                                       ?.object?[widget.index ?? 0]
                                       .isSaved = false;
                                 }
-                                setState(() {});
+                                super.setState(() {});
                               },
                               child: Center(
                                 child: Image.asset(
@@ -478,7 +478,7 @@ class _RecentBlogScrenState extends State<RecentBlogScren> {
                                       ?.object?[widget.index ?? 0]
                                       .isSaved = false;
                                 }
-                                setState(() {});
+                                super.setState(() {});
                               },
                               child: Center(
                                 child: Image.asset(

@@ -101,7 +101,7 @@ class _DurationPickerState extends State<DurationPicker> {
   }
 
   void changeDuration() {
-    setState(() {});
+    super.setState(() {});
   }
 
   Widget _buildPicker({

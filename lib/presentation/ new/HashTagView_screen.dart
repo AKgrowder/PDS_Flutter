@@ -683,7 +683,7 @@ class _HashTagViewScreenState extends State<HashTagViewScreen> {
                                                                 .builder(
                                                               onPageChanged:
                                                                   (page) {
-                                                                setState(() {
+                                                                super.setState(() {
                                                                   _currentPages[
                                                                           index] =
                                                                       page;
@@ -1171,7 +1171,7 @@ class _HashTagViewScreenState extends State<HashTagViewScreen> {
             (index) => PopupMenuItem(
                 enabled: true,
                 onTap: () {
-                  setState(() {
+                  super.setState(() {
                     indexx = index;
                   });
                 },

@@ -13,8 +13,8 @@ class VideoListItem extends StatefulWidget {
 class _VideoListItemState extends State<VideoListItem> {
   @override
   void initState() {
-    widget.controller.initialize().then((value) => setState(() {}));
-    setState(() {
+    widget.controller.initialize().then((value) => super.setState(() {}));
+    super.setState(() {
       widget.controller.play();
     });
     super.initState();
@@ -36,7 +36,7 @@ class _VideoListItemState extends State<VideoListItem> {
         ),
         ElevatedButton(
           onPressed: () {
-            setState(() {
+            super.setState(() {
               if (widget.controller.value.isPlaying) {
                 widget.controller.pause();
               } else {

@@ -85,7 +85,7 @@ class _RoomSelectionState extends State<RoomSelection> {
         print(state.SelectedRoom.object?[0]);
         SelectedRoomData = state.SelectedRoom;
         print(SelectedRoomData?.object?.length);
-        setState(() {});
+        super.setState(() {});
       }
     }, builder: (context, state) {
       return SafeArea(
@@ -147,7 +147,7 @@ class _RoomSelectionState extends State<RoomSelection> {
                                 )
                               : GestureDetector(
                                   onTap: () {
-                                    setState(() {
+                                    super.setState(() {
                                       selectedIndex = index;
                                       RoomID =
                                           SelectedRoomData?.object?[index].uid;

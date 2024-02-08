@@ -120,7 +120,7 @@ class _CreateNewPostState extends State<CreateNewPost> {
           .add(TextSpan(text: word + ' ', style: TextStyle(color: textColor)));
     }
 
-    setState(() {});
+    super.setState(() {});
   } */
 
   getDocumentSize() async {
@@ -132,7 +132,7 @@ class _CreateNewPostState extends State<CreateNewPost> {
     finalFileSize = documentuploadsize;
     videoUplodeSize = await double.parse(
         prefs.getString(PreferencesKey.MaxPostUploadSizeInMB) ?? "0");
-    setState(() {});
+    // super.setState(() {});
   }
 
   @override
@@ -144,9 +144,9 @@ class _CreateNewPostState extends State<CreateNewPost> {
     initAsync();
     Future.delayed(Duration(milliseconds: 150), () {
       if (mounted) {
-        setState(() {
-          _opacity = 1.0;
-        });
+        // super.setState(() {
+        _opacity = 1.0;
+        // });
       }
     });
     GetUserData();
@@ -204,11 +204,10 @@ class _CreateNewPostState extends State<CreateNewPost> {
           print("this condison is working");
           _controller = VideoPlayerController.networkUrl(
               Uri.parse('${imageDataPost!.object!.data!.first}'));
-          _controller?.initialize().then((value) => setState(() {}));
-          setState(() {
-            _controller?.play();
-            _controller?.setLooping(true);
-          });
+          _controller?.initialize().then((value) => super.setState(() {
+                _controller?.play();
+                _controller?.setLooping(true);
+              }));
         }
       }
       if (state is GetAllHashtagState) {
@@ -488,7 +487,6 @@ class _CreateNewPostState extends State<CreateNewPost> {
                                       focusedBorder: InputBorder.none,
                                     ),
                                     mentions: [
-                                                
                                       Mention(
                                           trigger: "@",
                                           data: tageData,
@@ -622,12 +620,12 @@ class _CreateNewPostState extends State<CreateNewPost> {
                                                     //   onTap: () {
                                                     //     if (_controller!.value
                                                     //         .isPlaying) {
-                                                    //       setState(() {
+                                                    //       super.setState(() {
                                                     //         _controller
                                                     //             ?.pause();
                                                     //       });
                                                     //     } else {
-                                                    //       setState(() {
+                                                    //       super.setState(() {
                                                     //         _controller
                                                     //             ?.play();
                                                     //       });
@@ -729,7 +727,7 @@ class _CreateNewPostState extends State<CreateNewPost> {
                                                                     .builder(
                                                                   onPageChanged:
                                                                       (value) {
-                                                                    setState(
+                                                                    super.setState(
                                                                         () {
                                                                       _currentPages =
                                                                           value;
@@ -955,7 +953,7 @@ class _CreateNewPostState extends State<CreateNewPost> {
                                                               file12 = null;
                                                               pickedImage
                                                                   .isEmpty;
-                                                              setState(() {});
+                                                              super.setState(() {});
 
                                                               CroppedFile?
                                                                   croppedFile =
@@ -1164,7 +1162,7 @@ class _CreateNewPostState extends State<CreateNewPost> {
                               width: _width,
                               child: PageView.builder(
                                 onPageChanged: (value) {
-                                  setState(() {
+                                  super.setState(() {
                                     _currentPages = value;
                                   });
                                 },
@@ -1211,9 +1209,9 @@ class _CreateNewPostState extends State<CreateNewPost> {
   }
 
   onChangeMethod(String value) {
-    setState(() {
-      postText.text = value;
-    });
+    // super.setState(() {
+    //   postText.text = value;
+    // });
 
     if (value.contains('@')) {
       print("if this condison is working-${value}");
@@ -1239,7 +1237,7 @@ class _CreateNewPostState extends State<CreateNewPost> {
       BlocProvider.of<AddPostCubit>(context)
           .GetAllHashtag(context, '10', '#${data1.trim()}');
     } else {
-      setState(() {
+      super.setState(() {
         // postText.text = postText.text + ' ' + postTexContrlloer.join(' ,');
         istageData = false;
         isHeshTegData = false;
@@ -1250,7 +1248,7 @@ class _CreateNewPostState extends State<CreateNewPost> {
   onChangeMethod(String value) {
     if (value.contains('@')) {
       print("value@ -$value");
-      setState(() {
+      super.setState(() {
         isHeshTegData = false;
         isTagData = true;
       });
@@ -1262,7 +1260,7 @@ class _CreateNewPostState extends State<CreateNewPost> {
         print("DatAddin@-${data.length}");
 
         if (data.endsWith(' #')) {
-          setState(() {
+          super.setState(() {
             isHeshTegData = true;
             isTagData = false;
           });
@@ -1271,7 +1269,7 @@ class _CreateNewPostState extends State<CreateNewPost> {
               .GetAllHashtag(context, '10', '#${data1.trim()}');
         }
         if (data.length <= 3 && value.contains('@')) {
-          setState(() {
+          super.setState(() {
             isHeshTegData = false;
             isTagData = true;
           });
@@ -1285,7 +1283,7 @@ class _CreateNewPostState extends State<CreateNewPost> {
       print("value#-${value.endsWith(',@')}");
 
       String data = value.split(' #').last.replaceAll('#', '');
-      setState(() {
+      super.setState(() {
         isHeshTegData = true;
       });
       print("Data Length-$data");
@@ -1294,13 +1292,13 @@ class _CreateNewPostState extends State<CreateNewPost> {
             .GetAllHashtag(context, '10', '#${data.trim()}');
       }
     } else {
-      setState(() {
+      super.setState(() {
         isHeshTegData = false;
         isTagData = false;
       });
     }
     /*     if (value.contains('#')) {
-                                        setState(() {
+                                        super.setState(() {
                                           isHeshTegData = true;
                                         });
                                         if (value.contains(' #')) {
@@ -1319,7 +1317,7 @@ class _CreateNewPostState extends State<CreateNewPost> {
                                                 .last
                                                 .replaceAll('@', '');
                                             if (mounted) {
-                                              setState(() {
+                                              super.setState(() {
                                                 isTagData = true;
                                               });
                                               BlocProvider.of<AddPostCubit>(
@@ -1336,7 +1334,7 @@ class _CreateNewPostState extends State<CreateNewPost> {
                                                   .GetAllHashtag(context, '10',
                                                       value.trim());
                                             } else {
-                                              setState(() {
+                                              super.setState(() {
                                                 isHeshTegData = false;
                                                 isTagData = false;
                                               });
@@ -1351,7 +1349,7 @@ class _CreateNewPostState extends State<CreateNewPost> {
                                                 .last
                                                 .replaceAll('@', '');
                                             if (mounted) {
-                                              setState(() {
+                                              super.setState(() {
                                                 isTagData = true;
                                               });
                                               BlocProvider.of<AddPostCubit>(
@@ -1365,7 +1363,7 @@ class _CreateNewPostState extends State<CreateNewPost> {
                                             String data =
                                                 value.replaceAll('@', '');
                                             if (mounted) {
-                                              setState(() {
+                                              super.setState(() {
                                                 isTagData = true;
                                               });
                                             }
@@ -1376,12 +1374,12 @@ class _CreateNewPostState extends State<CreateNewPost> {
                                                     context, data.trim(), '1');
                                           }
                                         } else {
-                                          setState(() {
+                                          super.setState(() {
                                             isTagData = false;
                                           });
                                         }
                                       } else {
-                                        setState(() {
+                                        super.setState(() {
                                           isHeshTegData = false;
                                           isTagData = false;
                                         });
@@ -1456,7 +1454,7 @@ class _CreateNewPostState extends State<CreateNewPost> {
           for (var i = 0; i < xFilePicker.length; i++) {
             if (!_isGifOrSvg(xFilePicker[i].path)) {
               pickedImage.add(File(xFilePicker[i].path));
-              setState(() {});
+              // super.setState(() {});
               getFileSize1(pickedImage, 1, i);
               if ((xFilePicker[i].path.contains(".mp4")) ||
                   (xFilePicker[i].path.contains(".mov")) ||
@@ -1560,7 +1558,7 @@ class _CreateNewPostState extends State<CreateNewPost> {
     }
     /* XFile? xfilePick = pickedFile;
       
-    setState(
+    super.setState(
       () {
         galleryFile.clear();
         if (xfilePick != null) {
@@ -1660,7 +1658,7 @@ class _CreateNewPostState extends State<CreateNewPost> {
           );
         }
 
-        setState(() {});
+        // super.setState(() {});
 
         break;
       case 2:
@@ -1730,7 +1728,7 @@ class _CreateNewPostState extends State<CreateNewPost> {
         switch (Index) {
           case 1:
             if (file1.name.isNotEmpty || file1.name.toString() == null) {
-              setState(() {
+              super.setState(() {
                 file12 = file1;
               });
             }
@@ -1747,7 +1745,7 @@ class _CreateNewPostState extends State<CreateNewPost> {
           case 0:
             print("file1.name-->${file1.name}");
             if (file1.name.isNotEmpty || file1.name.toString() == null) {
-              setState(() {
+              super.setState(() {
                 file12 = file1;
               });
             }
@@ -1760,7 +1758,7 @@ class _CreateNewPostState extends State<CreateNewPost> {
         BlocProvider.of<AddPostCubit>(context)
             .UplodeImageAPI(context, file1.name, file1.path.toString());
 
-        setState(() {});
+        // super.setState(() {});
 
         break;
       case 2:
@@ -1801,7 +1799,7 @@ class _CreateNewPostState extends State<CreateNewPost> {
           }
           print('filecheckPath1111-${file1.name}');
           print("file222.name-->${file1.name}");
-          setState(() {
+          super.setState(() {
             file12 = file1;
           });
 
@@ -1861,7 +1859,7 @@ class _CreateNewPostState extends State<CreateNewPost> {
           ScaffoldMessenger.of(context).showSnackBar(snackBar);
         } else { */
       if (CreatePostDone == true) {
-        setState(() {
+        super.setState(() {
           isDataSet = false;
         });
         if (postText.text.isNotEmpty && file?.path != null) {
@@ -2009,7 +2007,7 @@ class _CreateNewPostState extends State<CreateNewPost> {
             soicalData.length,
             (index) => PopupMenuItem(
                 onTap: () {
-                  setState(() {
+                  super.setState(() {
                     indexx = index;
                   });
                 },
@@ -2041,14 +2039,14 @@ class _CreateNewPostState extends State<CreateNewPost> {
       if (albums.isNotEmpty) {
         page = await albums.first.listMedia();
       }
-      setState(() {
-        _albums = albums;
-        _loading = false;
-      });
-    }
-    setState(() {
+      // super.setState(() {
+      _albums = albums;
       _loading = false;
-    });
+      // });
+    }
+    // super.setState(() {
+    _loading = false;
+    // });
   }
 
   Future<bool> _promptPermissionSetting() async {

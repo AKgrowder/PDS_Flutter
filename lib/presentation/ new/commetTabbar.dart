@@ -61,7 +61,7 @@ class _MyWidgetState extends State<MyWidget> {
                     }).toList(),
                     // Step 5.
                     onChanged: (String? newValue) {
-                      setState(() {
+                      super.setState(() {
                         widget.selctedValue = newValue!;
                       });
                     },
@@ -106,7 +106,7 @@ class _MyWidgetState extends State<MyWidget> {
                     }).toList(),
                     // Step 5.
                     onChanged: (String? newValue) {
-                      setState(() {
+                      super.setState(() {
                         widget.selctedValue1 = newValue!;
                       });
                     },
@@ -151,7 +151,7 @@ class _MyWidgetState extends State<MyWidget> {
                     }).toList(),
                     // Step 5.
                     onChanged: (String? newValue) {
-                      setState(() {
+                      super.setState(() {
                         widget.selctedValue = newValue!;
                       });
                     },
