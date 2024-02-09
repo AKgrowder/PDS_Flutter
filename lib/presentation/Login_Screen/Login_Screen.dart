@@ -695,11 +695,11 @@ class _LoginScreenState extends State<LoginScreen> {
       path: emailAddress,
     );
     Uri mailto = Uri.parse("mailto:$emailLaunchUri");
-    if (Platform.isAndroid) {
+    // if (Platform.isAndroid && Platform.isIOS) {
       await launchUrl(mailto);
-    } else {
-      print("Somthing went wrong!");
-    }
+    // } else {
+    //   print("Somthing went wrong!");
+    // }
     /* if (await canLaunch(emailLaunchUri.toString())) {
     await launch(emailLaunchUri.toString());
   } else {

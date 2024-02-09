@@ -2847,7 +2847,7 @@ openSaveImagePost(BuildContext context, String PostUID) async {
         '${Config.get_all_inbox_images}?userChatInboxUid=${userChatInboxUid}&pageNumber=${pageNumber}&numberOfRecords=20',
         context);
     var jsonString = json.decode(responce.body);
-    print('jasonnString$jsonString');
+    print('get_all_inbox_images$jsonString');
     print('respnse ${responce.statusCode}');
     switch (responce.statusCode) {
       case 200:
