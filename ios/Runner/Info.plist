@@ -83,9 +83,23 @@
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
 	</array>
+	<key>LSApplicationQueriesSchemes</key>
+     <array>
+   <string>sms</string>
+   <string>tel</string>
+    </array>
+	<key>NSPhotoLibraryUsageDescription</key>
+    <string>Example usage description</string>
 	<key>UISupportedInterfaceOrientations~ipad</key>
 	<array>
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 	</array>
+	<key>NSPhotoLibraryUsageDescription</key>
+    <string>Privacy - Photo Library Usage Description</string>
+    <key>NSMotionUsageDescription</key>
+    <string>Motion usage description</string>
+    <key>NSPhotoLibraryAddUsageDescription</key>
+    <string>NSPhotoLibraryAddUsageDescription</string>
+	
 </dict>
 </plist>

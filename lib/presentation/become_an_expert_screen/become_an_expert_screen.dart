@@ -888,7 +888,9 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                                 "jobProfile": jobprofileController.text,
                                 "uid": userid.toString(),
                                 "workingHours": time.toString(),
-                                "industryTypesUid": industryUUID
+                                "industryTypesUid": industryUUID,
+                                 'documentName' : dopcument
+                                
                               };
                               print('working time-$time');
                               print('pwarems-$params');
@@ -908,7 +910,8 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                                 "jobProfile": jobprofileController.text,
                                 "uid": userid.toString(),
                                 "workingHours": time.toString(),
-                                "industryTypesUid": industryUUID
+                                "industryTypesUid": industryUUID,
+                                 'documentName' : dopcument
                               };
                               print('working time-$time');
                               print('pwarems-$params');
