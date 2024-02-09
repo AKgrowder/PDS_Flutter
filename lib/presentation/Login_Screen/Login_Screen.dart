@@ -349,11 +349,11 @@ class _LoginScreenState extends State<LoginScreen> {
                                 emailAndMobileController.text.isEmpty ||
                                 !regex
                                     .hasMatch(emailAndMobileController.text)) {
-                              setState(() {
+                              super.setState(() {
                                 isPhone = true;
                               });
                             } else {
-                              setState(() {
+                              super.setState(() {
                                 isPhone = false;
                               });
                             }
@@ -452,7 +452,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                             child: GestureDetector(
                               onTap: () {
-                                setState(() {
+                                super.setState(() {
                                   Show_Password = !Show_Password;
                                 });
                               },
@@ -695,11 +695,11 @@ class _LoginScreenState extends State<LoginScreen> {
       path: emailAddress,
     );
     Uri mailto = Uri.parse("mailto:$emailLaunchUri");
-    if (Platform.isAndroid) {
+    // if (Platform.isAndroid && Platform.isIOS) {
       await launchUrl(mailto);
-    } else {
-      print("Somthing went wrong!");
-    }
+    // } else {
+    //   print("Somthing went wrong!");
+    // }
     /* if (await canLaunch(emailLaunchUri.toString())) {
     await launch(emailLaunchUri.toString());
   } else {

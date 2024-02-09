@@ -39,7 +39,7 @@ class EditHomeDilogScreenState extends State<EditHomeDilogScreen>
         CurvedAnimation(parent: controller, curve: Curves.elasticInOut);
 
     controller.addListener(() {
-      setState(() {});
+      super.setState(() {});
     });
 
     controller.forward();

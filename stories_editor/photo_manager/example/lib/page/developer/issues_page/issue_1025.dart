@@ -29,7 +29,7 @@ class _Issue1025PageState extends State<Issue1025Page>
 
   Future<void> _testForIgnorePermission() async {
     await PhotoManager.setIgnorePermissionCheck(true);
-    setState(() {
+    super.setState(() {
       log = 'setIgnorePermissionCheck(true) success' '\n$log';
     });
   }

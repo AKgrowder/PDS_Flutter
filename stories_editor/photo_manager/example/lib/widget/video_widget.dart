@@ -69,8 +69,8 @@ class _VideoWidgetState extends State<VideoWidget> {
       }
       _controller = VideoPlayerController.file(file)
         ..initialize()
-        ..addListener(() => setState(() {}));
-      setState(() {});
+        ..addListener(() => super.setState(() {}));
+      super.setState(() {});
     });
   }
 
@@ -83,8 +83,8 @@ class _VideoWidgetState extends State<VideoWidget> {
       }
       _controller = VideoPlayerController.networkUrl(Uri.parse(url))
         ..initialize()
-        ..addListener(() => setState(() {}));
-      setState(() {});
+        ..addListener(() => super.setState(() {}));
+      super.setState(() {});
     });
   }
 
@@ -129,7 +129,7 @@ class _VideoWidgetState extends State<VideoWidget> {
         child: buildVideoPlayer(),
         onTap: () {
           c.value.isPlaying ? c.pause() : c.play();
-          setState(() {});
+          super.setState(() {});
         },
       ),
     );

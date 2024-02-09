@@ -197,7 +197,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                       child: GestureDetector(
                         onTap: () {
                           if (mounted) {
-                            setState(() {
+                            super.setState(() {
                               Show_Password = !Show_Password;
                             });
                           }
@@ -267,7 +267,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                     child: Container(
                       child: GestureDetector(
                         onTap: () {
-                          setState(() {
+                          super.setState(() {
                             Show_Passwordd = !Show_Passwordd;
                           });
                         },
@@ -392,6 +392,6 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
     userUid = prefs.getString(
       PreferencesKey.loginUserID,
     );
-    setState(() {});
+    super.setState(() {});
   }
 }

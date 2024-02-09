@@ -57,14 +57,14 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     otpTimer = await prefs.getInt(PreferencesKey.otpTimer) ?? 0;
     print(" otp timer  ${otpTimer}");
-    setState(() {
+    super.setState(() {
       _secondsRemaining = otpTimer;
     });
   }
 
   void _startTimer() {
     _timer = Timer.periodic(Duration(seconds: 1), (timer) {
-      setState(() {
+      super.setState(() {
         if (_secondsRemaining > 0) {
           _secondsRemaining--;
         } else {
@@ -376,7 +376,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                                   tm
                                       ? GestureDetector(
                                           onTap: () {
-                                            setState(() {
+                                            super.setState(() {
                                               if (noMoveNext == false) {
                                                 OTPController.clear();
                                                 tm = false;

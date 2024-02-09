@@ -88,13 +88,13 @@ class Object {
     }
     data['numberOfElements'] = this.numberOfElements;
     data['first'] = this.first;
-    data['empty'] = this.empty;
-    return data;
+      data['empty'] = this.empty;
+      return data;
+    }
   }
-}
 
-class Content {
-  String? userUid;
+  class Content {
+    String? userUid;
   String? userChatMessageUid;
   String? userName;
   String? userProfilePic;

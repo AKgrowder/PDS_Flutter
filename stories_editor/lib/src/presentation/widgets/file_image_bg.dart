@@ -45,7 +45,7 @@ class _FileImageBGState extends State<FileImageBG> {
             Offset(imageKey.currentState!.context.size!.width / 2.03, 530));
         color1 = cd1;
         color2 = cd12;
-        setState(() {});
+        super.setState(() {});
         widget.generatedGradient(color1, color2);
         callback.cancel();
         stateController.close();

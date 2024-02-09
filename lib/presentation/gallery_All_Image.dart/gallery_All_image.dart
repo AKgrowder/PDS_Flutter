@@ -120,11 +120,16 @@ class _GalleryImageState extends State<GalleryImage> {
                             itemBuilder: (BuildContext context, int index) {
                               // Your grid item widget goes here
                               return GridTile(
-                                child: Container(
-                                    // color: Colors.blue,
-                                    child: AnimatedNetworkImage(
-                                        imageUrl:
-                                            "${getAllInboxImages?.object?.content?[index]}")),
+                                child: GestureDetector(
+                                  onTap: (){
+                                    print("this is tghe dATA -${getAllInboxImages?.object?.content?[index]}");
+                                  },
+                                  child: Container(
+                                      // color: Colors.blue,
+                                      child: CustomImageView(
+                                          url:
+                                              "${getAllInboxImages?.object?.content?[index]}")),
+                                ),
                               );
                             },
                           ),

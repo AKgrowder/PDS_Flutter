@@ -148,7 +148,7 @@ class _SplashScreenState extends State<SplashScreen> {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString(PreferencesKey.appApkMinVersion, "8");
     prefs.setString(PreferencesKey.appApkLatestVersion, "1");
-    prefs.setString(PreferencesKey.appApkRouteVersion, "7");
+    prefs.setString(PreferencesKey.appApkRouteVersion, "6");
 
     prefs.setString(PreferencesKey.IPAIosMainversion, "1");
     prefs.setString(PreferencesKey.IPAIosLatestVersion, "1");
@@ -271,8 +271,7 @@ class _SplashScreenState extends State<SplashScreen> {
         await FirebaseDynamicLinks.instance.getInitialLink();
     if (initialLink != null) {
       final Uri deepLink = initialLink.link;
-      print("${deepLink } :- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ ");
-      if (deepLink.toString().contains("room_link=")) {
+       if (deepLink.toString().contains("room_link=")) {
         deepLink1 = deepLink.toString().split("room_link=")[1];
         print("${deepLink1} :- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
         prefs.setString(PreferencesKey.AutoSetRoomID, deepLink1);
@@ -286,7 +285,7 @@ class _SplashScreenState extends State<SplashScreen> {
       // deepLink2 = deepLink1.toString().split("&")[0];
 
       print('Deeplinks uri:${deepLink.path}');
-      setState(() {
+      super.setState(() {
         // prefs.setString(PreferencesKey.AutoSetRoomID, deepLink1);
       });
     }

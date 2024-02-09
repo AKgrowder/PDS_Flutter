@@ -42,7 +42,7 @@ class _InviteDilogScreenState extends State<InviteDilogScreen>
         CurvedAnimation(parent: controller, curve: Curves.elasticInOut);
 
     controller.addListener(() {
-      setState(() {});
+      super.setState(() {});
     });
 
     controller.forward();

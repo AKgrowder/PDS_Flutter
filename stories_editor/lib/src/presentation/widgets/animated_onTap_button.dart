@@ -35,7 +35,7 @@ class _AnimatedOnTapButtonState extends State<AnimatedOnTapButton>
         duration: const Duration(milliseconds: 10),
       );
       _controllerA?.addListener(() {
-        setState(() {
+        super.setState(() {
           squareScaleA = _controllerA!.value;
         });
       });

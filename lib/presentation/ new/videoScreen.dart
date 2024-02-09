@@ -37,7 +37,7 @@ class _VideoListItem1State extends State<VideoListItem1> {
         VideoPlayerController.networkUrl(Uri.parse(widget.videoUrl))
           ..initialize().then((_) {
             // Ensure the first frame is shown after the video is initialized, even before the play button has been pressed.
-            setState(() {});
+            super.setState(() {});
           }); */
     /*  } */
   } 
@@ -98,10 +98,10 @@ class _VideoListItem1State extends State<VideoListItem1> {
                                     if (videoPlayerController!
                                         .value.isPlaying) {
                                       videoPlayerController!.pause();
-                                      setState(() {});
+                                      super.setState(() {});
                                     } else {
                                       videoPlayerController!.play();
-                                      setState(() {});
+                                      super.setState(() {});
                                     }
                                   },
                                   child: Icon(

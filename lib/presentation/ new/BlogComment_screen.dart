@@ -81,7 +81,7 @@ class _BlogCommentBottomSheetState extends State<BlogCommentBottomSheet> {
     return WillPopScope(
       onWillPop: () {
         if (isEmojiVisible) {
-          setState(() {
+          super.setState(() {
             isEmojiVisible = false;
           });
           return Future.value(false);
@@ -745,7 +745,7 @@ class _BlogCommentBottomSheetState extends State<BlogCommentBottomSheet> {
                                               FocusScope.of(context).unfocus();
                                             }
 
-                                            setState(() {
+                                            super.setState(() {
                                               isEmojiVisible = !isEmojiVisible;
                                             });
                                           },
@@ -829,14 +829,14 @@ class _BlogCommentBottomSheetState extends State<BlogCommentBottomSheet> {
                                   child: EmojiPicker(
                                     onBackspacePressed: () {
                                       if (isEmojiVisible) {
-                                        setState(() {
+                                        super.setState(() {
                                           isEmojiVisible = false;
                                         });
                                       }
                                     },
                                     onEmojiSelected: (category, emoji) {
                                       addcomment.text += emoji.emoji;
-                                      setState(() {});
+                                      super.setState(() {});
                                     },
                                     config: Config(
                                       columns: 7,
@@ -891,7 +891,7 @@ class _BlogCommentBottomSheetState extends State<BlogCommentBottomSheet> {
   }
 
   onChangeMethod(String value) {
-    setState(() {
+    super.setState(() {
       addcomment.text = value;
     });
     if (value.contains('@')) {
@@ -918,7 +918,7 @@ class _BlogCommentBottomSheetState extends State<BlogCommentBottomSheet> {
       BlocProvider.of<BlogcommentCubit>(context)
           .GetAllHashtag(context, '10', '#${data1.trim()}');
     } else {
-      setState(() {
+      super.setState(() {
         istageData = false;
         isHeshTegData = false;
       });

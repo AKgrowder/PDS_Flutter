@@ -132,7 +132,7 @@ class DmInboxCubit extends Cubit<getInboxState> {
       } else {
         if (SeenMessgaeModelData.success == true) {
           emit(SeenAllMessageLoadedState(SeenMessgaeModelData));
-          print("+++++++++++++++++++++++++++++++++++++");
+          
           print(SeenMessgaeModelData.message);
         }
       }

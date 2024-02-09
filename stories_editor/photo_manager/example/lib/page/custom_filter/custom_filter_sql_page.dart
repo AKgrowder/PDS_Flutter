@@ -51,7 +51,7 @@ class _CustomFilterSqlPageState extends State<CustomFilterSqlPage> {
   }
 
   void refresh() {
-    setState(() {
+    super.setState(() {
       filter = createCustomFilter();
     });
   }

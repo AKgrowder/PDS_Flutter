@@ -74,7 +74,7 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
   dataFunctionSetup() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     User_ID = prefs.getString(PreferencesKey.loginUserID);
-    setState(() {});
+    super.setState(() {});
   }
 
   FocusNode? _focusNode;
@@ -110,7 +110,7 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
       _controller = VideoPlayerController.networkUrl(
           (Uri.parse('${widget.buttonData.images[_curSegmentIndex].image}')))
         ..initialize().then((_) {
-          setState(() {
+          super.setState(() {
             ifVideoPlayer = true;
             durationOfVideo = _controller!.value.duration;
             _controller?.play();
@@ -144,20 +144,20 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
         _controller = VideoPlayerController.networkUrl(
             (Uri.parse('${widget.buttonData.images[_curSegmentIndex].image}')))
           ..initialize().then((_) {
-            setState(() {
+            super.setState(() {
               ifVideoPlayer = true;
               durationOfVideo = _controller!.value.duration;
               _controller?.play();
             });
           });
       } else {
-        setState(() {
+        super.setState(() {
           ifVideoPlayer = false;
           _controller?.dispose();
         });
       }
     }
-    setState(() {});
+    super.setState(() {});
   }
 
   Widget _buildCloseButton() {
@@ -348,7 +348,7 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
             StoryView = true;
             BlocProvider.of<ViewStoryCubit>(context).StoryViewList(context,
                 "${widget.buttonData.images[_curSegmentIndex].storyUid}");
-            setState(() {});
+            super.setState(() {});
           }
         }
       }),
@@ -451,7 +451,7 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
           StoryView = true;
           BlocProvider.of<ViewStoryCubit>(context).StoryViewList(context,
               "${widget.buttonData.images[_curSegmentIndex].storyUid}");
-          setState(() {});
+          super.setState(() {});
         }
       }
     });
@@ -556,7 +556,7 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
             }
             FocusScope.of(context).requestFocus(_focusNode);
             WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-              setState(() {
+              super.setState(() {
                 isDataGet = true;
                 isBottomSheetOpen = true;
               });
@@ -569,7 +569,7 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
           _storyController?.pause();
           _focusNode?.unfocus();
           WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-            setState(() {
+            super.setState(() {
               isDataGet = false;
               isBottomSheetOpen = false;
             });
@@ -595,7 +595,7 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
         _storyController!.unpause();
         FocusScope.of(context).unfocus();
         WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-              setState(() {
+              super.setState(() {
                 isDataGet = false;
                 
               });
@@ -625,7 +625,7 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
                                   _stopwatch.elapsedMilliseconds;
                               _pointerDownPosition = details.localPosition;
                               _storyController!.pause();
-                              setState(() {
+                              super.setState(() {
                                 isBottomSheetOpen = true;
                               });
                               showModalBottomSheet(
@@ -884,7 +884,7 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
                                   }
                                 }
                                 print("bottom sheet closed : unpause");
-                                setState(() {
+                                super.setState(() {
                                   isBottomSheetOpen = false;
                                 });
                                 _storyController!.unpause();
@@ -950,7 +950,7 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
                               minLines: 1,
                               maxLines: null,
                               onChanged: (value) {
-                                print("value Get-$value");
+                              
                               },
                               style: TextStyle(color: Colors.white),
                               decoration: InputDecoration(
@@ -972,7 +972,7 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
                                       .storyUid
                                       .toString());
 
-                              Navigator.of(context).pop();
+                             
                             },
                             child: Text(
                               'Send',
@@ -1274,7 +1274,7 @@ class _StoryTimelineState extends State<StoryTimeline> {
         }
       }
       if (mounted) {
-        setState(() {});
+        super.setState(() {});
       }
     }
   }
@@ -1480,7 +1480,7 @@ class _ZoomableImageState extends State<ZoomableImage> {
 
     final memoryImage = MemoryImage(Uint8List.fromList(bytes!));
 
-    setState(() {
+    super.setState(() {
       _memoryImage = memoryImage;
     });
   }

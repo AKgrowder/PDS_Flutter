@@ -47,19 +47,19 @@ class _PaginationWidgetState extends State<PaginationWidget> {
     int pageSize = ((widget.totalSize ?? 0) / 10).ceil();
     print(pageSize);
     if ((_offset) < pageSize && !_offsetList!.contains(_offset + 1)) {
-      setState(() {
+      super.setState(() {
         _offset++;
         _offsetList?.add((_offset));
         _isLoading = true;
       });
       print("**************${_offset}");
       await widget.onPagination!(_offset);
-      setState(() {
+      super.setState(() {
         _isLoading = false;
       });
     } else {
       if (_isLoading) {
-        setState(() {
+        super.setState(() {
           _isLoading = false;
         });
       }
@@ -142,19 +142,19 @@ class _PaginationWidgetMinScrollState extends State<PaginationWidgetMinScroll> {
     int pageSize = ((widget.totalSize ?? 0) / 10).ceil();
     print(pageSize);
     if ((_offset) < pageSize && !_offsetList!.contains(_offset + 1)) {
-      setState(() {
+      super.setState(() {
         _offset++;
         _offsetList?.add((_offset));
         _isLoading = true;
       });
       print("**************${_offset}");
       await widget.onPagination!(_offset);
-      setState(() {
+      super.setState(() {
         _isLoading = false;
       });
     } else {
       if (_isLoading) {
-        setState(() {
+        super.setState(() {
           _isLoading = false;
         });
       }

@@ -18,7 +18,7 @@ class _InteractiveImageState extends State<InteractiveImage> {
 
   @override
   Widget build(BuildContext context) {
-    setState(() => print("STATE SET\n"));
+    super.setState(() => print("STATE SET\n"));
     return new GestureDetector(
       onScaleStart: (ScaleStartDetails details) {
         print(details);
@@ -29,7 +29,7 @@ class _InteractiveImageState extends State<InteractiveImage> {
       },
       onScaleUpdate: (ScaleUpdateDetails details) {
         print(details);
-        setState(() => _scale = _previousScale * details.scale);
+        super.setState(() => _scale = _previousScale * details.scale);
       },
       onScaleEnd: (ScaleEndDetails details) {
         print(details);
