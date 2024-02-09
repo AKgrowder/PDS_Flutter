@@ -54,7 +54,8 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
   double value2 = 0.0;
   double finalFileSize = 0;
   double documentuploadsize = 0;
-  String? dopcument;
+  String? dopcument
+  ;
   String? filepath;
   bool? SubmitOneTime = false;
   ChooseDocument? chooseDocument;
@@ -572,7 +573,7 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
                           };
 
                           print('button-$params');
-
+                          print("workdsbfdsgfdsgf-${uplopdfile.text}");
                           if (SubmitOneTime == false) {
                             print(
                                 "${dopcument} :- dopcumentdopcumentdopcumentdopcumentdopcumentdopcument");
