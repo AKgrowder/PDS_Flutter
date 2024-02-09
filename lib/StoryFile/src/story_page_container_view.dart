@@ -950,7 +950,7 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
                               minLines: 1,
                               maxLines: null,
                               onChanged: (value) {
-                                print("value Get-$value");
+                              
                               },
                               style: TextStyle(color: Colors.white),
                               decoration: InputDecoration(
@@ -972,7 +972,7 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
                                       .storyUid
                                       .toString());
 
-                              Navigator.of(context).pop();
+                             
                             },
                             child: Text(
                               'Send',
