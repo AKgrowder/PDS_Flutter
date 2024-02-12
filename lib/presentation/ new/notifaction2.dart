@@ -536,7 +536,7 @@ class _AllNotificationClassState extends State<AllNotificationClass> {
                                                                 User_ID:
                                                                     "${AllNotificationData?.object?[index].accessCode}",
                                                                 isFollowing:
-                                                                    "");
+                                                                    "",ProfileNotification : true);
                                                           }))
                                                         //  print("open User Profile FOLLOW_PUBLIC_ACCOUNT & FOLLOW_PRIVATE_ACCOUNT_REQUEST & FOLLOW_REQUEST_ACCEPTED")
                                                         : print("");
