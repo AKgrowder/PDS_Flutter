@@ -72,7 +72,8 @@ import 'package:translator/translator.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:video_player/video_player.dart';
 import 'package:visibility_detector/visibility_detector.dart';
-
+import 'package:pds/videocallkey/projectkey.dart';
+import 'package:zego_uikit_prebuilt_call/zego_uikit_prebuilt_call.dart';
 // import 'package:flutter_langdetect/flutter_langdetect.dart' as langdetect;
 import '../../API/Model/Get_all_blog_Model/get_all_blog_model.dart';
 import '../../API/Model/UserTagModel/UserTag_model.dart';
@@ -205,7 +206,6 @@ class _HomeScreenNewState extends State<HomeScreenNew>
     return linkRegex.hasMatch(input);
   }
 
-
   final focusNode = FocusNode();
   String getTimeDifference(DateTime dateTime) {
     final difference = DateTime.now().difference(dateTime);
@@ -234,6 +234,52 @@ class _HomeScreenNewState extends State<HomeScreenNew>
       return 'Just now';
     }
   }
+
+ void onUserLogin() {
+    print("this method is calling");
+  /// 4/5. initialized ZegoUIKitPrebuiltCallInvitationService when account is logged in or re-logged in
+  ZegoUIKitPrebuiltCallInvitationService().init(
+    appID: MyConst.appId /*input your AppID*/,
+    appSign: MyConst.appSign /*input your AppSign*/,
+    userID: User_ID ?? '',
+    userName: User_Name ?? '',
+    plugins: [
+      ZegoUIKitSignalingPlugin(),
+    ],
+    
+
+   
+      androidNotificationConfig: ZegoAndroidNotificationConfig(
+        channelID: "ZegoUIKit",
+        channelName: "Call Notifications",
+        sound: "call",
+        icon: "call",
+      ),
+      iOSNotificationConfig: ZegoIOSNotificationConfig(
+        systemCallingIconName: 'CallKitIcon',
+      ),
+   
+    requireConfig: (ZegoCallInvitationData data) {
+      print("check Data -${ZegoCallType.videoCall}");
+      print("check Data1 -${data.type}");
+
+      final config = ZegoUIKitPrebuiltCallConfig.oneOnOneVideoCall();
+
+      config.avatarBuilder = (context, size, user, extraInfo) {
+        return CircleAvatar(
+          backgroundColor: Colors.grey,
+          
+        );
+      };
+
+      /// support minimizing, show minimizing button
+    true;
+      false;
+
+      return config;
+    },
+  );
+}
 
   @override
   void initState() {
@@ -1038,6 +1084,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
     }
     if (User_ID != null) {
       PushNotificationAutoOpen();
+      onUserLogin();
     }
   }
 
@@ -1062,7 +1109,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                         PostID: NotificationUID,
                         index: 0,
                       )),
-            )
+            ).then((value) => setColorr())
           // print("opne Save Image screen RE_POST & TAG_POST");
 
           : NotificationSubject == "INVITE_ROOM"
@@ -1092,7 +1139,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                             ? true
                                             : false,
                                       )),
-                            )
+                            ).then((value) => setColorr())
                           // print("opne Save Image screen LIKE_POST & COMMENT_POST & TAG_COMMENT_POST")
                           : NotificationSubject == "FOLLOW_PUBLIC_ACCOUNT" ||
                                   NotificationSubject ==
@@ -1106,7 +1153,8 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                   MaterialPageRoute(builder: (context) {
                                   return ProfileScreen(
                                       User_ID: "${NotificationUID}",
-                                      isFollowing: "");
+                                      isFollowing: "",
+                                      ProfileNotification: true);
                                 }))
                               //  print("open User Profile FOLLOW_PUBLIC_ACCOUNT & FOLLOW_PRIVATE_ACCOUNT_REQUEST & FOLLOW_REQUEST_ACCEPTED")
                               : print("");
@@ -1273,14 +1321,20 @@ class _HomeScreenNewState extends State<HomeScreenNew>
     // Access the detected language and confidence
     // language = result.language;
     // double confidence = result.confidence;
-
- }
+  }
+  setColorr() {
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+        statusBarIconBrightness: Brightness.dark, // Light icons for status bar
+        statusBarBrightness:
+            Brightness.light // Dark == white status bar -- for IOS.
+        ));
+  }
 
   @override
   Widget build(BuildContext context) {
     var _height = MediaQuery.of(context).size.height;
     var _width = MediaQuery.of(context).size.width;
-
+    setColorr();
     return WillPopScope(
         onWillPop: () async {
           return true;
@@ -1685,7 +1739,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                   "${state.OpenSharePostData.object?.postUid}",
                               index: 0,
                             )),
-                  );
+                  ).then((value) => setColorr());
                 } else {
                   await BlocProvider.of<GetGuestAllPostCubit>(context)
                       .seetinonExpried(context);
@@ -2077,54 +2131,50 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                               //         context,
                                               //         Permission.storage) ??
                                               //     false) {
-                                                print("this is the 3");
+                                              print("this is the 3");
 
-                                                imageDataPost =
-                                                    await Navigator.push(
-                                                        context,
-                                                        MaterialPageRoute(
-                                                            builder: (context) {
-                                                  return CreateStoryPage(
-                                                    finalFileSize:
-                                                        finalFileSize,
-                                                    finalvideoSize:
-                                                        finalvideoSize,
-                                                  );
-                                                }));
+                                              imageDataPost =
+                                                  await Navigator.push(context,
+                                                      MaterialPageRoute(
+                                                          builder: (context) {
+                                                return CreateStoryPage(
+                                                  finalFileSize: finalFileSize,
+                                                  finalvideoSize:
+                                                      finalvideoSize,
+                                                );
+                                              }));
 
-                                                if (imageDataPost?.object
-                                                        ?.split('.')
-                                                        .last ==
-                                                    'mp4') {
-                                                  var parmes = {
-                                                    "storyData":
-                                                        imageDataPost?.object,
-                                                    "storyType": "VIDEO",
-                                                    "videoDuration":
-                                                        imageDataPost
-                                                            ?.videodurationGet
-                                                  };
-                                                  print(
-                                                      "scdfhgsdfhsd-${parmes}");
-                                                  Repository().cretateStoryApi(
-                                                      context, parmes);
-                                                  isWatch = true;
-                                                  Get_UserToken();
-                                                } else {
-                                                  var parmes = {
-                                                    "storyData": imageDataPost
-                                                        ?.object
-                                                        .toString(),
-                                                    "storyType": "TEXT",
-                                                    "videoDuration": ''
-                                                  };
-                                                  print(
-                                                      "CHECK:--------${parmes}");
-                                                  Repository().cretateStoryApi(
-                                                      context, parmes);
-                                                  isWatch = true;
-                                                  Get_UserToken();
-                                                }
+                                              if (imageDataPost?.object
+                                                      ?.split('.')
+                                                      .last ==
+                                                  'mp4') {
+                                                var parmes = {
+                                                  "storyData":
+                                                      imageDataPost?.object,
+                                                  "storyType": "VIDEO",
+                                                  "videoDuration": imageDataPost
+                                                      ?.videodurationGet
+                                                };
+                                                print("scdfhgsdfhsd-${parmes}");
+                                                Repository().cretateStoryApi(
+                                                    context, parmes);
+                                                isWatch = true;
+                                                Get_UserToken();
+                                              } else {
+                                                var parmes = {
+                                                  "storyData": imageDataPost
+                                                      ?.object
+                                                      .toString(),
+                                                  "storyType": "TEXT",
+                                                  "videoDuration": ''
+                                                };
+                                                print(
+                                                    "CHECK:--------${parmes}");
+                                                Repository().cretateStoryApi(
+                                                    context, parmes);
+                                                isWatch = true;
+                                                Get_UserToken();
+                                              }
                                               // }
                                             }
                                           } else {
@@ -2438,7 +2488,8 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                           });
                                           WidgetsBinding.instance
                                               .addPostFrameCallback(
-                                                  (timeStamp) => super.setState(() {
+                                                  (timeStamp) =>
+                                                      super.setState(() {
                                                         added = true;
                                                       }));
                                         }
@@ -2492,16 +2543,17 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                 child: GestureDetector(
                                                   onTap: () {
                                                     Navigator.push(
-                                                        context,
-                                                        MaterialPageRoute(
-                                                          builder: (context) =>
-                                                              OpenSavePostImage(
+                                                            context,
+                                                            MaterialPageRoute(
+                                                              builder: (context) => OpenSavePostImage(
                                                                   PostID: AllGuestPostRoomData
                                                                       ?.object
                                                                       ?.content?[
                                                                           index]
                                                                       .postUid),
-                                                        ));
+                                                            ))
+                                                        .then((value) =>
+                                                            setColorr());
                                                   },
                                                   onDoubleTap: () async {
                                                     await soicalFunation(
@@ -2794,13 +2846,15 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                 forceWebView: true,
                                                                                 enableJavaScript: true);
                                                                           } else {
-                                                                            Navigator.push(
+                                                                            Navigator
+                                                                                .push(
                                                                               context,
                                                                               MaterialPageRoute(
                                                                                   builder: (context) => OpenSavePostImage(
                                                                                         PostID: AllGuestPostRoomData?.object?.content?[index].postUid,
                                                                                       )),
-                                                                            );
+                                                                            ).then((value) =>
+                                                                                setColorr());
                                                                           }
                                                                         },
                                                                         child:
@@ -3028,7 +3082,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                               PostID: AllGuestPostRoomData?.object?.content?[index].postUid,
                                                                                               index: index,
                                                                                             )),
-                                                                                  );
+                                                                                  ).then((value) => setColorr());
                                                                                   // }
                                                                                 },
                                                                                 child: Container(
@@ -3054,6 +3108,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                           width: _width,
                                                                                           child: VideoListItem1(
                                                                                             videoUrl: videoUrls[index],
+                                                                                            PostID: AllGuestPostRoomData?.object?.content?[index].postUid,
                                                                                             // isData: User_ID == null ? false : true,
                                                                                           ),
                                                                                         ),
@@ -3141,7 +3196,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                                               PostID: AllGuestPostRoomData?.object?.content?[index].postUid,
                                                                                                               index: index1,
                                                                                                             )),
-                                                                                                  );
+                                                                                                  ).then((value) => setColorr());
                                                                                                   // }
                                                                                                 },
                                                                                                 child: Stack(
@@ -3239,7 +3294,8 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                               PostID: AllGuestPostRoomData?.object?.content?[index].repostOn?.postUid,
                                                                               index: index,
                                                                             )),
-                                                              );
+                                                              ).then((value) =>
+                                                                  setColorr());
                                                               // }
                                                             },
                                                             child: Container(
@@ -3474,7 +3530,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                                   PostID: AllGuestPostRoomData?.object?.content?[index].repostOn?.postUid,
                                                                                                   index: index,
                                                                                                 )),
-                                                                                      );
+                                                                                      ).then((value) => setColorr());
                                                                                       // }
                                                                                     },
                                                                                     child: Container(
@@ -3498,6 +3554,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                             VideoListItem1(
                                                                                               videoUrl: videoUrls[index],
                                                                                               discrption: AllGuestPostRoomData?.object?.content?[index].repostOn?.description,
+                                                                                              PostID: AllGuestPostRoomData?.object?.content?[index].postUid,
                                                                                               // isData: User_ID == null ? false : true,
                                                                                             )
                                                                                           ],
@@ -3572,7 +3629,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                                                 PostID: AllGuestPostRoomData?.object?.content?[index].repostOn?.postUid,
                                                                                                                 index: index1,
                                                                                                               )),
-                                                                                                    );
+                                                                                                    ).then((value) => setColorr());
                                                                                                     // }
                                                                                                   },
                                                                                                   child: Container(
@@ -4046,16 +4103,17 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                 child: GestureDetector(
                                                   onTap: () {
                                                     Navigator.push(
-                                                        context,
-                                                        MaterialPageRoute(
-                                                          builder: (context) =>
-                                                              OpenSavePostImage(
+                                                            context,
+                                                            MaterialPageRoute(
+                                                              builder: (context) => OpenSavePostImage(
                                                                   PostID: AllGuestPostRoomData
                                                                       ?.object
                                                                       ?.content?[
                                                                           index]
                                                                       .postUid),
-                                                        ));
+                                                            ))
+                                                        .then((value) =>
+                                                            setColorr());
                                                   },
                                                   onDoubleTap: () async {
                                                     await soicalFunation(
@@ -4358,13 +4416,15 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                 forceWebView: true,
                                                                                 enableJavaScript: true);
                                                                           } else {
-                                                                            Navigator.push(
+                                                                            Navigator
+                                                                                .push(
                                                                               context,
                                                                               MaterialPageRoute(
                                                                                   builder: (context) => OpenSavePostImage(
                                                                                         PostID: AllGuestPostRoomData?.object?.content?[index].postUid,
                                                                                       )),
-                                                                            );
+                                                                            ).then((value) =>
+                                                                                setColorr());
                                                                           }
                                                                         },
                                                                         child:
@@ -4556,14 +4616,16 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                 null) {
                                                                               Navigator.of(context).push(MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
                                                                             } else { */
-                                                                            Navigator.push(
+                                                                            Navigator
+                                                                                .push(
                                                                               context,
                                                                               MaterialPageRoute(
                                                                                   builder: (context) => OpenSavePostImage(
                                                                                         PostID: AllGuestPostRoomData?.object?.content?[index].postUid,
                                                                                         index: index,
                                                                                       )),
-                                                                            );
+                                                                            ).then((value) =>
+                                                                                setColorr());
                                                                             // }
                                                                           },
                                                                           child:
@@ -4599,6 +4661,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
 
                                                                                   VideoListItem1(
                                                                                     videoUrl: videoUrls[index],
+                                                                                    PostID: AllGuestPostRoomData?.object?.content?[index].postUid,
                                                                                     // isData: User_ID == null ? false : true,
                                                                                   ),
                                                                                 ],
@@ -4683,7 +4746,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                                         PostID: AllGuestPostRoomData?.object?.content?[index].postUid,
                                                                                                         index: index1,
                                                                                                       )),
-                                                                                            );
+                                                                                            ).then((value) => setColorr());
                                                                                             // }
                                                                                           },
                                                                                           //this is the cusotmImageView
@@ -6044,44 +6107,10 @@ class _HomeScreenNewState extends State<HomeScreenNew>
     ImageDataPostOne? imageDataPost;
 
     // if (Platform.isAndroid) {
-      print("tHIS iS THE dATA gET");
-      final info = await DeviceInfoPlugin().androidInfo;
-      if (num.parse(await info.version.release).toInt() >= 13) {
-        if (await permissionHandler(context, Permission.photos) ?? false) {
-          imageDataPost = await Navigator.push(context,
-              MaterialPageRoute(builder: (context) {
-            return CreateStoryPage(
-              finalFileSize: finalFileSize,
-              finalvideoSize: finalvideoSize,
-            );
-          }));
-
-          if (imageDataPost?.object?.split('.').last == 'mp4') {
-            var parmes = {
-              "storyData": imageDataPost?.object,
-              "storyType": "VIDEO",
-              "videoDuration": imageDataPost?.videodurationGet
-            };
-            print("scdfhgsdfhsd-${parmes}");
-            Repository().cretateStoryApi(context, parmes);
-            isWatch = true;
-            Get_UserToken();
-          } else {
-            var parmes = {
-              "storyData": imageDataPost?.object.toString(),
-              "storyType": "TEXT",
-              "videoDuration": ''
-            };
-            print("CHECK:--------${parmes}");
-            Repository().cretateStoryApi(context, parmes);
-            isWatch = true;
-            Get_UserToken();
-          }
-        }
-      } else if (await permissionHandler(context, Permission.storage) ??
-          false) {
-        print("tHIS iS THE dATA ELSE");
-
+    print("tHIS iS THE dATA gET");
+    final info = await DeviceInfoPlugin().androidInfo;
+    if (num.parse(await info.version.release).toInt() >= 13) {
+      if (await permissionHandler(context, Permission.photos) ?? false) {
         imageDataPost =
             await Navigator.push(context, MaterialPageRoute(builder: (context) {
           return CreateStoryPage(
@@ -6098,6 +6127,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
           };
           print("scdfhgsdfhsd-${parmes}");
           Repository().cretateStoryApi(context, parmes);
+          isWatch = true;
           Get_UserToken();
         } else {
           var parmes = {
@@ -6107,9 +6137,41 @@ class _HomeScreenNewState extends State<HomeScreenNew>
           };
           print("CHECK:--------${parmes}");
           Repository().cretateStoryApi(context, parmes);
+          isWatch = true;
           Get_UserToken();
         }
       }
+    } else if (await permissionHandler(context, Permission.storage) ?? false) {
+      print("tHIS iS THE dATA ELSE");
+
+      imageDataPost =
+          await Navigator.push(context, MaterialPageRoute(builder: (context) {
+        return CreateStoryPage(
+          finalFileSize: finalFileSize,
+          finalvideoSize: finalvideoSize,
+        );
+      }));
+
+      if (imageDataPost?.object?.split('.').last == 'mp4') {
+        var parmes = {
+          "storyData": imageDataPost?.object,
+          "storyType": "VIDEO",
+          "videoDuration": imageDataPost?.videodurationGet
+        };
+        print("scdfhgsdfhsd-${parmes}");
+        Repository().cretateStoryApi(context, parmes);
+        Get_UserToken();
+      } else {
+        var parmes = {
+          "storyData": imageDataPost?.object.toString(),
+          "storyType": "TEXT",
+          "videoDuration": ''
+        };
+        print("CHECK:--------${parmes}");
+        Repository().cretateStoryApi(context, parmes);
+        Get_UserToken();
+      }
+    }
     // }
     buttonDatas[0].images.add(StoryModel(
         imageDataPost?.object,
@@ -6328,7 +6390,54 @@ class _HomeScreenNewState extends State<HomeScreenNew>
     } */
 
     showModalBottomSheet(
-        isScrollControlled: true,
+        context: context,
+        backgroundColor: Colors.white,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(15.0), topRight: Radius.circular(15.0)),
+        ),
+        builder: (context) {
+          return StatefulBuilder(
+              builder: (BuildContext context, StateSetter setState) {
+            return CommentBottomSheet(
+                isFoollinng:
+                    AllGuestPostRoomData?.object?.content?[index].isFollowing,
+                useruid:
+                    AllGuestPostRoomData?.object?.content?[index].userUid ?? "",
+                userProfile: AllGuestPostRoomData
+                        ?.object?.content?[index].userProfilePic ??
+                    "",
+                UserName: AllGuestPostRoomData
+                        ?.object?.content?[index].postUserName ??
+                    "",
+                desc:
+                    AllGuestPostRoomData?.object?.content?[index].description ??
+                        "",
+                postUuID:
+                    AllGuestPostRoomData?.object?.content?[index].postUid ??
+                        "");
+          }); /* Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.max,
+            children: <Widget>[
+              ListTile(
+                leading: Icon(Icons.email),
+                title: Text('Send email'),
+                onTap: () {
+                  print('Send email');
+                },
+              ),
+              ListTile(
+                leading: Icon(Icons.phone),
+                title: Text('Call phone'),
+                onTap: () {
+                  print('Call phone');
+                },
+              ),
+            ],
+          ); */
+        }
+        /*   isScrollControlled: true,
         useSafeArea: true,
         isDismissible: true,
         showDragHandle: true,
@@ -6358,7 +6467,8 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                     AllGuestPostRoomData?.object?.content?[index].postUid ??
                         "");
           });
-        }).then((value) {});
+        } */
+        ).then((value) {});
     ;
   }
 
@@ -6673,7 +6783,7 @@ class _VideoListItemState extends State<VideoListItem> {
       videoPlayerController: VideoPlayerController.networkUrl(
         Uri.parse(widget.videoUrl),
       ),
-    ); 
+    );
   }
 
   @override

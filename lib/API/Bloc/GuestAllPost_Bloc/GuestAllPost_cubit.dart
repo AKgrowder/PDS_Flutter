@@ -445,18 +445,38 @@ class GetGuestAllPostCubit extends Cubit<GetGuestAllPostState> {
     }
   }
 
-   Future<void> ChatOnline (BuildContext context,bool onlineStatus) async {
+  Future<void> ChatOnline(BuildContext context, bool onlineStatus) async {
     dynamic acceptRejectInvitationModel;
     try {
       emit(GetGuestAllPostLoadingState());
       acceptRejectInvitationModel =
-          await Repository().ChatOnline(context,onlineStatus);
+          await Repository().ChatOnline(context, onlineStatus);
       if (acceptRejectInvitationModel ==
           "Something Went Wrong, Try After Some Time.") {
         emit(GetGuestAllPostErrorState("${acceptRejectInvitationModel}"));
       } else {
         if (acceptRejectInvitationModel.success == true) {
           emit(OnlineChatStatusLoadedState(acceptRejectInvitationModel));
+        }
+      }
+    } catch (e) {
+      emit(GetGuestAllPostErrorState(acceptRejectInvitationModel));
+    }
+  }
+
+  Future<void> videowatchdetailAPI(BuildContext context, String postUid,
+      String userUid, String watchTime) async {
+    dynamic acceptRejectInvitationModel;
+    try {
+      emit(GetGuestAllPostLoadingState());
+      acceptRejectInvitationModel = await Repository()
+          .video_watch_detailAPI(context, postUid, userUid, watchTime);
+      if (acceptRejectInvitationModel ==
+          "Something Went Wrong, Try After Some Time.") {
+        emit(GetGuestAllPostErrorState("${acceptRejectInvitationModel}"));
+      } else {
+        if (acceptRejectInvitationModel.success == true) {
+          emit(WatchTimeSaveLoadedState(acceptRejectInvitationModel));
         }
       }
     } catch (e) {
