@@ -116,3 +116,9 @@ class OnlineChatStatusLoadedState extends GetGuestAllPostState {
   OnlineChatStatusLoadedState(this.accept_rejectModelData);
 }
 
+class WatchTimeSaveLoadedState extends GetGuestAllPostState {
+  final seenNotificationModel accept_rejectModelData;
+  WatchTimeSaveLoadedState(this.accept_rejectModelData);
+}
+
+
