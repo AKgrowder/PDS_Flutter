@@ -398,6 +398,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                 ],
               )),
           body: SingleChildScrollView(
+            
             child: Padding(
               padding: const EdgeInsets.only(top: 50.0),
               child: Column(
