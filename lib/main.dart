@@ -48,6 +48,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'API/Bloc/postData_Bloc/postData_Bloc.dart';
 import 'presentation/splash_screen/splash_screen.dart';
 import 'package:flutter_langdetect/flutter_langdetect.dart' as langdetect;
+import 'package:zego_uikit_prebuilt_call/zego_uikit_prebuilt_call.dart';
+import 'package:zego_uikit_signaling_plugin/zego_uikit_signaling_plugin.dart';
 
 Future<void> _messageHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
@@ -55,10 +57,14 @@ Future<void> _messageHandler(RemoteMessage message) async {
   print("value Gey-${message.data}");
 }
 
+GlobalKey<NavigatorState> navigatorKey = GlobalKey();
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await FlutterDownloader.initialize();
   await WidgetsFlutterBinding.ensureInitialized();
+  ZegoUIKitPrebuiltCallInvitationService().setNavigatorKey(navigatorKey);
+
   await Firebase.initializeApp();
   await langdetect.initLangDetect();
   SystemChrome.setPreferredOrientations([
@@ -97,7 +103,15 @@ void main() async {
     provisional: false,
   );
 
-  runApp(MyApp());
+  ZegoUIKitPrebuiltCallInvitationService().setNavigatorKey(navigatorKey);
+
+  ZegoUIKit().initLog().then((value) {
+    ZegoUIKitPrebuiltCallInvitationService().useSystemCallingUI(
+      [ZegoUIKitSignalingPlugin()],
+    );
+
+    runApp(MyApp());
+  });
 }
 
 class MyApp extends StatelessWidget {
@@ -226,14 +240,29 @@ class MyApp extends StatelessWidget {
       ],
       child: Portal(
         child: MaterialApp(
-            theme: ThemeData(
-              visualDensity: VisualDensity.standard,
-            ),
-            title: 'pds',
-            debugShowCheckedModeBanner: false,
-            home: SplashScreen()
-            //BottombarPage(buttomIndex: 0),
-            ),
+          theme: ThemeData(
+            visualDensity: VisualDensity.standard,
+          ),
+          title: 'pds',
+          debugShowCheckedModeBanner: false,
+          navigatorKey: navigatorKey,
+          home: SplashScreen(),
+          builder: (BuildContext context, Widget? child) {
+            return Stack(
+              children: [
+                child!,
+
+                /// support minimizing
+                ZegoUIKitPrebuiltCallMiniOverlayPage(
+                  contextQuery: () {
+                    return navigatorKey.currentState!.context;
+                  },
+                ),
+              ],
+            );
+          },
+          //BottombarPage(buttomIndex: 0),
+        ),
       ),
     );
   }
