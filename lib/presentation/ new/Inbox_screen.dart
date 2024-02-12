@@ -209,7 +209,7 @@ class _InboxScreenState extends State<InboxScreen> {
                       child: Padding(
                         padding: const EdgeInsets.only(left: 15, right: 15),
                         child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center, 
                           children: [
                             SizedBox(
                               height: height * 0.06,
@@ -530,7 +530,7 @@ class _InboxScreenState extends State<InboxScreen> {
                                                   style: TextStyle(
                                                     fontSize: 15,
                                                     fontWeight: FontWeight.w600,
-                                                    color: Colors.grey,
+                                                    color:PersonalChatListModelData?.object?[index].isSeen==true? Colors.grey:Colors.black,
                                                   ),
                                                 ),
                                         ),
