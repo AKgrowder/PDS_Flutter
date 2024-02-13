@@ -97,6 +97,7 @@ import '../Model/HomeScreenModel/MyPublicRoom_model.dart';
 import '../Model/HomeScreenModel/PublicRoomModel.dart';
 import '../Model/HomeScreenModel/getLoginPublicRoom_model.dart';
 import '../Model/InvitationModel/Invitation_Model.dart';
+import '../Model/ReadAllModel/ReadAll_model.dart';
 import '../Model/SelectRoomModel/SelectRoom_Model.dart';
 import '../Model/SendMSG/SendMSG_Model.dart';
 import '../Model/System_Config_model/fetchUserModule_model.dart';
@@ -2902,6 +2903,26 @@ openSaveImagePost(BuildContext context, String PostUID) async {
     switch (responce.statusCode) {
       case 200:
         return jsonString;
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+      case 400:
+        return Config.somethingWentWrong;
+      case 701:
+        return Config.somethingWentWrong;
+      default:
+        return jsonString;
+    }
+  }
+    ReadAllMassages(BuildContext context) async {
+    final responce = await apiServices.getApiCallWithToken(
+        '${Config.readAllmsg}', context);
+    var jsonString = json.decode(responce.body);
+    print('jasonnString$jsonString');
+    switch (responce.statusCode) {
+      case 200:
+        return ReadAllModel.fromJson(jsonString);
       case 404:
         return Config.somethingWentWrong;
       case 500:

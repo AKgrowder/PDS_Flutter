@@ -10,15 +10,16 @@ import 'package:pds/API/Model/acceptRejectInvitaionModel/RequestList_Model.dart'
 import 'package:pds/API/Model/acceptRejectInvitaionModel/accept_rejectModel.dart';
 import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/core/utils/image_constant.dart';
+import 'package:pds/core/utils/sharedPreferences.dart';
 import 'package:pds/presentation/%20new/OpenSavePostImage.dart';
 import 'package:pds/presentation/%20new/newbottembar.dart';
 import 'package:pds/presentation/%20new/profileNew.dart';
 import 'package:pds/presentation/room_members/room_members_screen.dart';
 import 'package:pds/widgets/custom_image_view.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:pds/core/utils/sharedPreferences.dart';
 
 import '../rooms/room_details_screen.dart';
+import 'ReadAll_dailog.dart';
 
 class NewNotifactionScreen extends StatefulWidget {
   const NewNotifactionScreen({Key? key}) : super(key: key);
@@ -45,6 +46,7 @@ class _NewNotifactionScreenState extends State<NewNotifactionScreen>
 
   AllAPICall() async {
     await BlocProvider.of<InvitationCubit>(context).seetinonExpried(context);
+    
     await BlocProvider.of<InvitationCubit>(context).AllNotification(context);
     await BlocProvider.of<InvitationCubit>(context).RequestListAPI(context);
     await BlocProvider.of<InvitationCubit>(context).InvitationAPI(context);
@@ -134,23 +136,54 @@ class _NewNotifactionScreenState extends State<NewNotifactionScreen>
                     SizedBox(
                       height: 10,
                     ),
-                    Center(
-                      child: Text(
-                        'Notifications',
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 22,
-                          fontFamily: "outfit",
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
+
+                      Row(
+                              children: [
+                                Spacer(),
+                                Container(
+                                  alignment: Alignment.bottomRight,
+                                  width: 150,
+                                  // color: Colors.amber,
+                                  child: Text(
+                            'Notifications',
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 22,
+                              fontFamily: "outfit",
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                                ),
+                                     Spacer(),
+                                 GestureDetector(
+                                    onTap: () {
+                                       showDialog(
+                                      context: context,
+                                      builder: (_) => ReadAlldailog());
+                                    },
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        color: ColorConstant.primary_color,
+                                        borderRadius: BorderRadius.circular(10)
+                                      ),
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Text("Read ALL",style: TextStyle(
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.w500,color: Colors.white
+                                        ),),
+                                      ),
+                                    ),
+                                  ),SizedBox(
+                      width: 20,
                     ),
+                              ],
+                            ),
+                  
                     SizedBox(
-                      height: 10,
+                      height: 20,
                     ),
-                    SizedBox(
-                      height: 10,
-                    ),
+                    
                     Container(
                       decoration:
                           BoxDecoration(border: Border.all(color: Colors.grey)),
