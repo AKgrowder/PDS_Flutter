@@ -50,20 +50,23 @@ import 'presentation/splash_screen/splash_screen.dart';
 import 'package:flutter_langdetect/flutter_langdetect.dart' as langdetect;
 import 'package:zego_uikit_prebuilt_call/zego_uikit_prebuilt_call.dart';
 import 'package:zego_uikit_signaling_plugin/zego_uikit_signaling_plugin.dart';
-
+import 'API/Bloc/ReadAll_Bloc/ReadAll_cubit.dart';  
 Future<void> _messageHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
   print('background message ${message.notification!.body}');
   print("value Gey-${message.data}");
 }
 
-GlobalKey<NavigatorState> navigatorKey = GlobalKey();
+final navigatorKey = GlobalKey<NavigatorState>();
+
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await FlutterDownloader.initialize();
   await WidgetsFlutterBinding.ensureInitialized();
-  ZegoUIKitPrebuiltCallInvitationService().setNavigatorKey(navigatorKey);
+
+   ZegoUIKitPrebuiltCallInvitationService().setNavigatorKey(navigatorKey);
+
 
   await Firebase.initializeApp();
   await langdetect.initLangDetect();
@@ -103,7 +106,6 @@ void main() async {
     provisional: false,
   );
 
-  ZegoUIKitPrebuiltCallInvitationService().setNavigatorKey(navigatorKey);
 
   ZegoUIKit().initLog().then((value) {
     ZegoUIKitPrebuiltCallInvitationService().useSystemCallingUI(
@@ -114,7 +116,19 @@ void main() async {
   });
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
+  final GlobalKey<NavigatorState>? navigatorKey;
+
+  const MyApp({
+    this.navigatorKey,
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
@@ -237,6 +251,9 @@ class MyApp extends StatelessWidget {
         BlocProvider<BlogcommentCubit>(
           create: (context) => BlogcommentCubit(),
         ),
+        BlocProvider<ReadAllMSGCubit>(
+          create: (context) => ReadAllMSGCubit(),
+        ),
       ],
       child: Portal(
         child: MaterialApp(
@@ -251,11 +268,9 @@ class MyApp extends StatelessWidget {
             return Stack(
               children: [
                 child!,
-
-                /// support minimizing
                 ZegoUIKitPrebuiltCallMiniOverlayPage(
                   contextQuery: () {
-                    return navigatorKey.currentState!.context;
+                    return widget.navigatorKey!.currentState!.context;
                   },
                 ),
               ],
