@@ -5,7 +5,6 @@ import 'package:pds/API/Bloc/NewProfileScreen_Bloc/NewProfileScreen_cubit.dart';
 import 'package:pds/API/Bloc/NewProfileScreen_Bloc/NewProfileScreen_state.dart';
 import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/presentation/%20new/AddWorkExperience_Screen.dart';
-
 import '../../API/Model/WorkExperience_Model/WorkExperience_model.dart';
 import '../../core/app_export.dart';
 
@@ -28,7 +27,6 @@ class _ExperienceEditScreenState extends State<ExperienceEditScreen> {
   bool isdataget = false;
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     BlocProvider.of<NewProfileSCubit>(context)
         .GetWorkExperienceAPI(context, widget.userID.toString());

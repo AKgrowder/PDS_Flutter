@@ -59,11 +59,12 @@ import 'comment_bottom_sheet.dart';
 class ProfileScreen extends StatefulWidget {
   String User_ID;
   String? isFollowing;
+  bool? ProfileNotification;
 
-  ProfileScreen({
-    required this.User_ID,
-    required this.isFollowing,
-  });
+  ProfileScreen(
+      {required this.User_ID,
+      required this.isFollowing,
+      this.ProfileNotification});
 
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
@@ -232,8 +233,11 @@ class _ProfileScreenState extends State<ProfileScreen>
   }
 
   getAllAPI_Data() async {
-    BlocProvider.of<NewProfileSCubit>(context)
-        .NewProfileSAPI(context, widget.User_ID);
+    widget.ProfileNotification == true
+        ? BlocProvider.of<NewProfileSCubit>(context)
+            .NewProfileSAPI(context, widget.User_ID, true)
+        : BlocProvider.of<NewProfileSCubit>(context)
+            .NewProfileSAPI(context, widget.User_ID, false);
     BlocProvider.of<NewProfileSCubit>(context)
         .getFollwerApi(context, widget.User_ID);
     BlocProvider.of<NewProfileSCubit>(context)
@@ -462,8 +466,11 @@ class _ProfileScreenState extends State<ProfileScreen>
         ScaffoldMessenger.of(context).showSnackBar(snackBar);
       }
       if (state is PostLikeLoadedState) {
-        BlocProvider.of<NewProfileSCubit>(context)
-            .NewProfileSAPI(context, widget.User_ID);
+        widget.ProfileNotification == true
+            ? BlocProvider.of<NewProfileSCubit>(context)
+                .NewProfileSAPI(context, widget.User_ID, true)
+            : BlocProvider.of<NewProfileSCubit>(context)
+                .NewProfileSAPI(context, widget.User_ID, false);
         if (state.likePost.object != 'Post Liked Successfully' &&
             state.likePost.object != 'Post Unliked Successfully') {
           SnackBar snackBar = SnackBar(
@@ -888,11 +895,16 @@ class _ProfileScreenState extends State<ProfileScreen>
                                             child: EditProfileScreen(
                                               newProfileData: NewProfileData,
                                             ));
-                                      })).then((value) =>
-                                          BlocProvider.of<NewProfileSCubit>(
-                                                  context)
+                                      })).then((value) => widget
+                                                  .ProfileNotification ==
+                                              true
+                                          ? BlocProvider.of<NewProfileSCubit>(context)
                                               .NewProfileSAPI(
-                                                  context, widget.User_ID));
+                                                  context, widget.User_ID, true)
+                                          : BlocProvider.of<NewProfileSCubit>(
+                                                  context)
+                                              .NewProfileSAPI(context,
+                                                  widget.User_ID, false));
                                     },
                                     child: Container(
                                       alignment: Alignment.center,
@@ -921,17 +933,23 @@ class _ProfileScreenState extends State<ProfileScreen>
                                       Navigator.push(
                                           context,
                                           MaterialPageRoute(
-                                              builder: (context) =>
-                                                  SettingScreen(
-                                                    accountType: NewProfileData
-                                                            ?.object
-                                                            ?.accountType ??
-                                                        '',
-                                                  ))).then((value) =>
-                                          BlocProvider.of<NewProfileSCubit>(
+                                              builder:
+                                                  (context) => SettingScreen(
+                                                        accountType: NewProfileData
+                                                                ?.object
+                                                                ?.accountType ??
+                                                            '',
+                                                      ))).then((value) => widget
+                                                  .ProfileNotification ==
+                                              true
+                                          ? BlocProvider.of<NewProfileSCubit>(
                                                   context)
                                               .NewProfileSAPI(
-                                                  context, widget.User_ID));
+                                                  context, widget.User_ID, true)
+                                          : BlocProvider.of<NewProfileSCubit>(
+                                                  context)
+                                              .NewProfileSAPI(context,
+                                                  widget.User_ID, false));
                                     },
                                     child: Container(
                                       margin: EdgeInsets.only(left: 10),
@@ -1127,10 +1145,15 @@ class _ProfileScreenState extends State<ProfileScreen>
                                             ),
                                           );
                                         })).then((value) {
-                                          BlocProvider.of<NewProfileSCubit>(
-                                                  context)
-                                              .NewProfileSAPI(
-                                                  context, widget.User_ID);
+                                          widget.ProfileNotification == true
+                                              ? BlocProvider.of<
+                                                      NewProfileSCubit>(context)
+                                                  .NewProfileSAPI(context,
+                                                      widget.User_ID, true)
+                                              : BlocProvider.of<
+                                                      NewProfileSCubit>(context)
+                                                  .NewProfileSAPI(context,
+                                                      widget.User_ID, false);
                                           BlocProvider.of<NewProfileSCubit>(
                                                   context)
                                               .getFollwerApi(
@@ -1199,9 +1222,8 @@ class _ProfileScreenState extends State<ProfileScreen>
                                       if (followersClassModel2
                                               ?.object?.isNotEmpty ==
                                           true) {
-                                        Navigator.push(context,
-                                            MaterialPageRoute(
-                                                builder: (context) {
+                                        Navigator.push(context, MaterialPageRoute(
+                                            builder: (context) {
                                           return MultiBlocProvider(
                                             providers: [
                                               BlocProvider<FollowerBlock>(
@@ -1215,11 +1237,16 @@ class _ProfileScreenState extends State<ProfileScreen>
                                               userId: widget.User_ID,
                                             ),
                                           );
-                                        })).then((value) =>
-                                            BlocProvider.of<NewProfileSCubit>(
+                                        })).then((value) => widget
+                                                    .ProfileNotification ==
+                                                true
+                                            ? BlocProvider.of<NewProfileSCubit>(context)
+                                                .NewProfileSAPI(context,
+                                                    widget.User_ID, true)
+                                            : BlocProvider.of<NewProfileSCubit>(
                                                     context)
                                                 .NewProfileSAPI(
-                                                    context, widget.User_ID));
+                                                    context, widget.User_ID, false));
                                       }
                                     } else {}
                                   },
@@ -2517,7 +2544,8 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                               // Step 5.
                                                               onChanged: (String?
                                                                   newValue) {
-                                                                super.setState(() {
+                                                                super.setState(
+                                                                    () {
                                                                   if (newValue ==
                                                                       "Newest to oldest") {
                                                                     BlocProvider.of<NewProfileSCubit>(context).GetPostCommetAPI(
@@ -3310,33 +3338,52 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                                     ),
                                                                                   ))),
                                                                             ), */
-                                                                            getAllPostData.object?[index].translatedDescription != null
-                                                                                ? GestureDetector(
-                                                                                    onTap: () async {
-                                                                                         super.setState(() {
-                                                                                        if ( getAllPostData.object?[index].isTrsnalteoption  == false || getAllPostData.object?[index].isTrsnalteoption  == null) {
-                                                                                           getAllPostData.object?[index].isTrsnalteoption = true;
-                                                                                        } else {
-                                                                                          getAllPostData.object?[index].isTrsnalteoption = false;
-                                                                                        }
-                                                                                      });
-                                                                                    },
-                                                                                    child: Container(
-                                                                                        width: 80,
-                                                                                        decoration: BoxDecoration(
-                                                                                          color: ColorConstant.primaryLight_color,
-                                                                                          borderRadius: BorderRadius.circular(10),
-                                                                                        ),
-                                                                                        child: Center(
-                                                                                            child: Text(
-                                                                                          "Translate",
-                                                                                          style: TextStyle(
-                                                                                            fontFamily: 'outfit',
-                                                                                            fontWeight: FontWeight.bold,
-                                                                                          ),
-                                                                                        ))),
-                                                                                  )
-                                                                                : SizedBox(),
+                                        getAllPostData.object?[index]
+                                                    .translatedDescription !=
+                                                null
+                                            ? GestureDetector(
+                                                onTap: () async {
+                                                  super.setState(() {
+                                                    if (getAllPostData
+                                                                .object?[index]
+                                                                .isTrsnalteoption ==
+                                                            false ||
+                                                        getAllPostData
+                                                                .object?[index]
+                                                                .isTrsnalteoption ==
+                                                            null) {
+                                                      getAllPostData
+                                                              .object?[index]
+                                                              .isTrsnalteoption =
+                                                          true;
+                                                    } else {
+                                                      getAllPostData
+                                                              .object?[index]
+                                                              .isTrsnalteoption =
+                                                          false;
+                                                    }
+                                                  });
+                                                },
+                                                child: Container(
+                                                    width: 80,
+                                                    decoration: BoxDecoration(
+                                                      color: ColorConstant
+                                                          .primaryLight_color,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              10),
+                                                    ),
+                                                    child: Center(
+                                                        child: Text(
+                                                      "Translate",
+                                                      style: TextStyle(
+                                                        fontFamily: 'outfit',
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                      ),
+                                                    ))),
+                                              )
+                                            : SizedBox(),
                                         SizedBox(
                                           height: 10,
                                         ),
@@ -3346,8 +3393,16 @@ class _ProfileScreenState extends State<ProfileScreen>
                                               child: Container(
                                                 // color: Colors.amber,
                                                 child: LinkifyText(
-                                                    getAllPostData.object?[index].isTrsnalteoption  == false || getAllPostData.object?[index].isTrsnalteoption  == null ?
-                                                      "${getAllPostData.object?[index].description}":"${getAllPostData.object?[index].translatedDescription}",
+                                                  getAllPostData.object?[index]
+                                                                  .isTrsnalteoption ==
+                                                              false ||
+                                                          getAllPostData
+                                                                  .object?[
+                                                                      index]
+                                                                  .isTrsnalteoption ==
+                                                              null
+                                                      ? "${getAllPostData.object?[index].description}"
+                                                      : "${getAllPostData.object?[index].translatedDescription}",
                                                   linkStyle: TextStyle(
                                                     color: Colors.blue,
                                                     fontFamily: 'outfit',
@@ -3570,6 +3625,11 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                           child: VideoListItem1(
                                                             videoUrl: videoUrls[
                                                                 index],
+                                                            PostID:
+                                                                getAllPostData
+                                                                    .object?[
+                                                                        index]
+                                                                    .postUid,
                                                             /*  isData:
                                                                 User_ID == null
                                                                     ? false
@@ -4148,7 +4208,11 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                     .object?[
                                                                         index]
                                                                     .repostOn
-                                                                    ?.description,
+                                                                    ?.description, PostID:
+                                                                getAllPostData
+                                                                    .object?[
+                                                                        index]
+                                                                    .postUid,
                                                             /*  isData:
                                                                 User_ID == null
                                                                     ? false
@@ -4808,33 +4872,56 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                                     ),
                                                                                   ))),
                                                                             ), */
-                                                                            getAllPostData.object?[index].translatedDescription != null
-                                                                                ? GestureDetector(
-                                                                                    onTap: () async {
-                                                                                         super.setState(() {
-                                                                                        if ( getAllPostData.object?[index].isTrsnalteoption  == false || getAllPostData.object?[index].isTrsnalteoption  == null) {
-                                                                                           getAllPostData.object?[index].isTrsnalteoption = true;
-                                                                                        } else {
-                                                                                          getAllPostData.object?[index].isTrsnalteoption = false;
-                                                                                        }
-                                                                                      });
-                                                                                    },
-                                                                                    child: Container(
-                                                                                        width: 80,
-                                                                                        decoration: BoxDecoration(
-                                                                                          color: ColorConstant.primaryLight_color,
-                                                                                          borderRadius: BorderRadius.circular(10),
-                                                                                        ),
-                                                                                        child: Center(
-                                                                                            child: Text(
-                                                                                          "Translate",
-                                                                                          style: TextStyle(
-                                                                                            fontFamily: 'outfit',
-                                                                                            fontWeight: FontWeight.bold,
-                                                                                          ),
-                                                                                        ))),
-                                                                                  )
-                                                                                : SizedBox(),
+                                            getAllPostData.object?[index]
+                                                        .translatedDescription !=
+                                                    null
+                                                ? GestureDetector(
+                                                    onTap: () async {
+                                                      super.setState(() {
+                                                        if (getAllPostData
+                                                                    .object?[
+                                                                        index]
+                                                                    .isTrsnalteoption ==
+                                                                false ||
+                                                            getAllPostData
+                                                                    .object?[
+                                                                        index]
+                                                                    .isTrsnalteoption ==
+                                                                null) {
+                                                          getAllPostData
+                                                                  .object?[index]
+                                                                  .isTrsnalteoption =
+                                                              true;
+                                                        } else {
+                                                          getAllPostData
+                                                                  .object?[index]
+                                                                  .isTrsnalteoption =
+                                                              false;
+                                                        }
+                                                      });
+                                                    },
+                                                    child: Container(
+                                                        width: 80,
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          color: ColorConstant
+                                                              .primaryLight_color,
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(10),
+                                                        ),
+                                                        child: Center(
+                                                            child: Text(
+                                                          "Translate",
+                                                          style: TextStyle(
+                                                            fontFamily:
+                                                                'outfit',
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                          ),
+                                                        ))),
+                                                  )
+                                                : SizedBox(),
                                             SizedBox(
                                               // color: Colors.red,
                                               height: 10,
@@ -4844,8 +4931,18 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                 Expanded(
                                                   child: Container(
                                                     child: LinkifyText(
-                                                      getAllPostData.object?[index].isTrsnalteoption  == false || getAllPostData.object?[index].isTrsnalteoption  == null ?
-                                                      "${getAllPostData.object?[index].description}":"${getAllPostData.object?[index].translatedDescription}",
+                                                      getAllPostData
+                                                                      .object?[
+                                                                          index]
+                                                                      .isTrsnalteoption ==
+                                                                  false ||
+                                                              getAllPostData
+                                                                      .object?[
+                                                                          index]
+                                                                      .isTrsnalteoption ==
+                                                                  null
+                                                          ? "${getAllPostData.object?[index].description}"
+                                                          : "${getAllPostData.object?[index].translatedDescription}",
                                                       linkStyle: TextStyle(
                                                         color: Colors.blue,
                                                         fontFamily: 'outfit',
@@ -5068,6 +5165,11 @@ class _ProfileScreenState extends State<ProfileScreen>
 
                                                   VideoListItem1(
                                                     videoUrl: videoUrls[index],
+                                                     PostID:
+                                                                getAllPostData
+                                                                    .object?[
+                                                                        index]
+                                                                    .postUid,
                                                     /* isData: User_ID == null
                                                         ? false
                                                         : true, */
@@ -6062,34 +6164,54 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                             ),
                                                                           ))),
                                                                     ), */
-                                                                     GetSavePostData?.object?[index].translatedDescription != null
-                                                                                ? GestureDetector(
-                                                                                    onTap: () async {
-                                                                                         super.setState(() {
-                                                                                        if ( GetSavePostData?.object?[index].isTrsnalteoption  == false || GetSavePostData?.object?[index].isTrsnalteoption  == null) {
-                                                                                           GetSavePostData?.object?[index].isTrsnalteoption = true;
-                                                                                        } else {
-                                                                                          GetSavePostData?.object?[index].isTrsnalteoption = false;
-                                                                                        }
-                                                                                      });
-                                                                                    },
-                                                                                    child: Container(
-                                                                                        width: 80,
-                                                                                        decoration: BoxDecoration(
-                                                                                          color: ColorConstant.primaryLight_color,
-                                                                                          borderRadius: BorderRadius.circular(10),
-                                                                                        ),
-                                                                                        child: Center(
-                                                                                            child: Text(
-                                                                                          "Translate",
-                                                                                          style: TextStyle(
-                                                                                            fontFamily: 'outfit',
-                                                                                            fontWeight: FontWeight.bold,
-                                                                                          ),
-                                                                                        ))),
-                                                                                  )
-                                                                                : SizedBox(),
-
+                                          GetSavePostData?.object?[index]
+                                                      .translatedDescription !=
+                                                  null
+                                              ? GestureDetector(
+                                                  onTap: () async {
+                                                    super.setState(() {
+                                                      if (GetSavePostData
+                                                                  ?.object?[
+                                                                      index]
+                                                                  .isTrsnalteoption ==
+                                                              false ||
+                                                          GetSavePostData
+                                                                  ?.object?[
+                                                                      index]
+                                                                  .isTrsnalteoption ==
+                                                              null) {
+                                                        GetSavePostData
+                                                                ?.object?[index]
+                                                                .isTrsnalteoption =
+                                                            true;
+                                                      } else {
+                                                        GetSavePostData
+                                                                ?.object?[index]
+                                                                .isTrsnalteoption =
+                                                            false;
+                                                      }
+                                                    });
+                                                  },
+                                                  child: Container(
+                                                      width: 80,
+                                                      decoration: BoxDecoration(
+                                                        color: ColorConstant
+                                                            .primaryLight_color,
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(10),
+                                                      ),
+                                                      child: Center(
+                                                          child: Text(
+                                                        "Translate",
+                                                        style: TextStyle(
+                                                          fontFamily: 'outfit',
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                        ),
+                                                      ))),
+                                                )
+                                              : SizedBox(),
                                           SizedBox(
                                             height: 10,
                                           ),
@@ -6099,8 +6221,18 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                 child: Container(
                                                   // color: Colors.amber,
                                                   child: LinkifyText(
-                                                      GetSavePostData?.object?[index].isTrsnalteoption  == false || GetSavePostData?.object?[index].isTrsnalteoption  == null ?
-                                                      "${GetSavePostData?.object?[index].description}":"${GetSavePostData?.object?[index].translatedDescription}",
+                                                    GetSavePostData
+                                                                    ?.object?[
+                                                                        index]
+                                                                    .isTrsnalteoption ==
+                                                                false ||
+                                                            GetSavePostData
+                                                                    ?.object?[
+                                                                        index]
+                                                                    .isTrsnalteoption ==
+                                                                null
+                                                        ? "${GetSavePostData?.object?[index].description}"
+                                                        : "${GetSavePostData?.object?[index].translatedDescription}",
                                                     linkStyle: TextStyle(
                                                       color: Colors.blue,
                                                       fontFamily: 'outfit',
@@ -6323,10 +6455,12 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                               videoUrl:
                                                                   videoUrls[
                                                                       index],
+                                                                      PostID: GetSavePostData?.object?[index].postUid,
                                                               /* isData: User_ID ==
                                                                       null
                                                                   ? false
                                                                   : true, */
+                                                                  
                                                             ),
                                                           ),
                                                         ],
@@ -6918,6 +7052,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                               videoUrl:
                                                                   videoUrls[
                                                                       index],
+                                                                      PostID: GetSavePostData?.object?[index].postUid,
                                                               discrption:
                                                                   GetSavePostData
                                                                       ?.object?[
@@ -6998,7 +7133,8 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                               PageView.builder(
                                                             onPageChanged:
                                                                 (page) {
-                                                              super.setState(() {
+                                                              super
+                                                                  .setState(() {
                                                                 _currentPages[
                                                                         index] =
                                                                     page;
@@ -7568,33 +7704,56 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                             ),
                                                                           ))),
                                                                     ), */
-                                                                      GetSavePostData?.object?[index].translatedDescription != null
-                                                                                ? GestureDetector(
-                                                                                    onTap: () async {
-                                                                                         super.setState(() {
-                                                                                        if ( GetSavePostData?.object?[index].isTrsnalteoption  == false || GetSavePostData?.object?[index].isTrsnalteoption  == null) {
-                                                                                           GetSavePostData?.object?[index].isTrsnalteoption = true;
-                                                                                        } else {
-                                                                                          GetSavePostData?.object?[index].isTrsnalteoption = false;
-                                                                                        }
-                                                                                      });
-                                                                                    },
-                                                                                    child: Container(
-                                                                                        width: 80,
-                                                                                        decoration: BoxDecoration(
-                                                                                          color: ColorConstant.primaryLight_color,
-                                                                                          borderRadius: BorderRadius.circular(10),
-                                                                                        ),
-                                                                                        child: Center(
-                                                                                            child: Text(
-                                                                                          "Translate",
-                                                                                          style: TextStyle(
-                                                                                            fontFamily: 'outfit',
-                                                                                            fontWeight: FontWeight.bold,
-                                                                                          ),
-                                                                                        ))),
-                                                                                  )
-                                                                                : SizedBox(),
+                                              GetSavePostData?.object?[index]
+                                                          .translatedDescription !=
+                                                      null
+                                                  ? GestureDetector(
+                                                      onTap: () async {
+                                                        super.setState(() {
+                                                          if (GetSavePostData
+                                                                      ?.object?[
+                                                                          index]
+                                                                      .isTrsnalteoption ==
+                                                                  false ||
+                                                              GetSavePostData
+                                                                      ?.object?[
+                                                                          index]
+                                                                      .isTrsnalteoption ==
+                                                                  null) {
+                                                            GetSavePostData
+                                                                ?.object?[index]
+                                                                .isTrsnalteoption = true;
+                                                          } else {
+                                                            GetSavePostData
+                                                                ?.object?[index]
+                                                                .isTrsnalteoption = false;
+                                                          }
+                                                        });
+                                                      },
+                                                      child: Container(
+                                                          width: 80,
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            color: ColorConstant
+                                                                .primaryLight_color,
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        10),
+                                                          ),
+                                                          child: Center(
+                                                              child: Text(
+                                                            "Translate",
+                                                            style: TextStyle(
+                                                              fontFamily:
+                                                                  'outfit',
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                            ),
+                                                          ))),
+                                                    )
+                                                  : SizedBox(),
                                               SizedBox(
                                                 height: 10,
                                               ),
@@ -7603,8 +7762,18 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                   Expanded(
                                                     child: Container(
                                                       child: LinkifyText(
-                                                           GetSavePostData?.object?[index].isTrsnalteoption  == false || GetSavePostData?.object?[index].isTrsnalteoption  == null ?
-                                                      "${GetSavePostData?.object?[index].description}":"${GetSavePostData?.object?[index].translatedDescription}",
+                                                        GetSavePostData
+                                                                        ?.object?[
+                                                                            index]
+                                                                        .isTrsnalteoption ==
+                                                                    false ||
+                                                                GetSavePostData
+                                                                        ?.object?[
+                                                                            index]
+                                                                        .isTrsnalteoption ==
+                                                                    null
+                                                            ? "${GetSavePostData?.object?[index].description}"
+                                                            : "${GetSavePostData?.object?[index].translatedDescription}",
                                                         linkStyle: TextStyle(
                                                           color: Colors.blue,
                                                           fontFamily: 'outfit',
@@ -7845,6 +8014,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                     VideoListItem1(
                                                       videoUrl:
                                                           videoUrls[index],
+                                                          PostID: GetSavePostData?.object?[index].postUid
                                                       /* isData: User_ID == null
                                                           ? false
                                                           : true, */
@@ -8510,9 +8680,11 @@ class _ProfileScreenState extends State<ProfileScreen>
                   MaterialPageRoute(
                       builder: (context) => EditProfileScreen(
                             newProfileData: NewProfileData,
-                          ))).then((value) =>
-                  BlocProvider.of<NewProfileSCubit>(context)
-                      .NewProfileSAPI(context, widget.User_ID));
+                          ))).then((value) => widget.ProfileNotification == true
+                  ? BlocProvider.of<NewProfileSCubit>(context)
+                      .NewProfileSAPI(context, widget.User_ID, true)
+                  : BlocProvider.of<NewProfileSCubit>(context)
+                      .NewProfileSAPI(context, widget.User_ID, false));
             },
             child: User_ID == NewProfileData?.object?.userUid
                 ? Icon(
@@ -9151,9 +9323,11 @@ class _ProfileScreenState extends State<ProfileScreen>
                   MaterialPageRoute(
                       builder: (context) => EditProfileScreen(
                             newProfileData: NewProfileData,
-                          ))).then((value) =>
-                  BlocProvider.of<NewProfileSCubit>(context)
-                      .NewProfileSAPI(context, widget.User_ID));
+                          ))).then((value) => widget.ProfileNotification == true
+                  ? BlocProvider.of<NewProfileSCubit>(context)
+                      .NewProfileSAPI(context, widget.User_ID, true)
+                  : BlocProvider.of<NewProfileSCubit>(context)
+                      .NewProfileSAPI(context, widget.User_ID, false));
             },
             child: User_ID == NewProfileData?.object?.userUid
                 ? Icon(

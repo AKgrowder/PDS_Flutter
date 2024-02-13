@@ -24,6 +24,7 @@ import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/core/utils/image_constant.dart';
 import 'package:pds/core/utils/sharedPreferences.dart';
 import 'package:pds/presentation/%20new/profileNew.dart';
+import 'package:pds/presentation/DMAll_Screen/videocallScreen.dart';
 import 'package:pds/presentation/create_story/full_story_page.dart';
 import 'package:pds/presentation/gallery_All_Image.dart/gallery_All_image.dart';
 // import 'package:pds/presentation/%20new/notifaction2.dart';
@@ -322,7 +323,7 @@ class _DmScreenState extends State<DmScreen> {
                 getInboxMessagesModel?.object?.content?.add(content);
                 SubmitOneTime = false;
               }
-             if (state is GetAllStoryLoadedState) {
+              if (state is GetAllStoryLoadedState) {
                 print('this stater Caling');
                 buttonDatas.clear();
                 state.getAllStoryModel.object?.forEach((element) {
@@ -605,10 +606,18 @@ class _DmScreenState extends State<DmScreen> {
                                     ),
                                   ),
                                   Padding(
-                                    padding: const EdgeInsets.only(right: 5),
+                                    padding: EdgeInsets.only(right: 5),
                                     child: GestureDetector(
                                       onTap: () {
-                                        // Navigator.push(context, MaterialPageRoute(builder: (context)=>));
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) => Callpage(
+                                                callId: widget.ChatInboxUid,
+                                                userid: userId ?? '',
+                                                username: User_Name,
+                                              ),
+                                            ));
                                       },
                                       child: Container(
                                         height: 30,
@@ -1031,7 +1040,7 @@ class _DmScreenState extends State<DmScreen> {
                                                                               Align(
                                                                                   alignment: Alignment.topRight,
                                                                                   child: Padding(
-                                                                                    padding: const EdgeInsets.only(left: 20),
+                                                                                    padding: EdgeInsets.only(top: getInboxMessagesModel?.object?.content?[index].messageType == 'TEXT' ? 10 : 0, left: 20),
                                                                                     child: Container(
                                                                                         padding: EdgeInsets.all(10),
                                                                                         decoration: BoxDecoration(color: ColorConstant.primary_color, borderRadius: BorderRadius.circular(10)),
@@ -1418,7 +1427,7 @@ class _DmScreenState extends State<DmScreen> {
                                                                             child: Align(
                                                                                 alignment: Alignment.topRight,
                                                                                 child: Padding(
-                                                                                  padding: const EdgeInsets.only(right: 20),
+                                                                                  padding: EdgeInsets.only(top: getInboxMessagesModel?.object?.content?[index].messageType == 'TEXT' ? 10 : 0, right: 20),
                                                                                   child: Container(
                                                                                       padding: EdgeInsets.all(10),
                                                                                       decoration: BoxDecoration(color: ColorConstant.primary_color, borderRadius: BorderRadius.circular(10)),
