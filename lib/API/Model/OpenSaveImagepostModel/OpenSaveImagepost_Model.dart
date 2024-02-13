@@ -41,6 +41,7 @@ class Object {
   int? repostCount;
   RepostOn? repostOn;
   Null? thumbnailImageUrl;
+  String? postLink;
 
   Object(
       {this.postUid,
@@ -59,7 +60,7 @@ class Object {
       this.commentCount,
       this.repostCount,
       this.repostOn,
-      this.thumbnailImageUrl});
+      this.thumbnailImageUrl,this.postLink,});
 
   Object.fromJson(Map<String, dynamic> json) {
     postUid = json['postUid'];
@@ -81,6 +82,7 @@ class Object {
         ? new RepostOn.fromJson(json['repostOn'])
         : null;
     thumbnailImageUrl = json['thumbnailImageUrl'];
+    postLink = json['postLink'];
   }
 
   Map<String, dynamic> toJson() {
@@ -104,6 +106,7 @@ class Object {
       data['repostOn'] = this.repostOn!.toJson();
     }
     data['thumbnailImageUrl'] = this.thumbnailImageUrl;
+    data['postLink'] = this.postLink;
     return data;
   }
 }

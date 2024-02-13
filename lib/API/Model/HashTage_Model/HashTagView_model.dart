@@ -65,22 +65,26 @@ class Posts {
   int? likedCount;
   int? commentCount;
   String? thumbnailImageUrl;
+  String? postLink;
 
-  Posts(
-      {this.postUid,
-      this.createdAt,
-      this.userUid,
-      this.postUserName,
-      this.userProfilePic,
-      this.description,
-      this.postData,
-      this.postDataType,
-      this.postType,
-      this.isLiked,
-      this.isSaved,
-      this.isFollowing,
-      this.likedCount,
-      this.commentCount,this.thumbnailImageUrl,});
+  Posts({
+    this.postUid,
+    this.createdAt,
+    this.userUid,
+    this.postUserName,
+    this.userProfilePic,
+    this.description,
+    this.postData,
+    this.postDataType,
+    this.postType,
+    this.isLiked,
+    this.isSaved,
+    this.isFollowing,
+    this.likedCount,
+    this.commentCount,
+    this.thumbnailImageUrl,
+    this.postLink,
+  });
 
   Posts.fromJson(Map<String, dynamic> json) {
     postUid = json['postUid'];
@@ -98,6 +102,7 @@ class Posts {
     likedCount = json['likedCount'];
     commentCount = json['commentCount'];
     thumbnailImageUrl = json['thumbnailImageUrl'];
+    postLink = json['postLink'];
   }
 
   Map<String, dynamic> toJson() {
@@ -117,6 +122,7 @@ class Posts {
     data['likedCount'] = this.likedCount;
     data['commentCount'] = this.commentCount;
     data['thumbnailImageUrl'] = this.thumbnailImageUrl;
+    data['postLink'] = this.postLink;
     return data;
   }
 }
