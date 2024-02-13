@@ -65,6 +65,7 @@ import 'package:pds/presentation/register_create_account_screen/register_create_
 import 'package:pds/presentation/splash_screen/splash_screen.dart';
 import 'package:pds/widgets/commentPdf.dart';
 import 'package:pds/widgets/pagenation.dart';
+import 'package:pds/widgets/videocallcommennotifaction.dart/videocallcommenmethod.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -79,6 +80,8 @@ import '../../API/Model/Get_all_blog_Model/get_all_blog_model.dart';
 import '../../API/Model/UserTagModel/UserTag_model.dart';
 import '../become_an_expert_screen/become_an_expert_screen.dart';
 import 'package:flutter_langdetect/flutter_langdetect.dart' as langdetect;
+import 'package:pds/videocallkey/projectkey.dart';
+import 'package:zego_uikit_signaling_plugin/zego_uikit_signaling_plugin.dart';
 
 class HomeScreenNew extends StatefulWidget {
   ScrollController scrollController;
@@ -234,52 +237,6 @@ class _HomeScreenNewState extends State<HomeScreenNew>
       return 'Just now';
     }
   }
-
- void onUserLogin() {
-    print("this method is calling");
-  /// 4/5. initialized ZegoUIKitPrebuiltCallInvitationService when account is logged in or re-logged in
-  ZegoUIKitPrebuiltCallInvitationService().init(
-    appID: MyConst.appId /*input your AppID*/,
-    appSign: MyConst.appSign /*input your AppSign*/,
-    userID: User_ID ?? '',
-    userName: User_Name ?? '',
-    plugins: [
-      ZegoUIKitSignalingPlugin(),
-    ],
-    
-
-   
-      androidNotificationConfig: ZegoAndroidNotificationConfig(
-        channelID: "ZegoUIKit",
-        channelName: "Call Notifications",
-        sound: "call",
-        icon: "call",
-      ),
-      iOSNotificationConfig: ZegoIOSNotificationConfig(
-        systemCallingIconName: 'CallKitIcon',
-      ),
-   
-    requireConfig: (ZegoCallInvitationData data) {
-      print("check Data -${ZegoCallType.videoCall}");
-      print("check Data1 -${data.type}");
-
-      final config = ZegoUIKitPrebuiltCallConfig.oneOnOneVideoCall();
-
-      config.avatarBuilder = (context, size, user, extraInfo) {
-        return CircleAvatar(
-          backgroundColor: Colors.grey,
-          
-        );
-      };
-
-      /// support minimizing, show minimizing button
-    true;
-      false;
-
-      return config;
-    },
-  );
-}
 
   @override
   void initState() {
@@ -1060,6 +1017,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
     User_Module = prefs.getString(PreferencesKey.module);
     uuid = prefs.getString(PreferencesKey.loginUserID);
     UserProfileImage = prefs.getString(PreferencesKey.UserProfile);
+    String? videoCallUid = prefs.getString(PreferencesKey.vidoCallUid);
     print("---------------------->> : ${FCMToken}");
     print("User Token :--- " + "${Token}");
     print("User_id-${User_ID}");
@@ -1084,7 +1042,10 @@ class _HomeScreenNewState extends State<HomeScreenNew>
     }
     if (User_ID != null) {
       PushNotificationAutoOpen();
-      onUserLogin();
+      // this is the
+    }
+    if(videoCallUid !=null){
+      onUserLogin(videoCallUid ?? '',User_Name ?? '');
     }
   }
 
