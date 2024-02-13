@@ -33,24 +33,27 @@ import 'package:pds/theme/theme_helper.dart';
 import 'package:pds/widgets/animatedwiget.dart';
 import 'package:pds/widgets/custom_image_view.dart';
 import 'package:pds/widgets/pagenation.dart';
+import 'package:pds/widgets/videocallcommennotifaction.dart/videocallcommenmethod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stomp_dart_client/stomp_frame.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../API/Bloc/dmInbox_bloc/dminbox_blcok.dart';
 import '../register_create_account_screen/register_create_account_screen.dart';
+import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 
 class DmScreen extends StatefulWidget {
   String UserName;
   String UserUID;
   String ChatInboxUid;
   String UserImage;
-
+  String? videoId;
   DmScreen(
       {required this.ChatInboxUid,
       required this.UserName,
       required this.UserUID,
-      required this.UserImage});
+      required this.UserImage,
+      this.videoId});
 
   @override
   State<DmScreen> createState() => _DmScreenState();
@@ -70,6 +73,7 @@ class _DmScreenState extends State<DmScreen> {
   XFile? pickedImageFile;
   ScrollController scrollController = ScrollController();
   ScrollController scrollController1 = ScrollController();
+  TextEditingController videoId = TextEditingController();
   bool isScroll = false;
   bool AddNewData = false;
   bool addDataSccesfully = false;
@@ -95,6 +99,22 @@ class _DmScreenState extends State<DmScreen> {
   TextEditingController Add_Comment = TextEditingController();
   String formattedDate = DateFormat('dd-MM-yyyy').format(now);
   List<StoryButtonData> buttonDatas = [];
+
+void onSendCallInvitationFinished(
+  String code,
+  String message,
+  List<String> errorInvitees,
+  
+) async {
+   final SharedPreferences prefs = await SharedPreferences.getInstance();
+   prefs.setString(PreferencesKey.vidoCallUid,widget.videoId ?? '') ?? "";
+  showToast(
+    message,
+    position: StyledToastPosition.top,
+    context: context,
+  );
+}
+
   void _goToElement() {
     scrollController.jumpTo(scrollController.position.maxScrollExtent + 100);
     print("msgUUIDmsgUUIDmsgUUID :- 1 ${widget.ChatInboxUid}");
@@ -255,6 +275,7 @@ class _DmScreenState extends State<DmScreen> {
 
   @override
   void initState() {
+    print("dfgdfsdgf-${widget.videoId}");
     BlocProvider.of<DmInboxCubit>(context).seetinonExpried(context);
     getDocumentSize();
     pageNumberMethod();
@@ -607,14 +628,31 @@ class _DmScreenState extends State<DmScreen> {
                                   ),
                                   Padding(
                                     padding: EdgeInsets.only(right: 5),
+                                    child: sendCallButton(
+                                      isVideoCall: true,
+                                      inviteeUsersIDTextCtrl:
+                                          TextEditingController(
+                                              text: widget.videoId),
+                                      onCallFinished:
+                                          onSendCallInvitationFinished,
+                                    ),
+                                  )
+                                  /*  Padding(
+                                    padding: EdgeInsets.only(right: 5),
                                     child: GestureDetector(
-                                      onTap: () {
+                                      onTap: () async {
+                                        final SharedPreferences prefs =
+                                            await SharedPreferences
+                                                .getInstance();
+                                        prefs.setString(
+                                            PreferencesKey.vidoCallUid,
+                                            widget.videoId ?? '');
                                         Navigator.push(
                                             context,
                                             MaterialPageRoute(
                                               builder: (context) => Callpage(
-                                                callId: widget.ChatInboxUid,
-                                                userid: userId ?? '',
+                                                callId: widget.videoId ?? '',
+                                                userid: widget.videoId ?? '',
                                                 username: User_Name,
                                               ),
                                             ));
@@ -627,7 +665,7 @@ class _DmScreenState extends State<DmScreen> {
                                             Center(child: Icon(Icons.videocam)),
                                       ),
                                     ),
-                                  ),
+                                  ), */
                                   /*     Padding(
                                     padding: const EdgeInsets.only(left: 7),
                                     child: GestureDetector(
