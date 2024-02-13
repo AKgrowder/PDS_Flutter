@@ -1902,7 +1902,7 @@ class Repository {
   }
   
     video_watch_detailAPI(BuildContext context, String postUid,String userUid,String watchTime) async {
-    final response = await apiServices.getApiCallWithToken(
+    final response = await apiServices.postApiCalla(
         "${Config.video_watch_detail}?postUid=${postUid}&userUid=${userUid}&watchTime=${watchTime}", context);
     print('AddPost$response');
     var jsonString = json.decode(response.body);
