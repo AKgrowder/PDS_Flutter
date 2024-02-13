@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import 'package:pds/API/Bloc/GuestAllPost_Bloc/GuestAllPost_cubit.dart';
 import 'package:pds/core/utils/sharedPreferences.dart';
 import 'package:pds/fick_players/flick_video_player.dart';
@@ -26,7 +27,7 @@ class _VideoListItem1State extends State<VideoListItem1> {
   FlickManager? flickManager;
   VideoPlayerController? videoPlayerController;
   String? User_ID;
-
+  DateTime time = DateTime(1990, 1, 1, 0, 0, 0, 0, 0);
   @override
   void initState() {
     super.initState();
@@ -61,6 +62,14 @@ class _VideoListItem1State extends State<VideoListItem1> {
     print("User_id-${User_ID}");
   }
 
+  String formatDurationInHhMmSs(Duration duration) {
+    final HH = (duration.inHours).toString().padLeft(2, '0');
+    final mm = (duration.inMinutes % 60).toString().padLeft(2, '0');
+    final ss = (duration.inSeconds % 60).toString().padLeft(2, '0');
+
+    return '$HH:$mm:$ss';
+  }
+
   @override
   Widget build(BuildContext context) {
     return VisibilityDetector(
@@ -70,13 +79,21 @@ class _VideoListItem1State extends State<VideoListItem1> {
           flickManager?.flickControlManager?.play();
         } else {
           flickManager?.flickControlManager?.pause();
-          var watchTime = "";
+
+          print(formatDurationInHhMmSs(Duration(
+              seconds: flickManager?.flickVideoManager?.videoPlayerController
+                      ?.value.position.inSeconds ??
+                  0))); // 00:00:01
+
+          var timeString = formatDurationInHhMmSs(Duration(
+              seconds: flickManager?.flickVideoManager?.videoPlayerController
+                      ?.value.position.inSeconds ??
+                  0));
           print(
               "video pause!!${flickManager?.flickVideoManager?.videoPlayerController?.value.position.inSeconds}");
-          watchTime =
-              "${flickManager?.flickVideoManager?.videoPlayerController?.value.position.inSeconds}";
+
           BlocProvider.of<GetGuestAllPostCubit>(context).videowatchdetailAPI(
-              context, "${widget.PostID}", "${User_ID}", watchTime);
+              context, "${widget.PostID}", "${User_ID}", timeString);
         }
       },
       child: Card(

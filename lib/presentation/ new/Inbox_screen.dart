@@ -398,6 +398,7 @@ class _InboxScreenState extends State<InboxScreen> {
                               "${PersonalChatListModelData?.object?[index].userChatInboxUid}",
                           UserImage:
                               "${PersonalChatListModelData?.object?[index].userProfilePic}",
+                              videoId: "${PersonalChatListModelData?.object?[index].videoId}",
                           // UserUID: "${PersonalChatListModelData?.object?[index].}",
                         );
                       })).then((value) => CallBackFunc());
