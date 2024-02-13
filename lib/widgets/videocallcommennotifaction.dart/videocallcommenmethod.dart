@@ -1,38 +1,43 @@
+import 'dart:developer';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:pds/presentation/DMAll_Screen/videocallScreen.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:zego_uikit_prebuilt_call/zego_uikit_prebuilt_call.dart';
 import 'package:zego_uikit_signaling_plugin/zego_uikit_signaling_plugin.dart';
-import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 
 void onUserLogin(String userid, String name) {
-  ZegoUIKitPrebuiltCallInvitationService().init(
-    appID: 1430307354,
-    appSign: '2ffeafa3c1c4816b11db133042c612ea80a007b534751d0c9596953e5286a994',
-    userID: userid,
-    userName: name,
-    plugins: [ZegoUIKitSignalingPlugin()],
-    requireConfig: (ZegoCallInvitationData data) {
-      final config = (data.invitees.length > 1)
-          ? ZegoCallType.videoCall == data.type
-              ? ZegoUIKitPrebuiltCallConfig.groupVideoCall()
-              : ZegoUIKitPrebuiltCallConfig.groupVoiceCall()
-          : ZegoCallType.videoCall == data.type
-              ? ZegoUIKitPrebuiltCallConfig.oneOnOneVideoCall()
-              : ZegoUIKitPrebuiltCallConfig.oneOnOneVoiceCall();
+  print("zego init : $name $userid");
+  try {
+    ZegoUIKitPrebuiltCallInvitationService().init(
+      appID: 1430307354,
+      appSign:
+          '2ffeafa3c1c4816b11db133042c612ea80a007b534751d0c9596953e5286a994',
+      userID: userid,
+      userName: name,
+      plugins: [ZegoUIKitSignalingPlugin()],
+      requireConfig: (ZegoCallInvitationData data) {
+        final config = (data.invitees.length > 1)
+            ? ZegoCallType.videoCall == data.type
+                ? ZegoUIKitPrebuiltCallConfig.groupVideoCall()
+                : ZegoUIKitPrebuiltCallConfig.groupVoiceCall()
+            : ZegoCallType.videoCall == data.type
+                ? ZegoUIKitPrebuiltCallConfig.oneOnOneVideoCall()
+                : ZegoUIKitPrebuiltCallConfig.oneOnOneVoiceCall();
 
-      /// custom avatar
-      config.avatarBuilder = customAvatarBuilder;
+        /// custom avatar
+        config.avatarBuilder = customAvatarBuilder;
 
-      /// support minimizing, show minimizing button
-      config.topMenuBar.isVisible = true;
-      config.topMenuBar.buttons
-          .insert(0, ZegoCallMenuBarButtonName.minimizingButton);
-
-      return config;
-    },
-  );
+        /// support minimizing, show minimizing button
+        config.topMenuBar.isVisible = true;
+        config.topMenuBar.buttons
+            .insert(0, ZegoCallMenuBarButtonName.minimizingButton);
+        print("zego config -${config}");
+        return config;
+      },
+    );
+  } catch (e) {
+    print("zego init error $e");
+  }
 }
 
 Widget customAvatarBuilder(
@@ -68,14 +73,19 @@ Widget customAvatarBuilder(
 Widget sendCallButton({
   required bool isVideoCall,
   required TextEditingController inviteeUsersIDTextCtrl,
+  required String inviterusername,
   void Function(String code, String message, List<String>)? onCallFinished,
 }) {
+  final invitees = <ZegoUIKitUser>[];
+  print('sdfsdgsdfgsdgf-${inviteeUsersIDTextCtrl.text}-${inviterusername}');
   return ValueListenableBuilder<TextEditingValue>(
     valueListenable: inviteeUsersIDTextCtrl,
     builder: (context, inviteeUserID, _) {
-      final invitees =
-          getInvitesFromTextCtrl(inviteeUsersIDTextCtrl.text.trim());
-
+      final invitees = <ZegoUIKitUser>[];
+      invitees.add(ZegoUIKitUser(
+        id: inviteeUsersIDTextCtrl.text,
+        name: 'user_$inviterusername',
+      ));
       return ZegoSendCallInvitationButton(
         isVideoCall: isVideoCall,
         invitees: invitees,
@@ -87,22 +97,3 @@ Widget sendCallButton({
     },
   );
 }
-
-List<ZegoUIKitUser> getInvitesFromTextCtrl(String textCtrlText) {
-  final invitees = <ZegoUIKitUser>[];
-
-  final inviteeIDs = textCtrlText.trim().replaceAll('，', '');
-  inviteeIDs.split(',').forEach((inviteeUserID) {
-    if (inviteeUserID.isEmpty) {
-      return;
-    }
-
-    invitees.add(ZegoUIKitUser(
-      id: inviteeUserID,
-      name: 'user_$inviteeUserID',
-    ));
-  });
-
-  return invitees;
-}
-

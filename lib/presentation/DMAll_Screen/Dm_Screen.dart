@@ -23,6 +23,7 @@ import 'package:pds/StoryFile/src/story_route.dart';
 import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/core/utils/image_constant.dart';
 import 'package:pds/core/utils/sharedPreferences.dart';
+import 'package:pds/main.dart';
 import 'package:pds/presentation/%20new/profileNew.dart';
 import 'package:pds/presentation/DMAll_Screen/videocallScreen.dart';
 import 'package:pds/presentation/create_story/full_story_page.dart';
@@ -172,6 +173,7 @@ void onSendCallInvitationFinished(
 
   void dispose() {
     DMstompClient.deactivate();
+     
     // Delet_DMstompClient.deactivate();
     super.dispose();
   }
@@ -279,7 +281,10 @@ void onSendCallInvitationFinished(
     BlocProvider.of<DmInboxCubit>(context).seetinonExpried(context);
     getDocumentSize();
     pageNumberMethod();
-
+    if (widget.videoId?.isNotEmpty == true) {
+      print("dsfgdfgdfgsdgfsdg");
+      // onUserLogin(widget.videoId ?? '', 'sxfdgfgd');
+    }
     getUserID();
     getToken();
     getDocumentSize();
@@ -298,7 +303,6 @@ void onSendCallInvitationFinished(
   Widget build(BuildContext context) {
     var _height = MediaQuery.of(context).size.height;
     var _width = MediaQuery.of(context).size.width;
-
     return WillPopScope(
         onWillPop: onBackPress,
         child: Scaffold(
@@ -635,9 +639,10 @@ void onSendCallInvitationFinished(
                                               text: widget.videoId),
                                       onCallFinished:
                                           onSendCallInvitationFinished,
+                                          inviterusername: widget.UserName,
                                     ),
                                   )
-                                  /*  Padding(
+                                 /*   Padding(
                                     padding: EdgeInsets.only(right: 5),
                                     child: GestureDetector(
                                       onTap: () async {
