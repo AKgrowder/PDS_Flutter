@@ -62,6 +62,14 @@ class _VideoListItem1State extends State<VideoListItem1> {
     print("User_id-${User_ID}");
   }
 
+  String formatDurationInHhMmSs(Duration duration) {
+    final HH = (duration.inHours).toString().padLeft(2, '0');
+    final mm = (duration.inMinutes % 60).toString().padLeft(2, '0');
+    final ss = (duration.inSeconds % 60).toString().padLeft(2, '0');
+
+    return '$HH:$mm:$ss';
+  }
+
   @override
   Widget build(BuildContext context) {
     return VisibilityDetector(
@@ -71,14 +79,16 @@ class _VideoListItem1State extends State<VideoListItem1> {
           flickManager?.flickControlManager?.play();
         } else {
           flickManager?.flickControlManager?.pause();
-          var watchTime = 0;
-          watchTime = flickManager?.flickVideoManager?.videoPlayerController
-                  ?.value.position.inSeconds ??
-              0;
-          time.add(Duration(seconds: watchTime));
-          String timeString = DateFormat.Hms().format(time);
-          print(timeString);
 
+          print(formatDurationInHhMmSs(Duration(
+              seconds: flickManager?.flickVideoManager?.videoPlayerController
+                      ?.value.position.inSeconds ??
+                  0))); // 00:00:01
+
+          var timeString = formatDurationInHhMmSs(Duration(
+              seconds: flickManager?.flickVideoManager?.videoPlayerController
+                      ?.value.position.inSeconds ??
+                  0));
           print(
               "video pause!!${flickManager?.flickVideoManager?.videoPlayerController?.value.position.inSeconds}");
 
