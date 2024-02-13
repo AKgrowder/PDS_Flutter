@@ -732,7 +732,7 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                                     dopcument = "Upload Document";
                                     chooseDocument?.object = null;
 
-                                    super.setState(() {});
+                                    setState(() {});
                                   },
                                   child: Container(
                                     height: 50,
@@ -1399,7 +1399,7 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
         print("Done file size B");
         switch (Index) {
           case 1:
-            super.setState(() {
+            setState(() {
               uplopdfile.text = file1.name;
               dopcument = file1.name;
             });
@@ -1413,7 +1413,7 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
         switch (Index) {
           case 0:
             print('filenamecheckdocmenut-${dopcument}');
-            super.setState(() {
+            setState(() {
               uplopdfile.text = file1.name;
               dopcument = file1.name;
             });
@@ -1502,7 +1502,7 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
 
           switch (Index) {
             case 1:
-              super.setState(() {
+              setState(() {
                 uplopdfile.text = file1.name;
                 dopcument = file1.name;
               });

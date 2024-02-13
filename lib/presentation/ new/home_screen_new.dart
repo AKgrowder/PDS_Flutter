@@ -1042,11 +1042,12 @@ class _HomeScreenNewState extends State<HomeScreenNew>
     }
     if (User_ID != null) {
       PushNotificationAutoOpen();
+      onUserLogin(User_ID!,User_Name ?? '');
       // this is the
     }
-    if(videoCallUid !=null){
-      onUserLogin(videoCallUid ?? '',User_Name ?? '');
-    }
+    // if(videoCallUid !=null){
+    //   onUserLogin(videoCallUid ?? '',User_Name ?? '');
+    // }
   }
 
   PushNotificationAutoOpen() async {
@@ -5388,7 +5389,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                       Row(
                                                                                         children: [
                                                                                           Text(
-                                                                                            "${AllExperData?.object?[index].userName}",
+                                                                                            "${AllExperData?.object?[index].userName ?? ''}",
                                                                                             style: TextStyle(fontSize: 11, color: Colors.black, fontFamily: "outfit", fontWeight: FontWeight.bold),
                                                                                           ),
                                                                                           SizedBox(
@@ -5413,7 +5414,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                           ),
                                                                                           Expanded(
                                                                                             child: Text(
-                                                                                              '${AllExperData?.object?[index].expertise?[0].expertiseName}',
+                                                                                              '${AllExperData?.object?[index].expertise?[0].expertiseName ?? ''}',
                                                                                               maxLines: 1,
                                                                                               style: TextStyle(fontFamily: "outfit", fontSize: 11, overflow: TextOverflow.ellipsis, color: Colors.black, fontWeight: FontWeight.bold),
                                                                                             ),

@@ -1,9 +1,12 @@
+import 'dart:io';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:linkfy_text/linkfy_text.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:pds/API/Bloc/HashTag_Bloc/HashTag_cubit.dart';
 import 'package:pds/API/Bloc/HashTag_Bloc/HashTag_state.dart';
 import 'package:pds/API/Bloc/NewProfileScreen_Bloc/NewProfileScreen_cubit.dart';
@@ -17,6 +20,7 @@ import 'package:pds/presentation/%20new/home_screen_new.dart';
 import 'package:pds/presentation/%20new/newbottembar.dart';
 import 'package:pds/presentation/%20new/profileNew.dart';
 import 'package:pds/widgets/commentPdf.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -237,11 +241,10 @@ class _HashTagViewScreenState extends State<HashTagViewScreen> {
                                                 child: ProfileScreen(
                                                     User_ID:
                                                         "${hashTagViewData?.object?.posts?[index].userUid}",
-                                                    isFollowing:
-                                                        hashTagViewData
-                                                            ?.object
-                                                            ?.posts?[index]
-                                                            .isFollowing));
+                                                    isFollowing: hashTagViewData
+                                                        ?.object
+                                                        ?.posts?[index]
+                                                        .isFollowing));
                                           }));
                                         }
                                       },
@@ -289,11 +292,10 @@ class _HashTagViewScreenState extends State<HashTagViewScreen> {
                                                 child: ProfileScreen(
                                                     User_ID:
                                                         "${hashTagViewData?.object?.posts?[index].userUid}",
-                                                    isFollowing:
-                                                        hashTagViewData
-                                                            ?.object
-                                                            ?.posts?[index]
-                                                            .isFollowing));
+                                                    isFollowing: hashTagViewData
+                                                        ?.object
+                                                        ?.posts?[index]
+                                                        .isFollowing));
                                           }));
                                         }
                                       },
@@ -319,8 +321,8 @@ class _HashTagViewScreenState extends State<HashTagViewScreen> {
                                       ),
                                     ),
                                     trailing: uuid ==
-                                            hashTagViewData?.object
-                                                ?.posts?[index].userUid
+                                            hashTagViewData
+                                                ?.object?.posts?[index].userUid
                                         ? GestureDetector(
                                             onTapDown:
                                                 (TapDownDetails details) {
@@ -348,8 +350,7 @@ class _HashTagViewScreenState extends State<HashTagViewScreen> {
                                                   color: ColorConstant
                                                       .primary_color,
                                                   borderRadius:
-                                                      BorderRadius.circular(
-                                                          4)),
+                                                      BorderRadius.circular(4)),
                                               child: hashTagViewData
                                                           ?.object
                                                           ?.posts?[index]
@@ -358,13 +359,11 @@ class _HashTagViewScreenState extends State<HashTagViewScreen> {
                                                   ? Text(
                                                       'Follow',
                                                       style: TextStyle(
-                                                          fontFamily:
-                                                              "outfit",
+                                                          fontFamily: "outfit",
                                                           fontSize: 12,
                                                           fontWeight:
                                                               FontWeight.bold,
-                                                          color:
-                                                              Colors.white),
+                                                          color: Colors.white),
                                                     )
                                                   : hashTagViewData
                                                               ?.object
@@ -380,8 +379,8 @@ class _HashTagViewScreenState extends State<HashTagViewScreen> {
                                                               fontWeight:
                                                                   FontWeight
                                                                       .bold,
-                                                              color: Colors
-                                                                  .white),
+                                                              color:
+                                                                  Colors.white),
                                                         )
                                                       : Text(
                                                           'Following ',
@@ -392,8 +391,8 @@ class _HashTagViewScreenState extends State<HashTagViewScreen> {
                                                               fontWeight:
                                                                   FontWeight
                                                                       .bold,
-                                                              color: Colors
-                                                                  .white),
+                                                              color:
+                                                                  Colors.white),
                                                         ),
                                             ),
                                           ),
@@ -472,9 +471,8 @@ class _HashTagViewScreenState extends State<HashTagViewScreen> {
                                                       },
                                                     ));
                                                   } else {
-                                                    launchUrl(Uri.parse(link
-                                                        .value
-                                                        .toString()));
+                                                    launchUrl(Uri.parse(
+                                                        link.value.toString()));
                                                     print(
                                                         "link.valuelink.value -- ${link.value}");
                                                   }
@@ -500,11 +498,10 @@ class _HashTagViewScreenState extends State<HashTagViewScreen> {
                                                   var name;
                                                   var tagName;
                                                   name = SelectedTest;
-                                                  tagName = name.replaceAll(
-                                                      "@", "");
+                                                  tagName =
+                                                      name.replaceAll("@", "");
                                                   await BlocProvider.of<
-                                                              HashTagCubit>(
-                                                          context)
+                                                          HashTagCubit>(context)
                                                       .UserTagAPI(
                                                           context, tagName);
 
@@ -571,11 +568,8 @@ class _HashTagViewScreenState extends State<HashTagViewScreen> {
                                                   '',
                                             ),
                                           )
-                                        : hashTagViewData
-                                                    ?.object
-                                                    ?.posts?[index]
-                                                    .postData
-                                                    ?.length ==
+                                        : hashTagViewData?.object?.posts?[index]
+                                                    .postData?.length ==
                                                 1
                                             ? (hashTagViewData
                                                         ?.object
@@ -618,8 +612,7 @@ class _HashTagViewScreenState extends State<HashTagViewScreen> {
                                                         "ATTACHMENT"
                                                     ? (hashTagViewData
                                                                 ?.object
-                                                                ?.posts?[
-                                                                    index]
+                                                                ?.posts?[index]
                                                                 .postData
                                                                 ?.isNotEmpty ==
                                                             true)
@@ -628,7 +621,7 @@ class _HashTagViewScreenState extends State<HashTagViewScreen> {
                                                               Container(
                                                                 width: _width,
                                                                 color: Colors
-                                                                     .transparent,
+                                                                    .transparent,
                                                                 /* child: DocumentViewScreen1(
                                                                                           path: AllGuestPostRoomData?.object?.content?[index].postData?[0].toString(),
                                                                                         ) */
@@ -643,8 +636,11 @@ class _HashTagViewScreenState extends State<HashTagViewScreen> {
                                                                     builder:
                                                                         (context) {
                                                                       return DocumentViewScreen1(
-                                                                          path:
-                                                                              hashTagViewData?.object?.posts?[index].postData?[0].toString());
+                                                                          path: hashTagViewData
+                                                                              ?.object
+                                                                              ?.posts?[index]
+                                                                              .postData?[0]
+                                                                              .toString());
                                                                     },
                                                                   ));
                                                                 },
@@ -678,11 +674,12 @@ class _HashTagViewScreenState extends State<HashTagViewScreen> {
                                                           true))
                                                         SizedBox(
                                                           height: 230,
-                                                          child: PageView
-                                                              .builder(
+                                                          child:
+                                                              PageView.builder(
                                                             onPageChanged:
                                                                 (page) {
-                                                              super.setState(() {
+                                                              super
+                                                                  .setState(() {
                                                                 _currentPages[
                                                                         index] =
                                                                     page;
@@ -730,8 +727,7 @@ class _HashTagViewScreenState extends State<HashTagViewScreen> {
                                                                     margin: EdgeInsets.only(
                                                                         left:
                                                                             16,
-                                                                        top:
-                                                                            15,
+                                                                        top: 15,
                                                                         right:
                                                                             16),
                                                                     child: Center(
@@ -742,7 +738,8 @@ class _HashTagViewScreenState extends State<HashTagViewScreen> {
                                                                               Alignment.topCenter,
                                                                           child:
                                                                               CustomImageView(
-                                                                            url: "${hashTagViewData?.object?.posts?[index].postData?[index1]}",
+                                                                            url:
+                                                                                "${hashTagViewData?.object?.posts?[index].postData?[index1]}",
                                                                           ),
                                                                         ),
                                                                         Align(
@@ -750,8 +747,10 @@ class _HashTagViewScreenState extends State<HashTagViewScreen> {
                                                                               Alignment.topRight,
                                                                           child:
                                                                               Card(
-                                                                            color: Colors.transparent,
-                                                                            elevation: 0,
+                                                                            color:
+                                                                                Colors.transparent,
+                                                                            elevation:
+                                                                                0,
                                                                             child: Container(
                                                                                 alignment: Alignment.center,
                                                                                 height: 30,
@@ -784,8 +783,10 @@ class _HashTagViewScreenState extends State<HashTagViewScreen> {
                                                                         DocumentViewScreen1(
                                                                       path: hashTagViewData
                                                                           ?.object
-                                                                          ?.posts?[index]
-                                                                          .postData?[index1]
+                                                                          ?.posts?[
+                                                                              index]
+                                                                          .postData?[
+                                                                              index1]
                                                                           .toString(),
                                                                     ));
                                                               }
@@ -804,9 +805,10 @@ class _HashTagViewScreenState extends State<HashTagViewScreen> {
                                                               left: 0,
                                                               right: 0,
                                                               child: Padding(
-                                                                padding: const EdgeInsets
-                                                                        .only(
-                                                                    top: 0),
+                                                                padding:
+                                                                    const EdgeInsets
+                                                                            .only(
+                                                                        top: 0),
                                                                 child:
                                                                     Container(
                                                                   height: 20,
@@ -818,9 +820,9 @@ class _HashTagViewScreenState extends State<HashTagViewScreen> {
                                                                             .postData
                                                                             ?.length ??
                                                                         0,
-                                                                    position:
-                                                                        _currentPages[index]
-                                                                            .toDouble(),
+                                                                    position: _currentPages[
+                                                                            index]
+                                                                        .toDouble(),
                                                                     decorator:
                                                                         DotsDecorator(
                                                                       size: const Size(
@@ -829,10 +831,13 @@ class _HashTagViewScreenState extends State<HashTagViewScreen> {
                                                                       activeSize: const Size(
                                                                           10.0,
                                                                           10.0),
-                                                                      spacing:
-                                                                          const EdgeInsets.symmetric(horizontal: 2),
+                                                                      spacing: const EdgeInsets
+                                                                              .symmetric(
+                                                                          horizontal:
+                                                                              2),
                                                                       activeColor:
-                                                                          ColorConstant.primary_color,
+                                                                          ColorConstant
+                                                                              .primary_color,
                                                                       color: Color(
                                                                           0xff6A6A6A),
                                                                     ),
@@ -864,8 +869,7 @@ class _HashTagViewScreenState extends State<HashTagViewScreen> {
                                         child: Container(
                                           color: Colors.transparent,
                                           child: Padding(
-                                            padding:
-                                                const EdgeInsets.all(5.0),
+                                            padding: const EdgeInsets.all(5.0),
                                             child: hashTagViewData
                                                         ?.object
                                                         ?.posts?[index]
@@ -903,8 +907,7 @@ class _HashTagViewScreenState extends State<HashTagViewScreen> {
                                                 color: Colors.transparent,
                                                 child: Padding(
                                                   padding:
-                                                      const EdgeInsets.all(
-                                                          5.0),
+                                                      const EdgeInsets.all(5.0),
                                                   child: Text(
                                                     "${hashTagViewData?.object?.posts?[index].likedCount}",
                                                     style: TextStyle(
@@ -957,8 +960,7 @@ class _HashTagViewScreenState extends State<HashTagViewScreen> {
                                         child: Container(
                                           color: Colors.transparent,
                                           child: Padding(
-                                            padding:
-                                                const EdgeInsets.all(5.0),
+                                            padding: const EdgeInsets.all(5.0),
                                             child: Image.asset(
                                               ImageConstant.meesage,
                                               height: 14,
@@ -989,8 +991,7 @@ class _HashTagViewScreenState extends State<HashTagViewScreen> {
                                         child: Container(
                                           color: Colors.transparent,
                                           child: Padding(
-                                            padding:
-                                                const EdgeInsets.all(5.0),
+                                            padding: const EdgeInsets.all(5.0),
                                             child: Image.asset(
                                               ImageConstant.vector2,
                                               height: 13,
@@ -998,21 +999,30 @@ class _HashTagViewScreenState extends State<HashTagViewScreen> {
                                           ),
                                         ),
                                       ),
-                                      // SizedBox(
-                                      //   width: 18,
-                                      // ),
-                                      // Image.asset(
-                                      //   ImageConstant.vector2,
-                                      //   height: 12,
-                                      // ),
-                                      // SizedBox(
-                                      //   width: 5,
-                                      // ),
-                                      // Text(
-                                      //   '1335',
-                                      //   style: TextStyle(
-                                      //       fontFamily: "outfit", fontSize: 14),
-                                      // ),
+                                      GestureDetector(
+                                        onTap: () {
+                                          if (uuid == null) {
+                                            Navigator.of(context).push(
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        RegisterCreateAccountScreen()));
+                                          } else {
+                                            _onShareXFileFromAssets(context,
+                                                androidLink:
+                                                    '${hashTagViewData?.object?.posts?[index].postLink}'
+                                                /* iosLink:
+                                                      "https://apps.apple.com/inList =  /app/growder-b2b-platform/id6451333863" */
+                                                );
+                                          }
+                                        },
+                                        child: Container(
+                                          height: 20,
+                                          width: 30,
+                                          color: Colors.transparent,
+                                          child: Icon(Icons.share_rounded,
+                                              size: 20),
+                                        ),
+                                      ),
                                       Spacer(),
                                       GestureDetector(
                                         onTap: () async {
@@ -1023,8 +1033,7 @@ class _HashTagViewScreenState extends State<HashTagViewScreen> {
                                         child: Container(
                                           color: Colors.transparent,
                                           child: Padding(
-                                            padding:
-                                                const EdgeInsets.all(5.0),
+                                            padding: const EdgeInsets.all(5.0),
                                             child: Image.asset(
                                               hashTagViewData
                                                           ?.object
@@ -1330,7 +1339,8 @@ class _HashTagViewScreenState extends State<HashTagViewScreen> {
                             hashTagViewData: hashTagViewData,
                             postUid:
                                 hashTagViewData?.object?.posts?[index].postUid,
-                                thumbNailURL:hashTagViewData?.object?.posts?[index].thumbnailImageUrl ,
+                            thumbNailURL: hashTagViewData
+                                ?.object?.posts?[index].thumbnailImageUrl,
                           );
                         },
                       ));
@@ -1345,5 +1355,32 @@ class _HashTagViewScreenState extends State<HashTagViewScreen> {
             ),
           );
         });
+  }
+
+  void _onShareXFileFromAssets(BuildContext context,
+      {String? androidLink}) async {
+    // RenderBox? box = context.findAncestorRenderObjectOfType();
+
+    var directory = await getApplicationDocumentsDirectory();
+
+    if (Platform.isAndroid) {
+      Share.shareXFiles(
+        [XFile("/sdcard/download/IPImage.jpg")],
+        subject: "Share",
+        text: "Try This Awesome App \n\n Android :- ${androidLink}",
+        // sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size,
+      );
+    } else {
+      Share.shareXFiles(
+        [
+          XFile(directory.path +
+              Platform.pathSeparator +
+              'Growder_Image/IPImage.jpg')
+        ],
+        subject: "Share",
+        text: "Try This Awesome App \n\n Android :- ${androidLink}",
+        // sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size,
+      );
+    }
   }
 }
