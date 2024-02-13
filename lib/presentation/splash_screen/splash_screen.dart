@@ -137,11 +137,11 @@ class _SplashScreenState extends State<SplashScreen> {
   getData() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     UserID = prefs.getString(PreferencesKey.loginUserID) ?? "";
-
     String? videouid = prefs.getString(PreferencesKey.vidoCallUid) ?? "";
-    if (videouid.isNotEmpty) {
-      onUserLogin(videouid, 'sxfdgfgd');
-    }
+         print("zego video uid : $videouid");
+// if (videouid.isNotEmpty) {
+      // onUserLogin(UserID, 'sxfdgfgd');
+    // }
   }
 
   saveUSerProfileAndUserModel() async {
