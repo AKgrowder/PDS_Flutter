@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
@@ -5,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:linkfy_text/linkfy_text.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:pds/API/Bloc/NewProfileScreen_Bloc/NewProfileScreen_cubit.dart';
 import 'package:pds/API/Bloc/OpenSaveImagepost_Bloc/OpenSaveImagepost_cubit.dart';
 import 'package:pds/API/Bloc/add_comment_bloc/add_comment_cubit.dart';
@@ -20,6 +23,7 @@ import 'package:pds/presentation/%20new/profileNew.dart';
 import 'package:pds/presentation/register_create_account_screen/register_create_account_screen.dart';
 import 'package:pds/widgets/commentPdf.dart';
 import 'package:pds/widgets/custom_image_view.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:photo_view/photo_view.dart';
@@ -1576,6 +1580,31 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
                                                       fontFamily: "outfit",
                                                       fontSize: 14),
                                                 ),
+                                          GestureDetector(
+                                            onTap: () {
+                                              if (uuid == null) {
+                                                Navigator.of(context).push(
+                                                    MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            RegisterCreateAccountScreen()));
+                                              } else {
+                                                _onShareXFileFromAssets(context,
+                                                    androidLink:
+                                                        '${OpenSaveModelData?.object?.postLink}'
+                                                    /* iosLink:
+                                                      "https://apps.apple.com/inList =  /app/growder-b2b-platform/id6451333863" */
+                                                    );
+                                              }
+                                            },
+                                            child: Container(
+                                              height: 20,
+                                              width: 30,
+                                              color: Colors.transparent,
+                                              child: Icon(Icons.share_rounded,
+                                                  color: Colors.white,
+                                                  size: 20),
+                                            ),
+                                          ),
                                           Spacer(),
                                           GestureDetector(
                                             onTap: () async {
@@ -2338,6 +2367,30 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
                                                     fontFamily: "outfit",
                                                     fontSize: 14),
                                               ),
+                                        GestureDetector(
+                                          onTap: () {
+                                            if (uuid == null) {
+                                              Navigator.of(context).push(
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          RegisterCreateAccountScreen()));
+                                            } else {
+                                              _onShareXFileFromAssets(context,
+                                                  androidLink:
+                                                      '${OpenSaveModelData?.object?.postLink}'
+                                                  /* iosLink:
+                                                      "https://apps.apple.com/inList =  /app/growder-b2b-platform/id6451333863" */
+                                                  );
+                                            }
+                                          },
+                                          child: Container(
+                                            height: 20,
+                                            width: 30,
+                                            color: Colors.transparent,
+                                            child: Icon(Icons.share_rounded,
+                                                color: Colors.white, size: 20),
+                                          ),
+                                        ),
                                         Spacer(),
                                         GestureDetector(
                                           onTap: () async {
@@ -2609,6 +2662,33 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
             ),
           );
         });
+  }
+
+  void _onShareXFileFromAssets(BuildContext context,
+      {String? androidLink}) async {
+    // RenderBox? box = context.findAncestorRenderObjectOfType();
+
+    var directory = await getApplicationDocumentsDirectory();
+
+    if (Platform.isAndroid) {
+      Share.shareXFiles(
+        [XFile("/sdcard/download/IPImage.jpg")],
+        subject: "Share",
+        text: "Try This Awesome App \n\n Android :- ${androidLink}",
+        // sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size,
+      );
+    } else {
+      Share.shareXFiles(
+        [
+          XFile(directory.path +
+              Platform.pathSeparator +
+              'Growder_Image/IPImage.jpg')
+        ],
+        subject: "Share",
+        text: "Try This Awesome App \n\n Android :- ${androidLink}",
+        // sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size,
+      );
+    }
   }
 }
 
