@@ -177,6 +177,7 @@ class _InviteMeesageState extends State<InviteMeesage> {
               if (UserIndexUUID != "" && UserIndexUUID != null) {
                 Navigator.push(context, MaterialPageRoute(builder: (context) {
                   return DmScreen(
+                    
                     UserUID:
                         "${searchUserForInbox1?.object?.content?[Index].userUid}",
                     UserName:
