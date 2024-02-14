@@ -1024,7 +1024,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         params['userProfilePic'] = "";
         params['userBackgroundPic'] = "";
       } else if (chooseDocumentuploded?.object.toString() != null) {
-        params['userProfilePic'] = chooseDocumentuploded?.object.toString(); 
+        params['userProfilePic'] = chooseDocumentuploded?.object.toString();
       } else if (chooseDocumentuploded1?.object.toString() != null) {
         params['userBackgroundPic'] = chooseDocumentuploded1?.object.toString();
       } else {
@@ -1264,7 +1264,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        if (widget.newProfileData?.object?.companyName != null)
+        if (widget.newProfileData?.object?.companyName != null &&
+            widget.newProfileData?.object?.approvalStatus != "PENDING" &&
+            widget.newProfileData?.object?.approvalStatus != "REJECTED")
           Padding(
             padding: const EdgeInsets.only(top: 10, bottom: 10),
             child: Text(
@@ -1276,12 +1278,16 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               ),
             ),
           ),
-        if (widget.newProfileData?.object?.companyName != null)
+        if (widget.newProfileData?.object?.companyName != null &&
+            widget.newProfileData?.object?.approvalStatus != "PENDING" &&
+            widget.newProfileData?.object?.approvalStatus != "REJECTED")
           customTextFeild(
               controller: companyName,
               width: _width / 1.1,
               color: Color(0xffFFF3F4)),
-        if (widget.newProfileData?.object?.jobProfile != null)
+        if (widget.newProfileData?.object?.jobProfile != null &&
+            widget.newProfileData?.object?.approvalStatus != "PENDING" &&
+            widget.newProfileData?.object?.approvalStatus != "REJECTED")
           Padding(
             padding: const EdgeInsets.only(top: 10, bottom: 10),
             child: Text(
@@ -1293,13 +1299,17 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               ),
             ),
           ),
-        if (widget.newProfileData?.object?.jobProfile != null)
+        if (widget.newProfileData?.object?.jobProfile != null &&
+            widget.newProfileData?.object?.approvalStatus != "PENDING" &&
+            widget.newProfileData?.object?.approvalStatus != "REJECTED")
           customTextFeild(
             color: Color(0xffFFF3F4),
             controller: jobProfile,
             width: _width / 1.1,
           ),
-        if (widget.newProfileData?.object?.industryTypes?.isNotEmpty == true)
+        if (widget.newProfileData?.object?.industryTypes?.isNotEmpty == true &&
+            widget.newProfileData?.object?.approvalStatus != "PENDING" &&
+            widget.newProfileData?.object?.approvalStatus != "REJECTED")
           Padding(
             padding: const EdgeInsets.only(top: 10, bottom: 10),
             child: Text(
@@ -1311,7 +1321,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               ),
             ),
           ),
-        if (widget.newProfileData?.object?.industryTypes?.isNotEmpty == true)
+        if (widget.newProfileData?.object?.industryTypes?.isNotEmpty == true &&
+            widget.newProfileData?.object?.approvalStatus != "PENDING" &&
+            widget.newProfileData?.object?.approvalStatus != "REJECTED")
           /*  Container(
             decoration: BoxDecoration(color: Color(0xffEFEFEF)),
             child: DropdownButtonHideUnderline(
@@ -1371,7 +1383,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               ),
             ),
           ),
-        if (widget.newProfileData?.object?.expertise?.isNotEmpty == true)
+        if (widget.newProfileData?.object?.expertise?.isNotEmpty == true &&
+            widget.newProfileData?.object?.approvalStatus != "PENDING" &&
+            widget.newProfileData?.object?.approvalStatus != "REJECTED")
           Padding(
             padding: const EdgeInsets.only(top: 10, bottom: 10),
             child: Text(
@@ -1383,7 +1397,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               ),
             ),
           ),
-        if (widget.newProfileData?.object?.expertise?.isNotEmpty == true)
+        if (widget.newProfileData?.object?.expertise?.isNotEmpty == true &&
+            widget.newProfileData?.object?.approvalStatus != "PENDING" &&
+            widget.newProfileData?.object?.approvalStatus != "REJECTED")
           Container(
             height: 50,
             width: _width,
@@ -1426,7 +1442,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               ),
             ),
           ),
-        if (widget.newProfileData?.object?.module == "EXPERT")
+        if (widget.newProfileData?.object?.module == "EXPERT" &&
+            widget.newProfileData?.object?.approvalStatus != "PENDING" &&
+            widget.newProfileData?.object?.approvalStatus != "REJECTED")
           Padding(
             padding: const EdgeInsets.only(top: 10, bottom: 10),
             child: Text(
@@ -1438,7 +1456,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               ),
             ),
           ),
-        if (widget.newProfileData?.object?.module == "EXPERT")
+        if (widget.newProfileData?.object?.module == "EXPERT" &&
+            widget.newProfileData?.object?.approvalStatus != "PENDING" &&
+            widget.newProfileData?.object?.approvalStatus != "REJECTED")
           customTextFeild(
               controller: fees,
               width: _width / 1.1,
@@ -1448,7 +1468,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     RegExp(r'^\d{0,4}(\.\d{0,2})?')),
               ],
               color: Color(0xffFFF3F4)),
-        if (widget.newProfileData?.object?.workingHours != null)
+        if (widget.newProfileData?.object?.workingHours != null &&
+            widget.newProfileData?.object?.approvalStatus != "PENDING" &&
+            widget.newProfileData?.object?.approvalStatus != "REJECTED")
           Padding(
             padding: const EdgeInsets.only(top: 10, bottom: 10),
             child: Text(
@@ -1460,7 +1482,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               ),
             ),
           ),
-        if (widget.newProfileData?.object?.workingHours != null)
+        if (widget.newProfileData?.object?.workingHours != null &&
+            widget.newProfileData?.object?.approvalStatus != "PENDING" &&
+            widget.newProfileData?.object?.approvalStatus != "REJECTED")
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -1545,7 +1569,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               ),
             ],
           ),
-        if (widget.newProfileData?.object?.module != 'EMPLOYEE')
+        if (widget.newProfileData?.object?.module != 'EMPLOYEE' &&
+            widget.newProfileData?.object?.approvalStatus != "PENDING" &&
+            widget.newProfileData?.object?.approvalStatus != "REJECTED")
           Padding(
             padding: const EdgeInsets.only(top: 10, bottom: 10),
             child: Text(
@@ -1557,7 +1583,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               ),
             ),
           ),
-        if (widget.newProfileData?.object?.module != 'EMPLOYEE')
+        if (widget.newProfileData?.object?.module != 'EMPLOYEE' &&
+            widget.newProfileData?.object?.approvalStatus != "PENDING" &&
+            widget.newProfileData?.object?.approvalStatus != "REJECTED")
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
