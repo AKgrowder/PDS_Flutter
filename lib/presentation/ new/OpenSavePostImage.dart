@@ -354,50 +354,47 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
 
                                   OpenSaveModelData?.object?.description == null
                                       ? SizedBox()
-                                      : GestureDetector(
-                                          onTap: () async {
-                                            super.setState(() {
-                                              if (OpenSaveModelData
-                                                          ?.object
-                                                          ?.repostOn
-                                                          ?.translatedDescription ==
-                                                      false ||
-                                                  OpenSaveModelData
-                                                          ?.object
-                                                          ?.repostOn
-                                                          ?.translatedDescription ==
-                                                      null) {
-                                                OpenSaveModelData
-                                                        ?.object
-                                                        ?.repostOn
-                                                        ?.translatedDescription ==
-                                                    true;
-                                              } else {
-                                                OpenSaveModelData
-                                                        ?.object
-                                                        ?.repostOn
-                                                        ?.translatedDescription ==
-                                                    false;
-                                              }
-                                            });
-                                          },
-                                          child: Container(
-                                              width: 80,
-                                              decoration: BoxDecoration(
-                                                  color: ColorConstant
-                                                      .primaryLight_color,
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          10)),
-                                              child: Center(
-                                                  child: Text(
-                                                "Translate",
-                                                style: TextStyle(
-                                                  fontFamily: 'outfit',
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                              ))),
-                                        ),
+                                      : OpenSaveModelData?.object
+                                                  ?.translatedDescription !=
+                                              null
+                                          ? GestureDetector(
+                                              onTap: () async {
+                                                super.setState(() {
+                                                  if (OpenSaveModelData?.object
+                                                              ?.isTrsnalteoption ==
+                                                          false ||
+                                                      OpenSaveModelData?.object
+                                                              ?.isTrsnalteoption ==
+                                                          null) {
+                                                    OpenSaveModelData?.object
+                                                            ?.isTrsnalteoption =
+                                                        true;
+                                                  } else {
+                                                    OpenSaveModelData?.object
+                                                            ?.isTrsnalteoption =
+                                                        false;
+                                                  }
+                                                });
+                                              },
+                                              child: Container(
+                                                  width: 80,
+                                                  decoration: BoxDecoration(
+                                                      color: ColorConstant
+                                                          .primaryLight_color,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              10)),
+                                                  child: Center(
+                                                      child: Text(
+                                                    "Translate",
+                                                    style: TextStyle(
+                                                      fontFamily: 'outfit',
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                  ))),
+                                            )
+                                          : SizedBox(),
                                   Padding(
                                     padding: const EdgeInsets.only(top: 10),
                                     child: Align(
@@ -405,14 +402,13 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
                                       child: LinkifyText(
                                         // "${OpenSaveModelData?.object?.description}",
                                         OpenSaveModelData?.object
-                                                        ?.translatedDescription ==
+                                                        ?.isTrsnalteoption ==
                                                     false ||
                                                 OpenSaveModelData?.object
-                                                        ?.translatedDescription ==
+                                                        ?.isTrsnalteoption ==
                                                     null
                                             ? "${OpenSaveModelData?.object?.description}"
                                             : "${OpenSaveModelData?.object?.translatedDescription}",
-
                                         linkStyle: TextStyle(
                                           color: Colors.blue,
                                           fontFamily: 'outfit',
@@ -1713,6 +1709,7 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
                               ),
                             )
                           : Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Padding(
                                     padding: const EdgeInsets.only(
@@ -2066,126 +2063,167 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
                                       ),
                                 OpenSaveModelData?.object?.description == null
                                     ? SizedBox()
-                                    : Padding(
-                                        padding: const EdgeInsets.only(top: 10),
-                                        child: Align(
-                                          alignment: Alignment.centerLeft,
-                                          child: LinkifyText(
-                                            "${OpenSaveModelData?.object?.description}",
-                                            linkStyle: TextStyle(
-                                              color: Colors.blue,
-                                              fontFamily: 'outfit',
-                                            ),
-                                            textStyle: TextStyle(
-                                              color: Colors.white,
-                                              fontFamily: 'outfit',
-                                            ),
-                                            linkTypes: [
-                                              LinkType.url,
-                                              LinkType.userTag,
-                                              LinkType.hashTag,
-                                              // LinkType
-                                              //     .email
-                                            ],
-                                            onTap: (link) async {
-                                              var SelectedTest =
-                                                  link.value.toString();
-                                              var Link =
-                                                  SelectedTest.startsWith(
-                                                      'https');
-                                              var Link1 =
-                                                  SelectedTest.startsWith(
-                                                      'http');
-                                              var Link2 =
-                                                  SelectedTest.startsWith(
-                                                      'www');
-                                              var Link3 =
-                                                  SelectedTest.startsWith(
-                                                      'WWW');
-                                              var Link4 =
-                                                  SelectedTest.startsWith(
-                                                      'HTTPS');
-                                              var Link5 =
-                                                  SelectedTest.startsWith(
-                                                      'HTTP');
-                                              var Link6 = SelectedTest.startsWith(
-                                                  'https://pdslink.page.link/');
-                                              print(SelectedTest.toString());
-
-                                              if (Link == true ||
-                                                  Link1 == true ||
-                                                  Link2 == true ||
-                                                  Link3 == true ||
-                                                  Link4 == true ||
-                                                  Link5 == true ||
-                                                  Link6 == true) {
-                                                if (Link2 == true ||
-                                                    Link3 == true) {
-                                                  launchUrl(Uri.parse(
-                                                      "https://${link.value.toString()}"));
-                                                } else {
-                                                  if (Link6 == true) {
-                                                    print("yes i am in room");
-                                                    Navigator.push(context,
-                                                        MaterialPageRoute(
-                                                      builder: (context) {
-                                                        return NewBottomBar(
-                                                          buttomIndex: 1,
-                                                        );
-                                                      },
-                                                    ));
+                                    : OpenSaveModelData?.object
+                                                ?.translatedDescription !=
+                                            null
+                                        ? Padding(
+                                            padding:
+                                                const EdgeInsets.only(top: 20),
+                                            child: GestureDetector(
+                                              onTap: () async {
+                                                super.setState(() {
+                                                  if (OpenSaveModelData?.object
+                                                              ?.isTrsnalteoption ==
+                                                          false ||
+                                                      OpenSaveModelData?.object
+                                                              ?.isTrsnalteoption ==
+                                                          null) {
+                                                    OpenSaveModelData?.object
+                                                            ?.isTrsnalteoption =
+                                                        true;
                                                   } else {
-                                                    launchUrl(Uri.parse(
-                                                        link.value.toString()));
-                                                    print(
-                                                        "link.valuelink.value -- ${link.value}");
+                                                    OpenSaveModelData?.object
+                                                            ?.isTrsnalteoption =
+                                                        false;
                                                   }
-                                                }
-                                              } else {
-                                                if (link.value!
-                                                    .startsWith('#')) {
-                                                  print("${link}");
-                                                  Navigator.push(
-                                                      context,
-                                                      MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            HashTagViewScreen(
-                                                                title:
-                                                                    "${link.value}"),
-                                                      ));
-                                                } else if (link.value!
-                                                    .startsWith('@')) {
-                                                  var name;
-                                                  var tagName;
-                                                  name = SelectedTest;
-                                                  tagName =
-                                                      name.replaceAll("@", "");
-                                                  await BlocProvider.of<
-                                                              OpenSaveCubit>(
-                                                          context)
-                                                      .UserTagAPI(
-                                                          context, tagName);
+                                                });
+                                              },
+                                              child: Container(
+                                                  width: 80,
+                                                  decoration: BoxDecoration(
+                                                      color: ColorConstant
+                                                          .primaryLight_color,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              10)),
+                                                  child: Center(
+                                                      child: Text(
+                                                    "Translate",
+                                                    style: TextStyle(
+                                                      fontFamily: 'outfit',
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                  ))),
+                                            ),
+                                          )
+                                        : SizedBox(),
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 10),
+                                  child: Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: LinkifyText(
+                                      // "${OpenSaveModelData?.object?.description}",
+                                      OpenSaveModelData?.object
+                                                      ?.isTrsnalteoption ==
+                                                  false ||
+                                              OpenSaveModelData?.object
+                                                      ?.isTrsnalteoption ==
+                                                  null
+                                          ? "${OpenSaveModelData?.object?.description}"
+                                          : "${OpenSaveModelData?.object?.translatedDescription}",
+                                      linkStyle: TextStyle(
+                                        color: Colors.blue,
+                                        fontFamily: 'outfit',
+                                      ),
+                                      textStyle: TextStyle(
+                                        color: Colors.white,
+                                        fontFamily: 'outfit',
+                                      ),
+                                      linkTypes: [
+                                        LinkType.url,
+                                        LinkType.userTag,
+                                        LinkType.hashTag,
+                                        // LinkType
+                                        //     .email
+                                      ],
+                                      onTap: (link) async {
+                                        var SelectedTest =
+                                            link.value.toString();
+                                        var Link =
+                                            SelectedTest.startsWith('https');
+                                        var Link1 =
+                                            SelectedTest.startsWith('http');
+                                        var Link2 =
+                                            SelectedTest.startsWith('www');
+                                        var Link3 =
+                                            SelectedTest.startsWith('WWW');
+                                        var Link4 =
+                                            SelectedTest.startsWith('HTTPS');
+                                        var Link5 =
+                                            SelectedTest.startsWith('HTTP');
+                                        var Link6 = SelectedTest.startsWith(
+                                            'https://pdslink.page.link/');
+                                        print(SelectedTest.toString());
 
-                                                  Navigator.push(context,
-                                                      MaterialPageRoute(
-                                                          builder: (context) {
-                                                    return ProfileScreen(
-                                                        User_ID:
-                                                            "${userTagModel?.object}",
-                                                        isFollowing: "");
-                                                  }));
+                                        if (Link == true ||
+                                            Link1 == true ||
+                                            Link2 == true ||
+                                            Link3 == true ||
+                                            Link4 == true ||
+                                            Link5 == true ||
+                                            Link6 == true) {
+                                          if (Link2 == true || Link3 == true) {
+                                            launchUrl(Uri.parse(
+                                                "https://${link.value.toString()}"));
+                                          } else {
+                                            if (Link6 == true) {
+                                              print("yes i am in room");
+                                              Navigator.push(context,
+                                                  MaterialPageRoute(
+                                                builder: (context) {
+                                                  return NewBottomBar(
+                                                    buttomIndex: 1,
+                                                  );
+                                                },
+                                              ));
+                                            } else {
+                                              launchUrl(Uri.parse(
+                                                  link.value.toString()));
+                                              print(
+                                                  "link.valuelink.value -- ${link.value}");
+                                            }
+                                          }
+                                        } else {
+                                          if (link.value!.startsWith('#')) {
+                                            print("${link}");
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      HashTagViewScreen(
+                                                          title:
+                                                              "${link.value}"),
+                                                ));
+                                          } else if (link.value!
+                                              .startsWith('@')) {
+                                            var name;
+                                            var tagName;
+                                            name = SelectedTest;
+                                            tagName = name.replaceAll("@", "");
+                                            await BlocProvider.of<
+                                                    OpenSaveCubit>(context)
+                                                .UserTagAPI(context, tagName);
 
-                                                  print(
-                                                      "tagName -- ${tagName}");
-                                                  print(
-                                                      "user id -- ${userTagModel?.object}");
-                                                } else {
-                                                  launchUrl(Uri.parse(
-                                                      "https://${link.value.toString()}"));
-                                                }
-                                              }
-                                            },
-                                          ), /* Text(
+                                            Navigator.push(context,
+                                                MaterialPageRoute(
+                                                    builder: (context) {
+                                              return ProfileScreen(
+                                                  User_ID:
+                                                      "${userTagModel?.object}",
+                                                  isFollowing: "");
+                                            }));
+
+                                            print("tagName -- ${tagName}");
+                                            print(
+                                                "user id -- ${userTagModel?.object}");
+                                          } else {
+                                            launchUrl(Uri.parse(
+                                                "https://${link.value.toString()}"));
+                                          }
+                                        }
+                                      },
+                                    ), /* Text(
                                   "${OpenSaveModelData?.object?.description ?? ""}",
                                   style: TextStyle(
                                     color: Colors.white,
@@ -2194,8 +2232,8 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
                                     fontWeight: FontWeight.w600,
                                   ),
                                 ) */
-                                        ),
-                                      ),
+                                  ),
+                                ),
                                 Container(
                                   // color: Colors.white,
                                   child: Padding(
