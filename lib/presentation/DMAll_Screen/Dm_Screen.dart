@@ -101,20 +101,19 @@ class _DmScreenState extends State<DmScreen> {
   String formattedDate = DateFormat('dd-MM-yyyy').format(now);
   List<StoryButtonData> buttonDatas = [];
 
-void onSendCallInvitationFinished(
-  String code,
-  String message,
-  List<String> errorInvitees,
-  
-) async {
-   final SharedPreferences prefs = await SharedPreferences.getInstance();
-   prefs.setString(PreferencesKey.vidoCallUid,widget.videoId ?? '') ?? "";
-  showToast(
-    message,
-    position: StyledToastPosition.top,
-    context: context,
-  );
-}
+  void onSendCallInvitationFinished(
+    String code,
+    String message,
+    List<String> errorInvitees,
+  ) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString(PreferencesKey.vidoCallUid, widget.videoId ?? '') ?? "";
+    showToast(
+      message,
+      position: StyledToastPosition.top,
+      context: context,
+    );
+  }
 
   void _goToElement() {
     scrollController.jumpTo(scrollController.position.maxScrollExtent + 100);
@@ -173,14 +172,12 @@ void onSendCallInvitationFinished(
 
   void dispose() {
     DMstompClient.deactivate();
-     
+
     // Delet_DMstompClient.deactivate();
     super.dispose();
   }
 
   String preprocessText(String text) {
-    // Add custom logic to preprocess the text before linkifying
-    // In this example, we exclude patterns that end with '.com'
     return text.replaceAll(RegExp(r'\b(?:https?://)?\S+\.com\b'), '');
   }
 
@@ -348,15 +345,14 @@ void onSendCallInvitationFinished(
                 getInboxMessagesModel?.object?.content?.add(content);
                 SubmitOneTime = false;
               }
-              if (state is GetAllStoryLoadedState) {
+                if (state is GetAllStoryLoadedState) {
                 print('this stater Caling');
                 buttonDatas.clear();
+                print("this is the Data Get");
                 state.getAllStoryModel.object?.forEach((element) {
-                  if (element.userUid != userId) {
-                    element.storyData?.forEach((index) {
-                      print("object-${index.storyUid}-${stroyUid}");
-                      if (index.storyUid == stroyUid) {
-                        print("fsdfgdfgdfgsdgfdg-${index.storyData}");
+                 element.storyData?.forEach((index) {
+                  print("check all functinty-${index.storyUid}---${stroyUid}");
+                  if(index.storyUid == stroyUid){
                         List<StoryModel> images = [
                           StoryModel(
                               index.storyData!,
@@ -369,34 +365,32 @@ void onSendCallInvitationFinished(
                               index.videoDuration ?? 15)
                         ];
                         buttonDatas.insert(
-                            0,
-                            StoryButtonData(
-                                child: Padding(
-                                  padding: const EdgeInsets.all(5.0),
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.max,
-                                    mainAxisAlignment: MainAxisAlignment.end,
-                                    children: [
-                                      Text(
-                                        '',
-                                        style: const TextStyle(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                images: images,
-                                segmentDuration: const Duration(seconds: 3),
-                                storyPages: [
-                                  FullStoryPage(
-                                    imageName: '${index.storyData}',
-                                  )
-                                ]));
-                        print("buttonData-aaaa${buttonDatas.length}");
-                      }
-                      Navigator.of(context)
+                           0,
+                           StoryButtonData(
+                               child: Padding(
+                                 padding: const EdgeInsets.all(5.0),
+                                 child: Column(
+                                   mainAxisSize: MainAxisSize.max,
+                                   mainAxisAlignment: MainAxisAlignment.end,
+                                   children: [
+                                     Text(
+                                       '',
+                                       style: const TextStyle(
+                                         color: Colors.white,
+                                         fontWeight: FontWeight.bold,
+                                       ),
+                                     ),
+                                   ],
+                                 ),
+                               ),
+                               images: images,
+                               segmentDuration: const Duration(seconds: 3),
+                               storyPages: [
+                                 FullStoryPage(
+                                   imageName: '${index.storyData}',
+                                 )
+                               ]));
+                                 Navigator.of(context)
                           .push(
                             StoryRoute(
                               // hii working Date
@@ -424,81 +418,10 @@ void onSendCallInvitationFinished(
                             ),
                           )
                           .then((value) => pageNumberMethod());
-                      print("sdfdfsdgf");
-                    });
-                  } else if (element.userUid == userId) {
-                    element.storyData?.forEach((index) {
-                      if (index.storyUid == stroyUid) {
-                        print("sdfvdgsdgdddg-${index.storyUid}");
-                        List<StoryModel> images = [
-                          StoryModel(
-                              index.storyData!,
-                              index.createdAt!,
-                              index.profilePic,
-                              index.userName,
-                              index.storyUid,
-                              index.userUid,
-                              index.storyViewCount,
-                              index.videoDuration ?? 15)
-                        ];
-                        buttonDatas.insert(
-                            0,
-                            StoryButtonData(
-                                child: Padding(
-                                  padding: const EdgeInsets.all(5.0),
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.max,
-                                    mainAxisAlignment: MainAxisAlignment.end,
-                                    children: [
-                                      Text(
-                                        '',
-                                        style: const TextStyle(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                images: images,
-                                segmentDuration: const Duration(seconds: 3),
-                                storyPages: [
-                                  FullStoryPage(
-                                    imageName: '${index.storyData}',
-                                  )
-                                ]));
-                      }
-                      Navigator.of(context)
-                          .push(
-                            StoryRoute(
-                              // hii working Date
-                              onTap: () async {
-                                await BlocProvider.of<DmInboxCubit>(context)
-                                    .seetinonExpried(context);
-                                Navigator.push(context,
-                                    MaterialPageRoute(builder: (context) {
-                                  return ProfileScreen(
-                                      User_ID: "${index.userUid}",
-                                      isFollowing: "");
-                                }));
-                              },
-                              storyContainerSettings: StoryContainerSettings(
-                                buttonData: buttonDatas.first,
-                                tapPosition:
-                                    buttonDatas.first.buttonCenterPosition ??
-                                        dataGet!.localPosition,
-                                curve: buttonDatas.first.pageAnimationCurve,
-                                allButtonDatas: buttonDatas,
-                                pageTransform: StoryPage3DTransform(),
-                                storyListScrollController: ScrollController(),
-                              ),
-                              duration: buttonDatas.first.pageAnimationDuration,
-                            ),
-                          )
-                          .then((value) => pageNumberMethod());
-                    });
                   }
+                 });
                 });
+              
               }
             }, builder: (context, state) {
               return Padding(
@@ -630,19 +553,17 @@ void onSendCallInvitationFinished(
                                       ),
                                     ),
                                   ),
-                                  Padding(
+                                  /*    Padding(
                                     padding: EdgeInsets.only(right: 5),
                                     child: sendCallButton(
                                       isVideoCall: true,
-                                      inviteeUsersIDTextCtrl:
-                                          TextEditingController(
-                                              text: widget.videoId),
+                                      inviteeUsersIDTextCtrl: widget.UserUID,
                                       onCallFinished:
                                           onSendCallInvitationFinished,
-                                          inviterusername: widget.UserName,
+                                      inviterusername: widget.UserName,
                                     ),
-                                  )
-                                 /*   Padding(
+                                  ) */
+                                  /*   Padding(
                                     padding: EdgeInsets.only(right: 5),
                                     child: GestureDetector(
                                       onTap: () async {
@@ -999,6 +920,7 @@ void onSendCallInvitationFinished(
                                                                                           child: getInboxMessagesModel?.object?.content?[index].reactionMessage != null
                                                                                               ? GestureDetector(
                                                                                                   onTapDown: (detalis) {
+                                                                                                    print('sdgfgdfgdfgsdfdgfg');
                                                                                                     print('emojiReaction-${getInboxMessagesModel?.object?.content?[index].reactionMessage}');
                                                                                                     print('emojiReaction-${getInboxMessagesModel?.object?.content?[index].emojiReaction}');
                                                                                                     print("dsdfdffffff-${getInboxMessagesModel?.object?.content?[index].storyUid}");
@@ -1029,7 +951,11 @@ void onSendCallInvitationFinished(
                                                                                                             ))
                                                                                                           ],
                                                                                                         )
-                                                                                                      : CustomImageView(
+                                                                                                      : getInboxMessagesModel?.object?.content?[index].message?.endsWith('.mp4') == true? Container(
+                                                                                                        height: 40,
+                                                                                                        width: 30,
+                                                                                                        color: Colors.amber,
+                                                                                                      ): CustomImageView(
                                                                                                           url: getInboxMessagesModel?.object?.content?[index].message,
                                                                                                           radius: BorderRadius.circular(20),
                                                                                                           // height: 20,

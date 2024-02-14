@@ -42,6 +42,8 @@ class Object {
   RepostOn? repostOn;
   Null? thumbnailImageUrl;
   String? postLink;
+  String? translatedDescription;
+  bool? isTrsnalteoption;
 
   Object(
       {this.postUid,
@@ -60,7 +62,7 @@ class Object {
       this.commentCount,
       this.repostCount,
       this.repostOn,
-      this.thumbnailImageUrl,this.postLink,});
+      this.thumbnailImageUrl,this.postLink,this.translatedDescription,this.isTrsnalteoption});
 
   Object.fromJson(Map<String, dynamic> json) {
     postUid = json['postUid'];
@@ -83,6 +85,8 @@ class Object {
         : null;
     thumbnailImageUrl = json['thumbnailImageUrl'];
     postLink = json['postLink'];
+    translatedDescription = json['translatedDescription'];
+    isTrsnalteoption = json['isTrsnalteoption'];
   }
 
   Map<String, dynamic> toJson() {
@@ -107,6 +111,8 @@ class Object {
     }
     data['thumbnailImageUrl'] = this.thumbnailImageUrl;
     data['postLink'] = this.postLink;
+    data['translatedDescription'] = this.translatedDescription;
+    data['isTrsnalteoption'] = this.isTrsnalteoption;
     return data;
   }
 }
@@ -129,6 +135,8 @@ class RepostOn {
   int? repostCount;
   Null? repostOn;
   String? thumbnailImageUrl;
+  String? translatedDescription;
+  bool? isTrsnalteoption;
 
   RepostOn({
     this.postUid,
@@ -148,6 +156,7 @@ class RepostOn {
     this.repostCount,
     this.repostOn,
     this.thumbnailImageUrl,
+    this.translatedDescription,this.isTrsnalteoption,
   });
 
   RepostOn.fromJson(Map<String, dynamic> json) {
@@ -168,6 +177,8 @@ class RepostOn {
     repostCount = json['repostCount'];
     repostOn = json['repostOn'];
     thumbnailImageUrl = json['thumbnailImageUrl'];
+    translatedDescription = json['translatedDescription'];
+    isTrsnalteoption = json['isTrsnalteoption'];
   }
 
   Map<String, dynamic> toJson() {
@@ -189,6 +200,8 @@ class RepostOn {
     data['repostCount'] = this.repostCount;
     data['repostOn'] = this.repostOn;
     data['thumbnailImageUrl'] = this.thumbnailImageUrl;
+    data['translatedDescription'] = this.translatedDescription;
+    data['isTrsnalteoption'] = this.isTrsnalteoption;
     return data;
   }
 }

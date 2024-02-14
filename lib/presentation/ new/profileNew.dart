@@ -2,7 +2,6 @@
 
 import 'dart:io';
 import 'dart:math';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:file_picker/file_picker.dart';
@@ -1310,14 +1309,11 @@ class _ProfileScreenState extends State<ProfileScreen>
                             (NewProfileData?.object?.isFollowing ==
                                     'FOLLOWING' &&
                                 NewProfileData?.object?.accountType ==
-                                    'PRIVATE') ||
-                            NewProfileData?.object?.accountType == 'PUBLIC')
-                             NewProfileData?.object?.approvalStatus == "PENDING" ||
-                                  NewProfileData?.object?.module == "EXPERT" ||
-                                  NewProfileData?.object?.approvalStatus ==
-                                      "REJECTED"
-                              ? SizedBox()
-                              :
+                                    'PRIVATE' &&
+                                NewProfileData?.object?.approvalStatus !=
+                                    "PENDING" &&
+                                NewProfileData?.object?.approvalStatus ==
+                                    "REJECTED"))
                           Container(
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -1550,14 +1546,12 @@ class _ProfileScreenState extends State<ProfileScreen>
                             (NewProfileData?.object?.isFollowing ==
                                     'FOLLOWING' &&
                                 NewProfileData?.object?.accountType ==
-                                    'PRIVATE') ||
-                            NewProfileData?.object?.accountType == 'PUBLIC')
-                             NewProfileData?.object?.approvalStatus == "PENDING" ||
-                                  NewProfileData?.object?.module == "EXPERT" ||
-                                  NewProfileData?.object?.approvalStatus ==
-                                      "REJECTED"
-                              ? SizedBox()
-                              :
+                                    'PRIVATE' &&
+                                NewProfileData?.object?.approvalStatus !=
+                                    "PENDING" &&
+                                NewProfileData?.object?.approvalStatus ==
+                                    "REJECTED"))
+
                           /* Container(
                         // color: Colors.red,
                         /*  height: _height, */
@@ -9043,187 +9037,207 @@ class _ProfileScreenState extends State<ProfileScreen>
   }
 
   Widget experience(_height, _width) {
-    return Column(
-      children: [
-        ListTile(
-            title: Text(
-              'Experience',
-              style: TextStyle(
-                color: Colors.black,
-                fontSize: 18,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-            trailing: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                (addWorkExperienceModel?.object?.isEmpty ?? false)
-                    ? SizedBox()
-                    : GestureDetector(
-                        onTap: () {
-                          Navigator.push(context, MaterialPageRoute(
-                            builder: (context) {
-                              return ExperienceEditScreen(
-                                userID: widget.User_ID,
-                                typeName: NewProfileData?.object?.module,
-                              );
-                            },
-                          )).then((value) =>
-                              BlocProvider.of<NewProfileSCubit>(context)
-                                  .GetWorkExperienceAPI(
-                                      context, widget.User_ID));
-                        },
-                        child: User_ID == NewProfileData?.object?.userUid
-                            ? Icon(
-                                Icons.edit,
-                                color: Colors.black,
-                              )
-                            : SizedBox(),
-                      ),
-                SizedBox(
-                  width: 10,
-                ),
-                GestureDetector(
-                  onTap: () {
-                    print("modulemodule == ${NewProfileData?.object?.module}");
-                    Navigator.push(context, MaterialPageRoute(
-                      builder: (context) {
-                        return AddWorkExperienceScreen(
-                            typeName: NewProfileData?.object?.module,
-                            userID: widget.User_ID);
-                      },
-                    )).then((value) =>
-                        BlocProvider.of<NewProfileSCubit>(context)
-                            .GetWorkExperienceAPI(context, widget.User_ID));
-                  },
-                  child: User_ID == NewProfileData?.object?.userUid
-                      ? Icon(
-                          Icons.add,
-                          color: Colors.black,
-                          size: 25,
-                        )
-                      : SizedBox(),
-                )
-              ],
-            )),
-        ListView.builder(
-          physics: NeverScrollableScrollPhysics(),
-          shrinkWrap: true,
-          padding: EdgeInsets.only(top: 10),
-          itemCount: addWorkExperienceModel?.object?.length,
-          itemBuilder: (context, index) {
-            print(
-                "StatDate-${addWorkExperienceModel?.object?[index].startDate}");
-            print("endData-${addWorkExperienceModel?.object?[index].endDate}");
-
-            formattedDateStart = DateFormat('dd-MM-yyyy').format(
-                DateFormat('yyyy-MM-dd').parse(
-                    addWorkExperienceModel?.object?[index].startDate ??
-                        DateTime.now().toIso8601String()));
-            if (addWorkExperienceModel?.object?[index].endDate != 'Present') {
-              print(
-                  "this is the Data Get-${addWorkExperienceModel?.object?[index].endDate}");
-              formattedDateEnd = DateFormat('dd-MM-yyyy').format(
-                  DateFormat('yyyy-MM-dd').parse(
-                      addWorkExperienceModel?.object?[index].endDate ??
-                          DateTime.now().toIso8601String()));
-            }
-            return ListTile(
-              titleAlignment: ListTileTitleAlignment.top,
-              leading: addWorkExperienceModel?.object?[index].userProfilePic !=
-                          null &&
-                      addWorkExperienceModel?.object?[index].userProfilePic !=
-                          ''
-                  ? CircleAvatar(
-                      backgroundColor: Colors.white,
-                      backgroundImage: NetworkImage(addWorkExperienceModel
-                              ?.object?[index].userProfilePic ??
-                          ''),
-                    )
-                  : CustomImageView(
-                      imagePath: ImageConstant.tomcruse,
-                      height: 32,
-                      width: 32,
-                      fit: BoxFit.fill,
-                      radius: BorderRadius.circular(25),
-                    ),
+    if (User_ID == NewProfileData?.object?.userUid ||
+        (NewProfileData?.object?.isFollowing == 'FOLLOWING' &&
+            NewProfileData?.object?.accountType == 'PRIVATE' &&
+            NewProfileData?.object?.approvalStatus != "PENDING" &&
+            NewProfileData?.object?.approvalStatus == "REJECTED")) {
+      return Column(
+        children: [
+          ListTile(
               title: Text(
-                '${addWorkExperienceModel?.object?[index].companyName}',
+                'Experience',
                 style: TextStyle(
                   color: Colors.black,
-                  fontSize: 15,
-                  fontWeight: FontWeight.w500,
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
                 ),
               ),
-              subtitle: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+              trailing: Row(
+                mainAxisSize: MainAxisSize.min,
                 children: [
+                  (addWorkExperienceModel?.object?.isEmpty ?? false)
+                      ? SizedBox()
+                      : GestureDetector(
+                          onTap: () {
+                            Navigator.push(context, MaterialPageRoute(
+                              builder: (context) {
+                                return ExperienceEditScreen(
+                                  userID: widget.User_ID,
+                                  typeName: NewProfileData?.object?.module,
+                                );
+                              },
+                            )).then((value) =>
+                                BlocProvider.of<NewProfileSCubit>(context)
+                                    .GetWorkExperienceAPI(
+                                        context, widget.User_ID));
+                          },
+                          child: User_ID == NewProfileData?.object?.userUid &&
+                                  NewProfileData?.object?.approvalStatus !=
+                                      "PENDING" &&
+                                  NewProfileData?.object?.approvalStatus !=
+                                      "REJECTED"
+                              ? Icon(
+                                  Icons.edit,
+                                  color: Colors.black,
+                                )
+                              : SizedBox(),
+                        ),
                   SizedBox(
-                    height: 10,
+                    width: 10,
                   ),
-                  Text(
-                    '${addWorkExperienceModel?.object?[index].jobProfile}',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 12,
-                    ),
-                  ),
-                  NewProfileData?.object?.module == "EXPERT"
-                      ? Text(
-                          '${addWorkExperienceModel?.object?[index].expertiseIn}',
-                          style: TextStyle(
+                  GestureDetector(
+                    onTap: () {
+                      print(
+                          "modulemodule == ${NewProfileData?.object?.module}");
+                      Navigator.push(context, MaterialPageRoute(
+                        builder: (context) {
+                          return AddWorkExperienceScreen(
+                              typeName: NewProfileData?.object?.module,
+                              userID: widget.User_ID);
+                        },
+                      )).then((value) =>
+                          BlocProvider.of<NewProfileSCubit>(context)
+                              .GetWorkExperienceAPI(context, widget.User_ID));
+                    },
+                    child: User_ID == NewProfileData?.object?.userUid
+                        ? Icon(
+                            Icons.add,
                             color: Colors.black,
-                            fontSize: 12,
-                          ),
-                        )
-                      : SizedBox(),
-                  Text(
-                    '${addWorkExperienceModel?.object?[index].industryType}',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 12,
-                    ),
+                            size: 25,
+                          )
+                        : SizedBox(),
+                  )
+                ],
+              )),
+          ListView.builder(
+            physics: NeverScrollableScrollPhysics(),
+            shrinkWrap: true,
+            padding: EdgeInsets.only(top: 10),
+            itemCount: addWorkExperienceModel?.object?.length,
+            itemBuilder: (context, index) {
+              print(
+                  "StatDate-${addWorkExperienceModel?.object?[index].startDate}");
+              print(
+                  "endData-${addWorkExperienceModel?.object?[index].endDate}");
+
+              formattedDateStart = DateFormat('dd-MM-yyyy').format(
+                  DateFormat('yyyy-MM-dd').parse(
+                      addWorkExperienceModel?.object?[index].startDate ??
+                          DateTime.now().toIso8601String()));
+              if (addWorkExperienceModel?.object?[index].endDate != 'Present') {
+                print(
+                    "this is the Data Get-${addWorkExperienceModel?.object?[index].endDate}");
+                formattedDateEnd = DateFormat('dd-MM-yyyy').format(
+                    DateFormat('yyyy-MM-dd').parse(
+                        addWorkExperienceModel?.object?[index].endDate ??
+                            DateTime.now().toIso8601String()));
+              }
+              return ListTile(
+                titleAlignment: ListTileTitleAlignment.top,
+                leading: addWorkExperienceModel
+                                ?.object?[index].userProfilePic !=
+                            null &&
+                        addWorkExperienceModel?.object?[index].userProfilePic !=
+                            ''
+                    ? CircleAvatar(
+                        backgroundColor: Colors.white,
+                        backgroundImage: NetworkImage(addWorkExperienceModel
+                                ?.object?[index].userProfilePic ??
+                            ''),
+                      )
+                    : CustomImageView(
+                        imagePath: ImageConstant.tomcruse,
+                        height: 32,
+                        width: 32,
+                        fit: BoxFit.fill,
+                        radius: BorderRadius.circular(25),
+                      ),
+                title: Text(
+                  '${addWorkExperienceModel?.object?[index].companyName}',
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 15,
+                    fontWeight: FontWeight.w500,
                   ),
-                  /* addWorkExperienceModel?.object?[index].startDate !=
+                ),
+                subtitle: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Text(
+                      '${addWorkExperienceModel?.object?[index].jobProfile}',
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 12,
+                      ),
+                    ),
+                    NewProfileData?.object?.module == "EXPERT"
+                        ? Text(
+                            '${addWorkExperienceModel?.object?[index].expertiseIn}',
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 12,
+                            ),
+                          )
+                        : SizedBox(),
+                    Text(
+                      '${addWorkExperienceModel?.object?[index].industryType}',
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 12,
+                      ),
+                    ),
+                    /* addWorkExperienceModel?.object?[index].startDate !=
                               null &&
                           addWorkExperienceModel?.object?[index].endDate !=
                               null
                       ? */
-                  /* DateFormat('dd-MM-yyyy').format(DateTime.now()) ==
+                    /* DateFormat('dd-MM-yyyy').format(DateTime.now()) ==
                           formattedDateEnd */
-                  addWorkExperienceModel?.object?[index].endDate == "Present"
-                      ? Text(
-                          '${formattedDateStart} to Present',
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 13,
-                          ),
-                        )
-                      : Text(
-                          '${formattedDateStart} to ${formattedDateEnd}',
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 13,
-                          ),
-                        )
-                  /* : SizedBox(), */
-                ],
-              ),
-            );
-          },
-        ),
-        SizedBox(
-          height: 10,
-        )
-      ],
-    );
+                    addWorkExperienceModel?.object?[index].endDate == "Present"
+                        ? Text(
+                            '${formattedDateStart} to Present',
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 13,
+                            ),
+                          )
+                        : Text(
+                            '${formattedDateStart} to ${formattedDateEnd}',
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 13,
+                            ),
+                          )
+                    /* : SizedBox(), */
+                  ],
+                ),
+              );
+            },
+          ),
+          SizedBox(
+            height: 10,
+          )
+        ],
+      );
+    } else {
+      return SizedBox();
+    }
   }
 
   Widget compnayUser(_height, _width) {
-    return Column(
-      children: [
-        ListTile(
-          /* leading: Container(
+    if (User_ID == NewProfileData?.object?.userUid ||
+        (NewProfileData?.object?.isFollowing == 'FOLLOWING' &&
+            NewProfileData?.object?.accountType == 'PRIVATE' &&
+            NewProfileData?.object?.approvalStatus != "PENDING" &&
+            NewProfileData?.object?.approvalStatus == "REJECTED")) {
+      return Column(
+        children: [
+          ListTile(
+            /* leading: Container(
             width: 35,
             height: 35,
             decoration: ShapeDecoration(
@@ -9231,186 +9245,51 @@ class _ProfileScreenState extends State<ProfileScreen>
               shape: OvalBorder(),
             ),
           ), */
-          title: Text(
-            'Work/ Business Details',
-            style: TextStyle(
-              color: Colors.black,
-              fontSize: 18,
-              fontWeight: FontWeight.w600,
+            title: Text(
+              'Work/ Business Details',
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 18,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            trailing: GestureDetector(
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => EditProfileScreen(
+                              newProfileData: NewProfileData,
+                            ))).then((value) =>
+                    widget.ProfileNotification == true
+                        ? BlocProvider.of<NewProfileSCubit>(context)
+                            .NewProfileSAPI(context, widget.User_ID, true)
+                        : BlocProvider.of<NewProfileSCubit>(context)
+                            .NewProfileSAPI(context, widget.User_ID, false));
+              },
+              child: User_ID == NewProfileData?.object?.userUid &&
+                      NewProfileData?.object?.approvalStatus != "PENDING" &&
+                      NewProfileData?.object?.approvalStatus != "REJECTED"
+                  ? Icon(
+                      Icons.edit,
+                      color: Colors.black,
+                    )
+                  : SizedBox(),
             ),
           ),
-          trailing: GestureDetector(
-            onTap: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => EditProfileScreen(
-                            newProfileData: NewProfileData,
-                          ))).then((value) => widget.ProfileNotification == true
-                  ? BlocProvider.of<NewProfileSCubit>(context)
-                      .NewProfileSAPI(context, widget.User_ID, true)
-                  : BlocProvider.of<NewProfileSCubit>(context)
-                      .NewProfileSAPI(context, widget.User_ID, false));
-            },
-            child: User_ID == NewProfileData?.object?.userUid
-                ? Icon(
-                    Icons.edit,
-                    color: Colors.black,
-                  )
-                : SizedBox(),
-          ),
-        ),
-        Container(
-          // color: Colors.amber,
-          height:
-              User_ID == NewProfileData?.object?.userUid ? _height / 1.9 : 400,
-          width: _width,
-          child: Padding(
-            padding: const EdgeInsets.only(right: 16, left: 16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  "Company Name",
-                  overflow: TextOverflow.ellipsis,
-                  textAlign: TextAlign.left,
-                  style: TextStyle(
-                    fontFamily: 'outfit',
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                Container(
-                  width: _width,
-                  child: CustomTextFormField(
-                    controller: CompanyName,
-                    readOnly: true,
-                    margin: EdgeInsets.only(
-                      top: 10,
-                    ),
-
-                    validator: (value) {
-                      RegExp nameRegExp = RegExp(r"^[a-zA-Z0-9\s'@]+$");
-                      if (value!.isEmpty) {
-                        return 'Please Enter Name';
-                      } else if (!nameRegExp.hasMatch(value)) {
-                        return 'Input cannot contains prohibited special characters';
-                      } else if (value.length <= 0 || value.length > 50) {
-                        return 'Minimum length required';
-                      } else if (value.contains('..')) {
-                        return 'username does not contain is correct';
-                      }
-
-                      return null;
-                    },
-                    // textStyle: theme.textTheme.titleMedium!,
-
-                    hintText: "Company Name",
-                    // hintStyle: theme.textTheme.titleMedium!,
-                    textInputAction: TextInputAction.next,
-                    filled: true,
-                    maxLength: 100,
-                    fillColor: appTheme.gray100,
-                  ),
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                Text(
-                  "Job Profile",
-                  overflow: TextOverflow.ellipsis,
-                  textAlign: TextAlign.left,
-                  style: TextStyle(
-                    fontFamily: 'outfit',
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                Container(
-                  width: _width,
-                  child: CustomTextFormField(
-                    readOnly: true,
-                    controller: jobprofileController,
-                    margin: EdgeInsets.only(
-                      top: 10,
-                    ),
-
-                    validator: (value) {
-                      RegExp nameRegExp = RegExp(r"^[a-zA-Z0-9\s'@]+$");
-                      if (value!.isEmpty) {
-                        return 'Please Enter Name';
-                      } else if (!nameRegExp.hasMatch(value)) {
-                        return 'Input cannot contains prohibited special characters';
-                      } else if (value.length <= 0 || value.length > 50) {
-                        return 'Minimum length required';
-                      } else if (value.contains('..')) {
-                        return 'username does not contain is correct';
-                      }
-
-                      return null;
-                    },
-                    // textStyle: theme.textTheme.titleMedium!,
-                    hintText: "Job profile",
-                    // hintStyle: theme.textTheme.titleMedium!,
-                    textInputAction: TextInputAction.next,
-                    filled: true,
-                    maxLength: 100,
-                    fillColor: appTheme.gray100,
-                  ),
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                Text(
-                  "Industry Type",
-                  overflow: TextOverflow.ellipsis,
-                  textAlign: TextAlign.left,
-                  style: TextStyle(
-                    fontFamily: 'outfit',
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                Container(
-                  width: _width,
-                  child: CustomTextFormField(
-                    readOnly: true, maxLines: 4,
-                    controller: IndustryType,
-                    textStyle: TextStyle(
-                        fontWeight: FontWeight.w400,
-                        wordSpacing: 1,
-                        letterSpacing: 1,
-                        fontFamily: 'outfit'),
-                    margin: EdgeInsets.only(
-                      top: 10,
-                    ),
-
-                    validator: (value) {
-                      RegExp nameRegExp = RegExp(r"^[a-zA-Z0-9\s'@]+$");
-                      if (value!.isEmpty) {
-                        return 'Please Enter Name';
-                      } else if (!nameRegExp.hasMatch(value)) {
-                        return 'Input cannot contains prohibited special characters';
-                      } else if (value.length <= 0 || value.length > 50) {
-                        return 'Minimum length required';
-                      } else if (value.contains('..')) {
-                        return 'username does not contain is correct';
-                      }
-
-                      return null;
-                    },
-                    // textStyle: theme.textTheme.titleMedium!,
-                    hintText: "Industry Type",
-                    // hintStyle: theme.textTheme.titleMedium!,
-                    textInputAction: TextInputAction.next,
-                    filled: true,
-                    maxLength: 100,
-                    fillColor: appTheme.gray100,
-                  ),
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                if (User_ID == NewProfileData?.object?.userUid)
+          Container(
+            // color: Colors.amber,
+            height: User_ID == NewProfileData?.object?.userUid
+                ? _height / 1.9
+                : 400,
+            width: _width,
+            child: Padding(
+              padding: const EdgeInsets.only(right: 16, left: 16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
                   Text(
-                    "Document",
+                    "Company Name",
                     overflow: TextOverflow.ellipsis,
                     textAlign: TextAlign.left,
                     style: TextStyle(
@@ -9418,97 +9297,240 @@ class _ProfileScreenState extends State<ProfileScreen>
                       fontWeight: FontWeight.w500,
                     ),
                   ),
-                if (User_ID == NewProfileData?.object?.userUid)
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Container(
-                            height: 50,
-                            // width: _width - 175,
-                            decoration: BoxDecoration(
-                                color: Color(0XFFF6F6F6),
-                                borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(5),
-                                    bottomLeft: Radius.circular(5))),
-                            child: Padding(
-                              padding: const EdgeInsets.only(top: 15, left: 10),
-                              child: Text(
-                                '${dopcument.toString().split('/').last}',
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(fontSize: 16),
-                              ),
-                            )),
+                  Container(
+                    width: _width,
+                    child: CustomTextFormField(
+                      controller: CompanyName,
+                      readOnly: true,
+                      margin: EdgeInsets.only(
+                        top: 10,
                       ),
-                      dopcument == "Upload Image"
-                          ? GestureDetector(
-                              onTap: () async {
-                                print(
-                                    'dopcument.toString()--${dopcument.toString()}');
-                                filepath = await prepareTestPdf(0);
-                              },
-                              child: Container(
-                                height: 50,
-                                // width: _width / 4.5,
-                                decoration: BoxDecoration(
-                                    color: Color(0XFF777777),
-                                    borderRadius: BorderRadius.only(
-                                        topRight: Radius.circular(5),
-                                        bottomRight: Radius.circular(5))),
-                                child: Center(
-                                  child: Text(
-                                    "Choose",
-                                    style: TextStyle(
-                                      fontFamily: 'outfit',
-                                      fontSize: 15,
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            )
-                          : GestureDetector(
-                              onTap: () async {
-                                // dopcument = "Upload Image";
 
-                                // super.setState(() {});
-                                print("dfsdfgsdfgdfg-${dopcument}");
-                                Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (context) => DocumentViewScreen1(
-                                          path: NewProfileData
-                                              ?.object?.userDocument,
-                                          title: 'Pdf',
-                                        )));
-                              },
-                              child: Container(
-                                height: 50,
-                                width: _width / 4.5,
-                                decoration: BoxDecoration(
-                                    color: Color.fromARGB(255, 228, 228, 228),
-                                    borderRadius: BorderRadius.only(
-                                        topRight: Radius.circular(5),
-                                        bottomRight: Radius.circular(5))),
-                                child: Center(
-                                  child: Text(
-                                    "Open",
-                                    style: TextStyle(
-                                      fontFamily: 'outfit',
-                                      fontSize: 15,
-                                      color: ColorConstant.primary_color,
-                                      fontWeight: FontWeight.w500,
+                      validator: (value) {
+                        RegExp nameRegExp = RegExp(r"^[a-zA-Z0-9\s'@]+$");
+                        if (value!.isEmpty) {
+                          return 'Please Enter Name';
+                        } else if (!nameRegExp.hasMatch(value)) {
+                          return 'Input cannot contains prohibited special characters';
+                        } else if (value.length <= 0 || value.length > 50) {
+                          return 'Minimum length required';
+                        } else if (value.contains('..')) {
+                          return 'username does not contain is correct';
+                        }
+
+                        return null;
+                      },
+                      // textStyle: theme.textTheme.titleMedium!,
+
+                      hintText: "Company Name",
+                      // hintStyle: theme.textTheme.titleMedium!,
+                      textInputAction: TextInputAction.next,
+                      filled: true,
+                      maxLength: 100,
+                      fillColor: appTheme.gray100,
+                    ),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Text(
+                    "Job Profile",
+                    overflow: TextOverflow.ellipsis,
+                    textAlign: TextAlign.left,
+                    style: TextStyle(
+                      fontFamily: 'outfit',
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  Container(
+                    width: _width,
+                    child: CustomTextFormField(
+                      readOnly: true,
+                      controller: jobprofileController,
+                      margin: EdgeInsets.only(
+                        top: 10,
+                      ),
+
+                      validator: (value) {
+                        RegExp nameRegExp = RegExp(r"^[a-zA-Z0-9\s'@]+$");
+                        if (value!.isEmpty) {
+                          return 'Please Enter Name';
+                        } else if (!nameRegExp.hasMatch(value)) {
+                          return 'Input cannot contains prohibited special characters';
+                        } else if (value.length <= 0 || value.length > 50) {
+                          return 'Minimum length required';
+                        } else if (value.contains('..')) {
+                          return 'username does not contain is correct';
+                        }
+
+                        return null;
+                      },
+                      // textStyle: theme.textTheme.titleMedium!,
+                      hintText: "Job profile",
+                      // hintStyle: theme.textTheme.titleMedium!,
+                      textInputAction: TextInputAction.next,
+                      filled: true,
+                      maxLength: 100,
+                      fillColor: appTheme.gray100,
+                    ),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Text(
+                    "Industry Type",
+                    overflow: TextOverflow.ellipsis,
+                    textAlign: TextAlign.left,
+                    style: TextStyle(
+                      fontFamily: 'outfit',
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  Container(
+                    width: _width,
+                    child: CustomTextFormField(
+                      readOnly: true, maxLines: 4,
+                      controller: IndustryType,
+                      textStyle: TextStyle(
+                          fontWeight: FontWeight.w400,
+                          wordSpacing: 1,
+                          letterSpacing: 1,
+                          fontFamily: 'outfit'),
+                      margin: EdgeInsets.only(
+                        top: 10,
+                      ),
+
+                      validator: (value) {
+                        RegExp nameRegExp = RegExp(r"^[a-zA-Z0-9\s'@]+$");
+                        if (value!.isEmpty) {
+                          return 'Please Enter Name';
+                        } else if (!nameRegExp.hasMatch(value)) {
+                          return 'Input cannot contains prohibited special characters';
+                        } else if (value.length <= 0 || value.length > 50) {
+                          return 'Minimum length required';
+                        } else if (value.contains('..')) {
+                          return 'username does not contain is correct';
+                        }
+
+                        return null;
+                      },
+                      // textStyle: theme.textTheme.titleMedium!,
+                      hintText: "Industry Type",
+                      // hintStyle: theme.textTheme.titleMedium!,
+                      textInputAction: TextInputAction.next,
+                      filled: true,
+                      maxLength: 100,
+                      fillColor: appTheme.gray100,
+                    ),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  if (User_ID == NewProfileData?.object?.userUid)
+                    Text(
+                      "Document",
+                      overflow: TextOverflow.ellipsis,
+                      textAlign: TextAlign.left,
+                      style: TextStyle(
+                        fontFamily: 'outfit',
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  if (User_ID == NewProfileData?.object?.userUid)
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Container(
+                              height: 50,
+                              // width: _width - 175,
+                              decoration: BoxDecoration(
+                                  color: Color(0XFFF6F6F6),
+                                  borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(5),
+                                      bottomLeft: Radius.circular(5))),
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.only(top: 15, left: 10),
+                                child: Text(
+                                  '${dopcument.toString().split('/').last}',
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(fontSize: 16),
+                                ),
+                              )),
+                        ),
+                        dopcument == "Upload Image"
+                            ? GestureDetector(
+                                onTap: () async {
+                                  print(
+                                      'dopcument.toString()--${dopcument.toString()}');
+                                  filepath = await prepareTestPdf(0);
+                                },
+                                child: Container(
+                                  height: 50,
+                                  // width: _width / 4.5,
+                                  decoration: BoxDecoration(
+                                      color: Color(0XFF777777),
+                                      borderRadius: BorderRadius.only(
+                                          topRight: Radius.circular(5),
+                                          bottomRight: Radius.circular(5))),
+                                  child: Center(
+                                    child: Text(
+                                      "Choose",
+                                      style: TextStyle(
+                                        fontFamily: 'outfit',
+                                        fontSize: 15,
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              )
+                            : GestureDetector(
+                                onTap: () async {
+                                  // dopcument = "Upload Image";
+
+                                  // super.setState(() {});
+                                  print("dfsdfgsdfgdfg-${dopcument}");
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                      builder: (context) => DocumentViewScreen1(
+                                            path: NewProfileData
+                                                ?.object?.userDocument,
+                                            title: 'Pdf',
+                                          )));
+                                },
+                                child: Container(
+                                  height: 50,
+                                  width: _width / 4.5,
+                                  decoration: BoxDecoration(
+                                      color: Color.fromARGB(255, 228, 228, 228),
+                                      borderRadius: BorderRadius.only(
+                                          topRight: Radius.circular(5),
+                                          bottomRight: Radius.circular(5))),
+                                  child: Center(
+                                    child: Text(
+                                      "Open",
+                                      style: TextStyle(
+                                        fontFamily: 'outfit',
+                                        fontSize: 15,
+                                        color: ColorConstant.primary_color,
+                                        fontWeight: FontWeight.w500,
+                                      ),
                                     ),
                                   ),
                                 ),
                               ),
-                            ),
-                    ],
-                  ),
-              ],
+                      ],
+                    ),
+                ],
+              ),
             ),
           ),
-        ),
-      ],
-    );
+        ],
+      );
+    } else {
+      return SizedBox();
+    }
   }
 
   Future<void> _selectStartTime(BuildContext context) async {

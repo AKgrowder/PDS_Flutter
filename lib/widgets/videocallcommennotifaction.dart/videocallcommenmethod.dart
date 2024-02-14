@@ -72,28 +72,23 @@ Widget customAvatarBuilder(
 
 Widget sendCallButton({
   required bool isVideoCall,
-  required TextEditingController inviteeUsersIDTextCtrl,
+  required String inviteeUsersIDTextCtrl,
   required String inviterusername,
   void Function(String code, String message, List<String>)? onCallFinished,
 }) {
   final invitees = <ZegoUIKitUser>[];
-  print('sdfsdgsdfgsdgf-${inviteeUsersIDTextCtrl.text}-${inviterusername}');
-  return ValueListenableBuilder<TextEditingValue>(
-    valueListenable: inviteeUsersIDTextCtrl,
-    builder: (context, inviteeUserID, _) {
-      final invitees = <ZegoUIKitUser>[];
-      invitees.add(ZegoUIKitUser(
-        id: inviteeUsersIDTextCtrl.text,
-        name: 'user_$inviterusername',
-      ));
-      return ZegoSendCallInvitationButton(
-        isVideoCall: isVideoCall,
-        invitees: invitees,
-        resourceID: 'zego_data',
-        iconSize: const Size(40, 40),
-        buttonSize: const Size(50, 50),
-        onPressed: onCallFinished,
-      );
-    },
+  print('sdfsdgsdfgsdgf-${inviteeUsersIDTextCtrl}-${inviterusername}');
+  invitees.add(ZegoUIKitUser(
+    id: inviteeUsersIDTextCtrl,
+    name: 'user_$inviterusername',
+  ));
+  log("check invation data-${invitees}");
+  return ZegoSendCallInvitationButton(
+    isVideoCall: isVideoCall,
+    invitees: invitees,
+    resourceID: 'zego_data',
+    iconSize: const Size(40, 40),
+    buttonSize: const Size(50, 50),
+    onPressed: onCallFinished,
   );
 }
