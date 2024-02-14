@@ -50,7 +50,7 @@ import 'presentation/splash_screen/splash_screen.dart';
 import 'package:flutter_langdetect/flutter_langdetect.dart' as langdetect;
 import 'package:zego_uikit_prebuilt_call/zego_uikit_prebuilt_call.dart';
 import 'package:zego_uikit_signaling_plugin/zego_uikit_signaling_plugin.dart';
-import 'API/Bloc/ReadAll_Bloc/ReadAll_cubit.dart';  
+
 Future<void> _messageHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
   print('background message ${message.notification!.body}');
@@ -251,9 +251,7 @@ class _MyAppState extends State<MyApp> {
         BlocProvider<BlogcommentCubit>(
           create: (context) => BlogcommentCubit(),
         ),
-        BlocProvider<ReadAllMSGCubit>(
-          create: (context) => ReadAllMSGCubit(),
-        ),
+        
       ],
       child: Portal(
         child: MaterialApp(
