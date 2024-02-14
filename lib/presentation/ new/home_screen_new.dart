@@ -1035,7 +1035,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
     }
     if (User_ID != null) {
       PushNotificationAutoOpen();
-      onUserLogin(User_ID!,User_Name ?? '');
+      // onUserLogin(User_ID!,User_Name ?? '');
       // this is the
     }
     // if(videoCallUid !=null){
