@@ -510,16 +510,18 @@ class _MainViewState extends State<MainView> {
                                       scale: 0.9,
                                       child: AnimatedOnTapButton(
                                           onTap: () async {
-                                            if (controlNotifier
-                                                    .mediaPath.isEmpty ==
-                                                true) {
+                                            if (itemProvider
+                                                              .draggableWidget
+                                                              .isEmpty &&
+                                                          !controlNotifier
+                                                              .isTextEditing &&
+                                                          paintingProvider
+                                                              .lines.isEmpty) {
                                             } else {
-                                              // isData = false;
-
+                                           
                                               String pngUri;
                                               print("check else condison");
                                               await takePicture(
-                                                 
                                                       SelectPath:
                                                           controlNotifier
                                                               .mediaPath,
@@ -563,12 +565,13 @@ class _MainViewState extends State<MainView> {
                                                   Text(
                                                     'Share',
                                                     style: TextStyle(
-                                                        color: isData ==
-                                                                    false &&
-                                                                controlNotifier
-                                                                        .mediaPath
-                                                                        .isEmpty ==
-                                                                    true
+                                                        color: itemProvider
+                                                            .draggableWidget
+                                                            .isEmpty &&
+                                                        !controlNotifier
+                                                            .isTextEditing &&
+                                                        paintingProvider
+                                                            .lines.isEmpty
                                                             ? Colors.grey
                                                             : Colors.white,
                                                         letterSpacing: 1.5,
@@ -1049,11 +1052,15 @@ class _MainViewState extends State<MainView> {
 
     /// show close dialog
     else if (!controlNotifier.isTextEditing && !controlNotifier.isPainting) {
-      print("else if -${controlNotifier.isTextEditing }");
-      print("else if -${controlNotifier.isPainting }");
+      print("else if -${controlNotifier.isTextEditing}");
+      print("else if -${controlNotifier.isPainting}");
 
       return widget.onBackPress ??
-          exitDialog(context: context, contentKey: contentKey, isTextEditing: controlNotifier.isTextEditing,selctedparth: controlNotifier.mediaPath);
+          exitDialog(
+              context: context,
+              contentKey: contentKey,
+              isTextEditing: controlNotifier.isTextEditing,
+              selctedparth: controlNotifier.mediaPath);
     }
     return false;
   }
