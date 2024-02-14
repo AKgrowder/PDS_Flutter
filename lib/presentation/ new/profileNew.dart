@@ -2,6 +2,7 @@
 
 import 'dart:io';
 import 'dart:math';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:file_picker/file_picker.dart';
@@ -1305,15 +1306,13 @@ class _ProfileScreenState extends State<ProfileScreen>
                         ),
                         /* NewProfileData?.object?.isFollowing == 'FOLLOWING' ||
                         User_ID == NewProfileData?.object?.userUid || NewProfileData?.object?.accountType == 'PUBLIC' */
+                      
                         if (User_ID == NewProfileData?.object?.userUid ||
                             (NewProfileData?.object?.isFollowing ==
                                     'FOLLOWING' &&
-                                NewProfileData?.object?.accountType ==
-                                    'PRIVATE' &&
-                                NewProfileData?.object?.approvalStatus !=
-                                    "PENDING" &&
-                                NewProfileData?.object?.approvalStatus ==
-                                    "REJECTED"))
+                                (NewProfileData?.object?.accountType ==
+                                    'PRIVATE' ||NewProfileData?.object?.accountType ==
+                                    'PUBLIC')))
                           Container(
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -1545,12 +1544,9 @@ class _ProfileScreenState extends State<ProfileScreen>
                         if (User_ID == NewProfileData?.object?.userUid ||
                             (NewProfileData?.object?.isFollowing ==
                                     'FOLLOWING' &&
-                                NewProfileData?.object?.accountType ==
-                                    'PRIVATE' &&
-                                NewProfileData?.object?.approvalStatus !=
-                                    "PENDING" &&
-                                NewProfileData?.object?.approvalStatus ==
-                                    "REJECTED"))
+                                (NewProfileData?.object?.accountType ==
+                                    'PRIVATE' ||NewProfileData?.object?.accountType ==
+                                    'PUBLIC')))
 
                           /* Container(
                         // color: Colors.red,
@@ -2251,9 +2247,12 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                             _height, _width),
                                                       )
                                                     : SizedBox(),
-                                                NewProfileData
-                                                            ?.object?.module ==
-                                                        "COMPANY"
+                                                NewProfileData?.object
+                                                                ?.module ==
+                                                            "COMPANY" &&
+                                                        NewProfileData?.object
+                                                                ?.approvalStatus !=
+                                                            'PENDING'
                                                     ? Card(
                                                         color: Colors.white,
                                                         borderOnForeground:
@@ -2290,9 +2289,12 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                       ),
                                                     ) */
                                                     : SizedBox(),
-                                                NewProfileData
-                                                            ?.object?.module ==
-                                                        "EXPERT"
+                                                NewProfileData?.object
+                                                                ?.module ==
+                                                            "EXPERT" &&
+                                                        NewProfileData?.object
+                                                                ?.approvalStatus !=
+                                                            'PENDING' 
                                                     ? Card(
                                                         color: Colors.white,
                                                         borderOnForeground:
@@ -9233,7 +9235,7 @@ class _ProfileScreenState extends State<ProfileScreen>
         (NewProfileData?.object?.isFollowing == 'FOLLOWING' &&
             NewProfileData?.object?.accountType == 'PRIVATE' &&
             NewProfileData?.object?.approvalStatus != "PENDING" &&
-            NewProfileData?.object?.approvalStatus == "REJECTED")) {
+            NewProfileData?.object?.approvalStatus != "REJECTED")) {
       return Column(
         children: [
           ListTile(
