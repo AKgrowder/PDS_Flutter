@@ -142,7 +142,7 @@ class _NewNotifactionScreenState extends State<NewNotifactionScreen>
                                 Spacer(),
                                 Container(
                                   alignment: Alignment.bottomRight,
-                                  width: 150,
+                                  width: 250,
                                   // color: Colors.amber,
                                   child: Text(
                             'Notifications',
