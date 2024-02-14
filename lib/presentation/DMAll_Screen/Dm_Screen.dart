@@ -101,20 +101,19 @@ class _DmScreenState extends State<DmScreen> {
   String formattedDate = DateFormat('dd-MM-yyyy').format(now);
   List<StoryButtonData> buttonDatas = [];
 
-void onSendCallInvitationFinished(
-  String code,
-  String message,
-  List<String> errorInvitees,
-  
-) async {
-   final SharedPreferences prefs = await SharedPreferences.getInstance();
-   prefs.setString(PreferencesKey.vidoCallUid,widget.videoId ?? '') ?? "";
-  showToast(
-    message,
-    position: StyledToastPosition.top,
-    context: context,
-  );
-}
+  void onSendCallInvitationFinished(
+    String code,
+    String message,
+    List<String> errorInvitees,
+  ) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString(PreferencesKey.vidoCallUid, widget.videoId ?? '') ?? "";
+    showToast(
+      message,
+      position: StyledToastPosition.top,
+      context: context,
+    );
+  }
 
   void _goToElement() {
     scrollController.jumpTo(scrollController.position.maxScrollExtent + 100);
@@ -173,14 +172,12 @@ void onSendCallInvitationFinished(
 
   void dispose() {
     DMstompClient.deactivate();
-     
+
     // Delet_DMstompClient.deactivate();
     super.dispose();
   }
 
   String preprocessText(String text) {
-    // Add custom logic to preprocess the text before linkifying
-    // In this example, we exclude patterns that end with '.com'
     return text.replaceAll(RegExp(r'\b(?:https?://)?\S+\.com\b'), '');
   }
 
@@ -351,6 +348,88 @@ void onSendCallInvitationFinished(
               if (state is GetAllStoryLoadedState) {
                 print('this stater Caling');
                 buttonDatas.clear();
+                print("this is the Data Get");
+                if (userId == widget.UserUID) {
+                  print("if condison is working check UserId");
+                } else if (userId != widget.UserUID) {
+                  print("else if  condison is working check UserId");
+                  state.getAllStoryModel.object?.forEach((element) {
+                    print(
+                        "elemen check -${element.userName}--${element.userUid}");
+                    if (element.userName == widget.UserName) {
+                      element.storyData?.forEach((index) {
+                        List<StoryModel> images = [
+                          StoryModel(
+                              index.storyData!,
+                              index.createdAt!,
+                              index.profilePic,
+                              index.userName,
+                              index.storyUid,
+                              index.userUid,
+                              index.storyViewCount,
+                              index.videoDuration ?? 15)
+                        ];
+                        buttonDatas.insert(
+                            0,
+                            StoryButtonData(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(5.0),
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.max,
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: [
+                                      Text(
+                                        '',
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                images: images,
+                                segmentDuration: const Duration(seconds: 3),
+                                storyPages: [
+                                  FullStoryPage(
+                                    imageName: '${index.storyData}',
+                                  )
+                                ]));
+                                 Navigator.of(context)
+                          .push(
+                            StoryRoute(
+                              // hii working Date
+                              onTap: () async {
+                                await BlocProvider.of<DmInboxCubit>(context)
+                                    .seetinonExpried(context);
+                                Navigator.push(context,
+                                    MaterialPageRoute(builder: (context) {
+                                  return ProfileScreen(
+                                      User_ID: "${index.userUid}",
+                                      isFollowing: "");
+                                }));
+                              },
+                              storyContainerSettings: StoryContainerSettings(
+                                buttonData: buttonDatas.first,
+                                tapPosition:
+                                    buttonDatas.first.buttonCenterPosition ??
+                                        dataGet!.localPosition,
+                                curve: buttonDatas.first.pageAnimationCurve,
+                                allButtonDatas: buttonDatas,
+                                pageTransform: StoryPage3DTransform(),
+                                storyListScrollController: ScrollController(),
+                              ),
+                              duration: buttonDatas.first.pageAnimationDuration,
+                            ),
+                          )
+                          .then((value) => pageNumberMethod());
+                      });
+                    } else {
+                      print("else in else");
+                    }
+                  });
+                }
+                /* buttonDatas.clear();
                 state.getAllStoryModel.object?.forEach((element) {
                   if (element.userUid != userId) {
                     element.storyData?.forEach((index) {
@@ -427,7 +506,15 @@ void onSendCallInvitationFinished(
                       print("sdfdfsdgf");
                     });
                   } else if (element.userUid == userId) {
-                    element.storyData?.forEach((index) {
+                      buttonDatas.clear();
+                    print("else if working");
+                    print("storyuid in else if -$stroyUid");
+                    print("storyuid in else if -$stroyUid");
+                    state.getAllStoryModel.object?.forEach((element) {
+                      print("sdhhsdfsdhfsdhffsd-${element.userName}");
+                    });
+                   /*  element.storyData?.forEach((index) {
+                      print("check incex stroyuid-${index.storyUid}-${stroyUid}");
                       if (index.storyUid == stroyUid) {
                         print("sdfvdgsdgdddg-${index.storyUid}");
                         List<StoryModel> images = [
@@ -468,6 +555,7 @@ void onSendCallInvitationFinished(
                                   )
                                 ]));
                       }
+                      print("cgsdfdfgdfgdvsd-${buttonDatas.length}");
                       Navigator.of(context)
                           .push(
                             StoryRoute(
@@ -496,9 +584,9 @@ void onSendCallInvitationFinished(
                             ),
                           )
                           .then((value) => pageNumberMethod());
-                    });
+                    }); */
                   }
-                });
+                }); */
               }
             }, builder: (context, state) {
               return Padding(
@@ -630,19 +718,17 @@ void onSendCallInvitationFinished(
                                       ),
                                     ),
                                   ),
-                                  Padding(
+                                  /*    Padding(
                                     padding: EdgeInsets.only(right: 5),
                                     child: sendCallButton(
                                       isVideoCall: true,
-                                      inviteeUsersIDTextCtrl:
-                                          TextEditingController(
-                                              text: widget.videoId),
+                                      inviteeUsersIDTextCtrl: widget.UserUID,
                                       onCallFinished:
                                           onSendCallInvitationFinished,
-                                          inviterusername: widget.UserName,
+                                      inviterusername: widget.UserName,
                                     ),
-                                  )
-                                 /*   Padding(
+                                  ) */
+                                  /*   Padding(
                                     padding: EdgeInsets.only(right: 5),
                                     child: GestureDetector(
                                       onTap: () async {

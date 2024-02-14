@@ -932,10 +932,10 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
                   : SizedBox(),
               if (User_ID != widget.buttonData.images[_curSegmentIndex].userUid)
                 Positioned(
-                    bottom: 0,
+                    bottom: 30,
                     child: Container(
                       height: 50,
-                      margin: EdgeInsets.only(left: 10, right: 10),
+                      margin: EdgeInsets.only(left: 15, right: 15),
                       width: MediaQuery.of(context).size.height / 2.4,
                       alignment: Alignment.center,
                       decoration: BoxDecoration(
@@ -955,8 +955,8 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
                               style: TextStyle(color: Colors.white),
                               decoration: InputDecoration(
                                   contentPadding: EdgeInsets.only(
-                                    left: 10,
-                                    right: 10,
+                                    left: 15,
+                                    right: 15,
                                   ),
                                   hintText: 'Send Meesage',
                                   hintStyle: TextStyle(color: Colors.white),
