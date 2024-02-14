@@ -6,6 +6,7 @@ import 'package:pds/API/Model/acceptRejectInvitaionModel/getAllNotificationCount
 import 'package:pds/API/Model/acceptRejectInvitaionModel/seenNotificationModel.dart';
 
 import '../../Model/InvitationModel/Invitation_Model.dart';
+import '../../Model/ReadAllModel/ReadAll_model.dart';
 
 abstract class InvitationState {}
 
@@ -38,7 +39,6 @@ class accept_rejectLoadedState extends InvitationState {
   accept_rejectLoadedState(this.accept_rejectData);
 }
 
-
 class GetAllNotificationLoadedState extends InvitationState {
   final GetAllNotificationModel AllNotificationData;
   GetAllNotificationLoadedState(this.AllNotificationData);
@@ -49,8 +49,17 @@ class SeenNotificationLoadedState extends InvitationState {
   SeenNotificationLoadedState(this.SeenNotificationData);
 }
 
-
 class GetNotificationCountLoadedState extends InvitationState {
   final getAllNotificationCount GetNotificationCountData;
   GetNotificationCountLoadedState(this.GetNotificationCountData);
+}
+
+class ReadAllMSGLoadedState extends InvitationState {
+  final ReadAllModel ReadAllMSGModelData;
+  ReadAllMSGLoadedState(this.ReadAllMSGModelData);
+}
+
+class ReadAllMSGErrorState extends InvitationState {
+  final dynamic error;
+  ReadAllMSGErrorState(this.error);
 }
