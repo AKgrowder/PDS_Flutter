@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:pds/API/Bloc/ReadAll_Bloc/ReadAll_state.dart';
+
 import 'package:pds/core/utils/color_constant.dart';
 
 import '../../API/Bloc/Invitation_Bloc/Invitation_cubit.dart';
-import '../../API/Bloc/ReadAll_Bloc/ReadAll_cubit.dart';
+import '../../API/Bloc/Invitation_Bloc/Invitation_state.dart';
+
 
 class ReadAlldailog extends StatefulWidget {
   @override
@@ -54,7 +55,7 @@ class ReadAlldailogState extends State<ReadAlldailog>
             child: SingleChildScrollView(
               child: Column(
                 children: [
-                 BlocConsumer<ReadAllMSGCubit, ReadAllMSGState>(listener: (context, state) {
+                 BlocConsumer<InvitationCubit, InvitationState>(listener: (context, state) {
                       if (state is ReadAllMSGErrorState) {
              
                
@@ -124,7 +125,7 @@ class ReadAlldailogState extends State<ReadAlldailog>
                                   child: const Text('Okay',
                                       style: TextStyle(color: Colors.white)),
                                   onPressed: () async {
-                                     BlocProvider.of<ReadAllMSGCubit>(context)
+                                     BlocProvider.of<InvitationCubit>(context)
                                         .ReadAllMassagesAPI(context);
                                   },
                                 ),

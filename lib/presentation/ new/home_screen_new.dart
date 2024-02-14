@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chewie/chewie.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:dio/dio.dart';
@@ -11,7 +10,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_langdetect/flutter_langdetect.dart' as langdetect;
 import 'package:intl/intl.dart';
 import 'package:linkfy_text/linkfy_text.dart';
 import 'package:path_provider/path_provider.dart';
@@ -69,19 +67,14 @@ import 'package:pds/widgets/videocallcommennotifaction.dart/videocallcommenmetho
 import 'package:permission_handler/permission_handler.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:translator/translator.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:video_player/video_player.dart';
 import 'package:visibility_detector/visibility_detector.dart';
-import 'package:pds/videocallkey/projectkey.dart';
-import 'package:zego_uikit_prebuilt_call/zego_uikit_prebuilt_call.dart';
+
 // import 'package:flutter_langdetect/flutter_langdetect.dart' as langdetect;
 import '../../API/Model/Get_all_blog_Model/get_all_blog_model.dart';
 import '../../API/Model/UserTagModel/UserTag_model.dart';
 import '../become_an_expert_screen/become_an_expert_screen.dart';
-import 'package:flutter_langdetect/flutter_langdetect.dart' as langdetect;
-import 'package:pds/videocallkey/projectkey.dart';
-import 'package:zego_uikit_signaling_plugin/zego_uikit_signaling_plugin.dart';
 
 class HomeScreenNew extends StatefulWidget {
   ScrollController scrollController;
@@ -2918,7 +2911,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                               children: [
                                                                                 Expanded(
                                                                                   child: Container(
-                                                                                    // color: Colors.amber,
+                                                                                    color: Colors.amber,
                                                                                     child: LinkifyText(
                                                                                       AllGuestPostRoomData?.object?.content?[index].isTrsnalteoption == false || AllGuestPostRoomData?.object?.content?[index].isTrsnalteoption == null ? "${AllGuestPostRoomData?.object?.content?[index].description}" : "${AllGuestPostRoomData?.object?.content?[index].translatedDescription}",
                                                                                       linkStyle: TextStyle(
@@ -4436,7 +4429,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                 //////////////////////////////////////////////////////////////////////////////////////////////////////////
                                                                                 Expanded(
                                                                                   child: Container(
-                                                                                    // color: Colors.red,
+                                                                                    color: Colors.red,
                                                                                     child: LinkifyText(
                                                                                       /*    utf8.decode(AllGuestPostRoomData?.object?.content?[index].description?.runes.toList() ??
                                                                                           []), */
@@ -5327,7 +5320,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                     width: 128,
                                                                                     radius: BorderRadius.only(topLeft: Radius.circular(10), topRight: Radius.circular(10)),
                                                                                     url: "${AllExperData?.object?[index].profilePic}",
-                                                                                    fit: BoxFit.cover,
+                                                                                    fit: BoxFit.cover, 
                                                                                   ),
                                                                             Align(
                                                                               alignment: Alignment.topCenter,

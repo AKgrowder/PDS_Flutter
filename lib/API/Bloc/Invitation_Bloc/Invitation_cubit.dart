@@ -144,7 +144,7 @@ class InvitationCubit extends Cubit<InvitationState> {
     } catch (e) {
       emit(InvitationErrorState(acceptRejectInvitationModel));
     }
-  } 
+  }
 
   Future<void> getAllNoticationsCountAPI(BuildContext context) async {
     dynamic acceptRejectInvitationModel;
@@ -162,6 +162,23 @@ class InvitationCubit extends Cubit<InvitationState> {
       }
     } catch (e) {
       emit(InvitationErrorState(acceptRejectInvitationModel));
+    }
+  }
+
+  Future<void> ReadAllMassagesAPI(BuildContext context) async {
+    dynamic readAllMsg;
+    try {
+      emit(InvitationLoadingState());
+      readAllMsg = await Repository().ReadAllMassages(context);
+      if (readAllMsg == "Something Went Wrong, Try After Some Time.") {
+        emit(ReadAllMSGErrorState("${readAllMsg}"));
+      } else {
+        if (readAllMsg.success == true) {
+          emit(ReadAllMSGLoadedState(readAllMsg));
+        }
+      }
+    } catch (e) {
+      emit(ReadAllMSGErrorState(readAllMsg));
     }
   }
 }
