@@ -2911,7 +2911,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                               children: [
                                                                                 Expanded(
                                                                                   child: Container(
-                                                                                    color: Colors.amber,
+                                                                                    // color: Colors.amber,
                                                                                     child: LinkifyText(
                                                                                       AllGuestPostRoomData?.object?.content?[index].isTrsnalteoption == false || AllGuestPostRoomData?.object?.content?[index].isTrsnalteoption == null ? "${AllGuestPostRoomData?.object?.content?[index].description}" : "${AllGuestPostRoomData?.object?.content?[index].translatedDescription}",
                                                                                       linkStyle: TextStyle(
@@ -4429,7 +4429,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                 //////////////////////////////////////////////////////////////////////////////////////////////////////////
                                                                                 Expanded(
                                                                                   child: Container(
-                                                                                    color: Colors.red,
+                                                                                    // color: Colors.red,
                                                                                     child: LinkifyText(
                                                                                       /*    utf8.decode(AllGuestPostRoomData?.object?.content?[index].description?.runes.toList() ??
                                                                                           []), */
