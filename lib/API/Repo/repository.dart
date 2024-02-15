@@ -2936,6 +2936,27 @@ openSaveImagePost(BuildContext context, String PostUID) async {
     }
   }
 
+  readnotificationscount(BuildContext context) async {
+    final responce = await apiServices.getApiCallWithToken(
+        '${Config.readnotificationscount}', context);
+    var jsonString = json.decode(responce.body);
+    print('jasonnString$jsonString');
+    switch (responce.statusCode) {
+      case 200:
+        return ReadAllModel.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+      case 400:
+        return Config.somethingWentWrong;
+      case 701:
+        return Config.somethingWentWrong;
+      default:
+        return jsonString;
+    }
+  }
+ 
 }
 // var headers = {
 //   'Authorization': 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJpc1ZlcmlmaWVkIjp0cnVlLCJtb2R1bGUiOiJFTVBMT1lFRSIsImlzQWN0aXZlIjp0cnVlLCJ1dWlkIjoiODYwMWViNTItNzk4NS00MWU3LTgwOTAtYmMyMjQ0MjkwZjkzIiwidXNlcm5hbWUiOiJBTiIsInN1YiI6IkFOIiwiaWF0IjoxNjkxMTUyODIxLCJleHAiOjE2OTIyMzI4MjF9.AjSlFxHlTU9opgsyXaqVh_sMQuv7f-fKGmIGle6879MD-OAGTNcPN5r9ZW8Go1124YE2BbSrc1Lj5GuspgilWg'

@@ -181,4 +181,22 @@ class InvitationCubit extends Cubit<InvitationState> {
       emit(ReadAllMSGErrorState(readAllMsg));
     }
   }
+
+
+   Future<void> readnotificationscount(BuildContext context) async {
+    dynamic readAllMsg;
+    try {
+      emit(InvitationLoadingState());
+      readAllMsg = await Repository().readnotificationscount(context);
+      if (readAllMsg == "Something Went Wrong, Try After Some Time.") {
+        emit(ReadAllMSGErrorState("${readAllMsg}"));
+      } else {
+        if (readAllMsg.success == true) {
+          emit(ReadAllMSGLoadedState(readAllMsg));
+        }
+      }
+    } catch (e) {
+      emit(ReadAllMSGErrorState(readAllMsg));
+    }
+  }
 }
