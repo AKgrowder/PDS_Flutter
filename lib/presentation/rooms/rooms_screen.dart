@@ -1177,9 +1177,9 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                             ),
                                           ),
                                           SizedBox(
-                                            height: 20,
+                                            height: 10,
                                           ),
-                                          Padding(
+                                          /* Padding(
                                             padding: const EdgeInsets.only(
                                                 left: 8.0),
                                             child: Padding(
@@ -1377,9 +1377,9 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                                 ],
                                               ),
                                             ),
-                                          ),
+                                          ), */
 
-                                          Padding(
+                                          /* Padding(
                                             padding: const EdgeInsets.only(
                                                 left: 8.0),
                                             child: Padding(
@@ -1576,7 +1576,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                                 ],
                                               ),
                                             ),
-                                          ),
+                                          ), */
                                           GestureDetector(
                                             onTap: () {
                                               Navigator.push(context,

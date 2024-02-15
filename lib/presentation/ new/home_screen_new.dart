@@ -63,7 +63,6 @@ import 'package:pds/presentation/register_create_account_screen/register_create_
 import 'package:pds/presentation/splash_screen/splash_screen.dart';
 import 'package:pds/widgets/commentPdf.dart';
 import 'package:pds/widgets/pagenation.dart';
-import 'package:pds/widgets/videocallcommennotifaction.dart/videocallcommenmethod.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -182,6 +181,9 @@ class _HomeScreenNewState extends State<HomeScreenNew>
   UserTagModel? userTagModel;
   List<ChewieController> chewieController = [];
   ChewieController? inList;
+  bool isExpanded = false;
+  int maxLength = 60;
+  List<bool> readmoree = [];
 
   bool isWatch = false;
   getDocumentSize() async {
@@ -1706,6 +1708,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                 }
               }
               if (state is GetGuestAllPostLoadedState) {
+                readmoree.clear();
                 mainPostControllers.clear();
                 videoUrls.clear();
                 VideoPlayerController _controller =
@@ -1714,6 +1717,13 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                 AllGuestPostRoomData = state.GetGuestAllPostRoomData;
 
                 AllGuestPostRoomData?.object?.content?.forEach((element) {
+                  if (element.description != null) {
+                    readmoree
+                        .add((element.description?.length ?? 0) <= maxLength);
+                  } else {
+                    readmoree.add(false);
+                  }
+
                   if (element.postDataType == 'VIDEO') {
                     if (element.postData?.isNotEmpty == true) {
                       videoUrls.add(element.postData?.first ?? '');
@@ -1739,6 +1749,8 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                   /*  chewieController.add(inList ??
                       ChewieController(videoPlayerController: _controller)); */
                 });
+                print(
+                    "readmoreereadmoreereadmoreereadmoree:-- ${readmoree.length}");
                 /*  print("chewieController length -${chewieController.length}"); */
               }
               if (state is PostLikeLoadedState) {
@@ -2817,7 +2829,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                           crossAxisAlignment:
                                                                               CrossAxisAlignment.start,
                                                                           children: [
-                                                                            AllGuestPostRoomData?.object?.content?[index].translatedDescription != null
+                                                                           /*  AllGuestPostRoomData?.object?.content?[index].translatedDescription != null
                                                                                 ? GestureDetector(
                                                                                     onTap: () async {
                                                                                       /*  // print("value cheak${AllGuestPostRoomData?.object?.content?[index].isfalsegu}");
@@ -2906,14 +2918,21 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                 : SizedBox(),
                                                                             SizedBox(
                                                                               height: 10,
-                                                                            ),
+                                                                            ), */
                                                                             Row(
                                                                               children: [
                                                                                 Expanded(
                                                                                   child: Container(
                                                                                     // color: Colors.amber,
                                                                                     child: LinkifyText(
-                                                                                      AllGuestPostRoomData?.object?.content?[index].isTrsnalteoption == false || AllGuestPostRoomData?.object?.content?[index].isTrsnalteoption == null ? "${AllGuestPostRoomData?.object?.content?[index].description}" : "${AllGuestPostRoomData?.object?.content?[index].translatedDescription}",
+                                                                                      // AllGuestPostRoomData?.object?.content?[index].isTrsnalteoption == false || AllGuestPostRoomData?.object?.content?[index].isTrsnalteoption == null ? "${AllGuestPostRoomData?.object?.content?[index].description}" : "${AllGuestPostRoomData?.object?.content?[index].translatedDescription}",
+                                                                                       readmoree[index] == true
+                                                                                    ? (AllGuestPostRoomData?.object?.content?[index].isTrsnalteoption == false || AllGuestPostRoomData?.object?.content?[index].isTrsnalteoption == null)
+                                                                                        ? "${AllGuestPostRoomData?.object?.content?[index].description}"
+                                                                                        : "${AllGuestPostRoomData?.object?.content?[index].translatedDescription}"
+                                                                                    : (AllGuestPostRoomData?.object?.content?[index].isTrsnalteoption == false || AllGuestPostRoomData?.object?.content?[index].isTrsnalteoption == null)
+                                                                                        ? "${AllGuestPostRoomData?.object?.content?[index].description?.substring(0, maxLength)}...."
+                                                                                        : "${AllGuestPostRoomData?.object?.content?[index].translatedDescription?.substring(0, maxLength)}....",
                                                                                       linkStyle: TextStyle(
                                                                                         color: Colors.blue,
                                                                                         fontFamily: 'outfit',
@@ -2998,6 +3017,72 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                 ),
                                                                               ],
                                                                             ),
+                                                                              AllGuestPostRoomData?.object?.content?[index].translatedDescription !=
+                                                                              null
+                                                                          ? readmoree[index] == true ? GestureDetector(
+                                                                              onTap: () async {
+                                                                                super.setState(() {
+                                                                                  if (AllGuestPostRoomData?.object?.content?[index].isTrsnalteoption == false || AllGuestPostRoomData?.object?.content?[index].isTrsnalteoption == null) {
+                                                                                    AllGuestPostRoomData?.object?.content?[index].isTrsnalteoption = true;
+                                                                                  } else {
+                                                                                    AllGuestPostRoomData?.object?.content?[index].isTrsnalteoption = false;
+                                                                                  }
+                                                                                });
+                                                                              },
+                                                                              child: Container(
+                                                                                  width: 80,
+                                                                                  decoration: BoxDecoration(
+                                                                                    color: ColorConstant.primaryLight_color,
+                                                                                    borderRadius: BorderRadius.circular(10),
+                                                                                  ),
+                                                                                  child: Center(
+                                                                                      child: Text(
+                                                                                    "Translate",
+                                                                                    style: TextStyle(
+                                                                                      fontFamily: 'outfit',
+                                                                                      fontWeight: FontWeight.bold,
+                                                                                    ),
+                                                                                  ))),
+                                                                            ) : SizedBox()
+                                                                          : SizedBox(),
+                                                                      Align(
+                                                                        alignment:
+                                                                            Alignment.centerRight,
+                                                                        child: (AllGuestPostRoomData?.object?.content?[index].description?.length ?? 0) >
+                                                                                maxLength
+                                                                            ? GestureDetector(
+                                                                                onTap: () {
+                                                                                  setState(() {
+                                                                                    if (readmoree[index] == true) {
+                                                                                      readmoree[index] = false;
+                                                                                      print("--------------false ");
+                                                                                    } else {
+                                                                                      readmoree[index] = true;
+                                                                                      print("-------------- true");
+                                                                                    }
+                                                                                  });
+                                                                                },
+                                                                                child: Container(
+                                                                                  // color: Colors.red,
+                                                                                  width: 75,
+                                                                                  height: 15,
+                                                                                  child: Align(
+                                                                                    alignment: Alignment.centerLeft,
+                                                                                    child: Text(
+                                                                                      readmoree[index]
+                                                                                          ?
+                                                                                          'Read Less'
+                                                                                          : 'Read More',
+                                                                                      style: TextStyle(
+                                                                                        color: Colors.blue,
+                                                                                        fontWeight: FontWeight.bold,
+                                                                                      ),
+                                                                                    ),
+                                                                                  ),
+                                                                                ),
+                                                                              )
+                                                                            : SizedBox(),
+                                                                      )
                                                                           ],
                                                                         )),
                                                               )
@@ -4354,191 +4439,241 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                         index]
                                                                     .description !=
                                                                 null
-                                                            ? Padding(
-                                                                padding:
-                                                                    const EdgeInsets
-                                                                            .only(
-                                                                        left:
-                                                                            16),
-                                                                child:
-                                                                    //this is the despcation
-                                                                    GestureDetector(
-                                                                        onTap:
-                                                                            () async {
-                                                                          if (DataGet ==
-                                                                              true) {
-                                                                            await launch('${AllGuestPostRoomData?.object?.content?[index].description}',
-                                                                                forceWebView: true,
-                                                                                enableJavaScript: true);
-                                                                          } else {
-                                                                            Navigator
-                                                                                .push(
-                                                                              context,
-                                                                              MaterialPageRoute(
-                                                                                  builder: (context) => OpenSavePostImage(
-                                                                                        PostID: AllGuestPostRoomData?.object?.content?[index].postUid,
-                                                                                      )),
-                                                                            ).then((value) =>
-                                                                                setColorr());
-                                                                          }
-                                                                        },
-                                                                        child:
-                                                                            Column(
-                                                                          crossAxisAlignment:
-                                                                              CrossAxisAlignment.start,
-                                                                          children: [
-                                                                            AllGuestPostRoomData?.object?.content?[index].translatedDescription != null
-                                                                                ? GestureDetector(
-                                                                                    onTap: () async {
-                                                                                      super.setState(() {
-                                                                                        if (AllGuestPostRoomData?.object?.content?[index].isTrsnalteoption == false || AllGuestPostRoomData?.object?.content?[index].isTrsnalteoption == null) {
-                                                                                          AllGuestPostRoomData?.object?.content?[index].isTrsnalteoption = true;
+                                                            ? GestureDetector(
+                                                                onTap:
+                                                                    () async {
+                                                                  if (DataGet ==
+                                                                      true) {
+                                                                    await launch(
+                                                                        '${AllGuestPostRoomData?.object?.content?[index].description}',
+                                                                        forceWebView:
+                                                                            true,
+                                                                        enableJavaScript:
+                                                                            true);
+                                                                  } else {
+                                                                    Navigator
+                                                                        .push(
+                                                                      context,
+                                                                      MaterialPageRoute(
+                                                                          builder: (context) =>
+                                                                              OpenSavePostImage(
+                                                                                PostID: AllGuestPostRoomData?.object?.content?[index].postUid,
+                                                                              )),
+                                                                    ).then((value) =>
+                                                                        setColorr());
+                                                                  }
+                                                                },
+                                                                child: Padding(
+                                                                  padding: const EdgeInsets
+                                                                          .only(
+                                                                      left: 16),
+                                                                  child: Column(
+                                                                    crossAxisAlignment:
+                                                                        CrossAxisAlignment
+                                                                            .start,
+                                                                    children: [
+                                                                     
+                                                                     /*  SizedBox(
+                                                                        height:
+                                                                            10,
+                                                                      ), */
+                                                                      Row(
+                                                                        children: [
+                                                                          ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+                                                                          /*  Expanded(
+                                                                            child: GestureDetector(onTap: () {
+                                                                            print("cheakkkkkkkkkkkkkkkk${AllGuestPostRoomData?.object?.content?[index].description ?? ''}");
+                                                                            print("index-$index");
+                                                                          },
+                                                                            child: Text(AllGuestPostRoomData?.object?.content?[index].description ?? '',))) */
+                                                                          //////////////////////////////////////////////////////////////////////////////////////////////////////////
+                                                                          Expanded(
+                                                                            child:
+                                                                                Container(
+                                                                              // color: Colors.red,
+                                                                              child: LinkifyText(
+                                                                                /*    utf8.decode(AllGuestPostRoomData?.object?.content?[index].description?.runes.toList() ??
+                                                                                    []), */
+                                                                                readmoree[index] == true
+                                                                                    ? (AllGuestPostRoomData?.object?.content?[index].isTrsnalteoption == false || AllGuestPostRoomData?.object?.content?[index].isTrsnalteoption == null)
+                                                                                        ? "${AllGuestPostRoomData?.object?.content?[index].description}"
+                                                                                        : "${AllGuestPostRoomData?.object?.content?[index].translatedDescription}"
+                                                                                    : (AllGuestPostRoomData?.object?.content?[index].isTrsnalteoption == false || AllGuestPostRoomData?.object?.content?[index].isTrsnalteoption == null)
+                                                                                        ? "${AllGuestPostRoomData?.object?.content?[index].description?.substring(0, maxLength)}...."
+                                                                                        : "${AllGuestPostRoomData?.object?.content?[index].translatedDescription?.substring(0, maxLength)}....",
+                                                                                linkStyle: TextStyle(
+                                                                                  color: Colors.blue,
+                                                                                  fontFamily: 'outfit',
+                                                                                ),
+                                                                                textStyle: TextStyle(
+                                                                                  color: Colors.black,
+                                                                                  fontFamily: 'outfit',
+                                                                                ),
+                                                                                linkTypes: [
+                                                                                  LinkType.url,
+                                                                                  LinkType.userTag,
+                                                                                  LinkType.hashTag,
+                                                                                  // LinkType
+                                                                                  //     .email
+                                                                                ],
+                                                                                onTap: (link) async {
+                                                                                  /// do stuff with `link` like
+                                                                                  /// if(link.type == Link.url) launchUrl(link.value);
+
+                                                                                  var SelectedTest = link.value.toString();
+                                                                                  var Link = SelectedTest.startsWith('https');
+                                                                                  var Link1 = SelectedTest.startsWith('http');
+                                                                                  var Link2 = SelectedTest.startsWith('www');
+                                                                                  var Link3 = SelectedTest.startsWith('WWW');
+                                                                                  var Link4 = SelectedTest.startsWith('HTTPS');
+                                                                                  var Link5 = SelectedTest.startsWith('HTTP');
+                                                                                  var Link6 = SelectedTest.startsWith('https://pdslink.page.link/');
+                                                                                  print("tag -- " + SelectedTest.toString());
+
+                                                                                  if (User_ID == null) {
+                                                                                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
+                                                                                  } else {
+                                                                                    if (Link == true || Link1 == true || Link2 == true || Link3 == true || Link4 == true || Link5 == true || Link6 == true) {
+                                                                                      if (Link2 == true || Link3 == true) {
+                                                                                        launchUrl(Uri.parse("https://${link.value.toString()}"));
+                                                                                        print("qqqqqqqqhttps://${link.value}");
+                                                                                      } else {
+                                                                                        if (Link6 == true) {
+                                                                                          print("yes i am inList =   room");
+                                                                                          Navigator.push(context, MaterialPageRoute(
+                                                                                            builder: (context) {
+                                                                                              return NewBottomBar(
+                                                                                                buttomIndex: 1,
+                                                                                              );
+                                                                                            },
+                                                                                          ));
                                                                                         } else {
-                                                                                          AllGuestPostRoomData?.object?.content?[index].isTrsnalteoption = false;
+                                                                                          launchUrl(Uri.parse(link.value.toString()));
+                                                                                          print("link.valuelink.value -- ${link.value}");
                                                                                         }
-                                                                                      });
-                                                                                    },
-                                                                                    child: Container(
-                                                                                        width: 80,
-                                                                                        decoration: BoxDecoration(
-                                                                                          color: ColorConstant.primaryLight_color,
-                                                                                          borderRadius: BorderRadius.circular(10),
-                                                                                        ),
-                                                                                        child: Center(
-                                                                                            child: Text(
-                                                                                          "Translate",
-                                                                                          style: TextStyle(
-                                                                                            fontFamily: 'outfit',
-                                                                                            fontWeight: FontWeight.bold,
-                                                                                          ),
-                                                                                        ))),
-                                                                                  )
-                                                                                : SizedBox(),
-                                                                            SizedBox(
-                                                                              height: 10,
-                                                                            ),
-                                                                            Row(
-                                                                              children: [
-                                                                                ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-                                                                                /*  Expanded(
-                                                                                  child: GestureDetector(onTap: () {
-                                                                                  print("cheakkkkkkkkkkkkkkkk${AllGuestPostRoomData?.object?.content?[index].description ?? ''}");
-                                                                                  print("index-$index");
+                                                                                      }
+                                                                                    } else if (link.value != null) {
+                                                                                      if (link.value!.startsWith('#')) {
+                                                                                        await BlocProvider.of<GetGuestAllPostCubit>(context).seetinonExpried(context);
+                                                                                        Navigator.push(
+                                                                                            context,
+                                                                                            MaterialPageRoute(
+                                                                                              builder: (context) => HashTagViewScreen(title: "${link.value}"),
+                                                                                            ));
+                                                                                      } else if (link.value!.startsWith('@')) {
+                                                                                        await BlocProvider.of<GetGuestAllPostCubit>(context).seetinonExpried(context);
+                                                                                        var name;
+                                                                                        var tagName;
+                                                                                        name = SelectedTest;
+                                                                                        tagName = name.replaceAll("@", "");
+                                                                                        await BlocProvider.of<GetGuestAllPostCubit>(context).UserTagAPI(context, tagName);
+
+                                                                                        Navigator.push(context, MaterialPageRoute(builder: (context) {
+                                                                                          return ProfileScreen(User_ID: "${userTagModel?.object}", isFollowing: "");
+                                                                                        })).then((value) => Get_UserToken());
+
+                                                                                        print("tagName -- ${tagName}");
+                                                                                        print("user id -- ${userTagModel?.object}");
+                                                                                      }
+                                                                                    }
+                                                                                  }
                                                                                 },
-                                                                                  child: Text(AllGuestPostRoomData?.object?.content?[index].description ?? '',))) */
-                                                                                //////////////////////////////////////////////////////////////////////////////////////////////////////////
-                                                                                Expanded(
-                                                                                  child: Container(
-                                                                                    // color: Colors.red,
-                                                                                    child: LinkifyText(
-                                                                                      /*    utf8.decode(AllGuestPostRoomData?.object?.content?[index].description?.runes.toList() ??
-                                                                                          []), */
-                                                                                      AllGuestPostRoomData?.object?.content?[index].isTrsnalteoption == false || AllGuestPostRoomData?.object?.content?[index].isTrsnalteoption == null ? "${AllGuestPostRoomData?.object?.content?[index].description}" : "${AllGuestPostRoomData?.object?.content?[index].translatedDescription}",
-                                                                                      linkStyle: TextStyle(
+                                                                              ),
+                                                                            ),
+                                                                          ),
+
+                                                                          SizedBox(
+                                                                            width:
+                                                                                10,
+                                                                          ),
+                                                                          // InkWell(
+                                                                          //     onTap: () async {
+
+                                                                          //       String inputText = "${AllGuestPostRoomData?.object?.content?[index].description}";
+                                                                          //       String translatedTextGujarati = await translateText(inputText, 'gu');
+                                                                          //       super.setState(() {
+                                                                          //         _translatedTextGujarati = translatedTextGujarati;
+                                                                          //       });
+                                                                          //     },
+                                                                          //     child: Column(
+                                                                          //       children: [
+                                                                          //         Text(
+                                                                          //           "Translate",
+                                                                          //         ),
+                                                                          //         Text(_translatedTextGujarati),
+                                                                          //       ],
+                                                                          //     )),
+                                                                        ],
+                                                                      ),
+                                                                      AllGuestPostRoomData?.object?.content?[index].translatedDescription !=
+                                                                              null
+                                                                          ? readmoree[index] == true ? GestureDetector(
+                                                                              onTap: () async {
+                                                                                super.setState(() {
+                                                                                  if (AllGuestPostRoomData?.object?.content?[index].isTrsnalteoption == false || AllGuestPostRoomData?.object?.content?[index].isTrsnalteoption == null) {
+                                                                                    AllGuestPostRoomData?.object?.content?[index].isTrsnalteoption = true;
+                                                                                  } else {
+                                                                                    AllGuestPostRoomData?.object?.content?[index].isTrsnalteoption = false;
+                                                                                  }
+                                                                                });
+                                                                              },
+                                                                              child: Container(
+                                                                                  width: 80,
+                                                                                  decoration: BoxDecoration(
+                                                                                    color: ColorConstant.primaryLight_color,
+                                                                                    borderRadius: BorderRadius.circular(10),
+                                                                                  ),
+                                                                                  child: Center(
+                                                                                      child: Text(
+                                                                                    "Translate",
+                                                                                    style: TextStyle(
+                                                                                      fontFamily: 'outfit',
+                                                                                      fontWeight: FontWeight.bold,
+                                                                                    ),
+                                                                                  ))),
+                                                                            ) : SizedBox()
+                                                                          : SizedBox(),
+                                                                      Align(
+                                                                        alignment:
+                                                                            Alignment.centerRight,
+                                                                        child: (AllGuestPostRoomData?.object?.content?[index].description?.length ?? 0) >
+                                                                                maxLength
+                                                                            ? GestureDetector(
+                                                                                onTap: () {
+                                                                                  setState(() {
+                                                                                    if (readmoree[index] == true) {
+                                                                                      readmoree[index] = false;
+                                                                                      print("--------------false ");
+                                                                                    } else {
+                                                                                      readmoree[index] = true;
+                                                                                      print("-------------- true");
+                                                                                    }
+                                                                                  });
+                                                                                },
+                                                                                child: Container(
+                                                                                  // color: Colors.red,
+                                                                                  width: 75,
+                                                                                  height: 15,
+                                                                                  child: Align(
+                                                                                    alignment: Alignment.centerLeft,
+                                                                                    child: Text(
+                                                                                      readmoree[index]
+                                                                                          ?
+                                                                                          'Read Less'
+                                                                                          : 'Read More',
+                                                                                      style: TextStyle(
                                                                                         color: Colors.blue,
-                                                                                        fontFamily: 'outfit',
+                                                                                        fontWeight: FontWeight.bold,
                                                                                       ),
-                                                                                      textStyle: TextStyle(
-                                                                                        color: Colors.black,
-                                                                                        fontFamily: 'outfit',
-                                                                                      ),
-                                                                                      linkTypes: [
-                                                                                        LinkType.url,
-                                                                                        LinkType.userTag,
-                                                                                        LinkType.hashTag,
-                                                                                        // LinkType
-                                                                                        //     .email
-                                                                                      ],
-                                                                                      onTap: (link) async {
-                                                                                        /// do stuff with `link` like
-                                                                                        /// if(link.type == Link.url) launchUrl(link.value);
-
-                                                                                        var SelectedTest = link.value.toString();
-                                                                                        var Link = SelectedTest.startsWith('https');
-                                                                                        var Link1 = SelectedTest.startsWith('http');
-                                                                                        var Link2 = SelectedTest.startsWith('www');
-                                                                                        var Link3 = SelectedTest.startsWith('WWW');
-                                                                                        var Link4 = SelectedTest.startsWith('HTTPS');
-                                                                                        var Link5 = SelectedTest.startsWith('HTTP');
-                                                                                        var Link6 = SelectedTest.startsWith('https://pdslink.page.link/');
-                                                                                        print("tag -- " + SelectedTest.toString());
-
-                                                                                        if (User_ID == null) {
-                                                                                          Navigator.of(context).push(MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
-                                                                                        } else {
-                                                                                          if (Link == true || Link1 == true || Link2 == true || Link3 == true || Link4 == true || Link5 == true || Link6 == true) {
-                                                                                            if (Link2 == true || Link3 == true) {
-                                                                                              launchUrl(Uri.parse("https://${link.value.toString()}"));
-                                                                                              print("qqqqqqqqhttps://${link.value}");
-                                                                                            } else {
-                                                                                              if (Link6 == true) {
-                                                                                                print("yes i am inList =   room");
-                                                                                                Navigator.push(context, MaterialPageRoute(
-                                                                                                  builder: (context) {
-                                                                                                    return NewBottomBar(
-                                                                                                      buttomIndex: 1,
-                                                                                                    );
-                                                                                                  },
-                                                                                                ));
-                                                                                              } else {
-                                                                                                launchUrl(Uri.parse(link.value.toString()));
-                                                                                                print("link.valuelink.value -- ${link.value}");
-                                                                                              }
-                                                                                            }
-                                                                                          } else if (link.value != null) {
-                                                                                            if (link.value!.startsWith('#')) {
-                                                                                              await BlocProvider.of<GetGuestAllPostCubit>(context).seetinonExpried(context);
-                                                                                              Navigator.push(
-                                                                                                  context,
-                                                                                                  MaterialPageRoute(
-                                                                                                    builder: (context) => HashTagViewScreen(title: "${link.value}"),
-                                                                                                  ));
-                                                                                            } else if (link.value!.startsWith('@')) {
-                                                                                              await BlocProvider.of<GetGuestAllPostCubit>(context).seetinonExpried(context);
-                                                                                              var name;
-                                                                                              var tagName;
-                                                                                              name = SelectedTest;
-                                                                                              tagName = name.replaceAll("@", "");
-                                                                                              await BlocProvider.of<GetGuestAllPostCubit>(context).UserTagAPI(context, tagName);
-
-                                                                                              Navigator.push(context, MaterialPageRoute(builder: (context) {
-                                                                                                return ProfileScreen(User_ID: "${userTagModel?.object}", isFollowing: "");
-                                                                                              })).then((value) => Get_UserToken());
-
-                                                                                              print("tagName -- ${tagName}");
-                                                                                              print("user id -- ${userTagModel?.object}");
-                                                                                            }
-                                                                                          }
-                                                                                        }
-                                                                                      },
                                                                                     ),
                                                                                   ),
                                                                                 ),
-                                                                                SizedBox(
-                                                                                  width: 10,
-                                                                                ),
-                                                                                // InkWell(
-                                                                                //     onTap: () async {
-
-                                                                                //       String inputText = "${AllGuestPostRoomData?.object?.content?[index].description}";
-                                                                                //       String translatedTextGujarati = await translateText(inputText, 'gu');
-                                                                                //       super.setState(() {
-                                                                                //         _translatedTextGujarati = translatedTextGujarati;
-                                                                                //       });
-                                                                                //     },
-                                                                                //     child: Column(
-                                                                                //       children: [
-                                                                                //         Text(
-                                                                                //           "Translate",
-                                                                                //         ),
-                                                                                //         Text(_translatedTextGujarati),
-                                                                                //       ],
-                                                                                //     )),
-                                                                              ],
-                                                                            ),
-                                                                          ],
-                                                                        )),
-                                                              )
+                                                                              )
+                                                                            : SizedBox(),
+                                                                      )
+                                                                    ],
+                                                                  ),
+                                                                ))
                                                             : SizedBox(),
                                                         // index == 0
 
@@ -5320,7 +5455,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                     width: 128,
                                                                                     radius: BorderRadius.only(topLeft: Radius.circular(10), topRight: Radius.circular(10)),
                                                                                     url: "${AllExperData?.object?[index].profilePic}",
-                                                                                    fit: BoxFit.cover, 
+                                                                                    fit: BoxFit.cover,
                                                                                   ),
                                                                             Align(
                                                                               alignment: Alignment.topCenter,

@@ -64,6 +64,8 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
   String? User_ID;
   StoryViewListModel? StoryViewListModelData;
   late PointerUpEvent event1;
+  PointerUpEvent eventdata = PointerUpEvent();
+
   DeleteStory? deleteStory;
   bool ifVideoPlayer = false;
   String lastLoggedTime = "";
@@ -537,7 +539,7 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
         _storyController!.unpause();
       },
       child: GestureDetector(
-        onVerticalDragStart: (details) {
+        /*  onVerticalDragStart: (details) {
           if (User_ID != widget.buttonData.images[_curSegmentIndex].userUid) {
             final pointerUpMillis = _stopwatch.elapsedMilliseconds;
             final maxPressMillis = kPressTimeout.inMilliseconds * 2;
@@ -574,7 +576,7 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
               isBottomSheetOpen = false;
             });
           });
-        },
+        }, */
         /* onVerticalDragEnd: (details) {
            final pointerUpMillis = _stopwatch.elapsedMilliseconds;
         final maxPressMillis = kPressTimeout.inMilliseconds * 2;
@@ -949,8 +951,55 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
                               focusNode: _focusNode,
                               minLines: 1,
                               maxLines: null,
+                              onTap: () {
+                                if (User_ID !=
+                                    widget.buttonData.images[_curSegmentIndex]
+                                        .userUid) {
+                                  final pointerUpMillis =
+                                      _stopwatch.elapsedMilliseconds;
+                                  final maxPressMillis =
+                                      kPressTimeout.inMilliseconds * 2;
+                                  final diffMillis =
+                                      pointerUpMillis - _pointerDownMillis;
+                                  if (diffMillis <= maxPressMillis) {
+                                    final position = event1.position;
+                                    final distance =
+                                        (position - _pointerDownPosition)
+                                            .distance;
+                                    if (distance < 5.0) {
+                                      final isLeft =
+                                          _isLeftPartOfStory(position);
+                                      if (isLeft) {
+                                        _storyController!.previousSegment();
+                                      } else {
+                                        _storyController!.nextSegment();
+                                      }
+                                    }
+                                  }
+                                  FocusScope.of(context)
+                                      .requestFocus(_focusNode);
+                                  WidgetsBinding.instance
+                                      .addPostFrameCallback((timeStamp) {
+                                    super.setState(() {
+                                      isBottomSheetOpen = true;
+                                    });
+                                  });
+                                }
+
+                                setState(() {
+                                  isDataGet = true;
+                                });
+                              },
                               onChanged: (value) {
-                              
+                                if (value.isEmpty) {
+                                  setState(() {
+                                    isDataGet = true;
+                                  });
+                                } else {
+                                  setState(() {
+                                    isDataGet = false;
+                                  });
+                                }
                               },
                               style: TextStyle(color: Colors.white),
                               decoration: InputDecoration(
@@ -971,8 +1020,37 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
                                   widget.buttonData.images[_curSegmentIndex]
                                       .storyUid
                                       .toString());
-
-                             
+                              if (User_ID !=
+                                  widget.buttonData.images[_curSegmentIndex]
+                                      .userUid) {
+                                final pointerUpMillis =
+                                    _stopwatch.elapsedMilliseconds;
+                                final maxPressMillis =
+                                    kPressTimeout.inMilliseconds * 2;
+                                final diffMillis =
+                                    pointerUpMillis - _pointerDownMillis;
+                                if (diffMillis <= maxPressMillis) {
+                                  final position = event1.position;
+                                  final distance =
+                                      (position - _pointerDownPosition)
+                                          .distance;
+                                  if (distance < 5.0) {
+                                    final isLeft = _isLeftPartOfStory(position);
+                                    if (isLeft) {
+                                      _storyController!.previousSegment();
+                                    } else {
+                                      _storyController!.nextSegment();
+                                    }
+                                  }
+                                }
+                                FocusScope.of(context).requestFocus(_focusNode);
+                                WidgetsBinding.instance
+                                    .addPostFrameCallback((timeStamp) {
+                                  super.setState(() {
+                                    isBottomSheetOpen = true;
+                                  });
+                                });
+                              }
                             },
                             child: Text(
                               'Send',
@@ -1136,6 +1214,33 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
     Repository().reactionMessageAddedOnStory(context, emoji,
         widget.buttonData.images[_curSegmentIndex].storyUid.toString(),
         emojiReaction: true);
+    if (User_ID != widget.buttonData.images[_curSegmentIndex].userUid) {
+      final pointerUpMillis = _stopwatch.elapsedMilliseconds;
+      final maxPressMillis = kPressTimeout.inMilliseconds * 2;
+      final diffMillis = pointerUpMillis - _pointerDownMillis;
+      if (diffMillis <= maxPressMillis) {
+        final position = event1.position;
+        final distance = (position - _pointerDownPosition).distance;
+        if (distance < 5.0) {
+          final isLeft = _isLeftPartOfStory(position);
+          if (isLeft) {
+            _storyController!.previousSegment();
+          } else {
+            _storyController!.nextSegment();
+          }
+        }
+      }
+      FocusScope.of(context).requestFocus(_focusNode);
+      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+        super.setState(() {
+          isBottomSheetOpen = true;
+        });
+      });
+    }
+    setState(() {
+      _focusNode?.unfocus();
+      isDataGet = false;
+    });
     // Navigator.of(context).pop(); // Close the dialog
   }
 
