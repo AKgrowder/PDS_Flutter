@@ -45,8 +45,8 @@ class _NewNotifactionScreenState extends State<NewNotifactionScreen>
   }
 
   AllAPICall() async {
+    await BlocProvider.of<InvitationCubit>(context).readnotificationscount(context);
     await BlocProvider.of<InvitationCubit>(context).seetinonExpried(context);
-    
     await BlocProvider.of<InvitationCubit>(context).AllNotification(context);
     await BlocProvider.of<InvitationCubit>(context).RequestListAPI(context);
     await BlocProvider.of<InvitationCubit>(context).InvitationAPI(context);
