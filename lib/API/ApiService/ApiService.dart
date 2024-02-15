@@ -257,6 +257,7 @@ class ApiServices {
       response.fields["name"] = params['name'];
       response.fields["email"] = params['email'];
       response.fields["industryTypesUid"] = params['industryTypesUid'];
+      response.fields['userName'] = params['userName'];
     }
     log('companyUserAllData-${response.fields}');
     print("check userProfilePic--${params?['userProfilePic']}");
