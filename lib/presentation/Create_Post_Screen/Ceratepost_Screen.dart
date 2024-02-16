@@ -465,7 +465,7 @@ class _CreateNewPostState extends State<CreateNewPost> {
                         Column(
                           children: [
                             SizedBox(
-                              height: 80,
+                              // height: 80,
                               child: FlutterMentions(
                                 defaultText: widget.edittextdata,
                                 onChanged: (value) {
