@@ -6,12 +6,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class OpenSaveCubit extends Cubit<OpenSaveState> {
   OpenSaveCubit() : super(OpenSaveInitialState()) {}
   Future<void> openSaveImagePostAPI(
-      BuildContext context, String PostUID) async {
+      BuildContext context, String PostUID,{bool showAlert = false}) async {
     dynamic OpenSaveModel;
     try {
-      emit(OpenSaveLoadingState());
-      OpenSaveModel =
-          await Repository().openSaveImagePost(context,PostUID);
+       showAlert == true ? emit(OpenSaveLoadingState()) : SizedBox();
+      OpenSaveModel = await Repository().openSaveImagePost(context, PostUID);
       if (OpenSaveModel == "Something Went Wrong, Try After Some Time.") {
         emit(OpenSaveErrorState("${OpenSaveModel}"));
       } else {
@@ -92,6 +91,27 @@ class OpenSaveCubit extends Cubit<OpenSaveState> {
       }
     } catch (e) {
       emit(OpenSaveErrorState(userTagData));
+    }
+  }
+
+  Future<void> followWIngMethodd(
+    String? followedToUid,
+    BuildContext context,
+  ) async {
+    dynamic likepost;
+    try {
+    
+      likepost = await Repository().folliwingMethod(followedToUid, context);
+      if (likepost == "Something Went Wrong, Try After Some Time.") {
+        emit(OpenSaveErrorState("${likepost}"));
+      } else {
+        if (likepost.success == true) {
+          emit(PostLikeLoadedState(likepost));
+        }
+      }
+    } catch (e) {
+      // print('errorstate-$e');
+      emit(OpenSaveErrorState(likepost));
     }
   }
 }

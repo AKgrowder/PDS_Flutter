@@ -33,3 +33,4 @@ class UserTagSaveLoadedState extends OpenSaveState {
   final UserTagModel userTagModel;
   UserTagSaveLoadedState(this.userTagModel);
 }
+
