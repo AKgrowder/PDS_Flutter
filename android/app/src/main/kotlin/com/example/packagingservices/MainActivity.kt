@@ -1,4 +1,4 @@
-package com.pds.app
+package com.inpackaging.app
 
 import io.flutter.embedding.android.FlutterActivity
 
