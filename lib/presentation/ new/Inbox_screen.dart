@@ -145,9 +145,8 @@ class _InboxScreenState extends State<InboxScreen> {
               PersonalChatListModelData = state.PersonalChatListModelData;
             }
             if (state is DMChatListLoadedState) {
-              print(state.DMChatList.object);
               UserIndexUUID = state.DMChatList.object;
-    
+
               if (UserIndexUUID != "" || UserIndexUUID != null) {
                 Navigator.push(context, MaterialPageRoute(builder: (context) {
                   return DmScreen(
@@ -209,7 +208,7 @@ class _InboxScreenState extends State<InboxScreen> {
                       child: Padding(
                         padding: const EdgeInsets.only(left: 15, right: 15),
                         child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center, 
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             SizedBox(
                               height: height * 0.06,
@@ -390,6 +389,8 @@ class _InboxScreenState extends State<InboxScreen> {
                       Navigator.push(context,
                           MaterialPageRoute(builder: (context) {
                         return DmScreen(
+                          isExpert: PersonalChatListModelData
+                              ?.object?[index].isExpert,
                           UserUID:
                               "${PersonalChatListModelData?.object?[index].userUid}",
                           UserName:
@@ -398,7 +399,8 @@ class _InboxScreenState extends State<InboxScreen> {
                               "${PersonalChatListModelData?.object?[index].userChatInboxUid}",
                           UserImage:
                               "${PersonalChatListModelData?.object?[index].userProfilePic}",
-                              videoId: "${PersonalChatListModelData?.object?[index].videoId}",
+                          videoId:
+                              "${PersonalChatListModelData?.object?[index].videoId}",
                           // UserUID: "${PersonalChatListModelData?.object?[index].}",
                         );
                       })).then((value) => CallBackFunc());
@@ -452,8 +454,7 @@ class _InboxScreenState extends State<InboxScreen> {
                                             height: 12,
                                             width: 12,
                                             decoration: BoxDecoration(
-                                                color:
-                                                    Colors.green,
+                                                color: Colors.green,
                                                 shape: BoxShape.circle,
                                                 border: Border.all(
                                                     color: Colors.white,
@@ -482,6 +483,17 @@ class _InboxScreenState extends State<InboxScreen> {
                                                   fontSize: 15,
                                                   fontWeight: FontWeight.w600),
                                             ),
+                                            if (PersonalChatListModelData
+                                                    ?.object?[index].isExpert ==
+                                                true)
+                                              Padding(
+                                                padding: const EdgeInsets.only(
+                                                    left: 2),
+                                                child: Image.asset(
+                                                  ImageConstant.Star,
+                                                  height: 18,
+                                                ),
+                                              ),
                                             Spacer(),
                                             Text(
                                               getTimeDifference(parsedDateTime),
@@ -531,7 +543,14 @@ class _InboxScreenState extends State<InboxScreen> {
                                                   style: TextStyle(
                                                     fontSize: 15,
                                                     fontWeight: FontWeight.w600,
-                                                    color:PersonalChatListModelData?.object?[index].isSeen==true? Colors.grey:Colors.black,
+                                                    color:
+                                                        PersonalChatListModelData
+                                                                    ?.object?[
+                                                                        index]
+                                                                    .isSeen ==
+                                                                true
+                                                            ? Colors.grey
+                                                            : Colors.black,
                                                   ),
                                                 ),
                                         ),
@@ -580,7 +599,7 @@ class _InboxScreenState extends State<InboxScreen> {
                 // DMChatListm
                 print(
                     "${getUsersChatByUsername?.object?.content?[index].userUuid}");
-                  Index = index;
+                Index = index;
                 BlocProvider.of<PersonalChatListCubit>(context).DMChatListm(
                     "${getUsersChatByUsername?.object?.content?[index].userUuid}",
                     context);

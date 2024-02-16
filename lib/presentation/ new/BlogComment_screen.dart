@@ -103,6 +103,14 @@ class _BlogCommentBottomSheetState extends State<BlogCommentBottomSheet> {
                 fontFamily: "outfit",
                 fontSize: 20),
           ),
+          actions: [
+            IconButton(
+              icon: Icon(Icons.close, color: Colors.black),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+          ],
         ),
         body: BlocConsumer<BlogcommentCubit, BlogCommentState>(
           listener: (context, state) async {
@@ -402,10 +410,16 @@ class _BlogCommentBottomSheetState extends State<BlogCommentBottomSheet> {
                                                         // color: Colors.amber,
                                                         child: LinkifyText(
                                                           "${blogCommentModel?.object?[index].comment}",
-                                                            linkStyle:
-                                                                              TextStyle(color: Colors.blue,fontFamily: 'outfit',),
-                                                                          textStyle:
-                                                                              TextStyle(color: Colors.black,fontFamily: 'outfit',),
+                                                          linkStyle: TextStyle(
+                                                            color: Colors.blue,
+                                                            fontFamily:
+                                                                'outfit',
+                                                          ),
+                                                          textStyle: TextStyle(
+                                                            color: Colors.black,
+                                                            fontFamily:
+                                                                'outfit',
+                                                          ),
                                                           linkTypes: [
                                                             LinkType.url,
                                                             LinkType.userTag,

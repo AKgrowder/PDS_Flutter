@@ -14,9 +14,10 @@ class MyAccountCubit extends Cubit<MyAccountState> {
       if (myAccontDetails == "Something Went Wrong, Try After Some Time.") {
         emit(MyAccountErrorState("${myAccontDetails}"));
       } else {
-      if (myAccontDetails.success == true) {
-        emit(MyAccountLoadedState(myAccontDetails));
-      }}
+        if (myAccontDetails.success == true) {
+          emit(MyAccountLoadedState(myAccontDetails));
+        }
+      }
     } catch (e) {
       emit(MyAccountErrorState(myAccontDetails));
     }
@@ -31,13 +32,12 @@ class MyAccountCubit extends Cubit<MyAccountState> {
       if (chooseDocument == "Something Went Wrong, Try After Some Time.") {
         emit(MyAccountErrorState("${chooseDocument}"));
       } else {
-      if (chooseDocument.success == true) {
-        emit(chooseDocumentLoadedState(chooseDocument));
+        if (chooseDocument.success == true) {
+          emit(chooseDocumentLoadedState(chooseDocument));
+        } else {
+          emit(chooseDocumentLoadedState(chooseDocument));
+        }
       }
-      else{
-        emit(chooseDocumentLoadedState(chooseDocument));
-
-      }}
     } catch (e) {
       print('LoginScreen-${e.toString()}');
       emit(MyAccountErrorState(chooseDocument));
@@ -51,15 +51,15 @@ class MyAccountCubit extends Cubit<MyAccountState> {
       emit(MyAccountLoadingState());
       chooseDocument =
           await Repository().userProfileprofileCover(imageFile, context);
-          if (chooseDocument == "Something Went Wrong, Try After Some Time.") {
+      if (chooseDocument == "Something Went Wrong, Try After Some Time.") {
         emit(MyAccountErrorState("${chooseDocument}"));
       } else {
-      if (chooseDocument.success == true) {
-        emit(chooseDocumentLoadedState1(chooseDocument));
+        if (chooseDocument.success == true) {
+          emit(chooseDocumentLoadedState1(chooseDocument));
+        } else {
+          emit(chooseDocumentLoadedState1(chooseDocument));
+        }
       }
-      else{
-         emit(chooseDocumentLoadedState1(chooseDocument));
-      }}
     } catch (e) {
       print('LoginScreen-${e.toString()}');
       emit(MyAccountErrorState(chooseDocument));
@@ -74,9 +74,10 @@ class MyAccountCubit extends Cubit<MyAccountState> {
       if (fetchExprtise == "Something Went Wrong, Try After Some Time.") {
         emit(MyAccountErrorState("${fetchExprtise}"));
       } else {
-      if (fetchExprtise.success == true) {
-        emit(FetchExprtiseRoomLoadedState(fetchExprtise));
-      }}
+        if (fetchExprtise.success == true) {
+          emit(FetchExprtiseRoomLoadedState(fetchExprtise));
+        }
+      }
     } catch (e) {
       emit(MyAccountErrorState(fetchExprtise));
     }
@@ -94,10 +95,11 @@ class MyAccountCubit extends Cubit<MyAccountState> {
       if (createForm == "Something Went Wrong, Try After Some Time.") {
         emit(MyAccountErrorState("${createForm}"));
       } else {
-      if (createForm.success == true) {
-        print('createFormdataGet-----${createForm.object}');
-        emit(chooseDocumentLoadedState2(createForm));
-      }}
+        if (createForm.success == true) {
+          print('createFormdataGet-----${createForm.object}');
+          emit(chooseDocumentLoadedState2(createForm));
+        }
+      }
     } catch (e) {
       print('error data-$e');
       emit(MyAccountErrorState(createForm));
@@ -109,29 +111,39 @@ class MyAccountCubit extends Cubit<MyAccountState> {
     try {
       emit(MyAccountLoadingState());
       fetchExprtise = await Repository().addEXpertAPiCaling(params, context);
+      print("sddgfdgsfgfg-${fetchExprtise.message}");
       if (fetchExprtise == "Something Went Wrong, Try After Some Time.") {
         emit(MyAccountErrorState("${fetchExprtise}"));
       } else {
-      if (fetchExprtise.success == true) {
-        emit(AddExportLoadedState(fetchExprtise));
-      }}
+        if (fetchExprtise.success == true) {
+          emit(AddExportLoadedState(fetchExprtise));
+        }else{
+           emit(UserExistLoadedState(fetchExprtise.message));
+        }
+      }
     } catch (e) {
       emit(MyAccountErrorState(fetchExprtise));
     }
   }
 
   Future<void> cretaForumUpdate(
-      Map<String, dynamic> params, BuildContext context,{String? apiname}) async {
+      Map<String, dynamic> params, BuildContext context,
+      {String? apiname}) async {
     dynamic createForm;
     try {
       emit(MyAccountLoadingState());
       createForm = await Repository().cretaForumUpdate(params, context);
+      print("creadfhd-${createForm.message}");
       if (createForm == "Something Went Wrong, Try After Some Time.") {
         emit(MyAccountErrorState("${createForm}"));
       } else {
-      if (createForm.success == true) {
-        emit(CreatFourmLoadedState(createForm));
-      }}
+        if (createForm.success == true) {
+          emit(CreatFourmLoadedState(createForm));
+        } else {
+          print("ddfgdfgffg-${createForm} ");
+          emit(UserExistLoadedState(createForm.message));
+        }
+      }
     } catch (e) {
       print("e --$e");
       emit(MyAccountErrorState(createForm));
@@ -147,9 +159,12 @@ class MyAccountCubit extends Cubit<MyAccountState> {
       if (updateProfile == "Something Went Wrong, Try After Some Time.") {
         emit(MyAccountErrorState("${updateProfile}"));
       } else {
-      if (updateProfile.success == true) {
-        emit(UpdateProfileLoadedState(updateProfile));
-      }}
+        if (updateProfile.success == true) {
+          emit(UpdateProfileLoadedState(updateProfile));
+        }else{
+           emit(UserExistLoadedState(updateProfile.message));
+        }
+      }
     } catch (e) {
       emit(MyAccountErrorState(updateProfile));
     }
@@ -163,9 +178,10 @@ class MyAccountCubit extends Cubit<MyAccountState> {
       if (emailVerifaction == "Something Went Wrong, Try After Some Time.") {
         emit(MyAccountErrorState("${emailVerifaction}"));
       } else {
-      if (emailVerifaction.success == true) {
-        emit(EmailVerifactionLoadedState(emailVerifaction));
-      }}
+        if (emailVerifaction.success == true) {
+          emit(EmailVerifactionLoadedState(emailVerifaction));
+        }
+      }
     } catch (e) {
       emit(MyAccountErrorState(emailVerifaction));
     }
@@ -179,9 +195,10 @@ class MyAccountCubit extends Cubit<MyAccountState> {
       if (industryType == "Something Went Wrong, Try After Some Time.") {
         emit(MyAccountErrorState("${industryType}"));
       } else {
-      if (industryType.success == true) {
-        emit(IndustryTypeLoadedState(industryType));
-      }}
+        if (industryType.success == true) {
+          emit(IndustryTypeLoadedState(industryType));
+        }
+      }
     } catch (e) {
       emit(MyAccountErrorState(industryType));
     }

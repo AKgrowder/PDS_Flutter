@@ -117,6 +117,14 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                 fontFamily: "outfit",
                 fontSize: 20),
           ),
+          actions: [
+             IconButton(
+                icon: Icon(Icons.close,color: Colors.black),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+          ],
         ),
         body: BlocConsumer<AddcommentCubit, AddCommentState>(
           listener: (context, state) async {
@@ -488,7 +496,8 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                                                             null
                                                         ? GestureDetector(
                                                             onTap: () async {
-                                                              super.setState(() {
+                                                              super
+                                                                  .setState(() {
                                                                 if (addCommentModeldata
                                                                             ?.object?[
                                                                                 index]

@@ -244,6 +244,14 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               }
               Navigator.pop(context);
             }
+            if(state is UserExistLoadedState){
+             print("this is the check${state.UserExist}"); 
+              SnackBar snackBar = SnackBar(
+                  content: Text(state.UserExist.toString()),
+                  backgroundColor: ColorConstant.primary_color,
+                );
+             ScaffoldMessenger.of(context).showSnackBar(snackBar);
+            }
             if (state is AddExportLoadedState) {
               if (state.addExpertProfile.message.toString() ==
                   "Profile Created Successfully") {

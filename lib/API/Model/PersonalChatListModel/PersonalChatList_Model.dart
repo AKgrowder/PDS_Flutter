@@ -39,6 +39,8 @@ class Object {
   String? userUid;
   bool? isSeen;
   String? videoId;
+  bool? isExpert;
+
   Object(
       {this.userChatInboxUid,
       this.userChatMessageUid,
@@ -47,7 +49,7 @@ class Object {
       this.message,
       this.createdDate,
       this.onlineStatus,
-      this.messageType,this.userUid,this.isSeen,this.videoId});
+      this.messageType,this.userUid,this.isSeen,this.videoId,this.isExpert});
 
   Object.fromJson(Map<String, dynamic> json) {
     userChatInboxUid = json['userChatInboxUid'];
@@ -61,6 +63,7 @@ class Object {
     userUid = json['userUid'];
     isSeen = json['isSeen'];
     videoId = json['videoId'];
+    isExpert = json['isExpert'];
   }
 
   Map<String, dynamic> toJson() {
