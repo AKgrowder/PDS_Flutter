@@ -53,12 +53,14 @@ class DmScreen extends StatefulWidget {
   String ChatInboxUid;
   String UserImage;
   String? videoId;
+  bool? isExpert;
   DmScreen(
       {required this.ChatInboxUid,
       required this.UserName,
       required this.UserUID,
       required this.UserImage,
-      this.videoId});
+      this.videoId,
+      this.isExpert});
 
   @override
   State<DmScreen> createState() => _DmScreenState();
@@ -552,6 +554,14 @@ class _DmScreenState extends State<DmScreen> {
                                       ),
                                     ),
                                   ),
+                                  if (widget.isExpert == true)
+                                    Padding(
+                                      padding: const EdgeInsets.only(left: 4,top: 3),
+                                      child: Image.asset(
+                                        ImageConstant.Star,
+                                        height: 15,
+                                      ),
+                                    ),
                                   Spacer(),
                                   Padding(
                                     padding: const EdgeInsets.only(right: 5),
@@ -771,7 +781,7 @@ class _DmScreenState extends State<DmScreen> {
 
                                                         ///
                                                         return Column(
-                                                          children: [  
+                                                          children: [
                                                             if (isFirstMessageForDate)
                                                               Container(
                                                                 child: Padding(
@@ -781,12 +791,12 @@ class _DmScreenState extends State<DmScreen> {
                                                                           8.0),
                                                                   child: Text(
                                                                     _formatDate(
-                                                                       '${getInboxMessagesModel?.object?.content?[index].createdDate}'),
+                                                                        '${getInboxMessagesModel?.object?.content?[index].createdDate}'),
                                                                     style: TextStyle(
-                                                                      color: Color(0xff5C5C5C),
+                                                                        color: Color(
+                                                                            0xff5C5C5C),
                                                                         fontWeight:
-                                                                            FontWeight
-                                                                                .bold),
+                                                                            FontWeight.bold),
                                                                   ),
                                                                 ),
                                                               ),

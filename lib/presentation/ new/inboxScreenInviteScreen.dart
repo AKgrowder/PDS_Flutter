@@ -173,7 +173,7 @@ class _InviteMeesageState extends State<InviteMeesage> {
             if (state is DMChatListLoadedState) {
               print(state.DMChatList.object);
               UserIndexUUID = state.DMChatList.object;
-
+            
               if (UserIndexUUID != "" && UserIndexUUID != null) {
                 Navigator.push(context, MaterialPageRoute(builder: (context) {
                   return DmScreen(
