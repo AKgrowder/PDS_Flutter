@@ -18,6 +18,8 @@ class ColorConstant {
   static Color HasTagColor = fromHex('#1A9ED7');
   static Color ChatBackColor = fromHex('#FFB7B7');
   static Color chatcolor = Color(0xffE7E8E9);
+  static Color otheruserchat = Color(0xffFFEFED);
+
   
 
   
