@@ -526,7 +526,7 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
                                                                       ?.object
                                                                       ?.isTrsnalteoption ==
                                                                   null)
-                                                          ? "${OpenSaveModelData?.object?.description}"
+                                                          ? "${OpenSaveModelData?.object?.description}${(OpenSaveModelData?.object?.description?.length ?? 0) > maxLength ? '....ReadLess' : ''}"
                                                           : "${OpenSaveModelData?.object?.translatedDescription}"
                                                       : (OpenSaveModelData
                                                                       ?.object
@@ -536,8 +536,8 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
                                                                       ?.object
                                                                       ?.isTrsnalteoption ==
                                                                   null)
-                                                          ? "${OpenSaveModelData?.object?.description?.substring(0, maxLength)}.."
-                                                          : "${OpenSaveModelData?.object?.translatedDescription?.substring(0, maxLength)}..",
+                                                          ? "${OpenSaveModelData?.object?.description?.substring(0, maxLength)}...ReadMore"
+                                                          : "${OpenSaveModelData?.object?.translatedDescription?.substring(0, maxLength)}...ReadMore",
                                                   linkStyle: TextStyle(
                                                     color: Colors.blue,
                                                     fontFamily: 'outfit',
@@ -579,7 +579,24 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
                                                             'https://pdslink.page.link/');
                                                     print(SelectedTest
                                                         .toString());
-
+                                                    if ((OpenSaveModelData
+                                                                ?.object
+                                                                ?.description
+                                                                ?.length ??
+                                                            0) >
+                                                        maxLength) {
+                                                      setState(() {
+                                                        if (readmoree == true) {
+                                                          readmoree = false;
+                                                          print(
+                                                              "--------------false ");
+                                                        } else {
+                                                          readmoree = true;
+                                                          print(
+                                                              "-------------- true");
+                                                        }
+                                                      });
+                                                    }
                                                     if (Link == true ||
                                                         Link1 == true ||
                                                         Link2 == true ||
@@ -653,8 +670,8 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
                                                         print(
                                                             "user id -- ${userTagModel?.object}");
                                                       } else {
-                                                        launchUrl(Uri.parse(
-                                                            "https://${link.value.toString()}"));
+                                                        // launchUrl(Uri.parse(
+                                                        //     "https://${link.value.toString()}"));
                                                       }
                                                     }
                                                   },
@@ -714,7 +731,8 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
                                                                 ))),
                                                           )
                                                         : SizedBox(),
-                                                    Align(
+                                                 /*    Align(
+                                                      // this seaction is repost
                                                       alignment:
                                                           Alignment.centerRight,
                                                       child: (OpenSaveModelData
@@ -766,7 +784,7 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
                                                               ),
                                                             )
                                                           : SizedBox(),
-                                                    ),
+                                                    ), */
                                                   ],
                                                 )
                                               ],
@@ -2175,7 +2193,7 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
                                                       OpenSaveModelData?.object
                                                               ?.isTrsnalteoption ==
                                                           null)
-                                                  ? "${OpenSaveModelData?.object?.description}"
+                                                  ? "${OpenSaveModelData?.object?.description}${(OpenSaveModelData?.object?.description?.length ?? 0) > maxLength ? '....ReadLess' : ''}"
                                                   : "${OpenSaveModelData?.object?.translatedDescription}"
                                               : (OpenSaveModelData?.object
                                                               ?.isTrsnalteoption ==
@@ -2183,8 +2201,8 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
                                                       OpenSaveModelData?.object
                                                               ?.isTrsnalteoption ==
                                                           null)
-                                                  ? "${OpenSaveModelData?.object?.description?.substring(0, maxLength)}.."
-                                                  : "${OpenSaveModelData?.object?.translatedDescription?.substring(0, maxLength)}..",
+                                                  ? "${OpenSaveModelData?.object?.description?.substring(0, maxLength)}...ReadMore "
+                                                  : "${OpenSaveModelData?.object?.translatedDescription?.substring(0, maxLength)}...ReadMore",
                                           linkStyle: TextStyle(
                                             color: Colors.blue,
                                             fontFamily: 'outfit',
@@ -2218,6 +2236,20 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
                                             var Link6 = SelectedTest.startsWith(
                                                 'https://pdslink.page.link/');
                                             print(SelectedTest.toString());
+                                            if ((OpenSaveModelData?.object
+                                                        ?.description?.length ??
+                                                    0) >
+                                                maxLength) {
+                                              setState(() {
+                                                if (readmoree == true) {
+                                                  readmoree = false;
+                                                  print("--------------false ");
+                                                } else {
+                                                  readmoree = true;
+                                                  print("-------------- true");
+                                                }
+                                              });
+                                            }
 
                                             if (Link == true ||
                                                 Link1 == true ||
@@ -2284,8 +2316,8 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
                                                 print(
                                                     "user id -- ${userTagModel?.object}");
                                               } else {
-                                                launchUrl(Uri.parse(
-                                                    "https://${link.value.toString()}"));
+                                                // launchUrl(Uri.parse(
+                                                //     "https://${link.value.toString()}"));
                                               }
                                             }
                                           },
@@ -2345,7 +2377,7 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
                                                         ))),
                                                   )
                                                 : SizedBox(),
-                                            Align(
+                                            /*  Align(
                                               alignment: Alignment.centerRight,
                                               child: (OpenSaveModelData
                                                               ?.object
@@ -2391,7 +2423,7 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
                                                       ),
                                                     )
                                                   : SizedBox(),
-                                            ),
+                                            ), */
                                           ],
                                         )
                                       ],

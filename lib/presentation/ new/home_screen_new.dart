@@ -1697,7 +1697,6 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                     context,
                     MaterialPageRoute(
                         builder: (context) => OpenSavePostImage(
-                          
                               PostID:
                                   "${state.OpenSharePostData.object?.postUid}",
                               index: 0,
@@ -2524,8 +2523,6 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                         MaterialPageRoute(
                                                           builder: (context) =>
                                                               OpenSavePostImage(
-                                                                 
-                                                                
                                                                   PostID: AllGuestPostRoomData
                                                                       ?.object
                                                                       ?.content?[
@@ -2945,11 +2942,11 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                       // AllGuestPostRoomData?.object?.content?[index].isTrsnalteoption == false || AllGuestPostRoomData?.object?.content?[index].isTrsnalteoption == null ? "${AllGuestPostRoomData?.object?.content?[index].description}" : "${AllGuestPostRoomData?.object?.content?[index].translatedDescription}",
                                                                                       readmoree[index] == true
                                                                                           ? (AllGuestPostRoomData?.object?.content?[index].isTrsnalteoption == false || AllGuestPostRoomData?.object?.content?[index].isTrsnalteoption == null)
-                                                                                              ? "${AllGuestPostRoomData?.object?.content?[index].description}"
+                                                                                              ? "${AllGuestPostRoomData?.object?.content?[index].description}${(AllGuestPostRoomData?.object?.content?[index].description?.length ?? 0) > maxLength ? '....ReadLess' : ''}"
                                                                                               : "${AllGuestPostRoomData?.object?.content?[index].translatedDescription}"
                                                                                           : (AllGuestPostRoomData?.object?.content?[index].isTrsnalteoption == false || AllGuestPostRoomData?.object?.content?[index].isTrsnalteoption == null)
-                                                                                              ? "${AllGuestPostRoomData?.object?.content?[index].description?.substring(0, maxLength)}.."
-                                                                                              : "${AllGuestPostRoomData?.object?.content?[index].translatedDescription?.substring(0, maxLength)}..",
+                                                                                              ? "${AllGuestPostRoomData?.object?.content?[index].description?.substring(0, maxLength)}....ReadMore"
+                                                                                              : "${AllGuestPostRoomData?.object?.content?[index].translatedDescription?.substring(0, maxLength)}....ReadMore",
                                                                                       linkStyle: TextStyle(
                                                                                         color: Colors.blue,
                                                                                         fontFamily: 'outfit',
@@ -2978,7 +2975,17 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                         var Link5 = SelectedTest.startsWith('HTTP');
                                                                                         var Link6 = SelectedTest.startsWith('https://pdslink.page.link/');
                                                                                         print(SelectedTest.toString());
-
+                                                                                        if ((AllGuestPostRoomData?.object?.content?[index].description?.length ?? 0) > maxLength) {
+                                                                                          setState(() {
+                                                                                            if (readmoree[index] == true) {
+                                                                                              readmoree[index] = false;
+                                                                                              print("--------------false ");
+                                                                                            } else {
+                                                                                              readmoree[index] = true;
+                                                                                              print("-------------- true");
+                                                                                            }
+                                                                                          });
+                                                                                        }
                                                                                         if (User_ID == null) {
                                                                                           Navigator.of(context).push(MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
                                                                                         } else {
@@ -3024,7 +3031,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                               print("tagName -- ${tagName}");
                                                                                               print("user id -- ${userTagModel?.object}");
                                                                                             } else {
-                                                                                              launchUrl(Uri.parse("https://${link.value.toString()}"));
+                                                                                              // launchUrl(Uri.parse("https://${link.value.toString()}"));
                                                                                             }
                                                                                           }
                                                                                         }
@@ -3063,7 +3070,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                       )
                                                                                     : SizedBox()
                                                                                 : SizedBox(),
-                                                                            Align(
+                                                                            /*   Align(
                                                                               alignment: Alignment.centerRight,
                                                                               child: (AllGuestPostRoomData?.object?.content?[index].description?.length ?? 0) > maxLength
                                                                                   ? GestureDetector(
@@ -3095,7 +3102,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                       ),
                                                                                     )
                                                                                   : SizedBox(),
-                                                                            )
+                                                                            ) */
                                                                           ],
                                                                         )),
                                                               )
@@ -4532,9 +4539,10 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                               child: LinkifyText(
                                                                                 /*    utf8.decode(AllGuestPostRoomData?.object?.content?[index].description?.runes.toList() ??
                                                                                     []), */
-                                                                                 readmoree[index] == true
+                                                                                // THIS IS THE SET
+                                                                                readmoree[index] == true
                                                                                     ? (AllGuestPostRoomData?.object?.content?[index].isTrsnalteoption == false || AllGuestPostRoomData?.object?.content?[index].isTrsnalteoption == null)
-                                                                                        ? "${AllGuestPostRoomData?.object?.content?[index].description} ${(AllGuestPostRoomData?.object?.content?[index].description?.length ?? 0) > maxLength?'....ReadLess':''}"
+                                                                                        ? "${AllGuestPostRoomData?.object?.content?[index].description} ${(AllGuestPostRoomData?.object?.content?[index].description?.length ?? 0) > maxLength ?'....ReadLess' : ''}"
                                                                                         : "${AllGuestPostRoomData?.object?.content?[index].translatedDescription}"
                                                                                     : (AllGuestPostRoomData?.object?.content?[index].isTrsnalteoption == false || AllGuestPostRoomData?.object?.content?[index].isTrsnalteoption == null)
                                                                                         ? "${AllGuestPostRoomData?.object?.content?[index].description?.substring(0, maxLength)}....ReadMore"
@@ -4567,7 +4575,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                   var Link5 = SelectedTest.startsWith('HTTP');
                                                                                   var Link6 = SelectedTest.startsWith('https://pdslink.page.link/');
                                                                                   print("tag -- " + SelectedTest.toString());
-                                                                                   if ((AllGuestPostRoomData?.object?.content?[index].description?.length ?? 0) > maxLength) {
+                                                                                  if ((AllGuestPostRoomData?.object?.content?[index].description?.length ?? 0) > maxLength) {
                                                                                     setState(() {
                                                                                       if (readmoree[index] == true) {
                                                                                         readmoree[index] = false;
