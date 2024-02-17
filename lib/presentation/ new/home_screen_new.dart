@@ -1729,6 +1729,10 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                   if (element.description != null) {
                     readmoree
                         .add((element.description?.length ?? 0) <= maxLength);
+                  } else if (element.repostOn?.description != null) {
+                    readmoree.add(
+                        (element.repostOn?.description?.length ?? 0) <=
+                            maxLength);
                   } else {
                     readmoree.add(false);
                   }
@@ -2946,7 +2950,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                               : "${AllGuestPostRoomData?.object?.content?[index].translatedDescription}"
                                                                                           : (AllGuestPostRoomData?.object?.content?[index].isTrsnalteoption == false || AllGuestPostRoomData?.object?.content?[index].isTrsnalteoption == null)
                                                                                               ? "${AllGuestPostRoomData?.object?.content?[index].description?.substring(0, maxLength)}....ReadMore"
-                                                                                              : "${AllGuestPostRoomData?.object?.content?[index].translatedDescription?.substring(0, maxLength)}....ReadMore",
+                                                                                              : "${AllGuestPostRoomData?.object?.content?[index].translatedDescription?.substring(0, maxLength)}....ReadMore", // asdsd
                                                                                       linkStyle: TextStyle(
                                                                                         color: Colors.blue,
                                                                                         fontFamily: 'outfit',
@@ -3496,7 +3500,14 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                   16),
                                                                           child:
                                                                               LinkifyText(
-                                                                            "${AllGuestPostRoomData?.object?.content?[index].repostOn?.description}",
+                                                                            readmoree[index] == true
+                                                                                ? (AllGuestPostRoomData?.object?.content?[index].repostOn?.isTrsnalteoption == false || AllGuestPostRoomData?.object?.content?[index].repostOn?.isTrsnalteoption == null)
+                                                                                    ? "${AllGuestPostRoomData?.object?.content?[index].repostOn?.description}${(AllGuestPostRoomData?.object?.content?[index].repostOn?.description?.length ?? 0) > maxLength ? '....ReadLess' : ''}"
+                                                                                    : "${AllGuestPostRoomData?.object?.content?[index].repostOn?.translatedDescription}"
+                                                                                : (AllGuestPostRoomData?.object?.content?[index].repostOn?.isTrsnalteoption == false || AllGuestPostRoomData?.object?.content?[index].repostOn?.isTrsnalteoption == null)
+                                                                                    ? "${AllGuestPostRoomData?.object?.content?[index].repostOn?.description?.substring(0, maxLength)}....ReadMore"
+                                                                                    : "${AllGuestPostRoomData?.object?.content?[index].repostOn?.translatedDescription?.substring(0, maxLength)}....ReadMore", // as
+
                                                                             linkStyle:
                                                                                 TextStyle(
                                                                               color: Colors.blue,
@@ -3528,7 +3539,17 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                               var Link5 = SelectedTest.startsWith('HTTP');
                                                                               var Link6 = SelectedTest.startsWith('https://pdslink.page.link/');
                                                                               print(SelectedTest.toString());
-
+                                                                              if ((AllGuestPostRoomData?.object?.content?[index].repostOn?.description?.length ?? 0) > maxLength) {
+                                                                                setState(() {
+                                                                                  if (readmoree[index] == true) {
+                                                                                    readmoree[index] = false;
+                                                                                    print("--------------false ");
+                                                                                  } else {
+                                                                                    readmoree[index] = true;
+                                                                                    print("-------------- true");
+                                                                                  }
+                                                                                });
+                                                                              }
                                                                               if (User_ID == null) {
                                                                                 Navigator.of(context).push(MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
                                                                               } else {
@@ -3580,6 +3601,94 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                             },
                                                                           ))
                                                                       : SizedBox(),
+                                                                  if (AllGuestPostRoomData
+                                                                              ?.object
+                                                                              ?.content?[
+                                                                                  index]
+                                                                              .repostOn
+                                                                              ?.translatedDescription !=
+                                                                          null &&
+                                                                      readmoree[
+                                                                              index] ==
+                                                                          true)
+                                                                    GestureDetector(
+                                                                      onTap:
+                                                                          () {
+                                                                        if (AllGuestPostRoomData?.object?.content?[index].repostOn?.isTrsnalteoption ==
+                                                                                false ||
+                                                                            AllGuestPostRoomData?.object?.content?[index].repostOn?.isTrsnalteoption ==
+                                                                                null) {
+                                                                          AllGuestPostRoomData
+                                                                              ?.object
+                                                                              ?.content?[index]
+                                                                              .repostOn
+                                                                              ?.isTrsnalteoption = true;
+                                                                        } else {
+                                                                          AllGuestPostRoomData
+                                                                              ?.object
+                                                                              ?.content?[index]
+                                                                              .repostOn
+                                                                              ?.isTrsnalteoption = false;
+                                                                        }
+                                                                      },
+                                                                      child:
+                                                                          Container(
+                                                                        margin: EdgeInsets.only(
+                                                                            left:
+                                                                                10,
+                                                                            top:
+                                                                                10),
+                                                                        width:
+                                                                            80,
+                                                                        decoration:
+                                                                            BoxDecoration(
+                                                                          color:
+                                                                              ColorConstant.primaryLight_color,
+                                                                          borderRadius:
+                                                                              BorderRadius.circular(10),
+                                                                        ),
+                                                                        child:
+                                                                            Center(
+                                                                          child:
+                                                                              Text(
+                                                                            "Translate",
+                                                                            style:
+                                                                                TextStyle(
+                                                                              fontFamily: 'outfit',
+                                                                              fontWeight: FontWeight.bold,
+                                                                            ),
+                                                                          ),
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                  /* AllGuestPostRoomData?.object?.content?[index].translatedDescription !=
+                                                                              null
+                                                                          ? readmoree[index] == true
+                                                                              ? GestureDetector(
+                                                                                  onTap: () async {
+                                                                                    super.setState(() {
+                                                                                      if (AllGuestPostRoomData?.object?.content?[index].isTrsnalteoption == false || AllGuestPostRoomData?.object?.content?[index].isTrsnalteoption == null) {
+                                                                                        AllGuestPostRoomData?.object?.content?[index].isTrsnalteoption = true;
+                                                                                      } else {
+                                                                                        AllGuestPostRoomData?.object?.content?[index].isTrsnalteoption = false;
+                                                                                      }
+                                                                                    });
+                                                                                  },
+                                                                                  child: Container(
+                                                                                      width: 80,
+                                                                                      decoration: BoxDecoration(
+                                                                                        color: ColorConstant.primaryLight_color,
+                                                                                        borderRadius: BorderRadius.circular(10),
+                                                                                      ),
+                                                                                      child: Center(
+                                                                                          child: Text(
+                                                                                        "Translate",
+                                                                                        style: TextStyle(
+                                                                                          fontFamily: 'outfit',
+                                                                                          fontWeight: FontWeight.bold,
+                                                                                        ),
+                                                                                      ))),
+                                                                                ), */
                                                                   Container(
                                                                     width:
                                                                         _width,
@@ -4542,7 +4651,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                 // THIS IS THE SET
                                                                                 readmoree[index] == true
                                                                                     ? (AllGuestPostRoomData?.object?.content?[index].isTrsnalteoption == false || AllGuestPostRoomData?.object?.content?[index].isTrsnalteoption == null)
-                                                                                        ? "${AllGuestPostRoomData?.object?.content?[index].description} ${(AllGuestPostRoomData?.object?.content?[index].description?.length ?? 0) > maxLength ?'....ReadLess' : ''}"
+                                                                                        ? "${AllGuestPostRoomData?.object?.content?[index].description} ${(AllGuestPostRoomData?.object?.content?[index].description?.length ?? 0) > maxLength ? '....ReadLess' : ''}"
                                                                                         : "${AllGuestPostRoomData?.object?.content?[index].translatedDescription}"
                                                                                     : (AllGuestPostRoomData?.object?.content?[index].isTrsnalteoption == false || AllGuestPostRoomData?.object?.content?[index].isTrsnalteoption == null)
                                                                                         ? "${AllGuestPostRoomData?.object?.content?[index].description?.substring(0, maxLength)}....ReadMore"
