@@ -228,7 +228,7 @@ class _DmScreenState extends State<DmScreen> {
 
   pageNumberMethod() async {
     await BlocProvider.of<DmInboxCubit>(context)
-        .DMChatListApiMethod(widget.ChatInboxUid, 1, 20, context);
+        .DMChatListApiMethod(widget.ChatInboxUid, 1, 100, context);
   }
 
   getUserID() async {
