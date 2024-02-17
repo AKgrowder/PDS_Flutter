@@ -118,32 +118,31 @@ class Content {
   // bool? isfalsehin;
   bool? isTrsnalteoption;
 
-  Content({
-    this.postUid,
-    this.createdAt,
-    this.userUid,
-    this.postUserName,
-    this.userProfilePic,
-    this.postLink,
-    this.translatedDescription,
-    this.description,
-    this.postData,
-    this.postDataType,
-    this.postType,
-    this.isLiked,
-    this.isSaved,
-    this.isFollowing,
-    this.likedCount,
-    this.commentCount,
-    this.repostOn,
-    this.repostCount,
-    this.userAccountType,
-    this.thumbnailImageUrl,
-    // this.isfalsegu,
-    // this.isfalsehin,
-    this.isTrsnalteoption
+  Content(
+      {this.postUid,
+      this.createdAt,
+      this.userUid,
+      this.postUserName,
+      this.userProfilePic,
+      this.postLink,
+      this.translatedDescription,
+      this.description,
+      this.postData,
+      this.postDataType,
+      this.postType,
+      this.isLiked,
+      this.isSaved,
+      this.isFollowing,
+      this.likedCount,
+      this.commentCount,
+      this.repostOn,
+      this.repostCount,
+      this.userAccountType,
+      this.thumbnailImageUrl,
 
-  });
+      // this.isfalsegu,
+      // this.isfalsehin,
+      this.isTrsnalteoption});
 
   Content.fromJson(Map<String, dynamic> json) {
     postUid = json['postUid'];
@@ -220,7 +219,9 @@ class RepostOn {
   int? repostCount;
   String? userAccountType;
   String? thumbnailImageUrl;
+  bool? isTrsnalteoption;
 
+  String? translatedDescription;
   RepostOn({
     this.postUid,
     this.createdAt,
@@ -241,6 +242,8 @@ class RepostOn {
     this.repostCount,
     this.userAccountType,
     this.thumbnailImageUrl,
+    this.isTrsnalteoption,
+    this.translatedDescription,
   });
 
   RepostOn.fromJson(Map<String, dynamic> json) {
@@ -263,6 +266,7 @@ class RepostOn {
     repostOn = json['repostOn'];
     userAccountType = json['userAccountType'];
     thumbnailImageUrl = json['thumbnailImageUrl'];
+    translatedDescription = json['translatedDescription'];
   }
 
   Map<String, dynamic> toJson() {

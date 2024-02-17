@@ -126,6 +126,10 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
 
         if ((OpenSaveModelData?.object?.description?.length ?? 0) <= 60) {
           readmoree = true;
+        } else if ((OpenSaveModelData?.object?.repostOn?.description?.length ??
+                0) <=
+            60) {
+          readmoree = true;
         } else {
           readmoree = false;
         }
@@ -731,7 +735,7 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
                                                                 ))),
                                                           )
                                                         : SizedBox(),
-                                                 /*    Align(
+                                                    /*    Align(
                                                       // this seaction is repost
                                                       alignment:
                                                           Alignment.centerRight,
@@ -1228,7 +1232,32 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
                                                       alignment:
                                                           Alignment.centerLeft,
                                                       child: LinkifyText(
-                                                        "${OpenSaveModelData?.object?.repostOn?.description}",
+                                                        readmoree == true
+                                                            ? (OpenSaveModelData
+                                                                            ?.object
+                                                                            ?.repostOn
+                                                                            ?.isTrsnalteoption ==
+                                                                        false ||
+                                                                    OpenSaveModelData
+                                                                            ?.object
+                                                                            ?.repostOn
+                                                                            ?.isTrsnalteoption ==
+                                                                        null)
+                                                                ? "${OpenSaveModelData?.object?.repostOn?.description}${(OpenSaveModelData?.object?.repostOn?.description?.length ?? 0) > maxLength ? '....ReadLess' : ''}"
+                                                                : "${OpenSaveModelData?.object?.repostOn?.translatedDescription}"
+                                                            : (OpenSaveModelData
+                                                                            ?.object
+                                                                            ?.repostOn
+                                                                            ?.isTrsnalteoption ==
+                                                                        false ||
+                                                                    OpenSaveModelData
+                                                                            ?.object
+                                                                            ?.repostOn
+                                                                            ?.isTrsnalteoption ==
+                                                                        null)
+                                                                ? "${OpenSaveModelData?.object?.repostOn?.description?.substring(0, maxLength)}...ReadMore "
+                                                                : "${OpenSaveModelData?.object?.repostOn?.translatedDescription?.substring(0, maxLength)}...ReadMore",
+                                                        // opem save post image
                                                         linkStyle: TextStyle(
                                                           color: Colors.blue,
                                                           fontFamily: 'outfit',
@@ -1245,6 +1274,28 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
                                                           //     .email
                                                         ],
                                                         onTap: (link) async {
+                                                          if ((OpenSaveModelData
+                                                                      ?.object
+                                                                      ?.repostOn
+                                                                      ?.description
+                                                                      ?.length ??
+                                                                  0) >
+                                                              maxLength) {
+                                                            setState(() {
+                                                              if (readmoree ==
+                                                                  true) {
+                                                                readmoree =
+                                                                    false;
+                                                                print(
+                                                                    "--------------false ");
+                                                              } else {
+                                                                readmoree =
+                                                                    true;
+                                                                print(
+                                                                    "-------------- true");
+                                                              }
+                                                            });
+                                                          }
                                                           var SelectedTest =
                                                               link.value
                                                                   .toString();
@@ -1362,8 +1413,8 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
                                                               print(
                                                                   "user id -- ${userTagModel?.object}");
                                                             } else {
-                                                              launchUrl(Uri.parse(
-                                                                  "https://${link.value.toString()}"));
+                                                              // launchUrl(Uri.parse(
+                                                              //     "https://${link.value.toString()}"));
                                                             }
                                                           }
                                                         },
@@ -1379,6 +1430,58 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
                                                     ),
                                                   ),
                                                 ),
+                                          if (readmoree == true &&
+                                              OpenSaveModelData
+                                                      ?.object
+                                                      ?.repostOn
+                                                      ?.translatedDescription !=
+                                                  null)
+                                            GestureDetector(
+                                              onTap: () async {
+                                                super.setState(() {
+                                                  if (OpenSaveModelData
+                                                              ?.object
+                                                              ?.repostOn
+                                                              ?.isTrsnalteoption ==
+                                                          false ||
+                                                      OpenSaveModelData
+                                                              ?.object
+                                                              ?.repostOn
+                                                              ?.isTrsnalteoption ==
+                                                          null) {
+                                                    OpenSaveModelData
+                                                            ?.object
+                                                            ?.repostOn
+                                                            ?.isTrsnalteoption =
+                                                        true;
+                                                  } else {
+                                                    OpenSaveModelData
+                                                            ?.object
+                                                            ?.repostOn
+                                                            ?.isTrsnalteoption =
+                                                        false;
+                                                  }
+                                                });
+                                              },
+                                              child: Container(
+                                                margin: EdgeInsets.only(left: 10,top: 10),
+                                                  width: 80,
+                                                  decoration: BoxDecoration(
+                                                      color: ColorConstant
+                                                          .primaryLight_color,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              10)),
+                                                  child: Center(
+                                                      child: Text(
+                                                    "Translate",
+                                                    style: TextStyle(
+                                                      fontFamily: 'outfit',
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                  ))),
+                                            ),
                                           Container(
                                             width: _width,
                                             child: OpenSaveModelData
