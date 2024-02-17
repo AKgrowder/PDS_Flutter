@@ -1288,7 +1288,8 @@ class _DmScreenState extends State<DmScreen> {
                                                                                       child: Padding(
                                                                                         padding: const EdgeInsets.only(top: 3),
                                                                                         child: Container(
-                                                                                          decoration: BoxDecoration(color: ColorConstant.primary_color, borderRadius: BorderRadius.circular(5)),
+                                                                                          margin: EdgeInsets.only(left: 10,right: 10),
+                                                                                          decoration: BoxDecoration(color: ColorConstant.otheruserchat, borderRadius: BorderRadius.circular(5)),
                                                                                           child: Column(
                                                                                             crossAxisAlignment: CrossAxisAlignment.end,
                                                                                             mainAxisAlignment: MainAxisAlignment.end,
@@ -1304,7 +1305,7 @@ class _DmScreenState extends State<DmScreen> {
                                                                                                 child: LinkifyText(
                                                                                                   "${getInboxMessagesModel?.object?.content?[index].message ?? ""}",
                                                                                                   linkStyle: TextStyle(fontWeight: FontWeight.w500, color: Colors.blue, fontFamily: "outfit", fontSize: 13, decoration: TextDecoration.underline, decorationColor: Colors.blue),
-                                                                                                  textStyle: TextStyle(fontWeight: FontWeight.w500, color: Colors.white, fontFamily: "outfit", fontSize: 13),
+                                                                                                  textStyle: TextStyle(fontWeight: FontWeight.bold, color: Colors.black, fontFamily: "outfit", fontSize: 13,),
                                                                                                   linkTypes: [
                                                                                                     LinkType.url,
 
@@ -1342,7 +1343,7 @@ class _DmScreenState extends State<DmScreen> {
                                                                                               Text(
                                                                                                 customFormat(parsedDateTime),
                                                                                                 textScaleFactor: 1.0,
-                                                                                                style: TextStyle(fontWeight: FontWeight.normal, color: Colors.white, fontFamily: "outfit", fontSize: 10),
+                                                                                                style: TextStyle(fontWeight: FontWeight.normal, color: Colors.black, fontFamily: "outfit", fontSize: 10),
                                                                                               ),
                                                                                             ],
                                                                                           ),
