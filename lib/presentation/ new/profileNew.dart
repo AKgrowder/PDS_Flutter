@@ -876,14 +876,19 @@ class _ProfileScreenState extends State<ProfileScreen>
                                     color: Color(0xff444444)),
                               ),
                             ),
-                            if (NewProfileData?.object?.module == "EXPERT")
-                              Padding(
-                                padding: const EdgeInsets.only(bottom: 4,left: 3),
-                                child: Image.asset(
-                                  ImageConstant.Star,
-                                  height: 18,
-                                ),
-                              )
+                            NewProfileData?.object?.approvalStatus ==
+                                    'PENDING' ||
+                                NewProfileData?.object?.approvalStatus ==
+                                    'REJECTED' ? SizedBox():
+                              NewProfileData?.object?.module == "EXPERT" ?
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.only(bottom: 4, left: 3),
+                                  child: Image.asset(
+                                    ImageConstant.Star,
+                                    height: 18,
+                                  ),
+                                ) : SizedBox()
                           ],
                         ),
 
