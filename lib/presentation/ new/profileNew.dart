@@ -2229,7 +2229,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                         )),
                                                 NewProfileData
                                                             ?.object?.module ==
-                                                        "EXPERT"
+                                                        "EXPERT" 
                                                     ? Card(
                                                         color: Colors.white,
                                                         borderOnForeground:
@@ -8593,7 +8593,12 @@ class _ProfileScreenState extends State<ProfileScreen>
   }
 
   Widget expertUser(_height, _width) {
-    return Column(
+    if (User_ID == NewProfileData?.object?.userUid ||
+        (NewProfileData?.object?.isFollowing == 'FOLLOWING' &&
+            NewProfileData?.object?.accountType == 'PRIVATE' &&
+            NewProfileData?.object?.approvalStatus != "PENDING" &&
+            NewProfileData?.object?.approvalStatus == "REJECTED")){
+              return Column(
       children: [
         ListTile(
           /*  leading: Container(
@@ -9056,10 +9061,14 @@ class _ProfileScreenState extends State<ProfileScreen>
         ),
       ],
     );
+            }
+    else{
+      return SizedBox();
+    }
   }
 
   Widget experience(_height, _width) {
-    if (User_ID == NewProfileData?.object?.userUid ||
+  if (User_ID == NewProfileData?.object?.userUid ||
         (NewProfileData?.object?.isFollowing == 'FOLLOWING' &&
             NewProfileData?.object?.accountType == 'PRIVATE' &&
             NewProfileData?.object?.approvalStatus != "PENDING" &&

@@ -2946,11 +2946,11 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                       // AllGuestPostRoomData?.object?.content?[index].isTrsnalteoption == false || AllGuestPostRoomData?.object?.content?[index].isTrsnalteoption == null ? "${AllGuestPostRoomData?.object?.content?[index].description}" : "${AllGuestPostRoomData?.object?.content?[index].translatedDescription}",
                                                                                       readmoree[index] == true
                                                                                           ? (AllGuestPostRoomData?.object?.content?[index].isTrsnalteoption == false || AllGuestPostRoomData?.object?.content?[index].isTrsnalteoption == null)
-                                                                                              ? "${AllGuestPostRoomData?.object?.content?[index].description}${(AllGuestPostRoomData?.object?.content?[index].description?.length ?? 0) > maxLength ? '....ReadLess' : ''}"
+                                                                                              ? "${AllGuestPostRoomData?.object?.content?[index].description}${(AllGuestPostRoomData?.object?.content?[index].description?.length ?? 0) > maxLength ? ' ....ReadLess' : ''}"
                                                                                               : "${AllGuestPostRoomData?.object?.content?[index].translatedDescription}"
                                                                                           : (AllGuestPostRoomData?.object?.content?[index].isTrsnalteoption == false || AllGuestPostRoomData?.object?.content?[index].isTrsnalteoption == null)
-                                                                                              ? "${AllGuestPostRoomData?.object?.content?[index].description?.substring(0, maxLength)}....ReadMore"
-                                                                                              : "${AllGuestPostRoomData?.object?.content?[index].translatedDescription?.substring(0, maxLength)}....ReadMore", // asdsd
+                                                                                              ? "${AllGuestPostRoomData?.object?.content?[index].description?.substring(0, maxLength)} ....ReadMore"
+                                                                                              : "${AllGuestPostRoomData?.object?.content?[index].translatedDescription?.substring(0, maxLength)} ....ReadMore", // asdsd
                                                                                       linkStyle: TextStyle(
                                                                                         color: Colors.blue,
                                                                                         fontFamily: 'outfit',
@@ -2989,53 +2989,54 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                               print("-------------- true");
                                                                                             }
                                                                                           });
-                                                                                        }
-                                                                                        if (User_ID == null) {
-                                                                                          Navigator.of(context).push(MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
                                                                                         } else {
-                                                                                          if (Link == true || Link1 == true || Link2 == true || Link3 == true || Link4 == true || Link5 == true || Link6 == true) {
-                                                                                            if (Link2 == true || Link3 == true) {
-                                                                                              launchUrl(Uri.parse("https://${link.value.toString()}"));
-                                                                                              print("qqqqqqqqhttps://${link.value}");
-                                                                                            } else {
-                                                                                              if (Link6 == true) {
-                                                                                                print("yes i am inList =   room");
-                                                                                                Navigator.push(context, MaterialPageRoute(
-                                                                                                  builder: (context) {
-                                                                                                    return NewBottomBar(
-                                                                                                      buttomIndex: 1,
-                                                                                                    );
-                                                                                                  },
-                                                                                                ));
-                                                                                              } else {
-                                                                                                launchUrl(Uri.parse(link.value.toString()));
-                                                                                                print("link.valuelink.value -- ${link.value}");
-                                                                                              }
-                                                                                            }
+                                                                                          if (User_ID == null) {
+                                                                                            Navigator.of(context).push(MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
                                                                                           } else {
-                                                                                            if (link.value!.startsWith('#')) {
-                                                                                              await BlocProvider.of<GetGuestAllPostCubit>(context).seetinonExpried(context);
-                                                                                              Navigator.push(
-                                                                                                  context,
-                                                                                                  MaterialPageRoute(
-                                                                                                    builder: (context) => HashTagViewScreen(title: "${link.value}"),
+                                                                                            if (Link == true || Link1 == true || Link2 == true || Link3 == true || Link4 == true || Link5 == true || Link6 == true) {
+                                                                                              if (Link2 == true || Link3 == true) {
+                                                                                                launchUrl(Uri.parse("https://${link.value.toString()}"));
+                                                                                                print("qqqqqqqqhttps://${link.value}");
+                                                                                              } else {
+                                                                                                if (Link6 == true) {
+                                                                                                  print("yes i am inList =   room");
+                                                                                                  Navigator.push(context, MaterialPageRoute(
+                                                                                                    builder: (context) {
+                                                                                                      return NewBottomBar(
+                                                                                                        buttomIndex: 1,
+                                                                                                      );
+                                                                                                    },
                                                                                                   ));
-                                                                                            } else if (link.value!.startsWith('@')) {
-                                                                                              await BlocProvider.of<GetGuestAllPostCubit>(context).seetinonExpried(context);
-                                                                                              var name;
-                                                                                              var tagName;
-                                                                                              name = SelectedTest;
-                                                                                              tagName = name.replaceAll("@", "");
-                                                                                              await BlocProvider.of<GetGuestAllPostCubit>(context).UserTagAPI(context, tagName);
-
-                                                                                              Navigator.push(context, MaterialPageRoute(builder: (context) {
-                                                                                                return ProfileScreen(User_ID: "${userTagModel?.object}", isFollowing: "");
-                                                                                              })).then((value) => Get_UserToken());
-
-                                                                                              print("tagName -- ${tagName}");
-                                                                                              print("user id -- ${userTagModel?.object}");
+                                                                                                } else {
+                                                                                                  launchUrl(Uri.parse(link.value.toString()));
+                                                                                                  print("link.valuelink.value -- ${link.value}");
+                                                                                                }
+                                                                                              }
                                                                                             } else {
-                                                                                              // launchUrl(Uri.parse("https://${link.value.toString()}"));
+                                                                                              if (link.value!.startsWith('#')) {
+                                                                                                await BlocProvider.of<GetGuestAllPostCubit>(context).seetinonExpried(context);
+                                                                                                Navigator.push(
+                                                                                                    context,
+                                                                                                    MaterialPageRoute(
+                                                                                                      builder: (context) => HashTagViewScreen(title: "${link.value}"),
+                                                                                                    ));
+                                                                                              } else if (link.value!.startsWith('@')) {
+                                                                                                await BlocProvider.of<GetGuestAllPostCubit>(context).seetinonExpried(context);
+                                                                                                var name;
+                                                                                                var tagName;
+                                                                                                name = SelectedTest;
+                                                                                                tagName = name.replaceAll("@", "");
+                                                                                                await BlocProvider.of<GetGuestAllPostCubit>(context).UserTagAPI(context, tagName);
+
+                                                                                                Navigator.push(context, MaterialPageRoute(builder: (context) {
+                                                                                                  return ProfileScreen(User_ID: "${userTagModel?.object}", isFollowing: "");
+                                                                                                })).then((value) => Get_UserToken());
+
+                                                                                                print("tagName -- ${tagName}");
+                                                                                                print("user id -- ${userTagModel?.object}");
+                                                                                              } else {
+                                                                                                // launchUrl(Uri.parse("https://${link.value.toString()}"));
+                                                                                              }
                                                                                             }
                                                                                           }
                                                                                         }
@@ -3550,7 +3551,8 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                   }
                                                                                 });
                                                                               }
-                                                                              if (User_ID == null) {
+                                                                              else{
+                                                                                if (User_ID == null) {
                                                                                 Navigator.of(context).push(MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
                                                                               } else {
                                                                                 if (Link == true || Link1 == true || Link2 == true || Link3 == true || Link4 == true || Link5 == true || Link6 == true) {
@@ -3597,6 +3599,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                     print("user id -- ${userTagModel?.object}");
                                                                                   }
                                                                                 }
+                                                                              }
                                                                               }
                                                                             },
                                                                           ))
@@ -4651,10 +4654,10 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                 // THIS IS THE SET
                                                                                 readmoree[index] == true
                                                                                     ? (AllGuestPostRoomData?.object?.content?[index].isTrsnalteoption == false || AllGuestPostRoomData?.object?.content?[index].isTrsnalteoption == null)
-                                                                                        ? "${AllGuestPostRoomData?.object?.content?[index].description} ${(AllGuestPostRoomData?.object?.content?[index].description?.length ?? 0) > maxLength ? '....ReadLess' : ''}"
+                                                                                        ? "${AllGuestPostRoomData?.object?.content?[index].description} ${(AllGuestPostRoomData?.object?.content?[index].description?.length ?? 0) > maxLength ? ' ....ReadLess' : ''}"
                                                                                         : "${AllGuestPostRoomData?.object?.content?[index].translatedDescription}"
                                                                                     : (AllGuestPostRoomData?.object?.content?[index].isTrsnalteoption == false || AllGuestPostRoomData?.object?.content?[index].isTrsnalteoption == null)
-                                                                                        ? "${AllGuestPostRoomData?.object?.content?[index].description?.substring(0, maxLength)}....ReadMore"
+                                                                                        ? "${AllGuestPostRoomData?.object?.content?[index].description?.substring(0, maxLength)} ....ReadMore"
                                                                                         : "${AllGuestPostRoomData?.object?.content?[index].translatedDescription?.substring(0, maxLength)}....ReadMore",
                                                                                 linkStyle: TextStyle(
                                                                                   color: Colors.blue,
@@ -4694,52 +4697,52 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                         print("-------------- true");
                                                                                       }
                                                                                     });
-                                                                                  }
-
-                                                                                  if (User_ID == null) {
-                                                                                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
                                                                                   } else {
-                                                                                    if (Link == true || Link1 == true || Link2 == true || Link3 == true || Link4 == true || Link5 == true || Link6 == true) {
-                                                                                      if (Link2 == true || Link3 == true) {
-                                                                                        launchUrl(Uri.parse("https://${link.value.toString()}"));
-                                                                                        print("qqqqqqqqhttps://${link.value}");
-                                                                                      } else {
-                                                                                        if (Link6 == true) {
-                                                                                          print("yes i am inList =   room");
-                                                                                          Navigator.push(context, MaterialPageRoute(
-                                                                                            builder: (context) {
-                                                                                              return NewBottomBar(
-                                                                                                buttomIndex: 1,
-                                                                                              );
-                                                                                            },
-                                                                                          ));
+                                                                                    if (User_ID == null) {
+                                                                                      Navigator.of(context).push(MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
+                                                                                    } else {
+                                                                                      if (Link == true || Link1 == true || Link2 == true || Link3 == true || Link4 == true || Link5 == true || Link6 == true) {
+                                                                                        if (Link2 == true || Link3 == true) {
+                                                                                          launchUrl(Uri.parse("https://${link.value.toString()}"));
+                                                                                          print("qqqqqqqqhttps://${link.value}");
                                                                                         } else {
-                                                                                          launchUrl(Uri.parse(link.value.toString()));
-                                                                                          print("link.valuelink.value -- ${link.value}");
-                                                                                        }
-                                                                                      }
-                                                                                    } else if (link.value != null) {
-                                                                                      if (link.value!.startsWith('#')) {
-                                                                                        await BlocProvider.of<GetGuestAllPostCubit>(context).seetinonExpried(context);
-                                                                                        Navigator.push(
-                                                                                            context,
-                                                                                            MaterialPageRoute(
-                                                                                              builder: (context) => HashTagViewScreen(title: "${link.value}"),
+                                                                                          if (Link6 == true) {
+                                                                                            print("yes i am inList =   room");
+                                                                                            Navigator.push(context, MaterialPageRoute(
+                                                                                              builder: (context) {
+                                                                                                return NewBottomBar(
+                                                                                                  buttomIndex: 1,
+                                                                                                );
+                                                                                              },
                                                                                             ));
-                                                                                      } else if (link.value!.startsWith('@')) {
-                                                                                        await BlocProvider.of<GetGuestAllPostCubit>(context).seetinonExpried(context);
-                                                                                        var name;
-                                                                                        var tagName;
-                                                                                        name = SelectedTest;
-                                                                                        tagName = name.replaceAll("@", "");
-                                                                                        await BlocProvider.of<GetGuestAllPostCubit>(context).UserTagAPI(context, tagName);
+                                                                                          } else {
+                                                                                            launchUrl(Uri.parse(link.value.toString()));
+                                                                                            print("link.valuelink.value -- ${link.value}");
+                                                                                          }
+                                                                                        }
+                                                                                      } else if (link.value != null) {
+                                                                                        if (link.value!.startsWith('#')) {
+                                                                                          await BlocProvider.of<GetGuestAllPostCubit>(context).seetinonExpried(context);
+                                                                                          Navigator.push(
+                                                                                              context,
+                                                                                              MaterialPageRoute(
+                                                                                                builder: (context) => HashTagViewScreen(title: "${link.value}"),
+                                                                                              ));
+                                                                                        } else if (link.value!.startsWith('@')) {
+                                                                                          await BlocProvider.of<GetGuestAllPostCubit>(context).seetinonExpried(context);
+                                                                                          var name;
+                                                                                          var tagName;
+                                                                                          name = SelectedTest;
+                                                                                          tagName = name.replaceAll("@", "");
+                                                                                          await BlocProvider.of<GetGuestAllPostCubit>(context).UserTagAPI(context, tagName);
 
-                                                                                        Navigator.push(context, MaterialPageRoute(builder: (context) {
-                                                                                          return ProfileScreen(User_ID: "${userTagModel?.object}", isFollowing: "");
-                                                                                        })).then((value) => Get_UserToken());
+                                                                                          Navigator.push(context, MaterialPageRoute(builder: (context) {
+                                                                                            return ProfileScreen(User_ID: "${userTagModel?.object}", isFollowing: "");
+                                                                                          })).then((value) => Get_UserToken());
 
-                                                                                        print("tagName -- ${tagName}");
-                                                                                        print("user id -- ${userTagModel?.object}");
+                                                                                          print("tagName -- ${tagName}");
+                                                                                          print("user id -- ${userTagModel?.object}");
+                                                                                        }
                                                                                       }
                                                                                     }
                                                                                   }
