@@ -304,291 +304,276 @@ class _InboxScreenState extends State<InboxScreen> {
     var _height = MediaQuery.of(context).size.height;
     var _width = MediaQuery.of(context).size.width;
     return Expanded(
-      child: Column(
-        children: [
-          SizedBox(height: 10,),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text("Mark all as read",
-                  style: TextStyle(
-                      decoration: TextDecoration.underline,
-                      color: ColorConstant.primary_color,
-                      fontWeight: FontWeight.bold)),SizedBox(width: 10,),
-            ],
-          ),
-          SingleChildScrollView(
-            child: ListView.builder(
-                shrinkWrap: true,
-                padding: EdgeInsets.zero,
-                physics: NeverScrollableScrollPhysics(),
-                itemCount: PersonalChatListModelData?.object?.length,
-                itemBuilder: (context, index) {
-                  DateTime parsedDateTime = DateTime.parse(
-                      '${PersonalChatListModelData?.object?[index].createdDate ?? ""}');
-                  return Padding(
-                    padding: const EdgeInsets.only(top: 15),
-                    child: Slidable(
-                      enabled: true,
-                      dragStartBehavior: DragStartBehavior.start,
-                      endActionPane: ActionPane(
-                          // dragDismissible: true,
-                          extentRatio: 0.2,
-                          motion: ScrollMotion(),
-                          // dismissible: DismissiblePane(onDismissed: () {
-                          //   super.setState(() {
-                          //     BlocProvider.of<PersonalChatListCubit>(context)
-                          //         .UserChatDelete(
-                          //             "${PersonalChatListModelData?.object?[index].userChatInboxUid}",
-                          //             context);
-                          //   });
-                          //   print("tap on Delete icon 2");
-                          // }),
-                          children: [
-                            SlidableAction(
-                              borderRadius: BorderRadius.circular(10),
-                              onPressed: (context) {
-                                super.setState(() {
-                                  BlocProvider.of<PersonalChatListCubit>(
-                                          context)
-                                      .UserChatDelete(
-                                          "${PersonalChatListModelData?.object?[index].userChatInboxUid}",
-                                          context);
-                                });
-                                print("tap on Delete icon 1");
-                              },
-                              backgroundColor: Colors.transparent,
-                              foregroundColor: ColorConstant.primary_color,
-                              icon: Icons.delete,
-                              // label: '',
-                            ),
-                            /*  GestureDetector(
-                              onTap: () {
-                                super.setState(() {
-                                  BlocProvider.of<PersonalChatListCubit>(context)
-                                      .UserChatDelete(
-                                          "${PersonalChatListModelData?.object?[index].userChatInboxUid}",
-                                          context);
-                                });
-                                print("tap on Delete icon 1");
-                              },
-                              child: Container(
-                                margin: EdgeInsets.only(left: 20, top: 5),
-                                height: 50,
-                                width: 50,
-                                decoration: BoxDecoration(
-                                    shape: BoxShape.circle, color: Color(0xffFBD8D9)),
-                                child: Center(
-                                    child: Padding(
-                                  padding: const EdgeInsets.all(15),
-                                  child: Image.asset(
-                                    ImageConstant.deleteIcon,
-                                    color: ColorConstant.primary_color,
-                                  ),
-                                )),
+      child: SingleChildScrollView(
+        child: ListView.builder(
+            shrinkWrap: true,
+            padding: EdgeInsets.zero,
+            physics: NeverScrollableScrollPhysics(),
+            itemCount: PersonalChatListModelData?.object?.length,
+            itemBuilder: (context, index) {
+              DateTime parsedDateTime = DateTime.parse(
+                  '${PersonalChatListModelData?.object?[index].createdDate ?? ""}');
+              return Padding(
+                padding: const EdgeInsets.only(top: 15),
+                child: Slidable(
+                  enabled: true,
+                  dragStartBehavior: DragStartBehavior.start,
+                  endActionPane: ActionPane(
+                      // dragDismissible: true,
+                      extentRatio: 0.2,
+                      motion: ScrollMotion(),
+                      // dismissible: DismissiblePane(onDismissed: () {
+                      //   super.setState(() {
+                      //     BlocProvider.of<PersonalChatListCubit>(context)
+                      //         .UserChatDelete(
+                      //             "${PersonalChatListModelData?.object?[index].userChatInboxUid}",
+                      //             context);
+                      //   });
+                      //   print("tap on Delete icon 2");
+                      // }),
+                      children: [
+                        SlidableAction(
+                          borderRadius: BorderRadius.circular(10),
+                          onPressed: (context) {
+                            super.setState(() {
+                              BlocProvider.of<PersonalChatListCubit>(
+                                      context)
+                                  .UserChatDelete(
+                                      "${PersonalChatListModelData?.object?[index].userChatInboxUid}",
+                                      context);
+                            });
+                            print("tap on Delete icon 1");
+                          },
+                          backgroundColor: Colors.transparent,
+                          foregroundColor: ColorConstant.primary_color,
+                          icon: Icons.delete,
+                          // label: '',
+                        ),
+                        /*  GestureDetector(
+                          onTap: () {
+                            super.setState(() {
+                              BlocProvider.of<PersonalChatListCubit>(context)
+                                  .UserChatDelete(
+                                      "${PersonalChatListModelData?.object?[index].userChatInboxUid}",
+                                      context);
+                            });
+                            print("tap on Delete icon 1");
+                          },
+                          child: Container(
+                            margin: EdgeInsets.only(left: 20, top: 5),
+                            height: 50,
+                            width: 50,
+                            decoration: BoxDecoration(
+                                shape: BoxShape.circle, color: Color(0xffFBD8D9)),
+                            child: Center(
+                                child: Padding(
+                              padding: const EdgeInsets.all(15),
+                              child: Image.asset(
+                                ImageConstant.deleteIcon,
+                                color: ColorConstant.primary_color,
                               ),
-                            ) */
-                          ]),
-                      child: GestureDetector(
-                        onTap: () {
-                          /* Navigator.push(context,
-                              MaterialPageRoute(builder: (context) {
-                            return DM_InboxScreen(
-                              UserName:
-                                  "${PersonalChatListModelData?.object?[index].userName}",
-                              ChatInboxUid:
-                                  "${PersonalChatListModelData?.object?[index].userChatInboxUid}",
-                            );
-                          })); */
-                          Navigator.push(context,
-                              MaterialPageRoute(builder: (context) {
-                            return DmScreen(
-                              isExpert: PersonalChatListModelData
-                                  ?.object?[index].isExpert,
-                              UserUID:
-                                  "${PersonalChatListModelData?.object?[index].userUid}",
-                              UserName:
-                                  "${PersonalChatListModelData?.object?[index].userName}",
-                              ChatInboxUid:
-                                  "${PersonalChatListModelData?.object?[index].userChatInboxUid}",
-                              UserImage:
-                                  "${PersonalChatListModelData?.object?[index].userProfilePic}",
-                              videoId:
-                                  "${PersonalChatListModelData?.object?[index].videoId}",
-                              // UserUID: "${PersonalChatListModelData?.object?[index].}",
-                            );
-                          })).then((value) => CallBackFunc());
-                        },
-                        child: Container(
-                          height: 80,
-                          decoration: BoxDecoration(
-                              border: Border.all(color: Colors.grey.shade400),
-                              borderRadius: BorderRadius.circular(10)),
-                          child: Padding(
-                            padding: const EdgeInsets.all(10),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                            )),
+                          ),
+                        ) */
+                      ]),
+                  child: GestureDetector(
+                    onTap: () {
+                      /* Navigator.push(context,
+                          MaterialPageRoute(builder: (context) {
+                        return DM_InboxScreen(
+                          UserName:
+                              "${PersonalChatListModelData?.object?[index].userName}",
+                          ChatInboxUid:
+                              "${PersonalChatListModelData?.object?[index].userChatInboxUid}",
+                        );
+                      })); */
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) {
+                        return DmScreen(
+                          isExpert: PersonalChatListModelData
+                              ?.object?[index].isExpert,
+                          UserUID:
+                              "${PersonalChatListModelData?.object?[index].userUid}",
+                          UserName:
+                              "${PersonalChatListModelData?.object?[index].userName}",
+                          ChatInboxUid:
+                              "${PersonalChatListModelData?.object?[index].userChatInboxUid}",
+                          UserImage:
+                              "${PersonalChatListModelData?.object?[index].userProfilePic}",
+                          videoId:
+                              "${PersonalChatListModelData?.object?[index].videoId}",
+                          // UserUID: "${PersonalChatListModelData?.object?[index].}",
+                        );
+                      })).then((value) => CallBackFunc());
+                    },
+                    child: Container(
+                      height: 80,
+                      decoration: BoxDecoration(
+                          border: Border.all(color: Colors.grey.shade400),
+                          borderRadius: BorderRadius.circular(10)),
+                      child: Padding(
+                        padding: const EdgeInsets.all(10),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
                               children: [
-                                Row(
-                                  children: [
-                                    Stack(children: [
-                                      Container(
-                                          height: 55,
-                                          width: 55,
-                                          decoration: BoxDecoration(
-                                            shape: BoxShape.circle,
-                                          ),
-                                          child: PersonalChatListModelData
-                                                          ?.object?[index]
-                                                          .userProfilePic !=
-                                                      null &&
-                                                  PersonalChatListModelData
-                                                          ?.object?[index]
-                                                          .userProfilePic !=
-                                                      ""
-                                              ? CustomImageView(
-                                                  url:
-                                                      "${PersonalChatListModelData?.object?[index].userProfilePic}",
-                                                  height: 60,
-                                                  width: 60,
-                                                  fit: BoxFit.cover,
-                                                  radius:
-                                                      BorderRadius.circular(30),
-                                                )
-                                              : CustomImageView(
-                                                  imagePath:
-                                                      ImageConstant.tomcruse)),
-                                      PersonalChatListModelData?.object?[index]
-                                                  .onlineStatus ==
-                                              true
-                                          ? Positioned(
-                                              bottom: 1,
-                                              right: 5,
-                                              child: Container(
-                                                height: 12,
-                                                width: 12,
-                                                decoration: BoxDecoration(
-                                                    color: Colors.green,
-                                                    shape: BoxShape.circle,
-                                                    border: Border.all(
-                                                        color: Colors.white,
-                                                        width: 2)),
-                                              ))
-                                          : SizedBox()
-                                    ]),
-                                    Padding(
-                                      padding: EdgeInsets.only(
-                                        top: 8,
-                                        left: 8,
+                                Stack(children: [
+                                  Container(
+                                      height: 55,
+                                      width: 55,
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
                                       ),
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Container(
-                                            width: _width / 1.4,
-                                            child: Row(
-                                              children: [
-                                                Text(
-                                                  "${PersonalChatListModelData?.object?[index].userName ?? ""}",
-                                                  style: TextStyle(
-                                                      fontSize: 15,
-                                                      fontWeight:
-                                                          FontWeight.w600),
-                                                ),
-                                                if (PersonalChatListModelData
-                                                        ?.object?[index]
-                                                        .isExpert ==
-                                                    true)
-                                                  Padding(
-                                                    padding:
-                                                        const EdgeInsets.only(
-                                                            left: 2),
-                                                    child: Image.asset(
-                                                      ImageConstant.Star,
-                                                      height: 18,
-                                                    ),
-                                                  ),
-                                                Spacer(),
-                                                Text(
-                                                  getTimeDifference(
-                                                      parsedDateTime),
-                                                  style: TextStyle(
-                                                    fontSize: 11,
-                                                    fontWeight: FontWeight.w400,
-                                                    color: Colors.grey,
-                                                  ),
-                                                )
-                                              ],
+                                      child: PersonalChatListModelData
+                                                      ?.object?[index]
+                                                      .userProfilePic !=
+                                                  null &&
+                                              PersonalChatListModelData
+                                                      ?.object?[index]
+                                                      .userProfilePic !=
+                                                  ""
+                                          ? CustomImageView(
+                                              url:
+                                                  "${PersonalChatListModelData?.object?[index].userProfilePic}",
+                                              height: 60,
+                                              width: 60,
+                                              fit: BoxFit.cover,
+                                              radius:
+                                                  BorderRadius.circular(30),
+                                            )
+                                          : CustomImageView(
+                                              imagePath:
+                                                  ImageConstant.tomcruse)),
+                                  PersonalChatListModelData?.object?[index]
+                                              .onlineStatus ==
+                                          true
+                                      ? Positioned(
+                                          bottom: 1,
+                                          right: 5,
+                                          child: Container(
+                                            height: 12,
+                                            width: 12,
+                                            decoration: BoxDecoration(
+                                                color: Colors.green,
+                                                shape: BoxShape.circle,
+                                                border: Border.all(
+                                                    color: Colors.white,
+                                                    width: 2)),
+                                          ))
+                                      : SizedBox()
+                                ]),
+                                Padding(
+                                  padding: EdgeInsets.only(
+                                    top: 8,
+                                    left: 8,
+                                  ),
+                                  child: Column(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Container(
+                                        width: _width / 1.4,
+                                        child: Row(
+                                          children: [
+                                            Text(
+                                              "${PersonalChatListModelData?.object?[index].userName ?? ""}",
+                                              style: TextStyle(
+                                                  fontSize: 15,
+                                                  fontWeight:
+                                                      FontWeight.w600),
                                             ),
-                                          ),
-                                          Padding(
-                                            padding: EdgeInsets.only(bottom: 7),
-                                            child: Container(
-                                              width: _width / 1.7,
-                                              height: 20,
-                                              child: PersonalChatListModelData
-                                                          ?.object?[index]
-                                                          .messageType ==
-                                                      "IMAGE"
-                                                  ? Row(
-                                                      children: [
-                                                        CustomImageView(
-                                                            height: 19,
-                                                            width: 19,
-                                                            imagePath: ImageConstant
-                                                                .ChatimageIcon),
-                                                        SizedBox(
-                                                          width: 7,
-                                                        ),
-                                                        Text(
-                                                          "Photo",
-                                                          style: TextStyle(
-                                                            fontSize: 15,
-                                                            fontWeight:
-                                                                FontWeight.w600,
-                                                            color: Colors.grey,
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    )
-                                                  : Text(
-                                                      "${PersonalChatListModelData?.object?[index].message}",
-                                                      overflow:
-                                                          TextOverflow.ellipsis,
+                                            if (PersonalChatListModelData
+                                                    ?.object?[index]
+                                                    .isExpert ==
+                                                true)
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsets.only(
+                                                        left: 2),
+                                                child: Image.asset(
+                                                  ImageConstant.Star,
+                                                  height: 18,
+                                                ),
+                                              ),
+                                            Spacer(),
+                                            Text(
+                                              getTimeDifference(
+                                                  parsedDateTime),
+                                              style: TextStyle(
+                                                fontSize: 11,
+                                                fontWeight: FontWeight.w400,
+                                                color: Colors.grey,
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: EdgeInsets.only(bottom: 7),
+                                        child: Container(
+                                          width: _width / 1.7,
+                                          height: 20,
+                                          child: PersonalChatListModelData
+                                                      ?.object?[index]
+                                                      .messageType ==
+                                                  "IMAGE"
+                                              ? Row(
+                                                  children: [
+                                                    CustomImageView(
+                                                        height: 19,
+                                                        width: 19,
+                                                        imagePath: ImageConstant
+                                                            .ChatimageIcon),
+                                                    SizedBox(
+                                                      width: 7,
+                                                    ),
+                                                    Text(
+                                                      "Photo",
                                                       style: TextStyle(
                                                         fontSize: 15,
                                                         fontWeight:
                                                             FontWeight.w600,
-                                                        color: PersonalChatListModelData
-                                                                    ?.object?[
-                                                                        index]
-                                                                    .isSeen ==
-                                                                true
-                                                            ? Colors.grey
-                                                            : Colors.black,
+                                                        color: Colors.grey,
                                                       ),
                                                     ),
-                                            ),
-                                          )
-                                        ],
-                                      ),
-                                    )
-                                  ],
-                                ),
+                                                  ],
+                                                )
+                                              : Text(
+                                                  "${PersonalChatListModelData?.object?[index].message}",
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  style: TextStyle(
+                                                    fontSize: 15,
+                                                    fontWeight:
+                                                        FontWeight.w600,
+                                                    color: PersonalChatListModelData
+                                                                ?.object?[
+                                                                    index]
+                                                                .isSeen ==
+                                                            true
+                                                        ? Colors.grey
+                                                        : Colors.black,
+                                                  ),
+                                                ),
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                )
                               ],
                             ),
-                          ),
+                          ],
                         ),
                       ),
                     ),
-                  );
-                }),
-          ),
-        ],
+                  ),
+                ),
+              );
+            }),
       ),
     );
   }

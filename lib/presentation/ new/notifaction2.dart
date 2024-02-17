@@ -21,6 +21,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../rooms/room_details_screen.dart';
 import 'ReadAll_dailog.dart';
 
+
+ int NotificationCount = 0;
 class NewNotifactionScreen extends StatefulWidget {
   const NewNotifactionScreen({Key? key}) : super(key: key);
 
@@ -34,7 +36,7 @@ class _NewNotifactionScreenState extends State<NewNotifactionScreen>
   RequestListModel? RequestListModelData;
   InvitationModel? invitationRoomData;
   GetAllNotificationModel? AllNotificationData;
-  int NotificationCount = 0;
+ 
   bool apiDataGet = false;
   bool dataGet = false;
   bool? Show_NoData_Image;
@@ -197,7 +199,7 @@ class _NewNotifactionScreenState extends State<NewNotifactionScreen>
                                               null
                                       ? SizedBox()
                                       : Container(
-                                          child: Text(
+                                          child: NotificationCount == 0 ? SizedBox() : Text(
                                             '${NotificationCount}',
                                             style: TextStyle(
                                                 overflow: TextOverflow.ellipsis,
@@ -426,7 +428,11 @@ class _AllNotificationClassState extends State<AllNotificationClass> {
         isdata = true;
         AllNotificationData = state.AllNotificationData;
       }
+if(state is ReadAllMSGLoadedState){
+                // Navigator.pop(context);
+                BlocProvider.of<InvitationCubit>(context).AllNotification(context);
 
+              }
       if (state is SeenNotificationLoadedState) {
         BlocProvider.of<InvitationCubit>(context).AllNotification(context);
       }
@@ -445,14 +451,16 @@ class _AllNotificationClassState extends State<AllNotificationClass> {
           : AllNotificationData?.object?.isNotEmpty == true
               ? Column(
                 children: [SizedBox(height: 10,),
-                  Row(
+              NotificationCount == 0 ? SizedBox() : Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               GestureDetector(
                  onTap: () {
-                                       showDialog(
-                                      context: context,
-                                      builder: (_) => ReadAlldailog());
+                   BlocProvider.of<InvitationCubit>(context)
+                                        .ReadAllMassagesAPI(context);
+                                      //  showDialog(
+                                      // context: context,
+                                      // builder: (_) => ReadAlldailog());
                                     },
                 child: Text("Mark all as read",
                     style: TextStyle(
