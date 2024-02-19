@@ -140,4 +140,8 @@ class Config {
       "user/reaction_message_added_on_story";
        static const String OpenSaveImagePostGuest = "guest/api/get_post_by_uid";
        static const String readAllmsg = "user/api/read_all_notification";
+       static const String readnotificationscount = "user/api/read_notifications_count";
+
+
+       
 }

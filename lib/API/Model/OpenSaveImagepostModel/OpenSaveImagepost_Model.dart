@@ -44,6 +44,7 @@ class Object {
   String? postLink;
   String? translatedDescription;
   bool? isTrsnalteoption;
+  String? userAccountType;
 
   Object(
       {this.postUid,
@@ -62,7 +63,7 @@ class Object {
       this.commentCount,
       this.repostCount,
       this.repostOn,
-      this.thumbnailImageUrl,this.postLink,this.translatedDescription,this.isTrsnalteoption});
+      this.thumbnailImageUrl,this.postLink,this.translatedDescription,this.isTrsnalteoption,this.userAccountType});
 
   Object.fromJson(Map<String, dynamic> json) {
     postUid = json['postUid'];
@@ -87,6 +88,7 @@ class Object {
     postLink = json['postLink'];
     translatedDescription = json['translatedDescription'];
     isTrsnalteoption = json['isTrsnalteoption'];
+    userAccountType = json['userAccountType'];
   }
 
   Map<String, dynamic> toJson() {
@@ -113,6 +115,7 @@ class Object {
     data['postLink'] = this.postLink;
     data['translatedDescription'] = this.translatedDescription;
     data['isTrsnalteoption'] = this.isTrsnalteoption;
+    data['userAccountType'] = this.userAccountType;
     return data;
   }
 }
@@ -137,6 +140,7 @@ class RepostOn {
   String? thumbnailImageUrl;
   String? translatedDescription;
   bool? isTrsnalteoption;
+  String? userAccountType;
 
   RepostOn({
     this.postUid,
@@ -156,7 +160,7 @@ class RepostOn {
     this.repostCount,
     this.repostOn,
     this.thumbnailImageUrl,
-    this.translatedDescription,this.isTrsnalteoption,
+    this.translatedDescription,this.isTrsnalteoption,this.userAccountType
   });
 
   RepostOn.fromJson(Map<String, dynamic> json) {
@@ -179,6 +183,7 @@ class RepostOn {
     thumbnailImageUrl = json['thumbnailImageUrl'];
     translatedDescription = json['translatedDescription'];
     isTrsnalteoption = json['isTrsnalteoption'];
+    userAccountType = json['userAccountType'];
   }
 
   Map<String, dynamic> toJson() {
@@ -202,6 +207,7 @@ class RepostOn {
     data['thumbnailImageUrl'] = this.thumbnailImageUrl;
     data['translatedDescription'] = this.translatedDescription;
     data['isTrsnalteoption'] = this.isTrsnalteoption;
+    data['userAccountType'] = this.userAccountType;
     return data;
   }
 }

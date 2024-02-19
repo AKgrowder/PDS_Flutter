@@ -145,9 +145,8 @@ class _InboxScreenState extends State<InboxScreen> {
               PersonalChatListModelData = state.PersonalChatListModelData;
             }
             if (state is DMChatListLoadedState) {
-              print(state.DMChatList.object);
               UserIndexUUID = state.DMChatList.object;
-    
+
               if (UserIndexUUID != "" || UserIndexUUID != null) {
                 Navigator.push(context, MaterialPageRoute(builder: (context) {
                   return DmScreen(
@@ -209,7 +208,7 @@ class _InboxScreenState extends State<InboxScreen> {
                       child: Padding(
                         padding: const EdgeInsets.only(left: 15, right: 15),
                         child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center, 
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             SizedBox(
                               height: height * 0.06,
@@ -337,7 +336,8 @@ class _InboxScreenState extends State<InboxScreen> {
                           borderRadius: BorderRadius.circular(10),
                           onPressed: (context) {
                             super.setState(() {
-                              BlocProvider.of<PersonalChatListCubit>(context)
+                              BlocProvider.of<PersonalChatListCubit>(
+                                      context)
                                   .UserChatDelete(
                                       "${PersonalChatListModelData?.object?[index].userChatInboxUid}",
                                       context);
@@ -390,6 +390,8 @@ class _InboxScreenState extends State<InboxScreen> {
                       Navigator.push(context,
                           MaterialPageRoute(builder: (context) {
                         return DmScreen(
+                          isExpert: PersonalChatListModelData
+                              ?.object?[index].isExpert,
                           UserUID:
                               "${PersonalChatListModelData?.object?[index].userUid}",
                           UserName:
@@ -398,7 +400,8 @@ class _InboxScreenState extends State<InboxScreen> {
                               "${PersonalChatListModelData?.object?[index].userChatInboxUid}",
                           UserImage:
                               "${PersonalChatListModelData?.object?[index].userProfilePic}",
-                              videoId: "${PersonalChatListModelData?.object?[index].videoId}",
+                          videoId:
+                              "${PersonalChatListModelData?.object?[index].videoId}",
                           // UserUID: "${PersonalChatListModelData?.object?[index].}",
                         );
                       })).then((value) => CallBackFunc());
@@ -437,13 +440,14 @@ class _InboxScreenState extends State<InboxScreen> {
                                               height: 60,
                                               width: 60,
                                               fit: BoxFit.cover,
-                                              radius: BorderRadius.circular(30),
+                                              radius:
+                                                  BorderRadius.circular(30),
                                             )
                                           : CustomImageView(
                                               imagePath:
                                                   ImageConstant.tomcruse)),
-                                  PersonalChatListModelData
-                                              ?.object?[index].onlineStatus ==
+                                  PersonalChatListModelData?.object?[index]
+                                              .onlineStatus ==
                                           true
                                       ? Positioned(
                                           bottom: 1,
@@ -452,8 +456,7 @@ class _InboxScreenState extends State<InboxScreen> {
                                             height: 12,
                                             width: 12,
                                             decoration: BoxDecoration(
-                                                color:
-                                                    Colors.green,
+                                                color: Colors.green,
                                                 shape: BoxShape.circle,
                                                 border: Border.all(
                                                     color: Colors.white,
@@ -480,11 +483,26 @@ class _InboxScreenState extends State<InboxScreen> {
                                               "${PersonalChatListModelData?.object?[index].userName ?? ""}",
                                               style: TextStyle(
                                                   fontSize: 15,
-                                                  fontWeight: FontWeight.w600),
+                                                  fontWeight:
+                                                      FontWeight.w600),
                                             ),
+                                            if (PersonalChatListModelData
+                                                    ?.object?[index]
+                                                    .isExpert ==
+                                                true)
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsets.only(
+                                                        left: 2),
+                                                child: Image.asset(
+                                                  ImageConstant.Star,
+                                                  height: 18,
+                                                ),
+                                              ),
                                             Spacer(),
                                             Text(
-                                              getTimeDifference(parsedDateTime),
+                                              getTimeDifference(
+                                                  parsedDateTime),
                                               style: TextStyle(
                                                 fontSize: 11,
                                                 fontWeight: FontWeight.w400,
@@ -530,8 +548,15 @@ class _InboxScreenState extends State<InboxScreen> {
                                                       TextOverflow.ellipsis,
                                                   style: TextStyle(
                                                     fontSize: 15,
-                                                    fontWeight: FontWeight.w600,
-                                                    color:PersonalChatListModelData?.object?[index].isSeen==true? Colors.grey:Colors.black,
+                                                    fontWeight:
+                                                        FontWeight.w600,
+                                                    color: PersonalChatListModelData
+                                                                ?.object?[
+                                                                    index]
+                                                                .isSeen ==
+                                                            true
+                                                        ? Colors.grey
+                                                        : Colors.black,
                                                   ),
                                                 ),
                                         ),
@@ -580,7 +605,7 @@ class _InboxScreenState extends State<InboxScreen> {
                 // DMChatListm
                 print(
                     "${getUsersChatByUsername?.object?.content?[index].userUuid}");
-                  Index = index;
+                Index = index;
                 BlocProvider.of<PersonalChatListCubit>(context).DMChatListm(
                     "${getUsersChatByUsername?.object?.content?[index].userUuid}",
                     context);

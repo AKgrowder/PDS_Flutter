@@ -244,6 +244,14 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               }
               Navigator.pop(context);
             }
+            if(state is UserExistLoadedState){
+             print("this is the check${state.UserExist}"); 
+              SnackBar snackBar = SnackBar(
+                  content: Text(state.UserExist.toString()),
+                  backgroundColor: ColorConstant.primary_color,
+                );
+             ScaffoldMessenger.of(context).showSnackBar(snackBar);
+            }
             if (state is AddExportLoadedState) {
               if (state.addExpertProfile.message.toString() ==
                   "Profile Created Successfully") {
@@ -665,11 +673,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           ),
                         ),
                         customTextFeild(
-                          isReadOnly: true,
-                          controller: userNameController,
-                          width: _width / 1.1,
-                          hintText: "Enter User ID",
-                        ),
+                            // isReadOnly: true,
+                            controller: userNameController,
+                            width: _width / 1.1,
+                            hintText: "Enter User ID",
+                            color: Color(0xffFFF3F4)),
                         Row(
                           children: [
                             Padding(
@@ -874,7 +882,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             "userBackgroundPic": chooseDocumentuploded1?.object.toString(),
             "email": emailController.text,
             "name": nameController.text,
-            // "userName": userNameController.text,
+            "userName": userNameController.text,
             "uuid": User_ID
           };
           print("parems--$params");
@@ -891,7 +899,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     : null,
             "email": emailController.text,
             "name": nameController.text,
-            // "userName": userNameController.text,
+            "userName": userNameController.text,
             "uuid": User_ID
           };
           print("parems--$params");
@@ -908,7 +916,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     ? widget.newProfileData?.object?.userProfilePic
                     : null,
             "name": nameController.text,
-            // "userName": userNameController.text,
+            "userName": userNameController.text,
             "uuid": User_ID
           };
           print("parems--$params");
@@ -929,7 +937,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     : null,
             "email": emailController.text,
             "name": nameController.text,
-            // "userName": userNameController.text,
+            "userName": userNameController.text,
             "uuid": User_ID
           };
           print("parems--$params");
@@ -1002,6 +1010,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       params['profileUid'] =
           widget.newProfileData?.object?.profileUid.toString();
       params['email'] = emailController.text;
+      params['userName'] = userNameController.text;
       params['industryTypesUid'] = industryType;
       if (chooseDocumentuploded2?.object != null) {
         params['document'] = chooseDocumentuploded2?.object.toString();
@@ -1033,7 +1042,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       print(
           "${dopcumentNameUpdate} :- 1 555555555555555555555555555555555555555555555555555555");
 
-      print("RonakRonakRonakRonakRonakRonakRonakRonakRonakRonak");
+      print("parems--");
       print(params);
       await BlocProvider.of<MyAccountCubit>(context).cretaForumUpdate(
         params,
@@ -1111,6 +1120,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         print("both condison");
         //ankur is working on
         var params = {
+           "userName": userNameController.text,
           "document": chooseDocumentuploded2?.object != null
               ? chooseDocumentuploded2?.object.toString()
               : "${widget.newProfileData?.object?.userDocument?.toString()}",
@@ -1122,7 +1132,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           "email": emailController.text,
           "userProfilePic": chooseDocumentuploded?.object.toString(),
           "userBackgroundPic": chooseDocumentuploded1?.object.toString(),
-          //  "userName":"AnkurTestTest17",
+         
           "uid": User_ID,
           "name": nameController.text,
           "documentName": dopcumentNameUpdate
@@ -1146,6 +1156,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             "${dopcumentNameUpdate} :- 3 555555555555555555555555555555555555555555555555555555");
 
         var params = {
+          "userName": userNameController.text,
           "document": chooseDocumentuploded2?.object != null
               ? chooseDocumentuploded2?.object.toString()
               : "${widget.newProfileData?.object?.userDocument?.toString()}",
@@ -1183,6 +1194,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             "${dopcumentNameUpdate} :- 4 555555555555555555555555555555555555555555555555555555");
 
         var params = {
+          "userName": userNameController.text,
           "document": chooseDocumentuploded2?.object != null
               ? chooseDocumentuploded2?.object.toString()
               : "${widget.newProfileData?.object?.userDocument?.toString()}",
@@ -1220,6 +1232,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             "${dopcumentNameUpdate} :- 5 555555555555555555555555555555555555555555555555555555");
 
         var params = {
+          "userName": userNameController.text,
           "userProfilePic":
               // widget.newProfileData?.object?.userProfilePic != null
               removeProfilePic == false

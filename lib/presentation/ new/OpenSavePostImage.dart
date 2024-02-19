@@ -41,6 +41,7 @@ class OpenSavePostImage extends StatefulWidget {
   bool? profileTure;
   int? index;
   bool? isnavgation;
+  String? Userid;
 
   OpenSavePostImage(
       {Key? key,
@@ -48,7 +49,8 @@ class OpenSavePostImage extends StatefulWidget {
       this.profileTure,
       this.PostopenLink,
       this.index,
-      this.isnavgation})
+      this.isnavgation,
+      this.Userid})
       : super(key: key);
   @override
   State<OpenSavePostImage> createState() => _OpenSavePostImageState();
@@ -68,11 +70,14 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
   bool added = false;
   int imageCount = 1;
   UserTagModel? userTagModel;
+  bool? readmoree;
+  int maxLength = 60;
+
   @override
   void initState() {
     print("dfgdfgdgf-  ${widget.profileTure}");
     BlocProvider.of<OpenSaveCubit>(context)
-        .openSaveImagePostAPI(context, "${widget.PostID}");
+        .openSaveImagePostAPI(context, "${widget.PostID}", showAlert: true);
     userIdFun();
 
     super.initState();
@@ -118,6 +123,16 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
       // }
       if (state is OpenSaveLoadedState) {
         OpenSaveModelData = state.OpenSaveData;
+
+        if ((OpenSaveModelData?.object?.description?.length ?? 0) <= 60) {
+          readmoree = true;
+        } else if ((OpenSaveModelData?.object?.repostOn?.description?.length ??
+                0) <=
+            60) {
+          readmoree = true;
+        } else {
+          readmoree = false;
+        }
         print(OpenSaveModelData?.object?.postUserName);
         navigationFunction();
         parsedDateTimeBlogs =
@@ -125,6 +140,11 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
         // parsedDateTimeRepost =
         //     DateTime.parse('${OpenSaveModelData?.object?.repostOn?.createdAt}');
 
+        // if (OpenSaveModelData?.object?.description!= null) {
+        //   readmoree.add((OpenSaveModelData?.object?.description?.length ?? 0) <= maxLength);
+        // } else {
+        //   readmoree.add(false);
+        // }
         if (OpenSaveModelData?.object?.repostOn != null) {
           repostTime = DateTime.parse(
               '${OpenSaveModelData?.object?.repostOn!.createdAt ?? ""}');
@@ -145,6 +165,13 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
                     added = true;
                   }));
         }
+      }
+
+      if (state is PostLikeLoadedState) {
+        BlocProvider.of<OpenSaveCubit>(context).openSaveImagePostAPI(
+          context,
+          "${widget.PostID}",
+        );
       }
       if (state is RePostLoadedState) {
         SnackBar snackBar = SnackBar(
@@ -309,43 +336,158 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.start,
                                             children: [
-                                              GestureDetector(
-                                                onTap: () {
-                                                  Navigator.push(context,
-                                                      MaterialPageRoute(
-                                                          builder: (context) {
-                                                    return ProfileScreen(
-                                                        User_ID:
-                                                            "${OpenSaveModelData?.object?.userUid}",
-                                                        isFollowing:
-                                                            OpenSaveModelData
-                                                                ?.object
-                                                                ?.isFollowing);
-                                                  }));
-                                                },
-                                                child: Container(
-                                                  child: Text(
-                                                    '${OpenSaveModelData?.object?.postUserName}',
-                                                    style: TextStyle(
-                                                      color: Colors.white,
-                                                      fontSize: 16,
-                                                      fontFamily: 'outfit',
-                                                      fontWeight:
-                                                          FontWeight.w600,
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                children: [
+                                                  GestureDetector(
+                                                    onTap: () {
+                                                      Navigator.push(context,
+                                                          MaterialPageRoute(
+                                                              builder:
+                                                                  (context) {
+                                                        return ProfileScreen(
+                                                            User_ID:
+                                                                "${OpenSaveModelData?.object?.userUid}",
+                                                            isFollowing:
+                                                                OpenSaveModelData
+                                                                    ?.object
+                                                                    ?.isFollowing);
+                                                      }));
+                                                    },
+                                                    child: Container(
+                                                      child: Text(
+                                                        '${OpenSaveModelData?.object?.postUserName}',
+                                                        style: TextStyle(
+                                                          color: Colors.white,
+                                                          fontSize: 16,
+                                                          fontFamily: 'outfit',
+                                                          fontWeight:
+                                                              FontWeight.w600,
+                                                        ),
+                                                      ),
                                                     ),
                                                   ),
-                                                ),
+                                                  if (uuid !=
+                                                      OpenSaveModelData
+                                                          ?.object?.userUid)
+                                                    GestureDetector(
+                                                      onTap: () async {
+                                                        await BlocProvider.of<
+                                                                    OpenSaveCubit>(
+                                                                context)
+                                                            .followWIngMethodd(
+                                                                OpenSaveModelData
+                                                                    ?.object
+                                                                    ?.userUid,
+                                                                context);
+                                                      },
+                                                      child: Container(
+                                                        height: 25,
+                                                        alignment:
+                                                            Alignment.center,
+                                                        width: 65,
+                                                        margin: EdgeInsets.only(
+                                                            bottom: 5),
+                                                        decoration: BoxDecoration(
+                                                            color: ColorConstant
+                                                                .primary_color,
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        4)),
+                                                        child: uuid == null
+                                                            ? Text(
+                                                                'Follow',
+                                                                style: TextStyle(
+                                                                    fontFamily:
+                                                                        "outfit",
+                                                                    fontSize:
+                                                                        12,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold,
+                                                                    color: Colors
+                                                                        .white),
+                                                              )
+                                                            : OpenSaveModelData
+                                                                        ?.object
+                                                                        ?.userAccountType ==
+                                                                    "PUBLIC"
+                                                                ? (OpenSaveModelData
+                                                                            ?.object
+                                                                            ?.isFollowing ==
+                                                                        'FOLLOW'
+                                                                    ? Text(
+                                                                        'Follow',
+                                                                        style: TextStyle(
+                                                                            fontFamily:
+                                                                                "outfit",
+                                                                            fontSize:
+                                                                                12,
+                                                                            fontWeight:
+                                                                                FontWeight.bold,
+                                                                            color: Colors.white),
+                                                                      )
+                                                                    : Text(
+                                                                        'Following ',
+                                                                        style: TextStyle(
+                                                                            fontFamily:
+                                                                                "outfit",
+                                                                            fontSize:
+                                                                                12,
+                                                                            fontWeight:
+                                                                                FontWeight.bold,
+                                                                            color: Colors.white),
+                                                                      ))
+                                                                : OpenSaveModelData
+                                                                            ?.object
+                                                                            ?.isFollowing ==
+                                                                        'FOLLOW'
+                                                                    ? Text(
+                                                                        'Follow',
+                                                                        style: TextStyle(
+                                                                            fontFamily:
+                                                                                "outfit",
+                                                                            fontSize:
+                                                                                12,
+                                                                            fontWeight:
+                                                                                FontWeight.bold,
+                                                                            color: Colors.white),
+                                                                      )
+                                                                    : OpenSaveModelData?.object?.isFollowing ==
+                                                                            'REQUESTED'
+                                                                        ? Text(
+                                                                            'Requested',
+                                                                            style: TextStyle(
+                                                                                fontFamily: "outfit",
+                                                                                fontSize: 12,
+                                                                                fontWeight: FontWeight.bold,
+                                                                                color: Colors.white),
+                                                                          )
+                                                                        : Text(
+                                                                            'Following ',
+                                                                            style: TextStyle(
+                                                                                fontFamily: "outfit",
+                                                                                fontSize: 12,
+                                                                                fontWeight: FontWeight.bold,
+                                                                                color: Colors.white),
+                                                                          ),
+                                                      ),
+                                                    ),
+                                                ],
                                               ),
-                                              SizedBox(height: 7),
                                               Text(
                                                   customFormat(
                                                       parsedDateTimeBlogs!),
                                                   style: TextStyle(
                                                     color: Colors.white,
-                                                    fontSize: 16,
+                                                    fontSize: 11,
                                                     fontFamily: 'outfit',
                                                     fontWeight: FontWeight.w600,
-                                                  ))
+                                                  )),
+                                              Spacer(),
                                             ])),
                                   ),
                                   SizedBox(
@@ -354,167 +496,305 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
 
                                   OpenSaveModelData?.object?.description == null
                                       ? SizedBox()
-                                      : OpenSaveModelData?.object
+                                      : /* OpenSaveModelData?.object
                                                   ?.translatedDescription !=
                                               null
-                                          ? GestureDetector(
-                                              onTap: () async {
-                                                super.setState(() {
-                                                  if (OpenSaveModelData?.object
-                                                              ?.isTrsnalteoption ==
-                                                          false ||
-                                                      OpenSaveModelData?.object
-                                                              ?.isTrsnalteoption ==
-                                                          null) {
+                                          ? SizedBox()
+                                          : SizedBox(), */
+                                      Padding(
+                                          padding:
+                                              const EdgeInsets.only(top: 10),
+                                          child: Align(
+                                            alignment: Alignment.centerLeft,
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                LinkifyText(
+                                                  // "${OpenSaveModelData?.object?.description}",
+                                                  /* OpenSaveModelData?.object
+                                                            ?.isTrsnalteoption ==
+                                                        false ||
                                                     OpenSaveModelData?.object
-                                                            ?.isTrsnalteoption =
-                                                        true;
-                                                  } else {
-                                                    OpenSaveModelData?.object
-                                                            ?.isTrsnalteoption =
-                                                        false;
-                                                  }
-                                                });
-                                              },
-                                              child: Container(
-                                                  width: 80,
-                                                  decoration: BoxDecoration(
-                                                      color: ColorConstant
-                                                          .primaryLight_color,
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              10)),
-                                                  child: Center(
-                                                      child: Text(
-                                                    "Translate",
-                                                    style: TextStyle(
-                                                      fontFamily: 'outfit',
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                    ),
-                                                  ))),
-                                            )
-                                          : SizedBox(),
-                                  Padding(
-                                    padding: const EdgeInsets.only(top: 10),
-                                    child: Align(
-                                      alignment: Alignment.centerLeft,
-                                      child: LinkifyText(
-                                        // "${OpenSaveModelData?.object?.description}",
-                                        OpenSaveModelData?.object
-                                                        ?.isTrsnalteoption ==
-                                                    false ||
-                                                OpenSaveModelData?.object
-                                                        ?.isTrsnalteoption ==
-                                                    null
-                                            ? "${OpenSaveModelData?.object?.description}"
-                                            : "${OpenSaveModelData?.object?.translatedDescription}",
-                                        linkStyle: TextStyle(
-                                          color: Colors.blue,
-                                          fontFamily: 'outfit',
-                                        ),
-                                        textStyle: TextStyle(
-                                          color: Colors.white,
-                                          fontFamily: 'outfit',
-                                        ),
-                                        linkTypes: [
-                                          LinkType.url,
-                                          LinkType.userTag,
-                                          LinkType.hashTag,
-                                          // LinkType
-                                          //     .email
-                                        ],
-                                        onTap: (link) async {
-                                          var SelectedTest =
-                                              link.value.toString();
-                                          var Link =
-                                              SelectedTest.startsWith('https');
-                                          var Link1 =
-                                              SelectedTest.startsWith('http');
-                                          var Link2 =
-                                              SelectedTest.startsWith('www');
-                                          var Link3 =
-                                              SelectedTest.startsWith('WWW');
-                                          var Link4 =
-                                              SelectedTest.startsWith('HTTPS');
-                                          var Link5 =
-                                              SelectedTest.startsWith('HTTP');
-                                          var Link6 = SelectedTest.startsWith(
-                                              'https://pdslink.page.link/');
-                                          print(SelectedTest.toString());
+                                                            ?.isTrsnalteoption ==
+                                                        null
+                                                ? "${OpenSaveModelData?.object?.description}"
+                                                : "${OpenSaveModelData?.object?.translatedDescription}", */
 
-                                          if (Link == true ||
-                                              Link1 == true ||
-                                              Link2 == true ||
-                                              Link3 == true ||
-                                              Link4 == true ||
-                                              Link5 == true ||
-                                              Link6 == true) {
-                                            if (Link2 == true ||
-                                                Link3 == true) {
-                                              launchUrl(Uri.parse(
-                                                  "https://${link.value.toString()}"));
-                                            } else {
-                                              if (Link6 == true) {
-                                                print("yes i am in room");
-                                                Navigator.push(context,
-                                                    MaterialPageRoute(
-                                                  builder: (context) {
-                                                    return NewBottomBar(
-                                                      buttomIndex: 1,
-                                                    );
+                                                  readmoree == true
+                                                      ? (OpenSaveModelData
+                                                                      ?.object
+                                                                      ?.isTrsnalteoption ==
+                                                                  false ||
+                                                              OpenSaveModelData
+                                                                      ?.object
+                                                                      ?.isTrsnalteoption ==
+                                                                  null)
+                                                          ? "${OpenSaveModelData?.object?.description}${(OpenSaveModelData?.object?.description?.length ?? 0) > maxLength ? '....ReadLess' : ''}"
+                                                          : "${OpenSaveModelData?.object?.translatedDescription}"
+                                                      : (OpenSaveModelData
+                                                                      ?.object
+                                                                      ?.isTrsnalteoption ==
+                                                                  false ||
+                                                              OpenSaveModelData
+                                                                      ?.object
+                                                                      ?.isTrsnalteoption ==
+                                                                  null)
+                                                          ? "${OpenSaveModelData?.object?.description?.substring(0, maxLength)}...ReadMore"
+                                                          : "${OpenSaveModelData?.object?.translatedDescription?.substring(0, maxLength)}...ReadMore",
+                                                  linkStyle: TextStyle(
+                                                    color: Colors.blue,
+                                                    fontFamily: 'outfit',
+                                                  ),
+                                                  textStyle: TextStyle(
+                                                    color: Colors.white,
+                                                    fontFamily: 'outfit',
+                                                  ),
+                                                  linkTypes: [
+                                                    LinkType.url,
+                                                    LinkType.userTag,
+                                                    LinkType.hashTag,
+                                                    // LinkType
+                                                    //     .email
+                                                  ],
+                                                  onTap: (link) async {
+                                                    var SelectedTest =
+                                                        link.value.toString();
+                                                    var Link =
+                                                        SelectedTest.startsWith(
+                                                            'https');
+                                                    var Link1 =
+                                                        SelectedTest.startsWith(
+                                                            'http');
+                                                    var Link2 =
+                                                        SelectedTest.startsWith(
+                                                            'www');
+                                                    var Link3 =
+                                                        SelectedTest.startsWith(
+                                                            'WWW');
+                                                    var Link4 =
+                                                        SelectedTest.startsWith(
+                                                            'HTTPS');
+                                                    var Link5 =
+                                                        SelectedTest.startsWith(
+                                                            'HTTP');
+                                                    var Link6 =
+                                                        SelectedTest.startsWith(
+                                                            'https://pdslink.page.link/');
+                                                    print(SelectedTest
+                                                        .toString());
+                                                    if ((OpenSaveModelData
+                                                                ?.object
+                                                                ?.description
+                                                                ?.length ??
+                                                            0) >
+                                                        maxLength) {
+                                                      setState(() {
+                                                        if (readmoree == true) {
+                                                          readmoree = false;
+                                                          print(
+                                                              "--------------false ");
+                                                        } else {
+                                                          readmoree = true;
+                                                          print(
+                                                              "-------------- true");
+                                                        }
+                                                      });
+                                                    }
+                                                    if (Link == true ||
+                                                        Link1 == true ||
+                                                        Link2 == true ||
+                                                        Link3 == true ||
+                                                        Link4 == true ||
+                                                        Link5 == true ||
+                                                        Link6 == true) {
+                                                      if (Link2 == true ||
+                                                          Link3 == true) {
+                                                        launchUrl(Uri.parse(
+                                                            "https://${link.value.toString()}"));
+                                                      } else {
+                                                        if (Link6 == true) {
+                                                          print(
+                                                              "yes i am in room");
+                                                          Navigator.push(
+                                                              context,
+                                                              MaterialPageRoute(
+                                                            builder: (context) {
+                                                              return NewBottomBar(
+                                                                buttomIndex: 1,
+                                                              );
+                                                            },
+                                                          ));
+                                                        } else {
+                                                          launchUrl(Uri.parse(
+                                                              link.value
+                                                                  .toString()));
+                                                          print(
+                                                              "link.valuelink.value -- ${link.value}");
+                                                        }
+                                                      }
+                                                    } else {
+                                                      if (link.value!
+                                                          .startsWith('#')) {
+                                                        print("${link}");
+                                                        Navigator.push(
+                                                            context,
+                                                            MaterialPageRoute(
+                                                              builder: (context) =>
+                                                                  HashTagViewScreen(
+                                                                      title:
+                                                                          "${link.value}"),
+                                                            ));
+                                                      } else if (link.value!
+                                                          .startsWith('@')) {
+                                                        var name;
+                                                        var tagName;
+                                                        name = SelectedTest;
+                                                        tagName =
+                                                            name.replaceAll(
+                                                                "@", "");
+                                                        await BlocProvider.of<
+                                                                    OpenSaveCubit>(
+                                                                context)
+                                                            .UserTagAPI(context,
+                                                                tagName);
+
+                                                        Navigator.push(context,
+                                                            MaterialPageRoute(
+                                                                builder:
+                                                                    (context) {
+                                                          return ProfileScreen(
+                                                              User_ID:
+                                                                  "${userTagModel?.object}",
+                                                              isFollowing: "");
+                                                        }));
+
+                                                        print(
+                                                            "tagName -- ${tagName}");
+                                                        print(
+                                                            "user id -- ${userTagModel?.object}");
+                                                      } else {
+                                                        // launchUrl(Uri.parse(
+                                                        //     "https://${link.value.toString()}"));
+                                                      }
+                                                    }
                                                   },
-                                                ));
-                                              } else {
-                                                launchUrl(Uri.parse(
-                                                    link.value.toString()));
-                                                print(
-                                                    "link.valuelink.value -- ${link.value}");
-                                              }
-                                            }
-                                          } else {
-                                            if (link.value!.startsWith('#')) {
-                                              print("${link}");
-                                              Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        HashTagViewScreen(
-                                                            title:
-                                                                "${link.value}"),
-                                                  ));
-                                            } else if (link.value!
-                                                .startsWith('@')) {
-                                              var name;
-                                              var tagName;
-                                              name = SelectedTest;
-                                              tagName =
-                                                  name.replaceAll("@", "");
-                                              await BlocProvider.of<
-                                                      OpenSaveCubit>(context)
-                                                  .UserTagAPI(context, tagName);
-
-                                              Navigator.push(context,
-                                                  MaterialPageRoute(
-                                                      builder: (context) {
-                                                return ProfileScreen(
-                                                    User_ID:
-                                                        "${userTagModel?.object}",
-                                                    isFollowing: "");
-                                              }));
-
-                                              print("tagName -- ${tagName}");
-                                              print(
-                                                  "user id -- ${userTagModel?.object}");
-                                            } else {
-                                              launchUrl(Uri.parse(
-                                                  "https://${link.value.toString()}"));
-                                            }
-                                          }
-                                        },
-                                      ),
-                                    ),
-                                  ),
+                                                ),
+                                                Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: [
+                                                    readmoree == true &&
+                                                            OpenSaveModelData
+                                                                    ?.object
+                                                                    ?.translatedDescription !=
+                                                                null
+                                                        ? GestureDetector(
+                                                            onTap: () async {
+                                                              super
+                                                                  .setState(() {
+                                                                if (OpenSaveModelData
+                                                                            ?.object
+                                                                            ?.isTrsnalteoption ==
+                                                                        false ||
+                                                                    OpenSaveModelData
+                                                                            ?.object
+                                                                            ?.isTrsnalteoption ==
+                                                                        null) {
+                                                                  OpenSaveModelData
+                                                                      ?.object
+                                                                      ?.isTrsnalteoption = true;
+                                                                } else {
+                                                                  OpenSaveModelData
+                                                                          ?.object
+                                                                          ?.isTrsnalteoption =
+                                                                      false;
+                                                                }
+                                                              });
+                                                            },
+                                                            child: Container(
+                                                                width: 80,
+                                                                decoration: BoxDecoration(
+                                                                    color: ColorConstant
+                                                                        .primaryLight_color,
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                            10)),
+                                                                child: Center(
+                                                                    child: Text(
+                                                                  "Translate",
+                                                                  style:
+                                                                      TextStyle(
+                                                                    fontFamily:
+                                                                        'outfit',
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold,
+                                                                  ),
+                                                                ))),
+                                                          )
+                                                        : SizedBox(),
+                                                    /*    Align(
+                                                      // this seaction is repost
+                                                      alignment:
+                                                          Alignment.centerRight,
+                                                      child: (OpenSaveModelData
+                                                                      ?.object
+                                                                      ?.description
+                                                                      ?.length ??
+                                                                  0) >
+                                                              maxLength
+                                                          ? GestureDetector(
+                                                              onTap: () {
+                                                                setState(() {
+                                                                  if (readmoree ==
+                                                                      true) {
+                                                                    readmoree =
+                                                                        false;
+                                                                    print(
+                                                                        "--------------false ");
+                                                                  } else {
+                                                                    readmoree =
+                                                                        true;
+                                                                    print(
+                                                                        "-------------- true");
+                                                                  }
+                                                                });
+                                                              },
+                                                              child: Container(
+                                                                // color: Colors.red,
+                                                                width: 75,
+                                                                height: 15,
+                                                                child: Align(
+                                                                  alignment:
+                                                                      Alignment
+                                                                          .centerLeft,
+                                                                  child: Text(
+                                                                    readmoree ==
+                                                                            true
+                                                                        ? 'Read Less'
+                                                                        : 'Read More',
+                                                                    style:
+                                                                        TextStyle(
+                                                                      color: Colors
+                                                                          .blue,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .bold,
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            )
+                                                          : SizedBox(),
+                                                    ), */
+                                                  ],
+                                                )
+                                              ],
+                                            ),
+                                          ),
+                                        ),
 
                                   (OpenSaveModelData
                                               ?.object?.postData?.isEmpty ??
@@ -906,13 +1186,12 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
                                                           ),
                                                         ),
                                                       ),
-                                                      SizedBox(height: 7),
                                                       Text(
                                                           customFormat(
                                                               repostTime!),
                                                           style: TextStyle(
                                                             color: Colors.white,
-                                                            fontSize: 16,
+                                                            fontSize: 11,
                                                             fontFamily:
                                                                 'outfit',
                                                             fontWeight:
@@ -953,7 +1232,32 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
                                                       alignment:
                                                           Alignment.centerLeft,
                                                       child: LinkifyText(
-                                                        "${OpenSaveModelData?.object?.repostOn?.description}",
+                                                        readmoree == true
+                                                            ? (OpenSaveModelData
+                                                                            ?.object
+                                                                            ?.repostOn
+                                                                            ?.isTrsnalteoption ==
+                                                                        false ||
+                                                                    OpenSaveModelData
+                                                                            ?.object
+                                                                            ?.repostOn
+                                                                            ?.isTrsnalteoption ==
+                                                                        null)
+                                                                ? "${OpenSaveModelData?.object?.repostOn?.description}${(OpenSaveModelData?.object?.repostOn?.description?.length ?? 0) > maxLength ? '....ReadLess' : ''}"
+                                                                : "${OpenSaveModelData?.object?.repostOn?.translatedDescription}"
+                                                            : (OpenSaveModelData
+                                                                            ?.object
+                                                                            ?.repostOn
+                                                                            ?.isTrsnalteoption ==
+                                                                        false ||
+                                                                    OpenSaveModelData
+                                                                            ?.object
+                                                                            ?.repostOn
+                                                                            ?.isTrsnalteoption ==
+                                                                        null)
+                                                                ? "${OpenSaveModelData?.object?.repostOn?.description?.substring(0, maxLength)}...ReadMore "
+                                                                : "${OpenSaveModelData?.object?.repostOn?.translatedDescription?.substring(0, maxLength)}...ReadMore",
+                                                        // opem save post image
                                                         linkStyle: TextStyle(
                                                           color: Colors.blue,
                                                           fontFamily: 'outfit',
@@ -970,6 +1274,28 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
                                                           //     .email
                                                         ],
                                                         onTap: (link) async {
+                                                          if ((OpenSaveModelData
+                                                                      ?.object
+                                                                      ?.repostOn
+                                                                      ?.description
+                                                                      ?.length ??
+                                                                  0) >
+                                                              maxLength) {
+                                                            setState(() {
+                                                              if (readmoree ==
+                                                                  true) {
+                                                                readmoree =
+                                                                    false;
+                                                                print(
+                                                                    "--------------false ");
+                                                              } else {
+                                                                readmoree =
+                                                                    true;
+                                                                print(
+                                                                    "-------------- true");
+                                                              }
+                                                            });
+                                                          }
                                                           var SelectedTest =
                                                               link.value
                                                                   .toString();
@@ -1087,8 +1413,8 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
                                                               print(
                                                                   "user id -- ${userTagModel?.object}");
                                                             } else {
-                                                              launchUrl(Uri.parse(
-                                                                  "https://${link.value.toString()}"));
+                                                              // launchUrl(Uri.parse(
+                                                              //     "https://${link.value.toString()}"));
                                                             }
                                                           }
                                                         },
@@ -1104,6 +1430,58 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
                                                     ),
                                                   ),
                                                 ),
+                                          if (readmoree == true &&
+                                              OpenSaveModelData
+                                                      ?.object
+                                                      ?.repostOn
+                                                      ?.translatedDescription !=
+                                                  null)
+                                            GestureDetector(
+                                              onTap: () async {
+                                                super.setState(() {
+                                                  if (OpenSaveModelData
+                                                              ?.object
+                                                              ?.repostOn
+                                                              ?.isTrsnalteoption ==
+                                                          false ||
+                                                      OpenSaveModelData
+                                                              ?.object
+                                                              ?.repostOn
+                                                              ?.isTrsnalteoption ==
+                                                          null) {
+                                                    OpenSaveModelData
+                                                            ?.object
+                                                            ?.repostOn
+                                                            ?.isTrsnalteoption =
+                                                        true;
+                                                  } else {
+                                                    OpenSaveModelData
+                                                            ?.object
+                                                            ?.repostOn
+                                                            ?.isTrsnalteoption =
+                                                        false;
+                                                  }
+                                                });
+                                              },
+                                              child: Container(
+                                                margin: EdgeInsets.only(left: 10,top: 10),
+                                                  width: 80,
+                                                  decoration: BoxDecoration(
+                                                      color: ColorConstant
+                                                          .primaryLight_color,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              10)),
+                                                  child: Center(
+                                                      child: Text(
+                                                    "Translate",
+                                                    style: TextStyle(
+                                                      fontFamily: 'outfit',
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                  ))),
+                                            ),
                                           Container(
                                             width: _width,
                                             child: OpenSaveModelData
@@ -1685,7 +2063,7 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
                                           // GestureDetector(
                                           //   onTap: () {
                                           //     Share.share(
-                                          //         'https://play.google.com/store/apps/details?id=com.pds.app');
+                                          //         'https://play.google.com/store/apps/details?id=com.inpackaging.app');
                                           //   },
                                           //   child: Container(
                                           //     color: Colors.transparent,
@@ -1712,91 +2090,460 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Padding(
-                                    padding: const EdgeInsets.only(
-                                        top: 15, bottom: 15),
-                                    child: Row(children: [
-                                      GestureDetector(
-                                        onTap: () {
-                                          Navigator.push(context,
-                                              MaterialPageRoute(
-                                                  builder: (context) {
-                                            return ProfileScreen(
-                                                User_ID:
-                                                    "${OpenSaveModelData?.object?.userUid}",
-                                                isFollowing: OpenSaveModelData
-                                                    ?.object?.isFollowing);
-                                          }));
-                                        },
-                                        child: OpenSaveModelData?.object
-                                                        ?.userProfilePic !=
-                                                    null &&
-                                                OpenSaveModelData?.object
-                                                        ?.userProfilePic !=
-                                                    ""
-                                            ? CustomImageView(
-                                                url:
-                                                    "${OpenSaveModelData?.object?.userProfilePic}",
-                                                height: 50,
-                                                width: 50,
-                                                fit: BoxFit.fill,
-                                                radius:
-                                                    BorderRadius.circular(25),
-                                              )
-                                            : CustomImageView(
-                                                imagePath:
-                                                    ImageConstant.tomcruse,
-                                                height: 50,
-                                                width: 50,
-                                                fit: BoxFit.fill,
-                                                radius:
-                                                    BorderRadius.circular(25),
-                                              ),
-                                      ),
-                                      SizedBox(width: 10),
-                                      Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            GestureDetector(
-                                              onTap: () {
-                                                Navigator.push(context,
-                                                    MaterialPageRoute(
-                                                        builder: (context) {
-                                                  return ProfileScreen(
-                                                      User_ID:
-                                                          "${OpenSaveModelData?.object?.userUid}",
-                                                      isFollowing:
-                                                          OpenSaveModelData
-                                                              ?.object
-                                                              ?.isFollowing);
-                                                }));
-                                              },
-                                              child: Container(
-                                                child: Text(
-                                                  '${OpenSaveModelData?.object?.postUserName}',
-                                                  style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize: 16,
-                                                    fontFamily: 'outfit',
-                                                    fontWeight: FontWeight.w600,
-                                                  ),
-                                                ),
-                                              ),
+                                  padding: const EdgeInsets.only(
+                                      top: 15, bottom: 15),
+                                  child: Row(children: [
+                                    GestureDetector(
+                                      onTap: () {
+                                        Navigator.push(context,
+                                            MaterialPageRoute(
+                                                builder: (context) {
+                                          return ProfileScreen(
+                                              User_ID:
+                                                  "${OpenSaveModelData?.object?.userUid}",
+                                              isFollowing: OpenSaveModelData
+                                                  ?.object?.isFollowing);
+                                        }));
+                                      },
+                                      child: OpenSaveModelData?.object
+                                                      ?.userProfilePic !=
+                                                  null &&
+                                              OpenSaveModelData?.object
+                                                      ?.userProfilePic !=
+                                                  ""
+                                          ? CustomImageView(
+                                              url:
+                                                  "${OpenSaveModelData?.object?.userProfilePic}",
+                                              height: 50,
+                                              width: 50,
+                                              fit: BoxFit.fill,
+                                              radius: BorderRadius.circular(25),
+                                            )
+                                          : CustomImageView(
+                                              imagePath: ImageConstant.tomcruse,
+                                              height: 50,
+                                              width: 50,
+                                              fit: BoxFit.fill,
+                                              radius: BorderRadius.circular(25),
                                             ),
-                                            SizedBox(height: 7),
-                                            Text(
-                                                customFormat(
-                                                    parsedDateTimeBlogs ??
-                                                        DateTime(2017, 9, 7, 17,
-                                                            30)),
+                                    ),
+                                    SizedBox(width: 10),
+                                    Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          GestureDetector(
+                                            onTap: () {
+                                              Navigator.push(context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) {
+                                                return ProfileScreen(
+                                                    User_ID:
+                                                        "${OpenSaveModelData?.object?.userUid}",
+                                                    isFollowing:
+                                                        OpenSaveModelData
+                                                            ?.object
+                                                            ?.isFollowing);
+                                              }));
+                                            },
+                                            child: Container(
+                                              child: Text(
+                                                '${OpenSaveModelData?.object?.postUserName}',
                                                 style: TextStyle(
                                                   color: Colors.white,
                                                   fontSize: 16,
                                                   fontFamily: 'outfit',
                                                   fontWeight: FontWeight.w600,
-                                                ))
-                                          ])
-                                    ])),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          Text(
+                                              customFormat(
+                                                  parsedDateTimeBlogs ??
+                                                      DateTime(
+                                                          2017, 9, 7, 17, 30)),
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 11,
+                                                fontFamily: 'outfit',
+                                                fontWeight: FontWeight.w600,
+                                              )),
+                                        ]),
+                                    Spacer(),
+                                    if (uuid !=
+                                        OpenSaveModelData?.object?.userUid)
+                                      GestureDetector(
+                                        onTap: () async {
+                                          await BlocProvider.of<OpenSaveCubit>(
+                                                  context)
+                                              .followWIngMethodd(
+                                                  OpenSaveModelData
+                                                      ?.object?.userUid,
+                                                  context);
+                                        },
+                                        child: Container(
+                                          height: 25,
+                                          alignment: Alignment.center,
+                                          width: 65,
+                                          margin: EdgeInsets.only(bottom: 5),
+                                          decoration: BoxDecoration(
+                                              color:
+                                                  ColorConstant.primary_color,
+                                              borderRadius:
+                                                  BorderRadius.circular(4)),
+                                          child: uuid == null
+                                              ? Text(
+                                                  'Follow',
+                                                  style: TextStyle(
+                                                      fontFamily: "outfit",
+                                                      fontSize: 12,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      color: Colors.white),
+                                                )
+                                              : OpenSaveModelData?.object
+                                                          ?.userAccountType ==
+                                                      "PUBLIC"
+                                                  ? (OpenSaveModelData?.object
+                                                              ?.isFollowing ==
+                                                          'FOLLOW'
+                                                      ? Text(
+                                                          'Follow',
+                                                          style: TextStyle(
+                                                              fontFamily:
+                                                                  "outfit",
+                                                              fontSize: 12,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                              color:
+                                                                  Colors.white),
+                                                        )
+                                                      : Text(
+                                                          'Following ',
+                                                          style: TextStyle(
+                                                              fontFamily:
+                                                                  "outfit",
+                                                              fontSize: 12,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                              color:
+                                                                  Colors.white),
+                                                        ))
+                                                  : OpenSaveModelData?.object
+                                                              ?.isFollowing ==
+                                                          'FOLLOW'
+                                                      ? Text(
+                                                          'Follow',
+                                                          style: TextStyle(
+                                                              fontFamily:
+                                                                  "outfit",
+                                                              fontSize: 12,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                              color:
+                                                                  Colors.white),
+                                                        )
+                                                      : OpenSaveModelData
+                                                                  ?.object
+                                                                  ?.isFollowing ==
+                                                              'REQUESTED'
+                                                          ? Text(
+                                                              'Requested',
+                                                              style: TextStyle(
+                                                                  fontFamily:
+                                                                      "outfit",
+                                                                  fontSize: 12,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold,
+                                                                  color: Colors
+                                                                      .white),
+                                                            )
+                                                          : Text(
+                                                              'Following ',
+                                                              style: TextStyle(
+                                                                  fontFamily:
+                                                                      "outfit",
+                                                                  fontSize: 12,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold,
+                                                                  color: Colors
+                                                                      .white),
+                                                            ),
+                                        ),
+                                      )
+                                  ]),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 10),
+                                  child: Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        LinkifyText(
+                                          // "${OpenSaveModelData?.object?.description}",
+                                          readmoree == true
+                                              ? (OpenSaveModelData?.object
+                                                              ?.isTrsnalteoption ==
+                                                          false ||
+                                                      OpenSaveModelData?.object
+                                                              ?.isTrsnalteoption ==
+                                                          null)
+                                                  ? "${OpenSaveModelData?.object?.description}${(OpenSaveModelData?.object?.description?.length ?? 0) > maxLength ? '....ReadLess' : ''}"
+                                                  : "${OpenSaveModelData?.object?.translatedDescription}"
+                                              : (OpenSaveModelData?.object
+                                                              ?.isTrsnalteoption ==
+                                                          false ||
+                                                      OpenSaveModelData?.object
+                                                              ?.isTrsnalteoption ==
+                                                          null)
+                                                  ? "${OpenSaveModelData?.object?.description?.substring(0, maxLength)}...ReadMore "
+                                                  : "${OpenSaveModelData?.object?.translatedDescription?.substring(0, maxLength)}...ReadMore",
+                                          linkStyle: TextStyle(
+                                            color: Colors.blue,
+                                            fontFamily: 'outfit',
+                                          ),
+                                          textStyle: TextStyle(
+                                            color: Colors.white,
+                                            fontFamily: 'outfit',
+                                          ),
+                                          linkTypes: [
+                                            LinkType.url,
+                                            LinkType.userTag,
+                                            LinkType.hashTag,
+                                            // LinkType
+                                            //     .email
+                                          ],
+                                          onTap: (link) async {
+                                            var SelectedTest =
+                                                link.value.toString();
+                                            var Link = SelectedTest.startsWith(
+                                                'https');
+                                            var Link1 =
+                                                SelectedTest.startsWith('http');
+                                            var Link2 =
+                                                SelectedTest.startsWith('www');
+                                            var Link3 =
+                                                SelectedTest.startsWith('WWW');
+                                            var Link4 = SelectedTest.startsWith(
+                                                'HTTPS');
+                                            var Link5 =
+                                                SelectedTest.startsWith('HTTP');
+                                            var Link6 = SelectedTest.startsWith(
+                                                'https://pdslink.page.link/');
+                                            print(SelectedTest.toString());
+                                            if ((OpenSaveModelData?.object
+                                                        ?.description?.length ??
+                                                    0) >
+                                                maxLength) {
+                                              setState(() {
+                                                if (readmoree == true) {
+                                                  readmoree = false;
+                                                  print("--------------false ");
+                                                } else {
+                                                  readmoree = true;
+                                                  print("-------------- true");
+                                                }
+                                              });
+                                            }
+
+                                            if (Link == true ||
+                                                Link1 == true ||
+                                                Link2 == true ||
+                                                Link3 == true ||
+                                                Link4 == true ||
+                                                Link5 == true ||
+                                                Link6 == true) {
+                                              if (Link2 == true ||
+                                                  Link3 == true) {
+                                                launchUrl(Uri.parse(
+                                                    "https://${link.value.toString()}"));
+                                              } else {
+                                                if (Link6 == true) {
+                                                  print("yes i am in room");
+                                                  Navigator.push(context,
+                                                      MaterialPageRoute(
+                                                    builder: (context) {
+                                                      return NewBottomBar(
+                                                        buttomIndex: 1,
+                                                      );
+                                                    },
+                                                  ));
+                                                } else {
+                                                  launchUrl(Uri.parse(
+                                                      link.value.toString()));
+                                                  print(
+                                                      "link.valuelink.value -- ${link.value}");
+                                                }
+                                              }
+                                            } else {
+                                              if (link.value!.startsWith('#')) {
+                                                print("${link}");
+                                                Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          HashTagViewScreen(
+                                                              title:
+                                                                  "${link.value}"),
+                                                    ));
+                                              } else if (link.value!
+                                                  .startsWith('@')) {
+                                                var name;
+                                                var tagName;
+                                                name = SelectedTest;
+                                                tagName =
+                                                    name.replaceAll("@", "");
+                                                await BlocProvider.of<
+                                                        OpenSaveCubit>(context)
+                                                    .UserTagAPI(
+                                                        context, tagName);
+
+                                                Navigator.push(context,
+                                                    MaterialPageRoute(
+                                                        builder: (context) {
+                                                  return ProfileScreen(
+                                                      User_ID:
+                                                          "${userTagModel?.object}",
+                                                      isFollowing: "");
+                                                }));
+
+                                                print("tagName -- ${tagName}");
+                                                print(
+                                                    "user id -- ${userTagModel?.object}");
+                                              } else {
+                                                // launchUrl(Uri.parse(
+                                                //     "https://${link.value.toString()}"));
+                                              }
+                                            }
+                                          },
+                                        ),
+                                        SizedBox(
+                                          height: 10,
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            readmoree == true &&
+                                                    OpenSaveModelData?.object
+                                                            ?.translatedDescription !=
+                                                        null
+                                                ? GestureDetector(
+                                                    onTap: () async {
+                                                      super.setState(() {
+                                                        if (OpenSaveModelData
+                                                                    ?.object
+                                                                    ?.isTrsnalteoption ==
+                                                                false ||
+                                                            OpenSaveModelData
+                                                                    ?.object
+                                                                    ?.isTrsnalteoption ==
+                                                                null) {
+                                                          OpenSaveModelData
+                                                                  ?.object
+                                                                  ?.isTrsnalteoption =
+                                                              true;
+                                                        } else {
+                                                          OpenSaveModelData
+                                                                  ?.object
+                                                                  ?.isTrsnalteoption =
+                                                              false;
+                                                        }
+                                                      });
+                                                    },
+                                                    child: Container(
+                                                        width: 80,
+                                                        decoration: BoxDecoration(
+                                                            color: ColorConstant
+                                                                .primaryLight_color,
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        10)),
+                                                        child: Center(
+                                                            child: Text(
+                                                          "Translate",
+                                                          style: TextStyle(
+                                                            fontFamily:
+                                                                'outfit',
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                          ),
+                                                        ))),
+                                                  )
+                                                : SizedBox(),
+                                            /*  Align(
+                                              alignment: Alignment.centerRight,
+                                              child: (OpenSaveModelData
+                                                              ?.object
+                                                              ?.description
+                                                              ?.length ??
+                                                          0) >
+                                                      maxLength
+                                                  ? GestureDetector(
+                                                      onTap: () {
+                                                        setState(() {
+                                                          if (readmoree ==
+                                                              true) {
+                                                            readmoree = false;
+                                                            print(
+                                                                "--------------false ");
+                                                          } else {
+                                                            readmoree = true;
+                                                            print(
+                                                                "-------------- true");
+                                                          }
+                                                        });
+                                                      },
+                                                      child: Container(
+                                                        // color: Colors.red,
+                                                        width: 75,
+                                                        height: 15,
+                                                        child: Align(
+                                                          alignment: Alignment
+                                                              .centerLeft,
+                                                          child: Text(
+                                                            readmoree == true
+                                                                ? 'Read Less'
+                                                                : 'Read More',
+                                                            style: TextStyle(
+                                                              color:
+                                                                  Colors.blue,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    )
+                                                  : SizedBox(),
+                                            ), */
+                                          ],
+                                        )
+                                      ],
+                                    ), /* Text(
+                                  "${OpenSaveModelData?.object?.description ?? ""}",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 16,
+                                    fontFamily: 'outfit',
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ) */
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 20,
+                                ),
                                 OpenSaveModelData?.object?.postDataType == null
                                     ? SizedBox()
                                     : GestureDetector(
@@ -2061,7 +2808,7 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
                                                         ),
                                         ),
                                       ),
-                                OpenSaveModelData?.object?.description == null
+                                /* OpenSaveModelData?.object?.description == null
                                     ? SizedBox()
                                     : OpenSaveModelData?.object
                                                 ?.translatedDescription !=
@@ -2069,171 +2816,10 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
                                         ? Padding(
                                             padding:
                                                 const EdgeInsets.only(top: 20),
-                                            child: GestureDetector(
-                                              onTap: () async {
-                                                super.setState(() {
-                                                  if (OpenSaveModelData?.object
-                                                              ?.isTrsnalteoption ==
-                                                          false ||
-                                                      OpenSaveModelData?.object
-                                                              ?.isTrsnalteoption ==
-                                                          null) {
-                                                    OpenSaveModelData?.object
-                                                            ?.isTrsnalteoption =
-                                                        true;
-                                                  } else {
-                                                    OpenSaveModelData?.object
-                                                            ?.isTrsnalteoption =
-                                                        false;
-                                                  }
-                                                });
-                                              },
-                                              child: Container(
-                                                  width: 80,
-                                                  decoration: BoxDecoration(
-                                                      color: ColorConstant
-                                                          .primaryLight_color,
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              10)),
-                                                  child: Center(
-                                                      child: Text(
-                                                    "Translate",
-                                                    style: TextStyle(
-                                                      fontFamily: 'outfit',
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                    ),
-                                                  ))),
-                                            ),
+                                             
                                           )
-                                        : SizedBox(),
-                                Padding(
-                                  padding: const EdgeInsets.only(top: 10),
-                                  child: Align(
-                                    alignment: Alignment.centerLeft,
-                                    child: LinkifyText(
-                                      // "${OpenSaveModelData?.object?.description}",
-                                      OpenSaveModelData?.object
-                                                      ?.isTrsnalteoption ==
-                                                  false ||
-                                              OpenSaveModelData?.object
-                                                      ?.isTrsnalteoption ==
-                                                  null
-                                          ? "${OpenSaveModelData?.object?.description}"
-                                          : "${OpenSaveModelData?.object?.translatedDescription}",
-                                      linkStyle: TextStyle(
-                                        color: Colors.blue,
-                                        fontFamily: 'outfit',
-                                      ),
-                                      textStyle: TextStyle(
-                                        color: Colors.white,
-                                        fontFamily: 'outfit',
-                                      ),
-                                      linkTypes: [
-                                        LinkType.url,
-                                        LinkType.userTag,
-                                        LinkType.hashTag,
-                                        // LinkType
-                                        //     .email
-                                      ],
-                                      onTap: (link) async {
-                                        var SelectedTest =
-                                            link.value.toString();
-                                        var Link =
-                                            SelectedTest.startsWith('https');
-                                        var Link1 =
-                                            SelectedTest.startsWith('http');
-                                        var Link2 =
-                                            SelectedTest.startsWith('www');
-                                        var Link3 =
-                                            SelectedTest.startsWith('WWW');
-                                        var Link4 =
-                                            SelectedTest.startsWith('HTTPS');
-                                        var Link5 =
-                                            SelectedTest.startsWith('HTTP');
-                                        var Link6 = SelectedTest.startsWith(
-                                            'https://pdslink.page.link/');
-                                        print(SelectedTest.toString());
+                                        : SizedBox(), */
 
-                                        if (Link == true ||
-                                            Link1 == true ||
-                                            Link2 == true ||
-                                            Link3 == true ||
-                                            Link4 == true ||
-                                            Link5 == true ||
-                                            Link6 == true) {
-                                          if (Link2 == true || Link3 == true) {
-                                            launchUrl(Uri.parse(
-                                                "https://${link.value.toString()}"));
-                                          } else {
-                                            if (Link6 == true) {
-                                              print("yes i am in room");
-                                              Navigator.push(context,
-                                                  MaterialPageRoute(
-                                                builder: (context) {
-                                                  return NewBottomBar(
-                                                    buttomIndex: 1,
-                                                  );
-                                                },
-                                              ));
-                                            } else {
-                                              launchUrl(Uri.parse(
-                                                  link.value.toString()));
-                                              print(
-                                                  "link.valuelink.value -- ${link.value}");
-                                            }
-                                          }
-                                        } else {
-                                          if (link.value!.startsWith('#')) {
-                                            print("${link}");
-                                            Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      HashTagViewScreen(
-                                                          title:
-                                                              "${link.value}"),
-                                                ));
-                                          } else if (link.value!
-                                              .startsWith('@')) {
-                                            var name;
-                                            var tagName;
-                                            name = SelectedTest;
-                                            tagName = name.replaceAll("@", "");
-                                            await BlocProvider.of<
-                                                    OpenSaveCubit>(context)
-                                                .UserTagAPI(context, tagName);
-
-                                            Navigator.push(context,
-                                                MaterialPageRoute(
-                                                    builder: (context) {
-                                              return ProfileScreen(
-                                                  User_ID:
-                                                      "${userTagModel?.object}",
-                                                  isFollowing: "");
-                                            }));
-
-                                            print("tagName -- ${tagName}");
-                                            print(
-                                                "user id -- ${userTagModel?.object}");
-                                          } else {
-                                            launchUrl(Uri.parse(
-                                                "https://${link.value.toString()}"));
-                                          }
-                                        }
-                                      },
-                                    ), /* Text(
-                                  "${OpenSaveModelData?.object?.description ?? ""}",
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 16,
-                                    fontFamily: 'outfit',
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ) */
-                                  ),
-                                ),
                                 Container(
                                   // color: Colors.white,
                                   child: Padding(
@@ -2511,7 +3097,7 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
                                         // GestureDetector(
                                         //   onTap: () {
                                         //     Share.share(
-                                        //         'https://play.google.com/store/apps/details?id=com.pds.app');
+                                        //         'https://play.google.com/store/apps/details?id=com.inpackaging.app');
                                         //   },
                                         //   child: Container(
                                         //     color: Colors.transparent,
@@ -2545,46 +3131,74 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
     });
   }
 
-  String customFormat(DateTime date) {
-    String day = date.day.toString();
-    String month = _getMonthName(date.month);
-    String year = date.year.toString();
-    String time = DateFormat('dd-MM-yyyy     h:mm a').format(date);
-
-    String formattedDate = '$time';
-    return formattedDate;
-  }
-
-  String _getMonthName(int month) {
-    switch (month) {
-      case 1:
-        return ' January';
-      case 2:
-        return ' February';
-      case 3:
-        return ' March';
-      case 4:
-        return ' April';
-      case 5:
-        return ' May';
-      case 6:
-        return ' June';
-      case 7:
-        return ' July';
-      case 8:
-        return ' August';
-      case 9:
-        return ' September';
-      case 10:
-        return ' October';
-      case 11:
-        return ' November';
-      case 12:
-        return ' December';
-      default:
-        return '';
+  String customFormat(DateTime dateTime) {
+    final difference = DateTime.now().difference(dateTime);
+    if (difference.inDays > 0) {
+      if (difference.inDays == 1) {
+        return '1 day ago';
+      } else if (difference.inDays < 7) {
+        return '${difference.inDays} days ago';
+      } else {
+        final weeks = (difference.inDays / 7).floor();
+        return '$weeks week${weeks == 1 ? '' : 's'} ago';
+      }
+    } else if (difference.inHours > 0) {
+      if (difference.inHours == 1) {
+        return '1 hour ago';
+      } else {
+        return '${difference.inHours} hours ago';
+      }
+    } else if (difference.inMinutes > 0) {
+      if (difference.inMinutes == 1) {
+        return '1 minute ago';
+      } else {
+        return '${difference.inMinutes} minutes ago';
+      }
+    } else {
+      return 'Just now';
     }
   }
+
+  // String customFormat(DateTime date) {
+  //   String day = date.day.toString();
+  //   String month = _getMonthName(date.month);
+  //   String year = date.year.toString();
+  //   String time = DateFormat('dd-MM-yyyy     h:mm a').format(date);
+
+  //   String formattedDate = '$time';
+  //   return formattedDate;
+  // }
+
+  // String _getMonthName(int month) {
+  //   switch (month) {
+  //     case 1:
+  //       return ' January';
+  //     case 2:
+  //       return ' February';
+  //     case 3:
+  //       return ' March';
+  //     case 4:
+  //       return ' April';
+  //     case 5:
+  //       return ' May';
+  //     case 6:
+  //       return ' June';
+  //     case 7:
+  //       return ' July';
+  //     case 8:
+  //       return ' August';
+  //     case 9:
+  //       return ' September';
+  //     case 10:
+  //       return ' October';
+  //     case 11:
+  //       return ' November';
+  //     case 12:
+  //       return ' December';
+  //     default:
+  //       return '';
+  //   }
+  // }
 
   navigationFunction() {
     if (widget.profileTure == true) {
@@ -2605,13 +3219,12 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
     }
 
     showModalBottomSheet(
-        isScrollControlled: true,
-        useSafeArea: true,
-        isDismissible: true,
-        showDragHandle: true,
-        enableDrag: true,
-        constraints: BoxConstraints.tight(Size.infinite),
         context: context,
+        backgroundColor: Colors.white,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(15.0), topRight: Radius.circular(15.0)),
+        ),
         builder: (BuildContext bc) {
           return CommentBottomSheet(
               useruid: OpenSaveModelData?.object?.userUid,
@@ -2651,7 +3264,24 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
       } else {
         OpenSaveModelData?.object?.isSaved = true;
       }
-    }
+    } /* else if (apiName == 'Follow') {
+      print("dfhsdfhsdfhsdgf");
+      await BlocProvider.of<OpenSaveCubit>(context)
+          .followWIngMethodd(OpenSaveModelData?.object?.userUid, context);
+
+      if (OpenSaveModelData?.object?.isFollowing == 'FOLLOW') {
+        if (OpenSaveModelData?.object?.userUid ==
+            OpenSaveModelData?.object?.userUid) {
+          OpenSaveModelData?.object?.isFollowing = 'REQUESTED';
+          print("check data-${OpenSaveModelData?.object?.isFollowing}");
+        }
+      } else {
+        if (OpenSaveModelData?.object?.userUid ==
+            OpenSaveModelData?.object?.userUid) {
+          OpenSaveModelData?.object?.isFollowing = 'FOLLOW';
+        }
+      }
+    } */
   }
 
   void rePostBottomSheet(

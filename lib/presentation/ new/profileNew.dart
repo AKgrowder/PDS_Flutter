@@ -741,7 +741,6 @@ class _ProfileScreenState extends State<ProfileScreen>
                                               Text(
                                                 "Profile APPROVED",
                                                 style: TextStyle(
-                                                    color: Color(0xff019801),
                                                     fontSize: 15,
                                                     fontWeight:
                                                         FontWeight.w600),
@@ -864,14 +863,33 @@ class _ProfileScreenState extends State<ProfileScreen>
                         SizedBox(
                           height: 10,
                         ),
-                        Center(
-                          child: Text(
-                            '@${NewProfileData?.object?.userName}',
-                            style: TextStyle(
-                                fontFamily: "outfit",
-                                fontWeight: FontWeight.bold,
-                                color: Color(0xff444444)),
-                          ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(left: 10),
+                              child: Text(
+                                '@${NewProfileData?.object?.userName}',
+                                style: TextStyle(
+                                    fontFamily: "outfit",
+                                    fontWeight: FontWeight.bold,
+                                    color: Color(0xff444444)),
+                              ),
+                            ),
+                            NewProfileData?.object?.approvalStatus ==
+                                    'PENDING' ||
+                                NewProfileData?.object?.approvalStatus ==
+                                    'REJECTED' ? SizedBox():
+                              NewProfileData?.object?.module == "EXPERT" ?
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.only(bottom: 4, left: 3),
+                                  child: Image.asset(
+                                    ImageConstant.Star,
+                                    height: 18,
+                                  ),
+                                ) : SizedBox()
+                          ],
                         ),
 
                         SizedBox(
@@ -1306,13 +1324,14 @@ class _ProfileScreenState extends State<ProfileScreen>
                         ),
                         /* NewProfileData?.object?.isFollowing == 'FOLLOWING' ||
                         User_ID == NewProfileData?.object?.userUid || NewProfileData?.object?.accountType == 'PUBLIC' */
-                      
+
                         if (User_ID == NewProfileData?.object?.userUid ||
                             (NewProfileData?.object?.isFollowing ==
                                     'FOLLOWING' &&
                                 (NewProfileData?.object?.accountType ==
-                                    'PRIVATE' ||NewProfileData?.object?.accountType ==
-                                    'PUBLIC')))
+                                        'PRIVATE' ||
+                                    NewProfileData?.object?.accountType ==
+                                        'PUBLIC')))
                           Container(
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -1545,8 +1564,9 @@ class _ProfileScreenState extends State<ProfileScreen>
                             (NewProfileData?.object?.isFollowing ==
                                     'FOLLOWING' &&
                                 (NewProfileData?.object?.accountType ==
-                                    'PRIVATE' ||NewProfileData?.object?.accountType ==
-                                    'PUBLIC')))
+                                        'PRIVATE' ||
+                                    NewProfileData?.object?.accountType ==
+                                        'PUBLIC')))
 
                           /* Container(
                         // color: Colors.red,
@@ -2209,7 +2229,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                         )),
                                                 NewProfileData
                                                             ?.object?.module ==
-                                                        "EXPERT"
+                                                        "EXPERT" 
                                                     ? Card(
                                                         color: Colors.white,
                                                         borderOnForeground:
@@ -2294,7 +2314,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                             "EXPERT" &&
                                                         NewProfileData?.object
                                                                 ?.approvalStatus !=
-                                                            'PENDING' 
+                                                            'PENDING'
                                                     ? Card(
                                                         color: Colors.white,
                                                         borderOnForeground:
@@ -8573,7 +8593,12 @@ class _ProfileScreenState extends State<ProfileScreen>
   }
 
   Widget expertUser(_height, _width) {
-    return Column(
+    if (User_ID == NewProfileData?.object?.userUid ||
+        (NewProfileData?.object?.isFollowing == 'FOLLOWING' &&
+            NewProfileData?.object?.accountType == 'PRIVATE' &&
+            NewProfileData?.object?.approvalStatus != "PENDING" &&
+            NewProfileData?.object?.approvalStatus == "REJECTED")){
+              return Column(
       children: [
         ListTile(
           /*  leading: Container(
@@ -9036,10 +9061,14 @@ class _ProfileScreenState extends State<ProfileScreen>
         ),
       ],
     );
+            }
+    else{
+      return SizedBox();
+    }
   }
 
   Widget experience(_height, _width) {
-    if (User_ID == NewProfileData?.object?.userUid ||
+  if (User_ID == NewProfileData?.object?.userUid ||
         (NewProfileData?.object?.isFollowing == 'FOLLOWING' &&
             NewProfileData?.object?.accountType == 'PRIVATE' &&
             NewProfileData?.object?.approvalStatus != "PENDING" &&
