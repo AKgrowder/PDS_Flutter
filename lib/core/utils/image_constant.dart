@@ -3,7 +3,7 @@ class ImageConstant {
   static String splashImage = 'assets/images/splashImage.png';
 
   static String unselectedimgVector = 'assets/images/Vector (10).png';
-  static String tomcruse = 'assets/images/Profileimage.png';
+  static String tomcruse = 'assets/images/INPACKAGING.png';
   static String bag = 'assets/images/iconoir_shopping-bag-alt.png';
   static String experts =
       'assets/images/pexels-tima-miroshnichenko-5452201 2 (1).png';
@@ -110,7 +110,7 @@ class ImageConstant {
 
   static String imageNotFound = 'assets/images/image_not_found.png';
   static String searchimage = 'assets/images/searchimage.png';
-  static String pdslogo = 'assets/images/final_logo-3.png';
+  static String pdslogo = 'assets/images/INPACKAGING.png';
   static String expertdetailimage = 'assets/images/expertdetailsimage.png';
 
   // ----------------
@@ -142,18 +142,18 @@ class ImageConstant {
   static String notn = 'assets/images/notn.png';
   //----------------expert_screen_images------------------------------------------
   static String searchimagee = 'assets/images/search.png';
-  static String noRoom = 'assets/images/no_room_720.png';
+  static String noRoom = 'assets/images/foramisempty.png';
   static String filterimage = 'assets/images/filter.png';
   static String roundrupee = 'assets/images/roundrupeee.png';
   static String timeimage = 'assets/images/ic_round-access-time.png';
   static String starimage = 'assets/images/material-symbols_star-rounded.png';
-  static String noInternetConnection = 'assets/images/noInternet.png';
+  static String noInternetConnection = 'assets/images/no internet image.png';
   static String expert2 = 'assets/images/expert3.png';
   static String expert3 = 'assets/images/expert4.png';
   static String expert4 = 'assets/images/expert5.png';
-  static String CreateForum = 'assets/images/CreateForum.png';
-  static String InPending = 'assets/images/InPending.png';
-  static String Rejected = 'assets/images/Rejected.png';
+  static String CreateForum = 'assets/images/foramisempty.png';
+  static String InPending = 'assets/images/in process.png';
+  static String Rejected = 'assets/images/rejected.png';
   static String rejctedPic = 'assets/images/rjected.png';
   static String blogsaveimage = 'assets/images/blog_save_image.png';
   static String blogunsaveimage = 'assets/images/blog_unsave_image.png';
@@ -170,7 +170,7 @@ class ImageConstant {
   static String notVerify = 'assets/images/yes.png';
   static String Verified = 'assets/images/close.png';
   static String savedPin = 'assets/images/savedPin.png';
-  static String brandlogo = 'assets/images/brandlogo.png';
+  static String brandlogo = 'assets/images/INPACKAGING.png';
   static String person_add_alt_1 = 'assets/images/person_add_alt_1 (1).png';
   static String placeholder = 'assets/images/placeholder.jpeg';
   static String placeholder2 = "assets/images/Ellipse 13.png";
@@ -180,14 +180,14 @@ class ImageConstant {
   static String vector2 = "assets/images/Vector (1).png";
   static String savePin = "assets/images/savePin.png";
   static String placeholder4 = "assets/images/plachodelr4.png";
-  static String Star = "assets/images/Star 7.png";
+  static String Star = "assets/images/Star 7 (1).png";
   static String beg = "assets/images/bag.png";
   static String huge = 'assets/images/Huge-icon.png';
   static String rendom = 'assets/images/unsplash_xX3T2C8ff1o.png';
   static String myprofile = 'assets/images/myprofile.png';
   static String camera = 'assets/images/Camera icon.png';
   static String palchoder4 = 'assets/images/palchoder4.png';
-  static String backArrow = 'assets/images/backArrow.png';
+  static String backArrow = 'assets/images/backkarrow.png';
   static String seetingIcon = 'assets/images/seeting.png';
   //
   static String post1 = 'assets/images/post1.png';
@@ -212,21 +212,21 @@ class ImageConstant {
   static String gridImage = 'assets/images/Rectangle 24.png';
   static String cameraData = 'assets/images/caemra_img.png';
   static String pin_icon = "assets/images/pin_icon.png";
-  static String uplodimage = "assets/images/uplodimage.png";
-  static String galleryimage = "assets/images/gallery.png";
+  static String uplodimage = "assets/images/uplod.png";
+  static String galleryimage = "assets/images/galerryyy.png";
   static String Post_Close = "assets/images/Post Close.png";
   static String downarrow = "assets/images/downarrow.png";
   static String Cameraicon = "assets/images/Cameraicon.png";
   static String aTTACHMENT = "assets/images/ATTACHMENT.png";
   static String gallery = "assets/images/galleryIcon.png";
   static String Gif_icon = 'assets/images/Gif icon.png';
-  static String Savefill = "assets/images/Savefill.png";
-  static String like = "assets/images/like 1.png";
+  static String Savefill = "assets/images/savefill.png";
+  static String like = "assets/images/likeimagee.png";
   static String commentarrow = "assets/images/Vector (30).png";
   static String ExitRoom = "assets/images/ExitRoom.png";
   static String likewithout = "assets/images/likewitoutcolor.png";
-  static String addroomimage = "assets/images/Plus button.png";
-  static String hashTagimg = "assets/images/hashTag_Img.png";
+  static String addroomimage = "assets/images/addrom.png"; 
+  static String hashTagimg = "assets/images/hastagimage.png";
   static String whiteClose = "assets/images/whiteClose.png";
   static String StoryViewListeye = "assets/images/StoryViewListeye.png";
   static String ChatimageIcon = "assets/images/ChatimageIcon.png";

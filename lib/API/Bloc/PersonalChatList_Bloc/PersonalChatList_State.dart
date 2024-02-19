@@ -3,6 +3,7 @@ import 'package:pds/API/Model/DeleteUserChatModel/DeleteUserChat_Model.dart';
 import 'package:pds/API/Model/GetUsersChatByUsernameModel/GetUsersChatByUsernameModel.dart';
 import 'package:pds/API/Model/OnTimeDMModel/OnTimeDMModel.dart';
 import 'package:pds/API/Model/PersonalChatListModel/PersonalChatList_Model.dart';
+import 'package:pds/API/Model/acceptRejectInvitaionModel/accept_rejectModel.dart';
 import 'package:pds/API/Model/acceptRejectInvitaionModel/getAllNotificationCount.dart';
 import 'package:pds/API/Model/createDocumentModel/createDocumentModel.dart';
 import 'package:pds/API/Model/selectMultipleUsers_ChatModel/selectMultipleUsers_ChatModel.dart';
@@ -57,4 +58,9 @@ class UserChatDeleteLoaded extends PersonalChatListState {
 class GetNotificationCountLoadedState extends PersonalChatListState {
   final getAllNotificationCount GetNotificationCountData;
   GetNotificationCountLoadedState(this.GetNotificationCountData);
+}
+
+class OnlineChatStatusLoadedState extends PersonalChatListState {
+  final accept_rejectModel accept_rejectModelData;
+  OnlineChatStatusLoadedState(this.accept_rejectModelData);
 }

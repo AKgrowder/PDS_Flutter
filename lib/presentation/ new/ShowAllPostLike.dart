@@ -26,7 +26,7 @@ class _ShowAllPostLikeState extends State<ShowAllPostLike> {
   getLoginUserData() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     User_ID = prefs.getString(PreferencesKey.loginUserID);
-    setState(() {});
+    super.setState(() {});
   }
 
   @override
@@ -85,10 +85,7 @@ class _ShowAllPostLikeState extends State<ShowAllPostLike> {
             );
           }
           if (state is GetGuestAllPostLoadedState) {
-            print(
-                "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
-
-            print(state.GetPostAllLikeRoomData.message);
+               print(state.GetPostAllLikeRoomData.message);
             GetPostAllLikeRoomData = state.GetPostAllLikeRoomData;
           }
           if (state is PostLikeLoadedState) {
@@ -235,7 +232,7 @@ class _ShowAllPostLikeState extends State<ShowAllPostLike> {
                                   width: 65,
                                   margin: EdgeInsets.only(bottom: 5),
                                   decoration: BoxDecoration(
-                                      color: Color(0xffED1C25),
+                                      color: ColorConstant.primary_color,
                                       borderRadius: BorderRadius.circular(4)),
                                   child: GetPostAllLikeRoomData
                                               ?.object?[index].isFollowing ==

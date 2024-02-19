@@ -29,7 +29,7 @@ void onConnect(StompFrame frame) {
   );
 
   Timer.periodic(Duration(seconds: 5), (_) {
-    print("Room Socket ++++++++++++++++++++++++++++++++++++++++++++++++++++");
+    
 
     DMstompClient.subscribe(
       destination: "/topic/getInboxMessage/${DMChatInboxUid}",
@@ -49,7 +49,7 @@ void onConnect(StompFrame frame) {
   });
 }
 
-final DMstompClient = StompClient(
+var  DMstompClient = StompClient(
   config: StompConfig(
     url:
         // "ws://d91d-2405-201-200b-a0cf-d0c7-a57a-7eba-c736.ngrok.io/user/pdsChat",

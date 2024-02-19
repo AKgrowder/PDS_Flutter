@@ -3,7 +3,6 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http/http.dart';
 import 'package:http/http.dart' as http;
 import 'package:pds/core/utils/color_constant.dart';
@@ -29,9 +28,9 @@ class ApiServices {
     } else {
       baseURL =
           // "https://0b8e-2405-201-200b-a0cf-4523-3bc3-2996-dc22.ngrok.io/";
-          // "https://uatapi.packagingdepot.store/";
-          // "https://api.packagingdepot.store/";
-          "http://192.168.29.150:8081/";
+          // "https://uatapi.inpackaging.com/";
+          // "https://api.inpackaging.com/";
+          "http://192.168.29.100:8081/";
     }
 
     print(baseURL);
@@ -60,15 +59,15 @@ class ApiServices {
       }
     } else {}
   }
-
+/// make:- fction
   getApiCall(String APIurl, BuildContext context) async {
     await UpdateBaseURL();
     if (APIurl == "user/api/fetchSysConfig") {
       baseURL =
           // "https://0b8e-2405-201-200b-a0cf-4523-3bc3-2996-dc22.ngrok.io/";
-          // "https://uatapi.packagingdepot.store/";
-          // "https://api.packagingdepot.store/";
-          "http://192.168.29.150:8081/";
+          // "https://uatapi.inpackaging.com/";
+          // "https://api.inpackaging.com/";
+          "http://192.168.29.100:8081/";
     }
     print("API => ******** ${baseURL + APIurl}");
 
@@ -245,17 +244,20 @@ class ApiServices {
         response.fields["userBackgroundPic"] = params['userBackgroundPic'];
       } else if (params['userProfilePic'] != null) {
         response.fields["userProfilePic"] = params['userProfilePic'];
+      } else if (params['documentName'] != null) {
+        response.fields["documentName"] = params['documentName'];
       } else {
         print("multipartFile2 else condions working on--");
       }
       response.fields["document"] = params['document'];
-      response.fields["documentName"] = params['documentName'];
+
       response.fields["companyName"] = params['companyName'];
       response.fields["jobProfile"] = params['jobProfile'];
       response.fields["profileUid"] = params['profileUid'];
       response.fields["name"] = params['name'];
       response.fields["email"] = params['email'];
       response.fields["industryTypesUid"] = params['industryTypesUid'];
+      response.fields['userName'] = params['userName'];
     }
     log('companyUserAllData-${response.fields}');
     print("check userProfilePic--${params?['userProfilePic']}");

@@ -11,7 +11,7 @@ class Config {
   static const String registerApi = "user/api/signup";
   static const String otpApi = "auth/auth/verifyOTP";
   static const String SendMSG = "guest/api/addMessageInRoom";
-  static const String coomment = "guest/api/fetchInbox";
+  static const String coomment = "user/fetchInbox";
   static const String getUserDetails = "auth/auth/getMasterUserByUUID";
   static const String company = "user/api/addUserProfile";
   static const String FetchMyRoom = "user/api/fetchMyRoom";
@@ -31,7 +31,7 @@ class Config {
   static const String addDeviceDetail = "auth/auth/addDeviceDetail";
   static const String fetchAllExperts = "user/api/fetchAllExperts";
   static const String myaccountApi = "user/api/fetchUserProfile";
-
+  static const String video_watch_detail = "user/api/video_watch_detail";
   static const String systemconfig = "user/api/fetchSysConfig";
   static const String fetchUserModule = "user/api/fetchUserModule";
   static const String fetchRoomDetails = "user/api/fetchRoomDetails/";
@@ -69,7 +69,6 @@ class Config {
   static const String Addcomments = "user/api/get_comments_on_post";
   //  static const String CreateStory = "user/api/create_story";
   static const String getcomments = "user/api/add_comment";
-  static const String NewfetchUserProfile = "user/api/fetchUserProfile";
   static const String getAllStory = "user/api/get_all_story";
   static const String crateStroyCheck = "user/api/create_story";
   static const String industryType = "user/api/get_all_industry_types";
@@ -79,9 +78,9 @@ class Config {
       "user/api/get_list_of_post_with_comments";
   static const String GetSavePostAPI = "user/api/get_all_saved_posts";
   static const String uploadStroy = "user/api/upload_story";
-  static const String HashTagForYou = "user/api/hashtag_names_and_post_count";
+  static const String HashTagForYou = "guest/api/hashtag_names_and_post_count";
   static const String HashTagView = "user/api/get_posts_by_hashtag";
-  static const String getalluser = "user/api/get_all_user_list_for_hashtag";
+  static const String getalluser = "guest/api/get_all_user_list_for_hashtag";
   static const String add_update_about_me = "user/api/add_update_about_me";
   static const String get_about_me = "user/api/get_about_me";
   static const String get_all_request = "user/api/get_all_request";
@@ -106,8 +105,7 @@ class Config {
   static const String get_all_followings = "user/api/get_all_followings";
   static const String remove_follower = "user/api/remove_follower";
   static const String SelectChatMember = "user/search_user_for_inbox";
-  static const String validateTokenCheck = "auth/auth/validateTokenCheck"
-  ;
+  static const String validateTokenCheck = "auth/auth/validateTokenCheck";
   static const String logOutUserSttionExperied = "auth/auth/isTokenExpired";
   static const String roomExists = "user/api/assignAdminToOtherRoomMember";
   static const String search_user_for_inboxUrl = "user/search_user_for_inbox";
@@ -127,15 +125,23 @@ class Config {
   static const String userTag = "user/api/get_uuid_by_username";
   static const String selectMultipleUsers_Chat =
       "user/selectMultipleUsers_Chat";
-  static const String chatImageDM = "user/send_image_in_user_chat"; // ankur 
-  static const String get_all_inbox_images = "user/get_all_inbox_images"; 
-  static const String delete_user_chat = "user/delete_user_chat"; 
-  static const String getAllNotifications = "user/api/getAllNotifications"; 
+  static const String chatImageDM = "user/send_image_in_user_chat"; // ankur
+  static const String get_all_inbox_images = "user/get_all_inbox_images";
+  static const String delete_user_chat = "user/delete_user_chat";
+  static const String getAllNotifications = "user/api/getAllNotifications";
   static const String insearch_user_for_inboxUrl1 = "user/search_user_for_tag";
   static const String SeenNotification = "user/api/notificationSeenByUser";
-  static const String getAllNoticationsCount = "user/api/getAllNotificationsCount";
+  static const String getAllNoticationsCount =
+      "user/api/getAllNotificationsCount";
   static const String getPostUidOrUserUid = "user/api/getPostUidOrUserUid";
+  static const String message_seen_by_user = "user/message_seen_by_user";
+  static const String online_offline_status = "user/online_offline_status";
+  static const String reaction_message_added_on_story =
+      "user/reaction_message_added_on_story";
+       static const String OpenSaveImagePostGuest = "guest/api/get_post_by_uid";
+       static const String readAllmsg = "user/api/read_all_notification";
+       static const String readnotificationscount = "user/api/read_notifications_count";
 
 
-
+       
 }

@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:pds/API/ApiService/ApiService.dart';
 import 'package:pds/API/Bloc/PersonalChatList_Bloc/PersonalChatList_State.dart';
 import 'package:pds/API/Repo/repository.dart';
 import 'package:flutter/material.dart';
@@ -203,4 +204,47 @@ class PersonalChatListCubit extends Cubit<PersonalChatListState> {
       emit(PersonalChatListErrorState(acceptRejectInvitationModel));
     }
   }
+
+  Future<void> seetinonExpried(BuildContext context,
+      {bool showAlert = false}) async {
+    try {
+      emit(PersonalChatListLoadingState());
+      dynamic settionExperied =
+          await Repository().logOutSettionexperied(context);
+      print("checkDatWant--$settionExperied");
+      // if (settionExperied == "Something Went Wrong, Try After Some Time.") {
+      //     emit(GetGuestAllPostErrorState("${settionExperied}"));
+      //   } else {
+      if (settionExperied.success == true) {
+        await setLOGOUT(context);
+      } else {
+        print("failed--check---${settionExperied}");
+      }
+      // }
+    } catch (e) {
+      print('errorstate-$e');
+      // emit(GetGuestAllPostErrorState(e.toString()));
+    }
+  }
+
+
+   Future<void> ChatOnline (BuildContext context,bool onlineStatus) async {
+    dynamic acceptRejectInvitationModel;
+    try {
+      emit(PersonalChatListLoadingState());
+      acceptRejectInvitationModel =
+          await Repository().ChatOnline(context,onlineStatus);
+      if (acceptRejectInvitationModel ==
+          "Something Went Wrong, Try After Some Time.") {
+        emit(PersonalChatListErrorState("${acceptRejectInvitationModel}"));
+      } else {
+        if (acceptRejectInvitationModel.success == true) {
+          emit(OnlineChatStatusLoadedState(acceptRejectInvitationModel));
+        }
+      }
+    } catch (e) {
+      emit(PersonalChatListErrorState(acceptRejectInvitationModel));
+    }
+  }
+
 }

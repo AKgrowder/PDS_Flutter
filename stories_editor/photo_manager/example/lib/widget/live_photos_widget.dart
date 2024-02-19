@@ -49,10 +49,10 @@ class _LivePhotosWidgetState extends State<LivePhotosWidget> {
       ..setVolume(0)
       ..addListener(() {
         if (mounted) {
-          setState(() {});
+          super.setState(() {});
         }
       });
-    setState(() {});
+    super.setState(() {});
   }
 
   void _play() {

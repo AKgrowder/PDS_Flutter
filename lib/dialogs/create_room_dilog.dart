@@ -32,7 +32,7 @@
 //         CurvedAnimation(parent: controller, curve: Curves.elasticInOut);
 
 //     controller.addListener(() {
-//       setState(() {});
+//       super.setState(() {});
 //     });
 
 //     controller.forward();
@@ -237,7 +237,7 @@
 //                                       style: TextStyle(
 //                                         fontFamily: 'outfit',
 //                                         fontSize: 15,
-//                                         color: Color(0xFFED1C25),
+//                                         color: ColorConstant.primary_color,
 //                                         fontWeight: FontWeight.w400,
 //                                       ),
 //                                     )),
@@ -327,7 +327,7 @@
 //                                     height: 43,
 //                                     width: _width / 3,
 //                                     decoration: BoxDecoration(
-//                                         color: Color(0xFFED1C25),
+//                                         color: ColorConstant.primary_color,
 //                                         borderRadius:
 //                                             BorderRadius.circular(10)),
 //                                     child: Center(

@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'package:flutter/material.dart';
+import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/core/utils/image_constant.dart';
 
 class CameraAccsessScreen extends StatefulWidget {
@@ -43,7 +44,7 @@ class _CameraAccsessScreenState extends State<CameraAccsessScreen> {
                   borderRadius: BorderRadius.circular(5)),
               child: Icon(
                 Icons.arrow_back,
-                color: Color(0xffED1C25),
+                color: ColorConstant.primary_color,
               ),
             ),
           ),
@@ -75,8 +76,8 @@ class _CameraAccsessScreenState extends State<CameraAccsessScreen> {
                   padding: EdgeInsets.all(5),
                   indicator: BoxDecoration(
                       borderRadius: BorderRadius.circular(50),
-                      color: Color(0xffED1C25)),
-                  unselectedLabelColor: Color(0xffED1C25),
+                      color: ColorConstant.primary_color),
+                  unselectedLabelColor: ColorConstant.primary_color,
                   indicatorColor: Colors.white,
                   controller: tabController,
                   physics: NeverScrollableScrollPhysics(),
@@ -87,7 +88,7 @@ class _CameraAccsessScreenState extends State<CameraAccsessScreen> {
                       // height: 30,
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(20),
-                          border: Border.all(color: Color(0xffED1C25))),
+                          border: Border.all(color:ColorConstant.primary_color)),
                       child: Center(
                           child: Text(
                         "Camera Roll",
@@ -98,7 +99,7 @@ class _CameraAccsessScreenState extends State<CameraAccsessScreen> {
                       // height: 30,
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(20),
-                          border: Border.all(color: Color(0xffED1C25))),
+                          border: Border.all(color: ColorConstant.primary_color)),
                       child: Center(
                           child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -158,7 +159,7 @@ class _CameraAccsessScreenState extends State<CameraAccsessScreen> {
                                 height: 40,
                                 width: 120,
                                 decoration: BoxDecoration(
-                                    color: Color(0xffED1C25),
+                                    color: ColorConstant.primary_color,
                                     borderRadius: BorderRadius.circular(5)),
                                 child: Center(
                                   child: Text(
@@ -317,7 +318,7 @@ class _CameraAccsessScreenState extends State<CameraAccsessScreen> {
             ankur.length,
             (index) => PopupMenuItem(
                 onTap: () {
-                  setState(() {
+                  super.setState(() {
                     indexx = index;
                   });
                   print("indexx--->$indexx");
@@ -325,7 +326,7 @@ class _CameraAccsessScreenState extends State<CameraAccsessScreen> {
                 child: Container(
                   decoration: BoxDecoration(
                       color: indexx == index
-                          ? Color(0xffED1C25)
+                          ?ColorConstant.primary_color
                           : Colors.transparent,
                       borderRadius: BorderRadius.circular(5)),
                   width: 80,

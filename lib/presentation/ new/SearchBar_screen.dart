@@ -13,9 +13,11 @@ import 'package:pds/core/utils/image_constant.dart';
 import 'package:pds/core/utils/sharedPreferences.dart';
 import 'package:pds/presentation/%20new/HashTagView_screen.dart';
 import 'package:pds/presentation/%20new/newbottembar.dart';
+import 'package:pds/presentation/%20new/profileNew.dart';
+import 'package:pds/presentation/register_create_account_screen/register_create_account_screen.dart';
 import 'package:pds/widgets/pagenation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:pds/presentation/%20new/profileNew.dart';
+
 import '../../API/Bloc/HashTag_Bloc/HashTag_cubit.dart';
 import '../../API/Bloc/HashTag_Bloc/HashTag_state.dart';
 import '../../API/Model/HashTage_Model/HashTag_model.dart';
@@ -48,43 +50,57 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
   ScrollController scrollController = ScrollController();
   ScrollController scrollController1 = ScrollController();
   ScrollController scrollController2 = ScrollController();
+  FocusNode _focusNode = FocusNode();
 
   int? indexxx;
   bool isSerch = false;
+  var UserLogin_ID;
   GetDataInSerch? getDataInSerch;
+  int? length;
   HashtagModel? hashtagModel; /* 
   HashTagImageModel? hashTagImageModel; */
   bool apiDataSetup = false;
+
   getUserData() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     dataSetup = 0;
     indexxx = 0;
-    /*  dataSetup = prefs.getInt(
-      "tabSelction",
-    );
-    if (dataSetup != null) {
-      dataSetup = await dataSetup;
+
+    /* await BlocProvider.of<HashTagCubit>(context).seetinonExpried(context);
+    await BlocProvider.of<HashTagCubit>(context)
+        .getAllNoticationsCountAPI(context);
+    await BlocProvider.of<HashTagCubit>(context)
+        .HashTagForYouAPI(context, 'FOR YOU', '1');
+         await BlocProvider.of<HashTagCubit>(context).serchDataGet(
+      context,
+    ); */
+    if (UserLogin_ID == null) {
+      // await BlocProvider.of<HashTagCubit>(context)
+      //     .getAllNoticationsCountAPI(context);
+      await BlocProvider.of<HashTagCubit>(context)
+          .HashTagForYouAPI(context, 'FOR YOU', '1');
     } else {
-      dataSetup = await widget.value2;
-    } */
-    if (mounted) {
-      setState(() {
-        // Update the widget's state.
-      });
+      await BlocProvider.of<HashTagCubit>(context).seetinonExpried(context);
+      await BlocProvider.of<HashTagCubit>(context)
+          .getAllNoticationsCountAPI(context);
+      await BlocProvider.of<HashTagCubit>(context)
+          .HashTagForYouAPI(context, 'FOR YOU', '1');
+      await BlocProvider.of<HashTagCubit>(context).serchDataGet(
+        context,
+      );
     }
+  }
+
+  checkGuestUser() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    UserLogin_ID = prefs.getString(PreferencesKey.loginUserID);
   }
 
   @override
   void initState() {
     super.initState();
-    BlocProvider.of<HashTagCubit>(context).seetinonExpried(context);
-    BlocProvider.of<HashTagCubit>(context).getAllNoticationsCountAPI(context);
+    checkGuestUser();
     getUserData();
-    BlocProvider.of<HashTagCubit>(context)
-        .HashTagForYouAPI(context, 'FOR YOU', '1');
-    // BlocProvider.of<HashTagCubit>(context).serchDataGet(context);
-
-    // BlocProvider.of<HashTagCubit>(context).HashTagBannerAPI(context);
   }
 
   void dispose() {
@@ -123,17 +139,25 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
             }
             if (state is GetSerchData) {
               getDataInSerch = state.getDataInSerch;
+              if (getDataInSerch?.object != null) {
+                if (getDataInSerch!.object!.length <= 5) {
+                  length = getDataInSerch!.object!.length;
+                } else {
+                  length = 5;
+                }
+              }
             }
             if (state is HashTagLoadedState) {
               apiDataSetup = true;
 
               hashtagModel = state.HashTagData;
             }
-             if (state is GetNotificationCountLoadedState) {
-                print(state.GetNotificationCountData.object);
-                saveNotificationCount(
-                    state.GetNotificationCountData.object ?? 0);
-              }
+            if (state is GetNotificationCountLoadedState) {
+              print(state.GetNotificationCountData.object);
+              saveNotificationCount(
+                  state.GetNotificationCountData.object?.notificationCount ?? 0,
+                  state.GetNotificationCountData.object?.messageCount ?? 0);
+            }
             if (state is GetAllUserLoadedState) {
               dataget = true;
               print("api caling");
@@ -175,11 +199,13 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                                   color: Color(0xffF0F0F0),
                                   borderRadius: BorderRadius.circular(30)),
                               child: TextFormField(
+                                enabled: true,
+                                focusNode: _focusNode,
                                 autofocus: true,
                                 onEditingComplete: () {},
                                 onTap: () {
                                   if (mounted) {
-                                    setState(() {
+                                    super.setState(() {
                                       isSerch = true;
                                     });
                                   }
@@ -192,8 +218,6 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                             )); */
                                 },
                                 onChanged: (value) {
-                                  print("i want to check value-${value}");
-                                  
                                   if (value.contains('#')) {
                                     print("value.contains('#')");
                                     if (indexxx == 0) {
@@ -227,7 +251,7 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                                   } else {
                                     dataget = false;
                                     if (mounted) {
-                                      setState(() {
+                                      super.setState(() {
                                         // Update the widget's state.
                                       });
                                     }
@@ -274,7 +298,7 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                           child: TextFormField(
                             onTap: () {
                               if (mounted) {
-                                setState(() {
+                                super.setState(() {
                                   isSerch = true;
                                 });
                               }
@@ -293,7 +317,7 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                               } else {
                                 dataget = false;
                                 if (mounted) {
-                                  setState(() {
+                                  super.setState(() {
                                     // Update the widget's state.
                                   });
                                 }
@@ -330,7 +354,7 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
 
                                   SharedPreferencesFunction(indexxx ?? 0);
                                   if (mounted) {
-                                    setState(() {
+                                    super.setState(() {
                                       // Update the widget's state.
                                     });
                                   }
@@ -377,10 +401,11 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                                   width: 120,
                                   decoration: BoxDecoration(
                                       color: indexxx == index
-                                          ? Color(0xffED1C25)
+                                          ? ColorConstant.primary_color
                                           : dataSetup == index
-                                              ? Color(0xffED1C25)
-                                              : Color(0xffFBD8D9),
+                                              ? ColorConstant.primary_color
+                                              : ColorConstant
+                                                  .primaryLight_color,
                                       borderRadius: BorderRadius.circular(20)),
                                   child: Center(
                                       child: Text(
@@ -392,7 +417,7 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                                             ? Colors.white
                                             : dataSetup == index
                                                 ? Colors.white
-                                                : Color(0xffED1C25)),
+                                                : ColorConstant.primary_color),
                                   )),
                                 ),
                               );
@@ -424,7 +449,7 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                                                 context, 'FOR YOU', '1');
                                       }
                                       if (mounted) {
-                                        setState(() {
+                                        super.setState(() {
                                           // Update the widget's state.
                                         });
                                       }
@@ -435,9 +460,9 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                                       width: 120,
                                       decoration: BoxDecoration(
                                           color: indexxx == index
-                                              ? Color(0xffED1C25)
+                                              ? ColorConstant.primary_color
                                               : dataSetup == index
-                                                  ? Color(0xffED1C25)
+                                                  ? ColorConstant.primary_color
                                                   : Color(0xffFBD8D9),
                                           borderRadius:
                                               BorderRadius.circular(20)),
@@ -451,7 +476,8 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                                                 ? Colors.white
                                                 : dataSetup == index
                                                     ? Colors.white
-                                                    : Color(0xffED1C25)),
+                                                    : ColorConstant
+                                                        .primary_color),
                                       )),
                                     ),
                                   );
@@ -527,7 +553,101 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                 isSerch == true
                     ? dataget == true
                         ? NavagtionPassing1()
-                        : SizedBox()
+                        : Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text(
+                                  'Recent',
+                                  style: TextStyle(
+                                      color: Colors.grey, fontSize: 18),
+                                ),
+                              ),
+                              Container(
+                                height: 300,
+                                width: _width,
+                                // color: Colors.amber,
+                                child: Column(
+                                  children:
+                                      List.generate((length ?? 0), (index) {
+                                    return Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          super.setState(() {
+                                            _focusNode.requestFocus();
+
+                                            isSerch = true;
+                                            searchController.text =
+                                                '${getDataInSerch?.object?[index].toString()}';
+                                          });
+                                          if (searchController.text
+                                              .contains('#')) {
+                                            print("value.contains('#')");
+                                            if (indexxx == 0) {
+                                              print("index is  0");
+                                              String hashTageValue =
+                                                  searchController.text
+                                                      .replaceAll("#", "%23");
+                                              BlocProvider.of<HashTagCubit>(
+                                                      context)
+                                                  .getalluser(
+                                                      1,
+                                                      hashTageValue.trim(),
+                                                      context);
+                                            } else {
+                                              print("index is not 0");
+                                              String hashTageValue =
+                                                  searchController.text
+                                                      .replaceAll("#", "%23");
+                                              BlocProvider.of<HashTagCubit>(
+                                                      context)
+                                                  .getalluser(
+                                                      1,
+                                                      hashTageValue.trim(),
+                                                      context,
+                                                      filterModule: 'EXPERT');
+                                            }
+                                          } else if (searchController
+                                              .text.isNotEmpty) {
+                                            if (indexxx == 0) {
+                                              BlocProvider.of<HashTagCubit>(
+                                                      context)
+                                                  .getalluser(
+                                                      1,
+                                                      searchController.text
+                                                          .trim(),
+                                                      context);
+                                            } else {
+                                              BlocProvider.of<HashTagCubit>(
+                                                      context)
+                                                  .getalluser(
+                                                      1,
+                                                      searchController.text
+                                                          .trim(),
+                                                      context,
+                                                      filterModule: 'EXPERT');
+                                            }
+                                          } else {}
+                                        },
+                                        child: Row(
+                                          children: [
+                                            Icon(Icons.history),
+                                            SizedBox(
+                                              width: 5,
+                                            ),
+                                            Text(
+                                                '${getDataInSerch?.object?[index]}')
+                                          ],
+                                        ),
+                                      ),
+                                    );
+                                  }),
+                                ),
+                              )
+                            ],
+                          )
                     : apiDataSetup == true
                         ? NavagtionPassing(hashtagModel: hashtagModel)
                         : SizedBox()
@@ -562,7 +682,7 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                                 searchController.text =
                                     getDataInSerch?.object?[index].toString() ??
                                         '';
-                                setState(() {});
+                                super.setState(() {});
 
                                 if (searchController.text.contains('#')) {
                                   String hashTageValue = searchController.text
@@ -617,7 +737,7 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                           onPageChanged: (index, reason) {
                             WidgetsBinding.instance.addPostFrameCallback((_) {
                               if (mounted) {
-                                setState(() {
+                                super.setState(() {
                                   sliderCurrentPosition = index;
                                 });
                               }
@@ -660,7 +780,7 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                         size: const Size(10.0, 7.0),
                         activeSize: const Size(10.0, 10.0),
                         spacing: const EdgeInsets.symmetric(horizontal: 2),
-                        activeColor: Color(0xffED1C25),
+                        activeColor: ColorConstant.primary_color,
                         color: Color(0xff6A6A6A),
                       ),
                     ),
@@ -730,17 +850,21 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                                     color: Colors.black),
                                 onTap: (text) {
                                   print('sdshfsdfh');
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            BlocProvider<HashTagCubit>(
-                                          create: (context) => HashTagCubit(),
-                                          child: HashTagViewScreen(
-                                              title:
-                                                  "${hashtagModel?.object?.content?[index].hashtagName}"),
-                                        ),
-                                      ));
+                                  if (UserLogin_ID != null) {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              BlocProvider<HashTagCubit>(
+                                            create: (context) => HashTagCubit(),
+                                            child: HashTagViewScreen(
+                                                title:
+                                                    "${hashtagModel?.object?.content?[index].hashtagName}"),
+                                          ),
+                                        ));
+                                  } else {
+                                    NaviRegisterScreen();
+                                  }
                                 },
                               ),
                               Padding(
@@ -820,19 +944,23 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                                               color: Colors.black),
                                           onTap: (text) {
                                             print(text);
-                                            Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      BlocProvider<
-                                                          HashTagCubit>(
-                                                    create: (context) =>
-                                                        HashTagCubit(),
-                                                    child: HashTagViewScreen(
-                                                        title:
-                                                            "${hashtagModel?.object?.content?[index].hashtagName}"),
-                                                  ),
-                                                ));
+                                            if (UserLogin_ID != null) {
+                                              Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        BlocProvider<
+                                                            HashTagCubit>(
+                                                      create: (context) =>
+                                                          HashTagCubit(),
+                                                      child: HashTagViewScreen(
+                                                          title:
+                                                              "${hashtagModel?.object?.content?[index].hashtagName}"),
+                                                    ),
+                                                  ));
+                                            } else {
+                                              NaviRegisterScreen();
+                                            }
                                           },
                                         ),
                                         SizedBox(
@@ -877,147 +1005,101 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
 
     if (indexxx != null) {
       if (indexxx == 0) {
-        print("fsgfsdfgsdgfsdg");
-        return Expanded(
-          child: SingleChildScrollView(
-            controller: scrollController,
-            child: PaginationWidget(
-              scrollController: scrollController,
-              totalSize: getalluserlistModel?.object?.totalElements,
-              offSet: getalluserlistModel?.object?.pageable?.pageNumber,
-              onPagination: (p0) async {
-                if (searchController.text.contains("#")) {
-                  String hashTageValue =
-                      searchController.text.replaceAll("#", "%23");
-                  BlocProvider.of<HashTagCubit>(context).getAllPagaationApi(
-                      (p0 + 1), hashTageValue.trim(), context);
-                } else {
-                  if (searchController.text.isNotEmpty) {
+        if (searchController.text.isEmpty &&
+            getDataInSerch?.object?.isNotEmpty == true) {
+          return Expanded(
+            child: Column(
+              children: [Text('data')],
+            ),
+          );
+        } else {
+          return Expanded(
+            child: SingleChildScrollView(
+              controller: scrollController,
+              child: PaginationWidget(
+                scrollController: scrollController,
+                totalSize: getalluserlistModel?.object?.totalElements,
+                offSet: getalluserlistModel?.object?.pageable?.pageNumber,
+                onPagination: (p0) async {
+                  if (searchController.text.contains("#")) {
+                    String hashTageValue =
+                        searchController.text.replaceAll("#", "%23");
                     BlocProvider.of<HashTagCubit>(context).getAllPagaationApi(
-                        (p0 + 1), searchController.text.trim(), context);
+                        (p0 + 1), hashTageValue.trim(), context);
+                  } else {
+                    if (searchController.text.isNotEmpty) {
+                      BlocProvider.of<HashTagCubit>(context).getAllPagaationApi(
+                          (p0 + 1), searchController.text.trim(), context);
+                    }
                   }
-                }
-              },
-              items: ListView.builder(
-                shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
-                padding: EdgeInsets.zero,
-                itemCount: getalluserlistModel?.object?.content?.length,
-                itemBuilder: (context, index) {
-                  return Column(
-                    children: [
-                      if (getalluserlistModel
-                              ?.object?.content?[index].hashtagNamesDto ==
-                          null)
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: GestureDetector(
-                            onTap: () {
-                              Navigator.push(context,
-                                  MaterialPageRoute(builder: (context) {
-                                return MultiBlocProvider(
-                                    providers: [
-                                      BlocProvider<NewProfileSCubit>(
-                                        create: (context) => NewProfileSCubit(),
-                                      ),
-                                    ],
-                                    child: ProfileScreen(
-                                        User_ID:
-                                            "${getalluserlistModel?.object?.content?[index].userUid}",
-                                        isFollowing: "REQUESTED"));
-                              }));
-                            },
-                            child: Container(
-                              height: 55,
-                              width: _width / 1.1,
-                              decoration: BoxDecoration(
-                                  border: Border.all(color: Colors.grey),
-                                  borderRadius: BorderRadius.circular(10)),
-                              child: Row(children: [
-                                SizedBox(
-                                  width: 8,
-                                ),
-                                Stack(
-                                  alignment: Alignment.bottomRight,
-                                  children: [
-                                    getalluserlistModel?.object?.content?[index]
-                                                .userProfile ==
-                                            null
-                                        ? CircleAvatar(
-                                            backgroundColor: Colors.white,
-                                            radius: 25,
-                                            child: Image.asset(
-                                                ImageConstant.tomcruse))
-                                        : CircleAvatar(
-                                            backgroundColor: Colors.white,
-                                            backgroundImage: NetworkImage(
-                                              "${getalluserlistModel?.object?.content?[index].userProfile}",
-                                            ),
-                                            radius: 25,
+                },
+                items: ListView.builder(
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
+                  padding: EdgeInsets.zero,
+                  itemCount: getalluserlistModel?.object?.content?.length,
+                  itemBuilder: (context, index) {
+                    return Column(
+                      children: [
+                        if (getalluserlistModel
+                                ?.object?.content?[index].hashtagNamesDto ==
+                            null)
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: GestureDetector(
+                              onTap: () {
+                                if (UserLogin_ID != null) {
+                                  Navigator.push(context,
+                                      MaterialPageRoute(builder: (context) {
+                                    return MultiBlocProvider(
+                                        providers: [
+                                          BlocProvider<NewProfileSCubit>(
+                                            create: (context) =>
+                                                NewProfileSCubit(),
                                           ),
-                                    getalluserlistModel?.object?.content?[index]
-                                                .isExpert ==
-                                            true
-                                        ? Image.asset(
-                                            ImageConstant.Star,
-                                            height: 18,
-                                          )
-                                        : SizedBox()
-                                  ],
-                                ),
-                                SizedBox(
-                                  width: 8,
-                                ),
-                                Container(
-                                  width: _width / 1.5,
-                                  // color: Colors.amber,
-                                  child: Text(
-                                    "${getalluserlistModel?.object?.content?[index].userName}",
-                                    overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 15,
-                                    ),
+                                        ],
+                                        child: ProfileScreen(
+                                            User_ID:
+                                                "${getalluserlistModel?.object?.content?[index].userUid}",
+                                            isFollowing: "REQUESTED"));
+                                  }));
+                                } else {
+                                  NaviRegisterScreen();
+                                }
+                              },
+                              child: Container(
+                                height: 55,
+                                width: _width / 1.1,
+                                decoration: BoxDecoration(
+                                    border: Border.all(color: Colors.grey),
+                                    borderRadius: BorderRadius.circular(10)),
+                                child: Row(children: [
+                                  SizedBox(
+                                    width: 8,
                                   ),
-                                )
-                              ]),
-                            ),
-                          ),
-                        ),
-                      if (getalluserlistModel
-                              ?.object?.content?[index].hashtagNamesDto !=
-                          null)
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                        BlocProvider<HashTagCubit>(
-                                      create: (context) => HashTagCubit(),
-                                      child: HashTagViewScreen(
-                                          title:
-                                              "${getalluserlistModel?.object?.content?[index].hashtagNamesDto?.hashtagName}"),
-                                    ),
-                                  ));
-                            },
-                            child: Container(
-                              height: 50,
-                              width: _width / 1.1,
-                              decoration: BoxDecoration(
-                                  border: Border.all(color: Colors.grey),
-                                  borderRadius: BorderRadius.circular(10)),
-                              child: Row(
-                                children: [
+                                  getalluserlistModel?.object?.content?[index]
+                                              .userProfile ==
+                                          null
+                                      ? CircleAvatar(
+                                          backgroundColor: Colors.white,
+                                          radius: 25,
+                                          child: Image.asset(
+                                              ImageConstant.tomcruse))
+                                      : CircleAvatar(
+                                          backgroundColor: Colors.white,
+                                          backgroundImage: NetworkImage(
+                                            "${getalluserlistModel?.object?.content?[index].userProfile}",
+                                          ),
+                                          radius: 25,
+                                        ),
                                   SizedBox(
                                     width: 8,
                                   ),
                                   Container(
-                                    width: _width / 1.5,
+                                    // color: Colors.amber,
+                                    margin: EdgeInsets.only(right: 5),
                                     child: Text(
-                                      "${getalluserlistModel?.object?.content?[index].hashtagNamesDto?.hashtagName}",
+                                      "${getalluserlistModel?.object?.content?[index].userName}",
                                       overflow: TextOverflow.ellipsis,
                                       style: TextStyle(
                                         fontWeight: FontWeight.bold,
@@ -1025,29 +1107,89 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                                       ),
                                     ),
                                   ),
-                                  SizedBox(
-                                    width: 8,
-                                  ),
-                                  Text(
-                                    "${getalluserlistModel?.object?.content?[index].hashtagNamesDto?.postCount} Post",
-                                    overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 15,
-                                    ),
-                                  ),
-                                ],
+                                  if (getalluserlistModel
+                                          ?.object?.content?[index].isExpert ==
+                                      true)
+                                    Padding(
+                                      padding: const EdgeInsets.only(bottom: 4),
+                                      child: Image.asset(
+                                        ImageConstant.Star,
+                                        height: 18,
+                                      ),
+                                    )
+                                ]),
                               ),
                             ),
                           ),
-                        )
-                    ],
-                  );
-                },
+                        if (getalluserlistModel
+                                ?.object?.content?[index].hashtagNamesDto !=
+                            null)
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: GestureDetector(
+                              onTap: () {
+                                if (UserLogin_ID != null) {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            BlocProvider<HashTagCubit>(
+                                          create: (context) => HashTagCubit(),
+                                          child: HashTagViewScreen(
+                                              title:
+                                                  "${getalluserlistModel?.object?.content?[index].hashtagNamesDto?.hashtagName}"),
+                                        ),
+                                      ));
+                                } else {
+                                  NaviRegisterScreen();
+                                }
+                              },
+                              child: Container(
+                                height: 50,
+                                width: _width / 1.1,
+                                decoration: BoxDecoration(
+                                    border: Border.all(color: Colors.grey),
+                                    borderRadius: BorderRadius.circular(10)),
+                                child: Row(
+                                  children: [
+                                    SizedBox(
+                                      width: 8,
+                                    ),
+                                    Container(
+                                      width: _width / 1.5,
+                                      child: Text(
+                                        "${getalluserlistModel?.object?.content?[index].hashtagNamesDto?.hashtagName}",
+                                        overflow: TextOverflow.ellipsis,
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 15,
+                                        ),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: 8,
+                                    ),
+                                    Text(
+                                      "${getalluserlistModel?.object?.content?[index].hashtagNamesDto?.postCount} Post",
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 15,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          )
+                      ],
+                    );
+                  },
+                ),
               ),
             ),
-          ),
-        );
+          );
+        }
       } else {
         return Expanded(
           child: SingleChildScrollView(
@@ -1085,19 +1227,24 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                           padding: const EdgeInsets.all(8.0),
                           child: GestureDetector(
                             onTap: () {
-                              Navigator.push(context,
-                                  MaterialPageRoute(builder: (context) {
-                                return MultiBlocProvider(
-                                    providers: [
-                                      BlocProvider<NewProfileSCubit>(
-                                        create: (context) => NewProfileSCubit(),
-                                      ),
-                                    ],
-                                    child: ProfileScreen(
-                                        User_ID:
-                                            "${getalluserlistModel?.object?.content?[index].userUid}",
-                                        isFollowing: "REQUESTED"));
-                              }));
+                              if (UserLogin_ID != null) {
+                                Navigator.push(context,
+                                    MaterialPageRoute(builder: (context) {
+                                  return MultiBlocProvider(
+                                      providers: [
+                                        BlocProvider<NewProfileSCubit>(
+                                          create: (context) =>
+                                              NewProfileSCubit(),
+                                        ),
+                                      ],
+                                      child: ProfileScreen(
+                                          User_ID:
+                                              "${getalluserlistModel?.object?.content?[index].userUid}",
+                                          isFollowing: "REQUESTED"));
+                                }));
+                              } else {
+                                NaviRegisterScreen();
+                              }
                             },
                             child: Container(
                               height: 55,
@@ -1109,39 +1256,27 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                                 SizedBox(
                                   width: 8,
                                 ),
-                                Stack(
-                                  alignment: Alignment.bottomRight,
-                                  children: [
-                                    getalluserlistModel?.object?.content?[index]
-                                                .userProfile ==
-                                            null
-                                        ? CircleAvatar(
-                                            backgroundColor: Colors.white,
-                                            radius: 25,
-                                            child: Image.asset(
-                                                ImageConstant.tomcruse))
-                                        : CircleAvatar(
-                                            backgroundColor: Colors.white,
-                                            backgroundImage: NetworkImage(
-                                              "${getalluserlistModel?.object?.content?[index].userProfile}",
-                                            ),
-                                            radius: 25,
-                                          ),
-                                    getalluserlistModel?.object?.content?[index]
-                                                .isExpert ==
-                                            true
-                                        ? Image.asset(
-                                            ImageConstant.Star,
-                                            height: 18,
-                                          )
-                                        : SizedBox()
-                                  ],
-                                ),
+                                getalluserlistModel?.object?.content?[index]
+                                            .userProfile ==
+                                        null
+                                    ? CircleAvatar(
+                                        backgroundColor: Colors.white,
+                                        radius: 25,
+                                        child:
+                                            Image.asset(ImageConstant.tomcruse))
+                                    : CircleAvatar(
+                                        backgroundColor: Colors.white,
+                                        backgroundImage: NetworkImage(
+                                          "${getalluserlistModel?.object?.content?[index].userProfile}",
+                                        ),
+                                        radius: 25,
+                                      ),
                                 SizedBox(
                                   width: 8,
                                 ),
                                 Container(
-                                  width: _width / 1.5,
+                                  margin: EdgeInsets.only(right: 10),
+                                  // width: _width / 1.5,
                                   child: Text(
                                     "${getalluserlistModel?.object?.content?[index].userName}",
                                     overflow: TextOverflow.ellipsis,
@@ -1150,6 +1285,10 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                                       fontSize: 15,
                                     ),
                                   ),
+                                ),
+                                Image.asset(
+                                  ImageConstant.Star,
+                                  height: 18,
                                 )
                               ]),
                             ),
@@ -1162,17 +1301,21 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                           padding: const EdgeInsets.all(8.0),
                           child: GestureDetector(
                             onTap: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                        BlocProvider<HashTagCubit>(
-                                      create: (context) => HashTagCubit(),
-                                      child: HashTagViewScreen(
-                                          title:
-                                              "${getalluserlistModel?.object?.content?[index].hashtagNamesDto?.hashtagName}"),
-                                    ),
-                                  ));
+                              if (UserLogin_ID != null) {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          BlocProvider<HashTagCubit>(
+                                        create: (context) => HashTagCubit(),
+                                        child: HashTagViewScreen(
+                                            title:
+                                                "${getalluserlistModel?.object?.content?[index].hashtagNamesDto?.hashtagName}"),
+                                      ),
+                                    ));
+                              } else {
+                                NaviRegisterScreen();
+                              }
                             },
                             child: Container(
                               height: 50,
@@ -1227,8 +1370,17 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
       ));
     }
   }
-   saveNotificationCount(int NotificationCount) async {
+
+  saveNotificationCount(int NotificationCount, int MessageCount) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setInt(PreferencesKey.NotificationCount, NotificationCount);
+    prefs.setInt(PreferencesKey.MessageCount, MessageCount);
+  }
+
+  NaviRegisterScreen() {
+    Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => RegisterCreateAccountScreen(
+              backSearch: true,
+            )));
   }
 }

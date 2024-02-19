@@ -6,6 +6,8 @@ import 'package:pds/API/Model/NewProfileScreenModel/GetSavePost_Model.dart';
 import 'package:pds/API/Model/NewProfileScreenModel/GetUserPostCommet_Model.dart';
 import 'package:pds/API/Model/NewProfileScreenModel/NewProfileScreen_Model.dart';
 import 'package:pds/API/Model/OnTimeDMModel/OnTimeDMModel.dart';
+import 'package:pds/API/Model/RePost_Model/RePost_model.dart';
+import 'package:pds/API/Model/UserTagModel/UserTag_model.dart';
 import 'package:pds/API/Model/WorkExperience_Model/ADDExperience_model.dart';
 import 'package:pds/API/Model/WorkExperience_Model/DeleteExperience_model.dart';
 import 'package:pds/API/Model/WorkExperience_Model/WorkExperience_model.dart';
@@ -15,6 +17,8 @@ import 'package:pds/API/Model/like_Post_Model/like_Post_Model.dart';
 import 'package:pds/API/Model/saveAllBlogModel/saveAllBlog_Model.dart';
 import 'package:pds/API/Model/saveBlogModel/saveBlog_Model.dart';
 
+import '../../Model/Delete_Api_model/delete_api_model.dart';
+import '../../Model/HasTagModel/hasTagModel.dart';
 import '../../Model/serchForInboxModel/serchForinboxModel.dart';
 
 abstract class NewProfileSState {}
@@ -117,8 +121,30 @@ class DMChatListLoadedState extends NewProfileSState {
   final OnTimeDMModel DMChatList;
   DMChatListLoadedState(this.DMChatList);
 }
-// class SearchHistoryDataAddxtends extends NewProfileSState {
-//   final SearchUserForInbox searchUserForInbox;
-//   SearchHistoryDataAddxtends(this.searchUserForInbox);
-// }
+class SearchHistoryDataAddxtends extends NewProfileSState {
+  final SearchUserForInbox searchUserForInbox;
+  SearchHistoryDataAddxtends(this.searchUserForInbox);
+}
 
+class GetAllHashtagState extends NewProfileSState {
+  final HasDataModel getAllHashtag;
+  GetAllHashtagState(this.getAllHashtag);
+}
+class AddPostErrorState extends NewProfileSState {
+  final dynamic error;
+  AddPostErrorState(this.error);
+}
+
+class UserTagLoadedState extends NewProfileSState {
+  final UserTagModel userTagModel;
+  UserTagLoadedState(this.userTagModel);
+}
+
+class RePostLoadedState extends NewProfileSState {
+  final RePostModel RePost;
+  RePostLoadedState(this.RePost);
+}
+class DeletePostLoadedState extends NewProfileSState {
+  final DeletePostModel DeletePost;
+  DeletePostLoadedState(this.DeletePost);
+}

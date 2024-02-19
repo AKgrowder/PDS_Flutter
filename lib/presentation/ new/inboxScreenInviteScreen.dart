@@ -40,6 +40,7 @@ class _InviteMeesageState extends State<InviteMeesage> {
   bool isChecked = false;
   bool isEmojiVisible = false;
   bool isKeyboardVisible = false;
+  bool singleTap = false;
   final focusNode = FocusNode();
   XFile? pickedImageFile;
   File? _image;
@@ -65,7 +66,7 @@ class _InviteMeesageState extends State<InviteMeesage> {
     finalFileSize = documentuploadsize;
     userID = prefs.getString(PreferencesKey.loginUserID);
     print("userid-chelc-${userID}");
-    setState(() {});
+    super.setState(() {});
   }
 
   @override
@@ -104,7 +105,7 @@ class _InviteMeesageState extends State<InviteMeesage> {
       FocusScope.of(context).unfocus();
     }
 
-    setState(() {
+    super.setState(() {
       isEmojiVisible = !isEmojiVisible;
     });
   }
@@ -172,21 +173,22 @@ class _InviteMeesageState extends State<InviteMeesage> {
             if (state is DMChatListLoadedState) {
               print(state.DMChatList.object);
               UserIndexUUID = state.DMChatList.object;
-
-
-                if (UserIndexUUID != "" && UserIndexUUID != null) {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) {
-                    return DmScreen(UserUID:  "${searchUserForInbox1?.object?.content?[Index].userUid}",
-                      UserName:
-                          "${searchUserForInbox1?.object?.content?[Index].userName}",
-                      ChatInboxUid: UserIndexUUID ?? "",
-                      UserImage:
-                          "${searchUserForInbox1?.object?.content?[Index].userProfilePic}",
-                    );
-                  }));
-                  // UserIndexUUID = "";
-                }
-              
+            
+              if (UserIndexUUID != "" && UserIndexUUID != null) {
+                Navigator.push(context, MaterialPageRoute(builder: (context) {
+                  return DmScreen(
+                    
+                    UserUID:
+                        "${searchUserForInbox1?.object?.content?[Index].userUid}",
+                    UserName:
+                        "${searchUserForInbox1?.object?.content?[Index].userName}",
+                    ChatInboxUid: UserIndexUUID ?? "",
+                    UserImage:
+                        "${searchUserForInbox1?.object?.content?[Index].userProfilePic}",
+                  );
+                }));
+                // UserIndexUUID = "";
+              }
             }
             if (state is SelectMultipleUsers_ChatLoadestate) {
               MultiUser = [];
@@ -242,7 +244,7 @@ class _InviteMeesageState extends State<InviteMeesage> {
                               children: MultiUsermap.map((Element) => Container(
                                     height: 40,
                                     decoration: BoxDecoration(
-                                      color: Color(0xffED1C25),
+                                      color: ColorConstant.primary_color,
                                       borderRadius: BorderRadius.circular(20),
                                       border:
                                           Border.all(color: Colors.grey[400]!),
@@ -260,7 +262,7 @@ class _InviteMeesageState extends State<InviteMeesage> {
                                             ),
                                             GestureDetector(
                                                 onTap: () {
-                                                  setState(() {
+                                                  super.setState(() {
                                                     MultiUser.forEach(
                                                         (element) {
                                                       if (element ==
@@ -364,7 +366,7 @@ class _InviteMeesageState extends State<InviteMeesage> {
                         } else if (value.isEmpty) {
                           print("Check value-${value}");
                           searchController.clear();
-                          setState(() {
+                          super.setState(() {
                             isDataGet = false;
                           });
                         }
@@ -376,7 +378,7 @@ class _InviteMeesageState extends State<InviteMeesage> {
                               onPressed: () {
                                 print("vgfdghdfgh");
                                 searchController.clear();
-                                setState(() {
+                                super.setState(() {
                                   _focusNode.unfocus();
                                   isDataGet = false;
                                 });
@@ -426,7 +428,7 @@ class _InviteMeesageState extends State<InviteMeesage> {
                                       ),
                                       GestureDetector(
                                         onTap: () {
-                                          setState(() {
+                                          super.setState(() {
                                             _image = null;
                                           });
                                         },
@@ -477,7 +479,7 @@ class _InviteMeesageState extends State<InviteMeesage> {
                                   // color: Colors.amber,
                                   child: Row(
                                     children: [
-                                     /*  Container(
+                                      /*  Container(
                                         // color: Colors.amber,
                                         child: IconButton(
                                           icon: Icon(
@@ -492,7 +494,7 @@ class _InviteMeesageState extends State<InviteMeesage> {
                                         width: 5,
                                       ),
                                       Container(
-                                        width: _width / 1.8,
+                                        width: _width / 1.5, //old is 1.8
                                         // color: Colors.red,
                                         child: TextField(
                                           maxLines: null,
@@ -507,7 +509,7 @@ class _InviteMeesageState extends State<InviteMeesage> {
                                       SizedBox(
                                         width: 5,
                                       ),
-                                      GestureDetector(
+                                      /* GestureDetector(
                                         onTap: () {
                                           prepareTestPdf(0);
                                         },
@@ -515,11 +517,11 @@ class _InviteMeesageState extends State<InviteMeesage> {
                                           "assets/images/paperclip-2.png",
                                           height: 23,
                                         ),
-                                      ),
+                                      ), */
                                       SizedBox(
                                         width: 13,
                                       ),
-                                      GestureDetector(
+                                      /* GestureDetector(
                                         onTap: () {
                                           camerapicker();
                                         },
@@ -527,7 +529,7 @@ class _InviteMeesageState extends State<InviteMeesage> {
                                           "assets/images/Vector (12).png",
                                           height: 20,
                                         ),
-                                      ),
+                                      ), */
                                       SizedBox(
                                         width: 8,
                                       ),
@@ -541,59 +543,69 @@ class _InviteMeesageState extends State<InviteMeesage> {
                             ),
                             GestureDetector(
                               onTap: () async {
-                                print(
-                                    'MultiUserLengthCheck-${MultiUsermap.length}');
-                                if (Add_Comment.text.isNotEmpty) {
-                                  if (Add_Comment.text.length >= 1000) {
+                                if (singleTap == false) {
+                                  print(
+                                      'MultiUserLengthCheck-${MultiUsermap.length}');
+                                  if (Add_Comment.text.isNotEmpty) {
+                                    if (Add_Comment.text.length >= 1000) {
+                                      SnackBar snackBar = SnackBar(
+                                        content: Text(
+                                            'One Time Message Lenght only for 1000 Your Meassge -> ${Add_Comment.text.length}'),
+                                        backgroundColor:
+                                            ColorConstant.primary_color,
+                                      );
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(snackBar);
+                                    } else {
+                                      if (MultiUser.isNotEmpty) {
+                                        print("check Multi User-$MultiUser");
+
+                                        var parmes = {
+                                          "message": Add_Comment.text,
+                                          "messageType": "TEXT",
+                                          "usersIds": MultiUser
+                                        };
+                                        BlocProvider.of<PersonalChatListCubit>(
+                                                context)
+                                            .selectMultipleUsers_ChatMethod(
+                                                parmes, context);
+                                      }
+                                    }
+                                  } else if (MultiUser.isNotEmpty &&
+                                      _image != null) {
+                                    var parmes = {
+                                      "message": imageDataPost?.object,
+                                      "messageType": "IMAGE",
+                                      "usersIds": MultiUser
+                                    };
+                                    BlocProvider.of<PersonalChatListCubit>(
+                                            context)
+                                        .selectMultipleUsers_ChatMethod(
+                                            parmes, context);
+                                  } else {
                                     SnackBar snackBar = SnackBar(
-                                      content: Text(
-                                          'One Time Message Lenght only for 1000 Your Meassge -> ${Add_Comment.text.length}'),
+                                      content: Text('Please Enter Comment'),
                                       backgroundColor:
                                           ColorConstant.primary_color,
                                     );
                                     ScaffoldMessenger.of(context)
                                         .showSnackBar(snackBar);
-                                  } else {
-                                    if (MultiUser.isNotEmpty) {
-                                      print("check Multi User-$MultiUser");
-                                      var parmes = {
-                                        "message": Add_Comment.text,
-                                        "messageType": "TEXT",
-                                        "usersIds": MultiUser
-                                      };
-                                      BlocProvider.of<PersonalChatListCubit>(
-                                              context)
-                                          .selectMultipleUsers_ChatMethod(
-                                              parmes, context);
-                                    }
                                   }
-                                } else if (MultiUser.isNotEmpty &&
-                                    _image != null) {
-                                  var parmes = {
-                                    "message": imageDataPost?.object,
-                                    "messageType": "IMAGE",
-                                    "usersIds": MultiUser
-                                  };
-                                  BlocProvider.of<PersonalChatListCubit>(
-                                          context)
-                                      .selectMultipleUsers_ChatMethod(
-                                          parmes, context);
-                                } else {
-                                  SnackBar snackBar = SnackBar(
-                                    content: Text('Please Enter Comment'),
-                                    backgroundColor:
-                                        ColorConstant.primary_color,
-                                  );
-                                  ScaffoldMessenger.of(context)
-                                      .showSnackBar(snackBar);
+                                  singleTap = true;
+                                  MultiUser = [];
+                                  MultiUsermap.clear();
+                                  _image = null;
+                                  isDataGet = false;
+                                  Add_Comment.clear();
+                                  searchController.clear();
                                 }
-                                // }
+                                Navigator.pop(context);
                               },
                               child: Container(
                                 height: 50,
                                 // width: 50,
                                 decoration: BoxDecoration(
-                                    color: Color(0xFFED1C25),
+                                    color: ColorConstant.primary_color,
                                     borderRadius: BorderRadius.circular(25)),
                                 child: Image.asset(
                                   "assets/images/Vector (13).png",
@@ -698,7 +710,7 @@ class _InviteMeesageState extends State<InviteMeesage> {
                     "${searchUserForInbox1?.object?.content?[index].userUid}",
                     context);
 
-               /*  if (UserIndexUUID != "" && UserIndexUUID != null) {
+                /*  if (UserIndexUUID != "" && UserIndexUUID != null) {
                   Navigator.push(context, MaterialPageRoute(builder: (context) {
                     return DmScreen(
                       UserName:
@@ -741,7 +753,7 @@ class _InviteMeesageState extends State<InviteMeesage> {
                             MultiUsermap.add(map);
                           }
 
-                          setState(() {});
+                          super.setState(() {});
                         },
                         child: Container(
                           height: 20,
@@ -807,7 +819,7 @@ class _InviteMeesageState extends State<InviteMeesage> {
     pickedImageFile = await picker.pickImage(source: ImageSource.gallery);
     if (pickedImageFile != null) {
       if (!_isGifOrSvg(pickedImageFile!.path)) {
-        setState(() {
+        super.setState(() {
           _image = File(pickedImageFile!.path);
         });
         final sizeInBytes = await _image!.length();
@@ -815,7 +827,7 @@ class _InviteMeesageState extends State<InviteMeesage> {
         // print('documentuploadsize-$documentuploadsize');
 
         if (sizeInMB > documentuploadsize) {
-          setState(() {
+          super.setState(() {
             _image = null;
           });
           showDialog(
@@ -912,7 +924,7 @@ class _InviteMeesageState extends State<InviteMeesage> {
           getFileSize(file.path!, 1, result.files.first, Index);
         }
 
-        /*     setState(() {
+        /*     super.setState(() {
           // fileparth = file.path!;
 
           switch (Index) {
@@ -945,7 +957,7 @@ class _InviteMeesageState extends State<InviteMeesage> {
     pickedImageFile = await picker.pickImage(source: ImageSource.camera);
     if (pickedImageFile != null) {
       _image = File(pickedImageFile!.path);
-      setState(() {});
+      super.setState(() {});
       final int fileSizeInBytes = await _image!.length();
       if (fileSizeInBytes <= finalFileSize * 1024 * 1024) {
         BlocProvider.of<PersonalChatListCubit>(context)
@@ -976,7 +988,7 @@ class _InviteMeesageState extends State<InviteMeesage> {
 
     /*    if (pickedImageFile != null) {
       if (!_isGifOrSvg(pickedImageFile!.path)) {
-        setState(() {
+        super.setState(() {
           _image = File(pickedImageFile!.path);
         });
           
@@ -1051,7 +1063,7 @@ class _InviteMeesageState extends State<InviteMeesage> {
         switch (Index) {
           case 1:
             if (file1.name.isNotEmpty || file1.name.toString() == null) {
-              setState(() {
+              super.setState(() {
                 file12 = file1;
                 _image = File(file1.path.toString());
               });
@@ -1069,7 +1081,7 @@ class _InviteMeesageState extends State<InviteMeesage> {
           case 0:
             print("file1.name-->${file1.name}");
             if (file1.name.isNotEmpty || file1.name.toString() == null) {
-              setState(() {
+              super.setState(() {
                 file12 = file1;
                 _image = File(file1.path.toString());
               });
@@ -1083,7 +1095,7 @@ class _InviteMeesageState extends State<InviteMeesage> {
         BlocProvider.of<PersonalChatListCubit>(context)
             .UplodeImageAPI(context, File(_image!.path));
 
-        setState(() {});
+        super.setState(() {});
 
         break;
       case 2:
@@ -1124,7 +1136,7 @@ class _InviteMeesageState extends State<InviteMeesage> {
           }
           print('filecheckPath1111-${file1.name}');
           print("file222.name-->${file1.name}");
-          setState(() {
+          super.setState(() {
             file12 = file1;
             _image = File(file1.path.toString());
           });

@@ -32,6 +32,8 @@ import 'package:transparent_image/transparent_image.dart';
 import 'package:video_player/video_player.dart';
 
 import '../../API/Model/HashTage_Model/HashTagView_model.dart';
+import '../../API/Model/NewProfileScreenModel/GetAppUserPost_Model.dart';
+import '../../API/Model/NewProfileScreenModel/GetSavePost_Model.dart';
 import '../Create_Post_Screen/CreatePostShow_ImageRow/photo_gallery-master/lib/photo_gallery.dart';
 import 'home_screen_new.dart';
 
@@ -47,20 +49,26 @@ class RePostScreen extends StatefulWidget {
   GetGuestAllPostModel? AllGuestPostRoomData;
   HashtagViewDataModel? hashTagViewData;
   OpenSaveImagepostModel? OpenSaveModelData;
-  RePostScreen({
-    Key? key,
-    this.username,
-    this.postData,
-    this.date,
-    this.desc,
-    this.userProfile,
-    this.postDataType,
-    this.index,
-    this.AllGuestPostRoomData,
-    this.postUid,
-    this.hashTagViewData,
-    this.OpenSaveModelData,
-  }) : super(key: key);
+  String? thumbNailURL;
+  GetSavePostModel? GetSavePostData;
+  GetAppUserPostModel? GetAllPostData;
+  RePostScreen(
+      {Key? key,
+      this.username,
+      this.postData,
+      this.date,
+      this.desc,
+      this.userProfile,
+      this.postDataType,
+      this.index,
+      this.AllGuestPostRoomData,
+      this.postUid,
+      this.hashTagViewData,
+      this.OpenSaveModelData,
+      this.thumbNailURL,
+      this.GetSavePostData,
+      this.GetAllPostData})
+      : super(key: key);
 
   @override
   State<RePostScreen> createState() => _RePostScreenState();
@@ -74,7 +82,7 @@ class _RePostScreenState extends State<RePostScreen> {
         prefs.getString(PreferencesKey.MaxPostUploadSizeInMB) ?? "0");
 
     finalFileSize = documentuploadsize;
-    setState(() {});
+    super.setState(() {});
   }
 
   @override
@@ -85,7 +93,7 @@ class _RePostScreenState extends State<RePostScreen> {
     initAsync();
     Future.delayed(Duration(milliseconds: 150), () {
       if (mounted) {
-        setState(() {
+        super.setState(() {
           _opacity = 1.0;
         });
       }
@@ -158,7 +166,15 @@ class _RePostScreenState extends State<RePostScreen> {
         pageControllers.add(PageController());
         currentPages.add(0);
       });
-      WidgetsBinding.instance.addPostFrameCallback((timeStamp) => setState(() {
+      widget.GetSavePostData?.object?.forEach((element) {
+        pageControllers.add(PageController());
+        currentPages.add(0);
+      });
+      widget.GetAllPostData?.object?.forEach((element) {
+        pageControllers.add(PageController());
+        currentPages.add(0);
+      });
+      WidgetsBinding.instance.addPostFrameCallback((timeStamp) => super.setState(() {
             added = true;
           }));
     }
@@ -183,8 +199,8 @@ class _RePostScreenState extends State<RePostScreen> {
           print("this condison is working");
           _controller = VideoPlayerController.networkUrl(
               Uri.parse('${imageDataPost!.object!.data!.first}'));
-          _controller?.initialize().then((value) => setState(() {}));
-          setState(() {
+          _controller?.initialize().then((value) => super.setState(() {}));
+          super.setState(() {
             _controller?.play();
             _controller?.setLooping(true);
           });
@@ -194,8 +210,8 @@ class _RePostScreenState extends State<RePostScreen> {
         //     _controllersRepost = VideoPlayerController.networkUrl(
         //         Uri.parse('${widget.postData?[i]}'));
         //     print("video list -- ${widget.postData}");
-        //     _controllersRepost?.initialize().then((value) => setState(() {}));
-        //     setState(() {
+        //     _controllersRepost?.initialize().then((value) => super.setState(() {}));
+        //     super.setState(() {
         //       _controllersRepost?.play();
         //       _controllersRepost?.pause();
         //       _controllersRepost?.setLooping(true);
@@ -265,7 +281,7 @@ class _RePostScreenState extends State<RePostScreen> {
     }, builder: (context, state) {
       return SafeArea(
           child: Scaffold(
-            backgroundColor: Colors.white,
+        backgroundColor: Colors.white,
         body: Container(
           color: Colors.white,
           child: Stack(
@@ -379,7 +395,7 @@ class _RePostScreenState extends State<RePostScreen> {
                                   decoration: BoxDecoration(
                                       border: Border.all(
                                         width: 1.5,
-                                        color: Color(0xffED1C25),
+                                        color: ColorConstant.primary_color,
                                       ),
                                       color: ColorConstant.primaryLight_color,
                                       borderRadius: BorderRadius.circular(10)),
@@ -404,6 +420,7 @@ class _RePostScreenState extends State<RePostScreen> {
                                         padding: EdgeInsets.only(right: 7),
                                         child: Image.asset(
                                           ImageConstant.downarrow,
+                                          color: ColorConstant.primary_color,
                                           height: 10,
                                           width: 10,
                                         ),
@@ -546,7 +563,7 @@ class _RePostScreenState extends State<RePostScreen> {
                                         ],
                                         onChanged: (value) {
                                           onChangeMethod(value);
-                                          setState(() {
+                                          super.setState(() {
                                             primaryColor = value.isNotEmpty
                                                 ? ColorConstant.primary_color
                                                 : ColorConstant.primaryLight_color;
@@ -577,12 +594,12 @@ class _RePostScreenState extends State<RePostScreen> {
                                                     //   onTap: () {
                                                     //     if (_controller!.value
                                                     //         .isPlaying) {
-                                                    //       setState(() {
+                                                    //       super.setState(() {
                                                     //         _controller
                                                     //             ?.pause();
                                                     //       });
                                                     //     } else {
-                                                    //       setState(() {
+                                                    //       super.setState(() {
                                                     //         _controller
                                                     //             ?.play();
                                                     //       });
@@ -644,7 +661,7 @@ class _RePostScreenState extends State<RePostScreen> {
                                                                     .builder(
                                                                   onPageChanged:
                                                                       (value) {
-                                                                    setState(
+                                                                    super.setState(
                                                                         () {
                                                                       _currentPages =
                                                                           value;
@@ -726,7 +743,8 @@ class _RePostScreenState extends State<RePostScreen> {
                                             activeSize: const Size(10.0, 10.0),
                                             spacing: const EdgeInsets.symmetric(
                                                 horizontal: 2),
-                                            activeColor: Color(0xffED1C25),
+                                            activeColor:
+                                                ColorConstant.primary_color,
                                             color: Color(0xff6A6A6A),
                                           ),
                                         ),
@@ -868,11 +886,12 @@ class _RePostScreenState extends State<RePostScreen> {
                                           },
                                           child: widget.postDataType == 'VIDEO'
                                               ? Padding(
-                                                padding: const EdgeInsets.all(20),
-                                                child: VideoListItem(
-                                                    videoUrl: widget
-                                                        .postData?[0]),
-                                              )
+                                                  padding:
+                                                      const EdgeInsets.all(20),
+                                                  child: VideoListItem(
+                                                      videoUrl:
+                                                          widget.postData?[0]),
+                                                )
                                               : Container(
                                                   width: _width,
                                                   child: widget.postDataType ==
@@ -957,11 +976,11 @@ class _RePostScreenState extends State<RePostScreen> {
                                                               //                       onTap: () {
                                                               //                         // _playPause(index);
                                                               //                         if (_controllersRepost!.value.isPlaying) {
-                                                              //                           setState(() {
+                                                              //                           super.setState(() {
                                                               //                             _controllersRepost!.pause();
                                                               //                           });
                                                               //                         } else {
-                                                              //                           setState(() {
+                                                              //                           super.setState(() {
                                                               //                             _controllersRepost!.play();
                                                               //                           });
                                                               //                         }
@@ -986,7 +1005,7 @@ class _RePostScreenState extends State<RePostScreen> {
                                                               //         : SizedBox()
                                                               : widget.postDataType ==
                                                                       "ATTACHMENT"
-                                                                  ? Container(
+                                                                  ? /*  Container(
                                                                       height:
                                                                           400,
                                                                       width:
@@ -995,7 +1014,41 @@ class _RePostScreenState extends State<RePostScreen> {
                                                                           DocumentViewScreen1(
                                                                         path: widget
                                                                             .postData?[0],
-                                                                      ))
+                                                                      )) */
+                                                                  Stack(
+                                                                      children: [
+                                                                        Container(
+                                                                          height:
+                                                                              400,
+                                                                          width:
+                                                                              _width,
+                                                                          color:
+                                                                              Colors.transparent,
+                                                                        ),
+                                                                        GestureDetector(
+                                                                          onTap:
+                                                                              () {
+                                                                            print("objectobjectobjectobject");
+                                                                            Navigator.push(context,
+                                                                                MaterialPageRoute(
+                                                                              builder: (context) {
+                                                                                return DocumentViewScreen1(
+                                                                                  path: widget.postData?[0].toString(),
+                                                                                );
+                                                                              },
+                                                                            ));
+                                                                          },
+                                                                          child:
+                                                                              Container(
+                                                                            child:
+                                                                                CachedNetworkImage(
+                                                                              imageUrl: widget.thumbNailURL ?? "",
+                                                                              fit: BoxFit.cover,
+                                                                            ),
+                                                                          ),
+                                                                        )
+                                                                      ],
+                                                                    )
                                                                   : SizedBox()
                                                           : Column(
                                                               children: [
@@ -1012,7 +1065,7 @@ class _RePostScreenState extends State<RePostScreen> {
                                                                             .builder(
                                                                           onPageChanged:
                                                                               (page) {
-                                                                            setState(() {
+                                                                            super.setState(() {
                                                                               currentPages[widget.index ?? 0] = page;
                                                                             });
                                                                           },
@@ -1066,7 +1119,7 @@ class _RePostScreenState extends State<RePostScreen> {
                                                                                   size: const Size(10.0, 7.0),
                                                                                   activeSize: const Size(10.0, 10.0),
                                                                                   spacing: const EdgeInsets.symmetric(horizontal: 2),
-                                                                                  activeColor: Color(0xffED1C25),
+                                                                                  activeColor: ColorConstant.primary_color,
                                                                                   color: Color(0xff6A6A6A),
                                                                                 ),
                                                                               ),
@@ -1095,210 +1148,217 @@ class _RePostScreenState extends State<RePostScreen> {
                   ),
                 ),
               ),
-               if(widget.postDataType != 'VIDEO')
-              Align(
-                alignment: Alignment.bottomCenter,
-                child: Column(
-                  children: [
-                    Spacer(),
-                    Padding(
-                      padding: EdgeInsets.only(left: 16, right: 0),
-                      child: Container(
-                        color: Colors.white,
-                        child: Row(
-                          children: [
-                            SizedBox(
-                              // margin: EdgeInsets.all(8),
-                              height: 90,
-                              width: 90,
-                              child: Center(
-                                child: GestureDetector(
-                                  onTap: () async {
-                                    print("asdfdfgdfg");
-                                    _getImageFromCamera();
-                                  },
-                                  child: Container(
-                                    // margin: EdgeInsets.all(8),
-                                    height: 80,
-                                    width: 80,
-                                    decoration: BoxDecoration(
-                                      // color: Color.fromARGB(255, 0, 0, 0),
-                                      border: Border.all(
-                                          color: Color.fromARGB(
-                                              255, 174, 174, 174),
-                                          width: 2),
-                                      borderRadius: BorderRadius.circular(20),
-                                    ),
-                                    child: Center(
-                                      child: Image.asset(
-                                        ImageConstant.Cameraicon,
-                                        height: 30,
+              if (widget.postDataType != 'VIDEO')
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Column(
+                    children: [
+                      Spacer(),
+                      Padding(
+                        padding: EdgeInsets.only(left: 16, right: 0),
+                        child: Container(
+                          color: Colors.white,
+                          child: Row(
+                            children: [
+                              SizedBox(
+                                // margin: EdgeInsets.all(8),
+                                height: 90,
+                                width: 90,
+                                child: Center(
+                                  child: GestureDetector(
+                                    onTap: () async {
+                                      print("asdfdfgdfg");
+                                      _getImageFromCamera();
+                                    },
+                                    child: Container(
+                                      // margin: EdgeInsets.all(8),
+                                      height: 80,
+                                      width: 80,
+                                      decoration: BoxDecoration(
+                                        // color: Color.fromARGB(255, 0, 0, 0),
+                                        border: Border.all(
+                                            color: Color.fromARGB(
+                                                255, 174, 174, 174),
+                                            width: 2),
+                                        borderRadius: BorderRadius.circular(20),
+                                      ),
+                                      child: Center(
+                                        child: Image.asset(
+                                          ImageConstant.Cameraicon,
+                                          color: ColorConstant.primary_color,
+                                          height: 30,
+                                        ),
                                       ),
                                     ),
                                   ),
                                 ),
                               ),
-                            ),
-                            
-                            Container(
-                              height: 90,
-                              width: _width - 106,
-                              // color: Colors.green,
-                              child: _loading
-                                  ? Center(
-                                      child: Container(
-                                        margin: EdgeInsets.only(bottom: 100),
-                                        child: ClipRRect(
-                                          borderRadius:
-                                              BorderRadius.circular(20),
-                                          child: Image.asset(
-                                              ImageConstant.loader,
-                                              fit: BoxFit.cover,
-                                              height: 100,
-                                              width: 100),
+                              Container(
+                                height: 90,
+                                width: _width - 106,
+                                // color: Colors.green,
+                                child: _loading
+                                    ? Center(
+                                        child: Container(
+                                          margin: EdgeInsets.only(bottom: 100),
+                                          child: ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(20),
+                                            child: Image.asset(
+                                                ImageConstant.loader,
+                                                fit: BoxFit.cover,
+                                                height: 100,
+                                                width: 100),
+                                          ),
                                         ),
-                                      ),
-                                    )
-                                  : LayoutBuilder(
-                                      builder: (context, constraints) {
-                                        double gridWidth =
-                                            (constraints.maxWidth - 20) / 3;
-                                        double gridHeight = gridWidth + 33;
-                                        double ratio = gridWidth / gridHeight;
-                                        return Padding(
-                                          padding: const EdgeInsets.only(
-                                              top: 5, bottom: 5),
-                                          child: Container(
-                                            // padding: EdgeInsets.all(5),
-                                            child: SizedBox(
-                                              height: 100,
-                                              child: GridView.count(
-                                                crossAxisCount: 1,
-                                                mainAxisSpacing: 5.0,
-                                                crossAxisSpacing: 10.0,
-                                                scrollDirection:
-                                                    Axis.horizontal,
-                                                children: <Widget>[
-                                                  ...page!.items.map(
-                                                    (medium) => GestureDetector(
-                                                      onTap: () async {
-                                                        medium1 = medium;
-                                                        selectImage = true;
+                                      )
+                                    : LayoutBuilder(
+                                        builder: (context, constraints) {
+                                          double gridWidth =
+                                              (constraints.maxWidth - 20) / 3;
+                                          double gridHeight = gridWidth + 33;
+                                          double ratio = gridWidth / gridHeight;
+                                          return Padding(
+                                            padding: const EdgeInsets.only(
+                                                top: 5, bottom: 5),
+                                            child: Container(
+                                              // padding: EdgeInsets.all(5),
+                                              child: SizedBox(
+                                                height: 100,
+                                                child: GridView.count(
+                                                  crossAxisCount: 1,
+                                                  mainAxisSpacing: 5.0,
+                                                  crossAxisSpacing: 10.0,
+                                                  scrollDirection:
+                                                      Axis.horizontal,
+                                                  children: <Widget>[
+                                                    ...page!.items.map(
+                                                      (medium) =>
+                                                          GestureDetector(
+                                                        onTap: () async {
+                                                          medium1 = medium;
+                                                          selectImage = true;
 
-                                                        file =
-                                                            await PhotoGallery
-                                                                .getFile(
-                                                          mediumId: medium1!.id,
-                                                          mediumType:
-                                                              MediumType.image,
-                                                        );
-                                                        file12 = null;
-                                                        pickedImage.isEmpty;
-                                                        setState(() {});
-                                                        print(
-                                                            "medium1!.id--.${medium1?.filename}");
-                                                        BlocProvider.of<
-                                                                    RePostCubit>(
-                                                                context)
-                                                            .UplodeImageAPI(
-                                                                context,
-                                                                medium1?.filename ??
-                                                                    '',
-                                                                file?.path ??
-                                                                    '');
-                                                      },
-                                                      child: Container(
-                                                        height: 100,
-                                                        width: 100,
-                                                        decoration: BoxDecoration(
-                                                            color: Colors
-                                                                .grey[300],
+                                                          file =
+                                                              await PhotoGallery
+                                                                  .getFile(
+                                                            mediumId:
+                                                                medium1!.id,
+                                                            mediumType:
+                                                                MediumType
+                                                                    .image,
+                                                          );
+                                                          file12 = null;
+                                                          pickedImage.isEmpty;
+                                                          super.setState(() {});
+                                                          print(
+                                                              "medium1!.id--.${medium1?.filename}");
+                                                          BlocProvider.of<
+                                                                      RePostCubit>(
+                                                                  context)
+                                                              .UplodeImageAPI(
+                                                                  context,
+                                                                  medium1?.filename ??
+                                                                      '',
+                                                                  file?.path ??
+                                                                      '');
+                                                        },
+                                                        child: Container(
+                                                          height: 100,
+                                                          width: 100,
+                                                          decoration: BoxDecoration(
+                                                              color: Colors
+                                                                  .grey[300],
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          10)),
+                                                          child: ClipRRect(
                                                             borderRadius:
                                                                 BorderRadius
                                                                     .circular(
-                                                                        10)),
-                                                        child: ClipRRect(
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(10),
-                                                          child: FadeInImage(
-                                                            fit: BoxFit.cover,
-                                                            placeholder:
-                                                                MemoryImage(
-                                                                    kTransparentImage),
-                                                            image:
-                                                                ThumbnailProvider(
-                                                              mediumId:
-                                                                  medium.id,
-                                                              mediumType: medium
-                                                                  .mediumType,
-                                                              highQuality: true,
+                                                                        10),
+                                                            child: FadeInImage(
+                                                              fit: BoxFit.cover,
+                                                              placeholder:
+                                                                  MemoryImage(
+                                                                      kTransparentImage),
+                                                              image:
+                                                                  ThumbnailProvider(
+                                                                mediumId:
+                                                                    medium.id,
+                                                                mediumType: medium
+                                                                    .mediumType,
+                                                                highQuality:
+                                                                    true,
+                                                              ),
                                                             ),
                                                           ),
                                                         ),
                                                       ),
                                                     ),
-                                                  ),
-                                                ],
+                                                  ],
+                                                ),
                                               ),
                                             ),
-                                          ),
-                                        );
-                                      },
-                                    ),
-                            ),
-                          ],
+                                          );
+                                        },
+                                      ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                    if(widget.postDataType != 'VIDEO')
-                    Container(
-                      height: 30,
-                      color: Colors.white,
-                      child: Padding(
-                        padding: EdgeInsets.only(left: 20, right: 16),
-                        child: Row(
-                          children: [
-                            GestureDetector(
-                              onTap: () async {
-                                prepareTestPdf(0);
-                              },
-                              child: Image.asset(
-                                ImageConstant.aTTACHMENT,
-                                height: 20,
-                              ),
+                      if (widget.postDataType != 'VIDEO')
+                        Container(
+                          height: 30,
+                          color: Colors.white,
+                          child: Padding(
+                            padding: EdgeInsets.only(left: 20, right: 16),
+                            child: Row(
+                              children: [
+                                GestureDetector(
+                                  onTap: () async {
+                                    prepareTestPdf(0);
+                                  },
+                                  child: Image.asset(
+                                    ImageConstant.aTTACHMENT,
+                                    color: ColorConstant.primary_color,
+                                    height: 20,
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 30,
+                                ),
+                                GestureDetector(
+                                  onTap: () {
+                                    _getImageFromSource();
+                                  },
+                                  child: Image.asset(
+                                    ImageConstant.gallery,
+                                    color: ColorConstant.primary_color,
+                                    height: 20,
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 30,
+                                ),
+                                GestureDetector(
+                                  onTap: () {
+                                    getVideo();
+                                  },
+                                  child: Icon(
+                                    Icons.play_circle_outline_sharp,
+                                    color: ColorConstant.primary_color,
+                                  ),
+                                )
+                              ],
                             ),
-                            SizedBox(
-                              width: 30,
-                            ),
-                            GestureDetector(
-                              onTap: () {
-                                _getImageFromSource();
-                              },
-                              child: Image.asset(
-                                ImageConstant.gallery,
-                                height: 20,
-                              ),
-                            ),
-                            SizedBox(
-                              width: 30,
-                            ),
-                            GestureDetector(
-                              onTap: () {
-                                getVideo();
-                              },
-                              child: Icon(
-                                Icons.play_circle_outline_sharp,
-                                color: ColorConstant.primary_color,
-                              ),
-                            )
-                          ],
+                          ),
                         ),
-                      ),
-                    ),
-                  ],
-                ),
-              )
+                    ],
+                  ),
+                )
             ],
           ),
         ),
@@ -1316,7 +1376,7 @@ class _RePostScreenState extends State<RePostScreen> {
           for (var i = 0; i < xFilePicker.length; i++) {
             if (!_isGifOrSvg(xFilePicker[i].path)) {
               pickedImage.add(File(xFilePicker[i].path));
-              setState(() {});
+              super.setState(() {});
               getFileSize1(pickedImage[i].path, 1, pickedImage[i], 0);
               if ((xFilePicker[i].path.contains(".mp4")) ||
                   (xFilePicker[i].path.contains(".mov")) ||
@@ -1411,7 +1471,7 @@ class _RePostScreenState extends State<RePostScreen> {
           context,
           pickedImage,
         );
-        setState(() {});
+        super.setState(() {});
 
         break;
       case 2:
@@ -1464,12 +1524,12 @@ class _RePostScreenState extends State<RePostScreen> {
       if (albums.isNotEmpty) {
         page = await albums.first.listMedia();
       }
-      setState(() {
+      super.setState(() {
         _albums = albums;
         _loading = false;
       });
     }
-    setState(() {
+    super.setState(() {
       _loading = false;
     });
   }
@@ -1565,7 +1625,7 @@ class _RePostScreenState extends State<RePostScreen> {
         switch (Index) {
           case 1:
             if (file1.name.isNotEmpty || file1.name.toString() == null) {
-              setState(() {
+              super.setState(() {
                 file12 = file1;
               });
             }
@@ -1582,7 +1642,7 @@ class _RePostScreenState extends State<RePostScreen> {
           case 0:
             print("file1.name-->${file1.name}");
             if (file1.name.isNotEmpty || file1.name.toString() == null) {
-              setState(() {
+              super.setState(() {
                 file12 = file1;
               });
             }
@@ -1595,7 +1655,7 @@ class _RePostScreenState extends State<RePostScreen> {
         BlocProvider.of<RePostCubit>(context)
             .UplodeImageAPI(context, file1.name, file1.path.toString());
 
-        setState(() {});
+        super.setState(() {});
 
         break;
       case 2:
@@ -1636,7 +1696,7 @@ class _RePostScreenState extends State<RePostScreen> {
           }
           print('filecheckPath1111-${file1.name}');
           print("file222.name-->${file1.name}");
-          setState(() {
+          super.setState(() {
             file12 = file1;
           });
 
@@ -1657,7 +1717,7 @@ class _RePostScreenState extends State<RePostScreen> {
         preferredCameraDevice: CameraDevice.front,
         maxDuration: const Duration(minutes: 10));
     XFile? xfilePick = pickedFile;
-    setState(
+    super.setState(
       () {
         galleryFile.clear();
         if (xfilePick != null) {
@@ -1738,14 +1798,14 @@ class _RePostScreenState extends State<RePostScreen> {
             soicalData.length,
             (index) => PopupMenuItem(
                 onTap: () {
-                  setState(() {
+                  super.setState(() {
                     indexx = index;
                   });
                 },
                 child: Container(
                   decoration: BoxDecoration(
                       color: indexx == index
-                          ? Color(0xffED1C25)
+                          ? ColorConstant.primary_color
                           : Colors.transparent,
                       borderRadius: BorderRadius.circular(5)),
                   width: 130,
@@ -1764,7 +1824,7 @@ class _RePostScreenState extends State<RePostScreen> {
   }
 
   onChangeMethod(String value) {
-    setState(() {
+    super.setState(() {
       postText1.text = value;
     });
     if (value.contains('@')) {
@@ -1791,7 +1851,7 @@ class _RePostScreenState extends State<RePostScreen> {
       BlocProvider.of<RePostCubit>(context)
           .GetAllHashtag(context, '10', '#${data1.trim()}');
     } else {
-      setState(() {
+      super.setState(() {
         istageData = false;
         isHeshTegData = false;
       });
@@ -1842,7 +1902,7 @@ class _RePostScreenState extends State<RePostScreen> {
           ScaffoldMessenger.of(context).showSnackBar(snackBar);
         } else { */
         if (CreatePostDone == true) {
-          setState(() {
+          super.setState(() {
             isrepostDataSet = false;
           });
           if (postText1.text.isNotEmpty && file?.path != null) {
@@ -1931,9 +1991,7 @@ class _RePostScreenState extends State<RePostScreen> {
               };
               BlocProvider.of<RePostCubit>(context)
                   .RePostAPI(context, param, widget.postUid, "");
-            }
-            
-            else if (_controller?.value.isPlaying == true) {
+            } else if (_controller?.value.isPlaying == true) {
               Map<String, dynamic> param = {
                 "postData": imageDataPost?.object?.data,
                 "postDataType": "VIDEO",

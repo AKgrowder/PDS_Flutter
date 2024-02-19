@@ -40,6 +40,11 @@ class Object {
   int? commentCount;
   int? repostCount;
   RepostOn? repostOn;
+  Null? thumbnailImageUrl;
+  String? postLink;
+  String? translatedDescription;
+  bool? isTrsnalteoption;
+  String? userAccountType;
 
   Object(
       {this.postUid,
@@ -57,7 +62,8 @@ class Object {
       this.likedCount,
       this.commentCount,
       this.repostCount,
-      this.repostOn});
+      this.repostOn,
+      this.thumbnailImageUrl,this.postLink,this.translatedDescription,this.isTrsnalteoption,this.userAccountType});
 
   Object.fromJson(Map<String, dynamic> json) {
     postUid = json['postUid'];
@@ -78,6 +84,11 @@ class Object {
     repostOn = json['repostOn'] != null
         ? new RepostOn.fromJson(json['repostOn'])
         : null;
+    thumbnailImageUrl = json['thumbnailImageUrl'];
+    postLink = json['postLink'];
+    translatedDescription = json['translatedDescription'];
+    isTrsnalteoption = json['isTrsnalteoption'];
+    userAccountType = json['userAccountType'];
   }
 
   Map<String, dynamic> toJson() {
@@ -100,6 +111,11 @@ class Object {
     if (this.repostOn != null) {
       data['repostOn'] = this.repostOn!.toJson();
     }
+    data['thumbnailImageUrl'] = this.thumbnailImageUrl;
+    data['postLink'] = this.postLink;
+    data['translatedDescription'] = this.translatedDescription;
+    data['isTrsnalteoption'] = this.isTrsnalteoption;
+    data['userAccountType'] = this.userAccountType;
     return data;
   }
 }
@@ -121,24 +137,31 @@ class RepostOn {
   int? commentCount;
   int? repostCount;
   Null? repostOn;
+  String? thumbnailImageUrl;
+  String? translatedDescription;
+  bool? isTrsnalteoption;
+  String? userAccountType;
 
-  RepostOn(
-      {this.postUid,
-      this.createdAt,
-      this.userUid,
-      this.postUserName,
-      this.userProfilePic,
-      this.description,
-      this.postData,
-      this.postDataType,
-      this.postType,
-      this.isLiked,
-      this.isSaved,
-      this.isFollowing,
-      this.likedCount,
-      this.commentCount,
-      this.repostCount,
-      this.repostOn});
+  RepostOn({
+    this.postUid,
+    this.createdAt,
+    this.userUid,
+    this.postUserName,
+    this.userProfilePic,
+    this.description,
+    this.postData,
+    this.postDataType,
+    this.postType,
+    this.isLiked,
+    this.isSaved,
+    this.isFollowing,
+    this.likedCount,
+    this.commentCount,
+    this.repostCount,
+    this.repostOn,
+    this.thumbnailImageUrl,
+    this.translatedDescription,this.isTrsnalteoption,this.userAccountType
+  });
 
   RepostOn.fromJson(Map<String, dynamic> json) {
     postUid = json['postUid'];
@@ -157,6 +180,10 @@ class RepostOn {
     commentCount = json['commentCount'];
     repostCount = json['repostCount'];
     repostOn = json['repostOn'];
+    thumbnailImageUrl = json['thumbnailImageUrl'];
+    translatedDescription = json['translatedDescription'];
+    isTrsnalteoption = json['isTrsnalteoption'];
+    userAccountType = json['userAccountType'];
   }
 
   Map<String, dynamic> toJson() {
@@ -177,6 +204,10 @@ class RepostOn {
     data['commentCount'] = this.commentCount;
     data['repostCount'] = this.repostCount;
     data['repostOn'] = this.repostOn;
+    data['thumbnailImageUrl'] = this.thumbnailImageUrl;
+    data['translatedDescription'] = this.translatedDescription;
+    data['isTrsnalteoption'] = this.isTrsnalteoption;
+    data['userAccountType'] = this.userAccountType;
     return data;
   }
 }

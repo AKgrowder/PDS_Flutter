@@ -5,7 +5,6 @@ import 'package:pds/API/Bloc/NewProfileScreen_Bloc/NewProfileScreen_cubit.dart';
 import 'package:pds/API/Bloc/NewProfileScreen_Bloc/NewProfileScreen_state.dart';
 import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/presentation/%20new/AddWorkExperience_Screen.dart';
-
 import '../../API/Model/WorkExperience_Model/WorkExperience_model.dart';
 import '../../core/app_export.dart';
 
@@ -28,7 +27,6 @@ class _ExperienceEditScreenState extends State<ExperienceEditScreen> {
   bool isdataget = false;
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     BlocProvider.of<NewProfileSCubit>(context)
         .GetWorkExperienceAPI(context, widget.userID.toString());
@@ -95,6 +93,7 @@ class _ExperienceEditScreenState extends State<ExperienceEditScreen> {
         if (state is GetWorkExpereinceLoadedState) {
           addWorkExperienceModel = state.addWorkExperienceModel;
           if (addWorkExperienceModel?.object?.isNotEmpty == true) {
+            // print("awdawdaw$");
             isdataget = true;
           }
         }
@@ -125,11 +124,15 @@ class _ExperienceEditScreenState extends State<ExperienceEditScreen> {
                                 addWorkExperienceModel
                                         ?.object?[index].startDate ??
                                     DateTime.now().toIso8601String()));
-                        formattedDateEnd = DateFormat('dd-MM-yyyy').format(
-                            DateFormat('yyyy-MM-dd').parse(
-                                addWorkExperienceModel
-                                        ?.object?[index].endDate ??
-                                    DateTime.now().toIso8601String()));
+                        if (addWorkExperienceModel?.object?[index].endDate !=
+                            'Present') {
+                          formattedDateEnd = DateFormat('dd-MM-yyyy').format(
+                              DateFormat('yyyy-MM-dd').parse(
+                                  addWorkExperienceModel
+                                          ?.object?[index].endDate ??
+                                      DateTime.now().toIso8601String()));
+                        }
+
                         return Padding(
                           padding: const EdgeInsets.only(
                               top: 20, left: 20, right: 20),
@@ -192,13 +195,12 @@ class _ExperienceEditScreenState extends State<ExperienceEditScreen> {
                                                         ?.object?[index]
                                                         .companyName,
                                                 edit: true,
-                                                endDate:
-                                                    DateFormat('dd-MM-yyyy')
-                                                                .format(DateTime
-                                                                    .now()) ==
-                                                            formattedDateEnd
-                                                        ? "Present"
-                                                        : formattedDateEnd,
+                                                endDate: addWorkExperienceModel
+                                                            ?.object?[index]
+                                                            .endDate ==
+                                                        "Present"
+                                                    ? "Present"
+                                                    : formattedDateEnd,
                                                 expertise:
                                                     addWorkExperienceModel
                                                         ?.object?[index]
@@ -316,7 +318,7 @@ class _ExperienceEditScreenState extends State<ExperienceEditScreen> {
                                                                           fontSize:
                                                                               15,
                                                                           color:
-                                                                              Color(0xFFED1C25),
+                                                                              ColorConstant.primary_color,
                                                                           fontWeight:
                                                                               FontWeight.w400,
                                                                         ),
@@ -337,8 +339,8 @@ class _ExperienceEditScreenState extends State<ExperienceEditScreen> {
                                                                           _width /
                                                                               3.5,
                                                                       decoration: BoxDecoration(
-                                                                          color: Color(
-                                                                              0xFFED1C25),
+                                                                          color: ColorConstant
+                                                                              .primary_color,
                                                                           borderRadius:
                                                                               BorderRadius.circular(10)),
                                                                       child: Center(
@@ -372,7 +374,7 @@ class _ExperienceEditScreenState extends State<ExperienceEditScreen> {
                                                           .toString()));
                                         },
                                         child: Image.asset(
-                                          ImageConstant.deleteIcon,
+                                          ImageConstant.delete,
                                           color: Colors.black,
                                           height: 20,
                                           width: 20,
@@ -416,14 +418,13 @@ class _ExperienceEditScreenState extends State<ExperienceEditScreen> {
                                   /*   addWorkExperienceModel
                                                   ?.object?[index].startDate !=
                                               null &&
-                                          addWorkExperienceModel
-                                                  ?.object?[index].endDate !=
+                                          !=
                                               null
                                       ? */
 
-                                  DateFormat('dd-MM-yyyy')
-                                              .format(DateTime.now()) ==
-                                          formattedDateEnd
+                                  addWorkExperienceModel
+                                              ?.object?[index].endDate ==
+                                          "Present"
                                       ? Text(
                                           '${formattedDateStart} to Present',
                                           style: TextStyle(

@@ -82,7 +82,7 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
     );
 
     if (pickedTime != null && pickedTime != _startTime) {
-      setState(() {
+      super.setState(() {
         _startTime = pickedTime;
       });
     }
@@ -97,27 +97,32 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
     );
 
     if (pickedTime != null && pickedTime != _endTime) {
-      setState(() {
+      super.setState(() {
         _endTime = pickedTime;
       });
     }
   }
 
   getDocumentSize() async {
+    await BlocProvider.of<FetchExprtiseRoomCubit>(context)
+        .seetinonExpried(context);
+
+    await BlocProvider.of<FetchExprtiseRoomCubit>(context)
+        .fetchExprties(context);
+    await BlocProvider.of<FetchExprtiseRoomCubit>(context)
+        .IndustryTypeAPI(context);
     final SharedPreferences prefs = await SharedPreferences.getInstance();
 
     documentuploadsize =
         await double.parse(prefs.getString(PreferencesKey.fileSize) ?? "0");
 
     finalFileSize = documentuploadsize;
-    setState(() {});
+    super.setState(() {});
   }
 
   void initState() {
     super.initState();
     getDocumentSize();
-    BlocProvider.of<FetchExprtiseRoomCubit>(context).fetchExprties(context);
-    BlocProvider.of<FetchExprtiseRoomCubit>(context).IndustryTypeAPI(context);
     dopcument = 'Upload Document';
   }
 
@@ -349,7 +354,7 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                               onChanged: (Expertise? newValue) {
                                 // When the user selects an option from the dropdown.
                                 if (newValue != null) {
-                                  setState(() {
+                                  super.setState(() {
                                     selectedExpertise = newValue;
                                     print("Selectedexpertise: ${newValue.uid}");
                                   });
@@ -406,7 +411,7 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                                   industryUUID
                                       .add("${element.industryTypeUid}");
                                 });
-                                setState(() {});
+                                super.setState(() {});
                               },
                             ),
                           ),
@@ -647,7 +652,7 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                       //           if (newValue != null) {
                       //             selectedWorkingHoures = newValue;
                       //             // Refresh the UI to reflect the selected item.
-                      //             setState(() {});
+                      //             super.setState(() {});
                       //           }
                       //         },
                       //         items: working_houres
@@ -722,25 +727,27 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                                     ),
                                   ),
                                 )
-                              : Container(
-                                  height: 50,
-                                  width: _width / 4.5,
-                                  decoration: BoxDecoration(
-                                      color: Color.fromARGB(255, 228, 228, 228),
-                                      borderRadius: BorderRadius.only(
-                                          topRight: Radius.circular(5),
-                                          bottomRight: Radius.circular(5))),
-                                  child: GestureDetector(
-                                      onTap: () {
-                                        dopcument = "Upload Document";
-                                        chooseDocument?.object = null;
+                              : GestureDetector(
+                                  onTap: () {
+                                    dopcument = "Upload Document";
+                                    chooseDocument?.object = null;
 
-                                        setState(() {});
-                                      },
-                                      child: Icon(
-                                        Icons.delete_forever,
-                                        color: ColorConstant.primary_color,
-                                      )),
+                                    setState(() {});
+                                  },
+                                  child: Container(
+                                    height: 50,
+                                    width: _width / 4.5,
+                                    decoration: BoxDecoration(
+                                        color:
+                                            Color.fromARGB(255, 228, 228, 228),
+                                        borderRadius: BorderRadius.only(
+                                            topRight: Radius.circular(5),
+                                            bottomRight: Radius.circular(5))),
+                                    child: Icon(
+                                      Icons.delete_forever,
+                                      color: ColorConstant.primary_color,
+                                    ),
+                                  ),
                                 ),
                         ],
                       ),
@@ -881,7 +888,9 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                                 "jobProfile": jobprofileController.text,
                                 "uid": userid.toString(),
                                 "workingHours": time.toString(),
-                                "industryTypesUid": industryUUID
+                                "industryTypesUid": industryUUID,
+                                 'documentName' : dopcument
+                                
                               };
                               print('working time-$time');
                               print('pwarems-$params');
@@ -901,7 +910,8 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                                 "jobProfile": jobprofileController.text,
                                 "uid": userid.toString(),
                                 "workingHours": time.toString(),
-                                "industryTypesUid": industryUUID
+                                "industryTypesUid": industryUUID,
+                                 'documentName' : dopcument
                               };
                               print('working time-$time');
                               print('pwarems-$params');
@@ -991,7 +1001,7 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                           height: 50,
                           width: _width,
                           decoration: BoxDecoration(
-                              color: Color(0xffED1C25),
+                              color: ColorConstant.primary_color,
                               borderRadius: BorderRadius.circular(5)),
                           child: Text(
                             'Submit',
@@ -1150,7 +1160,7 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
           getFileSize(file.path!, 1, result.files.first, Index);
         }
 
-        /*     setState(() {
+        /*     super.setState(() {
           // fileparth = file.path!;
 
           switch (Index) {
@@ -1179,7 +1189,7 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
     // "${fileparth}";
   }
 
-  getFileSize(
+  /* getFileSize(
       String filepath, int decimals, PlatformFile file1, int Index) async {
     var file = File(filepath);
     int bytes = await file.length();
@@ -1197,7 +1207,7 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
         switch (Index) {
           case 1:
             if (file1.name.isNotEmpty || file1.name.toString() == null) {
-              setState(() {
+              super.setState(() {
                 uplopdfile.text = file1.name;
                 dopcument = file1.name;
               });
@@ -1233,10 +1243,10 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
             uiSettings: [
               AndroidUiSettings(
                   toolbarTitle: 'Cropper',
-                  toolbarColor: Color(0xffED1C25),
+                  toolbarColor: ColorConstant.primary_color,
                   toolbarWidgetColor: Colors.white,
                   initAspectRatio: CropAspectRatioPreset.original,
-                  activeControlsWidgetColor: Color(0xffED1C25),
+                  activeControlsWidgetColor: ColorConstant.primary_color,
                   lockAspectRatio: false),
               IOSUiSettings(
                 title: 'Cropper',
@@ -1254,7 +1264,7 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
             print("cropendfileNamessss-${croppedFile.path}");
             print("dsghdfhdfghdf-$dopcument");
 
-            setState(() {
+            super.setState(() {
               uplopdfile.text = file1.name;
               dopcument = file1.name;
             });
@@ -1262,14 +1272,14 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
             BlocProvider.of<FetchExprtiseRoomCubit>(context)
                 .chooseDocumentprofile(
                     dopcument.toString(), file1.path!, context);
-            setState(() {
+            super.setState(() {
               uplopdfile.text = file1.name;
               dopcument = file1.name;
             });
           }
         }
 
-        setState(() {});
+        super.setState(() {});
 
         break;
       case 2:
@@ -1305,7 +1315,7 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
           print("file1.namedata-->${file1.name}");
           switch (Index) {
             case 1:
-              setState(() {
+              super.setState(() {
                 uplopdfile.text = file1.name;
                 dopcument = file1.name;
               });
@@ -1349,7 +1359,7 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                   .chooseDocumentprofile(
                       dopcument.toString(), croppedFile.path, context);
 
-              setState(() {
+              super.setState(() {
                 uplopdfile.text = file1.name;
                 dopcument = file1.name;
               });
@@ -1357,12 +1367,158 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
               BlocProvider.of<FetchExprtiseRoomCubit>(context)
                   .chooseDocumentprofile(
                       dopcument.toString(), file1.path!, context);
-              setState(() {
+              super.setState(() {
                 uplopdfile.text = file1.name;
                 dopcument = file1.name;
               });
             }
           }
+        }
+
+        break;
+      default:
+    }
+
+    return STR;
+  } */
+  getFileSize(
+      String filepath, int decimals, PlatformFile file1, int Index) async {
+    var file = File(filepath);
+    int bytes = await file.length();
+    if (bytes <= 0) return "0 B";
+    const suffixes = ["B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"];
+    var i = (log(bytes) / log(1024)).floor();
+    var STR = ((bytes / pow(1024, i)).toStringAsFixed(decimals));
+    print('getFileSizevariable-${file1.path.toString().split('.').last}');
+
+    value2 = double.parse(STR);
+
+    print(value2);
+    switch (i) {
+      case 0:
+        print("Done file size B");
+        switch (Index) {
+          case 1:
+            setState(() {
+              uplopdfile.text = file1.name;
+              dopcument = file1.name;
+            });
+            break;
+          default:
+        }
+
+        break;
+      case 1:
+        print("Done file size KB");
+        switch (Index) {
+          case 0:
+            print('filenamecheckdocmenut-${dopcument}');
+            setState(() {
+              uplopdfile.text = file1.name;
+              dopcument = file1.name;
+            });
+            break;
+          default:
+        }
+        if (file1.path?.split('.') != 'pdf') {
+          print("this fucntion is caaling");
+
+          CroppedFile? croppedFile = await ImageCropper().cropImage(
+            sourcePath:
+                // "",
+                file1.path.toString(),
+            aspectRatioPresets: [
+              CropAspectRatioPreset.square,
+              CropAspectRatioPreset.ratio3x2,
+              CropAspectRatioPreset.original,
+              CropAspectRatioPreset.ratio4x3,
+              CropAspectRatioPreset.ratio16x9
+            ],
+            uiSettings: [
+              AndroidUiSettings(
+                  toolbarTitle: 'Cropper',
+                  toolbarColor: ColorConstant.primary_color,
+                  toolbarWidgetColor: Colors.white,
+                  initAspectRatio: CropAspectRatioPreset.original,
+                  activeControlsWidgetColor: ColorConstant.primary_color,
+                  lockAspectRatio: false),
+              IOSUiSettings(
+                title: 'Cropper',
+              ),
+              WebUiSettings(
+                context: context,
+              ),
+            ],
+          );
+          if (croppedFile != null) {
+            dopcument = file1.name;
+            /* super.setState(() {
+              uplopdfile.text = croppedFile.path.split('/').last;
+              dopcument = file1.name;
+            }); */
+            BlocProvider.of<FetchExprtiseRoomCubit>(context)
+                .chooseDocumentprofile(
+                    dopcument.toString(), croppedFile.path, context);
+          } else {
+            BlocProvider.of<FetchExprtiseRoomCubit>(context)
+                .chooseDocumentprofile(
+                    dopcument.toString(), file1.path!, context);
+            super.setState(() {
+              uplopdfile.text = file1.name;
+              dopcument = file1.name;
+            });
+            print("cheeck wihout cutting--${file1.name}");
+          }
+        }
+
+        super.setState(() {});
+        break;
+      case 2:
+        if (value2 > finalFileSize) {
+          print(
+              "this file size ${value2} ${suffixes[i]} Selected Max size ${finalFileSize}MB");
+
+          showDialog(
+            context: context,
+            builder: (ctx) => AlertDialog(
+              title: Text("Max Size ${finalFileSize}MB"),
+              content: Text(
+                  "This file size ${value2} ${suffixes[i]} Selected Max size ${finalFileSize}MB"),
+              actions: <Widget>[
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(ctx).pop();
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.all(10),
+                    child: const Text("Okay"),
+                  ),
+                ),
+              ],
+            ),
+          );
+        } else {
+          print("Done file Size 12MB");
+
+          switch (Index) {
+            case 1:
+              setState(() {
+                uplopdfile.text = file1.name;
+                dopcument = file1.name;
+              });
+              break;
+
+            default:
+          }
+
+          /*    super.setState(() {
+            uplopdfile.text = file1.name;
+            dopcument = file1.name;
+          }); */
+          print('filecheckPath-${file1.path}');
+          BlocProvider.of<FetchExprtiseRoomCubit>(context)
+              .chooseDocumentprofile(
+                  dopcument.toString(), file1.path!, context);
         }
 
         break;

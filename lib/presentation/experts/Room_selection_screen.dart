@@ -85,7 +85,7 @@ class _RoomSelectionState extends State<RoomSelection> {
         print(state.SelectedRoom.object?[0]);
         SelectedRoomData = state.SelectedRoom;
         print(SelectedRoomData?.object?.length);
-        setState(() {});
+        super.setState(() {});
       }
     }, builder: (context, state) {
       return SafeArea(
@@ -147,7 +147,7 @@ class _RoomSelectionState extends State<RoomSelection> {
                                 )
                               : GestureDetector(
                                   onTap: () {
-                                    setState(() {
+                                    super.setState(() {
                                       selectedIndex = index;
                                       RoomID =
                                           SelectedRoomData?.object?[index].uid;
@@ -163,7 +163,7 @@ class _RoomSelectionState extends State<RoomSelection> {
                                                 ? Color(0xFFFFE7E7)
                                                 : Colors.white,
                                             border: Border.all(
-                                                color: Color(0xFFED1C25),
+                                                color: ColorConstant.primary_color,
                                                 width: 1),
                                             borderRadius:
                                                 BorderRadius.circular(10)),
@@ -242,7 +242,7 @@ class _RoomSelectionState extends State<RoomSelection> {
                             // height: 50,
                             width: _width,
                             decoration: BoxDecoration(
-                                color: Color(0xffED1C25),
+                                color: ColorConstant.primary_color,
                                 borderRadius: BorderRadius.circular(5)),
                             child: Text(
                               'Submit',

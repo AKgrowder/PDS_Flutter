@@ -81,7 +81,7 @@ class _BlogCommentBottomSheetState extends State<BlogCommentBottomSheet> {
     return WillPopScope(
       onWillPop: () {
         if (isEmojiVisible) {
-          setState(() {
+          super.setState(() {
             isEmojiVisible = false;
           });
           return Future.value(false);
@@ -103,6 +103,14 @@ class _BlogCommentBottomSheetState extends State<BlogCommentBottomSheet> {
                 fontFamily: "outfit",
                 fontSize: 20),
           ),
+          actions: [
+            IconButton(
+              icon: Icon(Icons.close, color: Colors.black),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+          ],
         ),
         body: BlocConsumer<BlogcommentCubit, BlogCommentState>(
           listener: (context, state) async {
@@ -165,7 +173,7 @@ class _BlogCommentBottomSheetState extends State<BlogCommentBottomSheet> {
                 Set<String> encounteredIds = Set<String>();
                 for (Map<String, dynamic> data in tageData) {
                   if (!encounteredIds.contains(data['id'])) {
-                    // If the ID hasn't been encountered, add to the result list
+                    //    If the ID hasn't been encountered, add to the result list
                     uniqueTageData.add(data);
 
                     // Mark the ID as encountered
@@ -403,11 +411,15 @@ class _BlogCommentBottomSheetState extends State<BlogCommentBottomSheet> {
                                                         child: LinkifyText(
                                                           "${blogCommentModel?.object?[index].comment}",
                                                           linkStyle: TextStyle(
-                                                              color:
-                                                                  Colors.blue),
+                                                            color: Colors.blue,
+                                                            fontFamily:
+                                                                'outfit',
+                                                          ),
                                                           textStyle: TextStyle(
-                                                              color:
-                                                                  Colors.black),
+                                                            color: Colors.black,
+                                                            fontFamily:
+                                                                'outfit',
+                                                          ),
                                                           linkTypes: [
                                                             LinkType.url,
                                                             LinkType.userTag,
@@ -747,7 +759,7 @@ class _BlogCommentBottomSheetState extends State<BlogCommentBottomSheet> {
                                               FocusScope.of(context).unfocus();
                                             }
 
-                                            setState(() {
+                                            super.setState(() {
                                               isEmojiVisible = !isEmojiVisible;
                                             });
                                           },
@@ -831,14 +843,14 @@ class _BlogCommentBottomSheetState extends State<BlogCommentBottomSheet> {
                                   child: EmojiPicker(
                                     onBackspacePressed: () {
                                       if (isEmojiVisible) {
-                                        setState(() {
+                                        super.setState(() {
                                           isEmojiVisible = false;
                                         });
                                       }
                                     },
                                     onEmojiSelected: (category, emoji) {
                                       addcomment.text += emoji.emoji;
-                                      setState(() {});
+                                      super.setState(() {});
                                     },
                                     config: Config(
                                       columns: 7,
@@ -893,7 +905,7 @@ class _BlogCommentBottomSheetState extends State<BlogCommentBottomSheet> {
   }
 
   onChangeMethod(String value) {
-    setState(() {
+    super.setState(() {
       addcomment.text = value;
     });
     if (value.contains('@')) {
@@ -920,7 +932,7 @@ class _BlogCommentBottomSheetState extends State<BlogCommentBottomSheet> {
       BlocProvider.of<BlogcommentCubit>(context)
           .GetAllHashtag(context, '10', '#${data1.trim()}');
     } else {
-      setState(() {
+      super.setState(() {
         istageData = false;
         isHeshTegData = false;
       });

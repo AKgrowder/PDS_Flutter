@@ -100,6 +100,7 @@ class Content {
   String? postUserName;
   String? userProfilePic;
   String? postLink;
+  String? translatedDescription;
   String? description;
   List<String>? postData;
   String? postDataType;
@@ -112,27 +113,36 @@ class Content {
   RepostOn? repostOn;
   int? repostCount;
   String? userAccountType;
+  String? thumbnailImageUrl;
+  // bool? isfalsegu;
+  // bool? isfalsehin;
+  bool? isTrsnalteoption;
 
-  Content({
-    this.postUid,
-    this.createdAt,
-    this.userUid,
-    this.postUserName,
-    this.userProfilePic,
-    this.postLink,
-    this.description,
-    this.postData,
-    this.postDataType,
-    this.postType,
-    this.isLiked,
-    this.isSaved,
-    this.isFollowing,
-    this.likedCount,
-    this.commentCount,
-    this.repostOn,
-    this.repostCount,
-    this.userAccountType,
-  });
+  Content(
+      {this.postUid,
+      this.createdAt,
+      this.userUid,
+      this.postUserName,
+      this.userProfilePic,
+      this.postLink,
+      this.translatedDescription,
+      this.description,
+      this.postData,
+      this.postDataType,
+      this.postType,
+      this.isLiked,
+      this.isSaved,
+      this.isFollowing,
+      this.likedCount,
+      this.commentCount,
+      this.repostOn,
+      this.repostCount,
+      this.userAccountType,
+      this.thumbnailImageUrl,
+
+      // this.isfalsegu,
+      // this.isfalsehin,
+      this.isTrsnalteoption});
 
   Content.fromJson(Map<String, dynamic> json) {
     postUid = json['postUid'];
@@ -140,6 +150,7 @@ class Content {
     userUid = json['userUid'];
     postUserName = json['postUserName'];
     userProfilePic = json['userProfilePic'];
+    translatedDescription = json['translatedDescription'];
     postLink = json['postLink'];
     description = json['description'];
     postData = json['postData'].cast<String>();
@@ -155,6 +166,8 @@ class Content {
         : null;
     repostCount = json['repostCount'];
     userAccountType = json['userAccountType'];
+    thumbnailImageUrl = json['thumbnailImageUrl'];
+    isTrsnalteoption = json['isTrsnalteoption'];
   }
 
   Map<String, dynamic> toJson() {
@@ -164,6 +177,7 @@ class Content {
     data['userUid'] = this.userUid;
     data['postUserName'] = this.postUserName;
     data['userProfilePic'] = this.userProfilePic;
+    data['translatedDescription'] = this.translatedDescription;
     data['postLink'] = this.postLink;
     data['description'] = this.description;
     data['postData'] = this.postData;
@@ -179,6 +193,8 @@ class Content {
     }
     data['repostCount'] = this.repostCount;
     data['userAccountType'] = this.userAccountType;
+    data['thumbnailImageUrl'] = this.thumbnailImageUrl;
+    data['isTrsnalteoption'] = this.isTrsnalteoption;
     return data;
   }
 }
@@ -202,7 +218,10 @@ class RepostOn {
   Null? repostOn;
   int? repostCount;
   String? userAccountType;
+  String? thumbnailImageUrl;
+  bool? isTrsnalteoption;
 
+  String? translatedDescription;
   RepostOn({
     this.postUid,
     this.createdAt,
@@ -222,6 +241,9 @@ class RepostOn {
     this.repostOn,
     this.repostCount,
     this.userAccountType,
+    this.thumbnailImageUrl,
+    this.isTrsnalteoption,
+    this.translatedDescription,
   });
 
   RepostOn.fromJson(Map<String, dynamic> json) {
@@ -243,6 +265,8 @@ class RepostOn {
     repostCount = json['repostCount'];
     repostOn = json['repostOn'];
     userAccountType = json['userAccountType'];
+    thumbnailImageUrl = json['thumbnailImageUrl'];
+    translatedDescription = json['translatedDescription'];
   }
 
   Map<String, dynamic> toJson() {
@@ -265,6 +289,7 @@ class RepostOn {
     data['repostCount'] = this.repostCount;
     data['repostOn'] = this.repostOn;
     data['userAccountType'] = this.userAccountType;
+    data['thumbnailImageUrl'] = this.thumbnailImageUrl;
     return data;
   }
 }

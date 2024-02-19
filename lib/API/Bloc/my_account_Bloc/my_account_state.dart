@@ -67,3 +67,8 @@ class IndustryTypeLoadedState extends MyAccountState {
   final IndustryTypeModel industryTypeModel;
   IndustryTypeLoadedState(this.industryTypeModel);
 }
+
+class UserExistLoadedState extends MyAccountState {
+  final String UserExist;
+  UserExistLoadedState(this.UserExist);
+}

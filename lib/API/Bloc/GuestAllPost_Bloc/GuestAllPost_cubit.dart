@@ -388,51 +388,45 @@ class GetGuestAllPostCubit extends Cubit<GetGuestAllPostState> {
     }
   }
 
-
-   Future<void> AutoEnterinRoom(
-    BuildContext context,
-    String RoomID
-  ) async {
+  Future<void> AutoEnterinRoom(BuildContext context, String RoomID) async {
     dynamic AutoEnterRoom;
     try {
       emit(GetGuestAllPostLoadingState());
-      AutoEnterRoom = await Repository().AutoEnterinAPI(context,RoomID);
+      AutoEnterRoom = await Repository().AutoEnterinAPI(context, RoomID);
       if (AutoEnterRoom == "Something Went Wrong, Try After Some Time.") {
         emit(GetGuestAllPostErrorState("${AutoEnterRoom}"));
       } else {
-      if (AutoEnterRoom.success == true) {
-        emit(AutoEnterinLoadedState(AutoEnterRoom));
-      } else {
-        emit(GetGuestAllPostErrorState(AutoEnterRoom.message));
-      }}
-    } catch (e) {
-      emit(GetGuestAllPostErrorState(AutoEnterRoom));
-    }
-  }
-  
-
-    Future<void> SharePost(
-    BuildContext context,
-    String postLink
-  ) async {
-    dynamic AutoEnterRoom;
-    try {
-      emit(GetGuestAllPostLoadingState());
-      AutoEnterRoom = await Repository().AutoOpenPostAPI(context,postLink);
-      if (AutoEnterRoom == "Something Went Wrong, Try After Some Time.") {
-        emit(GetGuestAllPostErrorState("${AutoEnterRoom}"));
-      } else {
-      if (AutoEnterRoom.success == true) {
-        emit(OpenSharePostLoadedState(AutoEnterRoom));
-      } else {
-        emit(GetGuestAllPostErrorState(AutoEnterRoom.message));
-      }}
+        if (AutoEnterRoom.success == true) {
+          emit(AutoEnterinLoadedState(AutoEnterRoom));
+        } else {
+          emit(GetGuestAllPostErrorState(AutoEnterRoom.message));
+        }
+      }
     } catch (e) {
       emit(GetGuestAllPostErrorState(AutoEnterRoom));
     }
   }
 
-    Future<void> getAllNoticationsCountAPI(BuildContext context) async {
+  Future<void> SharePost(BuildContext context, String postLink) async {
+    dynamic AutoEnterRoom;
+    try {
+      emit(GetGuestAllPostLoadingState());
+      AutoEnterRoom = await Repository().AutoOpenPostAPI(context, postLink);
+      if (AutoEnterRoom == "Something Went Wrong, Try After Some Time.") {
+        emit(GetGuestAllPostErrorState("${AutoEnterRoom}"));
+      } else {
+        if (AutoEnterRoom.success == true) {
+          emit(OpenSharePostLoadedState(AutoEnterRoom));
+        } else {
+          emit(GetGuestAllPostErrorState(AutoEnterRoom.message));
+        }
+      }
+    } catch (e) {
+      emit(GetGuestAllPostErrorState(AutoEnterRoom));
+    }
+  }
+
+  Future<void> getAllNoticationsCountAPI(BuildContext context) async {
     dynamic acceptRejectInvitationModel;
     try {
       emit(GetGuestAllPostLoadingState());
@@ -444,6 +438,45 @@ class GetGuestAllPostCubit extends Cubit<GetGuestAllPostState> {
       } else {
         if (acceptRejectInvitationModel.success == true) {
           emit(GetNotificationCountLoadedState(acceptRejectInvitationModel));
+        }
+      }
+    } catch (e) {
+      emit(GetGuestAllPostErrorState(acceptRejectInvitationModel));
+    }
+  }
+
+  Future<void> ChatOnline(BuildContext context, bool onlineStatus) async {
+    dynamic acceptRejectInvitationModel;
+    try {
+      emit(GetGuestAllPostLoadingState());
+      acceptRejectInvitationModel =
+          await Repository().ChatOnline(context, onlineStatus);
+      if (acceptRejectInvitationModel ==
+          "Something Went Wrong, Try After Some Time.") {
+        emit(GetGuestAllPostErrorState("${acceptRejectInvitationModel}"));
+      } else {
+        if (acceptRejectInvitationModel.success == true) {
+          emit(OnlineChatStatusLoadedState(acceptRejectInvitationModel));
+        }
+      }
+    } catch (e) {
+      emit(GetGuestAllPostErrorState(acceptRejectInvitationModel));
+    }
+  }
+
+  Future<void> videowatchdetailAPI(BuildContext context, String postUid,
+      String userUid, String watchTime) async {
+    dynamic acceptRejectInvitationModel;
+    try {
+      emit(GetGuestAllPostLoadingState());
+      acceptRejectInvitationModel = await Repository()
+          .video_watch_detailAPI(context, postUid, userUid, watchTime);
+      if (acceptRejectInvitationModel ==
+          "Something Went Wrong, Try After Some Time.") {
+        emit(GetGuestAllPostErrorState("${acceptRejectInvitationModel}"));
+      } else {
+        if (acceptRejectInvitationModel.success == true) {
+          emit(WatchTimeSaveLoadedState(acceptRejectInvitationModel));
         }
       }
     } catch (e) {

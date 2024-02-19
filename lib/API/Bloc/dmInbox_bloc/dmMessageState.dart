@@ -1,5 +1,8 @@
+import 'package:pds/API/Model/CreateStory_Model/all_stories.dart';
 import 'package:pds/API/Model/GetAllInboxImagesModel/GetAllInboxImagesModel.dart';
+import 'package:pds/API/Model/acceptRejectInvitaionModel/getAllNotificationCount.dart';
 import 'package:pds/API/Model/createDocumentModel/createDocumentModel.dart';
+import 'package:pds/API/Model/inboxScreenModel/SeenAllMessageModel.dart';
 import 'package:pds/API/Model/inboxScreenModel/inboxScrrenModel.dart';
 
 abstract class getInboxState {}
@@ -31,4 +34,19 @@ class SendImageInUserChatState extends getInboxState {
 class GetAllInboxImagesState extends getInboxState {
   final GetAllInboxImages getAllInboxImages;
   GetAllInboxImagesState(this.getAllInboxImages);
+}
+
+class GetNotificationCountLoadedState extends getInboxState {
+  final getAllNotificationCount GetNotificationCountData;
+  GetNotificationCountLoadedState(this.GetNotificationCountData);
+}
+
+class SeenAllMessageLoadedState extends getInboxState {
+  final SeenAllMessageModel SeenAllMessageModelData;
+  SeenAllMessageLoadedState(this.SeenAllMessageModelData);
+}
+
+class GetAllStoryLoadedState extends getInboxState {
+  final GetAllStoryModel getAllStoryModel;
+  GetAllStoryLoadedState(this.getAllStoryModel);
 }

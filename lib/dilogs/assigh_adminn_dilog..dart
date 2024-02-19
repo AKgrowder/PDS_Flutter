@@ -35,7 +35,7 @@
 //         CurvedAnimation(parent: controller, curve: Curves.elasticInOut);
 
 //     controller.addListener(() {
-//       setState(() {});
+//       super.setState(() {});
 //     });
 
 //     controller.forward();
@@ -130,7 +130,7 @@
 //                                     width: 80,
 //                                     height: 20,
 //                                     decoration: ShapeDecoration(
-//                                       color: Color(0xFFED1C25),
+//                                       color: ColorConstant.primary_color,
 //                                       shape: RoundedRectangleBorder(
 //                                         borderRadius:
 //                                             BorderRadius.circular(49.46),

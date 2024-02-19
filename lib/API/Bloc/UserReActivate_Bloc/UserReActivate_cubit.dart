@@ -35,7 +35,7 @@ class UserReActivateCubit extends Cubit<UserReActivateState> {
       } else {
       if (DeviceinfoModelData.success == true) {
         emit(DevicesInfoLoadedState(DeviceinfoModelData));
-        print("+++++++++++++++++++++++++++++++++++++");
+      
         print(DeviceinfoModelData.message);
       }}
     } catch (e) {

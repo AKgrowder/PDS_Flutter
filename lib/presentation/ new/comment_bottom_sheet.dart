@@ -58,7 +58,7 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
   List<String> postTexContrlloer = [];
   HasDataModel? getAllHashtag;
   GlobalKey<FlutterMentionsState> key = GlobalKey<FlutterMentionsState>();
-
+  bool OneTimeSend = false;
   SearchUserForInbox? searchUserForInbox1;
   bool isKeyboardVisible = false;
   String? uuid;
@@ -95,7 +95,7 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
     return WillPopScope(
       onWillPop: () {
         if (isEmojiVisible) {
-          setState(() {
+          super.setState(() {
             isEmojiVisible = false;
           });
           return Future.value(false);
@@ -117,6 +117,14 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                 fontFamily: "outfit",
                 fontSize: 20),
           ),
+          actions: [
+             IconButton(
+                icon: Icon(Icons.close,color: Colors.black),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+          ],
         ),
         body: BlocConsumer<AddcommentCubit, AddCommentState>(
           listener: (context, state) async {
@@ -141,35 +149,35 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
               }
             }
             if (state is SearchHistoryDataAddxtends) {
-        searchUserForInbox1 = state.searchUserForInbox;
+              searchUserForInbox1 = state.searchUserForInbox;
 
-        /*  isTagData = true;
+              /*  isTagData = true;
           isHeshTegData = false; */
-        searchUserForInbox1?.object?.content?.forEach((element) {
-          Map<String, dynamic> dataSetup = {
-            'id': element.userUid,
-            'display': element.userName,
-            'photo': element.userProfilePic,
-          };
+              searchUserForInbox1?.object?.content?.forEach((element) {
+                Map<String, dynamic> dataSetup = {
+                  'id': element.userUid,
+                  'display': element.userName,
+                  'photo': element.userProfilePic,
+                };
 
-          tageData.add(dataSetup);
-          List<Map<String, dynamic>> uniqueTageData = [];
-          Set<String> encounteredIds = Set<String>();
-          for (Map<String, dynamic> data in tageData) {
-            if (!encounteredIds.contains(data['id'])) {
-              // If the ID hasn't been encountered, add to the result list
-              uniqueTageData.add(data);
+                tageData.add(dataSetup);
+                List<Map<String, dynamic>> uniqueTageData = [];
+                Set<String> encounteredIds = Set<String>();
+                for (Map<String, dynamic> data in tageData) {
+                  if (!encounteredIds.contains(data['id'])) {
+                    // If the ID hasn't been encountered, add to the result list
+                    uniqueTageData.add(data);
 
-              // Mark the ID as encountered
-              encounteredIds.add(data['id']);
+                    // Mark the ID as encountered
+                    encounteredIds.add(data['id']);
+                  }
+                  tageData = uniqueTageData;
+                }
+                if (tageData.isNotEmpty == true) {
+                  istageData = true;
+                }
+              });
             }
-            tageData = uniqueTageData;
-          }
-          if (tageData.isNotEmpty == true) {
-            istageData = true;
-          }
-        });
-      }
             if (state is AddCommentErrorState) {
               SnackBar snackBar = SnackBar(
                 content: Text(state.error),
@@ -180,7 +188,7 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
 
             if (state is AddnewCommentLoadedState) {
               print("dgdfhgdfhdfghhdfgh-${state.addnewCommentsModeldata}");
-
+              OneTimeSend = false;
               if (state.addnewCommentsModeldata['message'] ==
                   'Comment contains a restricted word') {
                 SnackBar snackBar = SnackBar(
@@ -406,30 +414,33 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                                                 MainAxisAlignment.center,
                                             children: [
                                               Container(
-                                                width: 280,
+                                                width: 300,
                                                 // color: Colors.amber,
                                                 child: Row(
                                                   children: [
                                                     GestureDetector(
                                                       onTap: () {
-                                                  Navigator.push(context,
-                                                      MaterialPageRoute(
-                                                          builder: (context) {
-                                                    return ProfileScreen(
-                                                        User_ID:
-                                                            "${addCommentModeldata?.object?[index].userUid}",
-                                                        isFollowing:
-                                                            widget.isFoollinng);
-                                                  }));
-                                                },
+                                                        Navigator.push(context,
+                                                            MaterialPageRoute(
+                                                                builder:
+                                                                    (context) {
+                                                          return ProfileScreen(
+                                                              User_ID:
+                                                                  "${addCommentModeldata?.object?[index].userUid}",
+                                                              isFollowing: widget
+                                                                  .isFoollinng);
+                                                        }));
+                                                      },
                                                       child: Container(
                                                         child: Text(
                                                           "${addCommentModeldata?.object?[index].userName}",
                                                           style: TextStyle(
-                                                              fontFamily: 'outfit',
+                                                              fontFamily:
+                                                                  'outfit',
                                                               fontSize: 18,
                                                               fontWeight:
-                                                                  FontWeight.bold),
+                                                                  FontWeight
+                                                                      .bold),
                                                         ),
                                                       ),
                                                     ),
@@ -476,6 +487,60 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                                                             : SizedBox(),
                                                       ),
                                                     ),
+                                                    SizedBox(
+                                                      width: 5,
+                                                    ),
+                                                    addCommentModeldata
+                                                                ?.object?[index]
+                                                                .translatedComment !=
+                                                            null
+                                                        ? GestureDetector(
+                                                            onTap: () async {
+                                                              super
+                                                                  .setState(() {
+                                                                if (addCommentModeldata
+                                                                            ?.object?[
+                                                                                index]
+                                                                            .isTrsnalteoption ==
+                                                                        false ||
+                                                                    addCommentModeldata
+                                                                            ?.object?[index]
+                                                                            .isTrsnalteoption ==
+                                                                        null) {
+                                                                  addCommentModeldata
+                                                                      ?.object?[
+                                                                          index]
+                                                                      .isTrsnalteoption = true;
+                                                                } else {
+                                                                  addCommentModeldata
+                                                                      ?.object?[
+                                                                          index]
+                                                                      .isTrsnalteoption = false;
+                                                                }
+                                                              });
+                                                            },
+                                                            child: Container(
+                                                                width: 80,
+                                                                decoration: BoxDecoration(
+                                                                    color: ColorConstant
+                                                                        .primaryLight_color,
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                            10)),
+                                                                child: Center(
+                                                                    child: Text(
+                                                                  "Translate",
+                                                                  style:
+                                                                      TextStyle(
+                                                                    fontFamily:
+                                                                        'outfit',
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold,
+                                                                  ),
+                                                                ))),
+                                                          )
+                                                        : SizedBox(),
                                                   ],
                                                 ),
                                               ),
@@ -484,11 +549,26 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                                                 // height: 50,
                                                 // color: Colors.amber,
                                                 child: LinkifyText(
-                                                  "${addCommentModeldata?.object?[index].comment}",
+                                                  addCommentModeldata
+                                                                  ?.object?[
+                                                                      index]
+                                                                  .isTrsnalteoption ==
+                                                              false ||
+                                                          addCommentModeldata
+                                                                  ?.object?[
+                                                                      index]
+                                                                  .isTrsnalteoption ==
+                                                              null
+                                                      ? "${addCommentModeldata?.object?[index].comment}"
+                                                      : "${addCommentModeldata?.object?[index].translatedComment}",
                                                   linkStyle: TextStyle(
-                                                      color: Colors.blue),
+                                                    color: Colors.blue,
+                                                    fontFamily: 'outfit',
+                                                  ),
                                                   textStyle: TextStyle(
-                                                      color: Colors.black),
+                                                    color: Colors.black,
+                                                    fontFamily: 'outfit',
+                                                  ),
                                                   linkTypes: [
                                                     LinkType.url,
                                                     LinkType.userTag,
@@ -570,7 +650,8 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                                                                       title:
                                                                           "${link.value}"),
                                                             ));
-                                                        } else if (link.value!.startsWith('@')) {
+                                                      } else if (link.value!
+                                                          .startsWith('@')) {
                                                         var name;
                                                         var tagName;
                                                         name = SelectedTest;
@@ -587,9 +668,10 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                                                             "tagName -- ${tagName}");
                                                         print(
                                                             "user id -- ${userTagModel?.object}");
-                                                      }else{
-                                                                                    launchUrl(Uri.parse("https://${link.value.toString()}"));
-                                                                                }
+                                                      } else {
+                                                        launchUrl(Uri.parse(
+                                                            "https://${link.value.toString()}"));
+                                                      }
                                                     }
                                                   },
                                                 )
@@ -675,19 +757,19 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                                                   left: 50, bottom: 10),
                                               child: Row(
                                                 children: <Widget>[
-                                                   tageData['photo'] != null
-                                                        ? CircleAvatar(
-                                                            backgroundImage:
-                                                                NetworkImage(
-                                                              tageData['photo'],
-                                                            ),
-                                                          )
-                                                        : CircleAvatar(
-                                                            backgroundImage:
-                                                                AssetImage(
-                                                                    ImageConstant
-                                                                        .tomcruse),
+                                                  tageData['photo'] != null
+                                                      ? CircleAvatar(
+                                                          backgroundImage:
+                                                              NetworkImage(
+                                                            tageData['photo'],
                                                           ),
+                                                        )
+                                                      : CircleAvatar(
+                                                          backgroundImage:
+                                                              AssetImage(
+                                                                  ImageConstant
+                                                                      .tomcruse),
+                                                        ),
                                                   SizedBox(
                                                     width: 20.0,
                                                   ),
@@ -782,7 +864,7 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                                             FocusScope.of(context).unfocus();
                                           }
         
-                                          setState(() {
+                                          super.setState(() {
                                             isEmojiVisible = !isEmojiVisible;
                                           });
                                         },
@@ -829,13 +911,19 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                                     ScaffoldMessenger.of(context)
                                         .showSnackBar(snackBar);
                                   } else {
-                                    Map<String, dynamic> params = {
-                                      "comment": addcomment.text,
-                                      "postUid": '${widget.postUuID}',
-                                    };
+                                    if (OneTimeSend == false) {
+                                      OneTimeSend = true;
+                                      print(
+                                          "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
+                                      addcomment.text.isEmpty;
+                                      Map<String, dynamic> params = {
+                                        "comment": addcomment.text,
+                                        "postUid": '${widget.postUuID}',
+                                      };
 
-                                    BlocProvider.of<AddcommentCubit>(context)
-                                        .AddPostApiCalling(context, params);
+                                      BlocProvider.of<AddcommentCubit>(context)
+                                          .AddPostApiCalling(context, params);
+                                    }
                                   }
                                 }
                               },
@@ -876,7 +964,7 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                                         maxLines: null,
                                       onTap: () {
                                         if (isEmojiVisible) {
-                                          setState(() {
+                                          super.setState(() {
                                             isEmojiVisible = !isEmojiVisible;
                                           });
                                         }
@@ -911,7 +999,7 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                                                 FocusScope.of(context).unfocus();
                                               }
         
-                                              setState(() {
+                                              super.setState(() {
                                                 isEmojiVisible = !isEmojiVisible;
                                               });
                                             },
@@ -965,14 +1053,14 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                             child: EmojiPicker(
                               onBackspacePressed: () {
                                 if (isEmojiVisible) {
-                                  setState(() {
+                                  super.setState(() {
                                     isEmojiVisible = false;
                                   });
                                 }
                               },
                               onEmojiSelected: (category, emoji) {
                                 addcomment.text += emoji.emoji;
-                                setState(() {});
+                                super.setState(() {});
                               },
                               config: Config(
                                 columns: 7,
@@ -1024,7 +1112,7 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
   }
 
   onChangeMethod(String value) {
-    setState(() {
+    super.setState(() {
       addcomment.text = value;
     });
     if (value.contains('@')) {
@@ -1051,7 +1139,7 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
       BlocProvider.of<AddcommentCubit>(context)
           .GetAllHashtag(context, '10', '#${data1.trim()}');
     } else {
-      setState(() {
+      super.setState(() {
         istageData = false;
         isHeshTegData = false;
       });

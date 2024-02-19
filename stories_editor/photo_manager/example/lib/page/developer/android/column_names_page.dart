@@ -16,7 +16,7 @@ class _ColumnNamesPageState extends State<ColumnNamesPage> {
     final columns = await PhotoManager.plugin.androidColumns();
     print('columns: $columns');
     columns.sort();
-    setState(() {
+    super.setState(() {
       _columns = columns;
     });
   }

@@ -9,14 +9,14 @@ import 'package:path_provider/path_provider.dart';
 Future takePicture(
     {required contentKey,
     required SelectPath,
-    required isTextEditing,
+   
     required BuildContext context,
     required saveToGallery}) async {
   try {
     /// converter widget to image=
 
-    print("check Data Get isTextEditing -${isTextEditing}");
-    print("check Data Get SelectPath -${SelectPath}");
+   
+   
 
   /*   if (/* isTextEditing == true ||  */SelectPath == '' || SelectPath == null) {
       print("check this cnodion is working");

@@ -42,7 +42,7 @@ class _InviteDilogScreenState extends State<InviteDilogScreen>
         CurvedAnimation(parent: controller, curve: Curves.elasticInOut);
 
     controller.addListener(() {
-      setState(() {});
+      super.setState(() {});
     });
 
     controller.forward();
@@ -195,7 +195,7 @@ class _InviteDilogScreenState extends State<InviteDilogScreen>
                                       //     return 'Please Enter Email';
                                       //   } else if (!emailRegExp
                                       //       .hasMatch(value)) {
-                                      //     return 'please Enter vaild Email';
+                                      //     return 'Please Enter Vaild Email';
                                       //   }
                                       //   return null;
                                       // },
@@ -232,7 +232,7 @@ class _InviteDilogScreenState extends State<InviteDilogScreen>
                                         style: TextStyle(
                                           fontFamily: 'outfit',
                                           fontSize: 15,
-                                          color: Color(0xFFED1C25),
+                                          color: ColorConstant.primary_color,
                                           fontWeight: FontWeight.w400,
                                         ),
                                       )),
@@ -275,7 +275,7 @@ class _InviteDilogScreenState extends State<InviteDilogScreen>
                                           .hasMatch(email.text.toString())) {
                                         SnackBar snackBar = SnackBar(
                                           content:
-                                              Text('please Enter vaild Email'),
+                                              Text('Please Enter Vaild Email'),
                                           backgroundColor:
                                               ColorConstant.primary_color,
                                         );
@@ -300,7 +300,7 @@ class _InviteDilogScreenState extends State<InviteDilogScreen>
                                       height: 43,
                                       width: width / 3.5,
                                       decoration: BoxDecoration(
-                                          color: Color(0xFFED1C25),
+                                          color: ColorConstant.primary_color,
                                           borderRadius:
                                               BorderRadius.circular(10)),
                                       child: Center(
@@ -344,6 +344,7 @@ class _InviteDilogScreenState extends State<InviteDilogScreen>
                                       children: [
                                         CustomImageView(
                                           imagePath: ImageConstant.copyimage,
+                                          color: ColorConstant.primary_color,
                                           height: 20,
                                         ),
                                         Padding(
@@ -353,7 +354,8 @@ class _InviteDilogScreenState extends State<InviteDilogScreen>
                                             style: TextStyle(
                                               fontFamily: 'outfit',
                                               fontSize: 15,
-                                              color: Color(0xFFED1C25),
+                                              color:
+                                                  ColorConstant.primary_color,
                                               fontWeight: FontWeight.w400,
                                             ),
                                           ),

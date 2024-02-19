@@ -31,7 +31,7 @@
 //     } else {
 //       dataSetup = await widget.value2;
 //     }
-//     setState(() {});
+//     super.setState(() {});
 //   }
 
 //   void initState() {
@@ -59,7 +59,7 @@
 //                           value1 = index;
 
 //                           SharedPreferencesFunction(value1 ?? 0);
-//                           setState(() {});
+//                           super.setState(() {});
 //                         },
 //                         child: Container(
 //                           alignment: Alignment.center,
@@ -68,9 +68,9 @@
 //                           height: 25,
 //                           decoration: ShapeDecoration(
 //                             color: value1 == index
-//                                 ? Color(0xFFED1C25)
+//                                 ? ColorConstant.primary_color
 //                                 : dataSetup == index
-//                                     ? Color(0xFFED1C25)
+//                                     ?ColorConstant.primary_color
 //                                     : Color(0xFFFBD8D9),
 //                             shape: RoundedRectangleBorder(
 //                               borderRadius: BorderRadius.circular(100),

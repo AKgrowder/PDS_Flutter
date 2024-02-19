@@ -1,6 +1,6 @@
 name: pds
 description: A new Flutter project.
-version: 1.0.0+8
+version: 1.0.0+12
 environment: 
   sdk: '>=2.12.0 <3.0.0'
 dependencies: 
@@ -33,6 +33,7 @@ dependencies:
   syncfusion_flutter_pdfviewer: ^21.2.3
   url_launcher:
   share_plus: 
+  translator: 
   hashtagable: ^2.3.0+1
   carousel_slider: ^4.2.1
   dots_indicator: ^2.1.0
@@ -67,6 +68,11 @@ dependencies:
   path_provider: 
   video_thumbnail: ^0.5.3
   badges: ^3.1.2
+  widget_zoom: ^0.0.3
+  flutter_langdetect: ^0.0.2
+  zego_uikit_prebuilt_call: ^4.2.1
+  zego_uikit:
+  flutter_styled_toast: ^2.2.1
   # dio: ^5.3.4
   
   
@@ -79,6 +85,7 @@ dependency_overrides:
   path_drawing: ^0.5.1
   xml: ^6.0.1
   win32: ^3.0.0
+  uuid: ^4.1.0
   
 flutter: 
   uses-material-design: true

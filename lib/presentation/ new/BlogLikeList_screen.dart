@@ -29,7 +29,7 @@ class _BlogLikeListScreenState extends State<BlogLikeListScreen> {
   getLoginUserData() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     User_ID = prefs.getString(PreferencesKey.loginUserID);
-    setState(() {});
+    super.setState(() {});
   }
 
   @override
@@ -211,7 +211,7 @@ class _BlogLikeListScreenState extends State<BlogLikeListScreen> {
                                   width: 65,
                                   margin: EdgeInsets.only(bottom: 5),
                                   decoration: BoxDecoration(
-                                      color: Color(0xffED1C25),
+                                      color: ColorConstant.primary_color,
                                       borderRadius: BorderRadius.circular(4)),
                                   child: blogLikeListModel
                                               ?.object?[index].isFollowing ==

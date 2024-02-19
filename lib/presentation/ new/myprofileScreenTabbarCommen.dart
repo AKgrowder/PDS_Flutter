@@ -62,7 +62,7 @@
 //     );
 
 //     if (pickedTime != null && pickedTime != _startTime) {
-//       setState(() {
+//       super.setState(() {
 //         _startTime = pickedTime;
 //       });
 //     }
@@ -77,7 +77,7 @@
 //     );
 
 //     if (pickedTime != null && pickedTime != _endTime) {
-//       setState(() {
+//       super.setState(() {
 //         _endTime = pickedTime;
 //       });
 //     }
@@ -147,7 +147,7 @@
 //                                 width: 35,
 //                                 height: 35,
 //                                 decoration: ShapeDecoration(
-//                                   color: Color(0xFFED1C25),
+//                                   color: ColorConstant.primary_color,
 //                                   shape: OvalBorder(),
 //                                 ),
 //                               ),
@@ -277,7 +277,7 @@
 //             width: 35,
 //             height: 35,
 //             decoration: ShapeDecoration(
-//               color: Color(0xFFED1C25),
+//               color: ColorConstant.primary_color,
 //               shape: OvalBorder(),
 //             ),
 //           ),
@@ -499,7 +499,7 @@
 //                                 onTap: () async {
 //                                   dopcument = "Upload Image";
 
-//                                   setState(() {});
+//                                   super.setState(() {});
 //                                 },
 //                                 child: Icon(
 //                                   Icons.delete_forever,
@@ -524,7 +524,7 @@
 //             width: 35,
 //             height: 35,
 //             decoration: ShapeDecoration(
-//               color: Color(0xFFED1C25),
+//               color: ColorConstant.primary_color,
 //               shape: OvalBorder(),
 //             ),
 //           ),
@@ -917,7 +917,7 @@
 //                                 onTap: () async {
 //                                   dopcument = "Upload Image";
 
-//                                   setState(() {});
+//                                   super.setState(() {});
 //                                 },
 //                                 child: Icon(
 //                                   Icons.delete_forever,
@@ -1012,7 +1012,7 @@
 //         switch (Index) {
 //           case 1:
 //             if (file1.name.isNotEmpty || file1.name.toString() == null) {
-//               setState(() {
+//               super.setState(() {
 //                 uplopdfile.text = file1.name;
 //                 dopcument = file1.name;
 //               });
@@ -1030,7 +1030,7 @@
 //           case 0:
 //             print("file1.name-->${file1.name}");
 //             if (file1.name.isNotEmpty || file1.name.toString() == null) {
-//               setState(() {
+//               super.setState(() {
 //                 uplopdfile.text = file1.name;
 //                 dopcument = file1.name;
 //               });
@@ -1043,7 +1043,7 @@
 //         print('filenamecheckKB-${file1.path}');
 //         /* BlocProvider.of<FetchExprtiseRoomCubit>(context)
 //             .chooseDocumentprofile(dopcument.toString(), file1.path!, context); */
-//         setState(() {});
+//         super.setState(() {});
 
 //         break;
 //       case 2:
@@ -1073,7 +1073,7 @@
 //           print("file1.namedata-->${file1.name}");
 //           switch (Index) {
 //             case 1:
-//               setState(() {
+//               super.setState(() {
 //                 uplopdfile.text = file1.name;
 //                 dopcument = file1.name;
 //               });
@@ -1082,7 +1082,7 @@
 //             default:
 //           }
 //           print('filecheckPath1-${file1.name}');
-//           setState(() {
+//           super.setState(() {
 //             uplopdfile.text = file1.name;
 //             dopcument = file1.name;
 //           });

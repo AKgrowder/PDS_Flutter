@@ -57,14 +57,14 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     otpTimer = await prefs.getInt(PreferencesKey.otpTimer) ?? 0;
     print(" otp timer  ${otpTimer}");
-    setState(() {
+    super.setState(() {
       _secondsRemaining = otpTimer;
     });
   }
 
   void _startTimer() {
     _timer = Timer.periodic(Duration(seconds: 1), (timer) {
-      setState(() {
+      super.setState(() {
         if (_secondsRemaining > 0) {
           _secondsRemaining--;
         } else {
@@ -128,7 +128,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
               title: AppbarImage(
                   height: 37,
                   width: 140,
-                  imagePath: ImageConstant.imgImage248)),
+                  imagePath: ImageConstant.splashImage)),
           body: BlocProvider<OtpCubit>(
             create: (context) => OtpCubit(),
             child: BlocConsumer<OtpCubit, OtpState>(
@@ -178,7 +178,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                     );
                     ScaffoldMessenger.of(context).showSnackBar(snackBar);
                     SnackBar snackBar2 = SnackBar(
-                      content: Text('Signup Successfully'),
+                      content: Text('Signed Up Successfully'),
                       backgroundColor: ColorConstant.primary_color,
                     );
                     ScaffoldMessenger.of(context).showSnackBar(snackBar2);
@@ -186,11 +186,21 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
 
                   print('wiget flowcheck-${widget.flowCheck}');
                   if (widget.flowCheck == "Rgister") {
-                    Navigator.push(context,
+                    /* Navigator.push(context,
                         MaterialPageRoute(builder: (context) {
                       return LoginScreen(
                         flagCheck: 'otp done',
                       );
+                    })); */
+                     getDataStroe(
+                        widget.loginModelData?.object?.uuid.toString() ?? "",
+                        widget.loginModelData?.object?.jwt.toString() ?? "",
+                        widget.loginModelData?.object?.module.toString() ?? ""
+                        // state.loginModel.object!.verified.toString(),
+                        );
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) {
+                      return NewBottomBar(buttomIndex: 0);
                     }));
                   } else if (widget.forgetpassword == true) {
                     SnackBar snackBar = SnackBar(
@@ -334,7 +344,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                                 height: _height / 16,
                                 width: _width,
                                 decoration: BoxDecoration(
-                                  color: Color(0XFFED1C25),
+                                  color: ColorConstant.primary_color,
                                   borderRadius:
                                       BorderRadiusStyle.roundedBorder6,
                                 ),
@@ -366,7 +376,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                                   tm
                                       ? GestureDetector(
                                           onTap: () {
-                                            setState(() {
+                                            super.setState(() {
                                               if (noMoveNext == false) {
                                                 OTPController.clear();
                                                 tm = false;

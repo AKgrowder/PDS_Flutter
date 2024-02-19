@@ -15,17 +15,17 @@ class ExportService {
   }
 
   static Future<FFmpegSession> runFFmpegCommand(
-      FFmpegVideoEditorExecute execute, {
-        required void Function(File file) onCompleted,
-        void Function(Object, StackTrace)? onError,
-        void Function(Statistics)? onProgress,
-      }) {
+    FFmpegVideoEditorExecute execute, {
+    required void Function(File file) onCompleted,
+    void Function(Object, StackTrace)? onError,
+    void Function(Statistics)? onProgress,
+  }) {
     log('FFmpeg start process with command = ${execute.command}');
     return FFmpegKit.executeAsync(
       execute.command,
-          (session) async {
+      (session) async {
         final state =
-        FFmpegKitConfig.sessionStateToString(await session.getState());
+            FFmpegKitConfig.sessionStateToString(await session.getState());
         final code = await session.getReturnCode();
 
         if (ReturnCode.isSuccess(code)) {

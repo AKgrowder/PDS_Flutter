@@ -7,7 +7,6 @@ import 'package:pds/API/Bloc/CreateRoom_Bloc/CreateRoom_state.dart';
 import 'package:pds/dialogs/assigh_adminn_dilog.dart';
 import 'package:pds/dialogs/edit_dilog.dart';
 import 'package:pds/dilogs/invite_dilog.dart';
-import 'package:pds/presentation/%20new/Experts_member_Screen.dart';
 import 'package:pds/presentation/%20new/newbottembar.dart';
 import 'package:pds/presentation/%20new/profileNew.dart';
 import 'package:pds/presentation/experts/experts_screen.dart';
@@ -61,7 +60,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
     userId = prefs.getString(
       PreferencesKey.loginUserID,
     );
-    setState(() {});
+    super.setState(() {});
   }
 
   @override
@@ -84,12 +83,14 @@ class _RoomsScreenState extends State<RoomsScreen> {
     var User_ID = prefs.getString(PreferencesKey.loginUserID);
     if (User_ID != "" && User_ID?.isNotEmpty == true) {
       await BlocProvider.of<GetAllPrivateRoomCubit>(context)
-          .seetinonExpried(context);
+          .seetinonExpried(context); 
       await BlocProvider.of<GetAllPrivateRoomCubit>(context)
           .chckUserStaus(context);
 
-      await BlocProvider.of<GetAllPrivateRoomCubit>(context)
-          .getAllNoticationsCountAPI(context);
+      
+      await  BlocProvider.of<GetAllPrivateRoomCubit>(context)
+            .getAllNoticationsCountAPI(context);
+   
     }
 
     await BlocProvider.of<GetAllPrivateRoomCubit>(context)
@@ -237,7 +238,9 @@ class _RoomsScreenState extends State<RoomsScreen> {
 
             if (state is GetNotificationCountLoadedState) {
               print(state.GetNotificationCountData.object);
-              saveNotificationCount(state.GetNotificationCountData.object ?? 0);
+              saveNotificationCount(
+                  state.GetNotificationCountData.object?.notificationCount ?? 0,
+                  state.GetNotificationCountData.object?.messageCount ?? 0);
             }
 
             if (state is CheckuserLoadedState) {
@@ -281,7 +284,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                       width: _width / 1.2,
                                       decoration: BoxDecoration(
                                           border: Border.all(
-                                              color: const Color(0XFFED1C25),
+                                              color: ColorConstant.primary_color,
                                               width: 1),
                                           borderRadius:
                                               BorderRadius.circular(5)),
@@ -590,7 +593,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                                                                       style: TextStyle(
                                                                                         fontFamily: 'outfit',
                                                                                         fontSize: 15,
-                                                                                        color: Color(0xFFED1C25),
+                                                                                        color: ColorConstant.primary_color,
                                                                                         fontWeight: FontWeight.w400,
                                                                                       ),
                                                                                     )),
@@ -603,7 +606,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                                                                   child: Container(
                                                                                     height: 43,
                                                                                     width: _width / 3.5,
-                                                                                    decoration: BoxDecoration(color: Color(0xFFED1C25), borderRadius: BorderRadius.circular(10)),
+                                                                                    decoration: BoxDecoration(color: ColorConstant.primary_color, borderRadius: BorderRadius.circular(10)),
                                                                                     child: Center(
                                                                                         child: Text(
                                                                                       "Delete",
@@ -726,7 +729,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                                                                         style: TextStyle(
                                                                                           fontFamily: 'outfit',
                                                                                           fontSize: 15,
-                                                                                          color: Color(0xFFED1C25),
+                                                                                          color: ColorConstant.primary_color,
                                                                                           fontWeight: FontWeight.w400,
                                                                                         ),
                                                                                       )),
@@ -739,7 +742,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                                                                     child: Container(
                                                                                       height: 43,
                                                                                       width: _width / 3.5,
-                                                                                      decoration: BoxDecoration(color: Color(0xFFED1C25), borderRadius: BorderRadius.circular(10)),
+                                                                                      decoration: BoxDecoration(color: ColorConstant.primary_color, borderRadius: BorderRadius.circular(10)),
                                                                                       child: Center(
                                                                                           child: Text(
                                                                                         "Delete",
@@ -891,7 +894,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                                                                               style: TextStyle(
                                                                                                 fontFamily: 'outfit',
                                                                                                 fontSize: 15,
-                                                                                                color: Color(0xFFED1C25),
+                                                                                                color: ColorConstant.primary_color,
                                                                                                 fontWeight: FontWeight.w400,
                                                                                               ),
                                                                                             )),
@@ -904,7 +907,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                                                                           child: Container(
                                                                                             height: 43,
                                                                                             width: _width / 3.5,
-                                                                                            decoration: BoxDecoration(color: Color(0xFFED1C25), borderRadius: BorderRadius.circular(10)),
+                                                                                            decoration: BoxDecoration(color: ColorConstant.primary_color, borderRadius: BorderRadius.circular(10)),
                                                                                             child: Center(
                                                                                                 child: Text(
                                                                                               "Delete",
@@ -1010,7 +1013,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                                                                                 style: TextStyle(
                                                                                                   fontFamily: 'outfit',
                                                                                                   fontSize: 15,
-                                                                                                  color: Color(0xFFED1C25),
+                                                                                                  color: ColorConstant.primary_color,
                                                                                                   fontWeight: FontWeight.w400,
                                                                                                 ),
                                                                                               )),
@@ -1023,7 +1026,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                                                                             child: Container(
                                                                                               height: 43,
                                                                                               width: _width / 3.5,
-                                                                                              decoration: BoxDecoration(color: Color(0xFFED1C25), borderRadius: BorderRadius.circular(10)),
+                                                                                              decoration: BoxDecoration(color: ColorConstant.primary_color, borderRadius: BorderRadius.circular(10)),
                                                                                               child: Center(
                                                                                                   child: Text(
                                                                                                 "Delete",
@@ -1174,9 +1177,9 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                             ),
                                           ),
                                           SizedBox(
-                                            height: 20,
+                                            height: 10,
                                           ),
-                                          Padding(
+                                          /* Padding(
                                             padding: const EdgeInsets.only(
                                                 left: 8.0),
                                             child: Padding(
@@ -1208,7 +1211,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                                   // SizedBox(width: 10,),
                                                   GestureDetector(
                                                     onTap: () {
-                                                      // setState(() {
+                                                      // super.setState(() {
                                                       //   if (imagee?.contains(
                                                       //           index) ??
                                                       //       false) {
@@ -1265,8 +1268,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                                                     side: BorderSide(
                                                                         width:
                                                                             0.50,
-                                                                        color: Color(
-                                                                            0xFFED1C25)),
+                                                                        color:ColorConstant.primary_color),
                                                                     borderRadius:
                                                                         BorderRadius.circular(
                                                                             49.46),
@@ -1279,8 +1281,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                                                       fontWeight:
                                                                           FontWeight
                                                                               .w400,
-                                                                      color: Color(
-                                                                          0XFFED1C25),
+                                                                      color: ColorConstant.primary_color,
                                                                       fontFamily:
                                                                           "outfit",
                                                                       fontSize:
@@ -1294,7 +1295,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                                   // ),
                                                   GestureDetector(
                                                     onTap: () {
-                                                      // setState(() {
+                                                      // super.setState(() {
                                                       //   if (closee?.contains(
                                                       //           index) ??
                                                       //       false) {
@@ -1351,8 +1352,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                                                     side: BorderSide(
                                                                         width:
                                                                             0.50,
-                                                                        color: Color(
-                                                                            0xFFED1C25)),
+                                                                        color:ColorConstant.primary_color),
                                                                     borderRadius:
                                                                         BorderRadius.circular(
                                                                             49.46),
@@ -1365,8 +1365,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                                                       fontWeight:
                                                                           FontWeight
                                                                               .w400,
-                                                                      color: Color(
-                                                                          0XFFED1C25),
+                                                                      color:ColorConstant.primary_color,
                                                                       fontFamily:
                                                                           "outfit",
                                                                       fontSize:
@@ -1378,9 +1377,9 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                                 ],
                                               ),
                                             ),
-                                          ),
+                                          ), */
 
-                                          Padding(
+                                          /* Padding(
                                             padding: const EdgeInsets.only(
                                                 left: 8.0),
                                             child: Padding(
@@ -1411,7 +1410,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                                   // Spacer(),
                                                   GestureDetector(
                                                     onTap: () {
-                                                      // setState(() {
+                                                      // super.setState(() {
                                                       //   if (image?.contains(
                                                       //           index) ??
                                                       //       false) {
@@ -1468,8 +1467,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                                                     side: BorderSide(
                                                                         width:
                                                                             0.50,
-                                                                        color: Color(
-                                                                            0xFFED1C25)),
+                                                                        color: ColorConstant.primary_color),
                                                                     borderRadius:
                                                                         BorderRadius.circular(
                                                                             49.46),
@@ -1482,8 +1480,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                                                       fontWeight:
                                                                           FontWeight
                                                                               .w400,
-                                                                      color: Color(
-                                                                          0XFFED1C25),
+                                                                      color:ColorConstant.primary_color,
                                                                       fontFamily:
                                                                           "outfit",
                                                                       fontSize:
@@ -1497,7 +1494,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                                   // ),
                                                   GestureDetector(
                                                     onTap: () {
-                                                      // setState(() {
+                                                      // super.setState(() {
                                                       //   if (close?.contains(
                                                       //           index) ??
                                                       //       false) {
@@ -1554,8 +1551,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                                                     side: BorderSide(
                                                                         width:
                                                                             0.50,
-                                                                        color: Color(
-                                                                            0xFFED1C25)),
+                                                                        color:ColorConstant.primary_color),
                                                                     borderRadius:
                                                                         BorderRadius.circular(
                                                                             49.46),
@@ -1568,8 +1564,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                                                       fontWeight:
                                                                           FontWeight
                                                                               .w400,
-                                                                      color: Color(
-                                                                          0XFFED1C25),
+                                                                      color: ColorConstant.primary_color,
                                                                       fontFamily:
                                                                           "outfit",
                                                                       fontSize:
@@ -1581,7 +1576,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                                 ],
                                               ),
                                             ),
-                                          ),
+                                          ), */
                                           GestureDetector(
                                             onTap: () {
                                               Navigator.push(context,
@@ -1964,8 +1959,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                                                 side:
                                                                     BorderSide(
                                                                   width: 1,
-                                                                  color: Color(
-                                                                      0xFFED1C25),
+                                                                  color:ColorConstant.primary_color,
                                                                 ),
                                                                 borderRadius:
                                                                     BorderRadius
@@ -1980,8 +1974,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                                                   fontWeight:
                                                                       FontWeight
                                                                           .w400,
-                                                                  color: Color(
-                                                                      0xFFED1C25),
+                                                                  color:ColorConstant.primary_color,
                                                                   fontFamily:
                                                                       "outfit",
                                                                   fontSize: 13),
@@ -2035,7 +2028,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                                                                 shape: RoundedRectangleBorder(
                                                                                   side: BorderSide(
                                                                                     width: 1,
-                                                                                    color: Color(0xFFED1C25),
+                                                                                    color: ColorConstant.primary_color,
                                                                                   ),
                                                                                   borderRadius: BorderRadius.circular(50),
                                                                                 ),
@@ -2043,7 +2036,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                                                               child: Center(
                                                                                   child: Text(
                                                                                 "Invite User",
-                                                                                style: TextStyle(fontWeight: FontWeight.w400, color: Color(0xFFED1C25), fontFamily: "outfit", fontSize: 13),
+                                                                                style: TextStyle(fontWeight: FontWeight.w400, color: ColorConstant.primary_color, fontFamily: "outfit", fontSize: 13),
                                                                               )),
                                                                             )
                                                                           : Container(),
@@ -2167,8 +2160,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                                               ShapeDecoration(
                                                             color: ColorConstant
                                                                 .primary_color,
-                                                            // color: Color(
-                                                            //     0xFFED1C25),
+                                                            // color: ColorConstant.primary_color,
                                                             shape:
                                                                 RoundedRectangleBorder(
                                                               borderRadius:
@@ -2220,7 +2212,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                           //               decoration:
                                           //                   ShapeDecoration(
                                           //                 color:
-                                          //                     Color(0xFFED1C25),
+                                          //                     ColorConstant.primary_color,
                                           //                 shape:
                                           //                     RoundedRectangleBorder(
                                           //                   borderRadius:
@@ -2271,7 +2263,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                                     decoration: BoxDecoration(
                                                         // color: Color(0XFF9B9B9B),
                                                         color:
-                                                            Color(0xFFED1C25),
+                                                            ColorConstant.primary_color,
                                                         borderRadius:
                                                             BorderRadius.only(
                                                                 bottomLeft: Radius
@@ -2426,11 +2418,11 @@ class _RoomsScreenState extends State<RoomsScreen> {
 
                             child: CustomImageView(
                               imagePath: checkuserdata == "PARTIALLY_REGISTERED"
-                                  ? ImageConstant.CreateForum
+                                  ? ImageConstant.CreateForum//done
                                   : checkuserdata == "PENDING"
-                                      ? ImageConstant.InPending
+                                      ? ImageConstant.InPending//done
                                       : checkuserdata == "APPROVED"
-                                          ? ImageConstant.noRoom
+                                          ? ImageConstant.noRoom//done
                                           : ImageConstant.Rejected,
                             ),
 
@@ -2488,9 +2480,10 @@ class _RoomsScreenState extends State<RoomsScreen> {
     );
   }
 
-  saveNotificationCount(int NotificationCount) async {
+  saveNotificationCount(int NotificationCount, int MessageCount) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setInt(PreferencesKey.NotificationCount, NotificationCount);
+    prefs.setInt(PreferencesKey.MessageCount, MessageCount);
   }
 
   showAlert() {
@@ -2737,7 +2730,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                         style: TextStyle(
                                           fontFamily: 'outfit',
                                           fontSize: 15,
-                                          color: Color(0xFFED1C25),
+                                          color: ColorConstant.primary_color,
                                           fontWeight: FontWeight.w400,
                                         ),
                                       )),
@@ -2809,7 +2802,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                       height: 43,
                                       width: _width / 3,
                                       decoration: BoxDecoration(
-                                          color: Color(0xFFED1C25),
+                                          color: ColorConstant.primary_color,
                                           borderRadius:
                                               BorderRadius.circular(10)),
                                       child: Center(

@@ -164,7 +164,7 @@ class _AddThreadsScreenState extends State<AddThreadsScreen> {
                     ),
                   ),
                   // MarkdownTextInput(
-                  //         (String value) => setState(() => description = value),
+                  //         (String value) => super.setState(() => description = value),
                   //         description,insertLinksByDialog: true,
                   //         label: 'Description',
                   //         maxLines: 10,
@@ -194,7 +194,7 @@ class _AddThreadsScreenState extends State<AddThreadsScreen> {
                             padding: const EdgeInsets.all(8.0),
                             child: GestureDetector(
                               onTap: () =>
-                                  setState(() => currentmode = TextMode.bold),
+                                  super.setState(() => currentmode = TextMode.bold),
                               child: CustomImageView(
                                 imagePath: ImageConstant.boldimage,
                                 height: 20,
@@ -204,7 +204,7 @@ class _AddThreadsScreenState extends State<AddThreadsScreen> {
                           Spacer(),
                           GestureDetector(
                             onTap: () {
-                              setState(() {
+                              super.setState(() {
                                 currentmode = TextMode.italic;
                               });
                             },
@@ -216,7 +216,7 @@ class _AddThreadsScreenState extends State<AddThreadsScreen> {
                           Spacer(),
                           GestureDetector(
                             onTap: () {
-                              setState(() {
+                              super.setState(() {
                                 currentmode = TextMode.lineThrough;
                               });
                             },
@@ -343,7 +343,7 @@ class _AddThreadsScreenState extends State<AddThreadsScreen> {
                           height: 50,
                           // width: width / 1.2,
                           decoration: BoxDecoration(
-                              color: Color(0XFFED1C25),
+                              color: ColorConstant.primary_color,
                               borderRadius: BorderRadius.circular(5)),
                           child: Center(
                             child: Text(

@@ -106,19 +106,77 @@ class DmInboxCubit extends Cubit<getInboxState> {
           .get_all_inbox_images(context, userChatInboxUid, pageNumber);
 
       if (GetAllInboxImagesPagantionApi.success == true) {
-
         getAllInboxImage.object.content
             .addAll(GetAllInboxImagesPagantionApi.object.content);
         getAllInboxImage.object.pageable.pageNumber =
             GetAllInboxImagesPagantionApi.object.pageable.pageNumber;
         getAllInboxImage.object.totalElements =
             GetAllInboxImagesPagantionApi.object.totalElements;
-            
+
         emit(GetAllInboxImagesState(getAllInboxImage));
       }
     } catch (e) {
       print('eeee-$e');
       emit(getInboxErrorState(e.toString()));
+    }
+  }
+
+  Future<void> SeenMessage(BuildContext context, String inboxUid) async {
+    dynamic SeenMessgaeModelData;
+    try {
+      emit(getInboxLoadingState());
+      SeenMessgaeModelData = await Repository().SeenMessage(context, inboxUid);
+      if (SeenMessgaeModelData ==
+          "Something Went Wrong, Try After Some Time.") {
+        emit(getInboxErrorState("${SeenMessgaeModelData}"));
+      } else {
+        if (SeenMessgaeModelData.success == true) {
+          emit(SeenAllMessageLoadedState(SeenMessgaeModelData));
+          
+          print(SeenMessgaeModelData.message);
+        }
+      }
+    } catch (e) {
+      print('LoginScreen-${e.toString()}');
+      emit(getInboxErrorState(SeenMessgaeModelData));
+    }
+  }
+
+  Future<void> getAllNoticationsCountAPI(BuildContext context) async {
+    dynamic acceptRejectInvitationModel;
+    try {
+      emit(getInboxLoadingState());
+      acceptRejectInvitationModel =
+          await Repository().getAllNoticationsCountAPI(context);
+      if (acceptRejectInvitationModel ==
+          "Something Went Wrong, Try After Some Time.") {
+        emit(getInboxErrorState("${acceptRejectInvitationModel}"));
+      } else {
+        if (acceptRejectInvitationModel.success == true) {
+          emit(GetNotificationCountLoadedState(acceptRejectInvitationModel));
+        }
+      }
+    } catch (e) {
+      emit(getInboxErrorState(acceptRejectInvitationModel));
+    }
+  }
+
+  Future<void> get_all_story(BuildContext context,
+      {bool showAlert = false}) async {
+    dynamic getAllStory;
+    try {
+      emit(getInboxLoadingState());
+      getAllStory = await Repository().GetAllStory(context);
+      if (getAllStory == "Something Went Wrong, Try After Some Time.") {
+        emit(getInboxErrorState("${getAllStory}"));
+      } else {
+        if (getAllStory.success == true) {
+          emit(GetAllStoryLoadedState(getAllStory));
+        }
+      }
+    } catch (e) {
+      print('errorstate-$e');
+      emit(getInboxErrorState(e));
     }
   }
 }

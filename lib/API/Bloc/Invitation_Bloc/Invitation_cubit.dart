@@ -14,13 +14,19 @@ class InvitationCubit extends Cubit<InvitationState> {
       emit(InvitationLoadingState());
       dynamic settionExperied =
           await Repository().logOutSettionexperied(context);
+      print("checkDatWant--$settionExperied");
+      // if (settionExperied == "Something Went Wrong, Try After Some Time.") {
+      //     emit(GetGuestAllPostErrorState("${settionExperied}"));
+      //   } else {
       if (settionExperied.success == true) {
         await setLOGOUT(context);
       } else {
         print("failed--check---${settionExperied}");
       }
+      // }
     } catch (e) {
       print('errorstate-$e');
+      // emit(GetGuestAllPostErrorState(e.toString()));
     }
   }
 
@@ -138,7 +144,7 @@ class InvitationCubit extends Cubit<InvitationState> {
     } catch (e) {
       emit(InvitationErrorState(acceptRejectInvitationModel));
     }
-  } 
+  }
 
   Future<void> getAllNoticationsCountAPI(BuildContext context) async {
     dynamic acceptRejectInvitationModel;
@@ -156,6 +162,41 @@ class InvitationCubit extends Cubit<InvitationState> {
       }
     } catch (e) {
       emit(InvitationErrorState(acceptRejectInvitationModel));
+    }
+  }
+
+  Future<void> ReadAllMassagesAPI(BuildContext context) async {
+    dynamic readAllMsg;
+    try {
+      emit(InvitationLoadingState());
+      readAllMsg = await Repository().ReadAllMassages(context);
+      if (readAllMsg == "Something Went Wrong, Try After Some Time.") {
+        emit(ReadAllMSGErrorState("${readAllMsg}"));
+      } else {
+        if (readAllMsg.success == true) {
+          emit(ReadAllMSGLoadedState(readAllMsg));
+        }
+      }
+    } catch (e) {
+      emit(ReadAllMSGErrorState(readAllMsg));
+    }
+  }
+
+
+   Future<void> readnotificationscount(BuildContext context) async {
+    dynamic readAllMsg;
+    try {
+      emit(InvitationLoadingState());
+      readAllMsg = await Repository().readnotificationscount(context);
+      if (readAllMsg == "Something Went Wrong, Try After Some Time.") {
+        emit(ReadAllMSGErrorState("${readAllMsg}"));
+      } else {
+        if (readAllMsg.success == true) {
+          emit(ReadAllMSGLoadedState(readAllMsg));
+        }
+      }
+    } catch (e) {
+      emit(ReadAllMSGErrorState(readAllMsg));
     }
   }
 }

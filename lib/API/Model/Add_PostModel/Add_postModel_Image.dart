@@ -25,18 +25,21 @@ class ImageDataPost {
 
 class Object {
   String? status;
+  String? thumbnailImageUrl;
   List<String>? data;
 
-  Object({this.status, this.data});
+  Object({this.status, this.thumbnailImageUrl, this.data});
 
   Object.fromJson(Map<String, dynamic> json) {
     status = json['status'];
+    thumbnailImageUrl = json['thumbnailImageUrl'];
     data = json['data'].cast<String>();
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['status'] = this.status;
+    data['thumbnailImageUrl'] = this.thumbnailImageUrl;
     data['data'] = this.data;
     return data;
   }

@@ -25,13 +25,13 @@ class _VideoEditorState extends State<VideoEditor> {
   late final VideoEditorController _controller = VideoEditorController.file(
     widget.file,
     minDuration: const Duration(seconds: 1),
-    maxDuration: const Duration(seconds: 30),
+    maxDuration: const Duration(seconds: 40),
   );
 
   @override
   void initState() {
     super.initState();
-    _controller.initialize().then((_) => setState(() {})).catchError((error) {
+    _controller.initialize().then((_) => super.setState(() {})).catchError((error) {
       Navigator.pop(context);
     }, test: (e) => e is VideoMinDurationError);
   }
@@ -56,33 +56,28 @@ class _VideoEditorState extends State<VideoEditor> {
     _exportingProgress.value = 0;
     _isExporting.value = true;
 
-    final config = VideoFFmpegVideoEditorConfig(
-      _controller,
-      format: VideoExportFormat.mp4,
-      outputDirectory: Platform.isAndroid ? "/storage/emulated/0/Download":(await getApplicationDocumentsDirectory()).path
-    );
-
-    FFmpegVideoEditorExecute trimExecute = await config.getExecuteConfig();
-    print("export path : ${trimExecute.outputPath}");
-    //
+    final config = VideoFFmpegVideoEditorConfig(_controller,
+        format: VideoExportFormat.mp4,
+        outputDirectory: Platform.isAndroid
+            ? "/storage/emulated/0/Download"
+            : (await getApplicationDocumentsDirectory()).path);
     await ExportService.runFFmpegCommand(
       await config.getExecuteConfig(),
       onProgress: (stats) {
-        _exportingProgress.value = config.getFFmpegProgress(stats.getTime().toInt());
+        _exportingProgress.value =
+            config.getFFmpegProgress(stats.getTime().toInt());
       },
       onError: (e, s) => _showErrorSnackBar("Error on export video :("),
       onCompleted: (file) {
         _isExporting.value = false;
         if (!mounted) return;
-        print("exported path : ${file.path}");
-        Navigator.pop(context,file.path);
-        /*showDialog(
+          Navigator.pop(context,file);
+        /* showDialog(
           context: context,
           builder: (_) => VideoResultPopup(video: file),
-        );*/
+        ); */
       },
     );
-    
   }
 
   @override
@@ -100,7 +95,7 @@ class _VideoEditorState extends State<VideoEditor> {
                         _topNavBar(),
                         Expanded(
                           child: DefaultTabController(
-                            length: 2,
+                            length: 1,
                             child: Column(
                               children: [
                                 Expanded(
@@ -386,7 +381,7 @@ class _VideoEditorState extends State<VideoEditor> {
 //   bool _progressVisibility = false;
 
 //   Future<String?> _saveVideo() async {
-//     setState(() {
+//     super.setState(() {
 //       _progressVisibility = true;
 //     });
 
@@ -395,7 +390,7 @@ class _VideoEditorState extends State<VideoEditor> {
 //     await _trimmer
 //         .saveTrimmedVideo(startValue: _startValue, endValue: _endValue, onSave: (String? outputPath) {  })
 //         .then((value) {
-//       setState(() {
+//       super.setState(() {
 //         _progressVisibility = false;
 //         // _value = value;
 //       });
@@ -466,7 +461,7 @@ class _VideoEditorState extends State<VideoEditor> {
 //                     onChangeStart: (value) => _startValue = value,
 //                     onChangeEnd: (value) => _endValue = value,
 //                     onChangePlaybackState: (value) =>
-//                         setState(() => _isPlaying = value),
+//                         super.setState(() => _isPlaying = value),
 //                   ),
 //                 ),
 //                 TextButton(
@@ -486,7 +481,7 @@ class _VideoEditorState extends State<VideoEditor> {
 //                       startValue: _startValue,
 //                       endValue: _endValue,
 //                     );
-//                     setState(() {
+//                     super.setState(() {
 //                       _isPlaying = playbackState;
 //                     });
 //                   },

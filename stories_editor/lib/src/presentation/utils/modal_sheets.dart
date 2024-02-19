@@ -7,6 +7,7 @@ import 'package:stories_editor/src/domain/providers/notifiers/control_provider.d
 import 'package:stories_editor/src/domain/providers/notifiers/draggable_widget_notifier.dart';
 import 'package:stories_editor/src/domain/providers/notifiers/painting_notifier.dart';
 import 'package:stories_editor/src/domain/providers/notifiers/text_editing_notifier.dart';
+import 'package:stories_editor/src/domain/sevices/save_as_image.dart';
 import 'package:stories_editor/src/presentation/utils/Extensions/hexColor.dart';
 import 'package:stories_editor/src/presentation/utils/constants/app_enums.dart';
 import 'package:stories_editor/src/presentation/widgets/animated_onTap_button.dart';
@@ -37,7 +38,11 @@ Future createGiphyItem(
 }
 
 /// custom exit dialog
-Future<bool> exitDialog({required context, required contentKey}) async {
+Future<bool> exitDialog(
+    {required context,
+    required contentKey,
+    required selctedparth,
+    required isTextEditing}) async {
   return (await showDialog(
         context: context,
         barrierColor: Colors.black38,
@@ -115,7 +120,7 @@ Future<bool> exitDialog({required context, required contentKey}) async {
                   ),
 
                   /// save and exit
-              /*     AnimatedOnTapButton(
+                  AnimatedOnTapButton(
                     onTap: () async {
                       final _paintingProvider =
                           Provider.of<PaintingNotifier>(context, listen: false);
@@ -125,11 +130,18 @@ Future<bool> exitDialog({required context, required contentKey}) async {
                       if (_paintingProvider.lines.isNotEmpty ||
                           _widgetProvider.draggableWidget.isNotEmpty) {
                         /// save image
+
+                        print("check Value1-$selctedparth");
+                        print("check Value2-$isTextEditing");
+
                         var response = await takePicture(
-                            contentKey: contentKey,
-                            context: context,
-                            saveToGallery: true);
-                        if (response) {
+                          contentKey: contentKey,
+                          context: context,
+                          saveToGallery: true,
+                          SelectPath: selctedparth,
+                        );
+                        print("if roots choose -${response}");
+                        if (response!=null) {
                           _dispose(
                               context: context, message: 'Successfully saved');
                         } else {
@@ -148,13 +160,13 @@ Future<bool> exitDialog({required context, required contentKey}) async {
                           letterSpacing: 0.5),
                       textAlign: TextAlign.center,
                     ),
-                  ), */
-                /*   const SizedBox(
+                  ),
+                  const SizedBox(
                     height: 22,
                     child: Divider(
                       color: Colors.white10,
                     ),
-                  ), */
+                  ),
 
                   ///cancel
                   AnimatedOnTapButton(

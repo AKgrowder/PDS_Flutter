@@ -41,7 +41,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
     int? a = prefs.getInt(PreferencesKey.mediaSize);
     documentuploadsize = double.parse("${a}");
     print('scdhfggfgdf-$documentuploadsize.');
-    setState(() {});
+    super.setState(() {});
   }
 
   @override
@@ -111,7 +111,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
     fees.text = feesInSetdata != null ? '${feesInSetdata.toString()}' : '';
     compayName.text =
         companyNameSetData != null ? '${companyNameSetData.toString()}' : '';
-    setState(() {});
+    super.setState(() {});
   }
 
   Future<void> _selectStartTime(BuildContext context) async {
@@ -135,7 +135,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
     }
 
     if (pickedTime != null && pickedTime != _startTime) {
-      setState(() {
+      super.setState(() {
         _startTime = pickedTime;
       });
     }
@@ -174,7 +174,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
     }
 
     if (pickedTime != null && pickedTime != _endTime) {
-      setState(() {
+      super.setState(() {
         _endTime = pickedTime;
       });
     }
@@ -388,7 +388,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                             'check expertiseName-${selctedexpertiseData.first.expertiseName}');
                         print('check uid-${selctedexpertiseData.first.uid}');
                       } */
-                      setState(() {});
+                      super.setState(() {});
                     },
                     child: Icon(
                       Icons.edit,
@@ -398,6 +398,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                 ],
               )),
           body: SingleChildScrollView(
+            
             child: Padding(
               padding: const EdgeInsets.only(top: 50.0),
               child: Column(
@@ -884,7 +885,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                                       onChanged: (Expertiseclass? newValue) {
                                         // When the user selects an option from the dropdown.
                                         if (newValue != null) {
-                                          setState(() {
+                                          super.setState(() {
                                             selectedExpertise = newValue;
                                             print(
                                                 "Selectedexpertise: ${newValue.uid}");
@@ -1290,7 +1291,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                                                     onTap: () {
                                                       dopcument =
                                                           "Upload Image";
-                                                      setState(() {});
+                                                      super.setState(() {});
                                                     },
                                                     child: Icon(
                                                       Icons.delete_forever,
@@ -1480,7 +1481,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                                 .showSnackBar(snackBar);
                           } else if (!emailRegExp.hasMatch(email.text)) {
                             SnackBar snackBar = SnackBar(
-                              content: Text('please Enter vaild Email'),
+                              content: Text('Please Enter Vaild Email'),
                               backgroundColor: ColorConstant.primary_color,
                             );
                             ScaffoldMessenger.of(context)
@@ -1706,7 +1707,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                                 height: 50,
                                 width: _width / 3,
                                 decoration: BoxDecoration(
-                                    color: Color(0xFFED1C25),
+                                    color: ColorConstant.primary_color,
                                     borderRadius: BorderRadius.circular(5)),
                                 child: Center(
                                   child: Text(
@@ -1759,7 +1760,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
         print('filenamecheckKB-${file1.path}');
         BlocProvider.of<MyAccountCubit>(context)
             .upoldeProfilePic(pickedImage!, context);
-        setState(() {});
+        super.setState(() {});
 
         break;
       case 2:
@@ -1805,7 +1806,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
   Future<void> _requestPermissions() async {
     final cameraStatus = await Permission.camera.request();
 
-    setState(() {
+    super.setState(() {
       _cameraPermissionStatus = cameraStatus;
     });
   }
@@ -1817,7 +1818,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
       if (pickedFile != null) {
         if (!_isGifOrSvg(pickedFile!.path)) {
           pickedImage = File(pickedFile!.path);
-          setState(() {});
+          super.setState(() {});
           getUploadeProfile(pickedImage!.path, 1, pickedImage!, 0);
         } else {
           Navigator.pop(context);
@@ -1906,7 +1907,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
           getFileSize(file.path!, 1, result.files.first, Index, context);
         }
 
-        /*     setState(() {
+        /*     super.setState(() {
           // fileparth = file.path!;
 
           switch (Index) {
@@ -1953,7 +1954,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
         switch (Index) {
           case 1:
             if (file1.name.isNotEmpty || file1.name.toString() == null) {
-              setState(() {
+              super.setState(() {
                 uplopdfile.text = file1.name;
                 dopcument = file1.name;
               });
@@ -1970,7 +1971,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
         switch (Index) {
           case 0:
             if (file1.name.isNotEmpty || file1.name.toString() == null) {
-              setState(() {
+              super.setState(() {
                 uplopdfile.text = file1.name;
                 dopcument = file1.name;
               });
@@ -1984,7 +1985,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
         BlocProvider.of<MyAccountCubit>(context)
             .chooseDocumentprofile(dopcument.toString(), file1.path!, context);
 
-        setState(() {});
+        super.setState(() {});
 
         break;
       case 2:
@@ -2017,7 +2018,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
 
           switch (Index) {
             case 1:
-              setState(() {
+              super.setState(() {
                 uplopdfile.text = file1.name;
                 dopcument = file1.name;
               });
@@ -2043,7 +2044,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
     User_ID = prefs.getString(PreferencesKey.loginUserID);
     prefs.setBool(PreferencesKey.OpenProfile, false);
 
-    setState(() {});
+    super.setState(() {});
   }
 }
 

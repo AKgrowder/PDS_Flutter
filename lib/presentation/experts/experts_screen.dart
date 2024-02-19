@@ -133,7 +133,7 @@ class _ExpertsScreenState extends State<ExpertsScreen> {
                     //         width: 55,
                     //         height: 45,
                     //         decoration: BoxDecoration(
-                    //             color: Color(0xFFED1C25),
+                    //             color: ColorConstant.primary_color,
                     //             borderRadius: BorderRadius.only(
                     //                 topLeft: Radius.circular(5),
                     //                 bottomLeft: Radius.circular(5))),
@@ -174,7 +174,7 @@ class _ExpertsScreenState extends State<ExpertsScreen> {
                     //         decoration: BoxDecoration(
                     //             color: Color(0xFFFFE7E7),
                     //             border: Border.all(
-                    //               color: Color(0xFFED1C25),
+                    //               color: ColorConstant.primary_color,
                     //             ),
                     //             borderRadius: BorderRadius.all(Radius.circular(5))),
                     //         child: Center(
@@ -209,7 +209,7 @@ class _ExpertsScreenState extends State<ExpertsScreen> {
                             itemBuilder: (BuildContext context, int index) {
                               return GestureDetector(
                                 onTap: () {
-                                  setState(() {
+                                  super.setState(() {
                                     _containerColor = index;
                                   });
                                 },
@@ -220,10 +220,10 @@ class _ExpertsScreenState extends State<ExpertsScreen> {
                                       decoration: BoxDecoration(
                                         border: Border.all(
                                             color: _containerColor == index
-                                                ? Colors.red
+                                                ? ColorConstant.primary_color
                                                 : Colors.transparent),
                                         color: _containerColor == index
-                                            ? Color(0xFFFFE7E7)
+                                            ? ColorConstant.primaryLight_color
                                             : Colors.transparent,
                                         borderRadius: BorderRadius.all(
                                           Radius.circular(10),
@@ -404,7 +404,7 @@ class _ExpertsScreenState extends State<ExpertsScreen> {
                                                 ),
                                               ],
                                             ),
-                                          ),
+                                          ), 
                                           Padding(
                                             padding: const EdgeInsets.only(
                                                 left: 7, top: 10),
@@ -499,7 +499,7 @@ class _ExpertsScreenState extends State<ExpertsScreen> {
                                               height: 30,
                                               width: _width,
                                               decoration: BoxDecoration(
-                                                color: Color(0xFFED1C25),
+                                                color: ColorConstant.primary_color,
                                                 borderRadius: BorderRadius.all(
                                                     Radius.circular(10)),
                                               ),

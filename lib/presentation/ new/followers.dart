@@ -46,7 +46,7 @@ class _FollowersState extends State<Followers> {
   dataGetFuntion() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     User_ID = prefs.getString(PreferencesKey.loginUserID);
-    setState(() {});
+    super.setState(() {});
   }
 
   @override
@@ -80,12 +80,14 @@ class _FollowersState extends State<Followers> {
           if (state is FollowersClass) {
             //get all follwers
             followersClassModel1 = state.followersClassModel;
+            print("check Klength0${followersClassModel1?.object?.length}");
 
             apiDataGet = true;
           }
           if (state is FollowersClass1) {
             //get all follwing
             followersClassModel1 = state.followersClassModel1;
+            print("check Klength0${followersClassModel1?.object?.length}");
             apiDataGet = true;
           }
           if (state is RemoveLoddingState) {
@@ -164,25 +166,31 @@ class _FollowersState extends State<Followers> {
                                       padding: EdgeInsets.only(left: 10),
                                       child: GestureDetector(
                                         onTap: () {
-                                    Navigator.push(context,
-                                        MaterialPageRoute(builder: (context) {
-                                      return MultiBlocProvider(
-                                          providers: [
-                                            BlocProvider<NewProfileSCubit>(
-                                              create: (context) =>
-                                                  NewProfileSCubit(),
-                                            ),
-                                          ],
-                                          child: ProfileScreen(
-                                              User_ID: followersClassModel1
-                                                      ?.object?[index].userUid
-                                                      .toString() ??
-                                                  '',
-                                              isFollowing: followersClassModel1
-                                                  ?.object?[index].isFollow
-                                                  .toString()));
-                                    }));
-                                  },
+                                          Navigator.push(context,
+                                              MaterialPageRoute(
+                                                  builder: (context) {
+                                            return MultiBlocProvider(
+                                                providers: [
+                                                  BlocProvider<
+                                                      NewProfileSCubit>(
+                                                    create: (context) =>
+                                                        NewProfileSCubit(),
+                                                  ),
+                                                ],
+                                                child: ProfileScreen(
+                                                    User_ID:
+                                                        followersClassModel1
+                                                                ?.object?[index]
+                                                                .userUid
+                                                                .toString() ??
+                                                            '',
+                                                    isFollowing:
+                                                        followersClassModel1
+                                                            ?.object?[index]
+                                                            .isFollow
+                                                            .toString()));
+                                          }));
+                                        },
                                         child: Container(
                                           child: Text(
                                             "${followersClassModel1?.object?[index].userName}",
@@ -237,7 +245,11 @@ class _FollowersState extends State<Followers> {
                                             onTap: () {
                                               folloFuction(index);
                                             },
-                                            child: Container(
+                                            child: followersClassModel1
+                                                                ?.object?[index]
+                                                                .userUid ==
+                                                            User_ID
+                                                        ? SizedBox() : Container(
                                                 height: 60,
                                                 alignment: Alignment.center,
                                                 width: 90,
@@ -296,7 +308,9 @@ class _FollowersState extends State<Followers> {
                                         onTap: () {
                                           folloFuction(index);
                                         },
-                                        child: Container(
+                                        child:followersClassModel1
+                                                            ?.object?[index]
+                                                            .userUid  == User_ID ? SizedBox() : Container(
                                             height: 60,
                                             alignment: Alignment.center,
                                             width: 90,
@@ -334,20 +348,19 @@ class _FollowersState extends State<Followers> {
                                                             color:
                                                                 Colors.white),
                                                       )
-                                                    : Text(
-                                                        'Follow',
-                                                        style: TextStyle(
-                                                            fontFamily:
-                                                                "outfit",
-                                                            fontSize: 12,
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                            color:
-                                                                Colors.white),
-                                                      )),
+                                                    :  Text(
+                                                            'Follow',
+                                                            style: TextStyle(
+                                                                fontFamily:
+                                                                    "outfit",
+                                                                fontSize: 12,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                                color: Colors
+                                                                    .white),
+                                                          )),
                                       ),
-
-                        
                               )))),
                 )
               : Center(

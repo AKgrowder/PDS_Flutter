@@ -1,20 +1,17 @@
-import 'package:carousel_slider/carousel_slider.dart';
-import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pds/API/Bloc/BlogComment_BLoc/BlogComment_cubit.dart';
 import 'package:pds/API/Bloc/GuestAllPost_Bloc/GuestAllPost_cubit.dart';
 import 'package:pds/API/Model/Get_all_blog_Model/get_all_blog_model.dart';
 import 'package:pds/API/Model/saveAllBlogModel/saveAllBlog_Model.dart';
+import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/presentation/%20new/BlogComment_screen.dart';
 import 'package:pds/presentation/%20new/BlogLikeList_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../core/utils/color_constant.dart';
 import '../../core/utils/image_constant.dart';
 import '../../core/utils/sharedPreferences.dart';
 import '../../widgets/custom_image_view.dart';
-import '../home/home.dart';
 
 class RecentBlogScren extends StatefulWidget {
   String? title;
@@ -189,7 +186,7 @@ class _RecentBlogScrenState extends State<RecentBlogScren> {
                                               0) -
                                           1;
                                     }
-                                    setState(() {});
+                                    super.setState(() {});
                                   },
                                   child: widget
                                               .saveAllBlogModelData
@@ -278,7 +275,7 @@ class _RecentBlogScrenState extends State<RecentBlogScren> {
                                               0) -
                                           1;
                                     }
-                                    setState(() {});
+                                    super.setState(() {});
                                   },
                                   child: widget
                                               .getallBlogModel1
@@ -288,7 +285,7 @@ class _RecentBlogScrenState extends State<RecentBlogScren> {
                                       ? Icon(Icons.favorite_border)
                                       : Icon(
                                           Icons.favorite,
-                                          color: Colors.red,
+                                          color: ColorConstant.primary_color,
                                         ),
                                 ),
                                 widget
@@ -445,7 +442,7 @@ class _RecentBlogScrenState extends State<RecentBlogScren> {
                                       ?.object?[widget.index ?? 0]
                                       .isSaved = false;
                                 }
-                                setState(() {});
+                                super.setState(() {});
                               },
                               child: Center(
                                 child: Image.asset(
@@ -481,7 +478,7 @@ class _RecentBlogScrenState extends State<RecentBlogScren> {
                                       ?.object?[widget.index ?? 0]
                                       .isSaved = false;
                                 }
-                                setState(() {});
+                                super.setState(() {});
                               },
                               child: Center(
                                 child: Image.asset(

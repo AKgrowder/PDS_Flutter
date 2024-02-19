@@ -1,78 +1,86 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
-import 'package:pds/API/Model/DeleteUserChatModel/DeleteUserChat_Model.dart';
-import 'package:pds/API/Model/GetAllInboxImagesModel/GetAllInboxImagesModel.dart';
-import 'package:pds/API/Model/GetGuestAllPostModel/ShareAppOpenPostModel.dart';
-import 'package:pds/API/Model/acceptRejectInvitaionModel/GetAllNotificationModel.dart';
-import 'package:pds/API/Model/selectMultipleUsers_ChatModel/selectMultipleUsers_ChatModel.dart';
-import 'package:pds/API/Model/UserTagModel/UserTag_model.dart';
-import 'package:pds/API/Model/GetUsersChatByUsernameModel/GetUsersChatByUsernameModel.dart';
-import 'package:pds/API/Model/BlogComment_Model/BlogLikeList_model.dart';
-import 'package:pds/API/Model/FollwersModel/FllowersModel.dart';
-import 'package:pds/API/Model/HasTagModel/hasTagModel.dart';
-import 'package:pds/API/Model/IsTokenExpired/IsTokenExpired.dart';
-import 'package:pds/API/Model/OnTimeDMModel/OnTimeDMModel.dart';
-import 'package:pds/API/Model/RePost_Model/RePost_model.dart';
-import 'package:pds/API/Model/BlogComment_Model/BlogCommentDelete_model.dart';
-import 'package:pds/API/Model/BlogComment_Model/BlogComment_model.dart';
-import 'package:pds/API/Model/PersonalChatListModel/SelectChatMember_Model.dart';
+
 import 'package:flutter/cupertino.dart';
 import 'package:pds/API/Model/AddExportProfileModel/AddExportProfileModel.dart';
 import 'package:pds/API/Model/Add_PostModel/Add_PostModel.dart';
 import 'package:pds/API/Model/Add_PostModel/Add_postModel_Image.dart';
 import 'package:pds/API/Model/Add_comment_model/add_comment_model.dart';
+import 'package:pds/API/Model/BlogComment_Model/BlogCommentDelete_model.dart';
+import 'package:pds/API/Model/BlogComment_Model/BlogComment_model.dart';
+import 'package:pds/API/Model/BlogComment_Model/BlogLikeList_model.dart';
 import 'package:pds/API/Model/CreateStory_Model/all_stories.dart';
+import 'package:pds/API/Model/DeleteUserChatModel/DeleteUserChat_Model.dart';
 import 'package:pds/API/Model/DeleteUserModel/DeleteUser_Model.dart';
 import 'package:pds/API/Model/Delete_Api_model/delete_api_model.dart';
 import 'package:pds/API/Model/FetchExprtiseModel/fetchExprtiseModel.dart';
+import 'package:pds/API/Model/FollwersModel/FllowersModel.dart';
+import 'package:pds/API/Model/GetAllInboxImagesModel/GetAllInboxImagesModel.dart';
 import 'package:pds/API/Model/GetGuestAllPostModel/GetGuestAllPost_Model.dart';
 import 'package:pds/API/Model/GetGuestAllPostModel/GetPostLike_Model.dart';
+import 'package:pds/API/Model/GetGuestAllPostModel/ShareAppOpenPostModel.dart';
+import 'package:pds/API/Model/GetUsersChatByUsernameModel/GetUsersChatByUsernameModel.dart';
 import 'package:pds/API/Model/Get_all_blog_Model/get_all_blog_model.dart';
+import 'package:pds/API/Model/Getalluset_list_Model/get_all_userlist_model.dart';
+import 'package:pds/API/Model/HasTagModel/hasTagModel.dart';
+import 'package:pds/API/Model/HashTage_Model/HashTagBanner_model.dart';
+import 'package:pds/API/Model/HashTage_Model/HashTagView_model.dart';
+import 'package:pds/API/Model/HashTage_Model/HashTag_model.dart';
 import 'package:pds/API/Model/IndustrytypeModel/Industrytype_Model.dart';
+import 'package:pds/API/Model/IsTokenExpired/IsTokenExpired.dart';
 import 'package:pds/API/Model/LogOutModel/LogOut_model.dart';
 import 'package:pds/API/Model/NewProfileScreenModel/GetAppUserPost_Model.dart';
 import 'package:pds/API/Model/NewProfileScreenModel/GetSavePost_Model.dart';
 import 'package:pds/API/Model/NewProfileScreenModel/GetUserPostCommet_Model.dart';
+import 'package:pds/API/Model/NewProfileScreenModel/NewProfileScreen_Model.dart';
+import 'package:pds/API/Model/OnTimeDMModel/OnTimeDMModel.dart';
 import 'package:pds/API/Model/OpenSaveImagepostModel/OpenSaveImagepost_Model.dart';
 import 'package:pds/API/Model/PersonalChatListModel/PersonalChatList_Model.dart';
+import 'package:pds/API/Model/PersonalChatListModel/SelectChatMember_Model.dart';
+import 'package:pds/API/Model/RateUseModel/Rateuse_model.dart';
+import 'package:pds/API/Model/RePost_Model/RePost_model.dart';
 import 'package:pds/API/Model/RoomExistsModel/RoomExistsModel.dart';
 import 'package:pds/API/Model/System_Config_model/Tokenvalid_Model.dart';
+import 'package:pds/API/Model/UserReActivateModel/UserReActivate_model.dart';
+import 'package:pds/API/Model/UserTagModel/UserTag_model.dart';
+import 'package:pds/API/Model/ViewDetails_Model/ViewDetails_model.dart';
+import 'package:pds/API/Model/ViewStoryModel/StoryViewList_Model.dart';
 import 'package:pds/API/Model/ViewStoryModel/ViewStory_Model.dart';
 import 'package:pds/API/Model/WorkExperience_Model/DeleteExperience_model.dart';
 import 'package:pds/API/Model/WorkExperience_Model/WorkExperience_model.dart';
 import 'package:pds/API/Model/aboutMeModel/aboutMeModel.dart';
+import 'package:pds/API/Model/acceptRejectInvitaionModel/GetAllNotificationModel.dart';
 import 'package:pds/API/Model/acceptRejectInvitaionModel/RequestList_Model.dart';
+import 'package:pds/API/Model/acceptRejectInvitaionModel/accept_rejectModel.dart';
+import 'package:pds/API/Model/acceptRejectInvitaionModel/getAllNotificationCount.dart';
+import 'package:pds/API/Model/acceptRejectInvitaionModel/seenNotificationModel.dart';
 import 'package:pds/API/Model/accountType/accountTypeModel.dart';
-import 'package:pds/API/Model/deletecomment/delete_comment_model.dart';
-import 'package:pds/API/Model/getAllHashtagModel/getAllHashtagModel.dart';
-import 'package:pds/API/Model/getSerchDataModel/getSerchDataModel.dart';
-import 'package:pds/API/Model/inboxScreenModel/inboxScrrenModel.dart';
-import 'package:pds/API/Model/removeFolloweModel/removeFollowerModel.dart';
-import 'package:pds/API/Model/serchDataAddModel/serchDataAddModel.dart';
-import 'package:pds/API/Model/serchForInboxModel/serchForinboxModel.dart';
-import 'package:pds/API/Model/storyModel/stroyModel.dart';
-import 'package:pds/API/Model/HashTage_Model/HashTagView_model.dart';
-import 'package:pds/API/Model/HashTage_Model/HashTag_model.dart';
-import 'package:pds/API/Model/Getalluset_list_Model/get_all_userlist_model.dart';
-import 'package:pds/API/Model/NewProfileScreenModel/NewProfileScreen_Model.dart';
-import 'package:pds/API/Model/RateUseModel/Rateuse_model.dart';
-import 'package:pds/API/Model/UserReActivateModel/UserReActivate_model.dart';
-import 'package:pds/API/Model/ViewDetails_Model/ViewDetails_model.dart';
 import 'package:pds/API/Model/authModel/getUserDetailsMdoel.dart';
 import 'package:pds/API/Model/authModel/loginModel.dart';
-import 'package:pds/API/Model/authModel/registerModel.dart';
 import 'package:pds/API/Model/checkUserStatusModel/chekuserStausModel.dart';
 import 'package:pds/API/Model/createDocumentModel/createDocumentModel.dart';
 import 'package:pds/API/Model/createStroyModel/createStroyModel.dart';
+import 'package:pds/API/Model/deletecomment/delete_comment_model.dart';
 import 'package:pds/API/Model/deviceInfo/deviceInfo_model.dart';
 import 'package:pds/API/Model/emailVerfiaction/emailVerfiaction.dart';
 import 'package:pds/API/Model/forget_password_model/forget_password_model.dart';
 import 'package:pds/API/Model/getCountOfSavedRoomModel/getCountOfSavedRoomModel.dart';
+import 'package:pds/API/Model/getSerchDataModel/getSerchDataModel.dart';
+import 'package:pds/API/Model/inboxScreenModel/SeenAllMessageModel.dart';
+import 'package:pds/API/Model/inboxScreenModel/inboxScrrenModel.dart';
 import 'package:pds/API/Model/like_Post_Model/like_Post_Model.dart';
 import 'package:pds/API/Model/otpmodel/otpmodel.dart';
 import 'package:pds/API/Model/pinAndUnpinModel/pinAndUnpinModel.dart';
+import 'package:pds/API/Model/removeFolloweModel/removeFollowerModel.dart';
+import 'package:pds/API/Model/saveAllBlogModel/saveAllBlog_Model.dart';
+import 'package:pds/API/Model/saveBlogModel/saveBlog_Model.dart';
+import 'package:pds/API/Model/selectMultipleUsers_ChatModel/selectMultipleUsers_ChatModel.dart';
+import 'package:pds/API/Model/serchDataAddModel/serchDataAddModel.dart';
+import 'package:pds/API/Model/serchForInboxModel/serchForinboxModel.dart';
 import 'package:pds/API/Model/sherInviteModel/sherinviteModel.dart';
+import 'package:pds/API/Model/storyDeleteModel/storyDeleteModel.dart';
+import 'package:pds/API/Model/storyModel/stroyModel.dart';
 import 'package:pds/API/Model/updateprofileModel/updateprofileModel.dart';
 import 'package:pds/core/utils/sharedPreferences.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -89,6 +97,7 @@ import '../Model/HomeScreenModel/MyPublicRoom_model.dart';
 import '../Model/HomeScreenModel/PublicRoomModel.dart';
 import '../Model/HomeScreenModel/getLoginPublicRoom_model.dart';
 import '../Model/InvitationModel/Invitation_Model.dart';
+import '../Model/ReadAllModel/ReadAll_model.dart';
 import '../Model/SelectRoomModel/SelectRoom_Model.dart';
 import '../Model/SendMSG/SendMSG_Model.dart';
 import '../Model/System_Config_model/fetchUserModule_model.dart';
@@ -102,16 +111,6 @@ import '../Model/delete_room_model/Delete_room_model.dart';
 import '../Model/fetch_room_detail_model/fetch_room_detail_model.dart';
 import '../Model/forget_password_model/change_password_model.dart';
 import '../Model/myaccountModel/myaccountModel.dart';
-import 'package:pds/API/Model/acceptRejectInvitaionModel/accept_rejectModel.dart';
-import 'package:pds/API/Model/HashTage_Model/HashTagBanner_model.dart';
-import 'package:pds/API/Model/saveBlogModel/saveBlog_Model.dart';
-import 'package:pds/API/Model/saveAllBlogModel/saveAllBlog_Model.dart';
-import 'package:pds/API/Model/ViewStoryModel/StoryViewList_Model.dart';
-import 'package:pds/API/Model/storyDeleteModel/storyDeleteModel.dart';
-import 'package:pds/API/Model/acceptRejectInvitaionModel/seenNotificationModel.dart';
-import 'package:pds/API/Model/acceptRejectInvitaionModel/getAllNotificationCount.dart';
-
-
 
 class Repository {
   ApiServices apiServices = ApiServices();
@@ -271,7 +270,8 @@ class Repository {
     print('jsonString-$jsonString');
     switch (response.statusCode) {
       case 200:
-        return RegisterClass.fromJson(jsonString);
+        // RegisterClass
+        return LoginModel.fromJson(jsonString);
       case 404:
         return Config.somethingWentWrong;
       case 400:
@@ -351,7 +351,7 @@ class Repository {
   }
 
   commentApi(String Room_ID, String pageNumber, BuildContext context) async {
-    final response = await apiServices.getApiCall(
+    final response = await apiServices.getApiCallWithToken(
         "${Config.coomment}/${Room_ID}/${pageNumber}/${20}", context);
     print(response);
     var jsonString = json.decode(response.body);
@@ -607,16 +607,36 @@ class Repository {
     }
   }
 
-  getAllNoticationsCountAPI(
-      BuildContext context) async {
+  getAllNoticationsCountAPI(BuildContext context) async {
     final response = await apiServices.getApiCallWithToken(
-        '${Config.getAllNoticationsCount}',
-        context);
+        '${Config.getAllNoticationsCount}', context);
     print(response);
     var jsonString = json.decode(response.body);
     switch (response.statusCode) {
       case 200:
         return getAllNotificationCount.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+      case 400:
+        return Config.somethingWentWrong;
+      case 701:
+        return Config.somethingWentWrong;
+      default:
+        return jsonString;
+    }
+  }
+
+  ChatOnline(BuildContext context, bool onlineStatus) async {
+    final response = await apiServices.getApiCallWithToken(
+        '${Config.online_offline_status}?onlineStatus=${onlineStatus}',
+        context);
+    print(response);
+    var jsonString = json.decode(response.body);
+    switch (response.statusCode) {
+      case 200:
+        return accept_rejectModel.fromJson(jsonString);
       case 404:
         return Config.somethingWentWrong;
       case 500:
@@ -875,7 +895,7 @@ class Repository {
     final response = await apiServices.getApiCall(
         '${Config.get_all_hashtag}?numberOfRecords=30&pageNumber=${'1'}&searchHashtag=${searchHashtag.replaceAll("#", "%23")}',
         context);
-    var jsonString = json.decode(response.body);
+    var jsonString = json.decode(utf8.decode(response.bodyBytes));
     log("jsonString-$jsonString");
     switch (response.statusCode) {
       case 200:
@@ -943,6 +963,27 @@ class Repository {
     switch (response.statusCode) {
       case 200:
         return MyAccontDetails.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+      case 400:
+        return Config.somethingWentWrong;
+      case 701:
+        return jsonString;
+      default:
+        return jsonString;
+    }
+  }
+
+  SeenMessage(BuildContext context, String inboxUid) async {
+    final response = await apiServices.getApiCallWithToken(
+        "${Config.message_seen_by_user}?inboxUid=${inboxUid}", context);
+    var jsonString = json.decode(response.body);
+    print('Myaccount${response.statusCode}');
+    switch (response.statusCode) {
+      case 200:
+        return SeenAllMessageModel.fromJson(jsonString);
       case 404:
         return Config.somethingWentWrong;
       case 500:
@@ -1455,7 +1496,7 @@ class Repository {
     print('jasonnString$jsonString');
     switch (responce.statusCode) {
       case 200:
-        return GetCountOfSavedRoomModel.fromJson(jsonString);
+        return AutoEnterRoomModel.fromJson(jsonString);
       case 404:
         return Config.somethingWentWrong;
       case 500:
@@ -1468,7 +1509,8 @@ class Repository {
         return jsonString;
     }
   }
-   AutoOpenPostAPI(BuildContext context, String postLink) async {
+
+  AutoOpenPostAPI(BuildContext context, String postLink) async {
     final responce = await apiServices.getApiCallWithToken(
         '${Config.getPostUidOrUserUid}?postLink=${postLink}', context);
     var jsonString = json.decode(responce.body);
@@ -1562,7 +1604,8 @@ class Repository {
     final responce = await apiServices.getApiCall(
         '${Config.GuestGetAllPost}?pageNumber=$pageNumber&numberOfRecords=10',
         context);
-    var jsonString = json.decode(responce.body);
+    // var jsonString = json.decode(responce.body);
+    var jsonString = json.decode(utf8.decode(responce.bodyBytes));
     print('jasonnString$jsonString');
     print('respnse ${responce.statusCode}');
     switch (responce.statusCode) {
@@ -1588,7 +1631,7 @@ class Repository {
     final responce = await apiServices.getApiCallWithToken(
         '${Config.UserGetAllPost}?pageNumber=$pageNumber&numberOfRecords=10',
         context);
-    var jsonString = json.decode(responce.body);
+    var jsonString = json.decode(utf8.decode(responce.bodyBytes));
     print('jasonnString$jsonString');
     print('respnse ${responce.statusCode}');
     switch (responce.statusCode) {
@@ -1768,7 +1811,8 @@ class Repository {
   Addcomment(BuildContext context, String PostUID) async {
     final responce = await apiServices.getApiCallWithToken(
         '${Config.Addcomments}?postUid=${PostUID}', context);
-    var jsonString = json.decode(responce.body);
+    // var jsonString = json.decode(responce.body);
+    var jsonString = json.decode(utf8.decode(responce.bodyBytes));
     print('jasonnString$jsonString');
     print('respnse ${responce.statusCode}');
     switch (responce.statusCode) {
@@ -1794,7 +1838,8 @@ class Repository {
     final response =
         await apiServices.postApiCall(Config.getcomments, params, context);
     print('AddPost$response');
-    var jsonString = json.decode(response.body);
+    // var jsonString = json.decode(response.body);
+    var jsonString = json.decode(utf8.decode(response.bodyBytes));
     switch (response.statusCode) {
       case 200:
         return jsonString;
@@ -1835,10 +1880,10 @@ class Repository {
     }
   } */
 
-  NewProfileAPI(BuildContext context, String otherUserUid) async {
+  NewProfileAPI(BuildContext context, String otherUserUid,bool profileNotification) async {
     print("sdfhsdfhsdfh-$otherUserUid");
     final response = await apiServices.getApiCallWithToken(
-        "${Config.NewfetchUserProfile}?otherUserUid=${otherUserUid}", context);
+        "${Config.myaccountApi}?otherUserUid=${otherUserUid}&profileNotification=${profileNotification}", context);
     print('AddPost$response');
     var jsonString = json.decode(response.body);
     switch (response.statusCode) {
@@ -1856,12 +1901,35 @@ class Repository {
         return jsonString;
     }
   }
+  
+    video_watch_detailAPI(BuildContext context, String postUid,String userUid,String watchTime) async {
+    final response = await apiServices.postApiCalla(
+        "${Config.video_watch_detail}?postUid=${postUid}&userUid=${userUid}&watchTime=${watchTime}", context);
+    print('AddPost$response');
+    var jsonString = json.decode(response.body);
+    switch (response.statusCode) {
+      case 200:
+        return seenNotificationModel.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+      case 400:
+        return Config.somethingWentWrong;
+      case 701:
+        return Config.somethingWentWrong;
+      default:
+        return jsonString;
+    }
+  }
+
 
   GetAppPostAPI(BuildContext context, String userUid) async {
     final response = await apiServices.getApiCallWithToken(
         "${Config.GetAppPost}?userUid=${userUid}", context);
     print('AddPost$response');
-    var jsonString = json.decode(response.body);
+    // var jsonString = json.decode(response.body);
+    var jsonString = json.decode(utf8.decode(response.bodyBytes));
     switch (response.statusCode) {
       case 200:
         return GetAppUserPostModel.fromJson(jsonString);
@@ -1883,7 +1951,8 @@ class Repository {
         "${Config.GetPostCommetAPI}?userUid=${userUid}&orderBy=${orderBy}",
         context);
     print('AddPost$response');
-    var jsonString = json.decode(response.body);
+    // var jsonString = json.decode(response.body);
+    var jsonString = json.decode(utf8.decode(response.bodyBytes));
     switch (response.statusCode) {
       case 200:
         return GetUserPostCommetModel.fromJson(jsonString);
@@ -1904,7 +1973,8 @@ class Repository {
     final response = await apiServices.getApiCallWithToken(
         "${Config.GetSavePostAPI}?userUid=${userUid}", context);
     print('AddPost$response');
-    var jsonString = json.decode(response.body);
+    // var jsonString = json.decode(response.body);
+    var jsonString = json.decode(utf8.decode(response.bodyBytes));
     switch (response.statusCode) {
       case 200:
         return GetSavePostModel.fromJson(jsonString);
@@ -1946,7 +2016,7 @@ class Repository {
     final response = await apiServices.postApiCall(
         "${Config.crateStroyCheck}", params, context);
     var jsonString = json.decode(response.body);
-    print("cretateStoryApi$jsonString");
+    print("cretateStoryApi:-------------$jsonString");
     switch (response.statusCode) {
       case 200:
         return CreateStroy.fromJson(jsonString);
@@ -2006,11 +2076,11 @@ class Repository {
 
   HashTagForYouAPI(
       BuildContext context, String hashtagViewType, String pageNumber) async {
-    final response = await apiServices.getApiCallWithToken(
+    final response = await apiServices.getApiCall(
         '${Config.HashTagForYou}?hashtagViewType=$hashtagViewType&pageNumber=$pageNumber&pageSize=20',
         context);
 
-    var jsonString = json.decode(response.body);
+    var jsonString = json.decode(utf8.decode(response.bodyBytes));
     print("jasonnStingview-${jsonString}");
     switch (response.statusCode) {
       case 200:
@@ -2036,7 +2106,9 @@ class Repository {
         '${Config.HashTagView}?hashtagName=${hashTag.replaceAll("#", "%23")}',
         context);
     print(response);
-    var jsonString = json.decode(response.body);
+    // var jsonString = json.decode(response.body);
+
+    var jsonString = json.decode(utf8.decode(response.bodyBytes));
     switch (response.statusCode) {
       case 200:
         return HashtagViewDataModel.fromJson(jsonString);
@@ -2061,8 +2133,9 @@ class Repository {
     final response = await apiServices.getApiCallWithToken(
         '${Config.view_story}?userUid=${userUid}&storyUid=${storyUid}',
         context);
-    print(response);
     var jsonString = json.decode(response.body);
+    print('ViewStory checck -${jsonString}');
+
     switch (response.statusCode) {
       case 200:
         return ViewStoryModel.fromJson(jsonString);
@@ -2087,15 +2160,15 @@ class Repository {
   }) async {
     final response;
     if (filterModule != null) {
-      response = await apiServices.getApiCallWithToken(
+      response = await apiServices.getApiCall(
           "${Config.getalluser}?pageNumber=$pageNumber&numberOfRecords=20&searchName=$searchName&filterModule=$filterModule",
           context);
     } else {
-      response = await apiServices.getApiCallWithToken(
+      response = await apiServices.getApiCall(
           "${Config.getalluser}?pageNumber=$pageNumber&numberOfRecords=20&searchName=$searchName",
           context);
     }
-    var jsonString = json.decode(response.body);
+    var jsonString = json.decode(utf8.decode(response.bodyBytes));
     print(jsonString);
     switch (response.statusCode) {
       case 200:
@@ -2141,7 +2214,8 @@ class Repository {
 
   aboutMe(BuildContext context, String aboutMe) async {
     final response = await apiServices.getApiCallWithToken(
-        '${Config.add_update_about_me}?aboutMe=$aboutMe', context);
+        '${Config.add_update_about_me}?aboutMe=${aboutMe.replaceAll("#", "%23")}',
+        context);
     var jsonString = json.decode(response.body);
     switch (response.statusCode) {
       case 200:
@@ -2159,15 +2233,17 @@ class Repository {
     }
   }
 
-  openSaveImagePost(
-      BuildContext context, String PostLink, String PostUID) async {
-    final response = PostUID == ""
+openSaveImagePost(BuildContext context, String PostUID) async {
+     final SharedPreferences prefs = await SharedPreferences.getInstance();
+  
+  String?  uuid = prefs.getString(PreferencesKey.loginUserID);
+    final response = /* PostUID == ""
         ? await apiServices.getApiCallWithToken(
             '${Config.OpenSaveImagePost}?postLink=${PostLink}', context)
-        : await apiServices.getApiCallWithToken(
-            '${Config.OpenSaveImagePost}?postLink=${PostLink}&postUid=$PostUID',
-            context);
-    var jsonString = json.decode(response.body);
+        : */
+        await apiServices.getApiCallWithToken(
+           uuid == null ?'${Config.OpenSaveImagePostGuest}?postUid=$PostUID' : '${Config.OpenSaveImagePost}?postUid=$PostUID', context);
+    var jsonString = json.decode(utf8.decode(response.bodyBytes));
     switch (response.statusCode) {
       case 200:
         return OpenSaveImagepostModel.fromJson(jsonString);
@@ -2183,7 +2259,6 @@ class Repository {
         return jsonString;
     }
   }
-
   getAllDataGet(BuildContext context, String userUid) async {
     print("shdsdgfgsdfgfg-$userUid");
     final response = await apiServices.getApiCallWithToken(
@@ -2256,7 +2331,7 @@ class Repository {
     final response = await apiServices.getApiCallWithToken(
         '${Config.PersonalChatList}', context);
     print(response);
-    var jsonString = json.decode(response.body);
+    var jsonString = json.decode(utf8.decode(response.bodyBytes));
     switch (response.statusCode) {
       case 200:
         return PersonalChatListModel.fromJson(jsonString);
@@ -2340,8 +2415,8 @@ class Repository {
   }
 
   SelectChatMemberList(BuildContext context) async {
-    final responce =
-        await apiServices.getApiCall('${Config.SelectChatMember}', context);
+    final responce = await apiServices.getApiCallWithToken(
+        '${Config.SelectChatMember}', context);
     var jsonString = json.decode(responce.body);
     print('jasonnString$jsonString');
     switch (responce.statusCode) {
@@ -2564,7 +2639,7 @@ class Repository {
     final responce = await apiServices.getApiCallWithToken(
         '${Config.DMChatList}?userChatInboxUid=${userChatInboxUid}&pageNumber=${pageNumber}&numberOfRecords=${numberOfRecords}',
         context);
-    var jsonString = json.decode(responce.body);
+    var jsonString = json.decode(utf8.decode(responce.bodyBytes));
 
     switch (responce.statusCode) {
       case 200:
@@ -2585,7 +2660,8 @@ class Repository {
   Blogcomment(BuildContext context, String blogID) async {
     final responce = await apiServices.getApiCallWithToken(
         '${Config.blogComment}?blogUid=${blogID}', context);
-    var jsonString = json.decode(responce.body);
+    // var jsonString = json.decode(responce.body);
+    var jsonString = json.decode(utf8.decode(responce.bodyBytes));
     print('jasonnString$jsonString');
     print('respnse ${responce.statusCode}');
     switch (responce.statusCode) {
@@ -2635,7 +2711,8 @@ class Repository {
     final response =
         await apiServices.postApiCall(Config.addBlogcomments, params, context);
     print('AddPost$response');
-    var jsonString = json.decode(response.body);
+    // var jsonString = json.decode(response.body);
+    var jsonString = json.decode(utf8.decode(response.bodyBytes));
     switch (response.statusCode) {
       case 200:
         return jsonString;
@@ -2793,7 +2870,7 @@ class Repository {
         '${Config.get_all_inbox_images}?userChatInboxUid=${userChatInboxUid}&pageNumber=${pageNumber}&numberOfRecords=20',
         context);
     var jsonString = json.decode(responce.body);
-    print('jasonnString$jsonString');
+    print('get_all_inbox_images$jsonString');
     print('respnse ${responce.statusCode}');
     switch (responce.statusCode) {
       case 200:
@@ -2810,6 +2887,76 @@ class Repository {
         return jsonString;
     }
   }
+   reactionMessageAddedOnStory(
+      BuildContext context, String reactionMessage, String storyUid,
+      {bool? emojiReaction}) async {
+    print("emojireaction-$emojiReaction");
+
+    final responce = await apiServices.getApiCallWithToken(
+        emojiReaction == true
+            ? '${Config.reaction_message_added_on_story}?reactionMessage=$reactionMessage&storyUid=$storyUid&emojiReaction=$emojiReaction'
+            : '${Config.reaction_message_added_on_story}?reactionMessage=$reactionMessage&storyUid=$storyUid',
+        context);
+    var jsonString = json.decode(responce.body);
+    print('reactionMessageAddedOnStory$jsonString');
+    print('respnse ${responce.statusCode}');
+    switch (responce.statusCode) {
+      case 200:
+        return jsonString;
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+      case 400:
+        return Config.somethingWentWrong;
+      case 701:
+        return Config.somethingWentWrong;
+      default:
+        return jsonString;
+    }
+  }
+    ReadAllMassages(BuildContext context) async {
+    final responce = await apiServices.getApiCallWithToken(
+        '${Config.readAllmsg}', context);
+    var jsonString = json.decode(responce.body);
+    print('jasonnString$jsonString');
+    switch (responce.statusCode) {
+      case 200:
+        return ReadAllModel.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+      case 400:
+        return Config.somethingWentWrong;
+      case 701:
+        return Config.somethingWentWrong;
+      default:
+        return jsonString;
+    }
+  }
+
+  readnotificationscount(BuildContext context) async {
+    final responce = await apiServices.getApiCallWithToken(
+        '${Config.readnotificationscount}', context);
+    var jsonString = json.decode(responce.body);
+    print('jasonnString$jsonString');
+    switch (responce.statusCode) {
+      case 200:
+        return ReadAllModel.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+      case 400:
+        return Config.somethingWentWrong;
+      case 701:
+        return Config.somethingWentWrong;
+      default:
+        return jsonString;
+    }
+  }
+ 
 }
 // var headers = {
 //   'Authorization': 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJpc1ZlcmlmaWVkIjp0cnVlLCJtb2R1bGUiOiJFTVBMT1lFRSIsImlzQWN0aXZlIjp0cnVlLCJ1dWlkIjoiODYwMWViNTItNzk4NS00MWU3LTgwOTAtYmMyMjQ0MjkwZjkzIiwidXNlcm5hbWUiOiJBTiIsInN1YiI6IkFOIiwiaWF0IjoxNjkxMTUyODIxLCJleHAiOjE2OTIyMzI4MjF9.AjSlFxHlTU9opgsyXaqVh_sMQuv7f-fKGmIGle6879MD-OAGTNcPN5r9ZW8Go1124YE2BbSrc1Lj5GuspgilWg'

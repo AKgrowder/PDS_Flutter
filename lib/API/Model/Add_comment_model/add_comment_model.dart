@@ -98,6 +98,8 @@ class Object1 {
   String? profilePic;
   String? userName;
   String? createdAt;
+  String? translatedComment;
+  bool? isTrsnalteoption;
   bool? commentByLoggedInUser;
 
   Object1(
@@ -107,6 +109,8 @@ class Object1 {
       this.profilePic,
       this.userName,
       this.createdAt,
+      this.translatedComment,
+      this.isTrsnalteoption,
       this.commentByLoggedInUser});
 
   Object1.fromJson(Map<String, dynamic> json) {
@@ -116,6 +120,8 @@ class Object1 {
     profilePic = json['profilePic'];
     userName = json['userName'];
     createdAt = json['createdAt'];
+    translatedComment = json['translatedComment'];
+    isTrsnalteoption = json['isTrsnalteoption'];
     commentByLoggedInUser = json['commentByLoggedInUser'];
   }
 
@@ -127,6 +133,8 @@ class Object1 {
     data['profilePic'] = this.profilePic;
     data['userName'] = this.userName;
     data['createdAt'] = this.createdAt;
+    data['translatedComment'] = this.translatedComment;
+    data['isTrsnalteoption'] = this.isTrsnalteoption;
     data['commentByLoggedInUser'] = this.commentByLoggedInUser;
     return data;
   }

@@ -46,7 +46,11 @@ class _TopToolsState extends State<TopTools> {
                     ),
                     backGroundColor: Colors.black12,
                     onTap: () async {
+                      print("onTap -${controlNotifier.isTextEditing}");
+                      print("onTap -${controlNotifier.isPainting}");
                       var res = await exitDialog(
+                          isTextEditing: controlNotifier.isTextEditing,
+                          selctedparth: controlNotifier.mediaPath,
                           context: widget.context,
                           contentKey: widget.contentKey);
                       if (res) {
@@ -59,11 +63,11 @@ class _TopToolsState extends State<TopTools> {
                       onTap: () {
                         if (controlNotifier.gradientIndex >=
                             controlNotifier.gradientColors!.length - 1) {
-                          setState(() {
+                          super.setState(() {
                             controlNotifier.gradientIndex = 0;
                           });
                         } else {
-                          setState(() {
+                          super.setState(() {
                             controlNotifier.gradientIndex += 1;
                           });
                         }
@@ -79,13 +83,13 @@ class _TopToolsState extends State<TopTools> {
                     onTap: () async {
                       if (paintingNotifier.lines.isNotEmpty ||
                           itemNotifier.draggableWidget.isNotEmpty) {
-                            print("paintingNotifier.lines${controlNotifier.mediaPath}");
+                        print(
+                            "paintingNotifier.lines${controlNotifier.mediaPath}");
                         var response = await takePicture(
-                          isTextEditing: controlNotifier.isTextEditing,
-                           SelectPath :controlNotifier.mediaPath,
+                            SelectPath: controlNotifier.mediaPath,
                             contentKey: widget.contentKey,
                             context: context,
-                            saveToGallery: true);
+                            saveToGallery: false);
                         if (response) {
                           Fluttertoast.showToast(msg: 'Successfully saved');
                         } else {
@@ -94,46 +98,50 @@ class _TopToolsState extends State<TopTools> {
                       }
                     }),
                 ToolButton(
-                    child: const ImageIcon(
-                      AssetImage('assets/icons/stickers.png',
-                          package: 'stories_editor'),
-                      color: Colors.white,
-                      size: 20,
-                    ),
-                    backGroundColor: Colors.black12,
-                    onTap: () async{
-                      String? emoji = await showModalBottomSheet(
+                  child: const ImageIcon(
+                    AssetImage('assets/icons/stickers.png',
+                        package: 'stories_editor'),
+                    color: Colors.white,
+                    size: 20,
+                  ),
+                  backGroundColor: Colors.black12,
+                  onTap: () async {
+                    String? emoji = await showModalBottomSheet(
                       context: context,
                       backgroundColor: Colors.black,
                       builder: (BuildContext context) {
                         return const Emojies();
                       },
                     );
-                      if(emoji != null && emoji.isNotEmpty){
-                        var _editorProvider =
-                        Provider.of<TextEditingNotifier>(this.context, listen: false);
-                        final _editableItemNotifier =
-                        Provider.of<DraggableWidgetNotifier>(context, listen: false);
-                        _editorProvider.text = emoji;
-                        _editableItemNotifier.draggableWidget.add(EditableItem()
-                          ..type = ItemType.text
-                          ..text = _editorProvider.text.trim()
-                          ..backGroundColor = _editorProvider.backGroundColor
-                          ..textColor = controlNotifier.colorList![_editorProvider.textColor]
-                          ..fontFamily = _editorProvider.fontFamilyIndex
-                          ..fontSize = _editorProvider.textSize * 3
-                          ..fontAnimationIndex = _editorProvider.fontAnimationIndex
-                          ..textAlign = _editorProvider.textAlign
-                          ..textList = _editorProvider.textList
-                          ..animationType =
-                          _editorProvider.animationList[_editorProvider.fontAnimationIndex]
-                          ..position = const Offset(0.0, 0.0));
-                        _editorProvider.setDefaults();
-                      }
-
-                    } /*createGiphyItem(
+                    if (emoji != null && emoji.isNotEmpty) {
+                      var _editorProvider = Provider.of<TextEditingNotifier>(
+                          this.context,
+                          listen: false);
+                      final _editableItemNotifier =
+                          Provider.of<DraggableWidgetNotifier>(context,
+                              listen: false);
+                      _editorProvider.text = emoji;
+                      _editableItemNotifier.draggableWidget.add(EditableItem()
+                        ..type = ItemType.text
+                        ..text = _editorProvider.text.trim()
+                        ..backGroundColor = _editorProvider.backGroundColor
+                        ..textColor = controlNotifier
+                            .colorList![_editorProvider.textColor]
+                        ..fontFamily = _editorProvider.fontFamilyIndex
+                        ..fontSize = _editorProvider.textSize * 3
+                        ..fontAnimationIndex =
+                            _editorProvider.fontAnimationIndex
+                        ..textAlign = _editorProvider.textAlign
+                        ..textList = _editorProvider.textList
+                        ..animationType = _editorProvider
+                            .animationList[_editorProvider.fontAnimationIndex]
+                        ..position = const Offset(0.0, 0.0));
+                      _editorProvider.setDefaults();
+                    }
+                  } /*createGiphyItem(
                         context: context, giphyKey: controlNotifier.giphyKey))*/
-                    ,),
+                  ,
+                ),
                 ToolButton(
                     child: const ImageIcon(
                       AssetImage('assets/icons/draw.png',

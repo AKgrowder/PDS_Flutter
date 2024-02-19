@@ -53,6 +53,13 @@ class PreferencesKey {
   static String MaxStoryUploadSizeInMB = "MaxStoryUploadSizeInMB";
   static String MaxInboxUploadSizeInMB = "MaxInboxUploadSizeInMB";
   static String NotificationCount = "NotificationCount";
+  static String MessageCount = "MessageCount";
+  static String StroyLengthCheck = "StroyLengthCheck";
+  static String AwsImageInPackagingLogoUrl = "AwsImageInPackagingLogoUrl";
+
+  static String PushNotificationUID = "PushNotificationUID";
+  static String PushNotificationSubject = "PushNotificationSubject";
+  static String vidoCallUid = "videoCallUid";
 
 
   

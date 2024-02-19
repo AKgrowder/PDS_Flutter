@@ -75,15 +75,21 @@ class _AddWorkExperienceScreenState extends State<AddWorkExperienceScreen> {
   String? apiDatepresent;
   String? apiDateEnd;
   String? formattedDateEnd;
+
   DateTime? pickedStartDate;
+
+  // DateTime now = DateTime.now();
+  // String formattedDateTime = DateFormat('yyyy-MM-dd HH:mm:ss').format(pickedStartDate);
 
   void initState() {
     super.initState();
     if (widget.typeName != "COMPANY") {
       BlocProvider.of<NewProfileSCubit>(context).fetchExprties(context);
     }
-    print("widget.endDate"+widget.endDate.toString());
-    valuesecond= widget.endDate=="Present";
+    print("widget.endDate" + widget.endDate.toString());
+
+    valuesecond = widget.endDate == "Present";
+
     BlocProvider.of<NewProfileSCubit>(context).IndustryTypeAPI(context);
     if (widget.edit == true) {
       companyNameController.text = widget.companyName.toString();
@@ -93,7 +99,6 @@ class _AddWorkExperienceScreenState extends State<AddWorkExperienceScreen> {
       EndDateController.text = widget.endDate.toString();
       print("startDate${widget.startDate.toString()}");
       print("endDate${widget.endDate.toString()}");
-      
 
       //  widget.typeName != "COMPANY" ? selectedExpertise.expertiseName = widget.expertise : "";
     }
@@ -259,7 +264,7 @@ class _AddWorkExperienceScreenState extends State<AddWorkExperienceScreen> {
                                   onChanged: (IndustryType? newValue) {
                                     // When the user selects an option from the dropdown.
                                     if (newValue != null) {
-                                      setState(() {
+                                      super.setState(() {
                                         selectedIndustryTypes = newValue;
                                         print(
                                             "SelectedIndustryType: ${newValue.industryTypeUid}");
@@ -299,7 +304,7 @@ class _AddWorkExperienceScreenState extends State<AddWorkExperienceScreen> {
                                                   industryUUID.add(
                                                       "${element.industryTypeUid}");
                                                 });
-                                                setState(() {});
+                                                super.setState(() {});
                                               },
                                             ),
                                           ),
@@ -338,7 +343,7 @@ class _AddWorkExperienceScreenState extends State<AddWorkExperienceScreen> {
                                         onChanged: (Expertise? newValue) {
                                           // When the user selects an option from the dropdown.
                                           if (newValue != null) {
-                                            setState(() {
+                                            super.setState(() {
                                               selectedExpertise = newValue;
                                               print(
                                                   "Selectedexpertise: ${newValue.uid}");
@@ -362,11 +367,11 @@ class _AddWorkExperienceScreenState extends State<AddWorkExperienceScreen> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              Checkbox( 
+                              Checkbox(
                                 activeColor: ColorConstant.primary_color,
                                 value: this.valuesecond,
-                                onChanged: (bool? value ) {
-                                  setState(() {
+                                onChanged: (bool? value) {
+                                  super.setState(() {
                                     this.valuesecond = value!;
 
                                     if (valuesecond == true) {
@@ -423,9 +428,9 @@ class _AddWorkExperienceScreenState extends State<AddWorkExperienceScreen> {
                                                 DateTime.now());
 
                                         print(
-                                            "formattedDate Start--${formattedDateStart}");
+                                            "formattedDate Start--${apiDateStart}");
 
-                                        setState(() {
+                                        super.setState(() {
                                           StartDateController.text =
                                               formattedDateStart.toString();
                                         });
@@ -477,7 +482,7 @@ class _AddWorkExperienceScreenState extends State<AddWorkExperienceScreen> {
                                                           DateTime.now(),
                                                   firstDate: pickedStartDate ??
                                                       DateTime.now(),
-                                                  lastDate: DateTime(2101));
+                                                  lastDate: DateTime.now());
 
                                           if (pickedDate != null) {
                                             print(pickedDate);
@@ -490,7 +495,7 @@ class _AddWorkExperienceScreenState extends State<AddWorkExperienceScreen> {
                                             print(
                                                 "formattedDate end--${formattedDateEnd}");
 
-                                            setState(() {
+                                            super.setState(() {
                                               EndDateController.text =
                                                   formattedDateEnd.toString();
                                             });
@@ -594,7 +599,7 @@ class _AddWorkExperienceScreenState extends State<AddWorkExperienceScreen> {
                                     selectedIndustryTypes?.industryTypeName,
                                 "jobProfile": JobProfileController.text,
                                 "endDate": EndDateController.text == "Present"
-                                    ? apiDatepresent
+                                    ? "Present"
                                     : apiDateEnd,
                                 "startDate": apiDateStart,
                                 "userWorkExperienceUid": widget.workUserID
@@ -681,7 +686,7 @@ class _AddWorkExperienceScreenState extends State<AddWorkExperienceScreen> {
                                 "expertiseIn": selectedExpertise?.expertiseName,
                                 "jobProfile": JobProfileController.text,
                                 "endDate": EndDateController.text == "Present"
-                                    ? apiDatepresent
+                                    ? "Present"
                                     : apiDateEnd,
                                 "startDate": apiDateStart,
                                 "userWorkExperienceUid": widget.workUserID
@@ -754,13 +759,14 @@ class _AddWorkExperienceScreenState extends State<AddWorkExperienceScreen> {
                             } else {
                               apiDatepresent = DateFormat('yyyy-MM-dd')
                                   .format(DateTime.now());
+                              print('jkjjjhjhh-$apiDatepresent');
                               var params = {
                                 "companyName": companyNameController.text,
                                 "industryType":
                                     selectedIndustryTypes?.industryTypeName,
                                 "jobProfile": JobProfileController.text,
                                 "endDate": EndDateController.text == "Present"
-                                    ? apiDatepresent
+                                    ? "Present"
                                     : apiDateEnd,
                                 "startDate": apiDateStart
                               };
@@ -846,7 +852,7 @@ class _AddWorkExperienceScreenState extends State<AddWorkExperienceScreen> {
                                 "expertiseIn": selectedExpertise?.expertiseName,
                                 "jobProfile": JobProfileController.text,
                                 "endDate": EndDateController.text == "Present"
-                                    ? apiDatepresent
+                                    ? "Present"
                                     : apiDateEnd,
                                 "startDate": apiDateStart,
                               };
@@ -866,7 +872,7 @@ class _AddWorkExperienceScreenState extends State<AddWorkExperienceScreen> {
                             borderRadius: BorderRadius.circular(10)),
                         child: Center(
                           child: Text(
-                           "Save",
+                            "Save",
                             style: TextStyle(
                               fontSize: 17,
                               fontWeight: FontWeight.w500,
