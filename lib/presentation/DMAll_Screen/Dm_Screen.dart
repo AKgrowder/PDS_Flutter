@@ -15,6 +15,7 @@ import 'package:linkfy_text/linkfy_text.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pds/API/ApiService/DMSocket.dart';
 import 'package:pds/API/Bloc/dmInbox_bloc/dmMessageState.dart';
+import 'package:pds/API/Bloc/senMSG_Bloc/senMSG_cubit.dart';
 import 'package:pds/API/Model/createDocumentModel/createDocumentModel.dart';
 import 'package:pds/API/Model/inboxScreenModel/inboxScrrenModel.dart';
 import 'package:pds/API/Model/story_model.dart';
@@ -228,7 +229,7 @@ class _DmScreenState extends State<DmScreen> {
 
   pageNumberMethod() async {
     await BlocProvider.of<DmInboxCubit>(context)
-        .DMChatListApiMethod(widget.ChatInboxUid, 1, 100, context);
+        .DMChatListApiMethod(widget.ChatInboxUid, 1, context);
   }
 
   getUserID() async {
@@ -702,16 +703,17 @@ class _DmScreenState extends State<DmScreen> {
                                           controller: scrollController,
                                           child: Column(
                                             children: [
-                                              PaginationWidget(
+                                              chatPaginationWidget(
                                                   onPagination: (p0) async {
-                                                    // await BlocProvider.of<
-                                                    //             senMSGCubit>(
-                                                    //         context)
-                                                    //     .coomentPagePagenation(
-                                                    //         widget.Room_ID,
-                                                    //         context,
-                                                    //         p0.toString(),
-                                                    //         ShowLoader: true);
+                                                    await BlocProvider.of<
+                                                                DmInboxCubit>(
+                                                            context)
+                                                        .DMChatListApiPagantion(
+                                                            widget.ChatInboxUid,
+                                                          
+                                                            p0+1,
+                                                            context 
+                                                            );
                                                   },
                                                   offSet: (getInboxMessagesModel
                                                       ?.object
