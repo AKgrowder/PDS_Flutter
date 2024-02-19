@@ -40,13 +40,7 @@ class DmInboxCubit extends Cubit<getInboxState> {
       a.reversed;
 
       if (DmInboxPagnationWiget.success == true) {
-        // DmInbox.object.content.insert(0, DmInboxPagnationWiget.object.content);
-        // addAll(DmInboxPagnationWiget.object.content);
-
-        // DmInbox.object.content.addAll(DmInboxPagnationWiget.object.content);
-
-        DmInbox.object.content.insertAll(
-            0, DmInboxPagnationWiget.object.content.reversed.toList());
+        DmInbox.object.content.addAll(DmInboxPagnationWiget.object.content);
         DmInbox.object.pageable.pageNumber =
             DmInboxPagnationWiget.object.pageable.pageNumber;
         DmInbox.object.totalElements =
