@@ -190,3 +190,196 @@ class _PaginationWidgetMinScrollState extends State<PaginationWidgetMinScroll> {
     ]);
   }
 }
+
+
+
+//////  only for chat Listing  
+///
+class chatPaginationWidget extends StatefulWidget {
+  int? offSet;
+  ScrollController? scrollController;
+  Future<void> Function(int)? onPagination;
+  int? totalSize;
+  Widget? items;
+  bool isPagination;
+  chatPaginationWidget(
+      {this.offSet,
+      this.scrollController,
+      this.onPagination,
+      this.totalSize,
+      this.items,
+      this.isPagination = true});
+
+  @override
+  State<chatPaginationWidget> createState() => _chatPaginationWidgetState();
+}
+
+class _chatPaginationWidgetState extends State<chatPaginationWidget> {
+  int _offset = 0;
+  List<int>? _offsetList;
+  bool _isLoading = false;
+  @override
+  void initState() {
+    super.initState();
+    print("++++++++${_offset}");
+    _offset = 1;
+    _offsetList = [1];
+
+    widget.scrollController?.addListener(() {
+      if (widget.scrollController?.position.pixels ==
+              widget.scrollController?.position.minScrollExtent &&
+          widget.totalSize != null &&
+          !_isLoading &&
+          widget.isPagination) {
+        pagination();
+      }
+    });
+  }
+
+  void pagination() async {
+    int pageSize = ((widget.totalSize ?? 0) / 10).ceil();
+    print(pageSize);
+    if ((_offset) < pageSize && !_offsetList!.contains(_offset + 1)) {
+      super.setState(() {
+        _offset++;
+        _offsetList?.add((_offset));
+        _isLoading = true;
+      });
+      print("**************${_offset}");
+      await widget.onPagination!(_offset);
+      super.setState(() {
+        _isLoading = false;
+      });
+    } else {
+      if (_isLoading) {
+        super.setState(() {
+          _isLoading = false;
+        });
+      }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (widget.offSet != null) {
+      // print('offset ${widget.offSet}');
+      _offset = widget.offSet!;
+      _offsetList = [];
+      for (int i = 1; i <= (widget.offSet ?? 0); i++) {
+        _offsetList?.add(i);
+      }
+      // print("dsfhfgh-$_offsetList");
+    }
+    return Column(children: [
+      widget.items ?? SizedBox(),
+      ((widget.totalSize == null ||
+              (_offset) >= ((widget.totalSize ?? 0) / 10).ceil() ||
+              _offsetList!.contains((_offset) + 1)))
+          ? SizedBox()
+          : Center(
+              child: Padding(
+              padding: (_isLoading) ? EdgeInsets.all(5) : EdgeInsets.zero,
+              child: _isLoading
+                  ? GFLoader(
+                      type: GFLoaderType.ios,
+                    )
+                  : SizedBox(),
+            )),
+    ]);
+  }
+}
+
+class chatPaginationWidgetMinScroll extends StatefulWidget {
+  int? offSet;
+  ScrollController? scrollController;
+  Future<void> Function(int)? onPagination;
+  int? totalSize;
+  Widget? items;
+  bool isPagination;
+  chatPaginationWidgetMinScroll(
+      {this.offSet,
+      this.scrollController,
+      this.onPagination,
+      this.totalSize,
+      this.items,
+      this.isPagination = true});
+
+  @override
+  State<PaginationWidgetMinScroll> createState() =>
+      _PaginationWidgetMinScrollState();
+}
+
+class _chatPaginationWidgetMinScrollState extends State<PaginationWidgetMinScroll> {
+  int _offset = 0;
+  List<int>? _offsetList;
+  bool _isLoading = false;
+  @override
+  void initState() {
+    super.initState();
+    print("++++++++${_offset}");
+    _offset = 1;
+    _offsetList = [1];
+
+    widget.scrollController?.addListener(() {
+      if (widget.scrollController?.position.pixels ==
+              widget.scrollController?.position.minScrollExtent &&
+          widget.totalSize != null &&
+          !_isLoading &&
+          widget.isPagination) {
+        pagination();
+      }
+    });
+  }
+
+  void pagination() async {
+    int pageSize = ((widget.totalSize ?? 0) / 10).ceil();
+    print(pageSize);
+    if ((_offset) < pageSize && !_offsetList!.contains(_offset + 1)) {
+      super.setState(() {
+        _offset++;
+        _offsetList?.add((_offset));
+        _isLoading = true;
+      });
+      print("**************${_offset}");
+      await widget.onPagination!(_offset);
+      super.setState(() {
+        _isLoading = false;
+      });
+    } else {
+      if (_isLoading) {
+        super.setState(() {
+          _isLoading = false;
+        });
+      }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (widget.offSet != null) {
+      // print('offset ${widget.offSet}');
+      _offset = widget.offSet!;
+      _offsetList = [];
+      for (int i = 1; i <= (widget.offSet ?? 0); i++) {
+        _offsetList?.add(i);
+      }
+      // print("dsfhfgh-$_offsetList");
+    }
+    return Column(children: [
+      widget.items ?? SizedBox(),
+      ((widget.totalSize == null ||
+              (_offset) >= ((widget.totalSize ?? 0) / 10).ceil() ||
+              _offsetList!.contains((_offset) + 1)))
+          ? SizedBox()
+          : Center(
+              child: Padding(
+              padding: (_isLoading) ? EdgeInsets.all(5) : EdgeInsets.zero,
+              child: _isLoading
+                  ? GFLoader(
+                      type: GFLoaderType.ios,
+                    )
+                  : SizedBox(),
+            )),
+    ]);
+  }
+}
