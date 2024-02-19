@@ -343,9 +343,7 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
 
           // Image has been loaded
           imageLoaded = true;
-
           _storyController!.unpause();
-
           if (DummyStoryViewBool == true) {
             StoryView = true;
             BlocProvider.of<ViewStoryCubit>(context).StoryViewList(context,
@@ -390,9 +388,7 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
             ),
           )
         : StoryPageScaffold(
-            body: widget.buttonData.images[_curSegmentIndex].image!
-                    .contains("car")
-                ? Container(
+            body: Container(
                     width: double.infinity,
                     height: double.infinity,
                     decoration: BoxDecoration(
@@ -425,9 +421,7 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
                       ),
                     ),
                   )
-                : ZoomableImage(
-                    imageUrl: widget.buttonData.images[_curSegmentIndex].image!,
-                  ));
+                );
   }
 
   Widget _buildPageContent1() {
