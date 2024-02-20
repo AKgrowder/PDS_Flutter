@@ -10,6 +10,7 @@ import 'package:pds/API/Bloc/accounttype_bloc/account_cubit.dart';
 import 'package:pds/API/Bloc/accounttype_bloc/account_state.dart';
 import 'package:pds/API/Bloc/logOut_bloc/logOut_cubit.dart';
 import 'package:pds/core/utils/color_constant.dart';
+import 'package:pds/presentation/%20new/Blocked_userList_screen.dart';
 import 'package:pds/presentation/change_password_screen/change_password_screen.dart';
 import 'package:pds/presentation/settings/LogOut_dailog.dart';
 import 'package:pds/widgets/delete_dailog.dart';
@@ -39,13 +40,23 @@ var Setting_Array = [
   "Saved Pins",
   "Change Password",
   "Prefrences",
+
   "Support",
   "Policies",
   "Invite Friends",
   "Rate Us",
   "Delete Account",
   "Public & Private Profile",
+   "Block User",
   "Log Out",
+  /* "Change Password",
+  "Public & Private Profile",
+  "Block User",
+  "Policies",
+  "Invite Friends",
+  "Rate Us",
+  "Delete Account",
+  "Log Out", */
 ];
 
 // var Setting_Array2 = [
@@ -65,6 +76,7 @@ var SettingImage_Array = [
   // ImageConstant.setting_lock,
   ImageConstant.profileLock,
   ImageConstant.setting_settingimage,
+
   ImageConstant.setting_phone,
   // ImageConstant.Raised_Tickets,
   // ImageConstant.Delete,
@@ -74,7 +86,7 @@ var SettingImage_Array = [
   ImageConstant.setting_star,
   // ImageConstant.Invite_Friends,
   ImageConstant.setting_delete,
-  ImageConstant.profileLock,
+  ImageConstant.profileLock, ImageConstant.block_user,
   ImageConstant.setting_power,
   // ImageConstant.setting_power,
   // ImageConstant.setting_phone,
@@ -462,12 +474,9 @@ class _SettingScreenState extends State<SettingScreen> {
                                   print("profile");
                                   break;
                                 case 10:
-                                  showDialog(
-                                      context: context,
-                                      builder: (_) => BlocProvider<LogOutCubit>(
-                                            create: (context) => LogOutCubit(),
-                                            child: LogOutdailog(),
-                                          ));
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                      builder: (context) =>
+                                          const BlockedUserScreen()));
 
                                   break;
                                 // case 11:
@@ -476,17 +485,20 @@ class _SettingScreenState extends State<SettingScreen> {
 
                                 //   break;
 
-                                /* case 6:
-                                      Navigator.of(context).push(MaterialPageRoute(
-                                          builder: (context) =>
-                                              const RaiseQueryScreen()));
-                                      break;
-                                    case 7:
+                                case 11:
+                                  showDialog(
+                                      context: context,
+                                      builder: (_) => BlocProvider<LogOutCubit>(
+                                            create: (context) => LogOutCubit(),
+                                            child: LogOutdailog(),
+                                          ));
+                                  break;
+                                /*   case 7:
                                       showDialog(
                                         context: context,
                                         builder: (_) => FunkyOverlay(),
-                                      );
-                                      break; */
+                                      ); 
+                                      break;  */
                                 default:
                               }
                             },

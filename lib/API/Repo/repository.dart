@@ -7,6 +7,7 @@ import 'package:pds/API/Model/AddExportProfileModel/AddExportProfileModel.dart';
 import 'package:pds/API/Model/Add_PostModel/Add_PostModel.dart';
 import 'package:pds/API/Model/Add_PostModel/Add_postModel_Image.dart';
 import 'package:pds/API/Model/Add_comment_model/add_comment_model.dart';
+import 'package:pds/API/Model/BlockeUserModel/BlockUser_list_model.dart';
 import 'package:pds/API/Model/BlogComment_Model/BlogCommentDelete_model.dart';
 import 'package:pds/API/Model/BlogComment_Model/BlogComment_model.dart';
 import 'package:pds/API/Model/BlogComment_Model/BlogLikeList_model.dart';
@@ -88,6 +89,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../ApiService/ApiService.dart';
 import '../Const/const.dart';
 import '../Model/AddThread/CreateRoom_Model.dart';
+import '../Model/BlockeUserModel/BlockUser_model.dart';
 import '../Model/CreateRoomModel/CreateRoom_Model.dart';
 import '../Model/Edit_room_model/edit_room_model.dart';
 import '../Model/FatchAllMembers/fatchallmembers_model.dart';
@@ -2944,6 +2946,49 @@ openSaveImagePost(BuildContext context, String PostUID) async {
     switch (responce.statusCode) {
       case 200:
         return ReadAllModel.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+      case 400:
+        return Config.somethingWentWrong;
+      case 701:
+        return Config.somethingWentWrong;
+      default:
+        return jsonString;
+    }
+  }
+
+
+  blockUser(String blockUserID,bool isBlocked,
+     BuildContext context) async {
+    final respone = await apiServices.postApiCall(
+        "${Config.blockUser}?blockUserUid=${blockUserID}&isBlock=${isBlocked}" , {}, context);
+    var jsonString = json.decode(respone.body);
+    print("dfhdsfhd-$jsonString");
+    switch (respone.statusCode) {
+      case 200:
+        return BlockUserModel.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+      case 400:
+        return Config.somethingWentWrong;
+      case 701:
+        return Config.somethingWentWrong;
+      default:
+        return jsonString;
+    }
+  }
+    blockUserList(BuildContext context) async {
+    final responce = await apiServices.getApiCallWithToken(
+        '${Config.blockUserList}', context);
+    var jsonString = json.decode(responce.body);
+    print('jasonnString$jsonString');
+    switch (responce.statusCode) {
+      case 200:
+        return BlockUserListModel.fromJson(jsonString);
       case 404:
         return Config.somethingWentWrong;
       case 500:
