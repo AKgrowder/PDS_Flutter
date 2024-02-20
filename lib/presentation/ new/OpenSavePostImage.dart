@@ -2063,7 +2063,7 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
                                           // GestureDetector(
                                           //   onTap: () {
                                           //     Share.share(
-                                          //         'https://play.google.com/store/apps/details?id=com.inpackaging.app');
+                                          //         'https://play.google.com/store/apps/details?id=com.pds.app');
                                           //   },
                                           //   child: Container(
                                           //     color: Colors.transparent,
@@ -3097,7 +3097,7 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
                                         // GestureDetector(
                                         //   onTap: () {
                                         //     Share.share(
-                                        //         'https://play.google.com/store/apps/details?id=com.inpackaging.app');
+                                        //         'https://play.google.com/store/apps/details?id=com.pds.app');
                                         //   },
                                         //   child: Container(
                                         //     color: Colors.transparent,

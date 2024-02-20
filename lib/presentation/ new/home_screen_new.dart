@@ -523,7 +523,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                     GestureDetector(
                       onTap: () {
                         final Uri url = Uri.parse(
-                            "https://play.google.com/store/apps/details?id=com.inpackaging.app");
+                            "https://play.google.com/store/apps/details?id=com.pds.app");
 
                         launchUrl(url, mode: LaunchMode.externalApplication);
                       },
@@ -655,7 +655,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                         GestureDetector(
                           onTap: () {
                             final Uri url = Uri.parse(
-                                "https://play.google.com/store/apps/details?id=com.inpackaging.app");
+                                "https://play.google.com/store/apps/details?id=com.pds.app");
 
                             launchUrl(url,
                                 mode: LaunchMode.externalApplication);
@@ -4258,7 +4258,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                               // GestureDetector(
                                                               //   onTap: () {
                                                               //     Share.share(
-                                                              //         'https://play.google.com/store/apps/details?id=com.inpackaging.app');
+                                                              //         'https://play.google.com/store/apps/details?id=com.pds.app');
                                                               //   },
                                                               //   child: Container(
                                                               //     color: Colors
@@ -5472,7 +5472,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                               // GestureDetector(
                                                               //   onTap: () {
                                                               //     Share.share(
-                                                              //         'https://play.google.com/store/apps/details?id=com.inpackaging.app');
+                                                              //         'https://play.google.com/store/apps/details?id=com.pds.app');
                                                               //   },
                                                               //   child: Container(
                                                               //     color: Colors
