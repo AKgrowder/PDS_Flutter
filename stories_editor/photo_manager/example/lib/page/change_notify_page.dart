@@ -83,6 +83,6 @@ class _ChangeNotifyExampleState extends State<ChangeNotifyExample> {
   void _onChange(MethodCall value) {
     final String log = '${value.method}: ${value.arguments}';
     logs.add(log);
-    setState(() {});
+    super.setState(() {});
   }
 }

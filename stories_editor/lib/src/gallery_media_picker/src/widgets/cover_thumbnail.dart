@@ -64,7 +64,7 @@ class _CoverThumbnailState extends State<CoverThumbnail> {
     PhotoManager.getAssetPathList().then((pathList) {
       /// don't delete setState
       Future.delayed(Duration.zero, () {
-        setState(() {
+        super.setState(() {
           provider.resetPathList(pathList);
         });
       });

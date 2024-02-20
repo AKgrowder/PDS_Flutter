@@ -209,7 +209,7 @@ class _ExpertsScreenState extends State<ExpertsScreen> {
                             itemBuilder: (BuildContext context, int index) {
                               return GestureDetector(
                                 onTap: () {
-                                  setState(() {
+                                  super.setState(() {
                                     _containerColor = index;
                                   });
                                 },

@@ -46,7 +46,7 @@ class _FollowersState extends State<Followers> {
   dataGetFuntion() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     User_ID = prefs.getString(PreferencesKey.loginUserID);
-    setState(() {});
+    super.setState(() {});
   }
 
   @override

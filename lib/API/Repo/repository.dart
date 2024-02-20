@@ -97,6 +97,7 @@ import '../Model/HomeScreenModel/MyPublicRoom_model.dart';
 import '../Model/HomeScreenModel/PublicRoomModel.dart';
 import '../Model/HomeScreenModel/getLoginPublicRoom_model.dart';
 import '../Model/InvitationModel/Invitation_Model.dart';
+import '../Model/ReadAllModel/ReadAll_model.dart';
 import '../Model/SelectRoomModel/SelectRoom_Model.dart';
 import '../Model/SendMSG/SendMSG_Model.dart';
 import '../Model/System_Config_model/fetchUserModule_model.dart';
@@ -1879,10 +1880,10 @@ class Repository {
     }
   } */
 
-  NewProfileAPI(BuildContext context, String otherUserUid) async {
+  NewProfileAPI(BuildContext context, String otherUserUid,bool profileNotification) async {
     print("sdfhsdfhsdfh-$otherUserUid");
     final response = await apiServices.getApiCallWithToken(
-        "${Config.NewfetchUserProfile}?otherUserUid=${otherUserUid}", context);
+        "${Config.myaccountApi}?otherUserUid=${otherUserUid}&profileNotification=${profileNotification}", context);
     print('AddPost$response');
     var jsonString = json.decode(response.body);
     switch (response.statusCode) {
@@ -1900,6 +1901,28 @@ class Repository {
         return jsonString;
     }
   }
+  
+    video_watch_detailAPI(BuildContext context, String postUid,String userUid,String watchTime) async {
+    final response = await apiServices.postApiCalla(
+        "${Config.video_watch_detail}?postUid=${postUid}&userUid=${userUid}&watchTime=${watchTime}", context);
+    print('AddPost$response');
+    var jsonString = json.decode(response.body);
+    switch (response.statusCode) {
+      case 200:
+        return seenNotificationModel.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+      case 400:
+        return Config.somethingWentWrong;
+      case 701:
+        return Config.somethingWentWrong;
+      default:
+        return jsonString;
+    }
+  }
+
 
   GetAppPostAPI(BuildContext context, String userUid) async {
     final response = await apiServices.getApiCallWithToken(
@@ -2612,9 +2635,9 @@ openSaveImagePost(BuildContext context, String PostUID) async {
   }
 
   DMChatListApi(BuildContext context, String userChatInboxUid, int pageNumber,
-      int numberOfRecords) async {
+     ) async {
     final responce = await apiServices.getApiCallWithToken(
-        '${Config.DMChatList}?userChatInboxUid=${userChatInboxUid}&pageNumber=${pageNumber}&numberOfRecords=${numberOfRecords}',
+        '${Config.DMChatList}?userChatInboxUid=${userChatInboxUid}&pageNumber=${pageNumber}&numberOfRecords=20',
         context);
     var jsonString = json.decode(utf8.decode(responce.bodyBytes));
 
@@ -2847,7 +2870,7 @@ openSaveImagePost(BuildContext context, String PostUID) async {
         '${Config.get_all_inbox_images}?userChatInboxUid=${userChatInboxUid}&pageNumber=${pageNumber}&numberOfRecords=20',
         context);
     var jsonString = json.decode(responce.body);
-    print('jasonnString$jsonString');
+    print('get_all_inbox_images$jsonString');
     print('respnse ${responce.statusCode}');
     switch (responce.statusCode) {
       case 200:
@@ -2892,7 +2915,48 @@ openSaveImagePost(BuildContext context, String PostUID) async {
         return jsonString;
     }
   }
+    ReadAllMassages(BuildContext context) async {
+    final responce = await apiServices.getApiCallWithToken(
+        '${Config.readAllmsg}', context);
+    var jsonString = json.decode(responce.body);
+    print('jasonnString$jsonString');
+    switch (responce.statusCode) {
+      case 200:
+        return ReadAllModel.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+      case 400:
+        return Config.somethingWentWrong;
+      case 701:
+        return Config.somethingWentWrong;
+      default:
+        return jsonString;
+    }
+  }
 
+  readnotificationscount(BuildContext context) async {
+    final responce = await apiServices.getApiCallWithToken(
+        '${Config.readnotificationscount}', context);
+    var jsonString = json.decode(responce.body);
+    print('jasonnString$jsonString');
+    switch (responce.statusCode) {
+      case 200:
+        return ReadAllModel.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+      case 400:
+        return Config.somethingWentWrong;
+      case 701:
+        return Config.somethingWentWrong;
+      default:
+        return jsonString;
+    }
+  }
+ 
 }
 // var headers = {
 //   'Authorization': 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJpc1ZlcmlmaWVkIjp0cnVlLCJtb2R1bGUiOiJFTVBMT1lFRSIsImlzQWN0aXZlIjp0cnVlLCJ1dWlkIjoiODYwMWViNTItNzk4NS00MWU3LTgwOTAtYmMyMjQ0MjkwZjkzIiwidXNlcm5hbWUiOiJBTiIsInN1YiI6IkFOIiwiaWF0IjoxNjkxMTUyODIxLCJleHAiOjE2OTIyMzI4MjF9.AjSlFxHlTU9opgsyXaqVh_sMQuv7f-fKGmIGle6879MD-OAGTNcPN5r9ZW8Go1124YE2BbSrc1Lj5GuspgilWg'

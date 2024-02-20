@@ -167,11 +167,11 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
                                             !regex.hasMatch(
                                                 contectnumberrController
                                                     .text)) {
-                                          setState(() {
+                                          super.setState(() {
                                             isPhonee = true;
                                           });
                                         } else {
-                                          setState(() {
+                                          super.setState(() {
                                             isPhonee = false;
                                           });
                                         }

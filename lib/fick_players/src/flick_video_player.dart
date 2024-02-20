@@ -147,7 +147,7 @@ class _FlickVideoPlayerState extends State<FlickVideoPlayer>
       Future.delayed(Duration(milliseconds: 100), () {
         _videoHeight = MediaQuery.of(context).size.height;
         _videoWidth = MediaQuery.of(context).size.width;
-        setState(() {});
+        super.setState(() {});
       });
     } else {
       _overlayEntry = OverlayEntry(builder: (context) {
@@ -177,7 +177,7 @@ class _FlickVideoPlayerState extends State<FlickVideoPlayer>
       document.exitFullscreen();
       _videoHeight = null;
       _videoWidth = null;
-      setState(() {});
+      super.setState(() {});
     } else {
       _overlayEntry?.remove();
       _overlayEntry = null;

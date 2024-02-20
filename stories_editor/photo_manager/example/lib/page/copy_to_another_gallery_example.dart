@@ -60,7 +60,7 @@ class _CopyToAnotherGalleryPageState extends State<CopyToAnotherGalleryPage> {
           DropdownButton<AssetPathEntity>(
             onChanged: (AssetPathEntity? value) {
               targetGallery = value;
-              setState(() {});
+              super.setState(() {});
             },
             value: targetGallery,
             hint: const Text('Select target gallery'),

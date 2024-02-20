@@ -7,12 +7,13 @@ class NewProfileSCubit extends Cubit<NewProfileSState> {
   NewProfileSCubit() : super(NewProfileSInitialState()) {}
   Future<void> NewProfileSAPI(
     BuildContext context,
-    String url,
+    String UserUid,
+    bool profileNotification,
   ) async {
     dynamic PublicRModel;
     try {
       emit(NewProfileSLoadingState());
-      PublicRModel = await Repository().NewProfileAPI(context, url);
+      PublicRModel = await Repository().NewProfileAPI(context, UserUid, profileNotification);
       if (PublicRModel == "Something Went Wrong, Try After Some Time.") {
         emit(NewProfileSErrorState("${PublicRModel}"));
       } else {

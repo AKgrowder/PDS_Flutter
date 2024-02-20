@@ -59,11 +59,12 @@ import 'comment_bottom_sheet.dart';
 class ProfileScreen extends StatefulWidget {
   String User_ID;
   String? isFollowing;
+  bool? ProfileNotification;
 
-  ProfileScreen({
-    required this.User_ID,
-    required this.isFollowing,
-  });
+  ProfileScreen(
+      {required this.User_ID,
+      required this.isFollowing,
+      this.ProfileNotification});
 
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
@@ -213,7 +214,7 @@ class _ProfileScreenState extends State<ProfileScreen>
   savedataFuntion(String userId) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     User_Module = prefs.getString(PreferencesKey.module);
-    setState(() {});
+    super.setState(() {});
 
     BlocProvider.of<NewProfileSCubit>(context).get_about_me(context, userId);
 
@@ -232,8 +233,11 @@ class _ProfileScreenState extends State<ProfileScreen>
   }
 
   getAllAPI_Data() async {
-    BlocProvider.of<NewProfileSCubit>(context)
-        .NewProfileSAPI(context, widget.User_ID);
+    widget.ProfileNotification == true
+        ? BlocProvider.of<NewProfileSCubit>(context)
+            .NewProfileSAPI(context, widget.User_ID, true)
+        : BlocProvider.of<NewProfileSCubit>(context)
+            .NewProfileSAPI(context, widget.User_ID, false);
     BlocProvider.of<NewProfileSCubit>(context)
         .getFollwerApi(context, widget.User_ID);
     BlocProvider.of<NewProfileSCubit>(context)
@@ -462,8 +466,11 @@ class _ProfileScreenState extends State<ProfileScreen>
         ScaffoldMessenger.of(context).showSnackBar(snackBar);
       }
       if (state is PostLikeLoadedState) {
-        BlocProvider.of<NewProfileSCubit>(context)
-            .NewProfileSAPI(context, widget.User_ID);
+        widget.ProfileNotification == true
+            ? BlocProvider.of<NewProfileSCubit>(context)
+                .NewProfileSAPI(context, widget.User_ID, true)
+            : BlocProvider.of<NewProfileSCubit>(context)
+                .NewProfileSAPI(context, widget.User_ID, false);
         if (state.likePost.object != 'Post Liked Successfully' &&
             state.likePost.object != 'Post Unliked Successfully') {
           SnackBar snackBar = SnackBar(
@@ -734,7 +741,6 @@ class _ProfileScreenState extends State<ProfileScreen>
                                               Text(
                                                 "Profile APPROVED",
                                                 style: TextStyle(
-                                                    color: Color(0xff019801),
                                                     fontSize: 15,
                                                     fontWeight:
                                                         FontWeight.w600),
@@ -857,14 +863,33 @@ class _ProfileScreenState extends State<ProfileScreen>
                         SizedBox(
                           height: 10,
                         ),
-                        Center(
-                          child: Text(
-                            '@${NewProfileData?.object?.userName}',
-                            style: TextStyle(
-                                fontFamily: "outfit",
-                                fontWeight: FontWeight.bold,
-                                color: Color(0xff444444)),
-                          ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(left: 10),
+                              child: Text(
+                                '@${NewProfileData?.object?.userName}',
+                                style: TextStyle(
+                                    fontFamily: "outfit",
+                                    fontWeight: FontWeight.bold,
+                                    color: Color(0xff444444)),
+                              ),
+                            ),
+                            NewProfileData?.object?.approvalStatus ==
+                                    'PENDING' ||
+                                NewProfileData?.object?.approvalStatus ==
+                                    'REJECTED' ? SizedBox():
+                              NewProfileData?.object?.module == "EXPERT" ?
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.only(bottom: 4, left: 3),
+                                  child: Image.asset(
+                                    ImageConstant.Star,
+                                    height: 18,
+                                  ),
+                                ) : SizedBox()
+                          ],
                         ),
 
                         SizedBox(
@@ -888,11 +913,16 @@ class _ProfileScreenState extends State<ProfileScreen>
                                             child: EditProfileScreen(
                                               newProfileData: NewProfileData,
                                             ));
-                                      })).then((value) =>
-                                          BlocProvider.of<NewProfileSCubit>(
-                                                  context)
+                                      })).then((value) => widget
+                                                  .ProfileNotification ==
+                                              true
+                                          ? BlocProvider.of<NewProfileSCubit>(context)
                                               .NewProfileSAPI(
-                                                  context, widget.User_ID));
+                                                  context, widget.User_ID, true)
+                                          : BlocProvider.of<NewProfileSCubit>(
+                                                  context)
+                                              .NewProfileSAPI(context,
+                                                  widget.User_ID, false));
                                     },
                                     child: Container(
                                       alignment: Alignment.center,
@@ -921,17 +951,23 @@ class _ProfileScreenState extends State<ProfileScreen>
                                       Navigator.push(
                                           context,
                                           MaterialPageRoute(
-                                              builder: (context) =>
-                                                  SettingScreen(
-                                                    accountType: NewProfileData
-                                                            ?.object
-                                                            ?.accountType ??
-                                                        '',
-                                                  ))).then((value) =>
-                                          BlocProvider.of<NewProfileSCubit>(
+                                              builder:
+                                                  (context) => SettingScreen(
+                                                        accountType: NewProfileData
+                                                                ?.object
+                                                                ?.accountType ??
+                                                            '',
+                                                      ))).then((value) => widget
+                                                  .ProfileNotification ==
+                                              true
+                                          ? BlocProvider.of<NewProfileSCubit>(
                                                   context)
                                               .NewProfileSAPI(
-                                                  context, widget.User_ID));
+                                                  context, widget.User_ID, true)
+                                          : BlocProvider.of<NewProfileSCubit>(
+                                                  context)
+                                              .NewProfileSAPI(context,
+                                                  widget.User_ID, false));
                                     },
                                     child: Container(
                                       margin: EdgeInsets.only(left: 10),
@@ -1059,7 +1095,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                               children: [
                                 GestureDetector(
                                   onTap: () {
-                                    setState(() {
+                                    super.setState(() {
                                       updateType();
                                       arrNotiyTypeList[1].isSelected = true;
                                     });
@@ -1127,10 +1163,15 @@ class _ProfileScreenState extends State<ProfileScreen>
                                             ),
                                           );
                                         })).then((value) {
-                                          BlocProvider.of<NewProfileSCubit>(
-                                                  context)
-                                              .NewProfileSAPI(
-                                                  context, widget.User_ID);
+                                          widget.ProfileNotification == true
+                                              ? BlocProvider.of<
+                                                      NewProfileSCubit>(context)
+                                                  .NewProfileSAPI(context,
+                                                      widget.User_ID, true)
+                                              : BlocProvider.of<
+                                                      NewProfileSCubit>(context)
+                                                  .NewProfileSAPI(context,
+                                                      widget.User_ID, false);
                                           BlocProvider.of<NewProfileSCubit>(
                                                   context)
                                               .getFollwerApi(
@@ -1199,9 +1240,8 @@ class _ProfileScreenState extends State<ProfileScreen>
                                       if (followersClassModel2
                                               ?.object?.isNotEmpty ==
                                           true) {
-                                        Navigator.push(context,
-                                            MaterialPageRoute(
-                                                builder: (context) {
+                                        Navigator.push(context, MaterialPageRoute(
+                                            builder: (context) {
                                           return MultiBlocProvider(
                                             providers: [
                                               BlocProvider<FollowerBlock>(
@@ -1215,11 +1255,16 @@ class _ProfileScreenState extends State<ProfileScreen>
                                               userId: widget.User_ID,
                                             ),
                                           );
-                                        })).then((value) =>
-                                            BlocProvider.of<NewProfileSCubit>(
+                                        })).then((value) => widget
+                                                    .ProfileNotification ==
+                                                true
+                                            ? BlocProvider.of<NewProfileSCubit>(context)
+                                                .NewProfileSAPI(context,
+                                                    widget.User_ID, true)
+                                            : BlocProvider.of<NewProfileSCubit>(
                                                     context)
                                                 .NewProfileSAPI(
-                                                    context, widget.User_ID));
+                                                    context, widget.User_ID, false));
                                       }
                                     } else {}
                                   },
@@ -1279,12 +1324,14 @@ class _ProfileScreenState extends State<ProfileScreen>
                         ),
                         /* NewProfileData?.object?.isFollowing == 'FOLLOWING' ||
                         User_ID == NewProfileData?.object?.userUid || NewProfileData?.object?.accountType == 'PUBLIC' */
+
                         if (User_ID == NewProfileData?.object?.userUid ||
                             (NewProfileData?.object?.isFollowing ==
                                     'FOLLOWING' &&
-                                NewProfileData?.object?.accountType ==
-                                    'PRIVATE') ||
-                            NewProfileData?.object?.accountType == 'PUBLIC')
+                                (NewProfileData?.object?.accountType ==
+                                        'PRIVATE' ||
+                                    NewProfileData?.object?.accountType ==
+                                        'PUBLIC')))
                           Container(
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -1335,7 +1382,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                       ],
                                     ),
                                     onTap: () {
-                                      setState(() {
+                                      super.setState(() {
                                         updateType();
                                         arrNotiyTypeList[0].isSelected = true;
                                         selectedIndex = 0;
@@ -1386,7 +1433,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                       ],
                                     ),
                                     onTap: () {
-                                      setState(() {
+                                      super.setState(() {
                                         updateType();
                                         arrNotiyTypeList[1].isSelected = true;
                                         selectedIndex = 1;
@@ -1445,7 +1492,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                       ],
                                     ),
                                     onTap: () {
-                                      setState(() {
+                                      super.setState(() {
                                         updateType();
                                         arrNotiyTypeList[2].isSelected = true;
                                         selectedIndex = 2;
@@ -1499,7 +1546,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                 ),
                                               )),
                                           onTap: () {
-                                            setState(() {
+                                            super.setState(() {
                                               updateType();
                                               arrNotiyTypeList[3].isSelected =
                                                   true;
@@ -1516,9 +1563,11 @@ class _ProfileScreenState extends State<ProfileScreen>
                         if (User_ID == NewProfileData?.object?.userUid ||
                             (NewProfileData?.object?.isFollowing ==
                                     'FOLLOWING' &&
-                                NewProfileData?.object?.accountType ==
-                                    'PRIVATE') ||
-                            NewProfileData?.object?.accountType == 'PUBLIC')
+                                (NewProfileData?.object?.accountType ==
+                                        'PRIVATE' ||
+                                    NewProfileData?.object?.accountType ==
+                                        'PUBLIC')))
+
                           /* Container(
                         // color: Colors.red,
                         /*  height: _height, */
@@ -1550,13 +1599,13 @@ class _ProfileScreenState extends State<ProfileScreen>
                             child: GestureDetector(
                               onHorizontalDragUpdate: (details) {
                                 if (details.delta.dx > 0) {
-                                  setState(() {
+                                  super.setState(() {
                                     swipLeft = false;
                                     swipeRigth = true;
                                   });
                                   print("Swiped right");
                                 } else if (details.delta.dx < 0) {
-                                  setState(() {
+                                  super.setState(() {
                                     swipLeft = true;
                                     swipeRigth = false;
                                   });
@@ -1567,28 +1616,55 @@ class _ProfileScreenState extends State<ProfileScreen>
                                 Scrollable.ensureVisible(key.currentContext!,
                                     duration: Duration(microseconds: 400));
 
-                                if (swipLeft == false && swipeRigth == true) {
-                                  if (selectedIndex != 0) {
-                                    selectedIndex--;
-                                    setState(() {
-                                      updateType();
-                                      arrNotiyTypeList[selectedIndex]
-                                          .isSelected = true;
-                                    });
+                                if (User_ID !=
+                                    NewProfileData?.object?.userUid) {
+                                  if (swipLeft == false && swipeRigth == true) {
+                                    if (selectedIndex != 0) {
+                                      selectedIndex--;
+                                      super.setState(() {
+                                        updateType();
+                                        arrNotiyTypeList[selectedIndex]
+                                            .isSelected = true;
+                                      });
+                                    }
+                                    print("Swiped right");
+                                  } else if (swipLeft == true &&
+                                      swipeRigth == false) {
+                                    if (selectedIndex != 2) {
+                                      selectedIndex++;
+                                      super.setState(() {
+                                        updateType();
+                                        arrNotiyTypeList[selectedIndex]
+                                            .isSelected = true;
+                                      });
+                                    }
+                                    print("Swiped left");
                                   }
-                                  print("Swiped right");
-                                } else if (swipLeft == true &&
-                                    swipeRigth == false) {
-                                  if (selectedIndex != 3) {
-                                    selectedIndex++;
-                                    setState(() {
-                                      updateType();
-                                      arrNotiyTypeList[selectedIndex]
-                                          .isSelected = true;
-                                    });
+                                } else {
+                                  if (swipLeft == false && swipeRigth == true) {
+                                    if (selectedIndex != 0) {
+                                      selectedIndex--;
+                                      super.setState(() {
+                                        updateType();
+                                        arrNotiyTypeList[selectedIndex]
+                                            .isSelected = true;
+                                      });
+                                    }
+                                    print("Swiped right");
+                                  } else if (swipLeft == true &&
+                                      swipeRigth == false) {
+                                    if (selectedIndex != 3) {
+                                      selectedIndex++;
+                                      super.setState(() {
+                                        updateType();
+                                        arrNotiyTypeList[selectedIndex]
+                                            .isSelected = true;
+                                      });
+                                    }
+                                    print("Swiped left");
                                   }
-                                  print("Swiped left");
                                 }
+
                                 scrollController.animateTo(0.0,
                                     duration: Duration(milliseconds: 300),
                                     curve: Curves.easeOut);
@@ -1813,7 +1889,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                       : GestureDetector(
                                                                           onTap:
                                                                               () {
-                                                                            setState(() {
+                                                                            super.setState(() {
                                                                               isUpDate = true;
                                                                               isAbourtMe = false;
                                                                               AbboutMeShow = false;
@@ -2153,7 +2229,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                         )),
                                                 NewProfileData
                                                             ?.object?.module ==
-                                                        "EXPERT"
+                                                        "EXPERT" 
                                                     ? Card(
                                                         color: Colors.white,
                                                         borderOnForeground:
@@ -2191,9 +2267,12 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                             _height, _width),
                                                       )
                                                     : SizedBox(),
-                                                NewProfileData
-                                                            ?.object?.module ==
-                                                        "COMPANY"
+                                                NewProfileData?.object
+                                                                ?.module ==
+                                                            "COMPANY" &&
+                                                        NewProfileData?.object
+                                                                ?.approvalStatus !=
+                                                            'PENDING'
                                                     ? Card(
                                                         color: Colors.white,
                                                         borderOnForeground:
@@ -2230,9 +2309,12 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                       ),
                                                     ) */
                                                     : SizedBox(),
-                                                NewProfileData
-                                                            ?.object?.module ==
-                                                        "EXPERT"
+                                                NewProfileData?.object
+                                                                ?.module ==
+                                                            "EXPERT" &&
+                                                        NewProfileData?.object
+                                                                ?.approvalStatus !=
+                                                            'PENDING'
                                                     ? Card(
                                                         color: Colors.white,
                                                         borderOnForeground:
@@ -2442,459 +2524,337 @@ class _ProfileScreenState extends State<ProfileScreen>
 
                                     /// Content of Tab 3
                                     arrNotiyTypeList[2].isSelected
-                                        ? Container(
-                                            // height: _height * 50,
-                                            child: Padding(
-                                              padding: const EdgeInsets.only(
-                                                  left: 16, right: 16, top: 0),
-                                              child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Container(
-                                                    height: 30,
-                                                    child: Row(
-                                                      children: [
-                                                        Container(
-                                                          width: 150,
-                                                          height: 25,
-                                                          decoration:
-                                                              ShapeDecoration(
-                                                            color: Color(
-                                                                0xFFFBD8D9),
-                                                            shape:
-                                                                RoundedRectangleBorder(
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          100),
-                                                            ),
-                                                          ),
-                                                          child:
-                                                              DropdownButtonHideUnderline(
-                                                            child:
-                                                                DropdownButton<
-                                                                    String>(
-                                                              // Step 3.
-                                                              value:
-                                                                  selctedValue,
-                                                              // Step 4.
-                                                              items: <String>[
-                                                                'Newest to oldest',
-                                                                'oldest to Newest'
-                                                              ].map<
-                                                                  DropdownMenuItem<
-                                                                      String>>((String
-                                                                  value) {
-                                                                return DropdownMenuItem<
-                                                                    String>(
-                                                                  value: value,
-                                                                  child:
-                                                                      Padding(
-                                                                    padding: EdgeInsets
-                                                                        .only(
-                                                                            left:
-                                                                                10),
-                                                                    child: Text(
-                                                                      value,
-                                                                      style:
-                                                                          TextStyle(
-                                                                        color: Color(
-                                                                            0xFFF58E92),
-                                                                        fontSize:
-                                                                            14,
-                                                                        fontFamily:
-                                                                            'outfit',
-                                                                        fontWeight:
-                                                                            FontWeight.w400,
-                                                                        height:
-                                                                            0,
-                                                                      ),
-                                                                    ),
+                                        ? Padding(
+                                            padding: const EdgeInsets.only(
+                                                left: 16, right: 16, top: 0),
+                                            child: Column(
+                                              children: [
+                                                Row(
+                                                  children: [
+                                                    Container(
+                                                      width: 150,
+                                                      height: 25,
+                                                      decoration:
+                                                          ShapeDecoration(
+                                                        color:
+                                                            Color(0xFFFBD8D9),
+                                                        shape:
+                                                            RoundedRectangleBorder(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      100),
+                                                        ),
+                                                      ),
+                                                      child:
+                                                          DropdownButtonHideUnderline(
+                                                        child: DropdownButton<
+                                                            String>(
+                                                          // Step 3.
+                                                          value: selctedValue,
+                                                          // Step 4.
+                                                          items: <String>[
+                                                            'Newest to oldest',
+                                                            'oldest to Newest'
+                                                          ].map<
+                                                              DropdownMenuItem<
+                                                                  String>>((String
+                                                              value) {
+                                                            return DropdownMenuItem<
+                                                                String>(
+                                                              value: value,
+                                                              child: Padding(
+                                                                padding: EdgeInsets
+                                                                    .only(
+                                                                        left:
+                                                                            10),
+                                                                child: Text(
+                                                                  value,
+                                                                  style:
+                                                                      TextStyle(
+                                                                    color: Color(
+                                                                        0xFFF58E92),
+                                                                    fontSize:
+                                                                        14,
+                                                                    fontFamily:
+                                                                        'outfit',
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w400,
+                                                                    height: 0,
                                                                   ),
-                                                                );
-                                                              }).toList(),
-                                                              // Step 5.
-                                                              onChanged: (String?
-                                                                  newValue) {
-                                                                setState(() {
-                                                                  if (newValue ==
-                                                                      "Newest to oldest") {
-                                                                    BlocProvider.of<NewProfileSCubit>(context).GetPostCommetAPI(
+                                                                ),
+                                                              ),
+                                                            );
+                                                          }).toList(),
+                                                          // Step 5.
+                                                          onChanged: (String?
+                                                              newValue) {
+                                                            super.setState(() {
+                                                              if (newValue ==
+                                                                  "Newest to oldest") {
+                                                                BlocProvider.of<
+                                                                            NewProfileSCubit>(
+                                                                        context)
+                                                                    .GetPostCommetAPI(
                                                                         context,
                                                                         "${NewProfileData?.object?.userUid}",
                                                                         "asc"); //asc
-                                                                  } else if (newValue ==
-                                                                      "oldest to Newest") {
-                                                                    BlocProvider.of<NewProfileSCubit>(context).GetPostCommetAPI(
+                                                              } else if (newValue ==
+                                                                  "oldest to Newest") {
+                                                                BlocProvider.of<
+                                                                            NewProfileSCubit>(
+                                                                        context)
+                                                                    .GetPostCommetAPI(
                                                                         context,
                                                                         "${NewProfileData?.object?.userUid}",
                                                                         "desc");
-                                                                  }
-                                                                  selctedValue =
-                                                                      newValue!;
-                                                                });
-                                                              },
-                                                            ),
-                                                          ),
+                                                              }
+                                                              selctedValue =
+                                                                  newValue!;
+                                                            });
+                                                          },
                                                         ),
-                                                        /* SizedBox(
-                                                width: 10,
-                                              ),
-                                              Container(
-                                                width: 110,
-                                                height: 25,
-                                                decoration: ShapeDecoration(
-                                                  color: Color(0xFFFBD8D9),
-                                                  shape: RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(100),
-                                                  ),
-                                                ),
-                                                child: DropdownButtonHideUnderline(
-                                                  child: DropdownButton<String>(
-                                                    // Step 3.
-                                                    value: selctedValue1,
-                                                    // Step 4.
-                                                    items: <String>[
-                                                      'All Date',
-                                                      '1',
-                                                      '2',
-                                                      '3',
-                                                      '4'
-                                                    ].map<DropdownMenuItem<String>>(
-                                                        (String value) {
-                                                      return DropdownMenuItem<String>(
-                                                        value: value,
-                                                        child: Padding(
-                                                          padding: EdgeInsets.only(
-                                                              left: 12),
-                                                          child: Text(
-                                                            value,
-                                                            style: TextStyle(
-                                                              color:
-                                                                  Color(0xFFF58E92),
-                                                              fontSize: 14,
-                                                              fontFamily: 'outfit',
-                                                              fontWeight:
-                                                                  FontWeight.w400,
-                                                              height: 0,
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      );
-                                                    }).toList(),
-                                                    // Step 5.
-                                                    onChanged: (String? newValue) {
-                                                      setState(() {
-                                                        selctedValue1 = newValue!;
-                                                      });
-                                                    },
-                                                  ),
-                                                ),
-                                              ),
-                                              SizedBox(
-                                                width: 5,
-                                              ),
-                                              Container(
-                                                width: 100,
-                                                height: 25,
-                                                decoration: ShapeDecoration(
-                                                  color: Color(0xFFFBD8D9),
-                                                  shape: RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(100),
-                                                  ),
-                                                ),
-                                                child: DropdownButtonHideUnderline(
-                                                  child: DropdownButton<String>(
-                                                    // Step 3.
-                                                    value: selctedValue2,
-                                                    // Step 4.
-                                                    items: <String>[
-                                                      'All Users',
-                                                      '1',
-                                                      '2',
-                                                      '3',
-                                                      '4'
-                                                    ].map<DropdownMenuItem<String>>(
-                                                        (String value) {
-                                                      return DropdownMenuItem<String>(
-                                                        value: value,
-                                                        child: Padding(
-                                                          padding: EdgeInsets.only(
-                                                              left: 12),
-                                                          child: Text(
-                                                            value,
-                                                            style: TextStyle(
-                                                              color:
-                                                                  Color(0xFFF58E92),
-                                                              fontSize: 14,
-                                                              fontFamily: 'outfit',
-                                                              fontWeight:
-                                                                  FontWeight.w400,
-                                                              height: 0,
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      );
-                                                    }).toList(),
-                                                    // Step 5.
-                                                    onChanged: (String? newValue) {
-                                                      setState(() {
-                                                        selctedValue = newValue!;
-                                                      });
-                                                    },
-                                                  ),
-                                                ),
-                                              ), */
-                                                      ],
+                                                      ),
                                                     ),
-                                                  ),
-                                                  ListView.builder(
-                                                    shrinkWrap: true,
-                                                    physics:
-                                                        NeverScrollableScrollPhysics(),
-                                                    itemCount:
-                                                        GetUserPostCommetData
-                                                            ?.object?.length,
-                                                    itemBuilder:
-                                                        (context, index) {
-                                                      DateTime parsedDateTime =
-                                                          DateTime.parse(
-                                                              '${GetUserPostCommetData?.object?[index].createdAt ?? ""}');
-                                                      return Center(
-                                                        child: Padding(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                      .only(
-                                                                  bottom: 10),
-                                                          child:
-                                                              GestureDetector(
-                                                            onTap: () {
-                                                              Navigator.push(
-                                                                context,
-                                                                MaterialPageRoute(
-                                                                    builder:
-                                                                        (context) =>
-                                                                            OpenSavePostImage(
-                                                                              PostID: GetUserPostCommetData?.object?[index].postUid,
-                                                                              profileTure: true,
-                                                                            )),
-                                                              );
-                                                            },
-                                                            child:
-                                                                ConstrainedBox(
-                                                              constraints:
-                                                                  BoxConstraints(
-                                                                      maxHeight:
-                                                                          300,
-                                                                      maxWidth:
-                                                                          _width),
-                                                              child: Container(
-                                                                decoration:
-                                                                    ShapeDecoration(
-                                                                  // color: Colors.green,
-                                                                  shape:
-                                                                      RoundedRectangleBorder(
-                                                                    side: BorderSide(
-                                                                        width:
-                                                                            1,
-                                                                        color: Color(
-                                                                            0xFFD3D3D3)),
-                                                                    borderRadius:
-                                                                        BorderRadius.circular(
+                                                  ],
+                                                ),
+                                                ListView.builder(
+                                                  shrinkWrap: true,
+                                                  physics:
+                                                      NeverScrollableScrollPhysics(),
+                                                  itemCount:
+                                                      GetUserPostCommetData
+                                                          ?.object?.length,
+                                                  itemBuilder:
+                                                      (context, index) {
+                                                    DateTime parsedDateTime =
+                                                        DateTime.parse(
+                                                            '${GetUserPostCommetData?.object?[index].createdAt ?? ""}');
+                                                    return Padding(
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                              bottom: 10),
+                                                      child: GestureDetector(
+                                                          onTap: () {
+                                                            Navigator.push(
+                                                              context,
+                                                              MaterialPageRoute(
+                                                                  builder:
+                                                                      (context) =>
+                                                                          OpenSavePostImage(
+                                                                            PostID:
+                                                                                GetUserPostCommetData?.object?[index].postUid,
+                                                                            profileTure:
+                                                                                true,
+                                                                          )),
+                                                            );
+                                                          },
+                                                          child: Container(
+                                                            decoration:
+                                                                ShapeDecoration(
+                                                              // color: Colors.green,
+                                                              shape:
+                                                                  RoundedRectangleBorder(
+                                                                side: BorderSide(
+                                                                    width: 1,
+                                                                    color: Color(
+                                                                        0xFFD3D3D3)),
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
                                                                             10),
-                                                                  ),
+                                                              ),
+                                                            ),
+                                                            child: Row(
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .start,
+                                                              children: [
+                                                                Container(
+                                                                  width: 50,
+                                                                  // height: 50,
+                                                                  margin: EdgeInsets
+                                                                      .only(
+                                                                          left:
+                                                                              5,
+                                                                          top:
+                                                                              10),
+                                                                  child: GetUserPostCommetData?.object?[index].userProfilePic !=
+                                                                              null &&
+                                                                          GetUserPostCommetData?.object?[index].userProfilePic !=
+                                                                              ""
+                                                                      ? CircleAvatar(
+                                                                          backgroundColor:
+                                                                              Colors.white,
+                                                                          backgroundImage:
+                                                                              NetworkImage("${GetUserPostCommetData?.object?[index].userProfilePic}"),
+                                                                          radius:
+                                                                              25,
+                                                                        )
+                                                                      : CustomImageView(
+                                                                          imagePath:
+                                                                              ImageConstant.tomcruse,
+                                                                          height:
+                                                                              50,
+                                                                          width:
+                                                                              50,
+                                                                          fit: BoxFit
+                                                                              .fill,
+                                                                          radius:
+                                                                              BorderRadius.circular(25),
+                                                                        ),
+                                                                  // decoration:
+                                                                  //     ShapeDecoration(
+                                                                  //   image:
+                                                                  //       DecorationImage(
+                                                                  //     image: AssetImage(
+                                                                  //         ImageConstant
+                                                                  //             .placeholder2),1
+                                                                  //     fit: BoxFit.fill,
+                                                                  //   ),
+                                                                  //   shape: OvalBorder(),
+                                                                  // ),
                                                                 ),
-                                                                child: Column(
-                                                                  children: [
-                                                                    Expanded(
-                                                                      child: Container(
-                                                                          // color: Colors.amber,
-                                                                          child: Row(
-                                                                        crossAxisAlignment:
-                                                                            CrossAxisAlignment.start,
-                                                                        children: [
-                                                                          Container(
-                                                                            width:
-                                                                                50,
-                                                                            height:
-                                                                                50,
-                                                                            margin:
-                                                                                EdgeInsets.only(left: 5, top: 10),
-                                                                            child:
-                                                                                CircleAvatar(
-                                                                              backgroundColor: Colors.white,
-                                                                              backgroundImage: NetworkImage("${GetUserPostCommetData?.object?[index].userProfilePic}"),
-                                                                              radius: 25,
-                                                                            ),
-                                                                            // decoration:
-                                                                            //     ShapeDecoration(
-                                                                            //   image:
-                                                                            //       DecorationImage(
-                                                                            //     image: AssetImage(
-                                                                            //         ImageConstant
-                                                                            //             .placeholder2),1
-                                                                            //     fit: BoxFit.fill,
-                                                                            //   ),
-                                                                            //   shape: OvalBorder(),
-                                                                            // ),
-                                                                          ),
-                                                                          Column(
+                                                                Padding(
+                                                                  padding: const EdgeInsets
+                                                                          .only(
+                                                                      left: 10),
+                                                                  child: Column(
+                                                                    crossAxisAlignment:
+                                                                        CrossAxisAlignment
+                                                                            .start,
+                                                                    children: [
+                                                                      SizedBox(
+                                                                        height:
+                                                                            10,
+                                                                      ),
+                                                                      Text(
+                                                                        '${GetUserPostCommetData?.object?[index].postUserName}',
+                                                                        style:
+                                                                            TextStyle(
+                                                                          color:
+                                                                              Colors.black,
+                                                                          fontSize:
+                                                                              16,
+                                                                          fontFamily:
+                                                                              'outfit',
+                                                                          fontWeight:
+                                                                              FontWeight.w600,
+                                                                        ),
+                                                                      ),
+                                                                      GetUserPostCommetData?.object?[index].description !=
+                                                                              null
+                                                                          ? Container(
+                                                                              width: _width / 1.35,
+                                                                              child: Text(
+                                                                                '${GetUserPostCommetData?.object?[index].description}',
+                                                                                style: TextStyle(
+                                                                                  overflow: TextOverflow.visible,
+                                                                                  color: Colors.black,
+                                                                                  fontSize: 14,
+                                                                                  fontFamily: 'outfit',
+                                                                                  fontWeight: FontWeight.w400,
+                                                                                ),
+                                                                              ),
+                                                                            )
+                                                                          : SizedBox(),
+                                                                      Text(
+                                                                        getTimeDifference(
+                                                                            parsedDateTime),
+                                                                        style:
+                                                                            TextStyle(
+                                                                          fontSize:
+                                                                              12,
+                                                                          fontFamily:
+                                                                              "outfit",
+                                                                        ),
+                                                                      ),
+                                                                      Padding(
+                                                                        padding:
+                                                                            const EdgeInsets.only(bottom: 10),
+                                                                        child: Column(
+                                                                            children: List.generate(GetUserPostCommetData?.object?[index].comments?.length == null ? 0 : ((GetUserPostCommetData?.object?[index].comments?.length ?? 0) > 2 ? 2 : GetUserPostCommetData?.object?[index].comments?.length) ?? 0, (index2) {
+                                                                          DateTime
+                                                                              parsedDateTime2 =
+                                                                              DateTime.parse('${GetUserPostCommetData?.object?[index].comments?[index2].createdAt}');
+                                                                          return Row(
                                                                             crossAxisAlignment:
                                                                                 CrossAxisAlignment.start,
                                                                             children: [
-                                                                              SizedBox(
-                                                                                height: 15,
+                                                                              Container(
+                                                                                width: 45,
+                                                                                height: 45,
+                                                                                margin: EdgeInsets.only(top: 15),
+                                                                                child: GetUserPostCommetData?.object?[index].comments?[index2].profilePic != null && GetUserPostCommetData?.object?[index].comments?[index2].profilePic != ""
+                                                                                    ? CircleAvatar(
+                                                                                        backgroundColor: Colors.white,
+                                                                                        backgroundImage: NetworkImage("${GetUserPostCommetData?.object?[index].comments?[index2].profilePic}"),
+                                                                                        radius: 25,
+                                                                                      )
+                                                                                    : CustomImageView(
+                                                                                        imagePath: ImageConstant.tomcruse,
+                                                                                        height: 50,
+                                                                                        width: 50,
+                                                                                        fit: BoxFit.fill,
+                                                                                        radius: BorderRadius.circular(25),
+                                                                                      ),
                                                                               ),
                                                                               Padding(
-                                                                                padding: const EdgeInsets.only(left: 10),
-                                                                                child: Text(
-                                                                                  '${GetUserPostCommetData?.object?[index].postUserName}',
-                                                                                  style: TextStyle(
-                                                                                    color: Colors.black,
-                                                                                    fontSize: 16,
-                                                                                    fontFamily: 'outfit',
-                                                                                    fontWeight: FontWeight.w600,
-                                                                                  ),
-                                                                                ),
-                                                                              ),
-                                                                              Expanded(
-                                                                                child: Container(
-                                                                                  margin: EdgeInsets.only(left: 10),
-                                                                                  width: _width - 100,
-
-                                                                                  // color: Colors.red,
-                                                                                  child: Column(
-                                                                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                                                                    children: [
-                                                                                      GetUserPostCommetData?.object?[index].description != null
-                                                                                          ? Text(
-                                                                                              '${GetUserPostCommetData?.object?[index].description}',
-                                                                                              style: TextStyle(
-                                                                                                color: Colors.black,
-                                                                                                fontSize: 14,
-                                                                                                fontFamily: 'outfit',
-                                                                                                fontWeight: FontWeight.w400,
-                                                                                              ),
-                                                                                            )
-                                                                                          : SizedBox(),
-                                                                                      Text(
-                                                                                        getTimeDifference(parsedDateTime),
+                                                                                padding: const EdgeInsets.only(left: 8, top: 5, right: 3),
+                                                                                child: Column(
+                                                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                  children: [
+                                                                                    SizedBox(
+                                                                                      height: 10,
+                                                                                    ),
+                                                                                    Text(
+                                                                                      '${GetUserPostCommetData?.object?[index].comments?[index2].userName}',
+                                                                                      style: TextStyle(
+                                                                                        color: Colors.black,
+                                                                                        fontSize: 16,
+                                                                                        fontFamily: "outfit",
+                                                                                        fontWeight: FontWeight.w600,
+                                                                                      ),
+                                                                                    ),
+                                                                                    Container(
+                                                                                      width: _width / 1.7,
+                                                                                      child: Text(
+                                                                                        '${GetUserPostCommetData?.object?[index].comments?[index2].comment}',
+                                                                                        // maxLines: 1,
                                                                                         style: TextStyle(
-                                                                                          fontSize: 12,
+                                                                                          // overflow: TextOverflow.ellipsis,
+                                                                                          color: Colors.black,
+                                                                                          fontSize: 16,
                                                                                           fontFamily: "outfit",
+                                                                                          fontWeight: FontWeight.w600,
                                                                                         ),
                                                                                       ),
-                                                                                      Expanded(
-                                                                                        child: ListView.builder(
-                                                                                            padding: EdgeInsets.zero,
-                                                                                            shrinkWrap: true,
-                                                                                            physics: NeverScrollableScrollPhysics(),
-                                                                                            itemCount: GetUserPostCommetData?.object?[index].comments?.length == null ? 0 : ((GetUserPostCommetData?.object?[index].comments?.length ?? 0) > 2 ? 2 : GetUserPostCommetData?.object?[index].comments?.length),
-                                                                                            itemBuilder: (context, index2) {
-                                                                                              DateTime parsedDateTime2 = DateTime.parse('${GetUserPostCommetData?.object?[index].comments?[index2].createdAt}');
-                                                                                              return Row(
-                                                                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                                                                children: [
-                                                                                                  Container(
-                                                                                                    width: 45,
-                                                                                                    height: 45,
-                                                                                                    margin: EdgeInsets.only(top: 15),
-                                                                                                    child: CircleAvatar(
-                                                                                                      backgroundColor: Colors.white,
-                                                                                                      backgroundImage: NetworkImage("${GetUserPostCommetData?.object?[index].comments?[index2].profilePic}"),
-                                                                                                      radius: 25,
-                                                                                                    ),
-                                                                                                  ),
-                                                                                                  Padding(
-                                                                                                    padding: const EdgeInsets.only(left: 8, top: 5, right: 3),
-                                                                                                    child: Column(
-                                                                                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                                                                                      children: [
-                                                                                                        SizedBox(
-                                                                                                          height: 10,
-                                                                                                        ),
-                                                                                                        Text(
-                                                                                                          '${GetUserPostCommetData?.object?[index].comments?[index2].userName}',
-                                                                                                          style: TextStyle(
-                                                                                                            color: Colors.black,
-                                                                                                            fontSize: 16,
-                                                                                                            fontFamily: "outfit",
-                                                                                                            fontWeight: FontWeight.w600,
-                                                                                                          ),
-                                                                                                        ),
-                                                                                                        Container(
-                                                                                                          width: _width / 1.7,
-                                                                                                          child: Text(
-                                                                                                            '${GetUserPostCommetData?.object?[index].comments?[index2].comment}',
-                                                                                                            // maxLines: 1,
-                                                                                                            style: TextStyle(
-                                                                                                              // overflow: TextOverflow.ellipsis,
-                                                                                                              color: Colors.black,
-                                                                                                              fontSize: 16,
-                                                                                                              fontFamily: "outfit",
-                                                                                                              fontWeight: FontWeight.w600,
-                                                                                                            ),
-                                                                                                          ),
-                                                                                                        ),
-                                                                                                        Text(
-                                                                                                          getTimeDifference(parsedDateTime2),
-                                                                                                          style: TextStyle(
-                                                                                                            fontSize: 12,
-                                                                                                            fontFamily: "outfit",
-                                                                                                          ),
-                                                                                                        ),
-                                                                                                      ],
-                                                                                                    ),
-                                                                                                  )
-                                                                                                ],
-                                                                                              );
-                                                                                            }),
-                                                                                      )
-                                                                                    ],
-                                                                                  ),
+                                                                                    ),
+                                                                                    Text(
+                                                                                      getTimeDifference(parsedDateTime2),
+                                                                                      style: TextStyle(
+                                                                                        fontSize: 12,
+                                                                                        fontFamily: "outfit",
+                                                                                      ),
+                                                                                    ),
+                                                                                  ],
                                                                                 ),
-                                                                              ),
+                                                                              )
                                                                             ],
-                                                                          ),
-                                                                          /* Container(
-                                                                  width: 60,
-                                                                  height: 60,
-                                                                  margin:
-                                                                      EdgeInsets.only(
-                                                                          left: 10,
-                                                                          top: 5),
-                                                                  decoration:
-                                                                      ShapeDecoration(
-                                                                    image:
-                                                                        DecorationImage(
-                                                                      image: NetworkImage(
-                                                                          "${GetUserPostCommetData?.object?[index].postData?[0]}"),
-                                                                      fit: BoxFit.cover,
-                                                                    ),
-                                                                    shape: RoundedRectangleBorder(
-                                                                        borderRadius:
-                                                                            BorderRadius
-                                                                                .circular(
-                                                                                    4)),
+                                                                          );
+                                                                        })),
+                                                                      ),
+                                                                    ],
                                                                   ),
-                                                                ), */
-                                                                        ],
-                                                                      )),
-                                                                    ),
-                                                                  ],
                                                                 ),
-                                                              ),
+                                                              ],
                                                             ),
-                                                          ),
-                                                        ),
-                                                      );
-                                                    },
-                                                  )
-                                                ],
-                                              ),
+                                                          )),
+                                                    );
+                                                  },
+                                                )
+                                              ],
                                             ),
                                           )
                                         : SizedBox(),
@@ -2933,7 +2893,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                     SharedPreferencesFunction(
                                                                         value1 ??
                                                                             0);
-                                                                    setState(
+                                                                    super.setState(
                                                                         () {});
                                                                   },
                                                                   child:
@@ -2987,7 +2947,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                               ),
                                             ),
                                           )
-                                        : SizedBox(),
+                                        : SizedBox()
                                   ],
                                 ),
                               ),
@@ -3076,7 +3036,7 @@ class _ProfileScreenState extends State<ProfileScreen>
             _currentPages.add(0);
           });
           WidgetsBinding.instance
-              .addPostFrameCallback((timeStamp) => setState(() {
+              .addPostFrameCallback((timeStamp) => super.setState(() {
                     added = true;
                   }));
         }
@@ -3268,7 +3228,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                                 String translatedTextenglish = await translateText(inputText, 'en');
 
                                                                                 if (getAllPostData.object?[index].isfalsehin == null && getAllPostData?.object?[index].isfalsegu == null) {
-                                                  setState(() {
+                                                  super.setState(() {
                                                     // _translatedTextGujarati = translatedTextGujarati;
 
                                                                                     _translatedTextHindi = translatedTextHindi;
@@ -3278,7 +3238,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                                     getAllPostData?.object?[index].isfalsehin = true;
                                                                                   });
                                                                                 } else if (getAllPostData?.object?[index].isfalsehin == true && getAllPostData?.object?[index].isfalsegu == null) {
-                                                                                  setState(() {
+                                                                                  super.setState(() {
                                                                                     _translatedTextGujarati = translatedTextGujarati;
                                                                                     // _translatedTextHindi = translatedTextHindi;
 
@@ -3289,7 +3249,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                                 } else if (getAllPostData?.object?[index].isfalsehin == true && getAllPostData?.object?[index].isfalsehin == true) {
                                                                                   print("this condison is working");
 
-                                                                                  setState(() {
+                                                                                  super.setState(() {
                                                                                     print("i'm cheaking dataa--------------------------------$initalData");
                                                                                     _translatedTextenglish = translatedTextenglish;
                                                                                     getAllPostData?.object?[index].description = _translatedTextenglish;
@@ -3310,33 +3270,52 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                                     ),
                                                                                   ))),
                                                                             ), */
-                                                                            getAllPostData.object?[index].translatedDescription != null
-                                                                                ? GestureDetector(
-                                                                                    onTap: () async {
-                                                                                         setState(() {
-                                                                                        if ( getAllPostData.object?[index].isTrsnalteoption  == false || getAllPostData.object?[index].isTrsnalteoption  == null) {
-                                                                                           getAllPostData.object?[index].isTrsnalteoption = true;
-                                                                                        } else {
-                                                                                          getAllPostData.object?[index].isTrsnalteoption = false;
-                                                                                        }
-                                                                                      });
-                                                                                    },
-                                                                                    child: Container(
-                                                                                        width: 80,
-                                                                                        decoration: BoxDecoration(
-                                                                                          color: ColorConstant.primaryLight_color,
-                                                                                          borderRadius: BorderRadius.circular(10),
-                                                                                        ),
-                                                                                        child: Center(
-                                                                                            child: Text(
-                                                                                          "Translate",
-                                                                                          style: TextStyle(
-                                                                                            fontFamily: 'outfit',
-                                                                                            fontWeight: FontWeight.bold,
-                                                                                          ),
-                                                                                        ))),
-                                                                                  )
-                                                                                : SizedBox(),
+                                        getAllPostData.object?[index]
+                                                    .translatedDescription !=
+                                                null
+                                            ? GestureDetector(
+                                                onTap: () async {
+                                                  super.setState(() {
+                                                    if (getAllPostData
+                                                                .object?[index]
+                                                                .isTrsnalteoption ==
+                                                            false ||
+                                                        getAllPostData
+                                                                .object?[index]
+                                                                .isTrsnalteoption ==
+                                                            null) {
+                                                      getAllPostData
+                                                              .object?[index]
+                                                              .isTrsnalteoption =
+                                                          true;
+                                                    } else {
+                                                      getAllPostData
+                                                              .object?[index]
+                                                              .isTrsnalteoption =
+                                                          false;
+                                                    }
+                                                  });
+                                                },
+                                                child: Container(
+                                                    width: 80,
+                                                    decoration: BoxDecoration(
+                                                      color: ColorConstant
+                                                          .primaryLight_color,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              10),
+                                                    ),
+                                                    child: Center(
+                                                        child: Text(
+                                                      "Translate",
+                                                      style: TextStyle(
+                                                        fontFamily: 'outfit',
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                      ),
+                                                    ))),
+                                              )
+                                            : SizedBox(),
                                         SizedBox(
                                           height: 10,
                                         ),
@@ -3346,8 +3325,16 @@ class _ProfileScreenState extends State<ProfileScreen>
                                               child: Container(
                                                 // color: Colors.amber,
                                                 child: LinkifyText(
-                                                    getAllPostData.object?[index].isTrsnalteoption  == false || getAllPostData.object?[index].isTrsnalteoption  == null ?
-                                                      "${getAllPostData.object?[index].description}":"${getAllPostData.object?[index].translatedDescription}",
+                                                  getAllPostData.object?[index]
+                                                                  .isTrsnalteoption ==
+                                                              false ||
+                                                          getAllPostData
+                                                                  .object?[
+                                                                      index]
+                                                                  .isTrsnalteoption ==
+                                                              null
+                                                      ? "${getAllPostData.object?[index].description}"
+                                                      : "${getAllPostData.object?[index].translatedDescription}",
                                                   linkStyle: TextStyle(
                                                     color: Colors.blue,
                                                     fontFamily: 'outfit',
@@ -3570,6 +3557,11 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                           child: VideoListItem1(
                                                             videoUrl: videoUrls[
                                                                 index],
+                                                            PostID:
+                                                                getAllPostData
+                                                                    .object?[
+                                                                        index]
+                                                                    .postUid,
                                                             /*  isData:
                                                                 User_ID == null
                                                                     ? false
@@ -3651,7 +3643,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                       height: 200,
                                                       child: PageView.builder(
                                                         onPageChanged: (page) {
-                                                          setState(() {
+                                                          super.setState(() {
                                                             _currentPages[
                                                                 index] = page;
                                                             imageCount1 =
@@ -4149,6 +4141,11 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                         index]
                                                                     .repostOn
                                                                     ?.description,
+                                                            PostID:
+                                                                getAllPostData
+                                                                    .object?[
+                                                                        index]
+                                                                    .postUid,
                                                             /*  isData:
                                                                 User_ID == null
                                                                     ? false
@@ -4224,7 +4221,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                         child: PageView.builder(
                                                           onPageChanged:
                                                               (page) {
-                                                            setState(() {
+                                                            super.setState(() {
                                                               _currentPages[
                                                                   index] = page;
                                                               imageCount2 =
@@ -4764,7 +4761,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                                 String translatedTextenglish = await translateText(inputText, 'en');
 
                                                                                 if (getAllPostData?.object?[index].isfalsehin == null && getAllPostData?.object?[index].isfalsegu == null) {
-                                                                                  setState(() {
+                                                                                  super.setState(() {
                                                                                     _translatedTextHindi = translatedTextHindi;
 
                                                                                     // getAllPostData?.object?[index].description = _translatedTextGujarati;
@@ -4772,7 +4769,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                                     getAllPostData?.object?[index].isfalsehin = true;
                                                                                   });
                                                                                 } else if (getAllPostData?.object?[index].isfalsehin == true && getAllPostData?.object?[index].isfalsegu == null) {
-                                                                                  setState(() {
+                                                                                  super.setState(() {
                                                                                     // isDataSet = false;
                                                                                     _translatedTextGujarati = translatedTextGujarati;
                                                                                     // _translatedTextHindi = translatedTextHindi;
@@ -4785,7 +4782,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                                 } else if (getAllPostData?.object?[index].isfalsehin == true && getAllPostData?.object?[index].isfalsehin == true) {
                                                                                   print("this condison is working");
 
-                                                                                  setState(() {
+                                                                                  super.setState(() {
                                                                                     print("i'm cheaking dataa--------------------------------$initalData");
                                                                                     // isDataSet = false;
                                                                                     _translatedTextenglish = translatedTextenglish;
@@ -4808,33 +4805,56 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                                     ),
                                                                                   ))),
                                                                             ), */
-                                                                            getAllPostData.object?[index].translatedDescription != null
-                                                                                ? GestureDetector(
-                                                                                    onTap: () async {
-                                                                                         setState(() {
-                                                                                        if ( getAllPostData.object?[index].isTrsnalteoption  == false || getAllPostData.object?[index].isTrsnalteoption  == null) {
-                                                                                           getAllPostData.object?[index].isTrsnalteoption = true;
-                                                                                        } else {
-                                                                                          getAllPostData.object?[index].isTrsnalteoption = false;
-                                                                                        }
-                                                                                      });
-                                                                                    },
-                                                                                    child: Container(
-                                                                                        width: 80,
-                                                                                        decoration: BoxDecoration(
-                                                                                          color: ColorConstant.primaryLight_color,
-                                                                                          borderRadius: BorderRadius.circular(10),
-                                                                                        ),
-                                                                                        child: Center(
-                                                                                            child: Text(
-                                                                                          "Translate",
-                                                                                          style: TextStyle(
-                                                                                            fontFamily: 'outfit',
-                                                                                            fontWeight: FontWeight.bold,
-                                                                                          ),
-                                                                                        ))),
-                                                                                  )
-                                                                                : SizedBox(),
+                                            getAllPostData.object?[index]
+                                                        .translatedDescription !=
+                                                    null
+                                                ? GestureDetector(
+                                                    onTap: () async {
+                                                      super.setState(() {
+                                                        if (getAllPostData
+                                                                    .object?[
+                                                                        index]
+                                                                    .isTrsnalteoption ==
+                                                                false ||
+                                                            getAllPostData
+                                                                    .object?[
+                                                                        index]
+                                                                    .isTrsnalteoption ==
+                                                                null) {
+                                                          getAllPostData
+                                                                  .object?[index]
+                                                                  .isTrsnalteoption =
+                                                              true;
+                                                        } else {
+                                                          getAllPostData
+                                                                  .object?[index]
+                                                                  .isTrsnalteoption =
+                                                              false;
+                                                        }
+                                                      });
+                                                    },
+                                                    child: Container(
+                                                        width: 80,
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          color: ColorConstant
+                                                              .primaryLight_color,
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(10),
+                                                        ),
+                                                        child: Center(
+                                                            child: Text(
+                                                          "Translate",
+                                                          style: TextStyle(
+                                                            fontFamily:
+                                                                'outfit',
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                          ),
+                                                        ))),
+                                                  )
+                                                : SizedBox(),
                                             SizedBox(
                                               // color: Colors.red,
                                               height: 10,
@@ -4844,8 +4864,18 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                 Expanded(
                                                   child: Container(
                                                     child: LinkifyText(
-                                                      getAllPostData.object?[index].isTrsnalteoption  == false || getAllPostData.object?[index].isTrsnalteoption  == null ?
-                                                      "${getAllPostData.object?[index].description}":"${getAllPostData.object?[index].translatedDescription}",
+                                                      getAllPostData
+                                                                      .object?[
+                                                                          index]
+                                                                      .isTrsnalteoption ==
+                                                                  false ||
+                                                              getAllPostData
+                                                                      .object?[
+                                                                          index]
+                                                                      .isTrsnalteoption ==
+                                                                  null
+                                                          ? "${getAllPostData.object?[index].description}"
+                                                          : "${getAllPostData.object?[index].translatedDescription}",
                                                       linkStyle: TextStyle(
                                                         color: Colors.blue,
                                                         fontFamily: 'outfit',
@@ -5068,6 +5098,8 @@ class _ProfileScreenState extends State<ProfileScreen>
 
                                                   VideoListItem1(
                                                     videoUrl: videoUrls[index],
+                                                    PostID: getAllPostData
+                                                        .object?[index].postUid,
                                                     /* isData: User_ID == null
                                                         ? false
                                                         : true, */
@@ -5143,7 +5175,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                 height: 300,
                                                 child: PageView.builder(
                                                   onPageChanged: (page) {
-                                                    setState(() {
+                                                    super.setState(() {
                                                       _currentPages[index] =
                                                           page;
                                                       imageCount = page + 1;
@@ -5519,7 +5551,7 @@ class _ProfileScreenState extends State<ProfileScreen>
   }
 
   onChangeMethod(String value) {
-    setState(() {
+    super.setState(() {
       aboutMe.text = value;
     });
 
@@ -5547,7 +5579,7 @@ class _ProfileScreenState extends State<ProfileScreen>
       BlocProvider.of<NewProfileSCubit>(context)
           .GetAllHashtag(context, '10', '#${data1.trim()}');
     } else {
-      setState(() {
+      super.setState(() {
         // postText.text = postText.text + ' ' + postTexContrlloer.join(' ,');
         istageData = false;
         isHeshTegData = false;
@@ -5844,7 +5876,7 @@ class _ProfileScreenState extends State<ProfileScreen>
               _currentPages.add(0);
             });
             WidgetsBinding.instance
-                .addPostFrameCallback((timeStamp) => setState(() {
+                .addPostFrameCallback((timeStamp) => super.setState(() {
                       added = true;
                     }));
           }
@@ -6020,7 +6052,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                         String translatedTextenglish = await translateText(inputText, 'en');
 
                                                                         if (GetSavePostData?.object?[index].isfalsehin == null && GetSavePostData??.object?[index].isfalsegu == null) {
-                                                                          setState(() {
+                                                                          super.setState(() {
                                                                             // _translatedTextGujarati = translatedTextGujarati;
 
                                                                             _translatedTextHindi = translatedTextHindi;
@@ -6030,7 +6062,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                             GetSavePostData??.object?[index].isfalsehin = true;
                                                                           });
                                                                         } else if (GetSavePostData??.object?[index].isfalsehin == true && GetSavePostData??.object?[index].isfalsegu == null) {
-                                                                          setState(() {
+                                                                          super.setState(() {
                                                                             _translatedTextGujarati = translatedTextGujarati;
                                                                             // _translatedTextHindi = translatedTextHindi;
 
@@ -6041,7 +6073,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                         } else if (GetSavePostData??.object?[index].isfalsehin == true && GetSavePostData??.object?[index].isfalsehin == true) {
                                                                           print("this condison is working");
 
-                                                                          setState(() {
+                                                                          super.setState(() {
                                                                             print("i'm cheaking dataa--------------------------------$initalData");
                                                                             _translatedTextenglish = translatedTextenglish;
                                                                             GetSavePostData??.object?[index].description = _translatedTextenglish;
@@ -6062,34 +6094,54 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                             ),
                                                                           ))),
                                                                     ), */
-                                                                     GetSavePostData?.object?[index].translatedDescription != null
-                                                                                ? GestureDetector(
-                                                                                    onTap: () async {
-                                                                                         setState(() {
-                                                                                        if ( GetSavePostData?.object?[index].isTrsnalteoption  == false || GetSavePostData?.object?[index].isTrsnalteoption  == null) {
-                                                                                           GetSavePostData?.object?[index].isTrsnalteoption = true;
-                                                                                        } else {
-                                                                                          GetSavePostData?.object?[index].isTrsnalteoption = false;
-                                                                                        }
-                                                                                      });
-                                                                                    },
-                                                                                    child: Container(
-                                                                                        width: 80,
-                                                                                        decoration: BoxDecoration(
-                                                                                          color: ColorConstant.primaryLight_color,
-                                                                                          borderRadius: BorderRadius.circular(10),
-                                                                                        ),
-                                                                                        child: Center(
-                                                                                            child: Text(
-                                                                                          "Translate",
-                                                                                          style: TextStyle(
-                                                                                            fontFamily: 'outfit',
-                                                                                            fontWeight: FontWeight.bold,
-                                                                                          ),
-                                                                                        ))),
-                                                                                  )
-                                                                                : SizedBox(),
-
+                                          GetSavePostData?.object?[index]
+                                                      .translatedDescription !=
+                                                  null
+                                              ? GestureDetector(
+                                                  onTap: () async {
+                                                    super.setState(() {
+                                                      if (GetSavePostData
+                                                                  ?.object?[
+                                                                      index]
+                                                                  .isTrsnalteoption ==
+                                                              false ||
+                                                          GetSavePostData
+                                                                  ?.object?[
+                                                                      index]
+                                                                  .isTrsnalteoption ==
+                                                              null) {
+                                                        GetSavePostData
+                                                                ?.object?[index]
+                                                                .isTrsnalteoption =
+                                                            true;
+                                                      } else {
+                                                        GetSavePostData
+                                                                ?.object?[index]
+                                                                .isTrsnalteoption =
+                                                            false;
+                                                      }
+                                                    });
+                                                  },
+                                                  child: Container(
+                                                      width: 80,
+                                                      decoration: BoxDecoration(
+                                                        color: ColorConstant
+                                                            .primaryLight_color,
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(10),
+                                                      ),
+                                                      child: Center(
+                                                          child: Text(
+                                                        "Translate",
+                                                        style: TextStyle(
+                                                          fontFamily: 'outfit',
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                        ),
+                                                      ))),
+                                                )
+                                              : SizedBox(),
                                           SizedBox(
                                             height: 10,
                                           ),
@@ -6099,8 +6151,18 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                 child: Container(
                                                   // color: Colors.amber,
                                                   child: LinkifyText(
-                                                      GetSavePostData?.object?[index].isTrsnalteoption  == false || GetSavePostData?.object?[index].isTrsnalteoption  == null ?
-                                                      "${GetSavePostData?.object?[index].description}":"${GetSavePostData?.object?[index].translatedDescription}",
+                                                    GetSavePostData
+                                                                    ?.object?[
+                                                                        index]
+                                                                    .isTrsnalteoption ==
+                                                                false ||
+                                                            GetSavePostData
+                                                                    ?.object?[
+                                                                        index]
+                                                                    .isTrsnalteoption ==
+                                                                null
+                                                        ? "${GetSavePostData?.object?[index].description}"
+                                                        : "${GetSavePostData?.object?[index].translatedDescription}",
                                                     linkStyle: TextStyle(
                                                       color: Colors.blue,
                                                       fontFamily: 'outfit',
@@ -6323,6 +6385,11 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                               videoUrl:
                                                                   videoUrls[
                                                                       index],
+                                                              PostID:
+                                                                  GetSavePostData
+                                                                      ?.object?[
+                                                                          index]
+                                                                      .postUid,
                                                               /* isData: User_ID ==
                                                                       null
                                                                   ? false
@@ -6406,7 +6473,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                         child: PageView.builder(
                                                           onPageChanged:
                                                               (page) {
-                                                            setState(() {
+                                                            super.setState(() {
                                                               _currentPages[
                                                                   index] = page;
                                                               imageCount1 =
@@ -6918,6 +6985,11 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                               videoUrl:
                                                                   videoUrls[
                                                                       index],
+                                                              PostID:
+                                                                  GetSavePostData
+                                                                      ?.object?[
+                                                                          index]
+                                                                      .postUid,
                                                               discrption:
                                                                   GetSavePostData
                                                                       ?.object?[
@@ -6998,7 +7070,8 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                               PageView.builder(
                                                             onPageChanged:
                                                                 (page) {
-                                                              setState(() {
+                                                              super
+                                                                  .setState(() {
                                                                 _currentPages[
                                                                         index] =
                                                                     page;
@@ -7524,7 +7597,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                         String translatedTextenglish = await translateText(inputText, 'en');
 
                                                                         if (GetSavePostData??.object?[index].isfalsehin == null && GetSavePostData??.object?[index].isfalsegu == null) {
-                                                                          setState(() {
+                                                                          super.setState(() {
                                                                             _translatedTextHindi = translatedTextHindi;
 
                                                                             // GetSavePostData??.object?[index].description = _translatedTextGujarati;
@@ -7532,7 +7605,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                             GetSavePostData??.object?[index].isfalsehin = true;
                                                                           });
                                                                         } else if (GetSavePostData??.object?[index].isfalsehin == true && GetSavePostData??.object?[index].isfalsegu == null) {
-                                                                          setState(() {
+                                                                          super.setState(() {
                                                                             // isDataSet = false;
                                                                             _translatedTextGujarati = translatedTextGujarati;
                                                                             // _translatedTextHindi = translatedTextHindi;
@@ -7545,7 +7618,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                         } else if (GetSavePostData??.object?[index].isfalsehin == true && GetSavePostData??.object?[index].isfalsehin == true) {
                                                                           print("this condison is working");
 
-                                                                          setState(() {
+                                                                          super.setState(() {
                                                                             print("i'm cheaking dataa--------------------------------$initalData");
                                                                             // isDataSet = false;
                                                                             _translatedTextenglish = translatedTextenglish;
@@ -7568,33 +7641,56 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                             ),
                                                                           ))),
                                                                     ), */
-                                                                      GetSavePostData?.object?[index].translatedDescription != null
-                                                                                ? GestureDetector(
-                                                                                    onTap: () async {
-                                                                                         setState(() {
-                                                                                        if ( GetSavePostData?.object?[index].isTrsnalteoption  == false || GetSavePostData?.object?[index].isTrsnalteoption  == null) {
-                                                                                           GetSavePostData?.object?[index].isTrsnalteoption = true;
-                                                                                        } else {
-                                                                                          GetSavePostData?.object?[index].isTrsnalteoption = false;
-                                                                                        }
-                                                                                      });
-                                                                                    },
-                                                                                    child: Container(
-                                                                                        width: 80,
-                                                                                        decoration: BoxDecoration(
-                                                                                          color: ColorConstant.primaryLight_color,
-                                                                                          borderRadius: BorderRadius.circular(10),
-                                                                                        ),
-                                                                                        child: Center(
-                                                                                            child: Text(
-                                                                                          "Translate",
-                                                                                          style: TextStyle(
-                                                                                            fontFamily: 'outfit',
-                                                                                            fontWeight: FontWeight.bold,
-                                                                                          ),
-                                                                                        ))),
-                                                                                  )
-                                                                                : SizedBox(),
+                                              GetSavePostData?.object?[index]
+                                                          .translatedDescription !=
+                                                      null
+                                                  ? GestureDetector(
+                                                      onTap: () async {
+                                                        super.setState(() {
+                                                          if (GetSavePostData
+                                                                      ?.object?[
+                                                                          index]
+                                                                      .isTrsnalteoption ==
+                                                                  false ||
+                                                              GetSavePostData
+                                                                      ?.object?[
+                                                                          index]
+                                                                      .isTrsnalteoption ==
+                                                                  null) {
+                                                            GetSavePostData
+                                                                ?.object?[index]
+                                                                .isTrsnalteoption = true;
+                                                          } else {
+                                                            GetSavePostData
+                                                                ?.object?[index]
+                                                                .isTrsnalteoption = false;
+                                                          }
+                                                        });
+                                                      },
+                                                      child: Container(
+                                                          width: 80,
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            color: ColorConstant
+                                                                .primaryLight_color,
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        10),
+                                                          ),
+                                                          child: Center(
+                                                              child: Text(
+                                                            "Translate",
+                                                            style: TextStyle(
+                                                              fontFamily:
+                                                                  'outfit',
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                            ),
+                                                          ))),
+                                                    )
+                                                  : SizedBox(),
                                               SizedBox(
                                                 height: 10,
                                               ),
@@ -7603,8 +7699,18 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                   Expanded(
                                                     child: Container(
                                                       child: LinkifyText(
-                                                           GetSavePostData?.object?[index].isTrsnalteoption  == false || GetSavePostData?.object?[index].isTrsnalteoption  == null ?
-                                                      "${GetSavePostData?.object?[index].description}":"${GetSavePostData?.object?[index].translatedDescription}",
+                                                        GetSavePostData
+                                                                        ?.object?[
+                                                                            index]
+                                                                        .isTrsnalteoption ==
+                                                                    false ||
+                                                                GetSavePostData
+                                                                        ?.object?[
+                                                                            index]
+                                                                        .isTrsnalteoption ==
+                                                                    null
+                                                            ? "${GetSavePostData?.object?[index].description}"
+                                                            : "${GetSavePostData?.object?[index].translatedDescription}",
                                                         linkStyle: TextStyle(
                                                           color: Colors.blue,
                                                           fontFamily: 'outfit',
@@ -7843,12 +7949,15 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                                     )), */
 
                                                     VideoListItem1(
-                                                      videoUrl:
-                                                          videoUrls[index],
-                                                      /* isData: User_ID == null
+                                                        videoUrl:
+                                                            videoUrls[index],
+                                                        PostID: GetSavePostData
+                                                            ?.object?[index]
+                                                            .postUid
+                                                        /* isData: User_ID == null
                                                           ? false
                                                           : true, */
-                                                    ),
+                                                        ),
                                                   ],
                                                 ),
                                               )
@@ -7923,7 +8032,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                   height: 300,
                                                   child: PageView.builder(
                                                     onPageChanged: (page) {
-                                                      setState(() {
+                                                      super.setState(() {
                                                         _currentPages[index] =
                                                             page;
                                                         imageCount = page + 1;
@@ -8439,7 +8548,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                     //           true) {
                                     //         saveAllBlogModelData?.object
                                     //             ?.removeAt(index);
-                                    //         setState(() {
+                                    //         super.setState(() {
                                     //           SaveBlogCount =
                                     //               saveAllBlogModelData
                                     //                       ?.object?.length ??
@@ -8484,7 +8593,12 @@ class _ProfileScreenState extends State<ProfileScreen>
   }
 
   Widget expertUser(_height, _width) {
-    return Column(
+    if (User_ID == NewProfileData?.object?.userUid ||
+        (NewProfileData?.object?.isFollowing == 'FOLLOWING' &&
+            NewProfileData?.object?.accountType == 'PRIVATE' &&
+            NewProfileData?.object?.approvalStatus != "PENDING" &&
+            NewProfileData?.object?.approvalStatus == "REJECTED")){
+              return Column(
       children: [
         ListTile(
           /*  leading: Container(
@@ -8510,9 +8624,11 @@ class _ProfileScreenState extends State<ProfileScreen>
                   MaterialPageRoute(
                       builder: (context) => EditProfileScreen(
                             newProfileData: NewProfileData,
-                          ))).then((value) =>
-                  BlocProvider.of<NewProfileSCubit>(context)
-                      .NewProfileSAPI(context, widget.User_ID));
+                          ))).then((value) => widget.ProfileNotification == true
+                  ? BlocProvider.of<NewProfileSCubit>(context)
+                      .NewProfileSAPI(context, widget.User_ID, true)
+                  : BlocProvider.of<NewProfileSCubit>(context)
+                      .NewProfileSAPI(context, widget.User_ID, false));
             },
             child: User_ID == NewProfileData?.object?.userUid
                 ? Icon(
@@ -8945,190 +9061,214 @@ class _ProfileScreenState extends State<ProfileScreen>
         ),
       ],
     );
+            }
+    else{
+      return SizedBox();
+    }
   }
 
   Widget experience(_height, _width) {
-    return Column(
-      children: [
-        ListTile(
-            title: Text(
-              'Experience',
-              style: TextStyle(
-                color: Colors.black,
-                fontSize: 18,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-            trailing: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                (addWorkExperienceModel?.object?.isEmpty ?? false)
-                    ? SizedBox()
-                    : GestureDetector(
-                        onTap: () {
-                          Navigator.push(context, MaterialPageRoute(
-                            builder: (context) {
-                              return ExperienceEditScreen(
-                                userID: widget.User_ID,
-                                typeName: NewProfileData?.object?.module,
-                              );
-                            },
-                          )).then((value) =>
-                              BlocProvider.of<NewProfileSCubit>(context)
-                                  .GetWorkExperienceAPI(
-                                      context, widget.User_ID));
-                        },
-                        child: User_ID == NewProfileData?.object?.userUid
-                            ? Icon(
-                                Icons.edit,
-                                color: Colors.black,
-                              )
-                            : SizedBox(),
-                      ),
-                SizedBox(
-                  width: 10,
-                ),
-                GestureDetector(
-                  onTap: () {
-                    print("modulemodule == ${NewProfileData?.object?.module}");
-                    Navigator.push(context, MaterialPageRoute(
-                      builder: (context) {
-                        return AddWorkExperienceScreen(
-                            typeName: NewProfileData?.object?.module,
-                            userID: widget.User_ID);
-                      },
-                    )).then((value) =>
-                        BlocProvider.of<NewProfileSCubit>(context)
-                            .GetWorkExperienceAPI(context, widget.User_ID));
-                  },
-                  child: User_ID == NewProfileData?.object?.userUid
-                      ? Icon(
-                          Icons.add,
-                          color: Colors.black,
-                          size: 25,
-                        )
-                      : SizedBox(),
-                )
-              ],
-            )),
-        ListView.builder(
-          physics: NeverScrollableScrollPhysics(),
-          shrinkWrap: true,
-          padding: EdgeInsets.only(top: 10),
-          itemCount: addWorkExperienceModel?.object?.length,
-          itemBuilder: (context, index) {
-            print(
-                "StatDate-${addWorkExperienceModel?.object?[index].startDate}");
-            print("endData-${addWorkExperienceModel?.object?[index].endDate}");
-
-            formattedDateStart = DateFormat('dd-MM-yyyy').format(
-                DateFormat('yyyy-MM-dd').parse(
-                    addWorkExperienceModel?.object?[index].startDate ??
-                        DateTime.now().toIso8601String()));
-            if (addWorkExperienceModel?.object?[index].endDate != 'Present') {
-              print(
-                  "this is the Data Get-${addWorkExperienceModel?.object?[index].endDate}");
-              formattedDateEnd = DateFormat('dd-MM-yyyy').format(
-                  DateFormat('yyyy-MM-dd').parse(
-                      addWorkExperienceModel?.object?[index].endDate ??
-                          DateTime.now().toIso8601String()));
-            }
-            return ListTile(
-              titleAlignment: ListTileTitleAlignment.top,
-              leading: addWorkExperienceModel?.object?[index].userProfilePic !=
-                          null &&
-                      addWorkExperienceModel?.object?[index].userProfilePic !=
-                          ''
-                  ? CircleAvatar(
-                      backgroundColor: Colors.white,
-                      backgroundImage: NetworkImage(addWorkExperienceModel
-                              ?.object?[index].userProfilePic ??
-                          ''),
-                    )
-                  : CustomImageView(
-                      imagePath: ImageConstant.tomcruse,
-                      height: 32,
-                      width: 32,
-                      fit: BoxFit.fill,
-                      radius: BorderRadius.circular(25),
-                    ),
+  if (User_ID == NewProfileData?.object?.userUid ||
+        (NewProfileData?.object?.isFollowing == 'FOLLOWING' &&
+            NewProfileData?.object?.accountType == 'PRIVATE' &&
+            NewProfileData?.object?.approvalStatus != "PENDING" &&
+            NewProfileData?.object?.approvalStatus == "REJECTED")) {
+      return Column(
+        children: [
+          ListTile(
               title: Text(
-                '${addWorkExperienceModel?.object?[index].companyName}',
+                'Experience',
                 style: TextStyle(
                   color: Colors.black,
-                  fontSize: 15,
-                  fontWeight: FontWeight.w500,
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
                 ),
               ),
-              subtitle: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+              trailing: Row(
+                mainAxisSize: MainAxisSize.min,
                 children: [
+                  (addWorkExperienceModel?.object?.isEmpty ?? false)
+                      ? SizedBox()
+                      : GestureDetector(
+                          onTap: () {
+                            Navigator.push(context, MaterialPageRoute(
+                              builder: (context) {
+                                return ExperienceEditScreen(
+                                  userID: widget.User_ID,
+                                  typeName: NewProfileData?.object?.module,
+                                );
+                              },
+                            )).then((value) =>
+                                BlocProvider.of<NewProfileSCubit>(context)
+                                    .GetWorkExperienceAPI(
+                                        context, widget.User_ID));
+                          },
+                          child: User_ID == NewProfileData?.object?.userUid &&
+                                  NewProfileData?.object?.approvalStatus !=
+                                      "PENDING" &&
+                                  NewProfileData?.object?.approvalStatus !=
+                                      "REJECTED"
+                              ? Icon(
+                                  Icons.edit,
+                                  color: Colors.black,
+                                )
+                              : SizedBox(),
+                        ),
                   SizedBox(
-                    height: 10,
+                    width: 10,
                   ),
-                  Text(
-                    '${addWorkExperienceModel?.object?[index].jobProfile}',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 12,
-                    ),
-                  ),
-                  NewProfileData?.object?.module == "EXPERT"
-                      ? Text(
-                          '${addWorkExperienceModel?.object?[index].expertiseIn}',
-                          style: TextStyle(
+                  GestureDetector(
+                    onTap: () {
+                      print(
+                          "modulemodule == ${NewProfileData?.object?.module}");
+                      Navigator.push(context, MaterialPageRoute(
+                        builder: (context) {
+                          return AddWorkExperienceScreen(
+                              typeName: NewProfileData?.object?.module,
+                              userID: widget.User_ID);
+                        },
+                      )).then((value) =>
+                          BlocProvider.of<NewProfileSCubit>(context)
+                              .GetWorkExperienceAPI(context, widget.User_ID));
+                    },
+                    child: User_ID == NewProfileData?.object?.userUid
+                        ? Icon(
+                            Icons.add,
                             color: Colors.black,
-                            fontSize: 12,
-                          ),
-                        )
-                      : SizedBox(),
-                  Text(
-                    '${addWorkExperienceModel?.object?[index].industryType}',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 12,
-                    ),
+                            size: 25,
+                          )
+                        : SizedBox(),
+                  )
+                ],
+              )),
+          ListView.builder(
+            physics: NeverScrollableScrollPhysics(),
+            shrinkWrap: true,
+            padding: EdgeInsets.only(top: 10),
+            itemCount: addWorkExperienceModel?.object?.length,
+            itemBuilder: (context, index) {
+              print(
+                  "StatDate-${addWorkExperienceModel?.object?[index].startDate}");
+              print(
+                  "endData-${addWorkExperienceModel?.object?[index].endDate}");
+
+              formattedDateStart = DateFormat('dd-MM-yyyy').format(
+                  DateFormat('yyyy-MM-dd').parse(
+                      addWorkExperienceModel?.object?[index].startDate ??
+                          DateTime.now().toIso8601String()));
+              if (addWorkExperienceModel?.object?[index].endDate != 'Present') {
+                print(
+                    "this is the Data Get-${addWorkExperienceModel?.object?[index].endDate}");
+                formattedDateEnd = DateFormat('dd-MM-yyyy').format(
+                    DateFormat('yyyy-MM-dd').parse(
+                        addWorkExperienceModel?.object?[index].endDate ??
+                            DateTime.now().toIso8601String()));
+              }
+              return ListTile(
+                titleAlignment: ListTileTitleAlignment.top,
+                leading: addWorkExperienceModel
+                                ?.object?[index].userProfilePic !=
+                            null &&
+                        addWorkExperienceModel?.object?[index].userProfilePic !=
+                            ''
+                    ? CircleAvatar(
+                        backgroundColor: Colors.white,
+                        backgroundImage: NetworkImage(addWorkExperienceModel
+                                ?.object?[index].userProfilePic ??
+                            ''),
+                      )
+                    : CustomImageView(
+                        imagePath: ImageConstant.tomcruse,
+                        height: 32,
+                        width: 32,
+                        fit: BoxFit.fill,
+                        radius: BorderRadius.circular(25),
+                      ),
+                title: Text(
+                  '${addWorkExperienceModel?.object?[index].companyName}',
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 15,
+                    fontWeight: FontWeight.w500,
                   ),
-                  /* addWorkExperienceModel?.object?[index].startDate !=
+                ),
+                subtitle: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Text(
+                      '${addWorkExperienceModel?.object?[index].jobProfile}',
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 12,
+                      ),
+                    ),
+                    NewProfileData?.object?.module == "EXPERT"
+                        ? Text(
+                            '${addWorkExperienceModel?.object?[index].expertiseIn}',
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 12,
+                            ),
+                          )
+                        : SizedBox(),
+                    Text(
+                      '${addWorkExperienceModel?.object?[index].industryType}',
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 12,
+                      ),
+                    ),
+                    /* addWorkExperienceModel?.object?[index].startDate !=
                               null &&
                           addWorkExperienceModel?.object?[index].endDate !=
                               null
                       ? */
-                  /* DateFormat('dd-MM-yyyy').format(DateTime.now()) ==
+                    /* DateFormat('dd-MM-yyyy').format(DateTime.now()) ==
                           formattedDateEnd */
-                  addWorkExperienceModel?.object?[index].endDate == "Present"
-                      ? Text(
-                          '${formattedDateStart} to Present',
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 13,
-                          ),
-                        )
-                      : Text(
-                          '${formattedDateStart} to ${formattedDateEnd}',
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 13,
-                          ),
-                        )
-                  /* : SizedBox(), */
-                ],
-              ),
-            );
-          },
-        ),
-        SizedBox(
-          height: 10,
-        )
-      ],
-    );
+                    addWorkExperienceModel?.object?[index].endDate == "Present"
+                        ? Text(
+                            '${formattedDateStart} to Present',
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 13,
+                            ),
+                          )
+                        : Text(
+                            '${formattedDateStart} to ${formattedDateEnd}',
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 13,
+                            ),
+                          )
+                    /* : SizedBox(), */
+                  ],
+                ),
+              );
+            },
+          ),
+          SizedBox(
+            height: 10,
+          )
+        ],
+      );
+    } else {
+      return SizedBox();
+    }
   }
 
   Widget compnayUser(_height, _width) {
-    return Column(
-      children: [
-        ListTile(
-          /* leading: Container(
+    if (User_ID == NewProfileData?.object?.userUid ||
+        (NewProfileData?.object?.isFollowing == 'FOLLOWING' &&
+            NewProfileData?.object?.accountType == 'PRIVATE' &&
+            NewProfileData?.object?.approvalStatus != "PENDING" &&
+            NewProfileData?.object?.approvalStatus != "REJECTED")) {
+      return Column(
+        children: [
+          ListTile(
+            /* leading: Container(
             width: 35,
             height: 35,
             decoration: ShapeDecoration(
@@ -9136,184 +9276,51 @@ class _ProfileScreenState extends State<ProfileScreen>
               shape: OvalBorder(),
             ),
           ), */
-          title: Text(
-            'Work/ Business Details',
-            style: TextStyle(
-              color: Colors.black,
-              fontSize: 18,
-              fontWeight: FontWeight.w600,
+            title: Text(
+              'Work/ Business Details',
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 18,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            trailing: GestureDetector(
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => EditProfileScreen(
+                              newProfileData: NewProfileData,
+                            ))).then((value) =>
+                    widget.ProfileNotification == true
+                        ? BlocProvider.of<NewProfileSCubit>(context)
+                            .NewProfileSAPI(context, widget.User_ID, true)
+                        : BlocProvider.of<NewProfileSCubit>(context)
+                            .NewProfileSAPI(context, widget.User_ID, false));
+              },
+              child: User_ID == NewProfileData?.object?.userUid &&
+                      NewProfileData?.object?.approvalStatus != "PENDING" &&
+                      NewProfileData?.object?.approvalStatus != "REJECTED"
+                  ? Icon(
+                      Icons.edit,
+                      color: Colors.black,
+                    )
+                  : SizedBox(),
             ),
           ),
-          trailing: GestureDetector(
-            onTap: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => EditProfileScreen(
-                            newProfileData: NewProfileData,
-                          ))).then((value) =>
-                  BlocProvider.of<NewProfileSCubit>(context)
-                      .NewProfileSAPI(context, widget.User_ID));
-            },
-            child: User_ID == NewProfileData?.object?.userUid
-                ? Icon(
-                    Icons.edit,
-                    color: Colors.black,
-                  )
-                : SizedBox(),
-          ),
-        ),
-        Container(
-          // color: Colors.amber,
-          height:
-              User_ID == NewProfileData?.object?.userUid ? _height / 1.9 : 400,
-          width: _width,
-          child: Padding(
-            padding: const EdgeInsets.only(right: 16, left: 16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  "Company Name",
-                  overflow: TextOverflow.ellipsis,
-                  textAlign: TextAlign.left,
-                  style: TextStyle(
-                    fontFamily: 'outfit',
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                Container(
-                  width: _width,
-                  child: CustomTextFormField(
-                    controller: CompanyName,
-                    readOnly: true,
-                    margin: EdgeInsets.only(
-                      top: 10,
-                    ),
-
-                    validator: (value) {
-                      RegExp nameRegExp = RegExp(r"^[a-zA-Z0-9\s'@]+$");
-                      if (value!.isEmpty) {
-                        return 'Please Enter Name';
-                      } else if (!nameRegExp.hasMatch(value)) {
-                        return 'Input cannot contains prohibited special characters';
-                      } else if (value.length <= 0 || value.length > 50) {
-                        return 'Minimum length required';
-                      } else if (value.contains('..')) {
-                        return 'username does not contain is correct';
-                      }
-
-                      return null;
-                    },
-                    // textStyle: theme.textTheme.titleMedium!,
-
-                    hintText: "Company Name",
-                    // hintStyle: theme.textTheme.titleMedium!,
-                    textInputAction: TextInputAction.next,
-                    filled: true,
-                    maxLength: 100,
-                    fillColor: appTheme.gray100,
-                  ),
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                Text(
-                  "Job Profile",
-                  overflow: TextOverflow.ellipsis,
-                  textAlign: TextAlign.left,
-                  style: TextStyle(
-                    fontFamily: 'outfit',
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                Container(
-                  width: _width,
-                  child: CustomTextFormField(
-                    readOnly: true,
-                    controller: jobprofileController,
-                    margin: EdgeInsets.only(
-                      top: 10,
-                    ),
-
-                    validator: (value) {
-                      RegExp nameRegExp = RegExp(r"^[a-zA-Z0-9\s'@]+$");
-                      if (value!.isEmpty) {
-                        return 'Please Enter Name';
-                      } else if (!nameRegExp.hasMatch(value)) {
-                        return 'Input cannot contains prohibited special characters';
-                      } else if (value.length <= 0 || value.length > 50) {
-                        return 'Minimum length required';
-                      } else if (value.contains('..')) {
-                        return 'username does not contain is correct';
-                      }
-
-                      return null;
-                    },
-                    // textStyle: theme.textTheme.titleMedium!,
-                    hintText: "Job profile",
-                    // hintStyle: theme.textTheme.titleMedium!,
-                    textInputAction: TextInputAction.next,
-                    filled: true,
-                    maxLength: 100,
-                    fillColor: appTheme.gray100,
-                  ),
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                Text(
-                  "Industry Type",
-                  overflow: TextOverflow.ellipsis,
-                  textAlign: TextAlign.left,
-                  style: TextStyle(
-                    fontFamily: 'outfit',
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                Container(
-                  width: _width,
-                  child: CustomTextFormField(
-                    readOnly: true, maxLines: 4,
-                    controller: IndustryType,
-                    textStyle: TextStyle(
-                        fontWeight: FontWeight.w400,
-                        wordSpacing: 1,
-                        letterSpacing: 1,
-                        fontFamily: 'outfit'),
-                    margin: EdgeInsets.only(
-                      top: 10,
-                    ),
-
-                    validator: (value) {
-                      RegExp nameRegExp = RegExp(r"^[a-zA-Z0-9\s'@]+$");
-                      if (value!.isEmpty) {
-                        return 'Please Enter Name';
-                      } else if (!nameRegExp.hasMatch(value)) {
-                        return 'Input cannot contains prohibited special characters';
-                      } else if (value.length <= 0 || value.length > 50) {
-                        return 'Minimum length required';
-                      } else if (value.contains('..')) {
-                        return 'username does not contain is correct';
-                      }
-
-                      return null;
-                    },
-                    // textStyle: theme.textTheme.titleMedium!,
-                    hintText: "Industry Type",
-                    // hintStyle: theme.textTheme.titleMedium!,
-                    textInputAction: TextInputAction.next,
-                    filled: true,
-                    maxLength: 100,
-                    fillColor: appTheme.gray100,
-                  ),
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                if (User_ID == NewProfileData?.object?.userUid)
+          Container(
+            // color: Colors.amber,
+            height: User_ID == NewProfileData?.object?.userUid
+                ? _height / 1.9
+                : 400,
+            width: _width,
+            child: Padding(
+              padding: const EdgeInsets.only(right: 16, left: 16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
                   Text(
-                    "Document",
+                    "Company Name",
                     overflow: TextOverflow.ellipsis,
                     textAlign: TextAlign.left,
                     style: TextStyle(
@@ -9321,101 +9328,244 @@ class _ProfileScreenState extends State<ProfileScreen>
                       fontWeight: FontWeight.w500,
                     ),
                   ),
-                if (User_ID == NewProfileData?.object?.userUid)
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Container(
-                            height: 50,
-                            // width: _width - 175,
-                            decoration: BoxDecoration(
-                                color: Color(0XFFF6F6F6),
-                                borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(5),
-                                    bottomLeft: Radius.circular(5))),
-                            child: Padding(
-                              padding: const EdgeInsets.only(top: 15, left: 10),
-                              child: Text(
-                                '${dopcument.toString().split('/').last}',
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(fontSize: 16),
-                              ),
-                            )),
+                  Container(
+                    width: _width,
+                    child: CustomTextFormField(
+                      controller: CompanyName,
+                      readOnly: true,
+                      margin: EdgeInsets.only(
+                        top: 10,
                       ),
-                      dopcument == "Upload Image"
-                          ? GestureDetector(
-                              onTap: () async {
-                                print(
-                                    'dopcument.toString()--${dopcument.toString()}');
-                                filepath = await prepareTestPdf(0);
-                              },
-                              child: Container(
-                                height: 50,
-                                // width: _width / 4.5,
-                                decoration: BoxDecoration(
-                                    color: Color(0XFF777777),
-                                    borderRadius: BorderRadius.only(
-                                        topRight: Radius.circular(5),
-                                        bottomRight: Radius.circular(5))),
-                                child: Center(
-                                  child: Text(
-                                    "Choose",
-                                    style: TextStyle(
-                                      fontFamily: 'outfit',
-                                      fontSize: 15,
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            )
-                          : GestureDetector(
-                              onTap: () async {
-                                // dopcument = "Upload Image";
 
-                                // setState(() {});
-                                print("dfsdfgsdfgdfg-${dopcument}");
-                                Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (context) => DocumentViewScreen1(
-                                          path: NewProfileData
-                                              ?.object?.userDocument,
-                                          title: 'Pdf',
-                                        )));
-                              },
-                              child: Container(
-                                height: 50,
-                                width: _width / 4.5,
-                                decoration: BoxDecoration(
-                                    color: Color.fromARGB(255, 228, 228, 228),
-                                    borderRadius: BorderRadius.only(
-                                        topRight: Radius.circular(5),
-                                        bottomRight: Radius.circular(5))),
-                                child: Center(
-                                  child: Text(
-                                    "Open",
-                                    style: TextStyle(
-                                      fontFamily: 'outfit',
-                                      fontSize: 15,
-                                      color: ColorConstant.primary_color,
-                                      fontWeight: FontWeight.w500,
+                      validator: (value) {
+                        RegExp nameRegExp = RegExp(r"^[a-zA-Z0-9\s'@]+$");
+                        if (value!.isEmpty) {
+                          return 'Please Enter Name';
+                        } else if (!nameRegExp.hasMatch(value)) {
+                          return 'Input cannot contains prohibited special characters';
+                        } else if (value.length <= 0 || value.length > 50) {
+                          return 'Minimum length required';
+                        } else if (value.contains('..')) {
+                          return 'username does not contain is correct';
+                        }
+
+                        return null;
+                      },
+                      // textStyle: theme.textTheme.titleMedium!,
+
+                      hintText: "Company Name",
+                      // hintStyle: theme.textTheme.titleMedium!,
+                      textInputAction: TextInputAction.next,
+                      filled: true,
+                      maxLength: 100,
+                      fillColor: appTheme.gray100,
+                    ),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Text(
+                    "Job Profile",
+                    overflow: TextOverflow.ellipsis,
+                    textAlign: TextAlign.left,
+                    style: TextStyle(
+                      fontFamily: 'outfit',
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  Container(
+                    width: _width,
+                    child: CustomTextFormField(
+                      readOnly: true,
+                      controller: jobprofileController,
+                      margin: EdgeInsets.only(
+                        top: 10,
+                      ),
+
+                      validator: (value) {
+                        RegExp nameRegExp = RegExp(r"^[a-zA-Z0-9\s'@]+$");
+                        if (value!.isEmpty) {
+                          return 'Please Enter Name';
+                        } else if (!nameRegExp.hasMatch(value)) {
+                          return 'Input cannot contains prohibited special characters';
+                        } else if (value.length <= 0 || value.length > 50) {
+                          return 'Minimum length required';
+                        } else if (value.contains('..')) {
+                          return 'username does not contain is correct';
+                        }
+
+                        return null;
+                      },
+                      // textStyle: theme.textTheme.titleMedium!,
+                      hintText: "Job profile",
+                      // hintStyle: theme.textTheme.titleMedium!,
+                      textInputAction: TextInputAction.next,
+                      filled: true,
+                      maxLength: 100,
+                      fillColor: appTheme.gray100,
+                    ),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Text(
+                    "Industry Type",
+                    overflow: TextOverflow.ellipsis,
+                    textAlign: TextAlign.left,
+                    style: TextStyle(
+                      fontFamily: 'outfit',
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  Container(
+                    width: _width,
+                    child: CustomTextFormField(
+                      readOnly: true, maxLines: 4,
+                      controller: IndustryType,
+                      textStyle: TextStyle(
+                          fontWeight: FontWeight.w400,
+                          wordSpacing: 1,
+                          letterSpacing: 1,
+                          fontFamily: 'outfit'),
+                      margin: EdgeInsets.only(
+                        top: 10,
+                      ),
+
+                      validator: (value) {
+                        RegExp nameRegExp = RegExp(r"^[a-zA-Z0-9\s'@]+$");
+                        if (value!.isEmpty) {
+                          return 'Please Enter Name';
+                        } else if (!nameRegExp.hasMatch(value)) {
+                          return 'Input cannot contains prohibited special characters';
+                        } else if (value.length <= 0 || value.length > 50) {
+                          return 'Minimum length required';
+                        } else if (value.contains('..')) {
+                          return 'username does not contain is correct';
+                        }
+
+                        return null;
+                      },
+                      // textStyle: theme.textTheme.titleMedium!,
+                      hintText: "Industry Type",
+                      // hintStyle: theme.textTheme.titleMedium!,
+                      textInputAction: TextInputAction.next,
+                      filled: true,
+                      maxLength: 100,
+                      fillColor: appTheme.gray100,
+                    ),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  if (User_ID == NewProfileData?.object?.userUid)
+                    Text(
+                      "Document",
+                      overflow: TextOverflow.ellipsis,
+                      textAlign: TextAlign.left,
+                      style: TextStyle(
+                        fontFamily: 'outfit',
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  if (User_ID == NewProfileData?.object?.userUid)
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Container(
+                              height: 50,
+                              // width: _width - 175,
+                              decoration: BoxDecoration(
+                                  color: Color(0XFFF6F6F6),
+                                  borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(5),
+                                      bottomLeft: Radius.circular(5))),
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.only(top: 15, left: 10),
+                                child: Text(
+                                  '${dopcument.toString().split('/').last}',
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(fontSize: 16),
+                                ),
+                              )),
+                        ),
+                        dopcument == "Upload Image"
+                            ? GestureDetector(
+                                onTap: () async {
+                                  print(
+                                      'dopcument.toString()--${dopcument.toString()}');
+                                  filepath = await prepareTestPdf(0);
+                                },
+                                child: Container(
+                                  height: 50,
+                                  // width: _width / 4.5,
+                                  decoration: BoxDecoration(
+                                      color: Color(0XFF777777),
+                                      borderRadius: BorderRadius.only(
+                                          topRight: Radius.circular(5),
+                                          bottomRight: Radius.circular(5))),
+                                  child: Center(
+                                    child: Text(
+                                      "Choose",
+                                      style: TextStyle(
+                                        fontFamily: 'outfit',
+                                        fontSize: 15,
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              )
+                            : GestureDetector(
+                                onTap: () async {
+                                  // dopcument = "Upload Image";
+
+                                  // super.setState(() {});
+                                  print("dfsdfgsdfgdfg-${dopcument}");
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                      builder: (context) => DocumentViewScreen1(
+                                            path: NewProfileData
+                                                ?.object?.userDocument,
+                                            title: 'Pdf',
+                                          )));
+                                },
+                                child: Container(
+                                  height: 50,
+                                  width: _width / 4.5,
+                                  decoration: BoxDecoration(
+                                      color: Color.fromARGB(255, 228, 228, 228),
+                                      borderRadius: BorderRadius.only(
+                                          topRight: Radius.circular(5),
+                                          bottomRight: Radius.circular(5))),
+                                  child: Center(
+                                    child: Text(
+                                      "Open",
+                                      style: TextStyle(
+                                        fontFamily: 'outfit',
+                                        fontSize: 15,
+                                        color: ColorConstant.primary_color,
+                                        fontWeight: FontWeight.w500,
+                                      ),
                                     ),
                                   ),
                                 ),
                               ),
-                            ),
-                    ],
-                  ),
-              ],
+                      ],
+                    ),
+                ],
+              ),
             ),
           ),
-        ),
-      ],
-    );
+        ],
+      );
+    } else {
+      return SizedBox();
+    }
   }
 
   Future<void> _selectStartTime(BuildContext context) async {
-    setState(() {
+    super.setState(() {
       isDataSet = true;
     });
     TimeOfDay initialTime = TimeOfDay(hour: 0, minute: 0);
@@ -9438,14 +9588,14 @@ class _ProfileScreenState extends State<ProfileScreen>
     }
 
     if (pickedTime != null && pickedTime != _startTime) {
-      setState(() {
+      super.setState(() {
         _startTime = pickedTime;
       });
     }
   }
 
   Future<void> _selectEndTime(BuildContext context) async {
-    setState(() {
+    super.setState(() {
       isDataSet = true;
     });
     TimeOfDay initialTime = TimeOfDay(hour: 0, minute: 0);
@@ -9467,7 +9617,7 @@ class _ProfileScreenState extends State<ProfileScreen>
     }
 
     if (pickedTime != null && pickedTime != _endTime) {
-      setState(() {
+      super.setState(() {
         _endTime = pickedTime;
       });
     }
@@ -9638,7 +9788,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                         print(
                             "--------------------------------------------------${NewProfileData?.object?.userUid}");
 
-                        setState(() {});
+                        super.setState(() {});
                         BlocProvider.of<NewProfileSCubit>(context).DeletePost(
                             '${getAllPostData?.object?[index].postUid}',
                             context);
@@ -9779,7 +9929,7 @@ class _ProfileScreenState extends State<ProfileScreen>
         switch (Index) {
           case 1:
             if (file1.name.isNotEmpty || file1.name.toString() == null) {
-              setState(() {
+              super.setState(() {
                 uplopdfile.text = file1.name;
                 dopcument = file1.name;
               });
@@ -9797,7 +9947,7 @@ class _ProfileScreenState extends State<ProfileScreen>
           case 0:
             print("file1.name-->${file1.name}");
             if (file1.name.isNotEmpty || file1.name.toString() == null) {
-              setState(() {
+              super.setState(() {
                 uplopdfile.text = file1.name;
                 dopcument = file1.name;
               });
@@ -9810,7 +9960,7 @@ class _ProfileScreenState extends State<ProfileScreen>
         print('filenamecheckKB-${file1.path}');
         /* BlocProvider.of<FetchExprtiseRoomCubit>(context)
             .chooseDocumentprofile(dopcument.toString(), file1.path!, context); */
-        setState(() {});
+        super.setState(() {});
 
         break;
       case 2:
@@ -9840,7 +9990,7 @@ class _ProfileScreenState extends State<ProfileScreen>
           print("file1.namedata-->${file1.name}");
           switch (Index) {
             case 1:
-              setState(() {
+              super.setState(() {
                 uplopdfile.text = file1.name;
                 dopcument = file1.name;
               });
@@ -9849,7 +9999,7 @@ class _ProfileScreenState extends State<ProfileScreen>
             default:
           }
           print('filecheckPath1-${file1.name}');
-          setState(() {
+          super.setState(() {
             uplopdfile.text = file1.name;
             dopcument = file1.name;
           });

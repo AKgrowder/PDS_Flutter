@@ -205,7 +205,7 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                                 onEditingComplete: () {},
                                 onTap: () {
                                   if (mounted) {
-                                    setState(() {
+                                    super.setState(() {
                                       isSerch = true;
                                     });
                                   }
@@ -251,7 +251,7 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                                   } else {
                                     dataget = false;
                                     if (mounted) {
-                                      setState(() {
+                                      super.setState(() {
                                         // Update the widget's state.
                                       });
                                     }
@@ -298,7 +298,7 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                           child: TextFormField(
                             onTap: () {
                               if (mounted) {
-                                setState(() {
+                                super.setState(() {
                                   isSerch = true;
                                 });
                               }
@@ -317,7 +317,7 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                               } else {
                                 dataget = false;
                                 if (mounted) {
-                                  setState(() {
+                                  super.setState(() {
                                     // Update the widget's state.
                                   });
                                 }
@@ -354,7 +354,7 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
 
                                   SharedPreferencesFunction(indexxx ?? 0);
                                   if (mounted) {
-                                    setState(() {
+                                    super.setState(() {
                                       // Update the widget's state.
                                     });
                                   }
@@ -449,7 +449,7 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                                                 context, 'FOR YOU', '1');
                                       }
                                       if (mounted) {
-                                        setState(() {
+                                        super.setState(() {
                                           // Update the widget's state.
                                         });
                                       }
@@ -575,7 +575,7 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                                       padding: const EdgeInsets.all(8.0),
                                       child: GestureDetector(
                                         onTap: () {
-                                          setState(() {
+                                          super.setState(() {
                                             _focusNode.requestFocus();
 
                                             isSerch = true;
@@ -682,7 +682,7 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                                 searchController.text =
                                     getDataInSerch?.object?[index].toString() ??
                                         '';
-                                setState(() {});
+                                super.setState(() {});
 
                                 if (searchController.text.contains('#')) {
                                   String hashTageValue = searchController.text
@@ -737,7 +737,7 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                           onPageChanged: (index, reason) {
                             WidgetsBinding.instance.addPostFrameCallback((_) {
                               if (mounted) {
-                                setState(() {
+                                super.setState(() {
                                   sliderCurrentPosition = index;
                                 });
                               }
@@ -944,24 +944,23 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                                               color: Colors.black),
                                           onTap: (text) {
                                             print(text);
-                                             if (UserLogin_ID != null) {
-                        Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      BlocProvider<
-                                                          HashTagCubit>(
-                                                    create: (context) =>
-                                                        HashTagCubit(),
-                                                    child: HashTagViewScreen(
-                                                        title:
-                                                            "${hashtagModel?.object?.content?[index].hashtagName}"),
-                                                  ),
-                                                ));
-                            } else {
-                              NaviRegisterScreen();
-                            }
-                                           
+                                            if (UserLogin_ID != null) {
+                                              Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        BlocProvider<
+                                                            HashTagCubit>(
+                                                      create: (context) =>
+                                                          HashTagCubit(),
+                                                      child: HashTagViewScreen(
+                                                          title:
+                                                              "${hashtagModel?.object?.content?[index].hashtagName}"),
+                                                    ),
+                                                  ));
+                                            } else {
+                                              NaviRegisterScreen();
+                                            }
                                           },
                                         ),
                                         SizedBox(
@@ -1078,42 +1077,27 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                                   SizedBox(
                                     width: 8,
                                   ),
-                                  Stack(
-                                    alignment: Alignment.bottomRight,
-                                    children: [
-                                      getalluserlistModel
-                                                  ?.object
-                                                  ?.content?[index]
-                                                  .userProfile ==
-                                              null
-                                          ? CircleAvatar(
-                                              backgroundColor: Colors.white,
-                                              radius: 25,
-                                              child: Image.asset(
-                                                  ImageConstant.tomcruse))
-                                          : CircleAvatar(
-                                              backgroundColor: Colors.white,
-                                              backgroundImage: NetworkImage(
-                                                "${getalluserlistModel?.object?.content?[index].userProfile}",
-                                              ),
-                                              radius: 25,
-                                            ),
-                                      getalluserlistModel?.object
-                                                  ?.content?[index].isExpert ==
-                                              true
-                                          ? Image.asset(
-                                              ImageConstant.Star,
-                                              height: 18,
-                                            )
-                                          : SizedBox()
-                                    ],
-                                  ),
+                                  getalluserlistModel?.object?.content?[index]
+                                              .userProfile ==
+                                          null
+                                      ? CircleAvatar(
+                                          backgroundColor: Colors.white,
+                                          radius: 25,
+                                          child: Image.asset(
+                                              ImageConstant.tomcruse))
+                                      : CircleAvatar(
+                                          backgroundColor: Colors.white,
+                                          backgroundImage: NetworkImage(
+                                            "${getalluserlistModel?.object?.content?[index].userProfile}",
+                                          ),
+                                          radius: 25,
+                                        ),
                                   SizedBox(
                                     width: 8,
                                   ),
                                   Container(
-                                    width: _width / 1.5,
                                     // color: Colors.amber,
+                                    margin: EdgeInsets.only(right: 5),
                                     child: Text(
                                       "${getalluserlistModel?.object?.content?[index].userName}",
                                       overflow: TextOverflow.ellipsis,
@@ -1122,7 +1106,17 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                                         fontSize: 15,
                                       ),
                                     ),
-                                  )
+                                  ),
+                                  if (getalluserlistModel
+                                          ?.object?.content?[index].isExpert ==
+                                      true)
+                                    Padding(
+                                      padding: const EdgeInsets.only(bottom: 4),
+                                      child: Image.asset(
+                                        ImageConstant.Star,
+                                        height: 18,
+                                      ),
+                                    )
                                 ]),
                               ),
                             ),
@@ -1233,24 +1227,24 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                           padding: const EdgeInsets.all(8.0),
                           child: GestureDetector(
                             onTap: () {
-                               if (UserLogin_ID != null) {
+                              if (UserLogin_ID != null) {
                                 Navigator.push(context,
-                                  MaterialPageRoute(builder: (context) {
-                                return MultiBlocProvider(
-                                    providers: [
-                                      BlocProvider<NewProfileSCubit>(
-                                        create: (context) => NewProfileSCubit(),
-                                      ),
-                                    ],
-                                    child: ProfileScreen(
-                                        User_ID:
-                                            "${getalluserlistModel?.object?.content?[index].userUid}",
-                                        isFollowing: "REQUESTED"));
-                              }));
-                            } else {
-                              NaviRegisterScreen();
-                            }
-                           
+                                    MaterialPageRoute(builder: (context) {
+                                  return MultiBlocProvider(
+                                      providers: [
+                                        BlocProvider<NewProfileSCubit>(
+                                          create: (context) =>
+                                              NewProfileSCubit(),
+                                        ),
+                                      ],
+                                      child: ProfileScreen(
+                                          User_ID:
+                                              "${getalluserlistModel?.object?.content?[index].userUid}",
+                                          isFollowing: "REQUESTED"));
+                                }));
+                              } else {
+                                NaviRegisterScreen();
+                              }
                             },
                             child: Container(
                               height: 55,
@@ -1262,39 +1256,27 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                                 SizedBox(
                                   width: 8,
                                 ),
-                                Stack(
-                                  alignment: Alignment.bottomRight,
-                                  children: [
-                                    getalluserlistModel?.object?.content?[index]
-                                                .userProfile ==
-                                            null
-                                        ? CircleAvatar(
-                                            backgroundColor: Colors.white,
-                                            radius: 25,
-                                            child: Image.asset(
-                                                ImageConstant.tomcruse))
-                                        : CircleAvatar(
-                                            backgroundColor: Colors.white,
-                                            backgroundImage: NetworkImage(
-                                              "${getalluserlistModel?.object?.content?[index].userProfile}",
-                                            ),
-                                            radius: 25,
-                                          ),
-                                    getalluserlistModel?.object?.content?[index]
-                                                .isExpert ==
-                                            true
-                                        ? Image.asset(
-                                            ImageConstant.Star,
-                                            height: 18,
-                                          )
-                                        : SizedBox()
-                                  ],
-                                ),
+                                getalluserlistModel?.object?.content?[index]
+                                            .userProfile ==
+                                        null
+                                    ? CircleAvatar(
+                                        backgroundColor: Colors.white,
+                                        radius: 25,
+                                        child:
+                                            Image.asset(ImageConstant.tomcruse))
+                                    : CircleAvatar(
+                                        backgroundColor: Colors.white,
+                                        backgroundImage: NetworkImage(
+                                          "${getalluserlistModel?.object?.content?[index].userProfile}",
+                                        ),
+                                        radius: 25,
+                                      ),
                                 SizedBox(
                                   width: 8,
                                 ),
                                 Container(
-                                  width: _width / 1.5,
+                                  margin: EdgeInsets.only(right: 10),
+                                  // width: _width / 1.5,
                                   child: Text(
                                     "${getalluserlistModel?.object?.content?[index].userName}",
                                     overflow: TextOverflow.ellipsis,
@@ -1303,6 +1285,10 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                                       fontSize: 15,
                                     ),
                                   ),
+                                ),
+                                Image.asset(
+                                  ImageConstant.Star,
+                                  height: 18,
                                 )
                               ]),
                             ),
@@ -1392,7 +1378,9 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
   }
 
   NaviRegisterScreen() {
-    Navigator.of(context).push(
-        MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen(backSearch: true,)));
+    Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => RegisterCreateAccountScreen(
+              backSearch: true,
+            )));
   }
 }

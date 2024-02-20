@@ -115,7 +115,7 @@ class _StoryPageState extends State<StoryPage> {
 
     if (pickedImageFile != null) {
       if (!_isGifOrSvg(pickedImageFile!.path)) {
-        setState(() {
+        super.setState(() {
           _image = File(pickedImageFile!.path);
         });
         final sizeInBytes = await _image!.length();

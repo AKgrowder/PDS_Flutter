@@ -31,7 +31,7 @@ class Config {
   static const String addDeviceDetail = "auth/auth/addDeviceDetail";
   static const String fetchAllExperts = "user/api/fetchAllExperts";
   static const String myaccountApi = "user/api/fetchUserProfile";
-
+  static const String video_watch_detail = "user/api/video_watch_detail";
   static const String systemconfig = "user/api/fetchSysConfig";
   static const String fetchUserModule = "user/api/fetchUserModule";
   static const String fetchRoomDetails = "user/api/fetchRoomDetails/";
@@ -69,7 +69,6 @@ class Config {
   static const String Addcomments = "user/api/get_comments_on_post";
   //  static const String CreateStory = "user/api/create_story";
   static const String getcomments = "user/api/add_comment";
-  static const String NewfetchUserProfile = "user/api/fetchUserProfile";
   static const String getAllStory = "user/api/get_all_story";
   static const String crateStroyCheck = "user/api/create_story";
   static const String industryType = "user/api/get_all_industry_types";
@@ -140,4 +139,9 @@ class Config {
   static const String reaction_message_added_on_story =
       "user/reaction_message_added_on_story";
        static const String OpenSaveImagePostGuest = "guest/api/get_post_by_uid";
+       static const String readAllmsg = "user/api/read_all_notification";
+       static const String readnotificationscount = "user/api/read_notifications_count";
+
+
+       
 }

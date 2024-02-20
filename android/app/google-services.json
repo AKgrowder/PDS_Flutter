@@ -7,9 +7,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1027618813989:android:00150840d70f47b9a0e7cc",
+        "mobilesdk_app_id": "1:1027618813989:android:7df24cd8e94de60ea0e7cc",
         "android_client_info": {
-          "package_name": "com.pds.app"
+          "package_name": "com.inpackaging.app"
         }
       },
       "oauth_client": [
@@ -29,6 +29,49 @@
             {
               "client_id": "1027618813989-m073jg8dh5ktoqjfbag83l2fmlu8fv4i.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "1027618813989-1s05ljegbub4s8hdcijlsonv82lg60dr.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.inpackaging.app"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1027618813989:android:00150840d70f47b9a0e7cc",
+        "android_client_info": {
+          "package_name": "com.inpackaging.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1027618813989-m073jg8dh5ktoqjfbag83l2fmlu8fv4i.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBRVBp2O4g4kBtwpAcHmixLExqUGYMdZZ0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1027618813989-m073jg8dh5ktoqjfbag83l2fmlu8fv4i.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1027618813989-1s05ljegbub4s8hdcijlsonv82lg60dr.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.inpackaging.app"
+              }
             }
           ]
         }

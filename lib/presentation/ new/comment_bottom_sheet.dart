@@ -95,7 +95,7 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
     return WillPopScope(
       onWillPop: () {
         if (isEmojiVisible) {
-          setState(() {
+          super.setState(() {
             isEmojiVisible = false;
           });
           return Future.value(false);
@@ -117,6 +117,14 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                 fontFamily: "outfit",
                 fontSize: 20),
           ),
+          actions: [
+             IconButton(
+                icon: Icon(Icons.close,color: Colors.black),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+          ],
         ),
         body: BlocConsumer<AddcommentCubit, AddCommentState>(
           listener: (context, state) async {
@@ -406,7 +414,7 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                                                 MainAxisAlignment.center,
                                             children: [
                                               Container(
-                                                // width: 280,
+                                                width: 300,
                                                 // color: Colors.amber,
                                                 child: Row(
                                                   children: [
@@ -488,7 +496,8 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                                                             null
                                                         ? GestureDetector(
                                                             onTap: () async {
-                                                              setState(() {
+                                                              super
+                                                                  .setState(() {
                                                                 if (addCommentModeldata
                                                                             ?.object?[
                                                                                 index]
@@ -855,7 +864,7 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                                             FocusScope.of(context).unfocus();
                                           }
         
-                                          setState(() {
+                                          super.setState(() {
                                             isEmojiVisible = !isEmojiVisible;
                                           });
                                         },
@@ -955,7 +964,7 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                                         maxLines: null,
                                       onTap: () {
                                         if (isEmojiVisible) {
-                                          setState(() {
+                                          super.setState(() {
                                             isEmojiVisible = !isEmojiVisible;
                                           });
                                         }
@@ -990,7 +999,7 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                                                 FocusScope.of(context).unfocus();
                                               }
         
-                                              setState(() {
+                                              super.setState(() {
                                                 isEmojiVisible = !isEmojiVisible;
                                               });
                                             },
@@ -1044,14 +1053,14 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                             child: EmojiPicker(
                               onBackspacePressed: () {
                                 if (isEmojiVisible) {
-                                  setState(() {
+                                  super.setState(() {
                                     isEmojiVisible = false;
                                   });
                                 }
                               },
                               onEmojiSelected: (category, emoji) {
                                 addcomment.text += emoji.emoji;
-                                setState(() {});
+                                super.setState(() {});
                               },
                               config: Config(
                                 columns: 7,
@@ -1103,7 +1112,7 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
   }
 
   onChangeMethod(String value) {
-    setState(() {
+    super.setState(() {
       addcomment.text = value;
     });
     if (value.contains('@')) {
@@ -1130,7 +1139,7 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
       BlocProvider.of<AddcommentCubit>(context)
           .GetAllHashtag(context, '10', '#${data1.trim()}');
     } else {
-      setState(() {
+      super.setState(() {
         istageData = false;
         isHeshTegData = false;
       });

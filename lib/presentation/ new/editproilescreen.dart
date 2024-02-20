@@ -96,7 +96,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     contactController.text =
         widget.newProfileData?.object?.mobileNo?.toString() ?? '';
 
-    setState(() {});
+    super.setState(() {});
   }
 
   userStatusGet() async {
@@ -168,7 +168,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     }
 
     if (pickedTime != null && pickedTime != _endTime) {
-      setState(() {
+      super.setState(() {
         _endTime = pickedTime;
       });
     }
@@ -197,7 +197,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     }
 
     if (pickedTime != null && pickedTime != _startTime) {
-      setState(() {
+      super.setState(() {
         _startTime = pickedTime;
       });
     }
@@ -243,6 +243,14 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 chooseDocumentuploded = state.chooseDocumentuploded;
               }
               Navigator.pop(context);
+            }
+            if(state is UserExistLoadedState){
+             print("this is the check${state.UserExist}"); 
+              SnackBar snackBar = SnackBar(
+                  content: Text(state.UserExist.toString()),
+                  backgroundColor: ColorConstant.primary_color,
+                );
+             ScaffoldMessenger.of(context).showSnackBar(snackBar);
             }
             if (state is AddExportLoadedState) {
               if (state.addExpertProfile.message.toString() ==
@@ -341,7 +349,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   .toList();
 
               WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-                setState(() {});
+                super.setState(() {});
               });
               selectedIndustryTypes2.forEach((element) {
                 industryUUIDinApi.add(element.industryTypeUid);
@@ -665,11 +673,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           ),
                         ),
                         customTextFeild(
-                          isReadOnly: true,
-                          controller: userNameController,
-                          width: _width / 1.1,
-                          hintText: "Enter User ID",
-                        ),
+                            // isReadOnly: true,
+                            controller: userNameController,
+                            width: _width / 1.1,
+                            hintText: "Enter User ID",
+                            color: Color(0xffFFF3F4)),
                         Row(
                           children: [
                             Padding(
@@ -874,7 +882,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             "userBackgroundPic": chooseDocumentuploded1?.object.toString(),
             "email": emailController.text,
             "name": nameController.text,
-            // "userName": userNameController.text,
+            "userName": userNameController.text,
             "uuid": User_ID
           };
           print("parems--$params");
@@ -891,7 +899,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     : null,
             "email": emailController.text,
             "name": nameController.text,
-            // "userName": userNameController.text,
+            "userName": userNameController.text,
             "uuid": User_ID
           };
           print("parems--$params");
@@ -908,7 +916,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     ? widget.newProfileData?.object?.userProfilePic
                     : null,
             "name": nameController.text,
-            // "userName": userNameController.text,
+            "userName": userNameController.text,
             "uuid": User_ID
           };
           print("parems--$params");
@@ -929,7 +937,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     : null,
             "email": emailController.text,
             "name": nameController.text,
-            // "userName": userNameController.text,
+            "userName": userNameController.text,
             "uuid": User_ID
           };
           print("parems--$params");
@@ -1002,6 +1010,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       params['profileUid'] =
           widget.newProfileData?.object?.profileUid.toString();
       params['email'] = emailController.text;
+      params['userName'] = userNameController.text;
       params['industryTypesUid'] = industryType;
       if (chooseDocumentuploded2?.object != null) {
         params['document'] = chooseDocumentuploded2?.object.toString();
@@ -1024,7 +1033,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         params['userProfilePic'] = "";
         params['userBackgroundPic'] = "";
       } else if (chooseDocumentuploded?.object.toString() != null) {
-        params['userProfilePic'] = chooseDocumentuploded?.object.toString(); 
+        params['userProfilePic'] = chooseDocumentuploded?.object.toString();
       } else if (chooseDocumentuploded1?.object.toString() != null) {
         params['userBackgroundPic'] = chooseDocumentuploded1?.object.toString();
       } else {
@@ -1033,7 +1042,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       print(
           "${dopcumentNameUpdate} :- 1 555555555555555555555555555555555555555555555555555555");
 
-      print("RonakRonakRonakRonakRonakRonakRonakRonakRonakRonak");
+      print("parems--");
       print(params);
       await BlocProvider.of<MyAccountCubit>(context).cretaForumUpdate(
         params,
@@ -1049,7 +1058,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         industryUUID11.add("${element.industryTypeUid}");
       },
     );
-    setState(() {});
+    super.setState(() {});
     print("this is the expertDetials");
     if (jobProfile.text == null || jobProfile.text == "") {
       SnackBar snackBar = SnackBar(
@@ -1111,6 +1120,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         print("both condison");
         //ankur is working on
         var params = {
+           "userName": userNameController.text,
           "document": chooseDocumentuploded2?.object != null
               ? chooseDocumentuploded2?.object.toString()
               : "${widget.newProfileData?.object?.userDocument?.toString()}",
@@ -1122,7 +1132,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           "email": emailController.text,
           "userProfilePic": chooseDocumentuploded?.object.toString(),
           "userBackgroundPic": chooseDocumentuploded1?.object.toString(),
-          //  "userName":"AnkurTestTest17",
+         
           "uid": User_ID,
           "name": nameController.text,
           "documentName": dopcumentNameUpdate
@@ -1146,6 +1156,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             "${dopcumentNameUpdate} :- 3 555555555555555555555555555555555555555555555555555555");
 
         var params = {
+          "userName": userNameController.text,
           "document": chooseDocumentuploded2?.object != null
               ? chooseDocumentuploded2?.object.toString()
               : "${widget.newProfileData?.object?.userDocument?.toString()}",
@@ -1183,6 +1194,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             "${dopcumentNameUpdate} :- 4 555555555555555555555555555555555555555555555555555555");
 
         var params = {
+          "userName": userNameController.text,
           "document": chooseDocumentuploded2?.object != null
               ? chooseDocumentuploded2?.object.toString()
               : "${widget.newProfileData?.object?.userDocument?.toString()}",
@@ -1220,6 +1232,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             "${dopcumentNameUpdate} :- 5 555555555555555555555555555555555555555555555555555555");
 
         var params = {
+          "userName": userNameController.text,
           "userProfilePic":
               // widget.newProfileData?.object?.userProfilePic != null
               removeProfilePic == false
@@ -1264,7 +1277,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        if (widget.newProfileData?.object?.companyName != null)
+        if (widget.newProfileData?.object?.companyName != null &&
+            widget.newProfileData?.object?.approvalStatus != "PENDING" &&
+            widget.newProfileData?.object?.approvalStatus != "REJECTED")
           Padding(
             padding: const EdgeInsets.only(top: 10, bottom: 10),
             child: Text(
@@ -1276,12 +1291,16 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               ),
             ),
           ),
-        if (widget.newProfileData?.object?.companyName != null)
+        if (widget.newProfileData?.object?.companyName != null &&
+            widget.newProfileData?.object?.approvalStatus != "PENDING" &&
+            widget.newProfileData?.object?.approvalStatus != "REJECTED")
           customTextFeild(
               controller: companyName,
               width: _width / 1.1,
               color: Color(0xffFFF3F4)),
-        if (widget.newProfileData?.object?.jobProfile != null)
+        if (widget.newProfileData?.object?.jobProfile != null &&
+            widget.newProfileData?.object?.approvalStatus != "PENDING" &&
+            widget.newProfileData?.object?.approvalStatus != "REJECTED")
           Padding(
             padding: const EdgeInsets.only(top: 10, bottom: 10),
             child: Text(
@@ -1293,13 +1312,17 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               ),
             ),
           ),
-        if (widget.newProfileData?.object?.jobProfile != null)
+        if (widget.newProfileData?.object?.jobProfile != null &&
+            widget.newProfileData?.object?.approvalStatus != "PENDING" &&
+            widget.newProfileData?.object?.approvalStatus != "REJECTED")
           customTextFeild(
             color: Color(0xffFFF3F4),
             controller: jobProfile,
             width: _width / 1.1,
           ),
-        if (widget.newProfileData?.object?.industryTypes?.isNotEmpty == true)
+        if (widget.newProfileData?.object?.industryTypes?.isNotEmpty == true &&
+            widget.newProfileData?.object?.approvalStatus != "PENDING" &&
+            widget.newProfileData?.object?.approvalStatus != "REJECTED")
           Padding(
             padding: const EdgeInsets.only(top: 10, bottom: 10),
             child: Text(
@@ -1311,7 +1334,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               ),
             ),
           ),
-        if (widget.newProfileData?.object?.industryTypes?.isNotEmpty == true)
+        if (widget.newProfileData?.object?.industryTypes?.isNotEmpty == true &&
+            widget.newProfileData?.object?.approvalStatus != "PENDING" &&
+            widget.newProfileData?.object?.approvalStatus != "REJECTED")
           /*  Container(
             decoration: BoxDecoration(color: Color(0xffEFEFEF)),
             child: DropdownButtonHideUnderline(
@@ -1332,7 +1357,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     selectedIndustryTypes2.forEach((element) {
                       industryUUIDinApi.add("${element.industryTypeUid}");
                     });
-                    setState(() {});
+                    super.setState(() {});
                   },
                 ),
               ),
@@ -1365,13 +1390,15 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       industryUUIDinApi.add(element.industryTypeUid);
                       selectedIndustryTypes3.add(element);
                     });
-                    setState(() {});
+                    super.setState(() {});
                   },
                 ),
               ),
             ),
           ),
-        if (widget.newProfileData?.object?.expertise?.isNotEmpty == true)
+        if (widget.newProfileData?.object?.expertise?.isNotEmpty == true &&
+            widget.newProfileData?.object?.approvalStatus != "PENDING" &&
+            widget.newProfileData?.object?.approvalStatus != "REJECTED")
           Padding(
             padding: const EdgeInsets.only(top: 10, bottom: 10),
             child: Text(
@@ -1383,7 +1410,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               ),
             ),
           ),
-        if (widget.newProfileData?.object?.expertise?.isNotEmpty == true)
+        if (widget.newProfileData?.object?.expertise?.isNotEmpty == true &&
+            widget.newProfileData?.object?.approvalStatus != "PENDING" &&
+            widget.newProfileData?.object?.approvalStatus != "REJECTED")
           Container(
             height: 50,
             width: _width,
@@ -1400,7 +1429,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   /*  onChanged: (Expertiseclass? newValue) {
                     // When the user selects an option from the dropdown.
                     if (newValue != null) {
-                      setState(() {
+                      super.setState(() {
                         selectedExpertise = newValue;
                         print("Selectedexpertise: ${newValue.uid}");
                       });
@@ -1409,7 +1438,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   onChanged: (Expertiseclass? newValue) {
                     // When the user selects an option from the dropdown.
                     if (newValue != null) {
-                      setState(() {
+                      super.setState(() {
                         selectedExpertise = newValue;
                         print("Selectedexpertise: ${newValue.uid}");
                       });
@@ -1426,7 +1455,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               ),
             ),
           ),
-        if (widget.newProfileData?.object?.module == "EXPERT")
+        if (widget.newProfileData?.object?.module == "EXPERT" &&
+            widget.newProfileData?.object?.approvalStatus != "PENDING" &&
+            widget.newProfileData?.object?.approvalStatus != "REJECTED")
           Padding(
             padding: const EdgeInsets.only(top: 10, bottom: 10),
             child: Text(
@@ -1438,7 +1469,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               ),
             ),
           ),
-        if (widget.newProfileData?.object?.module == "EXPERT")
+        if (widget.newProfileData?.object?.module == "EXPERT" &&
+            widget.newProfileData?.object?.approvalStatus != "PENDING" &&
+            widget.newProfileData?.object?.approvalStatus != "REJECTED")
           customTextFeild(
               controller: fees,
               width: _width / 1.1,
@@ -1448,7 +1481,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     RegExp(r'^\d{0,4}(\.\d{0,2})?')),
               ],
               color: Color(0xffFFF3F4)),
-        if (widget.newProfileData?.object?.workingHours != null)
+        if (widget.newProfileData?.object?.workingHours != null &&
+            widget.newProfileData?.object?.approvalStatus != "PENDING" &&
+            widget.newProfileData?.object?.approvalStatus != "REJECTED")
           Padding(
             padding: const EdgeInsets.only(top: 10, bottom: 10),
             child: Text(
@@ -1460,7 +1495,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               ),
             ),
           ),
-        if (widget.newProfileData?.object?.workingHours != null)
+        if (widget.newProfileData?.object?.workingHours != null &&
+            widget.newProfileData?.object?.approvalStatus != "PENDING" &&
+            widget.newProfileData?.object?.approvalStatus != "REJECTED")
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -1545,7 +1582,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               ),
             ],
           ),
-        if (widget.newProfileData?.object?.module != 'EMPLOYEE')
+        if (widget.newProfileData?.object?.module != 'EMPLOYEE' &&
+            widget.newProfileData?.object?.approvalStatus != "PENDING" &&
+            widget.newProfileData?.object?.approvalStatus != "REJECTED")
           Padding(
             padding: const EdgeInsets.only(top: 10, bottom: 10),
             child: Text(
@@ -1557,7 +1596,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               ),
             ),
           ),
-        if (widget.newProfileData?.object?.module != 'EMPLOYEE')
+        if (widget.newProfileData?.object?.module != 'EMPLOYEE' &&
+            widget.newProfileData?.object?.approvalStatus != "PENDING" &&
+            widget.newProfileData?.object?.approvalStatus != "REJECTED")
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
@@ -1631,7 +1672,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             dopcument = "Upload Document";
                             // chooseDocument2?.object = null;
 
-                            setState(() {});
+                            super.setState(() {});
                           },
                           child: Icon(
                             Icons.delete_forever,
@@ -1697,7 +1738,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         child: GestureDetector(
                             onTap: () {
                               dopcument = "Upload Image";
-                              setState(() {});
+                              super.setState(() {});
                             },
                             child: Icon(
                               Icons.delete_forever,
@@ -1863,14 +1904,14 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   removeuserProfilePic() async {
     removeProfilePic = true;
     widget.newProfileData?.object?.userProfilePic = null;
-    setState(() {});
+    super.setState(() {});
     Navigator.pop(context);
   }
 
   removeUserCover() async {
     removeCoverPic = true;
     widget.newProfileData?.object?.userBackgroundPic = null;
-    setState(() {});
+    super.setState(() {});
     Navigator.pop(context);
   }
 
@@ -2023,7 +2064,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           getFileSize(file.path!, 1, result.files.first, Index, context);
         }
 
-        /*     setState(() {
+        /*     super.setState(() {
           // fileparth = file.path!;
 
           switch (Index) {
@@ -2100,7 +2141,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         switch (Index) {
           case 1:
             if (file1.name.isNotEmpty || file1.name.toString() == null) {
-              setState(() {
+              super.setState(() {
                 uplopdfile.text = file1.name;
                 dopcument = file1.name;
                 dopcumentNameUpdate = dopcument;
@@ -2119,7 +2160,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         switch (Index) {
           case 0:
             if (file1.name.isNotEmpty || file1.name.toString() == null) {
-              setState(() {
+              super.setState(() {
                 uplopdfile.text = file1.name;
                 dopcument = file1.name;
                 dopcumentNameUpdate = dopcument;
@@ -2136,7 +2177,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             croppedFile != null ? croppedFile.path : file1.path!,
             context);
 
-        setState(() {});
+        super.setState(() {});
 
         break;
       case 2:
@@ -2169,7 +2210,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
           switch (Index) {
             case 1:
-              setState(() {
+              super.setState(() {
                 uplopdfile.text = file1.name;
                 dopcument = file1.name;
                 dopcumentNameUpdate = dopcument;
@@ -2180,7 +2221,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           }
           print('filecheckPath-${file1.path}');
           print('filecheckPath-${file1.path}');
-          setState(() {
+          super.setState(() {
             uplopdfile.text = file1.name;
             dopcument = file1.name;
             dopcumentNameUpdate = dopcument;
@@ -2214,13 +2255,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   Future<void> gallerypicker() async {
     print("this is the gallerypicker");
     var pickedImageFile = await picker.pickImage(source: ImageSource.gallery);
-    setState(() {
+    super.setState(() {
       _image = File(pickedImageFile?.path ?? '');
     });
     if (_image != null) {
       if (!_isGifOrSvg(_image!.path)) {
         _image = File(_image!.path);
-        setState(() {});
+        super.setState(() {});
         getUploadeProfile(_image!.path, 1, _image!, 0);
       }
     }
@@ -2232,12 +2273,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
     var pickedImageFile = await picker.pickImage(source: ImageSource.gallery);
     _image1 = File(pickedImageFile?.path ?? '');
-    setState(() {});
+    super.setState(() {});
 
     if (_image1 != null) {
       if (!_isGifOrSvg(_image1!.path)) {
         _image1 = File(_image1!.path);
-        setState(() {});
+        super.setState(() {});
         getUploadeProfile1(_image1!.path, 1, _image1!, 0);
       }
     }
@@ -2266,7 +2307,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         print('filenamecheckKB-${file1.path}');
         BlocProvider.of<MyAccountCubit>(context)
             .upoldeProfilePic(_image!, context);
-        setState(() {});
+        super.setState(() {});
 
         break;
       case 2:
@@ -2332,7 +2373,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         print('filenamecheckKB-${file1.path}');
         BlocProvider.of<MyAccountCubit>(context)
             .upoldeProfilePic1(_image1!, context);
-        setState(() {});
+        super.setState(() {});
 
         break;
       case 2:

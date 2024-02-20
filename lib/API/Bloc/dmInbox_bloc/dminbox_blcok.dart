@@ -9,15 +9,48 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class DmInboxCubit extends Cubit<getInboxState> {
   DmInboxCubit() : super(getInboxInitialState()) {}
   dynamic getAllInboxImage;
-  Future<void> DMChatListApiMethod(String userChatInboxUid, int pageNumber,
-      int numberOfRecordsm, BuildContext context) async {
-    dynamic DmInbox;
+  dynamic DmInbox;
+
+  Future<void> DMChatListApiMethod(
+      String userChatInboxUid, int pageNumber, BuildContext context) async {
     try {
       emit(getInboxLoadingState());
       DmInbox = await Repository().DMChatListApi(
-          context, userChatInboxUid, pageNumber, numberOfRecordsm);
+        context,
+        userChatInboxUid,
+        pageNumber,
+      );
 
       if (DmInbox.success == true) {
+        emit(getInboxLoadedState(DmInbox));
+      }
+    } catch (e) {
+      emit(getInboxErrorState(e.toString()));
+    }
+  }
+
+  Future<void> DMChatListApiPagantion(
+      String userChatInboxUid, int pageNumber, BuildContext context) async {
+    dynamic DmInboxPagnationWiget;
+    try {
+      emit(getInboxLoadingState());
+      DmInboxPagnationWiget = await Repository()
+          .DMChatListApi(context, userChatInboxUid, pageNumber);
+      List a = [];
+      a.reversed;
+
+      if (DmInboxPagnationWiget.success == true) {
+        // DmInbox.object.content.insert(0, DmInboxPagnationWiget.object.content);
+        // addAll(DmInboxPagnationWiget.object.content);
+
+        // DmInbox.object.content.addAll(DmInboxPagnationWiget.object.content);
+
+        DmInbox.object.content.insertAll(
+            0, DmInboxPagnationWiget.object.content.reversed.toList());
+        DmInbox.object.pageable.pageNumber =
+            DmInboxPagnationWiget.object.pageable.pageNumber;
+        DmInbox.object.totalElements =
+            DmInboxPagnationWiget.object.totalElements;
         emit(getInboxLoadedState(DmInbox));
       }
     } catch (e) {
@@ -132,7 +165,7 @@ class DmInboxCubit extends Cubit<getInboxState> {
       } else {
         if (SeenMessgaeModelData.success == true) {
           emit(SeenAllMessageLoadedState(SeenMessgaeModelData));
-          print("+++++++++++++++++++++++++++++++++++++");
+
           print(SeenMessgaeModelData.message);
         }
       }

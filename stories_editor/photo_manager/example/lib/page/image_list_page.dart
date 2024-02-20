@@ -211,7 +211,7 @@ class _GalleryContentListPageState extends State<GalleryContentListPage> {
                   if (newEntity != null) {
                     entity = newEntity;
                     readPathProvider(context).list[index] = newEntity;
-                    setState(() {});
+                    super.setState(() {});
                   }
                 },
               ),

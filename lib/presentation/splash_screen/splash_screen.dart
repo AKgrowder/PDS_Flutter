@@ -10,6 +10,7 @@ import 'package:pds/core/utils/sharedPreferences.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pds/presentation/%20new/newbottembar.dart';
+import 'package:pds/widgets/videocallcommennotifaction.dart/videocallcommenmethod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../core/utils/image_constant.dart';
@@ -136,6 +137,11 @@ class _SplashScreenState extends State<SplashScreen> {
   getData() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     UserID = prefs.getString(PreferencesKey.loginUserID) ?? "";
+    String? videouid = prefs.getString(PreferencesKey.vidoCallUid) ?? "";
+         print("zego video uid : $videouid");
+// if (videouid.isNotEmpty) {
+      // onUserLogin(UserID, 'sxfdgfgd');
+    // }
   }
 
   saveUSerProfileAndUserModel() async {
@@ -146,9 +152,9 @@ class _SplashScreenState extends State<SplashScreen> {
 
   SetUi() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setString(PreferencesKey.appApkMinVersion, "8");
+    prefs.setString(PreferencesKey.appApkMinVersion, "9");
     prefs.setString(PreferencesKey.appApkLatestVersion, "1");
-    prefs.setString(PreferencesKey.appApkRouteVersion, "7");
+    prefs.setString(PreferencesKey.appApkRouteVersion, "8");
 
     prefs.setString(PreferencesKey.IPAIosMainversion, "1");
     prefs.setString(PreferencesKey.IPAIosLatestVersion, "1");
@@ -183,17 +189,15 @@ class _SplashScreenState extends State<SplashScreen> {
         print(" ApkRouteVersion  ${ApkRouteVersion}");
         prefs.setString(
             PreferencesKey.MaxPostUploadSizeInMB, element.value ?? '');
-      }else if (element.name == "MaxInboxUploadSizeInMB") {
+      } else if (element.name == "MaxInboxUploadSizeInMB") {
         print(" ApkRouteVersion  ${ApkRouteVersion}");
         prefs.setString(
             PreferencesKey.MaxInboxUploadSizeInMB, element.value ?? '');
-      }else if (element.name == "AwsImageInPackagingLogoUrl") {
+      } else if (element.name == "AwsImageInPackagingLogoUrl") {
         print(" ApkRouteVersion  ${ApkRouteVersion}");
         prefs.setString(
             PreferencesKey.AwsImageInPackagingLogoUrl, element.value ?? '');
       }
-
-      
 
       /// -----
 
@@ -271,10 +275,10 @@ class _SplashScreenState extends State<SplashScreen> {
         await FirebaseDynamicLinks.instance.getInitialLink();
     if (initialLink != null) {
       final Uri deepLink = initialLink.link;
-      print("${deepLink } :- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ ");
       if (deepLink.toString().contains("room_link=")) {
         deepLink1 = deepLink.toString().split("room_link=")[1];
-        print("${deepLink1} :- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+        print(
+            "${deepLink1} :- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
         prefs.setString(PreferencesKey.AutoSetRoomID, deepLink1);
         prefs.setBool(PreferencesKey.AutoOpenPostBool, false);
       } else if (deepLink.toString().contains("post_link=")) {
@@ -286,7 +290,7 @@ class _SplashScreenState extends State<SplashScreen> {
       // deepLink2 = deepLink1.toString().split("&")[0];
 
       print('Deeplinks uri:${deepLink.path}');
-      setState(() {
+      super.setState(() {
         // prefs.setString(PreferencesKey.AutoSetRoomID, deepLink1);
       });
     }

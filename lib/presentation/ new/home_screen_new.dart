@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chewie/chewie.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:dio/dio.dart';
@@ -11,7 +10,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_langdetect/flutter_langdetect.dart' as langdetect;
 import 'package:intl/intl.dart';
 import 'package:linkfy_text/linkfy_text.dart';
 import 'package:path_provider/path_provider.dart';
@@ -68,7 +66,6 @@ import 'package:pds/widgets/pagenation.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:translator/translator.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:video_player/video_player.dart';
 import 'package:visibility_detector/visibility_detector.dart';
@@ -77,7 +74,6 @@ import 'package:visibility_detector/visibility_detector.dart';
 import '../../API/Model/Get_all_blog_Model/get_all_blog_model.dart';
 import '../../API/Model/UserTagModel/UserTag_model.dart';
 import '../become_an_expert_screen/become_an_expert_screen.dart';
-import 'package:flutter_langdetect/flutter_langdetect.dart' as langdetect;
 
 class HomeScreenNew extends StatefulWidget {
   ScrollController scrollController;
@@ -162,9 +158,6 @@ class _HomeScreenNewState extends State<HomeScreenNew>
   String? IosLatestVersion;
   String? IosRoutVersion;
   String? IosMainversion;
-  String _translatedTextGujarati = '';
-  String _translatedTextHindi = '';
-  String _translatedTextenglish = '';
   String language = "";
   String tempdata1 = "";
   String tempdata2 = "";
@@ -188,7 +181,9 @@ class _HomeScreenNewState extends State<HomeScreenNew>
   UserTagModel? userTagModel;
   List<ChewieController> chewieController = [];
   ChewieController? inList;
-  Map<String, bool> _videoVisibility = {};
+  bool isExpanded = false;
+  int maxLength = 60;
+  List<bool> readmoree = [];
 
   bool isWatch = false;
   getDocumentSize() async {
@@ -200,17 +195,13 @@ class _HomeScreenNewState extends State<HomeScreenNew>
     documentVideosize = await double.parse(
         prefs.getString(PreferencesKey.MaxStoryUploadSizeInMB) ?? "0");
     finalvideoSize = documentVideosize;
-    setState(() {});
+    super.setState(() {});
   }
 
   bool _isLink(String input) {
     RegExp linkRegex = RegExp(
         r'^https?:\/\/(?:www\.)?[a-zA-Z0-9-]+(?:\.[a-zA-Z]+)+(?:[^\s]*)$');
     return linkRegex.hasMatch(input);
-  }
-
-  thubMethod() async {
-    Directory tempDir = await getTemporaryDirectory();
   }
 
   final focusNode = FocusNode();
@@ -244,33 +235,34 @@ class _HomeScreenNewState extends State<HomeScreenNew>
 
   @override
   void initState() {
+    super.initState();
+
     Get_UserToken();
     myScroll();
 
     storycontext = context;
     VersionControll();
     getDocumentSize();
-    WidgetsBinding.instance!.addObserver(this);
-    super.initState();
+    WidgetsBinding.instance.addObserver(this);
   }
 
   @override
   void dispose() {
     timer?.cancel();
     scrollController.removeListener(() {});
-    WidgetsBinding.instance!.removeObserver(this);
+    WidgetsBinding.instance.removeObserver(this);
 
     super.dispose();
   }
 
   void hideFloting() {
-    setState(() {
+    super.setState(() {
       _show = false;
     });
   }
 
   void showFloting() {
-    setState(() {
+    super.setState(() {
       _show = true;
     });
   }
@@ -532,7 +524,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                     GestureDetector(
                       onTap: () {
                         final Uri url = Uri.parse(
-                            "https://play.google.com/store/apps/details?id=com.pds.app");
+                            "https://play.google.com/store/apps/details?id=com.inpackaging.app");
 
                         launchUrl(url, mode: LaunchMode.externalApplication);
                       },
@@ -664,7 +656,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                         GestureDetector(
                           onTap: () {
                             final Uri url = Uri.parse(
-                                "https://play.google.com/store/apps/details?id=com.pds.app");
+                                "https://play.google.com/store/apps/details?id=com.inpackaging.app");
 
                             launchUrl(url,
                                 mode: LaunchMode.externalApplication);
@@ -1021,6 +1013,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
     User_Module = prefs.getString(PreferencesKey.module);
     uuid = prefs.getString(PreferencesKey.loginUserID);
     UserProfileImage = prefs.getString(PreferencesKey.UserProfile);
+    String? videoCallUid = prefs.getString(PreferencesKey.vidoCallUid);
     print("---------------------->> : ${FCMToken}");
     print("User Token :--- " + "${Token}");
     print("User_id-${User_ID}");
@@ -1045,7 +1038,12 @@ class _HomeScreenNewState extends State<HomeScreenNew>
     }
     if (User_ID != null) {
       PushNotificationAutoOpen();
+      // onUserLogin(User_ID!,User_Name ?? '');
+      // this is the
     }
+    // if(videoCallUid !=null){
+    //   onUserLogin(videoCallUid ?? '',User_Name ?? '');
+    // }
   }
 
   PushNotificationAutoOpen() async {
@@ -1067,9 +1065,14 @@ class _HomeScreenNewState extends State<HomeScreenNew>
               MaterialPageRoute(
                   builder: (context) => OpenSavePostImage(
                         PostID: NotificationUID,
+                        Userid: User_ID,
                         index: 0,
                       )),
-            )
+            ).then((value) {
+              Get_UserToken();
+
+              setColorr();
+            })
           // print("opne Save Image screen RE_POST & TAG_POST");
 
           : NotificationSubject == "INVITE_ROOM"
@@ -1099,7 +1102,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                             ? true
                                             : false,
                                       )),
-                            )
+                            ).then((value) => setColorr())
                           // print("opne Save Image screen LIKE_POST & COMMENT_POST & TAG_COMMENT_POST")
                           : NotificationSubject == "FOLLOW_PUBLIC_ACCOUNT" ||
                                   NotificationSubject ==
@@ -1113,7 +1116,8 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                   MaterialPageRoute(builder: (context) {
                                   return ProfileScreen(
                                       User_ID: "${NotificationUID}",
-                                      isFollowing: "");
+                                      isFollowing: "",
+                                      ProfileNotification: true);
                                 }))
                               //  print("open User Profile FOLLOW_PUBLIC_ACCOUNT & FOLLOW_PRIVATE_ACCOUNT_REQUEST & FOLLOW_REQUEST_ACCEPTED")
                               : print("");
@@ -1142,7 +1146,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
 
   NewApi() async {
     timer = Timer.periodic(Duration(seconds: 15), (timer) async {
-      setState(() {
+      super.setState(() {
         secound = timer.tick;
       });
       await BlocProvider.of<GetGuestAllPostCubit>(context)
@@ -1280,15 +1284,20 @@ class _HomeScreenNewState extends State<HomeScreenNew>
     // Access the detected language and confidence
     // language = result.language;
     // double confidence = result.confidence;
-
-// print("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ :- ${index} :-  ${language}");
+  }
+  setColorr() {
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+        statusBarIconBrightness: Brightness.dark, // Light icons for status bar
+        statusBarBrightness:
+            Brightness.light // Dark == white status bar -- for IOS.
+        ));
   }
 
   @override
   Widget build(BuildContext context) {
     var _height = MediaQuery.of(context).size.height;
     var _width = MediaQuery.of(context).size.width;
-
+    setColorr();
     return WillPopScope(
         onWillPop: () async {
           return true;
@@ -1451,7 +1460,8 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                               image: element.profilePic != null &&
                                       element.profilePic != ""
                                   ? DecorationImage(
-                                      image: NetworkImage(element.profilePic),
+                                      image:
+                                          NetworkImage("${element.profilePic}"),
                                       fit: BoxFit.fill)
                                   : DecorationImage(
                                       image: AssetImage(
@@ -1573,8 +1583,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                           image: element.profilePic != null &&
                                   element.profilePic != ''
                               ? DecorationImage(
-                                  image: NetworkImage(
-                                      element.profilePic.toString()),
+                                  image: NetworkImage("${element.profilePic}"),
                                   fit: BoxFit.fill)
                               : DecorationImage(
                                   image: AssetImage(
@@ -1693,7 +1702,11 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                   "${state.OpenSharePostData.object?.postUid}",
                               index: 0,
                             )),
-                  );
+                  ).then((value) {
+                    Get_UserToken();
+
+                    setColorr();
+                  });
                 } else {
                   await BlocProvider.of<GetGuestAllPostCubit>(context)
                       .seetinonExpried(context);
@@ -1705,6 +1718,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                 }
               }
               if (state is GetGuestAllPostLoadedState) {
+                readmoree.clear();
                 mainPostControllers.clear();
                 videoUrls.clear();
                 VideoPlayerController _controller =
@@ -1713,6 +1727,17 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                 AllGuestPostRoomData = state.GetGuestAllPostRoomData;
 
                 AllGuestPostRoomData?.object?.content?.forEach((element) {
+                  if (element.description != null) {
+                    readmoree
+                        .add((element.description?.length ?? 0) <= maxLength);
+                  } else if (element.repostOn?.description != null) {
+                    readmoree.add(
+                        (element.repostOn?.description?.length ?? 0) <=
+                            maxLength);
+                  } else {
+                    readmoree.add(false);
+                  }
+
                   if (element.postDataType == 'VIDEO') {
                     if (element.postData?.isNotEmpty == true) {
                       videoUrls.add(element.postData?.first ?? '');
@@ -1738,6 +1763,8 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                   /*  chewieController.add(inList ??
                       ChewieController(videoPlayerController: _controller)); */
                 });
+                print(
+                    "readmoreereadmoreereadmoreereadmoree:-- ${readmoree.length}");
                 /*  print("chewieController length -${chewieController.length}"); */
               }
               if (state is PostLikeLoadedState) {
@@ -1886,6 +1913,11 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                             SizedBox(
                               height: 15,
                             ),
+                            storyButtons == null?Container(
+                              height: 40,
+                              width: 200,
+                              color: Colors.amber,
+                            ) :
                             Container(
                               height: 90,
                               margin: EdgeInsets.symmetric(horizontal: 16),
@@ -2017,6 +2049,119 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                   Get_UserToken();
                                                 }
                                               }
+                                            }
+                                            if (Platform.isIOS) {
+// final info =
+//                                                   await DeviceInfoPlugin()
+//                                                       .androidInfo;
+                                              // if (num.parse(await info
+                                              //             .version.release)
+                                              //         .toInt() >=
+                                              //     13) {
+                                              //   if (await permissionHandler(
+                                              //           context,
+                                              //           Permission.photos) ??
+                                              //       false) {
+                                              //     imageDataPost =
+                                              //         await Navigator.push(
+                                              //             context,
+                                              //             MaterialPageRoute(
+                                              //                 builder:
+                                              //                     (context) {
+                                              //       return CreateStoryPage(
+                                              //         finalFileSize:
+                                              //             finalFileSize,
+                                              //         finalvideoSize:
+                                              //             finalvideoSize,
+                                              //       );
+                                              //     }));
+
+                                              //     print("this is the 1");
+                                              //     if (imageDataPost?.object
+                                              //             ?.split('.')
+                                              //             .last ==
+                                              //         'mp4') {
+                                              //       var parmes = {
+                                              //         "storyData":
+                                              //             imageDataPost?.object,
+                                              //         "storyType": "VIDEO",
+                                              //         "videoDuration":
+                                              //             imageDataPost
+                                              //                 ?.videodurationGet
+                                              //       };
+                                              //       print(
+                                              //           "scdfhgsdfhsd-${parmes}");
+                                              //       Repository()
+                                              //           .cretateStoryApi(
+                                              //               context, parmes);
+                                              //       isWatch = true;
+                                              //       Get_UserToken();
+                                              //     } else {
+                                              //       var parmes = {
+                                              //         "storyData": imageDataPost
+                                              //             ?.object
+                                              //             .toString(),
+                                              //         "storyType": "TEXT",
+                                              //         "videoDuration": ''
+                                              //       };
+                                              //       print(
+                                              //           "CHECK:--------${parmes}");
+                                              //       Repository()
+                                              //           .cretateStoryApi(
+                                              //               context, parmes);
+                                              //       isWatch = true;
+                                              //       Get_UserToken();
+                                              //     }
+                                              //   }
+                                              // } else if (await permissionHandler(
+                                              //         context,
+                                              //         Permission.storage) ??
+                                              //     false) {
+                                              print("this is the 3");
+
+                                              imageDataPost =
+                                                  await Navigator.push(context,
+                                                      MaterialPageRoute(
+                                                          builder: (context) {
+                                                return CreateStoryPage(
+                                                  finalFileSize: finalFileSize,
+                                                  finalvideoSize:
+                                                      finalvideoSize,
+                                                );
+                                              }));
+
+                                              if (imageDataPost?.object
+                                                      ?.split('.')
+                                                      .last ==
+                                                  'mp4') {
+                                                var parmes = {
+                                                  "storyData":
+                                                      imageDataPost?.object,
+                                                  "storyType": "VIDEO",
+                                                  "videoDuration": imageDataPost
+                                                      ?.videodurationGet
+                                                };
+                                                print("scdfhgsdfhsd-${parmes}");
+                                                Repository().cretateStoryApi(
+                                                    context, parmes);
+                                                isWatch = true;
+                                                Get_UserToken();
+                                              } else {
+                                                var parmes = {
+                                                  "storyData": imageDataPost
+                                                      ?.object
+                                                      .toString(),
+                                                  "storyType": "TEXT",
+                                                  "videoDuration": ''
+                                                };
+                                                print(
+                                                    "CHECK:--------${parmes}");
+                                                Repository().cretateStoryApi(
+                                                    context, parmes);
+                                                isWatch = true;
+                                                Get_UserToken();
+                                              }
+                                              // }
                                             }
                                           } else {
                                             Navigator.of(context).push(
@@ -2173,7 +2318,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
 
                                             userName.add(User_Name!);
                                             if (mounted)
-                                              setState(() {
+                                              super.setState(() {
                                                 storyAdded = true;
                                               });
                                           }
@@ -2329,7 +2474,8 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                           });
                                           WidgetsBinding.instance
                                               .addPostFrameCallback(
-                                                  (timeStamp) => setState(() {
+                                                  (timeStamp) =>
+                                                      super.setState(() {
                                                         added = true;
                                                       }));
                                         }
@@ -2392,7 +2538,11 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                       ?.content?[
                                                                           index]
                                                                       .postUid),
-                                                        ));
+                                                        )).then((value) {
+                                                      Get_UserToken();
+
+                                                      setColorr();
+                                                    });
                                                   },
                                                   onDoubleTap: () async {
                                                     await soicalFunation(
@@ -2691,7 +2841,11 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                   builder: (context) => OpenSavePostImage(
                                                                                         PostID: AllGuestPostRoomData?.object?.content?[index].postUid,
                                                                                       )),
-                                                                            );
+                                                                            ).then((value) {
+                                                                              Get_UserToken();
+
+                                                                              setColorr();
+                                                                            });
                                                                           }
                                                                         },
                                                                         child:
@@ -2699,7 +2853,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                           crossAxisAlignment:
                                                                               CrossAxisAlignment.start,
                                                                           children: [
-                                                                            AllGuestPostRoomData?.object?.content?[index].translatedDescription != null
+                                                                            /*  AllGuestPostRoomData?.object?.content?[index].translatedDescription != null
                                                                                 ? GestureDetector(
                                                                                     onTap: () async {
                                                                                       /*  // print("value cheak${AllGuestPostRoomData?.object?.content?[index].isfalsegu}");
@@ -2712,7 +2866,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                           // if (AllGuestPostRoomData?.object?.content?[index].isfalsehin == null && AllGuestPostRoomData?.object?.content?[index].isfalsegu == null) {
                                                                                           //   // Translate from the original language to English
                                                                                           //   translatedTextenglish = await translateText(inputText, 'en');
-                                                                                          //   setState(() {
+                                                                                          //   super.setState(() {
                                                                                           //     _translatedTextenglish = translatedTextenglish;
                                                                                           //     AllGuestPostRoomData?.object?.content?[index].description = _translatedTextenglish;
                                                                                           //     AllGuestPostRoomData?.object?.content?[index].isfalsehin = true;
@@ -2720,7 +2874,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                           // } else if (AllGuestPostRoomData?.object?.content?[index].isfalsehin == true && AllGuestPostRoomData?.object?.content?[index].isfalsegu == null) {
                                                                                           //   // Translate from Hindi to English
                                                                                           //   translatedTextenglish = await translateText(inputText, 'en');
-                                                                                          //   setState(() {
+                                                                                          //   super.setState(() {
                                                                                           //     _translatedTextenglish = translatedTextenglish;
                                                                                           //     AllGuestPostRoomData?.object?.content?[index].description = _translatedTextenglish;
                                                                                           //     AllGuestPostRoomData?.object?.content?[index].isfalsegu = true;
@@ -2739,7 +2893,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                             if (language == 'gu' || language == 'hi') {
                                                                                               // Translate from the original language to English
                                                                                               translatedTextenglish = await translateText(inputText, 'en');
-                                                                                              setState(() {
+                                                                                              super.setState(() {
                                                                                                 print("languagelanguagelanguagelanguage :--2 ${language}");
                                                                                                 _translatedTextenglish = translatedTextenglish;
                                                                                                 AllGuestPostRoomData?.object?.content?[index].description = _translatedTextenglish;
@@ -2748,7 +2902,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                               });
                                                                                             } else if (language == 'en') {
                                                                                               // No need to translate, as the text is already in English
-                                                                                              // setState(() {
+                                                                                              // super.setState(() {
                                                                                               //   print("languagelanguagelanguagelanguage :--3 ${language}");
                                                                                               //   checkLun = false;
                                                                                               //   AllGuestPostRoomData?.object?.content?[index].description = tempdata2;
@@ -2756,7 +2910,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                               // print("This condition is working");
 
                                                                                               translatedTextenglish = await translateText(inputText, 'en');
-                                                                                              setState(() {
+                                                                                              super.setState(() {
                                                                                                 print("languagelanguagelanguagelanguage :--3 ${language}");
                                                                                                 _translatedTextenglish = translatedTextenglish;
                                                                                                 AllGuestPostRoomData?.object?.content?[index].description = _translatedTextenglish;
@@ -2765,12 +2919,11 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                               });
                                                                                             }
                                                                                           } */
-                                                                                      setState(() {
-                                                                                        if (AllGuestPostRoomData?.object?.content?[index].isTrsnalteoption == false || AllGuestPostRoomData?.object?.content?[index].isTrsnalteoption  == null) {
-                                                                                         
-                                                                                          AllGuestPostRoomData?.object?.content?[index].isTrsnalteoption = true; 
+                                                                                      super.setState(() {
+                                                                                        if (AllGuestPostRoomData?.object?.content?[index].isTrsnalteoption == false || AllGuestPostRoomData?.object?.content?[index].isTrsnalteoption == null) {
+                                                                                          AllGuestPostRoomData?.object?.content?[index].isTrsnalteoption = true;
                                                                                         } else {
-                                                                                          AllGuestPostRoomData?.object?.content?[index].isTrsnalteoption = false; 
+                                                                                          AllGuestPostRoomData?.object?.content?[index].isTrsnalteoption = false;
                                                                                         }
                                                                                       });
                                                                                     },
@@ -2789,16 +2942,21 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                 : SizedBox(),
                                                                             SizedBox(
                                                                               height: 10,
-                                                                            ),
+                                                                            ), */
                                                                             Row(
                                                                               children: [
                                                                                 Expanded(
                                                                                   child: Container(
                                                                                     // color: Colors.amber,
                                                                                     child: LinkifyText(
-                                                                                       AllGuestPostRoomData?.object?.content?[index].isTrsnalteoption  == false || AllGuestPostRoomData?.object?.content?[index].isTrsnalteoption  == null
-                                                                                          ? "${AllGuestPostRoomData?.object?.content?[index].description}"
-                                                                                          :  "${AllGuestPostRoomData?.object?.content?[index].translatedDescription}",
+                                                                                      // AllGuestPostRoomData?.object?.content?[index].isTrsnalteoption == false || AllGuestPostRoomData?.object?.content?[index].isTrsnalteoption == null ? "${AllGuestPostRoomData?.object?.content?[index].description}" : "${AllGuestPostRoomData?.object?.content?[index].translatedDescription}",
+                                                                                      readmoree[index] == true
+                                                                                          ? (AllGuestPostRoomData?.object?.content?[index].isTrsnalteoption == false || AllGuestPostRoomData?.object?.content?[index].isTrsnalteoption == null)
+                                                                                              ? "${AllGuestPostRoomData?.object?.content?[index].description}${(AllGuestPostRoomData?.object?.content?[index].description?.length ?? 0) > maxLength ? ' ....ReadLess' : ''}"
+                                                                                              : "${AllGuestPostRoomData?.object?.content?[index].translatedDescription}"
+                                                                                          : (AllGuestPostRoomData?.object?.content?[index].isTrsnalteoption == false || AllGuestPostRoomData?.object?.content?[index].isTrsnalteoption == null)
+                                                                                              ? "${AllGuestPostRoomData?.object?.content?[index].description?.substring(0, maxLength)} ....ReadMore"
+                                                                                              : "${AllGuestPostRoomData?.object?.content?[index].translatedDescription?.substring(0, maxLength)} ....ReadMore", // asdsd
                                                                                       linkStyle: TextStyle(
                                                                                         color: Colors.blue,
                                                                                         fontFamily: 'outfit',
@@ -2827,53 +2985,64 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                         var Link5 = SelectedTest.startsWith('HTTP');
                                                                                         var Link6 = SelectedTest.startsWith('https://pdslink.page.link/');
                                                                                         print(SelectedTest.toString());
-
-                                                                                        if (User_ID == null) {
-                                                                                          Navigator.of(context).push(MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
-                                                                                        } else {
-                                                                                          if (Link == true || Link1 == true || Link2 == true || Link3 == true || Link4 == true || Link5 == true || Link6 == true) {
-                                                                                            if (Link2 == true || Link3 == true) {
-                                                                                              launchUrl(Uri.parse("https://${link.value.toString()}"));
-                                                                                              print("qqqqqqqqhttps://${link.value}");
+                                                                                        if ((AllGuestPostRoomData?.object?.content?[index].description?.length ?? 0) > maxLength) {
+                                                                                          setState(() {
+                                                                                            if (readmoree[index] == true) {
+                                                                                              readmoree[index] = false;
+                                                                                              print("--------------false ");
                                                                                             } else {
-                                                                                              if (Link6 == true) {
-                                                                                                print("yes i am inList =   room");
-                                                                                                Navigator.push(context, MaterialPageRoute(
-                                                                                                  builder: (context) {
-                                                                                                    return NewBottomBar(
-                                                                                                      buttomIndex: 1,
-                                                                                                    );
-                                                                                                  },
-                                                                                                ));
-                                                                                              } else {
-                                                                                                launchUrl(Uri.parse(link.value.toString()));
-                                                                                                print("link.valuelink.value -- ${link.value}");
-                                                                                              }
+                                                                                              readmoree[index] = true;
+                                                                                              print("-------------- true");
                                                                                             }
+                                                                                          });
+                                                                                        } else {
+                                                                                          if (User_ID == null) {
+                                                                                            Navigator.of(context).push(MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
                                                                                           } else {
-                                                                                            if (link.value!.startsWith('#')) {
-                                                                                              await BlocProvider.of<GetGuestAllPostCubit>(context).seetinonExpried(context);
-                                                                                              Navigator.push(
-                                                                                                  context,
-                                                                                                  MaterialPageRoute(
-                                                                                                    builder: (context) => HashTagViewScreen(title: "${link.value}"),
+                                                                                            if (Link == true || Link1 == true || Link2 == true || Link3 == true || Link4 == true || Link5 == true || Link6 == true) {
+                                                                                              if (Link2 == true || Link3 == true) {
+                                                                                                launchUrl(Uri.parse("https://${link.value.toString()}"));
+                                                                                                print("qqqqqqqqhttps://${link.value}");
+                                                                                              } else {
+                                                                                                if (Link6 == true) {
+                                                                                                  print("yes i am inList =   room");
+                                                                                                  Navigator.push(context, MaterialPageRoute(
+                                                                                                    builder: (context) {
+                                                                                                      return NewBottomBar(
+                                                                                                        buttomIndex: 1,
+                                                                                                      );
+                                                                                                    },
                                                                                                   ));
-                                                                                            } else if (link.value!.startsWith('@')) {
-                                                                                              await BlocProvider.of<GetGuestAllPostCubit>(context).seetinonExpried(context);
-                                                                                              var name;
-                                                                                              var tagName;
-                                                                                              name = SelectedTest;
-                                                                                              tagName = name.replaceAll("@", "");
-                                                                                              await BlocProvider.of<GetGuestAllPostCubit>(context).UserTagAPI(context, tagName);
-
-                                                                                              Navigator.push(context, MaterialPageRoute(builder: (context) {
-                                                                                                return ProfileScreen(User_ID: "${userTagModel?.object}", isFollowing: "");
-                                                                                              })).then((value) => Get_UserToken());
-
-                                                                                              print("tagName -- ${tagName}");
-                                                                                              print("user id -- ${userTagModel?.object}");
+                                                                                                } else {
+                                                                                                  launchUrl(Uri.parse(link.value.toString()));
+                                                                                                  print("link.valuelink.value -- ${link.value}");
+                                                                                                }
+                                                                                              }
                                                                                             } else {
-                                                                                              launchUrl(Uri.parse("https://${link.value.toString()}"));
+                                                                                              if (link.value!.startsWith('#')) {
+                                                                                                await BlocProvider.of<GetGuestAllPostCubit>(context).seetinonExpried(context);
+                                                                                                Navigator.push(
+                                                                                                    context,
+                                                                                                    MaterialPageRoute(
+                                                                                                      builder: (context) => HashTagViewScreen(title: "${link.value}"),
+                                                                                                    ));
+                                                                                              } else if (link.value!.startsWith('@')) {
+                                                                                                await BlocProvider.of<GetGuestAllPostCubit>(context).seetinonExpried(context);
+                                                                                                var name;
+                                                                                                var tagName;
+                                                                                                name = SelectedTest;
+                                                                                                tagName = name.replaceAll("@", "");
+                                                                                                await BlocProvider.of<GetGuestAllPostCubit>(context).UserTagAPI(context, tagName);
+
+                                                                                                Navigator.push(context, MaterialPageRoute(builder: (context) {
+                                                                                                  return ProfileScreen(User_ID: "${userTagModel?.object}", isFollowing: "");
+                                                                                                })).then((value) => Get_UserToken());
+
+                                                                                                print("tagName -- ${tagName}");
+                                                                                                print("user id -- ${userTagModel?.object}");
+                                                                                              } else {
+                                                                                                // launchUrl(Uri.parse("https://${link.value.toString()}"));
+                                                                                              }
                                                                                             }
                                                                                           }
                                                                                         }
@@ -2883,6 +3052,68 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                 ),
                                                                               ],
                                                                             ),
+                                                                            AllGuestPostRoomData?.object?.content?[index].translatedDescription != null
+                                                                                ? readmoree[index] == true
+                                                                                    ? GestureDetector(
+                                                                                        onTap: () async {
+                                                                                          super.setState(() {
+                                                                                            if (AllGuestPostRoomData?.object?.content?[index].isTrsnalteoption == false || AllGuestPostRoomData?.object?.content?[index].isTrsnalteoption == null) {
+                                                                                              AllGuestPostRoomData?.object?.content?[index].isTrsnalteoption = true;
+                                                                                            } else {
+                                                                                              AllGuestPostRoomData?.object?.content?[index].isTrsnalteoption = false;
+                                                                                            }
+                                                                                          });
+                                                                                        },
+                                                                                        child: Container(
+                                                                                            width: 80,
+                                                                                            decoration: BoxDecoration(
+                                                                                              color: ColorConstant.primaryLight_color,
+                                                                                              borderRadius: BorderRadius.circular(10),
+                                                                                            ),
+                                                                                            child: Center(
+                                                                                                child: Text(
+                                                                                              "Translate",
+                                                                                              style: TextStyle(
+                                                                                                fontFamily: 'outfit',
+                                                                                                fontWeight: FontWeight.bold,
+                                                                                              ),
+                                                                                            ))),
+                                                                                      )
+                                                                                    : SizedBox()
+                                                                                : SizedBox(),
+                                                                            /*   Align(
+                                                                              alignment: Alignment.centerRight,
+                                                                              child: (AllGuestPostRoomData?.object?.content?[index].description?.length ?? 0) > maxLength
+                                                                                  ? GestureDetector(
+                                                                                      onTap: () {
+                                                                                        setState(() {
+                                                                                          if (readmoree[index] == true) {
+                                                                                            readmoree[index] = false;
+                                                                                            print("--------------false ");
+                                                                                          } else {
+                                                                                            readmoree[index] = true;
+                                                                                            print("-------------- true");
+                                                                                          }
+                                                                                        });
+                                                                                      },
+                                                                                      child: Container(
+                                                                                        // color: Colors.red,
+                                                                                        width: 75,
+                                                                                        height: 15,
+                                                                                        child: Align(
+                                                                                          alignment: Alignment.centerLeft,
+                                                                                          child: Text(
+                                                                                            readmoree[index] ? 'Read Less' : 'Read More',
+                                                                                            style: TextStyle(
+                                                                                              color: Colors.blue,
+                                                                                              fontWeight: FontWeight.bold,
+                                                                                            ),
+                                                                                          ),
+                                                                                        ),
+                                                                                      ),
+                                                                                    )
+                                                                                  : SizedBox(),
+                                                                            ) */
                                                                           ],
                                                                         )),
                                                               )
@@ -2922,7 +3153,11 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                               PostID: AllGuestPostRoomData?.object?.content?[index].postUid,
                                                                                               index: index,
                                                                                             )),
-                                                                                  );
+                                                                                  ).then((value) {
+                                                                                    Get_UserToken();
+
+                                                                                    setColorr();
+                                                                                  });
                                                                                   // }
                                                                                 },
                                                                                 child: Container(
@@ -2948,6 +3183,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                           width: _width,
                                                                                           child: VideoListItem1(
                                                                                             videoUrl: videoUrls[index],
+                                                                                            PostID: AllGuestPostRoomData?.object?.content?[index].postUid,
                                                                                             // isData: User_ID == null ? false : true,
                                                                                           ),
                                                                                         ),
@@ -2987,10 +3223,14 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                                   }
                                                                                                 },
                                                                                                 child: Container(
-                                                                                                  child: CachedNetworkImage(
-                                                                                                    imageUrl: AllGuestPostRoomData?.object?.content?[index].thumbnailImageUrl ?? "",
+                                                                                                  child: CustomImageView(
+                                                                                                    url: "${AllGuestPostRoomData?.object?.content?[index].thumbnailImageUrl}",
                                                                                                     fit: BoxFit.cover,
                                                                                                   ),
+                                                                                                  // CachedNetworkImage(
+                                                                                                  //   imageUrl: "${AllGuestPostRoomData?.object?.content?[index].thumbnailImageUrl}",
+                                                                                                  //   fit: BoxFit.cover,
+                                                                                                  // ),
                                                                                                 ),
                                                                                               )
                                                                                             ],
@@ -3006,7 +3246,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                       height: 200,
                                                                                       child: PageView.builder(
                                                                                         onPageChanged: (page) {
-                                                                                          setState(() {
+                                                                                          super.setState(() {
                                                                                             _currentPages[index] = page;
                                                                                             imageCount1 = page + 1;
                                                                                           });
@@ -3031,7 +3271,11 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                                               PostID: AllGuestPostRoomData?.object?.content?[index].postUid,
                                                                                                               index: index1,
                                                                                                             )),
-                                                                                                  );
+                                                                                                  ).then((value) {
+                                                                                                    Get_UserToken();
+
+                                                                                                    setColorr();
+                                                                                                  });
                                                                                                   // }
                                                                                                 },
                                                                                                 child: Stack(
@@ -3129,7 +3373,11 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                               PostID: AllGuestPostRoomData?.object?.content?[index].repostOn?.postUid,
                                                                               index: index,
                                                                             )),
-                                                              );
+                                                              ).then((value) {
+                                                                Get_UserToken();
+
+                                                                setColorr();
+                                                              });
                                                               // }
                                                             },
                                                             child: Container(
@@ -3259,7 +3507,14 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                   16),
                                                                           child:
                                                                               LinkifyText(
-                                                                            "${AllGuestPostRoomData?.object?.content?[index].repostOn?.description}",
+                                                                            readmoree[index] == true
+                                                                                ? (AllGuestPostRoomData?.object?.content?[index].repostOn?.isTrsnalteoption == false || AllGuestPostRoomData?.object?.content?[index].repostOn?.isTrsnalteoption == null)
+                                                                                    ? "${AllGuestPostRoomData?.object?.content?[index].repostOn?.description}${(AllGuestPostRoomData?.object?.content?[index].repostOn?.description?.length ?? 0) > maxLength ? '....ReadLess' : ''}"
+                                                                                    : "${AllGuestPostRoomData?.object?.content?[index].repostOn?.translatedDescription}"
+                                                                                : (AllGuestPostRoomData?.object?.content?[index].repostOn?.isTrsnalteoption == false || AllGuestPostRoomData?.object?.content?[index].repostOn?.isTrsnalteoption == null)
+                                                                                    ?  "${AllGuestPostRoomData?.object?.content?[index].repostOn?.description != null ?'': AllGuestPostRoomData?.object?.content?[index].repostOn?.description?.substring(0, maxLength)}....ReadMore"
+                                                                                    : "${AllGuestPostRoomData?.object?.content?[index].repostOn?.translatedDescription?.substring(0, maxLength)}....ReadMore", // as
+
                                                                             linkStyle:
                                                                                 TextStyle(
                                                                               color: Colors.blue,
@@ -3291,8 +3546,19 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                               var Link5 = SelectedTest.startsWith('HTTP');
                                                                               var Link6 = SelectedTest.startsWith('https://pdslink.page.link/');
                                                                               print(SelectedTest.toString());
-
-                                                                              if (User_ID == null) {
+                                                                              if ((AllGuestPostRoomData?.object?.content?[index].repostOn?.description?.length ?? 0) > maxLength) {
+                                                                                setState(() {
+                                                                                  if (readmoree[index] == true) {
+                                                                                    readmoree[index] = false;
+                                                                                    print("--------------false ");
+                                                                                  } else {
+                                                                                    readmoree[index] = true;
+                                                                                    print("-------------- true");
+                                                                                  }
+                                                                                });
+                                                                              }
+                                                                              else{
+                                                                                if (User_ID == null) {
                                                                                 Navigator.of(context).push(MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
                                                                               } else {
                                                                                 if (Link == true || Link1 == true || Link2 == true || Link3 == true || Link4 == true || Link5 == true || Link6 == true) {
@@ -3340,9 +3606,98 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                   }
                                                                                 }
                                                                               }
+                                                                              }
                                                                             },
                                                                           ))
                                                                       : SizedBox(),
+                                                                  if (AllGuestPostRoomData
+                                                                              ?.object
+                                                                              ?.content?[
+                                                                                  index]
+                                                                              .repostOn
+                                                                              ?.translatedDescription !=
+                                                                          null &&
+                                                                      readmoree[
+                                                                              index] ==
+                                                                          true)
+                                                                    GestureDetector(
+                                                                      onTap:
+                                                                          () {
+                                                                        if (AllGuestPostRoomData?.object?.content?[index].repostOn?.isTrsnalteoption ==
+                                                                                false ||
+                                                                            AllGuestPostRoomData?.object?.content?[index].repostOn?.isTrsnalteoption ==
+                                                                                null) {
+                                                                          AllGuestPostRoomData
+                                                                              ?.object
+                                                                              ?.content?[index]
+                                                                              .repostOn
+                                                                              ?.isTrsnalteoption = true;
+                                                                        } else {
+                                                                          AllGuestPostRoomData
+                                                                              ?.object
+                                                                              ?.content?[index]
+                                                                              .repostOn
+                                                                              ?.isTrsnalteoption = false;
+                                                                        }
+                                                                      },
+                                                                      child:
+                                                                          Container(
+                                                                        margin: EdgeInsets.only(
+                                                                            left:
+                                                                                10,
+                                                                            top:
+                                                                                10),
+                                                                        width:
+                                                                            80,
+                                                                        decoration:
+                                                                            BoxDecoration(
+                                                                          color:
+                                                                              ColorConstant.primaryLight_color,
+                                                                          borderRadius:
+                                                                              BorderRadius.circular(10),
+                                                                        ),
+                                                                        child:
+                                                                            Center(
+                                                                          child:
+                                                                              Text(
+                                                                            "Translate",
+                                                                            style:
+                                                                                TextStyle(
+                                                                              fontFamily: 'outfit',
+                                                                              fontWeight: FontWeight.bold,
+                                                                            ),
+                                                                          ),
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                  /* AllGuestPostRoomData?.object?.content?[index].translatedDescription !=
+                                                                              null
+                                                                          ? readmoree[index] == true
+                                                                              ? GestureDetector(
+                                                                                  onTap: () async {
+                                                                                    super.setState(() {
+                                                                                      if (AllGuestPostRoomData?.object?.content?[index].isTrsnalteoption == false || AllGuestPostRoomData?.object?.content?[index].isTrsnalteoption == null) {
+                                                                                        AllGuestPostRoomData?.object?.content?[index].isTrsnalteoption = true;
+                                                                                      } else {
+                                                                                        AllGuestPostRoomData?.object?.content?[index].isTrsnalteoption = false;
+                                                                                      }
+                                                                                    });
+                                                                                  },
+                                                                                  child: Container(
+                                                                                      width: 80,
+                                                                                      decoration: BoxDecoration(
+                                                                                        color: ColorConstant.primaryLight_color,
+                                                                                        borderRadius: BorderRadius.circular(10),
+                                                                                      ),
+                                                                                      child: Center(
+                                                                                          child: Text(
+                                                                                        "Translate",
+                                                                                        style: TextStyle(
+                                                                                          fontFamily: 'outfit',
+                                                                                          fontWeight: FontWeight.bold,
+                                                                                        ),
+                                                                                      ))),
+                                                                                ), */
                                                                   Container(
                                                                     width:
                                                                         _width,
@@ -3364,7 +3719,11 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                                   PostID: AllGuestPostRoomData?.object?.content?[index].repostOn?.postUid,
                                                                                                   index: index,
                                                                                                 )),
-                                                                                      );
+                                                                                      ).then((value) {
+                                                                                        Get_UserToken();
+
+                                                                                        setColorr();
+                                                                                      });
                                                                                       // }
                                                                                     },
                                                                                     child: Container(
@@ -3388,6 +3747,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                             VideoListItem1(
                                                                                               videoUrl: videoUrls[index],
                                                                                               discrption: AllGuestPostRoomData?.object?.content?[index].repostOn?.description,
+                                                                                              PostID: AllGuestPostRoomData?.object?.content?[index].postUid,
                                                                                               // isData: User_ID == null ? false : true,
                                                                                             )
                                                                                           ],
@@ -3418,10 +3778,14 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                                   }
                                                                                                 },
                                                                                                 child: Container(
-                                                                                                  child: CachedNetworkImage(
-                                                                                                    imageUrl: AllGuestPostRoomData?.object?.content?[index].repostOn?.thumbnailImageUrl ?? "",
+                                                                                                  child: CustomImageView(
+                                                                                                    url: "${AllGuestPostRoomData?.object?.content?[index].repostOn?.thumbnailImageUrl}",
                                                                                                     fit: BoxFit.cover,
                                                                                                   ),
+                                                                                                  //  CachedNetworkImage(
+                                                                                                  //   imageUrl: "${AllGuestPostRoomData?.object?.content?[index].repostOn?.thumbnailImageUrl}",
+                                                                                                  //   fit: BoxFit.cover,
+                                                                                                  // ),
                                                                                                 ),
                                                                                               )
                                                                                             ],
@@ -3436,7 +3800,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                           height: 300,
                                                                                           child: PageView.builder(
                                                                                             onPageChanged: (page) {
-                                                                                              setState(() {
+                                                                                              super.setState(() {
                                                                                                 _currentPages[index] = page;
                                                                                                 imageCount2 = page + 1;
                                                                                               });
@@ -3458,7 +3822,11 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                                                 PostID: AllGuestPostRoomData?.object?.content?[index].repostOn?.postUid,
                                                                                                                 index: index1,
                                                                                                               )),
-                                                                                                    );
+                                                                                                    ).then((value) {
+                                                                                                      Get_UserToken();
+
+                                                                                                      setColorr();
+                                                                                                    });
                                                                                                     // }
                                                                                                   },
                                                                                                   child: Container(
@@ -3896,7 +4264,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                               // GestureDetector(
                                                               //   onTap: () {
                                                               //     Share.share(
-                                                              //         'https://play.google.com/store/apps/details?id=com.pds.app');
+                                                              //         'https://play.google.com/store/apps/details?id=com.inpackaging.app');
                                                               //   },
                                                               //   child: Container(
                                                               //     color: Colors
@@ -3941,7 +4309,11 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                       ?.content?[
                                                                           index]
                                                                       .postUid),
-                                                        ));
+                                                        )).then((value) {
+                                                      Get_UserToken();
+
+                                                      setColorr();
+                                                    });
                                                   },
                                                   onDoubleTap: () async {
                                                     await soicalFunation(
@@ -4227,191 +4599,255 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                         index]
                                                                     .description !=
                                                                 null
-                                                            ? Padding(
-                                                                padding:
-                                                                    const EdgeInsets
-                                                                            .only(
-                                                                        left:
-                                                                            16),
-                                                                child:
-                                                                    //this is the despcation
-                                                                    GestureDetector(
-                                                                        onTap:
-                                                                            () async {
-                                                                          if (DataGet ==
-                                                                              true) {
-                                                                            await launch('${AllGuestPostRoomData?.object?.content?[index].description}',
-                                                                                forceWebView: true,
-                                                                                enableJavaScript: true);
-                                                                          } else {
-                                                                            Navigator.push(
-                                                                              context,
-                                                                              MaterialPageRoute(
-                                                                                  builder: (context) => OpenSavePostImage(
-                                                                                        PostID: AllGuestPostRoomData?.object?.content?[index].postUid,
-                                                                                      )),
-                                                                            );
-                                                                          }
-                                                                        },
-                                                                        child:
-                                                                            Column(
-                                                                          crossAxisAlignment:
-                                                                              CrossAxisAlignment.start,
-                                                                          children: [
-                                                                            AllGuestPostRoomData?.object?.content?[index].translatedDescription != null
-                                                                                ? GestureDetector(
-                                                                                    onTap: () async {
-                                                                                         setState(() {
-                                                                                        if ( AllGuestPostRoomData?.object?.content?[index].isTrsnalteoption  == false || AllGuestPostRoomData?.object?.content?[index].isTrsnalteoption  == null) {
-                                                                                           AllGuestPostRoomData?.object?.content?[index].isTrsnalteoption = true;
+                                                            ? GestureDetector(
+                                                                onTap:
+                                                                    () async {
+                                                                  if (DataGet ==
+                                                                      true) {
+                                                                    await launch(
+                                                                        '${AllGuestPostRoomData?.object?.content?[index].description}',
+                                                                        forceWebView:
+                                                                            true,
+                                                                        enableJavaScript:
+                                                                            true);
+                                                                  } else {
+                                                                    Navigator
+                                                                        .push(
+                                                                      context,
+                                                                      MaterialPageRoute(
+                                                                          builder: (context) =>
+                                                                              OpenSavePostImage(
+                                                                                PostID: AllGuestPostRoomData?.object?.content?[index].postUid,
+                                                                              )),
+                                                                    ).then(
+                                                                        (value) {
+                                                                      Get_UserToken();
+
+                                                                      setColorr();
+                                                                    });
+                                                                  }
+                                                                },
+                                                                child: Padding(
+                                                                  padding: const EdgeInsets
+                                                                          .only(
+                                                                      left: 16),
+                                                                  child: Column(
+                                                                    crossAxisAlignment:
+                                                                        CrossAxisAlignment
+                                                                            .start,
+                                                                    children: [
+                                                                      /*  SizedBox(
+                                                                        height:
+                                                                            10,
+                                                                      ), */
+                                                                      Row(
+                                                                        children: [
+                                                                          ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+                                                                          /*  Expanded(
+                                                                            child: GestureDetector(onTap: () {
+                                                                            print("cheakkkkkkkkkkkkkkkk${AllGuestPostRoomData?.object?.content?[index].description ?? ''}");
+                                                                            print("index-$index");
+                                                                          },
+                                                                            child: Text(AllGuestPostRoomData?.object?.content?[index].description ?? '',))) */
+                                                                          //////////////////////////////////////////////////////////////////////////////////////////////////////////
+                                                                          Expanded(
+                                                                            child:
+                                                                                Container(
+                                                                              // color: Colors.red,
+                                                                              child: LinkifyText(
+                                                                                /*    utf8.decode(AllGuestPostRoomData?.object?.content?[index].description?.runes.toList() ??
+                                                                                    []), */
+                                                                                // THIS IS THE SET
+                                                                                readmoree[index] == true
+                                                                                    ? (AllGuestPostRoomData?.object?.content?[index].isTrsnalteoption == false || AllGuestPostRoomData?.object?.content?[index].isTrsnalteoption == null)
+                                                                                        ? "${AllGuestPostRoomData?.object?.content?[index].description} ${(AllGuestPostRoomData?.object?.content?[index].description?.length ?? 0) > maxLength ? ' ....ReadLess' : ''}"
+                                                                                        : "${AllGuestPostRoomData?.object?.content?[index].translatedDescription}"
+                                                                                    : (AllGuestPostRoomData?.object?.content?[index].isTrsnalteoption == false || AllGuestPostRoomData?.object?.content?[index].isTrsnalteoption == null)
+                                                                                        ? "${AllGuestPostRoomData?.object?.content?[index].description?.substring(0, maxLength)} ....ReadMore"
+                                                                                        : "${AllGuestPostRoomData?.object?.content?[index].translatedDescription?.substring(0, maxLength)}....ReadMore",
+                                                                                linkStyle: TextStyle(
+                                                                                  color: Colors.blue,
+                                                                                  fontFamily: 'outfit',
+                                                                                ),
+                                                                                textStyle: TextStyle(
+                                                                                  color: Colors.black,
+                                                                                  fontFamily: 'outfit',
+                                                                                ),
+                                                                                linkTypes: [
+                                                                                  LinkType.url,
+                                                                                  LinkType.userTag,
+                                                                                  LinkType.hashTag,
+                                                                                  // LinkType
+                                                                                  //     .email
+                                                                                ],
+                                                                                onTap: (link) async {
+                                                                                  /// do stuff with `link` like
+                                                                                  /// if(link.type == Link.url) launchUrl(link.value);
+
+                                                                                  var SelectedTest = link.value.toString();
+                                                                                  var Link = SelectedTest.startsWith('https');
+                                                                                  var Link1 = SelectedTest.startsWith('http');
+                                                                                  var Link2 = SelectedTest.startsWith('www');
+                                                                                  var Link3 = SelectedTest.startsWith('WWW');
+                                                                                  var Link4 = SelectedTest.startsWith('HTTPS');
+                                                                                  var Link5 = SelectedTest.startsWith('HTTP');
+                                                                                  var Link6 = SelectedTest.startsWith('https://pdslink.page.link/');
+                                                                                  print("tag -- " + SelectedTest.toString());
+                                                                                  if ((AllGuestPostRoomData?.object?.content?[index].description?.length ?? 0) > maxLength) {
+                                                                                    setState(() {
+                                                                                      if (readmoree[index] == true) {
+                                                                                        readmoree[index] = false;
+                                                                                        print("--------------false ");
+                                                                                      } else {
+                                                                                        readmoree[index] = true;
+                                                                                        print("-------------- true");
+                                                                                      }
+                                                                                    });
+                                                                                  } else {
+                                                                                    if (User_ID == null) {
+                                                                                      Navigator.of(context).push(MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
+                                                                                    } else {
+                                                                                      if (Link == true || Link1 == true || Link2 == true || Link3 == true || Link4 == true || Link5 == true || Link6 == true) {
+                                                                                        if (Link2 == true || Link3 == true) {
+                                                                                          launchUrl(Uri.parse("https://${link.value.toString()}"));
+                                                                                          print("qqqqqqqqhttps://${link.value}");
                                                                                         } else {
-                                                                                           AllGuestPostRoomData?.object?.content?[index].isTrsnalteoption = false;
-                                                                                        }
-                                                                                      });
-                                                                                    },
-                                                                                    child: Container(
-                                                                                        width: 80,
-                                                                                        decoration: BoxDecoration(
-                                                                                          color: ColorConstant.primaryLight_color,
-                                                                                          borderRadius: BorderRadius.circular(10),
-                                                                                        ),
-                                                                                        child: Center(
-                                                                                            child: Text(
-                                                                                          "Translate",
-                                                                                          style: TextStyle(
-                                                                                            fontFamily: 'outfit',
-                                                                                            fontWeight: FontWeight.bold,
-                                                                                          ),
-                                                                                        ))),
-                                                                                  )
-                                                                                : SizedBox(),
-                                                                            SizedBox(
-                                                                              height: 10,
-                                                                            ),
-                                                                            Row(
-                                                                              children: [
-                                                                                ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-                                                                                /*  Expanded(
-                                                                                  child: GestureDetector(onTap: () {
-                                                                                  print("cheakkkkkkkkkkkkkkkk${AllGuestPostRoomData?.object?.content?[index].description ?? ''}");
-                                                                                  print("index-$index");
-                                                                                },
-                                                                                  child: Text(AllGuestPostRoomData?.object?.content?[index].description ?? '',))) */
-                                                                                //////////////////////////////////////////////////////////////////////////////////////////////////////////
-                                                                                Expanded(
-                                                                                  child: Container(
-                                                                                    // color: Colors.red,
-                                                                                    child: LinkifyText(
-                                                                                      /*    utf8.decode(AllGuestPostRoomData?.object?.content?[index].description?.runes.toList() ??
-                                                                                          []), */
-                                                                                      AllGuestPostRoomData?.object?.content?[index].isTrsnalteoption == false || AllGuestPostRoomData?.object?.content?[index].isTrsnalteoption  == null
-                                                                                          ? "${AllGuestPostRoomData?.object?.content?[index].description}"
-                                                                                          :  "${AllGuestPostRoomData?.object?.content?[index].translatedDescription}",
-                                                                                      linkStyle: TextStyle(
-                                                                                        color: Colors.blue,
-                                                                                        fontFamily: 'outfit',
-                                                                                      ),
-                                                                                      textStyle: TextStyle(
-                                                                                        color: Colors.black,
-                                                                                        fontFamily: 'outfit',
-                                                                                      ),
-                                                                                      linkTypes: [
-                                                                                        LinkType.url,
-                                                                                        LinkType.userTag,
-                                                                                        LinkType.hashTag,
-                                                                                        // LinkType
-                                                                                        //     .email
-                                                                                      ],
-                                                                                      onTap: (link) async {
-                                                                                        /// do stuff with `link` like
-                                                                                        /// if(link.type == Link.url) launchUrl(link.value);
-
-                                                                                        var SelectedTest = link.value.toString();
-                                                                                        var Link = SelectedTest.startsWith('https');
-                                                                                        var Link1 = SelectedTest.startsWith('http');
-                                                                                        var Link2 = SelectedTest.startsWith('www');
-                                                                                        var Link3 = SelectedTest.startsWith('WWW');
-                                                                                        var Link4 = SelectedTest.startsWith('HTTPS');
-                                                                                        var Link5 = SelectedTest.startsWith('HTTP');
-                                                                                        var Link6 = SelectedTest.startsWith('https://pdslink.page.link/');
-                                                                                        print("tag -- " + SelectedTest.toString());
-
-                                                                                        if (User_ID == null) {
-                                                                                          Navigator.of(context).push(MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
-                                                                                        } else {
-                                                                                          if (Link == true || Link1 == true || Link2 == true || Link3 == true || Link4 == true || Link5 == true || Link6 == true) {
-                                                                                            if (Link2 == true || Link3 == true) {
-                                                                                              launchUrl(Uri.parse("https://${link.value.toString()}"));
-                                                                                              print("qqqqqqqqhttps://${link.value}");
-                                                                                            } else {
-                                                                                              if (Link6 == true) {
-                                                                                                print("yes i am inList =   room");
-                                                                                                Navigator.push(context, MaterialPageRoute(
-                                                                                                  builder: (context) {
-                                                                                                    return NewBottomBar(
-                                                                                                      buttomIndex: 1,
-                                                                                                    );
-                                                                                                  },
-                                                                                                ));
-                                                                                              } else {
-                                                                                                launchUrl(Uri.parse(link.value.toString()));
-                                                                                                print("link.valuelink.value -- ${link.value}");
-                                                                                              }
-                                                                                            }
-                                                                                          } else if (link.value != null) {
-                                                                                            if (link.value!.startsWith('#')) {
-                                                                                              await BlocProvider.of<GetGuestAllPostCubit>(context).seetinonExpried(context);
-                                                                                              Navigator.push(
-                                                                                                  context,
-                                                                                                  MaterialPageRoute(
-                                                                                                    builder: (context) => HashTagViewScreen(title: "${link.value}"),
-                                                                                                  ));
-                                                                                            } else if (link.value!.startsWith('@')) {
-                                                                                              await BlocProvider.of<GetGuestAllPostCubit>(context).seetinonExpried(context);
-                                                                                              var name;
-                                                                                              var tagName;
-                                                                                              name = SelectedTest;
-                                                                                              tagName = name.replaceAll("@", "");
-                                                                                              await BlocProvider.of<GetGuestAllPostCubit>(context).UserTagAPI(context, tagName);
-
-                                                                                              Navigator.push(context, MaterialPageRoute(builder: (context) {
-                                                                                                return ProfileScreen(User_ID: "${userTagModel?.object}", isFollowing: "");
-                                                                                              })).then((value) => Get_UserToken());
-
-                                                                                              print("tagName -- ${tagName}");
-                                                                                              print("user id -- ${userTagModel?.object}");
-                                                                                            }
+                                                                                          if (Link6 == true) {
+                                                                                            print("yes i am inList =   room");
+                                                                                            Navigator.push(context, MaterialPageRoute(
+                                                                                              builder: (context) {
+                                                                                                return NewBottomBar(
+                                                                                                  buttomIndex: 1,
+                                                                                                );
+                                                                                              },
+                                                                                            ));
+                                                                                          } else {
+                                                                                            launchUrl(Uri.parse(link.value.toString()));
+                                                                                            print("link.valuelink.value -- ${link.value}");
                                                                                           }
                                                                                         }
-                                                                                      },
+                                                                                      } else if (link.value != null) {
+                                                                                        if (link.value!.startsWith('#')) {
+                                                                                          await BlocProvider.of<GetGuestAllPostCubit>(context).seetinonExpried(context);
+                                                                                          Navigator.push(
+                                                                                              context,
+                                                                                              MaterialPageRoute(
+                                                                                                builder: (context) => HashTagViewScreen(title: "${link.value}"),
+                                                                                              ));
+                                                                                        } else if (link.value!.startsWith('@')) {
+                                                                                          await BlocProvider.of<GetGuestAllPostCubit>(context).seetinonExpried(context);
+                                                                                          var name;
+                                                                                          var tagName;
+                                                                                          name = SelectedTest;
+                                                                                          tagName = name.replaceAll("@", "");
+                                                                                          await BlocProvider.of<GetGuestAllPostCubit>(context).UserTagAPI(context, tagName);
+
+                                                                                          Navigator.push(context, MaterialPageRoute(builder: (context) {
+                                                                                            return ProfileScreen(User_ID: "${userTagModel?.object}", isFollowing: "");
+                                                                                          })).then((value) => Get_UserToken());
+
+                                                                                          print("tagName -- ${tagName}");
+                                                                                          print("user id -- ${userTagModel?.object}");
+                                                                                        }
+                                                                                      }
+                                                                                    }
+                                                                                  }
+                                                                                },
+                                                                              ),
+                                                                            ),
+                                                                          ),
+
+                                                                          SizedBox(
+                                                                            width:
+                                                                                10,
+                                                                          ),
+                                                                          // InkWell(
+                                                                          //     onTap: () async {
+
+                                                                          //       String inputText = "${AllGuestPostRoomData?.object?.content?[index].description}";
+                                                                          //       String translatedTextGujarati = await translateText(inputText, 'gu');
+                                                                          //       super.setState(() {
+                                                                          //         _translatedTextGujarati = translatedTextGujarati;
+                                                                          //       });
+                                                                          //     },
+                                                                          //     child: Column(
+                                                                          //       children: [
+                                                                          //         Text(
+                                                                          //           "Translate",
+                                                                          //         ),
+                                                                          //         Text(_translatedTextGujarati),
+                                                                          //       ],
+                                                                          //     )),
+                                                                        ],
+                                                                      ),
+                                                                      AllGuestPostRoomData?.object?.content?[index].translatedDescription !=
+                                                                              null
+                                                                          ? readmoree[index] == true
+                                                                              ? GestureDetector(
+                                                                                  onTap: () async {
+                                                                                    super.setState(() {
+                                                                                      if (AllGuestPostRoomData?.object?.content?[index].isTrsnalteoption == false || AllGuestPostRoomData?.object?.content?[index].isTrsnalteoption == null) {
+                                                                                        AllGuestPostRoomData?.object?.content?[index].isTrsnalteoption = true;
+                                                                                      } else {
+                                                                                        AllGuestPostRoomData?.object?.content?[index].isTrsnalteoption = false;
+                                                                                      }
+                                                                                    });
+                                                                                  },
+                                                                                  child: Container(
+                                                                                      width: 80,
+                                                                                      decoration: BoxDecoration(
+                                                                                        color: ColorConstant.primaryLight_color,
+                                                                                        borderRadius: BorderRadius.circular(10),
+                                                                                      ),
+                                                                                      child: Center(
+                                                                                          child: Text(
+                                                                                        "Translate",
+                                                                                        style: TextStyle(
+                                                                                          fontFamily: 'outfit',
+                                                                                          fontWeight: FontWeight.bold,
+                                                                                        ),
+                                                                                      ))),
+                                                                                )
+                                                                              : SizedBox()
+                                                                          : SizedBox(),
+                                                                      /* Align(
+                                                                        alignment:
+                                                                            Alignment.centerRight,
+                                                                        child: (AllGuestPostRoomData?.object?.content?[index].description?.length ?? 0) >
+                                                                                maxLength
+                                                                            ? GestureDetector(
+                                                                                onTap: () {
+                                                                                  setState(() {
+                                                                                    if (readmoree[index] == true) {
+                                                                                      readmoree[index] = false;
+                                                                                      print("--------------false ");
+                                                                                    } else {
+                                                                                      readmoree[index] = true;
+                                                                                      print("-------------- true");
+                                                                                    }
+                                                                                  });
+                                                                                },
+                                                                                child: Container(
+                                                                                  // color: Colors.red,
+                                                                                  width: 75,
+                                                                                  height: 15,
+                                                                                  child: Align(
+                                                                                    alignment: Alignment.centerLeft,
+                                                                                    child: Text(
+                                                                                      readmoree[index] ? 'Read Less' : 'Read More',
+                                                                                      style: TextStyle(
+                                                                                        color: Colors.blue,
+                                                                                        fontWeight: FontWeight.bold,
+                                                                                      ),
                                                                                     ),
                                                                                   ),
                                                                                 ),
-                                                                                SizedBox(
-                                                                                  width: 10,
-                                                                                ),
-                                                                                // InkWell(
-                                                                                //     onTap: () async {
-
-                                                                                //       String inputText = "${AllGuestPostRoomData?.object?.content?[index].description}";
-                                                                                //       String translatedTextGujarati = await translateText(inputText, 'gu');
-                                                                                //       setState(() {
-                                                                                //         _translatedTextGujarati = translatedTextGujarati;
-                                                                                //       });
-                                                                                //     },
-                                                                                //     child: Column(
-                                                                                //       children: [
-                                                                                //         Text(
-                                                                                //           "Translate",
-                                                                                //         ),
-                                                                                //         Text(_translatedTextGujarati),
-                                                                                //       ],
-                                                                                //     )),
-                                                                              ],
-                                                                            ),
-                                                                          ],
-                                                                        )),
-                                                              )
+                                                                              )
+                                                                            : SizedBox(),
+                                                                      ) */
+                                                                    ],
+                                                                  ),
+                                                                ))
                                                             : SizedBox(),
                                                         // index == 0
 
@@ -4451,7 +4887,11 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                         PostID: AllGuestPostRoomData?.object?.content?[index].postUid,
                                                                                         index: index,
                                                                                       )),
-                                                                            );
+                                                                            ).then((value) {
+                                                                              Get_UserToken();
+
+                                                                              setColorr();
+                                                                            });
                                                                             // }
                                                                           },
                                                                           child:
@@ -4487,6 +4927,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
 
                                                                                   VideoListItem1(
                                                                                     videoUrl: videoUrls[index],
+                                                                                    PostID: AllGuestPostRoomData?.object?.content?[index].postUid,
                                                                                     // isData: User_ID == null ? false : true,
                                                                                   ),
                                                                                 ],
@@ -4522,10 +4963,14 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                             }
                                                                                           },
                                                                                           child: Container(
-                                                                                            child: CachedNetworkImage(
-                                                                                              imageUrl: AllGuestPostRoomData?.object?.content?[index].thumbnailImageUrl ?? "",
+                                                                                            child: CustomImageView(
+                                                                                              url: "${AllGuestPostRoomData?.object?.content?[index].thumbnailImageUrl}",
                                                                                               fit: BoxFit.cover,
                                                                                             ),
+                                                                                            //  CachedNetworkImage(
+                                                                                            //   imageUrl: "${AllGuestPostRoomData?.object?.content?[index].thumbnailImageUrl}",
+                                                                                            //   fit: BoxFit.cover,
+                                                                                            // ),
                                                                                           ),
                                                                                         )
                                                                                       ],
@@ -4542,7 +4987,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                 height: 300,
                                                                                 child: PageView.builder(
                                                                                   onPageChanged: (page) {
-                                                                                    setState(() {
+                                                                                    super.setState(() {
                                                                                       _currentPages[index] = page;
                                                                                       imageCount = page + 1;
                                                                                     });
@@ -4567,7 +5012,11 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                                         PostID: AllGuestPostRoomData?.object?.content?[index].postUid,
                                                                                                         index: index1,
                                                                                                       )),
-                                                                                            );
+                                                                                            ).then((value) {
+                                                                                              Get_UserToken();
+
+                                                                                              setColorr();
+                                                                                            });
                                                                                             // }
                                                                                           },
                                                                                           //this is the cusotmImageView
@@ -4579,7 +5028,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                               children: [
                                                                                                 PhotoViewGallery(
                                                                                                   onPageChanged: (value) {
-                                                                                                    setState(() {
+                                                                                                    super.setState(() {
                                                                                                       imageCount = value + 1;
                                                                                                     });
                                                                                                     print("imageCountcheck--${imageCount}");
@@ -5029,7 +5478,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                               // GestureDetector(
                                                               //   onTap: () {
                                                               //     Share.share(
-                                                              //         'https://play.google.com/store/apps/details?id=com.pds.app');
+                                                              //         'https://play.google.com/store/apps/details?id=com.inpackaging.app');
                                                               //   },
                                                               //   child: Container(
                                                               //     color: Colors
@@ -5119,7 +5568,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                               // ExpertsScreen(RoomUUID:  PriveateRoomData?.object?[index].uid),
                                                                             )).then(
                                                                         (value) =>
-                                                                            setState(() {
+                                                                            super.setState(() {
                                                                               // refresh = true;
                                                                             }));
                                                                   },
@@ -5248,7 +5697,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                       Row(
                                                                                         children: [
                                                                                           Text(
-                                                                                            "${AllExperData?.object?[index].userName}",
+                                                                                            "${AllExperData?.object?[index].userName ?? ''}",
                                                                                             style: TextStyle(fontSize: 11, color: Colors.black, fontFamily: "outfit", fontWeight: FontWeight.bold),
                                                                                           ),
                                                                                           SizedBox(
@@ -5273,7 +5722,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                           ),
                                                                                           Expanded(
                                                                                             child: Text(
-                                                                                              '${AllExperData?.object?[index].expertise?[0].expertiseName}',
+                                                                                              '${AllExperData?.object?[index].expertise?[0].expertiseName ?? ''}',
                                                                                               maxLines: 1,
                                                                                               style: TextStyle(fontFamily: "outfit", fontSize: 11, overflow: TextOverflow.ellipsis, color: Colors.black, fontWeight: FontWeight.bold),
                                                                                             ),
@@ -5297,7 +5746,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                             ),
                                                                                           ], child: ExpertsScreen(RoomUUID: "")),
                                                                                           // ExpertsScreen(RoomUUID:  PriveateRoomData?.object?[index].uid),
-                                                                                        )).then((value) => setState(() {
+                                                                                        )).then((value) => super.setState(() {
                                                                                       // refresh = true;
                                                                                     }));
                                                                               },
@@ -5740,7 +6189,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
             ankur.length,
             (index) => PopupMenuItem(
                 onTap: () {
-                  setState(() {
+                  super.setState(() {
                     indexx = index;
                   });
                   index == 0 ? CreateForum() : becomeAnExport();
@@ -5892,7 +6341,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
             (index) => PopupMenuItem(
                 enabled: true,
                 onTap: () {
-                  setState(() {
+                  super.setState(() {
                     indexx = index;
                   });
                 },
@@ -5927,45 +6376,11 @@ class _HomeScreenNewState extends State<HomeScreenNew>
     print("method caling");
     ImageDataPostOne? imageDataPost;
 
-    if (Platform.isAndroid) {
-      print("tHIS iS THE dATA gET");
-      final info = await DeviceInfoPlugin().androidInfo;
-      if (num.parse(await info.version.release).toInt() >= 13) {
-        if (await permissionHandler(context, Permission.photos) ?? false) {
-          imageDataPost = await Navigator.push(context,
-              MaterialPageRoute(builder: (context) {
-            return CreateStoryPage(
-              finalFileSize: finalFileSize,
-              finalvideoSize: finalvideoSize,
-            );
-          }));
-
-          if (imageDataPost?.object?.split('.').last == 'mp4') {
-            var parmes = {
-              "storyData": imageDataPost?.object,
-              "storyType": "VIDEO",
-              "videoDuration": imageDataPost?.videodurationGet
-            };
-            print("scdfhgsdfhsd-${parmes}");
-            Repository().cretateStoryApi(context, parmes);
-            isWatch = true;
-            Get_UserToken();
-          } else {
-            var parmes = {
-              "storyData": imageDataPost?.object.toString(),
-              "storyType": "TEXT",
-              "videoDuration": ''
-            };
-            print("CHECK:--------${parmes}");
-            Repository().cretateStoryApi(context, parmes);
-            isWatch = true;
-            Get_UserToken();
-          }
-        }
-      } else if (await permissionHandler(context, Permission.storage) ??
-          false) {
-        print("tHIS iS THE dATA ELSE");
-
+    // if (Platform.isAndroid) {
+    print("tHIS iS THE dATA gET");
+    final info = await DeviceInfoPlugin().androidInfo;
+    if (num.parse(await info.version.release).toInt() >= 13) {
+      if (await permissionHandler(context, Permission.photos) ?? false) {
         imageDataPost =
             await Navigator.push(context, MaterialPageRoute(builder: (context) {
           return CreateStoryPage(
@@ -5982,6 +6397,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
           };
           print("scdfhgsdfhsd-${parmes}");
           Repository().cretateStoryApi(context, parmes);
+          isWatch = true;
           Get_UserToken();
         } else {
           var parmes = {
@@ -5991,10 +6407,42 @@ class _HomeScreenNewState extends State<HomeScreenNew>
           };
           print("CHECK:--------${parmes}");
           Repository().cretateStoryApi(context, parmes);
+          isWatch = true;
           Get_UserToken();
         }
       }
+    } else if (await permissionHandler(context, Permission.storage) ?? false) {
+      print("tHIS iS THE dATA ELSE");
+
+      imageDataPost =
+          await Navigator.push(context, MaterialPageRoute(builder: (context) {
+        return CreateStoryPage(
+          finalFileSize: finalFileSize,
+          finalvideoSize: finalvideoSize,
+        );
+      }));
+
+      if (imageDataPost?.object?.split('.').last == 'mp4') {
+        var parmes = {
+          "storyData": imageDataPost?.object,
+          "storyType": "VIDEO",
+          "videoDuration": imageDataPost?.videodurationGet
+        };
+        print("scdfhgsdfhsd-${parmes}");
+        Repository().cretateStoryApi(context, parmes);
+        Get_UserToken();
+      } else {
+        var parmes = {
+          "storyData": imageDataPost?.object.toString(),
+          "storyType": "TEXT",
+          "videoDuration": ''
+        };
+        print("CHECK:--------${parmes}");
+        Repository().cretateStoryApi(context, parmes);
+        Get_UserToken();
+      }
     }
+    // }
     buttonDatas[0].images.add(StoryModel(
         imageDataPost?.object,
         DateTime.now().toIso8601String(),
@@ -6009,7 +6457,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
             imageName: '${imageDataPost?.object}',
           ));
       if (mounted)
-        setState(() {
+        super.setState(() {
           storyAdded = true;
         });
     }
@@ -6212,7 +6660,54 @@ class _HomeScreenNewState extends State<HomeScreenNew>
     } */
 
     showModalBottomSheet(
-        isScrollControlled: true,
+        context: context,
+        backgroundColor: Colors.white,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(15.0), topRight: Radius.circular(15.0)),
+        ),
+        builder: (context) {
+          return StatefulBuilder(
+              builder: (BuildContext context, StateSetter setState) {
+            return CommentBottomSheet(
+                isFoollinng:
+                    AllGuestPostRoomData?.object?.content?[index].isFollowing,
+                useruid:
+                    AllGuestPostRoomData?.object?.content?[index].userUid ?? "",
+                userProfile: AllGuestPostRoomData
+                        ?.object?.content?[index].userProfilePic ??
+                    "",
+                UserName: AllGuestPostRoomData
+                        ?.object?.content?[index].postUserName ??
+                    "",
+                desc:
+                    AllGuestPostRoomData?.object?.content?[index].description ??
+                        "",
+                postUuID:
+                    AllGuestPostRoomData?.object?.content?[index].postUid ??
+                        "");
+          }); /* Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.max,
+            children: <Widget>[
+              ListTile(
+                leading: Icon(Icons.email),
+                title: Text('Send email'),
+                onTap: () {
+                  print('Send email');
+                },
+              ),
+              ListTile(
+                leading: Icon(Icons.phone),
+                title: Text('Call phone'),
+                onTap: () {
+                  print('Call phone');
+                },
+              ),
+            ],
+          ); */
+        }
+        /*   isScrollControlled: true,
         useSafeArea: true,
         isDismissible: true,
         showDragHandle: true,
@@ -6242,7 +6737,8 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                     AllGuestPostRoomData?.object?.content?[index].postUid ??
                         "");
           });
-        }).then((value) {});
+        } */
+        ).then((value) {});
     ;
   }
 
@@ -6281,13 +6777,13 @@ class _HomeScreenNewState extends State<HomeScreenNew>
       FocusScope.of(context).unfocus();
     }
 
-    // setState(() {
+    // super.setState(() {
     isEmojiVisible = !isEmojiVisible;
 
     // });
   }
 
-  void onEmojiSelected(String emoji) => setState(() {
+  void onEmojiSelected(String emoji) => super.setState(() {
         addcomment.text = addcomment.text + emoji;
       });
 
@@ -6558,7 +7054,6 @@ class _VideoListItemState extends State<VideoListItem> {
         Uri.parse(widget.videoUrl),
       ),
     );
-    setState(() {});
   }
 
   @override

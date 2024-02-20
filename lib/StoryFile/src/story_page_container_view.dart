@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:collection';
+import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:flutter/gestures.dart';
@@ -64,8 +65,11 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
   String? User_ID;
   StoryViewListModel? StoryViewListModelData;
   late PointerUpEvent event1;
+  PointerUpEvent eventdata = PointerUpEvent();
+
   DeleteStory? deleteStory;
   bool ifVideoPlayer = false;
+  bool isMounted = true;
   String lastLoggedTime = "";
   Duration? durationOfVideo;
   int countcheck = 0;
@@ -74,7 +78,9 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
   dataFunctionSetup() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     User_ID = prefs.getString(PreferencesKey.loginUserID);
-    setState(() {});
+    if (mounted) {
+      super.setState(() {});
+    }
   }
 
   FocusNode? _focusNode;
@@ -110,11 +116,13 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
       _controller = VideoPlayerController.networkUrl(
           (Uri.parse('${widget.buttonData.images[_curSegmentIndex].image}')))
         ..initialize().then((_) {
-          setState(() {
-            ifVideoPlayer = true;
-            durationOfVideo = _controller!.value.duration;
-            _controller?.play();
-          });
+          if (mounted) {
+            super.setState(() {
+              ifVideoPlayer = true;
+              durationOfVideo = _controller!.value.duration;
+              _controller?.play();
+            });
+          }
         });
     }
   }
@@ -144,20 +152,26 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
         _controller = VideoPlayerController.networkUrl(
             (Uri.parse('${widget.buttonData.images[_curSegmentIndex].image}')))
           ..initialize().then((_) {
-            setState(() {
-              ifVideoPlayer = true;
-              durationOfVideo = _controller!.value.duration;
-              _controller?.play();
-            });
+            if (mounted) {
+              super.setState(() {
+                ifVideoPlayer = true;
+                durationOfVideo = _controller!.value.duration;
+                _controller?.play();
+              });
+            }
           });
       } else {
-        setState(() {
-          ifVideoPlayer = false;
-          _controller?.dispose();
-        });
+        if (mounted) {
+          super.setState(() {
+            ifVideoPlayer = false;
+            _controller?.dispose();
+          });
+        }
       }
     }
-    setState(() {});
+    if (mounted) {
+      super.setState(() {});
+    }
   }
 
   Widget _buildCloseButton() {
@@ -171,12 +185,32 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
         child: MaterialButton(
           padding: EdgeInsets.zero,
           onPressed: () {
-            if (widget.onClosePressed != null) {
+            print("this is the check -${isDataGet}");
+            if (isDataGet == true) {
+              print("this is Data Get");
+              _storyController!.unpause();
+
+              WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+                if (mounted) {
+                  super.setState(() {
+                    _focusNode?.unfocus();
+                    isDataGet = false;
+                    isBottomSheetOpen = false;
+                  });
+                }
+              });
+              widget.onClosePressed!.call();
+            } else if (widget.onClosePressed != null) {
+              widget.onClosePressed!.call();
+            } else {
+              Navigator.of(context).pop();
+            }
+            /*  if (widget.onClosePressed != null) {
               widget.onClosePressed!.call();
             } else {
               _controller?.dispose();
               Navigator.of(context).pop();
-            }
+            } */
           },
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(
@@ -341,14 +375,12 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
 
           // Image has been loaded
           imageLoaded = true;
-
           _storyController!.unpause();
-
           if (DummyStoryViewBool == true) {
             StoryView = true;
             BlocProvider.of<ViewStoryCubit>(context).StoryViewList(context,
                 "${widget.buttonData.images[_curSegmentIndex].storyUid}");
-            setState(() {});
+            super.setState(() {});
           }
         }
       }),
@@ -388,44 +420,39 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
             ),
           )
         : StoryPageScaffold(
-            body: widget.buttonData.images[_curSegmentIndex].image!
-                    .contains("car")
-                ? Container(
-                    width: double.infinity,
-                    height: double.infinity,
-                    decoration: BoxDecoration(
-                      image: widget.buttonData.images[_curSegmentIndex].image!
-                              .contains("car")
-                          ? DecorationImage(
-                              image: AssetImage(ImageConstant.pdslogo),
-                              fit: BoxFit.cover,
-                            )
-                          : DecorationImage(
-                              image: networkImage,
-                              fit: BoxFit.cover,
-                            ),
+            body: Container(
+            width: double.infinity,
+            height: double.infinity,
+            decoration: BoxDecoration(
+              image: widget.buttonData.images[_curSegmentIndex].image!
+                      .contains("car")
+                  ? DecorationImage(
+                      image: AssetImage(ImageConstant.pdslogo),
+                      fit: BoxFit.cover,
+                    )
+                  : DecorationImage(
+                      image: networkImage,
+                      fit: BoxFit.cover,
                     ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          Text(
-                            '',
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 30.0,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          )
-                        ],
-                      ),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Text(
+                    '',
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 30.0,
+                      fontWeight: FontWeight.bold,
                     ),
                   )
-                : ZoomableImage(
-                    imageUrl: widget.buttonData.images[_curSegmentIndex].image!,
-                  ));
+                ],
+              ),
+            ),
+          ));
   }
 
   Widget _buildPageContent1() {
@@ -451,7 +478,7 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
           StoryView = true;
           BlocProvider.of<ViewStoryCubit>(context).StoryViewList(context,
               "${widget.buttonData.images[_curSegmentIndex].storyUid}");
-          setState(() {});
+          super.setState(() {});
         }
       }
     });
@@ -537,7 +564,7 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
         _storyController!.unpause();
       },
       child: GestureDetector(
-        onVerticalDragStart: (details) {
+        /*  onVerticalDragStart: (details) {
           if (User_ID != widget.buttonData.images[_curSegmentIndex].userUid) {
             final pointerUpMillis = _stopwatch.elapsedMilliseconds;
             final maxPressMillis = kPressTimeout.inMilliseconds * 2;
@@ -556,7 +583,7 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
             }
             FocusScope.of(context).requestFocus(_focusNode);
             WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-              setState(() {
+              super.setState(() {
                 isDataGet = true;
                 isBottomSheetOpen = true;
               });
@@ -569,12 +596,12 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
           _storyController?.pause();
           _focusNode?.unfocus();
           WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-            setState(() {
+            super.setState(() {
               isDataGet = false;
               isBottomSheetOpen = false;
             });
           });
-        },
+        }, */
         /* onVerticalDragEnd: (details) {
            final pointerUpMillis = _stopwatch.elapsedMilliseconds;
         final maxPressMillis = kPressTimeout.inMilliseconds * 2;
@@ -595,7 +622,7 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
         _storyController!.unpause();
         FocusScope.of(context).unfocus();
         WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-              setState(() {
+              super.setState(() {
                 isDataGet = false;
                 
               });
@@ -620,14 +647,19 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
                     widget.buttonData.images[_curSegmentIndex].userUid ==
                             User_ID
                         ? GestureDetector(
+                            
                             onTapDown: (details) {
+                              print("dfgdgdfhgdfhhfghghdfhgdfhgdfh");
                               _pointerDownMillis =
                                   _stopwatch.elapsedMilliseconds;
                               _pointerDownPosition = details.localPosition;
                               _storyController!.pause();
-                              setState(() {
-                                isBottomSheetOpen = true;
-                              });
+                              if (mounted) {
+                                super.setState(() {
+                                  isBottomSheetOpen = true;
+                                });
+                              }
+
                               showModalBottomSheet(
                                   isScrollControlled: true,
                                   useSafeArea: true,
@@ -884,9 +916,12 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
                                   }
                                 }
                                 print("bottom sheet closed : unpause");
-                                setState(() {
-                                  isBottomSheetOpen = false;
-                                });
+                                if (mounted) {
+                                  super.setState(() {
+                                    isBottomSheetOpen = false;
+                                  });
+                                }
+
                                 _storyController!.unpause();
                               });
                             },
@@ -932,10 +967,10 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
                   : SizedBox(),
               if (User_ID != widget.buttonData.images[_curSegmentIndex].userUid)
                 Positioned(
-                    bottom: 0,
+                    bottom: 30,
                     child: Container(
                       height: 50,
-                      margin: EdgeInsets.only(left: 10, right: 10),
+                      margin: EdgeInsets.only(left: 15, right: 15),
                       width: MediaQuery.of(context).size.height / 2.4,
                       alignment: Alignment.center,
                       decoration: BoxDecoration(
@@ -949,14 +984,45 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
                               focusNode: _focusNode,
                               minLines: 1,
                               maxLines: null,
+                              onTap: () {
+                                print("else working");
+                                if (User_ID !=
+                                    widget.buttonData.images[_curSegmentIndex]
+                                        .userUid) {
+                                  _storyController!.pause();
+                                  FocusScope.of(context)
+                                      .requestFocus(_focusNode);
+                                  WidgetsBinding.instance
+                                      .addPostFrameCallback((timeStamp) {
+                                    if (mounted) {
+                                      super.setState(() {
+                                        isBottomSheetOpen = true;
+                                        isDataGet = true;
+                                      });
+                                    }
+                                  });
+                                }
+                              },
                               onChanged: (value) {
-                                print("value Get-$value");
+                                if (value.isEmpty) {
+                                  if (mounted) {
+                                    setState(() {
+                                      isDataGet = true;
+                                    });
+                                  }
+                                } else {
+                                  if (mounted) {
+                                    setState(() {
+                                      isDataGet = false;
+                                    });
+                                  }
+                                }
                               },
                               style: TextStyle(color: Colors.white),
                               decoration: InputDecoration(
                                   contentPadding: EdgeInsets.only(
-                                    left: 10,
-                                    right: 10,
+                                    left: 15,
+                                    right: 15,
                                   ),
                                   hintText: 'Send Meesage',
                                   hintStyle: TextStyle(color: Colors.white),
@@ -972,7 +1038,22 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
                                       .storyUid
                                       .toString());
 
-                              Navigator.of(context).pop();
+                              if (User_ID !=
+                                  widget.buttonData.images[_curSegmentIndex]
+                                      .userUid) {
+                                reactionData.clear();
+                                _storyController!.unpause();
+                                WidgetsBinding.instance
+                                    .addPostFrameCallback((timeStamp) {
+                                  if (mounted) {
+                                    super.setState(() {
+                                      _focusNode?.unfocus();
+                                      isDataGet = false;
+                                      isBottomSheetOpen = false;
+                                    });
+                                  }
+                                });
+                              }
                             },
                             child: Text(
                               'Send',
@@ -1068,6 +1149,7 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
     _stopwatch.stop();
     _storyController!.removeListener(_onTimelineEvent);
     _controller?.dispose();
+    durationOfVideo = null;
     super.dispose();
   }
 
@@ -1136,6 +1218,20 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
     Repository().reactionMessageAddedOnStory(context, emoji,
         widget.buttonData.images[_curSegmentIndex].storyUid.toString(),
         emojiReaction: true);
+
+    if (User_ID != widget.buttonData.images[_curSegmentIndex].userUid) {
+      _storyController!.unpause();
+      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+        if (mounted) {
+          super.setState(() {
+            _focusNode?.unfocus();
+            isDataGet = false;
+            isBottomSheetOpen = false;
+          });
+        }
+      });
+    }
+
     // Navigator.of(context).pop(); // Close the dialog
   }
 
@@ -1274,7 +1370,7 @@ class _StoryTimelineState extends State<StoryTimeline> {
         }
       }
       if (mounted) {
-        setState(() {});
+        super.setState(() {});
       }
     }
   }
@@ -1479,10 +1575,11 @@ class _ZoomableImageState extends State<ZoomableImage> {
     bytes = response.bodyBytes;
 
     final memoryImage = MemoryImage(Uint8List.fromList(bytes!));
-
-    setState(() {
-      _memoryImage = memoryImage;
-    });
+    if (mounted) {
+      super.setState(() {
+        _memoryImage = memoryImage;
+      });
+    }
   }
 
   Widget build(BuildContext context) {

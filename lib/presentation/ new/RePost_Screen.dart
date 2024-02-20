@@ -82,7 +82,7 @@ class _RePostScreenState extends State<RePostScreen> {
         prefs.getString(PreferencesKey.MaxPostUploadSizeInMB) ?? "0");
 
     finalFileSize = documentuploadsize;
-    setState(() {});
+    super.setState(() {});
   }
 
   @override
@@ -93,7 +93,7 @@ class _RePostScreenState extends State<RePostScreen> {
     initAsync();
     Future.delayed(Duration(milliseconds: 150), () {
       if (mounted) {
-        setState(() {
+        super.setState(() {
           _opacity = 1.0;
         });
       }
@@ -174,7 +174,7 @@ class _RePostScreenState extends State<RePostScreen> {
         pageControllers.add(PageController());
         currentPages.add(0);
       });
-      WidgetsBinding.instance.addPostFrameCallback((timeStamp) => setState(() {
+      WidgetsBinding.instance.addPostFrameCallback((timeStamp) => super.setState(() {
             added = true;
           }));
     }
@@ -199,8 +199,8 @@ class _RePostScreenState extends State<RePostScreen> {
           print("this condison is working");
           _controller = VideoPlayerController.networkUrl(
               Uri.parse('${imageDataPost!.object!.data!.first}'));
-          _controller?.initialize().then((value) => setState(() {}));
-          setState(() {
+          _controller?.initialize().then((value) => super.setState(() {}));
+          super.setState(() {
             _controller?.play();
             _controller?.setLooping(true);
           });
@@ -210,8 +210,8 @@ class _RePostScreenState extends State<RePostScreen> {
         //     _controllersRepost = VideoPlayerController.networkUrl(
         //         Uri.parse('${widget.postData?[i]}'));
         //     print("video list -- ${widget.postData}");
-        //     _controllersRepost?.initialize().then((value) => setState(() {}));
-        //     setState(() {
+        //     _controllersRepost?.initialize().then((value) => super.setState(() {}));
+        //     super.setState(() {
         //       _controllersRepost?.play();
         //       _controllersRepost?.pause();
         //       _controllersRepost?.setLooping(true);
@@ -563,7 +563,7 @@ class _RePostScreenState extends State<RePostScreen> {
                                         ],
                                         onChanged: (value) {
                                           onChangeMethod(value);
-                                          setState(() {
+                                          super.setState(() {
                                             primaryColor = value.isNotEmpty
                                                 ? ColorConstant.primary_color
                                                 : ColorConstant.primaryLight_color;
@@ -594,12 +594,12 @@ class _RePostScreenState extends State<RePostScreen> {
                                                     //   onTap: () {
                                                     //     if (_controller!.value
                                                     //         .isPlaying) {
-                                                    //       setState(() {
+                                                    //       super.setState(() {
                                                     //         _controller
                                                     //             ?.pause();
                                                     //       });
                                                     //     } else {
-                                                    //       setState(() {
+                                                    //       super.setState(() {
                                                     //         _controller
                                                     //             ?.play();
                                                     //       });
@@ -661,7 +661,7 @@ class _RePostScreenState extends State<RePostScreen> {
                                                                     .builder(
                                                                   onPageChanged:
                                                                       (value) {
-                                                                    setState(
+                                                                    super.setState(
                                                                         () {
                                                                       _currentPages =
                                                                           value;
@@ -976,11 +976,11 @@ class _RePostScreenState extends State<RePostScreen> {
                                                               //                       onTap: () {
                                                               //                         // _playPause(index);
                                                               //                         if (_controllersRepost!.value.isPlaying) {
-                                                              //                           setState(() {
+                                                              //                           super.setState(() {
                                                               //                             _controllersRepost!.pause();
                                                               //                           });
                                                               //                         } else {
-                                                              //                           setState(() {
+                                                              //                           super.setState(() {
                                                               //                             _controllersRepost!.play();
                                                               //                           });
                                                               //                         }
@@ -1065,7 +1065,7 @@ class _RePostScreenState extends State<RePostScreen> {
                                                                             .builder(
                                                                           onPageChanged:
                                                                               (page) {
-                                                                            setState(() {
+                                                                            super.setState(() {
                                                                               currentPages[widget.index ?? 0] = page;
                                                                             });
                                                                           },
@@ -1250,7 +1250,7 @@ class _RePostScreenState extends State<RePostScreen> {
                                                           );
                                                           file12 = null;
                                                           pickedImage.isEmpty;
-                                                          setState(() {});
+                                                          super.setState(() {});
                                                           print(
                                                               "medium1!.id--.${medium1?.filename}");
                                                           BlocProvider.of<
@@ -1376,7 +1376,7 @@ class _RePostScreenState extends State<RePostScreen> {
           for (var i = 0; i < xFilePicker.length; i++) {
             if (!_isGifOrSvg(xFilePicker[i].path)) {
               pickedImage.add(File(xFilePicker[i].path));
-              setState(() {});
+              super.setState(() {});
               getFileSize1(pickedImage[i].path, 1, pickedImage[i], 0);
               if ((xFilePicker[i].path.contains(".mp4")) ||
                   (xFilePicker[i].path.contains(".mov")) ||
@@ -1471,7 +1471,7 @@ class _RePostScreenState extends State<RePostScreen> {
           context,
           pickedImage,
         );
-        setState(() {});
+        super.setState(() {});
 
         break;
       case 2:
@@ -1524,12 +1524,12 @@ class _RePostScreenState extends State<RePostScreen> {
       if (albums.isNotEmpty) {
         page = await albums.first.listMedia();
       }
-      setState(() {
+      super.setState(() {
         _albums = albums;
         _loading = false;
       });
     }
-    setState(() {
+    super.setState(() {
       _loading = false;
     });
   }
@@ -1625,7 +1625,7 @@ class _RePostScreenState extends State<RePostScreen> {
         switch (Index) {
           case 1:
             if (file1.name.isNotEmpty || file1.name.toString() == null) {
-              setState(() {
+              super.setState(() {
                 file12 = file1;
               });
             }
@@ -1642,7 +1642,7 @@ class _RePostScreenState extends State<RePostScreen> {
           case 0:
             print("file1.name-->${file1.name}");
             if (file1.name.isNotEmpty || file1.name.toString() == null) {
-              setState(() {
+              super.setState(() {
                 file12 = file1;
               });
             }
@@ -1655,7 +1655,7 @@ class _RePostScreenState extends State<RePostScreen> {
         BlocProvider.of<RePostCubit>(context)
             .UplodeImageAPI(context, file1.name, file1.path.toString());
 
-        setState(() {});
+        super.setState(() {});
 
         break;
       case 2:
@@ -1696,7 +1696,7 @@ class _RePostScreenState extends State<RePostScreen> {
           }
           print('filecheckPath1111-${file1.name}');
           print("file222.name-->${file1.name}");
-          setState(() {
+          super.setState(() {
             file12 = file1;
           });
 
@@ -1717,7 +1717,7 @@ class _RePostScreenState extends State<RePostScreen> {
         preferredCameraDevice: CameraDevice.front,
         maxDuration: const Duration(minutes: 10));
     XFile? xfilePick = pickedFile;
-    setState(
+    super.setState(
       () {
         galleryFile.clear();
         if (xfilePick != null) {
@@ -1798,7 +1798,7 @@ class _RePostScreenState extends State<RePostScreen> {
             soicalData.length,
             (index) => PopupMenuItem(
                 onTap: () {
-                  setState(() {
+                  super.setState(() {
                     indexx = index;
                   });
                 },
@@ -1824,7 +1824,7 @@ class _RePostScreenState extends State<RePostScreen> {
   }
 
   onChangeMethod(String value) {
-    setState(() {
+    super.setState(() {
       postText1.text = value;
     });
     if (value.contains('@')) {
@@ -1851,7 +1851,7 @@ class _RePostScreenState extends State<RePostScreen> {
       BlocProvider.of<RePostCubit>(context)
           .GetAllHashtag(context, '10', '#${data1.trim()}');
     } else {
-      setState(() {
+      super.setState(() {
         istageData = false;
         isHeshTegData = false;
       });
@@ -1902,7 +1902,7 @@ class _RePostScreenState extends State<RePostScreen> {
           ScaffoldMessenger.of(context).showSnackBar(snackBar);
         } else { */
         if (CreatePostDone == true) {
-          setState(() {
+          super.setState(() {
             isrepostDataSet = false;
           });
           if (postText1.text.isNotEmpty && file?.path != null) {

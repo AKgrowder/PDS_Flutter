@@ -54,7 +54,8 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
   double value2 = 0.0;
   double finalFileSize = 0;
   double documentuploadsize = 0;
-  String? dopcument;
+  String? dopcument
+  ;
   String? filepath;
   bool? SubmitOneTime = false;
   ChooseDocument? chooseDocument;
@@ -70,7 +71,7 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
         await double.parse(prefs.getString(PreferencesKey.fileSize) ?? "0");
 
     finalFileSize = documentuploadsize;
-    setState(() {});
+    super.setState(() {});
   }
 
   @override
@@ -374,7 +375,7 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
                                   industryUUID
                                       .add("${element.industryTypeUid}");
                                 });
-                                setState(() {});
+                                super.setState(() {});
                               },
                             ),
                           ),
@@ -420,7 +421,7 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
                               ? GestureDetector(
                                   onTap: () async {
                                     filepath = await prepareTestPdf(0);
-                                    setState(() {
+                                    super.setState(() {
                                       uplopdfile.text = dopcument.toString();
                                     });
                                     print('filepath-${uplopdfile.text}');
@@ -451,7 +452,7 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
                                     dopcument = "Upload Document";
                                     chooseDocument?.object = null;
 
-                                    setState(() {});
+                                    super.setState(() {});
                                   },
                                   child: Container(
                                     height: 50,
@@ -572,7 +573,7 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
                           };
 
                           print('button-$params');
-
+                          print("workdsbfdsgfdsgf-${uplopdfile.text}");
                           if (SubmitOneTime == false) {
                             print(
                                 "${dopcument} :- dopcumentdopcumentdopcumentdopcumentdopcumentdopcument");
@@ -773,7 +774,7 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
         print("Done file size B");
         switch (Index) {
           case 1:
-            setState(() {
+            super.setState(() {
               uplopdfile.text = file1.name;
               dopcument = file1.name;
             });
@@ -787,7 +788,7 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
         switch (Index) {
           case 0:
             print('filenamecheckdocmenut-${dopcument}');
-            setState(() {
+            super.setState(() {
               uplopdfile.text = file1.name;
               dopcument = file1.name;
             });
@@ -826,7 +827,7 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
           );
           if (croppedFile != null) {
             dopcument = file1.name;
-            /* setState(() {
+            /* super.setState(() {
               uplopdfile.text = croppedFile.path.split('/').last;
               dopcument = file1.name;
             }); */
@@ -836,7 +837,7 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
           } else {
             BlocProvider.of<CreatFourmCubit>(context).chooseDocumentprofile(
                 dopcument.toString(), file1.path!, context);
-            setState(() {
+            super.setState(() {
               uplopdfile.text = file1.name;
               dopcument = file1.name;
             });
@@ -844,7 +845,7 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
           }
         }
 
-        setState(() {});
+        super.setState(() {});
         break;
       case 2:
         if (value2 > finalFileSize) {
@@ -875,7 +876,7 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
 
           switch (Index) {
             case 1:
-              setState(() {
+              super.setState(() {
                 uplopdfile.text = file1.name;
                 dopcument = file1.name;
               });
@@ -884,7 +885,7 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
             default:
           }
 
-          /*    setState(() {
+          /*    super.setState(() {
             uplopdfile.text = file1.name;
             dopcument = file1.name;
           }); */

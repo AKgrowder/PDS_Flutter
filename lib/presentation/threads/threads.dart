@@ -100,7 +100,7 @@
 //                                   ),
 //                                   GestureDetector(
 //                                     onTap: () {
-//                                       setState(() {
+//                                       super.setState(() {
 //                                         if (image?.contains(index) ?? false) {
 //                                           image?.remove(index);
 //                                         } else {

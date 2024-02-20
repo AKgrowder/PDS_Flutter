@@ -23,23 +23,23 @@ class _VideoFullScreenState extends State<VideoFullScreen> {
       _controllers =
           VideoPlayerController.networkUrl(Uri.parse('${widget.postData?[i]}'));
 
-      _controllers?.initialize().then((value) => setState(() {
+      _controllers?.initialize().then((value) => super.setState(() {
             _endDuration = _controllers?.value.duration;
           }));
-      setState(() {
+      super.setState(() {
         _controllers?.play();
         _controllers?.pause();
         _controllers?.setLooping(true);
         _controllers?.videoPlayerOptions?.allowBackgroundPlayback;
 
-        _controllers?.addListener(() => setState(() {
+        _controllers?.addListener(() => super.setState(() {
               if (_controllers?.value.isPlaying ?? false) {
-                setState(() {
+                super.setState(() {
                   _startDuration = _controllers?.value.position;
                   _endDuration = _controllers?.value.duration;
                 });
               } else {
-                setState(() {
+                super.setState(() {
                   _startDuration = _controllers?.value.position;
                   _endDuration = _controllers?.value.duration;
                   ;
@@ -126,11 +126,11 @@ class _VideoFullScreenState extends State<VideoFullScreen> {
                 onTap: () {
                   // _playPause(index);
                   if (_controllers!.value.isPlaying) {
-                    setState(() {
+                    super.setState(() {
                       _controllers?.pause();
                     });
                   } else {
-                    setState(() {
+                    super.setState(() {
                       _controllers?.play();
                     });
                   }

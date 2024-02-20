@@ -60,7 +60,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
     userId = prefs.getString(
       PreferencesKey.loginUserID,
     );
-    setState(() {});
+    super.setState(() {});
   }
 
   @override
@@ -87,11 +87,10 @@ class _RoomsScreenState extends State<RoomsScreen> {
       await BlocProvider.of<GetAllPrivateRoomCubit>(context)
           .chckUserStaus(context);
 
-      // Timer.periodic(Duration(seconds: 15), (_) {
-        // print("Room Socket ++++++++++++++++++++++++++++++++++++++++++++++++++++");
+      
       await  BlocProvider.of<GetAllPrivateRoomCubit>(context)
             .getAllNoticationsCountAPI(context);
-      // });
+   
     }
 
     await BlocProvider.of<GetAllPrivateRoomCubit>(context)
@@ -1178,9 +1177,9 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                             ),
                                           ),
                                           SizedBox(
-                                            height: 20,
+                                            height: 10,
                                           ),
-                                          Padding(
+                                          /* Padding(
                                             padding: const EdgeInsets.only(
                                                 left: 8.0),
                                             child: Padding(
@@ -1212,7 +1211,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                                   // SizedBox(width: 10,),
                                                   GestureDetector(
                                                     onTap: () {
-                                                      // setState(() {
+                                                      // super.setState(() {
                                                       //   if (imagee?.contains(
                                                       //           index) ??
                                                       //       false) {
@@ -1296,7 +1295,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                                   // ),
                                                   GestureDetector(
                                                     onTap: () {
-                                                      // setState(() {
+                                                      // super.setState(() {
                                                       //   if (closee?.contains(
                                                       //           index) ??
                                                       //       false) {
@@ -1378,9 +1377,9 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                                 ],
                                               ),
                                             ),
-                                          ),
+                                          ), */
 
-                                          Padding(
+                                          /* Padding(
                                             padding: const EdgeInsets.only(
                                                 left: 8.0),
                                             child: Padding(
@@ -1411,7 +1410,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                                   // Spacer(),
                                                   GestureDetector(
                                                     onTap: () {
-                                                      // setState(() {
+                                                      // super.setState(() {
                                                       //   if (image?.contains(
                                                       //           index) ??
                                                       //       false) {
@@ -1495,7 +1494,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                                   // ),
                                                   GestureDetector(
                                                     onTap: () {
-                                                      // setState(() {
+                                                      // super.setState(() {
                                                       //   if (close?.contains(
                                                       //           index) ??
                                                       //       false) {
@@ -1577,7 +1576,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                                 ],
                                               ),
                                             ),
-                                          ),
+                                          ), */
                                           GestureDetector(
                                             onTap: () {
                                               Navigator.push(context,
