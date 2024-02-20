@@ -6,6 +6,7 @@ import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/core/utils/image_constant.dart';
 
 import '../API/Bloc/BlockUser_Bloc/Block_user_cubit.dart';
+import '../API/Bloc/NewProfileScreen_Bloc/NewProfileScreen_cubit.dart';
 
 class BlockUserdailog extends StatefulWidget {
   String? blockUserID;
@@ -61,6 +62,8 @@ class BlockUserdailogState extends State<BlockUserdailog>
           );
           ScaffoldMessenger.of(context).showSnackBar(snackBar);
           Navigator.pop(context);
+          BlocProvider.of<NewProfileSCubit>(context)
+              .NewProfileSAPI(context, widget.blockUserID.toString(), true);
         }
       },
       builder: (context, state) {
