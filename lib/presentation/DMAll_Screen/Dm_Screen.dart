@@ -9,13 +9,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
+import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:linkfy_text/linkfy_text.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:pds/API/ApiService/DMSocket.dart';
 import 'package:pds/API/Bloc/dmInbox_bloc/dmMessageState.dart';
-import 'package:pds/API/Bloc/senMSG_Bloc/senMSG_cubit.dart';
 import 'package:pds/API/Model/createDocumentModel/createDocumentModel.dart';
 import 'package:pds/API/Model/inboxScreenModel/inboxScrrenModel.dart';
 import 'package:pds/API/Model/story_model.dart';
@@ -25,21 +24,16 @@ import 'package:pds/StoryFile/src/story_route.dart';
 import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/core/utils/image_constant.dart';
 import 'package:pds/core/utils/sharedPreferences.dart';
-import 'package:pds/main.dart';
 import 'package:pds/presentation/%20new/profileNew.dart';
-import 'package:pds/presentation/DMAll_Screen/videocallScreen.dart';
-import 'package:pds/widgets/Unblocked_userChat_dailog.dart';
-import 'package:video_thumbnail/video_thumbnail.dart';
-
 import 'package:pds/presentation/create_story/full_story_page.dart';
 import 'package:pds/presentation/gallery_All_Image.dart/gallery_All_image.dart';
 // import 'package:pds/presentation/%20new/notifaction2.dart';
 import 'package:pds/presentation/view_comments/view_comments_screen.dart';
 import 'package:pds/theme/theme_helper.dart';
+import 'package:pds/widgets/Unblocked_userChat_dailog.dart';
 import 'package:pds/widgets/animatedwiget.dart';
 import 'package:pds/widgets/custom_image_view.dart';
 import 'package:pds/widgets/pagenation.dart';
-import 'package:pds/widgets/videocallcommennotifaction.dart/videocallcommenmethod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stomp_dart_client/stomp_frame.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -47,7 +41,6 @@ import 'package:video_thumbnail/video_thumbnail.dart';
 
 import '../../API/Bloc/dmInbox_bloc/dminbox_blcok.dart';
 import '../register_create_account_screen/register_create_account_screen.dart';
-import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 
 class DmScreen extends StatefulWidget {
   String UserName;
@@ -925,18 +918,18 @@ class _DmScreenState extends State<DmScreen> {
                                                                                         child: Padding(
                                                                                           padding: const EdgeInsets.only(top: 0, left: 3),
                                                                                           child: Container(
-                                                                                            decoration: BoxDecoration(color: ColorConstant.ChatBackColor, borderRadius: BorderRadius.circular(5)),
+                                                                                            decoration: BoxDecoration(color: ColorConstant.ChatBackColor, borderRadius: BorderRadius.circular(10)),
                                                                                             child: Column(
                                                                                               crossAxisAlignment: CrossAxisAlignment.start,
                                                                                               mainAxisAlignment: MainAxisAlignment.start,
                                                                                               children: [
                                                                                                 Padding(
-                                                                                                  padding: const EdgeInsets.only(left: 3, right: 3),
+                                                                                                  padding: const EdgeInsets.only(left: 5, right: 3),
                                                                                                   child: Text(
                                                                                                     "${getInboxMessagesModel?.object?.content?[index].message ?? ""}",
                                                                                                     // maxLines: 3,
                                                                                                     textScaleFactor: 1.0,
-                                                                                                    style: TextStyle(fontWeight: FontWeight.w500, color: Colors.black, fontFamily: "outfit", fontSize: 13),
+                                                                                                    style: TextStyle(fontWeight: FontWeight.w500, color: Colors.black, fontFamily: "outfit", fontSize: 14),
                                                                                                   ),
                                                                                                 ),
                                                                                                 // Padding(
@@ -1309,13 +1302,13 @@ class _DmScreenState extends State<DmScreen> {
                                                                                         padding: const EdgeInsets.only(top: 3),
                                                                                         child: Container(
                                                                                           margin: EdgeInsets.only(left: 10, right: 10),
-                                                                                          decoration: BoxDecoration(color: ColorConstant.otheruserchat, borderRadius: BorderRadius.circular(5)),
+                                                                                          decoration: BoxDecoration(color: ColorConstant.otheruserchat, borderRadius: BorderRadius.circular(10)),
                                                                                           child: Column(
                                                                                             crossAxisAlignment: CrossAxisAlignment.end,
                                                                                             mainAxisAlignment: MainAxisAlignment.end,
                                                                                             children: [
                                                                                               Padding(
-                                                                                                padding: const EdgeInsets.only(left: 3, right: 3),
+                                                                                                padding: const EdgeInsets.only(left: 3, right: 5),
                                                                                                 /*  child: Text(
                                                                                               "${getInboxMessagesModel?.object?.content?[index].message ?? ""}", //ankurChek
                                                                                               // maxLines: 3,
