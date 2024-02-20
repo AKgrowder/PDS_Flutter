@@ -28,6 +28,7 @@ import 'package:pds/core/utils/sharedPreferences.dart';
 import 'package:pds/main.dart';
 import 'package:pds/presentation/%20new/profileNew.dart';
 import 'package:pds/presentation/DMAll_Screen/videocallScreen.dart';
+import 'package:pds/widgets/Unblocked_userChat_dailog.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
 
 import 'package:pds/presentation/create_story/full_story_page.dart';
@@ -55,13 +56,15 @@ class DmScreen extends StatefulWidget {
   String UserImage;
   String? videoId;
   bool? isExpert;
+  bool? isBlock;
   DmScreen(
       {required this.ChatInboxUid,
       required this.UserName,
       required this.UserUID,
       required this.UserImage,
       this.videoId,
-      this.isExpert});
+      this.isExpert,
+      this.isBlock});
 
   @override
   State<DmScreen> createState() => _DmScreenState();
@@ -300,6 +303,22 @@ class _DmScreenState extends State<DmScreen> {
         isEmojiVisible = false;
       }
     });
+
+    if (widget.isBlock == true) {
+      Future.delayed(
+        Duration(
+          milliseconds: 2,
+        ),
+        () {
+          showDialog(
+            context: context,
+            builder: (_) => UnBlockUserChatdailog(
+              userName: widget.UserName,
+            ),
+          );
+        },
+      );
+    }
 
     super.initState();
   }
@@ -557,7 +576,8 @@ class _DmScreenState extends State<DmScreen> {
                                   ),
                                   if (widget.isExpert == true)
                                     Padding(
-                                      padding: const EdgeInsets.only(left: 4,top: 3),
+                                      padding: const EdgeInsets.only(
+                                          left: 4, top: 3),
                                       child: Image.asset(
                                         ImageConstant.Star,
                                         height: 15,
@@ -710,10 +730,8 @@ class _DmScreenState extends State<DmScreen> {
                                                             context)
                                                         .DMChatListApiPagantion(
                                                             widget.ChatInboxUid,
-                                                          
-                                                            p0+1,
-                                                            context 
-                                                            );
+                                                            p0 + 1,
+                                                            context);
                                                   },
                                                   offSet: (getInboxMessagesModel
                                                       ?.object
@@ -1290,7 +1308,7 @@ class _DmScreenState extends State<DmScreen> {
                                                                                       child: Padding(
                                                                                         padding: const EdgeInsets.only(top: 3),
                                                                                         child: Container(
-                                                                                          margin: EdgeInsets.only(left: 10,right: 10),
+                                                                                          margin: EdgeInsets.only(left: 10, right: 10),
                                                                                           decoration: BoxDecoration(color: ColorConstant.otheruserchat, borderRadius: BorderRadius.circular(5)),
                                                                                           child: Column(
                                                                                             crossAxisAlignment: CrossAxisAlignment.end,
@@ -1307,7 +1325,12 @@ class _DmScreenState extends State<DmScreen> {
                                                                                                 child: LinkifyText(
                                                                                                   "${getInboxMessagesModel?.object?.content?[index].message ?? ""}",
                                                                                                   linkStyle: TextStyle(fontWeight: FontWeight.w500, color: Colors.blue, fontFamily: "outfit", fontSize: 13, decoration: TextDecoration.underline, decorationColor: Colors.blue),
-                                                                                                  textStyle: TextStyle(fontWeight: FontWeight.bold, color: Colors.black, fontFamily: "outfit", fontSize: 13,),
+                                                                                                  textStyle: TextStyle(
+                                                                                                    fontWeight: FontWeight.bold,
+                                                                                                    color: Colors.black,
+                                                                                                    fontFamily: "outfit",
+                                                                                                    fontSize: 13,
+                                                                                                  ),
                                                                                                   linkTypes: [
                                                                                                     LinkType.url,
 
