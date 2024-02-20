@@ -235,6 +235,8 @@ class _HomeScreenNewState extends State<HomeScreenNew>
 
   @override
   void initState() {
+    super.initState();
+
     Get_UserToken();
     myScroll();
 
@@ -242,7 +244,6 @@ class _HomeScreenNewState extends State<HomeScreenNew>
     VersionControll();
     getDocumentSize();
     WidgetsBinding.instance.addObserver(this);
-    super.initState();
   }
 
   @override
