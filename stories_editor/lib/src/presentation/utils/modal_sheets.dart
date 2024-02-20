@@ -112,7 +112,14 @@ Future<bool> exitDialog(
                       textAlign: TextAlign.center,
                     ),
                   ),
-                  const SizedBox(
+                   const SizedBox(
+                    height: 22,
+                    child: Divider(
+                      color: Colors.white10,
+                    ),
+                  ),
+
+                 /*  const SizedBox(
                     height: 22,
                     child: Divider(
                       color: Colors.white10,
@@ -166,7 +173,7 @@ Future<bool> exitDialog(
                     child: Divider(
                       color: Colors.white10,
                     ),
-                  ),
+                  ), */
 
                   ///cancel
                   AnimatedOnTapButton(

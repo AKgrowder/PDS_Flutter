@@ -1913,6 +1913,11 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                             SizedBox(
                               height: 15,
                             ),
+                            storyButtons == null?Container(
+                              height: 40,
+                              width: 200,
+                              color: Colors.amber,
+                            ) :
                             Container(
                               height: 90,
                               margin: EdgeInsets.symmetric(horizontal: 16),
