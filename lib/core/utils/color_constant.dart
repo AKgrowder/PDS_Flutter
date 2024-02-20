@@ -16,7 +16,7 @@ class ColorConstant {
   // static Color primaryLight_color = fromHex('#FBD8D9');
   static Color primaryLight_color = fromHex('#F0D7D4');
   static Color HasTagColor = fromHex('#1A9ED7');
-  static Color ChatBackColor = fromHex('#FFB7B7');
+  static Color ChatBackColor = fromHex('#E7E8E9');
   static Color chatcolor = Color(0xffE7E8E9);
   static Color otheruserchat = Color(0xffFFEFED);
 
