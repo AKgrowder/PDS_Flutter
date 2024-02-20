@@ -2635,9 +2635,9 @@ openSaveImagePost(BuildContext context, String PostUID) async {
   }
 
   DMChatListApi(BuildContext context, String userChatInboxUid, int pageNumber,
-      int numberOfRecords) async {
+     ) async {
     final responce = await apiServices.getApiCallWithToken(
-        '${Config.DMChatList}?userChatInboxUid=${userChatInboxUid}&pageNumber=${pageNumber}&numberOfRecords=${numberOfRecords}',
+        '${Config.DMChatList}?userChatInboxUid=${userChatInboxUid}&pageNumber=${pageNumber}&numberOfRecords=20',
         context);
     var jsonString = json.decode(utf8.decode(responce.bodyBytes));
 
