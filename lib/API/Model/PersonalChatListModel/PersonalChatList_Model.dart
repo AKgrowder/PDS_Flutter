@@ -40,6 +40,7 @@ class Object {
   bool? isSeen;
   String? videoId;
   bool? isExpert;
+  bool? isBlock;
 
   Object(
       {this.userChatInboxUid,
@@ -49,7 +50,12 @@ class Object {
       this.message,
       this.createdDate,
       this.onlineStatus,
-      this.messageType,this.userUid,this.isSeen,this.videoId,this.isExpert});
+      this.messageType,
+      this.userUid,
+      this.isSeen,
+      this.videoId,
+      this.isExpert,
+      this.isBlock});
 
   Object.fromJson(Map<String, dynamic> json) {
     userChatInboxUid = json['userChatInboxUid'];
@@ -64,6 +70,7 @@ class Object {
     isSeen = json['isSeen'];
     videoId = json['videoId'];
     isExpert = json['isExpert'];
+    isBlock = json['isBlock'];
   }
 
   Map<String, dynamic> toJson() {
@@ -78,6 +85,9 @@ class Object {
     data['onlineStatus'] = this.onlineStatus;
     data['userUid'] = this.userUid;
     data['isSeen'] = this.isSeen;
+    data['videoId'] = this.videoId;
+    data['isExpert'] = this.isExpert;
+    data['isBlock'] = this.isBlock;
     return data;
   }
 }

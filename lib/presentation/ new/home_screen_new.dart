@@ -235,6 +235,8 @@ class _HomeScreenNewState extends State<HomeScreenNew>
 
   @override
   void initState() {
+    super.initState();
+
     Get_UserToken();
     myScroll();
 
@@ -242,7 +244,6 @@ class _HomeScreenNewState extends State<HomeScreenNew>
     VersionControll();
     getDocumentSize();
     WidgetsBinding.instance.addObserver(this);
-    super.initState();
   }
 
   @override
@@ -1912,6 +1913,11 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                             SizedBox(
                               height: 15,
                             ),
+                            storyButtons == null?Container(
+                              height: 40,
+                              width: 200,
+                              color: Colors.amber,
+                            ) :
                             Container(
                               height: 90,
                               margin: EdgeInsets.symmetric(horizontal: 16),
