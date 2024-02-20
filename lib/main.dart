@@ -45,6 +45,7 @@ import 'package:pds/API/Bloc/viewStory_Bloc/viewStory_cubit.dart';
 import 'package:pds/core/utils/sharedPreferences.dart';
 import 'package:pds/theme/theme_helper.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'API/Bloc/BlockUser_Bloc/Block_user_cubit.dart';
 import 'API/Bloc/postData_Bloc/postData_Bloc.dart';
 import 'presentation/splash_screen/splash_screen.dart';
 import 'package:flutter_langdetect/flutter_langdetect.dart' as langdetect;
@@ -250,6 +251,8 @@ class _MyAppState extends State<MyApp> {
         ),
         BlocProvider<BlogcommentCubit>(
           create: (context) => BlogcommentCubit(),
+        ),BlocProvider<BlockUserCubit>(
+          create: (context) => BlockUserCubit(),
         ),
         
       ],
