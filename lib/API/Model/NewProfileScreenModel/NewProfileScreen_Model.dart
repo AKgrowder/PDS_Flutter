@@ -54,6 +54,7 @@ class Object {
   int? postCount;
   String? accountType;
   String? documentName;
+  bool? isBlock;
   Object(
       {this.isApproved,
       this.userDocument,
@@ -80,7 +81,9 @@ class Object {
       this.followersCount,
       this.followingCount,
       this.documentName,
-      this.postCount,this.accountType});
+      this.postCount,
+      this.accountType,
+      this.isBlock});
 
   Object.fromJson(Map<String, dynamic> json) {
     log("gdfhgfhgdfbh-${json['accountType']}");
@@ -88,7 +91,7 @@ class Object {
     userDocument = json['userDocument'];
     companyName = json['companyName'];
     jobProfile = json['jobProfile'];
-    documentName =json['documentName'];
+    documentName = json['documentName'];
     fees = json['fees'];
     workingHours = json['workingHours'];
     rejectionReason = json['rejectionReason'];
@@ -121,6 +124,7 @@ class Object {
     followersCount = json['followersCount'];
     followingCount = json['followingCount'];
     postCount = json['postCount'];
+    isBlock = json['isBlock'];
   }
 
   Map<String, dynamic> toJson() {
@@ -155,6 +159,7 @@ class Object {
     data['followersCount'] = this.followersCount;
     data['followingCount'] = this.followingCount;
     data['postCount'] = this.postCount;
+    data['isBlock'] = this.isBlock;
     return data;
   }
 }
