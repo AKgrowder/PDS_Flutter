@@ -674,6 +674,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         ),
                         customTextFeild(
                             // isReadOnly: true,
+                            inputFormatters: [
+                              LengthLimitingTextInputFormatter(30),
+                            ],
                             controller: userNameController,
                             width: _width / 1.1,
                             hintText: "Enter User ID",
