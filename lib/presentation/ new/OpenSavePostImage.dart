@@ -551,7 +551,7 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
                                                                       ?.object
                                                                       ?.isTrsnalteoption ==
                                                                   null)
-                                                          ? "${OpenSaveModelData?.object?.description}${(OpenSaveModelData?.object?.description?.length ?? 0) > maxLength ? '....ReadLess' : ''}"
+                                                          ? "${OpenSaveModelData?.object?.description ?? ""}${(OpenSaveModelData?.object?.description?.length ?? 0) > maxLength ? ' ...ReadLess' : ''}"
                                                           : "${OpenSaveModelData?.object?.translatedDescription}"
                                                       : (OpenSaveModelData
                                                                       ?.object
@@ -561,8 +561,8 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
                                                                       ?.object
                                                                       ?.isTrsnalteoption ==
                                                                   null)
-                                                          ? "${OpenSaveModelData?.object?.description?.substring(0, maxLength)}...ReadMore"
-                                                          : "${OpenSaveModelData?.object?.translatedDescription?.substring(0, maxLength)}...ReadMore",
+                                                          ? "${OpenSaveModelData?.object?.description?.substring(0, maxLength)} ...ReadMore"
+                                                          : "${OpenSaveModelData?.object?.translatedDescription?.substring(0, maxLength)} ...ReadMore",
                                                   linkStyle: TextStyle(
                                                     color: Colors.blue,
                                                     fontFamily: 'outfit',
@@ -1270,7 +1270,7 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
                                                                             ?.repostOn
                                                                             ?.isTrsnalteoption ==
                                                                         null)
-                                                                ? "${OpenSaveModelData?.object?.repostOn?.description}${(OpenSaveModelData?.object?.repostOn?.description?.length ?? 0) > maxLength ? '....ReadLess' : ''}"
+                                                                ? "${OpenSaveModelData?.object?.repostOn?.description ?? ""}${(OpenSaveModelData?.object?.repostOn?.description?.length ?? 0) > maxLength ? ' ...ReadLess' : ''}"
                                                                 : "${OpenSaveModelData?.object?.repostOn?.translatedDescription}"
                                                             : (OpenSaveModelData
                                                                             ?.object
@@ -1282,8 +1282,8 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
                                                                             ?.repostOn
                                                                             ?.isTrsnalteoption ==
                                                                         null)
-                                                                ? "${OpenSaveModelData?.object?.repostOn?.description?.substring(0, maxLength)}...ReadMore "
-                                                                : "${OpenSaveModelData?.object?.repostOn?.translatedDescription?.substring(0, maxLength)}...ReadMore",
+                                                                ? "${OpenSaveModelData?.object?.repostOn?.description?.substring(0, maxLength)} ...ReadMore "
+                                                                : "${OpenSaveModelData?.object?.repostOn?.translatedDescription?.substring(0, maxLength)} ...ReadMore",
                                                         // opem save post image
                                                         linkStyle: TextStyle(
                                                           color: Colors.blue,
@@ -2338,7 +2338,7 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
                                                       OpenSaveModelData?.object
                                                               ?.isTrsnalteoption ==
                                                           null)
-                                                  ? "${OpenSaveModelData?.object?.description}${(OpenSaveModelData?.object?.description?.length ?? 0) > maxLength ? '....ReadLess' : ''}"
+                                                  ? "${OpenSaveModelData?.object?.description ?? ""}${(OpenSaveModelData?.object?.description?.length ?? 0) > maxLength ? ' ...ReadLess' : ''}"
                                                   : "${OpenSaveModelData?.object?.translatedDescription}"
                                               : (OpenSaveModelData?.object
                                                               ?.isTrsnalteoption ==
@@ -2346,8 +2346,8 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
                                                       OpenSaveModelData?.object
                                                               ?.isTrsnalteoption ==
                                                           null)
-                                                  ? "${OpenSaveModelData?.object?.description?.substring(0, maxLength)}...ReadMore "
-                                                  : "${OpenSaveModelData?.object?.translatedDescription?.substring(0, maxLength)}...ReadMore",
+                                                  ? "${OpenSaveModelData?.object?.description?.substring(0, maxLength)} ...ReadMore "
+                                                  : "${OpenSaveModelData?.object?.translatedDescription?.substring(0, maxLength)} ...ReadMore",
                                           linkStyle: TextStyle(
                                             color: Colors.blue,
                                             fontFamily: 'outfit',
@@ -2634,8 +2634,8 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
                                                                   ?.postDataType ==
                                                               "IMAGE"
                                                           ? Container(
-                                                              height:
-                                                                  _height / 2,
+                                                              // height:
+                                                              //     _height / 2,
                                                               width: _width,
                                                               child:
                                                                   CustomImageView(

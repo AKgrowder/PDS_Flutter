@@ -131,7 +131,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
   GetAllStoryModel? getAllStoryModel;
   FetchAllExpertsModel? AllExperData;
   SystemConfigModel? systemConfigModel;
-  bool apiCalingdone = false;
+  bool apiCalingdone = true;
   int? secound;
   int sliderCurrentPosition = 0;
   List<PageController> _pageControllers = [];
@@ -1069,7 +1069,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                         index: 0,
                       )),
             ).then((value) {
-              Get_UserToken();
+              // Get_UserToken();
 
               setColorr();
             })
@@ -1703,7 +1703,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                               index: 0,
                             )),
                   ).then((value) {
-                    Get_UserToken();
+                    // Get_UserToken();
 
                     setColorr();
                   });
@@ -2528,6 +2528,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                     left: 16, right: 16),
                                                 child: GestureDetector(
                                                   onTap: () {
+                                                    if (AllGuestPostRoomData?.object?.content?[index].postDataType != "ATTACHMENT") {
                                                     Navigator.push(
                                                         context,
                                                         MaterialPageRoute(
@@ -2539,10 +2540,10 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                           index]
                                                                       .postUid),
                                                         )).then((value) {
-                                                      Get_UserToken();
+                                                      // Get_UserToken();
 
                                                       setColorr();
-                                                    });
+                                                    });}
                                                   },
                                                   onDoubleTap: () async {
                                                     await soicalFunation(
@@ -2842,7 +2843,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                         PostID: AllGuestPostRoomData?.object?.content?[index].postUid,
                                                                                       )),
                                                                             ).then((value) {
-                                                                              Get_UserToken();
+                                                                              // Get_UserToken();
 
                                                                               setColorr();
                                                                             });
@@ -2853,96 +2854,6 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                           crossAxisAlignment:
                                                                               CrossAxisAlignment.start,
                                                                           children: [
-                                                                            /*  AllGuestPostRoomData?.object?.content?[index].translatedDescription != null
-                                                                                ? GestureDetector(
-                                                                                    onTap: () async {
-                                                                                      /*  // print("value cheak${AllGuestPostRoomData?.object?.content?[index].isfalsegu}");
-                                                                                          // print("value cheak${AllGuestPostRoomData?.object?.content?[index].isfalsehin}");
-                                                                                          String inputText = "${AllGuestPostRoomData?.object?.content?[index].description}";
-                                                                                          String translatedTextGujarati = await translateText(inputText, 'gu');
-                                                                                          // String translatedTextHindi = await translateText(inputText, 'hi');
-                                                                                          String translatedTextenglish = await translateText(inputText, 'en');
-                                                                                          /////////////////////
-                                                                                          // if (AllGuestPostRoomData?.object?.content?[index].isfalsehin == null && AllGuestPostRoomData?.object?.content?[index].isfalsegu == null) {
-                                                                                          //   // Translate from the original language to English
-                                                                                          //   translatedTextenglish = await translateText(inputText, 'en');
-                                                                                          //   super.setState(() {
-                                                                                          //     _translatedTextenglish = translatedTextenglish;
-                                                                                          //     AllGuestPostRoomData?.object?.content?[index].description = _translatedTextenglish;
-                                                                                          //     AllGuestPostRoomData?.object?.content?[index].isfalsehin = true;
-                                                                                          //   });
-                                                                                          // } else if (AllGuestPostRoomData?.object?.content?[index].isfalsehin == true && AllGuestPostRoomData?.object?.content?[index].isfalsegu == null) {
-                                                                                          //   // Translate from Hindi to English
-                                                                                          //   translatedTextenglish = await translateText(inputText, 'en');
-                                                                                          //   super.setState(() {
-                                                                                          //     _translatedTextenglish = translatedTextenglish;
-                                                                                          //     AllGuestPostRoomData?.object?.content?[index].description = _translatedTextenglish;
-                                                                                          //     AllGuestPostRoomData?.object?.content?[index].isfalsegu = true;
-                                                                                          //   });
-                                                                                          // } else if (AllGuestPostRoomData?.object?.content?[index].isfalsehin == true && AllGuestPostRoomData?.object?.content?[index].isfalsegu == true) {
-                                                                                          //   // No need to translate, as the text is already in English
-                                                                                          //   print("This condition is working");
-                                                                                          // }
-
-                                                                                          language = langdetect.detect(AllGuestPostRoomData?.object?.content?[index].description ?? "");
-                                                                                          print("languagelanguagelanguagelanguage :--1 ${language}");
-                                                                                          if (language == 'gu' || language == 'hi' || language == 'en') {
-                                                                                            // if (tempdata2 == "") {
-                                                                                            // var tempdata3 = AllGuestPostRoomData?.object?.content?[index].description ?? "";
-                                                                                            // }
-                                                                                            if (language == 'gu' || language == 'hi') {
-                                                                                              // Translate from the original language to English
-                                                                                              translatedTextenglish = await translateText(inputText, 'en');
-                                                                                              super.setState(() {
-                                                                                                print("languagelanguagelanguagelanguage :--2 ${language}");
-                                                                                                _translatedTextenglish = translatedTextenglish;
-                                                                                                AllGuestPostRoomData?.object?.content?[index].description = _translatedTextenglish;
-                                                                                                checkLun = true;
-                                                                                                // AllGuestPostRoomData?.object?.content?[index].isfalsehin = true;
-                                                                                              });
-                                                                                            } else if (language == 'en') {
-                                                                                              // No need to translate, as the text is already in English
-                                                                                              // super.setState(() {
-                                                                                              //   print("languagelanguagelanguagelanguage :--3 ${language}");
-                                                                                              //   checkLun = false;
-                                                                                              //   AllGuestPostRoomData?.object?.content?[index].description = tempdata2;
-                                                                                              // });
-                                                                                              // print("This condition is working");
-
-                                                                                              translatedTextenglish = await translateText(inputText, 'en');
-                                                                                              super.setState(() {
-                                                                                                print("languagelanguagelanguagelanguage :--3 ${language}");
-                                                                                                _translatedTextenglish = translatedTextenglish;
-                                                                                                AllGuestPostRoomData?.object?.content?[index].description = _translatedTextenglish;
-                                                                                                checkLun = true;
-                                                                                                // AllGuestPostRoomData?.object?.content?[index].isfalsehin = true;
-                                                                                              });
-                                                                                            }
-                                                                                          } */
-                                                                                      super.setState(() {
-                                                                                        if (AllGuestPostRoomData?.object?.content?[index].isTrsnalteoption == false || AllGuestPostRoomData?.object?.content?[index].isTrsnalteoption == null) {
-                                                                                          AllGuestPostRoomData?.object?.content?[index].isTrsnalteoption = true;
-                                                                                        } else {
-                                                                                          AllGuestPostRoomData?.object?.content?[index].isTrsnalteoption = false;
-                                                                                        }
-                                                                                      });
-                                                                                    },
-                                                                                    child: Container(
-                                                                                        width: 80,
-                                                                                        decoration: BoxDecoration(color: ColorConstant.primaryLight_color, borderRadius: BorderRadius.circular(10)),
-                                                                                        child: Center(
-                                                                                            child: Text(
-                                                                                          "Translate",
-                                                                                          style: TextStyle(
-                                                                                            fontFamily: 'outfit',
-                                                                                            fontWeight: FontWeight.bold,
-                                                                                          ),
-                                                                                        ))),
-                                                                                  )
-                                                                                : SizedBox(),
-                                                                            SizedBox(
-                                                                              height: 10,
-                                                                            ), */
                                                                             Row(
                                                                               children: [
                                                                                 Expanded(
@@ -3154,7 +3065,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                               index: index,
                                                                                             )),
                                                                                   ).then((value) {
-                                                                                    Get_UserToken();
+                                                                                    // Get_UserToken();
 
                                                                                     setColorr();
                                                                                   });
@@ -3272,7 +3183,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                                               index: index1,
                                                                                                             )),
                                                                                                   ).then((value) {
-                                                                                                    Get_UserToken();
+                                                                                                    // Get_UserToken();
 
                                                                                                     setColorr();
                                                                                                   });
@@ -3374,7 +3285,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                               index: index,
                                                                             )),
                                                               ).then((value) {
-                                                                Get_UserToken();
+                                                                // Get_UserToken();
 
                                                                 setColorr();
                                                               });
@@ -3720,7 +3631,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                                   index: index,
                                                                                                 )),
                                                                                       ).then((value) {
-                                                                                        Get_UserToken();
+                                                                                        // Get_UserToken();
 
                                                                                         setColorr();
                                                                                       });
@@ -3823,7 +3734,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                                                 index: index1,
                                                                                                               )),
                                                                                                     ).then((value) {
-                                                                                                      Get_UserToken();
+                                                                                                      // Get_UserToken();
 
                                                                                                       setColorr();
                                                                                                     });
@@ -4299,6 +4210,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                     left: 16, right: 16),
                                                 child: GestureDetector(
                                                   onTap: () {
+                                                    if (AllGuestPostRoomData?.object?.content?[index].postDataType != "ATTACHMENT") {
                                                     Navigator.push(
                                                         context,
                                                         MaterialPageRoute(
@@ -4310,10 +4222,10 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                           index]
                                                                       .postUid),
                                                         )).then((value) {
-                                                      Get_UserToken();
+                                                      // Get_UserToken();
 
                                                       setColorr();
-                                                    });
+                                                    });}
                                                   },
                                                   onDoubleTap: () async {
                                                     await soicalFunation(
@@ -4621,7 +4533,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                               )),
                                                                     ).then(
                                                                         (value) {
-                                                                      Get_UserToken();
+                                                                      // Get_UserToken();
 
                                                                       setColorr();
                                                                     });
@@ -4888,7 +4800,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                         index: index,
                                                                                       )),
                                                                             ).then((value) {
-                                                                              Get_UserToken();
+                                                                              // Get_UserToken();
 
                                                                               setColorr();
                                                                             });
@@ -5013,7 +4925,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                                         index: index1,
                                                                                                       )),
                                                                                             ).then((value) {
-                                                                                              Get_UserToken();
+                                                                                              // Get_UserToken();
 
                                                                                               setColorr();
                                                                                             });
