@@ -889,8 +889,7 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                                 "uid": userid.toString(),
                                 "workingHours": time.toString(),
                                 "industryTypesUid": industryUUID,
-                                 'documentName' : dopcument
-                                
+                                'documentName': dopcument
                               };
                               print('working time-$time');
                               print('pwarems-$params');
@@ -911,7 +910,7 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                                 "uid": userid.toString(),
                                 "workingHours": time.toString(),
                                 "industryTypesUid": industryUUID,
-                                 'documentName' : dopcument
+                                'documentName' : dopcument
                               };
                               print('working time-$time');
                               print('pwarems-$params');
@@ -1121,7 +1120,7 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
 
     FilePickerResult? result = await FilePicker.platform.pickFiles(
       type: FileType.custom,
-      allowedExtensions: ['pdf', 'png', 'doc', 'jpg'],
+      allowedExtensions: ['pdf', 'png', 'doc', 'jpg',],
     );
     {
       if (result != null) {
@@ -1499,7 +1498,10 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
           );
         } else {
           print("Done file Size 12MB");
-
+          setState(() {
+            uplopdfile.text = file1.name;
+            dopcument = file1.name;
+          });
           switch (Index) {
             case 1:
               setState(() {
