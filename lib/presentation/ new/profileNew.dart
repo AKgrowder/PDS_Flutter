@@ -1078,39 +1078,39 @@ class _ProfileScreenState extends State<ProfileScreen>
                                           ),
                                         )
                                       : SizedBox(),
-                                  Padding(
-                                    padding: const EdgeInsets.only(left: 10),
-                                    child: GestureDetector(
-                                      key: blockKey,
-                                      onTap: () {
-                                        showPopupMenuBlock(
-                                            context,
-                                            NewProfileData?.object?.userUid,
-                                            NewProfileData?.object?.name,
-                                            blockKey);
-                                      },
-                                      child: Container(
-                                        height: 40,
-                                        width: 40,
-                                        decoration: BoxDecoration(
-                                          color: ColorConstant.primary_color,
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                        ),
-                                        child: Center(
-                                          child: Icon(
-                                            Icons.more_vert_rounded,
-                                            color: Colors.white,
-                                          ) /* CustomImageView(
-                                                        height: 20,
-                                                        width: 20,
-                                                        imagePath:
-                                                            ImageConstant.chat) */
-                                          ,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
+                                  // Padding(
+                                  //   padding: const EdgeInsets.only(left: 10),
+                                  //   child: GestureDetector(
+                                  //     key: blockKey,
+                                  //     onTap: () {
+                                  //       showPopupMenuBlock(
+                                  //           context,
+                                  //           NewProfileData?.object?.userUid,
+                                  //           NewProfileData?.object?.name,
+                                  //           blockKey);
+                                  //     },
+                                  //     child: Container(
+                                  //       height: 40,
+                                  //       width: 40,
+                                  //       decoration: BoxDecoration(
+                                  //         color: ColorConstant.primary_color,
+                                  //         borderRadius:
+                                  //             BorderRadius.circular(10),
+                                  //       ),
+                                  //       child: Center(
+                                  //         child: Icon(
+                                  //           Icons.more_vert_rounded,
+                                  //           color: Colors.white,
+                                  //         ) /* CustomImageView(
+                                  //                       height: 20,
+                                  //                       width: 20,
+                                  //                       imagePath:
+                                  //                           ImageConstant.chat) */
+                                  //         ,
+                                  //       ),
+                                  //     ),
+                                  //   ),
+                                  // ),
                                   Spacer(),
                                 ],
                               ),

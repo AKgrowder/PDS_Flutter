@@ -1882,10 +1882,12 @@ class Repository {
     }
   } */
 
-  NewProfileAPI(BuildContext context, String otherUserUid,bool profileNotification) async {
+  NewProfileAPI(BuildContext context, String otherUserUid,
+      bool profileNotification) async {
     print("sdfhsdfhsdfh-$otherUserUid");
     final response = await apiServices.getApiCallWithToken(
-        "${Config.myaccountApi}?otherUserUid=${otherUserUid}&profileNotification=${profileNotification}", context);
+        "${Config.myaccountApi}?otherUserUid=${otherUserUid}&profileNotification=${profileNotification}",
+        context);
     print('AddPost$response');
     var jsonString = json.decode(response.body);
     switch (response.statusCode) {
@@ -1903,10 +1905,12 @@ class Repository {
         return jsonString;
     }
   }
-  
-    video_watch_detailAPI(BuildContext context, String postUid,String userUid,String watchTime) async {
+
+  video_watch_detailAPI(BuildContext context, String postUid, String userUid,
+      String watchTime) async {
     final response = await apiServices.postApiCalla(
-        "${Config.video_watch_detail}?postUid=${postUid}&userUid=${userUid}&watchTime=${watchTime}", context);
+        "${Config.video_watch_detail}?postUid=${postUid}&userUid=${userUid}&watchTime=${watchTime}",
+        context);
     print('AddPost$response');
     var jsonString = json.decode(response.body);
     switch (response.statusCode) {
@@ -1924,7 +1928,6 @@ class Repository {
         return jsonString;
     }
   }
-
 
   GetAppPostAPI(BuildContext context, String userUid) async {
     final response = await apiServices.getApiCallWithToken(
@@ -2160,15 +2163,29 @@ class Repository {
     BuildContext context, {
     String? filterModule,
   }) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    var User_ID = prefs.getString(PreferencesKey.loginUserID);
     final response;
     if (filterModule != null) {
-      response = await apiServices.getApiCall(
-          "${Config.getalluser}?pageNumber=$pageNumber&numberOfRecords=20&searchName=$searchName&filterModule=$filterModule",
-          context);
+      if (User_ID != null) {
+        response = await apiServices.getApiCallWithToken(
+            "${Config.getalluser}?pageNumber=$pageNumber&numberOfRecords=20&searchName=$searchName&filterModule=$filterModule",
+            context);
+      } else {
+        response = await apiServices.getApiCall(
+            "${Config.Guestgetalluser}?pageNumber=$pageNumber&numberOfRecords=20&searchName=$searchName&filterModule=$filterModule",
+            context);
+      }
     } else {
-      response = await apiServices.getApiCall(
-          "${Config.getalluser}?pageNumber=$pageNumber&numberOfRecords=20&searchName=$searchName",
-          context);
+      if (User_ID != null) {
+        response = await apiServices.getApiCallWithToken(
+            "${Config.getalluser}?pageNumber=$pageNumber&numberOfRecords=20&searchName=$searchName",
+            context);
+      } else {
+        response = await apiServices.getApiCall(
+            "${Config.Guestgetalluser}?pageNumber=$pageNumber&numberOfRecords=20&searchName=$searchName",
+            context);
+      }
     }
     var jsonString = json.decode(utf8.decode(response.bodyBytes));
     print(jsonString);
@@ -2918,8 +2935,8 @@ openSaveImagePost(BuildContext context, String PostUID) async {
     }
   }
     ReadAllMassages(BuildContext context) async {
-    final responce = await apiServices.getApiCallWithToken(
-        '${Config.readAllmsg}', context);
+    final responce =
+        await apiServices.getApiCallWithToken('${Config.readAllmsg}', context);
     var jsonString = json.decode(responce.body);
     print('jasonnString$jsonString');
     switch (responce.statusCode) {
@@ -2959,11 +2976,11 @@ openSaveImagePost(BuildContext context, String PostUID) async {
     }
   }
 
-
-  blockUser(String blockUserID,bool isBlocked,
-     BuildContext context) async {
+  blockUser(String blockUserID, bool isBlocked, BuildContext context) async {
     final respone = await apiServices.postApiCall(
-        "${Config.blockUser}?blockUserUid=${blockUserID}&isBlock=${isBlocked}" , {}, context);
+        "${Config.blockUser}?blockUserUid=${blockUserID}&isBlock=${isBlocked}",
+        {},
+        context);
     var jsonString = json.decode(respone.body);
     print("dfhdsfhd-$jsonString");
     switch (respone.statusCode) {
@@ -2981,7 +2998,8 @@ openSaveImagePost(BuildContext context, String PostUID) async {
         return jsonString;
     }
   }
-    blockUserList(BuildContext context) async {
+
+  blockUserList(BuildContext context) async {
     final responce = await apiServices.getApiCallWithToken(
         '${Config.blockUserList}', context);
     var jsonString = json.decode(responce.body);
@@ -3001,7 +3019,6 @@ openSaveImagePost(BuildContext context, String PostUID) async {
         return jsonString;
     }
   }
- 
 }
 // var headers = {
 //   'Authorization': 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJpc1ZlcmlmaWVkIjp0cnVlLCJtb2R1bGUiOiJFTVBMT1lFRSIsImlzQWN0aXZlIjp0cnVlLCJ1dWlkIjoiODYwMWViNTItNzk4NS00MWU3LTgwOTAtYmMyMjQ0MjkwZjkzIiwidXNlcm5hbWUiOiJBTiIsInN1YiI6IkFOIiwiaWF0IjoxNjkxMTUyODIxLCJleHAiOjE2OTIyMzI4MjF9.AjSlFxHlTU9opgsyXaqVh_sMQuv7f-fKGmIGle6879MD-OAGTNcPN5r9ZW8Go1124YE2BbSrc1Lj5GuspgilWg'
