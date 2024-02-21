@@ -875,6 +875,10 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
           );
         } else {
           print("Done file Size 12MB");
+          setState(() {
+            uplopdfile.text = file1.name;
+            dopcument = file1.name;
+          });
 
           switch (Index) {
             case 1:
