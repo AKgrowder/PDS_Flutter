@@ -1420,7 +1420,7 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
             break;
           default:
         }
-        if (file1.path?.split('.') != 'pdf') {
+        if (file1.path?.split('.').last != 'pdf') {
           print("this fucntion is caaling");
 
           CroppedFile? croppedFile = await ImageCropper().cropImage(

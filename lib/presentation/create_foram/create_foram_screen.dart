@@ -788,6 +788,7 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
         switch (Index) {
           case 0:
             print('filenamecheckdocmenut-${dopcument}');
+            print(file1.path);
             super.setState(() {
               uplopdfile.text = file1.name;
               dopcument = file1.name;
@@ -795,7 +796,8 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
             break;
           default:
         }
-        if (file1.path?.split('.') != 'pdf') {
+        
+        if (file1.path?.split('.').last != 'pdf') {
           print("this fucntion is caaling");
 
           CroppedFile? croppedFile = await ImageCropper().cropImage(
