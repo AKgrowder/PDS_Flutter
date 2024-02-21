@@ -918,21 +918,22 @@ class _DmScreenState extends State<DmScreen> {
                                                                                         child: Padding(
                                                                                           padding: const EdgeInsets.only(top: 0, left: 3),
                                                                                           child: Container(
-                                                                                            decoration: BoxDecoration(color: ColorConstant.ChatBackColor, borderRadius: BorderRadius.circular(10)),
+                                                                                            decoration: BoxDecoration(color: ColorConstant.ChatBackColor, borderRadius: BorderRadius.only(bottomLeft: Radius.circular(13), bottomRight: Radius.circular(13), topRight: Radius.circular(13))),
                                                                                             child: Column(
-                                                                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                              crossAxisAlignment: CrossAxisAlignment.end,
                                                                                               mainAxisAlignment: MainAxisAlignment.start,
                                                                                               children: [
                                                                                                 Padding(
-                                                                                                  padding: const EdgeInsets.only(left: 5, right: 3),
+                                                                                                  padding: const EdgeInsets.only(left: 10, right: 10),
                                                                                                   child: Text(
                                                                                                     "${getInboxMessagesModel?.object?.content?[index].message ?? ""}",
                                                                                                     // maxLines: 3,
                                                                                                     textScaleFactor: 1.0,
-                                                                                                    style: TextStyle(fontWeight: FontWeight.w500, color: Colors.black, fontFamily: "outfit", fontSize: 14),
+                                                                                                    style: TextStyle(fontWeight: FontWeight.w400, color: Colors.black, fontFamily: "outfit", fontSize: 15),
                                                                                                   ),
                                                                                                 ),
                                                                                                 // Padding(
+
                                                                                                 //   padding: const EdgeInsets.only(left: 4, right: 4),
                                                                                                 //   child: Text(
                                                                                                 //     getTimeDifference(parsedDateTime),
@@ -940,12 +941,13 @@ class _DmScreenState extends State<DmScreen> {
                                                                                                 //     style: TextStyle(fontWeight: FontWeight.normal, color: Colors.black, fontFamily: "outfit", fontSize: 10),
                                                                                                 //   ),
                                                                                                 // ),
+                                                                                                 
                                                                                                 Padding(
-                                                                                                  padding: const EdgeInsets.only(left: 4, right: 4),
+                                                                                                  padding: const EdgeInsets.only(left: 4, right: 8, bottom: 2),
                                                                                                   child: Text(
                                                                                                     customFormat(parsedDateTime),
                                                                                                     textScaleFactor: 1.0,
-                                                                                                    style: TextStyle(fontWeight: FontWeight.normal, color: Colors.black, fontFamily: "outfit", fontSize: 10),
+                                                                                                    style: TextStyle(fontWeight: FontWeight.normal, color: Colors.black, fontFamily: "outfit", fontSize: 10,),
                                                                                                   ),
                                                                                                 ),
                                                                                               ],
@@ -1302,13 +1304,13 @@ class _DmScreenState extends State<DmScreen> {
                                                                                         padding: const EdgeInsets.only(top: 3),
                                                                                         child: Container(
                                                                                           margin: EdgeInsets.only(left: 10, right: 10),
-                                                                                          decoration: BoxDecoration(color: ColorConstant.otheruserchat, borderRadius: BorderRadius.circular(10)),
+                                                                                          decoration: BoxDecoration(color: ColorConstant.otheruserchat, borderRadius: BorderRadius.circular(13)),
                                                                                           child: Column(
                                                                                             crossAxisAlignment: CrossAxisAlignment.end,
                                                                                             mainAxisAlignment: MainAxisAlignment.end,
                                                                                             children: [
                                                                                               Padding(
-                                                                                                padding: const EdgeInsets.only(left: 3, right: 5),
+                                                                                                padding: const EdgeInsets.only(left: 4, right: 4,top: 3),
                                                                                                 /*  child: Text(
                                                                                               "${getInboxMessagesModel?.object?.content?[index].message ?? ""}", //ankurChek
                                                                                               // maxLines: 3,
@@ -1319,7 +1321,7 @@ class _DmScreenState extends State<DmScreen> {
                                                                                                   "${getInboxMessagesModel?.object?.content?[index].message ?? ""}",
                                                                                                   linkStyle: TextStyle(fontWeight: FontWeight.w500, color: Colors.blue, fontFamily: "outfit", fontSize: 13, decoration: TextDecoration.underline, decorationColor: Colors.blue),
                                                                                                   textStyle: TextStyle(
-                                                                                                    fontWeight: FontWeight.bold,
+                                                                                                    fontWeight: FontWeight.w500,
                                                                                                     color: Colors.black,
                                                                                                     fontFamily: "outfit",
                                                                                                     fontSize: 13,
@@ -1358,10 +1360,13 @@ class _DmScreenState extends State<DmScreen> {
                                                                                               //     style: TextStyle(fontWeight: FontWeight.normal, color: Colors.white, fontFamily: "outfit", fontSize: 10),
                                                                                               //   ),
                                                                                               // ),
-                                                                                              Text(
-                                                                                                customFormat(parsedDateTime),
-                                                                                                textScaleFactor: 1.0,
-                                                                                                style: TextStyle(fontWeight: FontWeight.normal, color: Colors.black, fontFamily: "outfit", fontSize: 10),
+                                                                                              Padding(
+                                                                                                padding: const EdgeInsets.only(left: 3, right: 5, bottom: 2),
+                                                                                                child: Text(
+                                                                                                  customFormat(parsedDateTime),
+                                                                                                  textScaleFactor: 1.0,
+                                                                                                  style: TextStyle(fontWeight: FontWeight.normal, color: Colors.black, fontFamily: "outfit", fontSize: 10),
+                                                                                                ),
                                                                                               ),
                                                                                             ],
                                                                                           ),
@@ -2267,43 +2272,43 @@ class _DmScreenState extends State<DmScreen> {
 }
 
 String customFormat(DateTime date) {
-  String day = date.day.toString();
+  /* String day = date.day.toString();
   String month = _getMonthName(date.month);
-  String year = date.year.toString();
-  String time = DateFormat('h:mm a').format(date);
-  String DayCount = "";
+  String year = date.year.toString(); */
+  String time = (DateFormat('HH:mm').format(date));
+  /* String DayCount = ""; */
 
-  final difference = DateTime.now().difference(date);
-  if (difference.inDays > 0) {
-    if (difference.inDays == 1) {
-      DayCount = '1 day ago';
-    } else if (difference.inDays < 7) {
-      DayCount = '${difference.inDays} days ago';
-    } else {
-      final weeks = (difference.inDays / 7).floor();
-      DayCount = '$weeks week${weeks == 1 ? '' : 's'} ago';
-    }
-  } else if (difference.inHours > 0) {
-    if (difference.inHours == 1) {
-      DayCount = '1 hour ago';
-    } else {
-      DayCount = '${difference.inHours} hours ago';
-    }
-  } else if (difference.inMinutes > 0) {
-    if (difference.inMinutes == 1) {
-      DayCount = '1 minute ago';
-    } else {
-      DayCount = '${difference.inMinutes} minutes ago';
-    }
-  } else {
-    DayCount = 'Just now';
-  }
+  // final difference = DateTime.now().difference(date);
+  // if (difference.inDays > 0) {
+  //   if (difference.inDays == 1) {
+  //     DayCount = '1 day ago';
+  //   } else if (difference.inDays < 7) {
+  //     DayCount = '${difference.inDays} days ago';
+  //   } else {
+  //     final weeks = (difference.inDays / 7).floor();
+  //     DayCount = '$weeks week${weeks == 1 ? '' : 's'} ago';
+  //   }
+  // } else if (difference.inHours > 0) {
+  //   if (difference.inHours == 1) {
+  //     DayCount = '1 hour ago';
+  //   } else {
+  //     DayCount = '${difference.inHours} hours ago';
+  //   }
+  // } else if (difference.inMinutes > 0) {
+  //   if (difference.inMinutes == 1) {
+  //     DayCount = '1 minute ago';
+  //   } else {
+  //     DayCount = '${difference.inMinutes} minutes ago';
+  //   }
+  // } else {
+  //   DayCount = 'Just now';
+  // }
 
-  String formattedDate = ' $DayCount $time ';
+  String formattedDate = '$time';
   return formattedDate;
 }
 
-String _getMonthName(int month) {
+/* String _getMonthName(int month) {
   switch (month) {
     case 1:
       return 'Jan';
@@ -2332,7 +2337,7 @@ String _getMonthName(int month) {
     default:
       return '';
   }
-}
+} */
 
 class VideoThumbnailPage extends StatefulWidget {
   String videoUrl;
