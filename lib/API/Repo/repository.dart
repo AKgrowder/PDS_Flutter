@@ -2000,7 +2000,7 @@ class Repository {
     final response =
         await apiServices.getApiCallWithToken("${Config.getAllStory}", context);
     var jsonString = json.decode(response.body);
-    print(jsonString);
+    print('jsonString-${jsonString}');
     switch (response.statusCode) {
       case 200:
         return GetAllStoryModel.fromJson(jsonString);
@@ -2252,16 +2252,19 @@ class Repository {
     }
   }
 
-openSaveImagePost(BuildContext context, String PostUID) async {
-     final SharedPreferences prefs = await SharedPreferences.getInstance();
-  
-  String?  uuid = prefs.getString(PreferencesKey.loginUserID);
+  openSaveImagePost(BuildContext context, String PostUID) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    String? uuid = prefs.getString(PreferencesKey.loginUserID);
     final response = /* PostUID == ""
         ? await apiServices.getApiCallWithToken(
             '${Config.OpenSaveImagePost}?postLink=${PostLink}', context)
         : */
         await apiServices.getApiCallWithToken(
-           uuid == null ?'${Config.OpenSaveImagePostGuest}?postUid=$PostUID' : '${Config.OpenSaveImagePost}?postUid=$PostUID', context);
+            uuid == null
+                ? '${Config.OpenSaveImagePostGuest}?postUid=$PostUID'
+                : '${Config.OpenSaveImagePost}?postUid=$PostUID',
+            context);
     var jsonString = json.decode(utf8.decode(response.bodyBytes));
     switch (response.statusCode) {
       case 200:
@@ -2278,6 +2281,7 @@ openSaveImagePost(BuildContext context, String PostUID) async {
         return jsonString;
     }
   }
+
   getAllDataGet(BuildContext context, String userUid) async {
     print("shdsdgfgsdfgfg-$userUid");
     final response = await apiServices.getApiCallWithToken(
@@ -2653,8 +2657,11 @@ openSaveImagePost(BuildContext context, String PostUID) async {
     }
   }
 
-  DMChatListApi(BuildContext context, String userChatInboxUid, int pageNumber,
-     ) async {
+  DMChatListApi(
+    BuildContext context,
+    String userChatInboxUid,
+    int pageNumber,
+  ) async {
     final responce = await apiServices.getApiCallWithToken(
         '${Config.DMChatList}?userChatInboxUid=${userChatInboxUid}&pageNumber=${pageNumber}&numberOfRecords=20',
         context);
@@ -2906,7 +2913,8 @@ openSaveImagePost(BuildContext context, String PostUID) async {
         return jsonString;
     }
   }
-   reactionMessageAddedOnStory(
+
+  reactionMessageAddedOnStory(
       BuildContext context, String reactionMessage, String storyUid,
       {bool? emojiReaction}) async {
     print("emojireaction-$emojiReaction");
@@ -2934,7 +2942,8 @@ openSaveImagePost(BuildContext context, String PostUID) async {
         return jsonString;
     }
   }
-    ReadAllMassages(BuildContext context) async {
+
+  ReadAllMassages(BuildContext context) async {
     final responce =
         await apiServices.getApiCallWithToken('${Config.readAllmsg}', context);
     var jsonString = json.decode(responce.body);
