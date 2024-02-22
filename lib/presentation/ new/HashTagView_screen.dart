@@ -111,8 +111,17 @@ class _HashTagViewScreenState extends State<HashTagViewScreen> {
           ScaffoldMessenger.of(context).showSnackBar(snackBar);
         }
         if (state is HashTagViewDataLoadedState) {
+          
           hashTagViewData = state.HashTagViewData;
           print("HashTagViewDataLoadedState${hashTagViewData}");
+          
+              hashTagViewData?.object?.posts?.forEach((element) {
+            _pageControllers.add(PageController());
+            print(
+                "_pageControllers-${_pageControllers.length}-${hashTagViewData?.object?.posts?.length}");
+
+            _currentPages.add(0);
+          });
         }
         if (state is PostLikeLoadedState) {
           SnackBar snackBar = SnackBar(
@@ -1095,14 +1104,42 @@ class _HashTagViewScreenState extends State<HashTagViewScreen> {
         });
   }
 
-  String customFormat(DateTime date) {
-    String day = date.day.toString();
-    // String month = _getMonthName(date.month);
-    String year = date.year.toString();
-    String time = DateFormat('h:mm a').format(date);
+  // String customFormat(DateTime date) {
+  //   String day = date.day.toString();
+  //   // String month = _getMonthName(date.month);
+  //   String year = date.year.toString();
+  //   String time = DateFormat('h:mm a').format(date);
 
-    String formattedDate = '$time';
-    return formattedDate;
+  //   String formattedDate = '$time';
+  //   return formattedDate;
+  // }
+
+  String customFormat(DateTime date) {
+    final difference = DateTime.now().difference(date);
+    if (difference.inDays > 0) {
+      if (difference.inDays == 1) {
+        return '1 day ago';
+      } else if (difference.inDays < 7) {
+        return '${difference.inDays} days ago';
+      } else {
+        final weeks = (difference.inDays / 7).floor();
+        return '$weeks week${weeks == 1 ? '' : 's'} ago';
+      }
+    } else if (difference.inHours > 0) {
+      if (difference.inHours == 1) {
+        return '1 hour ago';
+      } else {
+        return '${difference.inHours} hours ago';
+      }
+    } else if (difference.inMinutes > 0) {
+      if (difference.inMinutes == 1) {
+        return '1 minute ago';
+      } else {
+        return '${difference.inMinutes} minutes ago';
+      }
+    } else {
+      return 'Just now';
+    }
   }
 
   soicalFunation({String? apiName, int? index}) async {
