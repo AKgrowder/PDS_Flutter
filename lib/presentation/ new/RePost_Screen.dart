@@ -1829,7 +1829,7 @@ class _RePostScreenState extends State<RePostScreen> {
     });
     if (value.contains('@')) {
       print("if this condison is working-${value}");
-      if (value.length >= 3 && value.contains('@')) {
+      if (value.length >= 1 && value.contains('@')) {
         print("value check --${value.endsWith(' #')}");
         if (value.endsWith(' #')) {
           String data1 = value.split(' #').last.replaceAll('#', '');
