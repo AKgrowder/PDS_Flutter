@@ -338,8 +338,8 @@ class _SettingScreenState extends State<SettingScreen> {
                         if (index == 1 ||
                             index == 4 ||
                             index == 0 ||
-                            index == 3 /* ||
-                            index == 10 */) {
+                            index == 3 ||
+                            index == 10) {
                           return SizedBox();
                         }
                         return GestureDetector(

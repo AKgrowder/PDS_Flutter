@@ -2116,7 +2116,9 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                 ),
                                                         ],
                                                       )),
-                                                if ((NewProfileData?.object
+                                                if (User_ID !=
+                                                    NewProfileData
+                                                        ?.object?.userUid && (NewProfileData?.object
                                                             ?.accountType ==
                                                         'PUBLIC') ||
                                                     (NewProfileData?.object
