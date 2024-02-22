@@ -376,127 +376,121 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
                                                       ),
                                                     ),
                                                   ),
-                                                  /*   if (uuid !=
+                                                  if (uuid !=
                                                       OpenSaveModelData
-                                                          ?.object?.userUid) */
-                                                  GestureDetector(
-                                                    onTap: () async {
-                                                      print(
-                                                          "objectobjectobjectobjectobjectobjectobjectobjectobjectobjectobjectobjectobjectobject");
-
-                                                      if (uuid == null) {
-                                                        Navigator.of(context).push(
-                                                            MaterialPageRoute(
-                                                                builder:
-                                                                    (context) =>
-                                                                        RegisterCreateAccountScreen()));
-                                                      } else {
-                                                        await BlocProvider.of<
-                                                                    OpenSaveCubit>(
-                                                                context)
-                                                            .followWIngMethodd(
-                                                                OpenSaveModelData
-                                                                    ?.object
-                                                                    ?.userUid,
-                                                                context);
-                                                      }
-                                                    },
-                                                    child: Container(
-                                                      height: 25,
-                                                      alignment:
-                                                          Alignment.center,
-                                                      width: 65,
-                                                      margin: EdgeInsets.only(
-                                                          bottom: 5),
-                                                      decoration: BoxDecoration(
-                                                          color: ColorConstant
-                                                              .primary_color,
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(4)),
-                                                      child: uuid == null
-                                                          ? Text(
-                                                              'Follow',
-                                                              style: TextStyle(
-                                                                  fontFamily:
-                                                                      "outfit",
-                                                                  fontSize: 12,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold,
-                                                                  color: Colors
-                                                                      .white),
-                                                            )
-                                                          : OpenSaveModelData
+                                                          ?.object?.userUid)
+                                                    GestureDetector(
+                                                      onTap: () async {
+                                                        if (uuid == null) {
+                                                          Navigator.of(context).push(
+                                                              MaterialPageRoute(
+                                                                  builder:
+                                                                      (context) =>
+                                                                          RegisterCreateAccountScreen()));
+                                                        } else {
+                                                          await BlocProvider.of<
+                                                                      OpenSaveCubit>(
+                                                                  context)
+                                                              .followWIngMethodd(
+                                                                  OpenSaveModelData
                                                                       ?.object
-                                                                      ?.userAccountType ==
-                                                                  "PUBLIC"
-                                                              ? (OpenSaveModelData
-                                                                          ?.object
-                                                                          ?.isFollowing ==
-                                                                      'FOLLOW'
-                                                                  ? Text(
-                                                                      'Follow',
-                                                                      style: TextStyle(
-                                                                          fontFamily:
-                                                                              "outfit",
-                                                                          fontSize:
-                                                                              12,
-                                                                          fontWeight: FontWeight
-                                                                              .bold,
-                                                                          color:
-                                                                              Colors.white),
-                                                                    )
-                                                                  : Text(
-                                                                      'Following ',
-                                                                      style: TextStyle(
-                                                                          fontFamily:
-                                                                              "outfit",
-                                                                          fontSize:
-                                                                              12,
-                                                                          fontWeight: FontWeight
-                                                                              .bold,
-                                                                          color:
-                                                                              Colors.white),
-                                                                    ))
-                                                              : OpenSaveModelData
-                                                                          ?.object
-                                                                          ?.isFollowing ==
-                                                                      'FOLLOW'
-                                                                  ? Text(
-                                                                      'Follow',
-                                                                      style: TextStyle(
-                                                                          fontFamily:
-                                                                              "outfit",
-                                                                          fontSize:
-                                                                              12,
-                                                                          fontWeight: FontWeight
-                                                                              .bold,
-                                                                          color:
-                                                                              Colors.white),
-                                                                    )
-                                                                  : OpenSaveModelData
-                                                                              ?.object
-                                                                              ?.isFollowing ==
-                                                                          'REQUESTED'
-                                                                      ? Text(
-                                                                          'Requested',
-                                                                          style: TextStyle(
-                                                                              fontFamily: "outfit",
-                                                                              fontSize: 12,
-                                                                              fontWeight: FontWeight.bold,
-                                                                              color: Colors.white),
-                                                                        )
-                                                                      : Text(
-                                                                          'Following ',
-                                                                          style: TextStyle(
-                                                                              fontFamily: "outfit",
-                                                                              fontSize: 12,
-                                                                              fontWeight: FontWeight.bold,
-                                                                              color: Colors.white),
-                                                                        ),
+                                                                      ?.userUid,
+                                                                  context);
+                                                        }
+                                                      },
+                                                      child: Container(
+                                                        height: 25,
+                                                        alignment:
+                                                            Alignment.center,
+                                                        width: 65,
+                                                        margin: EdgeInsets.only(
+                                                            bottom: 5),
+                                                        decoration: BoxDecoration(
+                                                            color: ColorConstant
+                                                                .primary_color,
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        4)),
+                                                        child: uuid == null
+                                                            ? Text(
+                                                                'Follow',
+                                                                style: TextStyle(
+                                                                    fontFamily:
+                                                                        "outfit",
+                                                                    fontSize:
+                                                                        12,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold,
+                                                                    color: Colors
+                                                                        .white),
+                                                              )
+                                                            : OpenSaveModelData
+                                                                        ?.object
+                                                                        ?.userAccountType ==
+                                                                    "PUBLIC"
+                                                                ? (OpenSaveModelData
+                                                                            ?.object
+                                                                            ?.isFollowing ==
+                                                                        'FOLLOW'
+                                                                    ? Text(
+                                                                        'Follow',
+                                                                        style: TextStyle(
+                                                                            fontFamily:
+                                                                                "outfit",
+                                                                            fontSize:
+                                                                                12,
+                                                                            fontWeight:
+                                                                                FontWeight.bold,
+                                                                            color: Colors.white),
+                                                                      )
+                                                                    : Text(
+                                                                        'Following ',
+                                                                        style: TextStyle(
+                                                                            fontFamily:
+                                                                                "outfit",
+                                                                            fontSize:
+                                                                                12,
+                                                                            fontWeight:
+                                                                                FontWeight.bold,
+                                                                            color: Colors.white),
+                                                                      ))
+                                                                : OpenSaveModelData
+                                                                            ?.object
+                                                                            ?.isFollowing ==
+                                                                        'FOLLOW'
+                                                                    ? Text(
+                                                                        'Follow',
+                                                                        style: TextStyle(
+                                                                            fontFamily:
+                                                                                "outfit",
+                                                                            fontSize:
+                                                                                12,
+                                                                            fontWeight:
+                                                                                FontWeight.bold,
+                                                                            color: Colors.white),
+                                                                      )
+                                                                    : OpenSaveModelData?.object?.isFollowing ==
+                                                                            'REQUESTED'
+                                                                        ? Text(
+                                                                            'Requested',
+                                                                            style: TextStyle(
+                                                                                fontFamily: "outfit",
+                                                                                fontSize: 12,
+                                                                                fontWeight: FontWeight.bold,
+                                                                                color: Colors.white),
+                                                                          )
+                                                                        : Text(
+                                                                            'Following ',
+                                                                            style: TextStyle(
+                                                                                fontFamily: "outfit",
+                                                                                fontSize: 12,
+                                                                                fontWeight: FontWeight.bold,
+                                                                                color: Colors.white),
+                                                                          ),
+                                                      ),
                                                     ),
-                                                  ),
                                                 ],
                                               ),
                                               Text(
@@ -1118,32 +1112,35 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
                                             child: ListTile(
                                                 leading: GestureDetector(
                                                   onTap: () {
-                                                     if (uuid == null) {
-                                            Navigator.of(context).push(
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        RegisterCreateAccountScreen()));
-                                          }else{  Navigator.push(context,
-                                                        MaterialPageRoute(
-                                                            builder: (context) {
-                                                      return MultiBlocProvider(
-                                                          providers: [
-                                                            BlocProvider<
-                                                                NewProfileSCubit>(
-                                                              create: (context) =>
-                                                                  NewProfileSCubit(),
-                                                            ),
-                                                          ],
-                                                          child: ProfileScreen(
-                                                              User_ID:
-                                                                  "${OpenSaveModelData?.object?.repostOn?.userUid}",
-                                                              isFollowing:
-                                                                  OpenSaveModelData
-                                                                      ?.object
-                                                                      ?.repostOn
-                                                                      ?.isFollowing));
-                                                    }));}
-                                                   
+                                                    if (uuid == null) {
+                                                      Navigator.of(context).push(
+                                                          MaterialPageRoute(
+                                                              builder: (context) =>
+                                                                  RegisterCreateAccountScreen()));
+                                                    } else {
+                                                      Navigator.push(context,
+                                                          MaterialPageRoute(
+                                                              builder:
+                                                                  (context) {
+                                                        return MultiBlocProvider(
+                                                            providers: [
+                                                              BlocProvider<
+                                                                  NewProfileSCubit>(
+                                                                create: (context) =>
+                                                                    NewProfileSCubit(),
+                                                              ),
+                                                            ],
+                                                            child: ProfileScreen(
+                                                                User_ID:
+                                                                    "${OpenSaveModelData?.object?.repostOn?.userUid}",
+                                                                isFollowing:
+                                                                    OpenSaveModelData
+                                                                        ?.object
+                                                                        ?.repostOn
+                                                                        ?.isFollowing));
+                                                      }));
+                                                    }
+
                                                     //
                                                   },
                                                   child: OpenSaveModelData
