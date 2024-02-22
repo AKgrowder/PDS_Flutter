@@ -653,6 +653,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                 alignment: Alignment.bottomCenter,
                                 child: GestureDetector(
                                   onTap: () {
+                                    print("frgfgdfggdfgdfhghfdgh");
                                     if (NewProfileData?.object?.userProfilePic
                                                 ?.isNotEmpty ==
                                             true &&
@@ -1363,13 +1364,20 @@ class _ProfileScreenState extends State<ProfileScreen>
                         /* NewProfileData?.object?.isFollowing == 'FOLLOWING' ||
                         User_ID == NewProfileData?.object?.userUid || NewProfileData?.object?.accountType == 'PUBLIC' */
 
-                        if (User_ID == NewProfileData?.object?.userUid ||
+                        /*  if (User_ID == NewProfileData?.object?.userUid ||
                             (NewProfileData?.object?.isFollowing ==
                                     'FOLLOWING' &&
                                 (NewProfileData?.object?.accountType ==
                                         'PRIVATE' ||
                                     NewProfileData?.object?.accountType ==
-                                        'PUBLIC')))
+                                        'PUBLIC'))) */
+
+                        if (User_ID == NewProfileData?.object?.userUid ||
+                            (NewProfileData?.object?.accountType == 'PUBLIC') ||
+                            (NewProfileData?.object?.isFollowing ==
+                                    'FOLLOWING' &&
+                                NewProfileData?.object?.accountType ==
+                                    'PRIVATE'))
                           Container(
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -1599,12 +1607,11 @@ class _ProfileScreenState extends State<ProfileScreen>
                             ),
                           ),
                         if (User_ID == NewProfileData?.object?.userUid ||
+                            (NewProfileData?.object?.accountType == 'PUBLIC') ||
                             (NewProfileData?.object?.isFollowing ==
                                     'FOLLOWING' &&
-                                (NewProfileData?.object?.accountType ==
-                                        'PRIVATE' ||
-                                    NewProfileData?.object?.accountType ==
-                                        'PUBLIC')))
+                                NewProfileData?.object?.accountType ==
+                                    'PRIVATE'))
 
                           /* Container(
                         // color: Colors.red,
@@ -1719,7 +1726,790 @@ class _ProfileScreenState extends State<ProfileScreen>
                                               crossAxisAlignment:
                                                   CrossAxisAlignment.start,
                                               children: [
-                                                User_ID !=
+                                                if (User_ID ==
+                                                    NewProfileData
+                                                        ?.object?.userUid)
+                                                  Card(
+                                                      color: Colors.white,
+                                                      borderOnForeground: true,
+                                                      elevation: 10,
+                                                      shape:
+                                                          RoundedRectangleBorder(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(15.0),
+                                                      ),
+                                                      child: Column(
+                                                        children: [
+                                                          Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                        .only(
+                                                                    top: 10,
+                                                                    right: 20,
+                                                                    left: 20),
+                                                            child: Row(
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .spaceBetween,
+                                                              children: [
+                                                                Text(
+                                                                  'About Me',
+                                                                  style:
+                                                                      TextStyle(
+                                                                    color: Colors
+                                                                        .black,
+                                                                    fontSize:
+                                                                        18,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w600,
+                                                                  ),
+                                                                ),
+                                                                User_ID !=
+                                                                        NewProfileData
+                                                                            ?.object
+                                                                            ?.userUid
+                                                                    ? SizedBox
+                                                                        .shrink()
+                                                                    : GestureDetector(
+                                                                        onTap:
+                                                                            () {
+                                                                          super.setState(
+                                                                              () {
+                                                                            isUpDate =
+                                                                                true;
+                                                                            isAbourtMe =
+                                                                                false;
+                                                                            AbboutMeShow =
+                                                                                false;
+                                                                          });
+                                                                        },
+                                                                        child: isUpDate ==
+                                                                                true
+                                                                            ? GestureDetector(
+                                                                                onTap: () {
+                                                                                  if (aboutMe.text.isNotEmpty) {
+                                                                                    BlocProvider.of<NewProfileSCubit>(context).abboutMeApi(context, aboutMe.text);
+                                                                                  } else {
+                                                                                    SnackBar snackBar = SnackBar(
+                                                                                      content: Text('Please Enter About Me'),
+                                                                                      backgroundColor: ColorConstant.primary_color,
+                                                                                    );
+                                                                                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                                                                  }
+                                                                                },
+                                                                                child: Container(
+                                                                                  alignment: Alignment.center,
+                                                                                  height: 24,
+                                                                                  width: 50,
+                                                                                  decoration: BoxDecoration(
+                                                                                    borderRadius: BorderRadius.circular(5),
+                                                                                    color: ColorConstant.primary_color,
+                                                                                  ),
+                                                                                  child: Text(
+                                                                                    'SAVE',
+                                                                                    style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                                                                                  ),
+                                                                                ),
+                                                                              )
+                                                                            : Icon(
+                                                                                Icons.edit,
+                                                                                color: Colors.black,
+                                                                              ),
+                                                                      )
+                                                              ],
+                                                            ),
+                                                          ),
+                                                          isUpDate == false
+                                                              ? Padding(
+                                                                  padding: const EdgeInsets
+                                                                          .only(
+                                                                      top: 12,
+                                                                      left: 10,
+                                                                      right: 10,
+                                                                      bottom:
+                                                                          15),
+                                                                  child:
+                                                                      Container(
+                                                                    child:
+                                                                        LinkifyText(
+                                                                      "${aboutMe.text}",
+                                                                      linkStyle:
+                                                                          TextStyle(
+                                                                        color: Colors
+                                                                            .blue,
+                                                                        fontFamily:
+                                                                            'outfit',
+                                                                      ),
+                                                                      textStyle:
+                                                                          TextStyle(
+                                                                        color: Colors
+                                                                            .black,
+                                                                        fontFamily:
+                                                                            'outfit',
+                                                                      ),
+                                                                      linkTypes: [
+                                                                        LinkType
+                                                                            .url,
+                                                                        LinkType
+                                                                            .userTag,
+                                                                        LinkType
+                                                                            .hashTag,
+                                                                        // LinkType
+                                                                        //     .email
+                                                                      ],
+                                                                      onTap:
+                                                                          (link) async {
+                                                                        /// do stuff with `link` like
+                                                                        /// if(link.type == Link.url) launchUrl(link.value);
+
+                                                                        var SelectedTest = link
+                                                                            .value
+                                                                            .toString();
+                                                                        var Link =
+                                                                            SelectedTest.startsWith('https');
+                                                                        var Link1 =
+                                                                            SelectedTest.startsWith('http');
+                                                                        var Link2 =
+                                                                            SelectedTest.startsWith('www');
+                                                                        var Link3 =
+                                                                            SelectedTest.startsWith('WWW');
+                                                                        var Link4 =
+                                                                            SelectedTest.startsWith('HTTPS');
+                                                                        var Link5 =
+                                                                            SelectedTest.startsWith('HTTP');
+                                                                        var Link6 =
+                                                                            SelectedTest.startsWith('https://pdslink.page.link/');
+                                                                        print(SelectedTest
+                                                                            .toString());
+
+                                                                        if (User_ID ==
+                                                                            null) {
+                                                                          Navigator.of(context)
+                                                                              .push(MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
+                                                                        } else {
+                                                                          if (Link == true ||
+                                                                              Link1 == true ||
+                                                                              Link2 == true ||
+                                                                              Link3 == true ||
+                                                                              Link4 == true ||
+                                                                              Link5 == true ||
+                                                                              Link6 == true) {
+                                                                            if (Link2 == true ||
+                                                                                Link3 == true) {
+                                                                              launchUrl(Uri.parse("https://${link.value.toString()}"));
+                                                                              print("qqqqqqqqhttps://${link.value}");
+                                                                            } else {
+                                                                              if (Link6 == true) {
+                                                                                print("yes i am inList =   room");
+                                                                                Navigator.push(context, MaterialPageRoute(
+                                                                                  builder: (context) {
+                                                                                    return NewBottomBar(
+                                                                                      buttomIndex: 1,
+                                                                                    );
+                                                                                  },
+                                                                                ));
+                                                                              } else {
+                                                                                launchUrl(Uri.parse(link.value.toString()));
+                                                                                print("link.valuelink.value -- ${link.value}");
+                                                                              }
+                                                                            }
+                                                                          } else {
+                                                                            if (link.value!.startsWith('#')) {
+                                                                              Navigator.push(
+                                                                                  context,
+                                                                                  MaterialPageRoute(
+                                                                                    builder: (context) => HashTagViewScreen(title: "${link.value}"),
+                                                                                  ));
+                                                                            } else if (link.value!.startsWith('@')) {
+                                                                              var name;
+                                                                              var tagName;
+                                                                              name = SelectedTest;
+                                                                              tagName = name.replaceAll("@", "");
+                                                                              await BlocProvider.of<NewProfileSCubit>(context).UserTagAPI(context, tagName);
+                                                                            } else {
+                                                                              launchUrl(Uri.parse("https://${link.value.toString()}"));
+                                                                            }
+                                                                          }
+                                                                        }
+                                                                      },
+                                                                    ),
+                                                                  ),
+                                                                )
+                                                              : Padding(
+                                                                  padding: const EdgeInsets
+                                                                          .only(
+                                                                      left: 0),
+                                                                  child: Column(
+                                                                    crossAxisAlignment:
+                                                                        CrossAxisAlignment
+                                                                            .start,
+                                                                    children: [
+                                                                      SizedBox(
+                                                                        height:
+                                                                            15,
+                                                                      ),
+
+                                                                      SizedBox(
+                                                                        height:
+                                                                            5,
+                                                                      ),
+                                                                      AbboutMeShow ==
+                                                                              true
+                                                                          ? Padding(
+                                                                              padding: const EdgeInsets.only(left: 20, right: 20),
+                                                                              child: Container(
+                                                                                alignment: Alignment.center,
+                                                                                height: 50,
+                                                                                // width:
+                                                                                //     _width /
+                                                                                //         1.5,
+                                                                                decoration: BoxDecoration(
+                                                                                    // color: Colors.amber
+                                                                                    borderRadius: BorderRadius.circular(10),
+                                                                                    border: Border.all(color: Color(0xffEFEFEF))),
+                                                                                child: Text(
+                                                                                  'Enter About Me',
+                                                                                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w300, color: Colors.black),
+                                                                                ),
+                                                                              ),
+                                                                            )
+                                                                          : Padding(
+                                                                              padding: EdgeInsets.only(
+                                                                                left: 16,
+                                                                                right: 16,
+                                                                                top: 0,
+                                                                              ),
+                                                                              child: Stack(
+                                                                                children: [
+                                                                                  Column(
+                                                                                    children: [
+                                                                                      SizedBox(
+                                                                                        height: 100,
+                                                                                        child: FlutterMentions(
+                                                                                          readOnly: isAbourtMe,
+                                                                                          defaultText: aboutMe.text,
+                                                                                          onChanged: (value) {
+                                                                                            onChangeMethod(value);
+                                                                                          },
+                                                                                          suggestionPosition: SuggestionPosition.values.first,
+                                                                                          maxLines: 5,
+                                                                                          decoration: InputDecoration(
+                                                                                            hintText: 'Enter About Me',
+                                                                                            border: InputBorder.none,
+                                                                                            focusedBorder: InputBorder.none,
+                                                                                          ),
+                                                                                          mentions: [
+                                                                                            Mention(
+                                                                                                trigger: "@",
+                                                                                                data: tageData,
+                                                                                                matchAll: true,
+                                                                                                style: TextStyle(color: Colors.blue),
+                                                                                                suggestionBuilder: (tageData) {
+                                                                                                  if (istageData) {
+                                                                                                    return Container(
+                                                                                                      padding: EdgeInsets.all(10.0),
+                                                                                                      child: Row(
+                                                                                                        children: <Widget>[
+                                                                                                          tageData['photo'] != null
+                                                                                                              ? CircleAvatar(
+                                                                                                                  backgroundImage: NetworkImage(
+                                                                                                                    tageData['photo'],
+                                                                                                                  ),
+                                                                                                                )
+                                                                                                              : CircleAvatar(
+                                                                                                                  backgroundImage: AssetImage(ImageConstant.tomcruse),
+                                                                                                                ),
+                                                                                                          SizedBox(
+                                                                                                            width: 20.0,
+                                                                                                          ),
+                                                                                                          Column(
+                                                                                                            children: <Widget>[
+                                                                                                              Text('@${tageData['display']}'),
+                                                                                                            ],
+                                                                                                          )
+                                                                                                        ],
+                                                                                                      ),
+                                                                                                    );
+                                                                                                  }
+
+                                                                                                  return Container(
+                                                                                                    color: Colors.amber,
+                                                                                                  );
+                                                                                                }),
+                                                                                            Mention(
+                                                                                                trigger: "#",
+                                                                                                style: TextStyle(color: Colors.blue),
+                                                                                                disableMarkup: true,
+                                                                                                data: heshTageData,
+                                                                                                // matchAll: true,
+                                                                                                suggestionBuilder: (tageData) {
+                                                                                                  if (isHeshTegData) {
+                                                                                                    return Container(
+                                                                                                        padding: EdgeInsets.all(10.0),
+                                                                                                        child: ListTile(
+                                                                                                          leading: CircleAvatar(
+                                                                                                            child: Text('#'),
+                                                                                                          ),
+                                                                                                          title: Text('${tageData['display']}'),
+                                                                                                        )
+                                                                                                        /* Column(
+                                                                                                                                crossAxisAlignment:
+                                                                                                                                    CrossAxisAlignment
+                                                                                                                                                .start,
+                                                                                                                                children: <Widget>[
+                                                                                                                                  Text(
+                                                                                                                                      '${tageData['display']}'),
+                                                                                                                                ],
+                                                                                                                              ), */
+                                                                                                        );
+                                                                                                  }
+
+                                                                                                  return Container(
+                                                                                                    color: Colors.amber,
+                                                                                                  );
+                                                                                                }),
+                                                                                          ],
+                                                                                        ),
+                                                                                      ),
+                                                                                    ],
+                                                                                  ),
+                                                                                ],
+                                                                              ),
+                                                                            ),
+
+                                                                      // Padding(
+                                                                      //         padding: const EdgeInsets
+                                                                      //                 .only(
+                                                                      //             left:
+                                                                      //                 20,
+                                                                      //             right:
+                                                                      //                 20),
+                                                                      //         child:
+                                                                      //             TextFormField(
+                                                                      //           inputFormatters: [
+                                                                      //             LengthLimitingTextInputFormatter(
+                                                                      //                 500),
+                                                                      //           ],
+                                                                      //           readOnly:
+                                                                      //               isAbourtMe,
+                                                                      //           controller:
+                                                                      //               aboutMe,
+                                                                      //           maxLines:
+                                                                      //               5,
+                                                                      //           decoration:
+                                                                      //               InputDecoration(
+                                                                      //             border:
+                                                                      //                 OutlineInputBorder(),
+                                                                      //           ),
+                                                                      //         ),
+                                                                      //       ),
+                                                                      //wiil DataGet
+                                                                      /*   : */
+                                                                      SizedBox(
+                                                                        height:
+                                                                            12,
+                                                                      ),
+                                                                    ],
+                                                                  ),
+                                                                ),
+                                                        ],
+                                                      )),
+                                                if ((NewProfileData?.object
+                                                            ?.accountType ==
+                                                        'PUBLIC') ||
+                                                    (NewProfileData?.object
+                                                                ?.isFollowing ==
+                                                            'FOLLOWING' &&
+                                                        NewProfileData?.object
+                                                                ?.accountType ==
+                                                            'PRIVATE'))
+                                                  Card(
+                                                      color: Colors.white,
+                                                      borderOnForeground: true,
+                                                      elevation: 10,
+                                                      shape:
+                                                          RoundedRectangleBorder(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(15.0),
+                                                      ),
+                                                      /*  child: expertUser(_height, _width) */
+                                                      child: Column(
+                                                        children: [
+                                                          ListTile(
+                                                              /*     leading:
+                                                                      Container(
+                                                                    width: 35,
+                                                                    height: 35,
+                                                                    decoration:
+                                                                        ShapeDecoration(
+                                                                      color:ColorConstant.primary_color,
+                                                                      shape:
+                                                                          OvalBorder(),
+                                                                    ),
+                                                                  ), */
+                                                              title: Text(
+                                                                'About Me',
+                                                                style:
+                                                                    TextStyle(
+                                                                  color: Colors
+                                                                      .black,
+                                                                  fontSize: 18,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w600,
+                                                                ),
+                                                              ),
+                                                              subtitle: /* Text(
+                                                                  '${NewProfileData?.object?.aboutMe}',
+                                                                  style: TextStyle(
+                                                                      color: Colors
+                                                                          .black,
+                                                                      fontSize: 14,
+                                                                      fontFamily:
+                                                                          "outfit"),
+                                                                ), */
+
+                                                                  LinkifyText(
+                                                                "${NewProfileData?.object?.aboutMe}",
+                                                                linkStyle:
+                                                                    TextStyle(
+                                                                  color: Colors
+                                                                      .blue,
+                                                                  fontFamily:
+                                                                      'outfit',
+                                                                ),
+                                                                textStyle:
+                                                                    TextStyle(
+                                                                  color: Colors
+                                                                      .black,
+                                                                  fontFamily:
+                                                                      'outfit',
+                                                                ),
+                                                                linkTypes: [
+                                                                  LinkType.url,
+                                                                  LinkType
+                                                                      .userTag,
+                                                                  LinkType
+                                                                      .hashTag,
+                                                                  // LinkType
+                                                                  //     .email
+                                                                ],
+                                                                onTap:
+                                                                    (link) async {
+                                                                  /// do stuff with `link` like
+                                                                  /// if(link.type == Link.url) launchUrl(link.value);
+
+                                                                  var SelectedTest =
+                                                                      link.value
+                                                                          .toString();
+                                                                  var Link = SelectedTest
+                                                                      .startsWith(
+                                                                          'https');
+                                                                  var Link1 = SelectedTest
+                                                                      .startsWith(
+                                                                          'http');
+                                                                  var Link2 = SelectedTest
+                                                                      .startsWith(
+                                                                          'www');
+                                                                  var Link3 = SelectedTest
+                                                                      .startsWith(
+                                                                          'WWW');
+                                                                  var Link4 = SelectedTest
+                                                                      .startsWith(
+                                                                          'HTTPS');
+                                                                  var Link5 = SelectedTest
+                                                                      .startsWith(
+                                                                          'HTTP');
+                                                                  var Link6 = SelectedTest
+                                                                      .startsWith(
+                                                                          'https://pdslink.page.link/');
+                                                                  print(SelectedTest
+                                                                      .toString());
+
+                                                                  if (User_ID ==
+                                                                      null) {
+                                                                    Navigator.of(
+                                                                            context)
+                                                                        .push(MaterialPageRoute(
+                                                                            builder: (context) =>
+                                                                                RegisterCreateAccountScreen()));
+                                                                  } else {
+                                                                    if (Link ==
+                                                                            true ||
+                                                                        Link1 ==
+                                                                            true ||
+                                                                        Link2 ==
+                                                                            true ||
+                                                                        Link3 ==
+                                                                            true ||
+                                                                        Link4 ==
+                                                                            true ||
+                                                                        Link5 ==
+                                                                            true ||
+                                                                        Link6 ==
+                                                                            true) {
+                                                                      if (Link2 ==
+                                                                              true ||
+                                                                          Link3 ==
+                                                                              true) {
+                                                                        launchUrl(
+                                                                            Uri.parse("https://${link.value.toString()}"));
+                                                                        print(
+                                                                            "qqqqqqqqhttps://${link.value}");
+                                                                      } else {
+                                                                        if (Link6 ==
+                                                                            true) {
+                                                                          print(
+                                                                              "yes i am inList =   room");
+                                                                          Navigator.push(
+                                                                              context,
+                                                                              MaterialPageRoute(
+                                                                            builder:
+                                                                                (context) {
+                                                                              return NewBottomBar(
+                                                                                buttomIndex: 1,
+                                                                              );
+                                                                            },
+                                                                          ));
+                                                                        } else {
+                                                                          launchUrl(Uri.parse(link
+                                                                              .value
+                                                                              .toString()));
+                                                                          print(
+                                                                              "link.valuelink.value -- ${link.value}");
+                                                                        }
+                                                                      }
+                                                                    } else {
+                                                                      if (link
+                                                                          .value!
+                                                                          .startsWith(
+                                                                              '#')) {
+                                                                        Navigator.push(
+                                                                            context,
+                                                                            MaterialPageRoute(
+                                                                              builder: (context) => HashTagViewScreen(title: "${link.value}"),
+                                                                            ));
+                                                                      } else if (link
+                                                                          .value!
+                                                                          .startsWith(
+                                                                              '@')) {
+                                                                        var name;
+                                                                        var tagName;
+                                                                        name =
+                                                                            SelectedTest;
+                                                                        tagName = name.replaceAll(
+                                                                            "@",
+                                                                            "");
+                                                                        await BlocProvider.of<NewProfileSCubit>(context).UserTagAPI(
+                                                                            context,
+                                                                            tagName);
+                                                                      } else {
+                                                                        launchUrl(
+                                                                            Uri.parse("https://${link.value.toString()}"));
+                                                                      }
+                                                                    }
+                                                                  }
+                                                                },
+                                                              )),
+                                                        ],
+                                                      )),
+
+                                                /* Card(
+                                                      color: Colors.white,
+                                                      borderOnForeground: true,
+                                                      elevation: 10,
+                                                      shape:
+                                                          RoundedRectangleBorder(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(15.0),
+                                                      ),
+                                                      /*  child: expertUser(_height, _width) */
+                                                      child: Column(
+                                                        children: [
+                                                          ListTile(
+                                                              /*     leading:
+                                                                      Container(
+                                                                    width: 35,
+                                                                    height: 35,
+                                                                    decoration:
+                                                                        ShapeDecoration(
+                                                                      color:ColorConstant.primary_color,
+                                                                      shape:
+                                                                          OvalBorder(),
+                                                                    ),
+                                                                  ), */
+                                                              title: Text(
+                                                                'About Me',
+                                                                style:
+                                                                    TextStyle(
+                                                                  color: Colors
+                                                                      .black,
+                                                                  fontSize: 18,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w600,
+                                                                ),
+                                                              ),
+                                                              subtitle: /* Text(
+                                                                  '${NewProfileData?.object?.aboutMe}',
+                                                                  style: TextStyle(
+                                                                      color: Colors
+                                                                          .black,
+                                                                      fontSize: 14,
+                                                                      fontFamily:
+                                                                          "outfit"),
+                                                                ), */
+
+                                                                  LinkifyText(
+                                                                "${NewProfileData?.object?.aboutMe}",
+                                                                linkStyle:
+                                                                    TextStyle(
+                                                                  color: Colors
+                                                                      .blue,
+                                                                  fontFamily:
+                                                                      'outfit',
+                                                                ),
+                                                                textStyle:
+                                                                    TextStyle(
+                                                                  color: Colors
+                                                                      .black,
+                                                                  fontFamily:
+                                                                      'outfit',
+                                                                ),
+                                                                linkTypes: [
+                                                                  LinkType.url,
+                                                                  LinkType
+                                                                      .userTag,
+                                                                  LinkType
+                                                                      .hashTag,
+                                                                  // LinkType
+                                                                  //     .email
+                                                                ],
+                                                                onTap:
+                                                                    (link) async {
+                                                                  /// do stuff with `link` like
+                                                                  /// if(link.type == Link.url) launchUrl(link.value);
+
+                                                                  var SelectedTest =
+                                                                      link.value
+                                                                          .toString();
+                                                                  var Link = SelectedTest
+                                                                      .startsWith(
+                                                                          'https');
+                                                                  var Link1 = SelectedTest
+                                                                      .startsWith(
+                                                                          'http');
+                                                                  var Link2 = SelectedTest
+                                                                      .startsWith(
+                                                                          'www');
+                                                                  var Link3 = SelectedTest
+                                                                      .startsWith(
+                                                                          'WWW');
+                                                                  var Link4 = SelectedTest
+                                                                      .startsWith(
+                                                                          'HTTPS');
+                                                                  var Link5 = SelectedTest
+                                                                      .startsWith(
+                                                                          'HTTP');
+                                                                  var Link6 = SelectedTest
+                                                                      .startsWith(
+                                                                          'https://pdslink.page.link/');
+                                                                  print(SelectedTest
+                                                                      .toString());
+
+                                                                  if (User_ID ==
+                                                                      null) {
+                                                                    Navigator.of(
+                                                                            context)
+                                                                        .push(MaterialPageRoute(
+                                                                            builder: (context) =>
+                                                                                RegisterCreateAccountScreen()));
+                                                                  } else {
+                                                                    if (Link ==
+                                                                            true ||
+                                                                        Link1 ==
+                                                                            true ||
+                                                                        Link2 ==
+                                                                            true ||
+                                                                        Link3 ==
+                                                                            true ||
+                                                                        Link4 ==
+                                                                            true ||
+                                                                        Link5 ==
+                                                                            true ||
+                                                                        Link6 ==
+                                                                            true) {
+                                                                      if (Link2 ==
+                                                                              true ||
+                                                                          Link3 ==
+                                                                              true) {
+                                                                        launchUrl(
+                                                                            Uri.parse("https://${link.value.toString()}"));
+                                                                        print(
+                                                                            "qqqqqqqqhttps://${link.value}");
+                                                                      } else {
+                                                                        if (Link6 ==
+                                                                            true) {
+                                                                          print(
+                                                                              "yes i am inList =   room");
+                                                                          Navigator.push(
+                                                                              context,
+                                                                              MaterialPageRoute(
+                                                                            builder:
+                                                                                (context) {
+                                                                              return NewBottomBar(
+                                                                                buttomIndex: 1,
+                                                                              );
+                                                                            },
+                                                                          ));
+                                                                        } else {
+                                                                          launchUrl(Uri.parse(link
+                                                                              .value
+                                                                              .toString()));
+                                                                          print(
+                                                                              "link.valuelink.value -- ${link.value}");
+                                                                        }
+                                                                      }
+                                                                    } else {
+                                                                      if (link
+                                                                          .value!
+                                                                          .startsWith(
+                                                                              '#')) {
+                                                                        Navigator.push(
+                                                                            context,
+                                                                            MaterialPageRoute(
+                                                                              builder: (context) => HashTagViewScreen(title: "${link.value}"),
+                                                                            ));
+                                                                      } else if (link
+                                                                          .value!
+                                                                          .startsWith(
+                                                                              '@')) {
+                                                                        var name;
+                                                                        var tagName;
+                                                                        name =
+                                                                            SelectedTest;
+                                                                        tagName = name.replaceAll(
+                                                                            "@",
+                                                                            "");
+                                                                        await BlocProvider.of<NewProfileSCubit>(context).UserTagAPI(
+                                                                            context,
+                                                                            tagName);
+                                                                      } else {
+                                                                        launchUrl(
+                                                                            Uri.parse("https://${link.value.toString()}"));
+                                                                      }
+                                                                    }
+                                                                  }
+                                                                },
+                                                              )),
+                                                        ],
+                                                      )),
+ */
+                                                /* User_ID !=
                                                         NewProfileData
                                                             ?.object?.userUid
                                                     ? NewProfileData?.object
@@ -2264,7 +3054,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                     ),
                                                                   ),
                                                           ],
-                                                        )),
+                                                        )), */
                                                 NewProfileData
                                                             ?.object?.module ==
                                                         "EXPERT"
@@ -8632,10 +9422,12 @@ class _ProfileScreenState extends State<ProfileScreen>
 
   Widget expertUser(_height, _width) {
     if (User_ID == NewProfileData?.object?.userUid ||
-        (NewProfileData?.object?.isFollowing == 'FOLLOWING' &&
-            NewProfileData?.object?.accountType == 'PRIVATE' &&
+        (NewProfileData?.object?.accountType == 'PUBLIC' &&
             NewProfileData?.object?.approvalStatus != "PENDING" &&
-            NewProfileData?.object?.approvalStatus == "REJECTED")) {
+            NewProfileData?.object?.approvalStatus != "REJECTED") ||
+        (NewProfileData?.object?.isFollowing == 'FOLLOWING' &&
+            NewProfileData?.object?.approvalStatus != "PENDING" &&
+            NewProfileData?.object?.approvalStatus != "REJECTED")) {
       return Column(
         children: [
           ListTile(
@@ -9114,10 +9906,12 @@ class _ProfileScreenState extends State<ProfileScreen>
 
   Widget experience(_height, _width) {
     if (User_ID == NewProfileData?.object?.userUid ||
-        (NewProfileData?.object?.isFollowing == 'FOLLOWING' &&
-            NewProfileData?.object?.accountType == 'PRIVATE' &&
+        (NewProfileData?.object?.accountType == 'PUBLIC' &&
             NewProfileData?.object?.approvalStatus != "PENDING" &&
-            NewProfileData?.object?.approvalStatus == "REJECTED")) {
+            NewProfileData?.object?.approvalStatus != "REJECTED") ||
+        (NewProfileData?.object?.isFollowing == 'FOLLOWING' &&
+            NewProfileData?.object?.approvalStatus != "PENDING" &&
+            NewProfileData?.object?.approvalStatus != "REJECTED")) {
       return Column(
         children: [
           ListTile(
@@ -9305,9 +10099,16 @@ class _ProfileScreenState extends State<ProfileScreen>
   }
 
   Widget compnayUser(_height, _width) {
-    if (User_ID == NewProfileData?.object?.userUid ||
+    /*  if (User_ID == NewProfileData?.object?.userUid ||
         (NewProfileData?.object?.isFollowing == 'FOLLOWING' &&
             NewProfileData?.object?.accountType == 'PRIVATE' &&
+            NewProfileData?.object?.approvalStatus != "PENDING" &&
+            NewProfileData?.object?.approvalStatus != "REJECTED")) */
+    if (User_ID == NewProfileData?.object?.userUid ||
+        (NewProfileData?.object?.accountType == 'PUBLIC' &&
+            NewProfileData?.object?.approvalStatus != "PENDING" &&
+            NewProfileData?.object?.approvalStatus != "REJECTED") ||
+        (NewProfileData?.object?.isFollowing == 'FOLLOWING' &&
             NewProfileData?.object?.approvalStatus != "PENDING" &&
             NewProfileData?.object?.approvalStatus != "REJECTED")) {
       return Column(
