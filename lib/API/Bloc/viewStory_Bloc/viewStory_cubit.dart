@@ -62,4 +62,24 @@ class ViewStoryCubit extends Cubit<ViewStoryState> {
       emit(ViewStoryErrorState(e.toString()));
     }
   }
+   Future<void> followWIngMethodd(
+    String? followedToUid,
+    BuildContext context,
+  ) async {
+    dynamic likepost;
+    try {
+    
+      likepost = await Repository().folliwingMethod(followedToUid, context);
+      if (likepost == "Something Went Wrong, Try After Some Time.") {
+        // emit(ViewStoryLoadingState("${likepost}"));
+      } else {
+        if (likepost.success == true) {
+          emit(PostLikeLoadedState(likepost));
+        }
+      }
+    } catch (e) {
+      // print('errorstate-$e');
+      emit(ViewStoryErrorState(likepost));
+    }
+  }
 }

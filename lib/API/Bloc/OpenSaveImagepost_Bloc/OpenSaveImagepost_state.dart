@@ -14,10 +14,10 @@ class OpenSaveLoadedState extends OpenSaveState {
   OpenSaveLoadedState(this.OpenSaveData);
 }
 
-class PostLikeLoadedState extends OpenSaveState {
-  final LikePost likePost;
-  PostLikeLoadedState(this.likePost);
-}
+  class PostLikeLoadedState extends OpenSaveState {
+    final LikePost likePost;
+    PostLikeLoadedState(this.likePost);
+  }
 
 class RePostLoadedState extends OpenSaveState {
   final RePostModel RePost;

@@ -524,7 +524,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                     GestureDetector(
                       onTap: () {
                         final Uri url = Uri.parse(
-                            "https://play.google.com/store/apps/details?id=com.inpackaging.app");
+                            "https://play.google.com/store/apps/details?id=com.pds.app");
 
                         launchUrl(url, mode: LaunchMode.externalApplication);
                       },
@@ -656,7 +656,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                         GestureDetector(
                           onTap: () {
                             final Uri url = Uri.parse(
-                                "https://play.google.com/store/apps/details?id=com.inpackaging.app");
+                                "https://play.google.com/store/apps/details?id=com.pds.app");
 
                             launchUrl(url,
                                 mode: LaunchMode.externalApplication);
@@ -1425,6 +1425,8 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                 storyButtons.clear();
                 userName.clear();
                 storyButtons = List.filled(1, null, growable: true);
+                userName.add('');
+                print("stroyButtonsData-${storyButtons.length}");
                 if (state.getAllStoryModel.object != null ||
                     ((state.getAllStoryModel.object?.isNotEmpty == true) ??
                         false)) {
@@ -1558,15 +1560,17 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                           buttonData: buttonDatas[0],
                           allButtonDatas: buttonDatas,
                           storyListViewController: ScrollController()));
+                          userName.clear();
+                          userName.add(element.userName ?? ''); 
 
                       storyAdded = true;
                     } else if (element.userUid != User_ID) {
-                      userName.add(element.userName.toString());
+                    
 
                       print("check Data get -${element.userName.toString()}");
-                      if (!storyAdded)
+                   /*    if (!storyAdded)
                         // userName.add("Share Storyaaaa");
-                        userName.add(element.userName.toString());
+                        userName.add(element.userName.toString()); */
 
                       int count = 0;
                       element.storyData?.forEach((element) {
@@ -1671,6 +1675,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                           buttonData: buttonData1,
                           allButtonDatas: buttonDatas,
                           storyListViewController: ScrollController()));
+                             userName.add(element.userName.toString());
                     }
                   });
                 }
@@ -2315,8 +2320,8 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                 allButtonDatas: buttonDatas,
                                                 storyListViewController:
                                                     ScrollController());
-
-                                            userName.add(User_Name!);
+                                            userName[0] = User_Name!;
+                                           
                                             if (mounted)
                                               super.setState(() {
                                                 storyAdded = true;
@@ -2408,6 +2413,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                             child: storyButtons[index]!,
                                             flex: 1,
                                           ),
+                                          if(userName[index].isNotEmpty)
                                           Text(
                                             '${userName[index]}',
                                             style: TextStyle(
