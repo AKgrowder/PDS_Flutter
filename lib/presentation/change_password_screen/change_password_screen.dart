@@ -297,7 +297,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                           newpasswordController.text) {
                         SnackBar snackBar = SnackBar(
                           content: Text(
-                              'New Password and Current Password are not same'),
+                              'New Password and Confirm Password Are Not Same'),
                           backgroundColor: ColorConstant.primary_color,
                         );
                         ScaffoldMessenger.of(context).showSnackBar(snackBar);

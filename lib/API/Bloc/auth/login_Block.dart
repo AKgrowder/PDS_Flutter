@@ -1,4 +1,5 @@
 import 'package:pds/API/Bloc/auth/login_state.dart';
+import 'package:pds/API/Const/const.dart';
 import 'package:pds/API/Repo/repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -11,7 +12,7 @@ class LoginCubit extends Cubit<LoginState> {
     try {
       emit(LoginLoadingState());
       registerClassData = await Repository().loginApi(params, context);
-      if (registerClassData == "Something Went Wrong, Try After Some Time.") {
+      if (registerClassData == Config.somethingWentWrong) {
        emit( LoginErrorState("${registerClassData}"));
       } else {
         if (registerClassData.success == true) {

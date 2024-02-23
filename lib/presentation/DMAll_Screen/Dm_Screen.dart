@@ -9,13 +9,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
+import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:linkfy_text/linkfy_text.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:pds/API/ApiService/DMSocket.dart';
 import 'package:pds/API/Bloc/dmInbox_bloc/dmMessageState.dart';
-import 'package:pds/API/Bloc/senMSG_Bloc/senMSG_cubit.dart';
 import 'package:pds/API/Model/createDocumentModel/createDocumentModel.dart';
 import 'package:pds/API/Model/inboxScreenModel/inboxScrrenModel.dart';
 import 'package:pds/API/Model/story_model.dart';
@@ -25,20 +24,16 @@ import 'package:pds/StoryFile/src/story_route.dart';
 import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/core/utils/image_constant.dart';
 import 'package:pds/core/utils/sharedPreferences.dart';
-import 'package:pds/main.dart';
 import 'package:pds/presentation/%20new/profileNew.dart';
-import 'package:pds/presentation/DMAll_Screen/videocallScreen.dart';
-import 'package:video_thumbnail/video_thumbnail.dart';
-
 import 'package:pds/presentation/create_story/full_story_page.dart';
 import 'package:pds/presentation/gallery_All_Image.dart/gallery_All_image.dart';
 // import 'package:pds/presentation/%20new/notifaction2.dart';
 import 'package:pds/presentation/view_comments/view_comments_screen.dart';
 import 'package:pds/theme/theme_helper.dart';
+import 'package:pds/widgets/Unblocked_userChat_dailog.dart';
 import 'package:pds/widgets/animatedwiget.dart';
 import 'package:pds/widgets/custom_image_view.dart';
 import 'package:pds/widgets/pagenation.dart';
-import 'package:pds/widgets/videocallcommennotifaction.dart/videocallcommenmethod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stomp_dart_client/stomp_frame.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -46,7 +41,6 @@ import 'package:video_thumbnail/video_thumbnail.dart';
 
 import '../../API/Bloc/dmInbox_bloc/dminbox_blcok.dart';
 import '../register_create_account_screen/register_create_account_screen.dart';
-import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 
 class DmScreen extends StatefulWidget {
   String UserName;
@@ -55,13 +49,15 @@ class DmScreen extends StatefulWidget {
   String UserImage;
   String? videoId;
   bool? isExpert;
+  bool? isBlock;
   DmScreen(
       {required this.ChatInboxUid,
       required this.UserName,
       required this.UserUID,
       required this.UserImage,
       this.videoId,
-      this.isExpert});
+      this.isExpert,
+      this.isBlock});
 
   @override
   State<DmScreen> createState() => _DmScreenState();
@@ -300,6 +296,22 @@ class _DmScreenState extends State<DmScreen> {
         isEmojiVisible = false;
       }
     });
+
+    if (widget.isBlock == true) {
+      Future.delayed(
+        Duration(
+          milliseconds: 2,
+        ),
+        () {
+          showDialog(
+            context: context,
+            builder: (_) => UnBlockUserChatdailog(
+              userName: widget.UserName,
+            ),
+          );
+        },
+      );
+    }
 
     super.initState();
   }
@@ -557,7 +569,8 @@ class _DmScreenState extends State<DmScreen> {
                                   ),
                                   if (widget.isExpert == true)
                                     Padding(
-                                      padding: const EdgeInsets.only(left: 4,top: 3),
+                                      padding: const EdgeInsets.only(
+                                          left: 4, top: 3),
                                       child: Image.asset(
                                         ImageConstant.Star,
                                         height: 15,
@@ -710,10 +723,8 @@ class _DmScreenState extends State<DmScreen> {
                                                             context)
                                                         .DMChatListApiPagantion(
                                                             widget.ChatInboxUid,
-                                                          
-                                                            p0+1,
-                                                            context 
-                                                            );
+                                                            p0 + 1,
+                                                            context);
                                                   },
                                                   offSet: (getInboxMessagesModel
                                                       ?.object
@@ -907,21 +918,22 @@ class _DmScreenState extends State<DmScreen> {
                                                                                         child: Padding(
                                                                                           padding: const EdgeInsets.only(top: 0, left: 3),
                                                                                           child: Container(
-                                                                                            decoration: BoxDecoration(color: ColorConstant.ChatBackColor, borderRadius: BorderRadius.circular(5)),
+                                                                                            decoration: BoxDecoration(color: ColorConstant.ChatBackColor, borderRadius: BorderRadius.only(bottomLeft: Radius.circular(13), bottomRight: Radius.circular(13), topRight: Radius.circular(13))),
                                                                                             child: Column(
-                                                                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                              crossAxisAlignment: CrossAxisAlignment.end,
                                                                                               mainAxisAlignment: MainAxisAlignment.start,
                                                                                               children: [
                                                                                                 Padding(
-                                                                                                  padding: const EdgeInsets.only(left: 3, right: 3),
+                                                                                                  padding: const EdgeInsets.only(left: 10, right: 10),
                                                                                                   child: Text(
                                                                                                     "${getInboxMessagesModel?.object?.content?[index].message ?? ""}",
                                                                                                     // maxLines: 3,
                                                                                                     textScaleFactor: 1.0,
-                                                                                                    style: TextStyle(fontWeight: FontWeight.w500, color: Colors.black, fontFamily: "outfit", fontSize: 13),
+                                                                                                    style: TextStyle(fontWeight: FontWeight.w400, color: Colors.black, fontFamily: "outfit", fontSize: 15),
                                                                                                   ),
                                                                                                 ),
                                                                                                 // Padding(
+
                                                                                                 //   padding: const EdgeInsets.only(left: 4, right: 4),
                                                                                                 //   child: Text(
                                                                                                 //     getTimeDifference(parsedDateTime),
@@ -929,12 +941,13 @@ class _DmScreenState extends State<DmScreen> {
                                                                                                 //     style: TextStyle(fontWeight: FontWeight.normal, color: Colors.black, fontFamily: "outfit", fontSize: 10),
                                                                                                 //   ),
                                                                                                 // ),
+                                                                                                 
                                                                                                 Padding(
-                                                                                                  padding: const EdgeInsets.only(left: 4, right: 4),
+                                                                                                  padding: const EdgeInsets.only(left: 4, right: 8, bottom: 2),
                                                                                                   child: Text(
                                                                                                     customFormat(parsedDateTime),
                                                                                                     textScaleFactor: 1.0,
-                                                                                                    style: TextStyle(fontWeight: FontWeight.normal, color: Colors.black, fontFamily: "outfit", fontSize: 10),
+                                                                                                    style: TextStyle(fontWeight: FontWeight.normal, color: Colors.black, fontFamily: "outfit", fontSize: 10,),
                                                                                                   ),
                                                                                                 ),
                                                                                               ],
@@ -1290,14 +1303,14 @@ class _DmScreenState extends State<DmScreen> {
                                                                                       child: Padding(
                                                                                         padding: const EdgeInsets.only(top: 3),
                                                                                         child: Container(
-                                                                                          margin: EdgeInsets.only(left: 10,right: 10),
-                                                                                          decoration: BoxDecoration(color: ColorConstant.otheruserchat, borderRadius: BorderRadius.circular(5)),
+                                                                                          margin: EdgeInsets.only(left: 10, right: 10),
+                                                                                          decoration: BoxDecoration(color: ColorConstant.otheruserchat, borderRadius: BorderRadius.circular(13)),
                                                                                           child: Column(
                                                                                             crossAxisAlignment: CrossAxisAlignment.end,
                                                                                             mainAxisAlignment: MainAxisAlignment.end,
                                                                                             children: [
                                                                                               Padding(
-                                                                                                padding: const EdgeInsets.only(left: 3, right: 3),
+                                                                                                padding: const EdgeInsets.only(left: 4, right: 4,top: 3),
                                                                                                 /*  child: Text(
                                                                                               "${getInboxMessagesModel?.object?.content?[index].message ?? ""}", //ankurChek
                                                                                               // maxLines: 3,
@@ -1307,7 +1320,12 @@ class _DmScreenState extends State<DmScreen> {
                                                                                                 child: LinkifyText(
                                                                                                   "${getInboxMessagesModel?.object?.content?[index].message ?? ""}",
                                                                                                   linkStyle: TextStyle(fontWeight: FontWeight.w500, color: Colors.blue, fontFamily: "outfit", fontSize: 13, decoration: TextDecoration.underline, decorationColor: Colors.blue),
-                                                                                                  textStyle: TextStyle(fontWeight: FontWeight.bold, color: Colors.black, fontFamily: "outfit", fontSize: 13,),
+                                                                                                  textStyle: TextStyle(
+                                                                                                    fontWeight: FontWeight.w500,
+                                                                                                    color: Colors.black,
+                                                                                                    fontFamily: "outfit",
+                                                                                                    fontSize: 13,
+                                                                                                  ),
                                                                                                   linkTypes: [
                                                                                                     LinkType.url,
 
@@ -1342,10 +1360,13 @@ class _DmScreenState extends State<DmScreen> {
                                                                                               //     style: TextStyle(fontWeight: FontWeight.normal, color: Colors.white, fontFamily: "outfit", fontSize: 10),
                                                                                               //   ),
                                                                                               // ),
-                                                                                              Text(
-                                                                                                customFormat(parsedDateTime),
-                                                                                                textScaleFactor: 1.0,
-                                                                                                style: TextStyle(fontWeight: FontWeight.normal, color: Colors.black, fontFamily: "outfit", fontSize: 10),
+                                                                                              Padding(
+                                                                                                padding: const EdgeInsets.only(left: 3, right: 5, bottom: 2),
+                                                                                                child: Text(
+                                                                                                  customFormat(parsedDateTime),
+                                                                                                  textScaleFactor: 1.0,
+                                                                                                  style: TextStyle(fontWeight: FontWeight.normal, color: Colors.black, fontFamily: "outfit", fontSize: 10),
+                                                                                                ),
                                                                                               ),
                                                                                             ],
                                                                                           ),
@@ -2251,43 +2272,43 @@ class _DmScreenState extends State<DmScreen> {
 }
 
 String customFormat(DateTime date) {
-  String day = date.day.toString();
+  /* String day = date.day.toString();
   String month = _getMonthName(date.month);
-  String year = date.year.toString();
-  String time = DateFormat('h:mm a').format(date);
-  String DayCount = "";
+  String year = date.year.toString(); */
+  String time = (DateFormat('HH:mm').format(date));
+  /* String DayCount = ""; */
 
-  final difference = DateTime.now().difference(date);
-  if (difference.inDays > 0) {
-    if (difference.inDays == 1) {
-      DayCount = '1 day ago';
-    } else if (difference.inDays < 7) {
-      DayCount = '${difference.inDays} days ago';
-    } else {
-      final weeks = (difference.inDays / 7).floor();
-      DayCount = '$weeks week${weeks == 1 ? '' : 's'} ago';
-    }
-  } else if (difference.inHours > 0) {
-    if (difference.inHours == 1) {
-      DayCount = '1 hour ago';
-    } else {
-      DayCount = '${difference.inHours} hours ago';
-    }
-  } else if (difference.inMinutes > 0) {
-    if (difference.inMinutes == 1) {
-      DayCount = '1 minute ago';
-    } else {
-      DayCount = '${difference.inMinutes} minutes ago';
-    }
-  } else {
-    DayCount = 'Just now';
-  }
+  // final difference = DateTime.now().difference(date);
+  // if (difference.inDays > 0) {
+  //   if (difference.inDays == 1) {
+  //     DayCount = '1 day ago';
+  //   } else if (difference.inDays < 7) {
+  //     DayCount = '${difference.inDays} days ago';
+  //   } else {
+  //     final weeks = (difference.inDays / 7).floor();
+  //     DayCount = '$weeks week${weeks == 1 ? '' : 's'} ago';
+  //   }
+  // } else if (difference.inHours > 0) {
+  //   if (difference.inHours == 1) {
+  //     DayCount = '1 hour ago';
+  //   } else {
+  //     DayCount = '${difference.inHours} hours ago';
+  //   }
+  // } else if (difference.inMinutes > 0) {
+  //   if (difference.inMinutes == 1) {
+  //     DayCount = '1 minute ago';
+  //   } else {
+  //     DayCount = '${difference.inMinutes} minutes ago';
+  //   }
+  // } else {
+  //   DayCount = 'Just now';
+  // }
 
-  String formattedDate = ' $DayCount $time ';
+  String formattedDate = '$time';
   return formattedDate;
 }
 
-String _getMonthName(int month) {
+/* String _getMonthName(int month) {
   switch (month) {
     case 1:
       return 'Jan';
@@ -2316,7 +2337,7 @@ String _getMonthName(int month) {
     default:
       return '';
   }
-}
+} */
 
 class VideoThumbnailPage extends StatefulWidget {
   String videoUrl;

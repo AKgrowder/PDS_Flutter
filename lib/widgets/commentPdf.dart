@@ -19,91 +19,18 @@ import '../core/utils/color_constant.dart';
 class DocumentViewScreen extends StatefulWidget {
   String? path;
   String? title;
-  bool? dataHowToDislay;
 
-  DocumentViewScreen({Key? key, this.path, this.title, this.dataHowToDislay})
-      : super(key: key);
+  DocumentViewScreen({
+    Key? key,
+    this.path,
+    this.title,
+  }) : super(key: key);
 
   @override
   State<DocumentViewScreen> createState() => _DocumentViewScreenState();
 }
 
 class _DocumentViewScreenState extends State<DocumentViewScreen> {
-  late bool _permissionReady;
-  late String _localPath;
-  late TargetPlatform? platform;
-  bool pathExists = false;
-  int? version;
-  String? nameUrl;
-
-  @override
-  void initState() {
-    if (Platform.isAndroid) {
-      platform = TargetPlatform.android;
-    } else {
-      platform = TargetPlatform.iOS;
-    }
-    // Platform.isAndroid ? getVersion() : SizedBox();
-
-    super.initState();
-  }
-
-  Future<bool> _checkPermission() async {
-    if (platform == TargetPlatform.android) {
-      DeviceInfoPlugin deviceInfo = await DeviceInfoPlugin();
-      AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
-      final status = (int.parse(androidInfo.version.release)) < 13
-          ? await Permission.storage.status
-          : await Permission.mediaLibrary.status;
-      if (status != PermissionStatus.granted) {
-        final result = (int.parse(androidInfo.version.release)) < 13
-            ? await Permission.storage.request()
-            : await Permission.mediaLibrary.request();
-        if (result == PermissionStatus.granted) {
-          return true;
-        }
-      } else {
-        return true;
-      }
-    } else {
-      return true;
-    }
-    return false;
-  }
-
-  // getVersion() async {
-  //   final SharedPreferences prefs = await SharedPreferences.getInstance();
-
-  //   version =
-  //       await int.parse(prefs.getString(PreferencesKey.version).toString());
-
-  //   print('version ${version}');
-  // }
-
-  Future<void> _prepareSaveDir() async {
-    _localPath = (await _findLocalPath())!;
-
-    print(_localPath);
-    final savedDir = Directory(_localPath);
-    bool hasExisted = await savedDir.exists();
-    if (!hasExisted) {
-      savedDir.create();
-      print('first vvvvvvvvvvvvvvvvvvv');
-      super.setState(() {
-        pathExists = false;
-      });
-    }
-  }
-
-  Future<String?> _findLocalPath() async {
-    if (platform == TargetPlatform.android) {
-      return "/storage/emulated/0/Download/";
-    } else {
-      var directory = await getApplicationDocumentsDirectory();
-      return directory.path + Platform.pathSeparator;
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     print("if the DocumentViewScreen");
@@ -116,39 +43,6 @@ class _DocumentViewScreenState extends State<DocumentViewScreen> {
           "Document",
           style: TextStyle(color: Colors.black),
         ),
-        actions: [
-          /* GestureDetector(
-              onTap: () async {
-                _permissionReady = await _checkPermission();
-                await _prepareSaveDir();
-
-                if (_permissionReady) {
-                  print("Downloading");
-
-                  try {
-                    await Dio().download(
-                      widget.path.toString(),
-                      _localPath + "/" + "images",
-                      /* Invoice.pdf */
-                      onReceiveProgress: (receivedBytes, totalBytes) {
-                        if (totalBytes != -1) {
-                          final progress =
-                              ((receivedBytes / totalBytes) * 100).toInt();
-                        }
-                      },
-                    );
-
-                    print("Download Completed.");
-                  } catch (e) {
-                    print("Download Failed.\n\n" + e.toString());
-                  }
-                }
-              },
-              child: Icon(Icons.download_sharp, color: Colors.black)), */
-          SizedBox(
-            width: 20,
-          )
-        ],
         systemOverlayStyle: SystemUiOverlayStyle.dark,
       ),
       body: Container(
@@ -156,7 +50,8 @@ class _DocumentViewScreenState extends State<DocumentViewScreen> {
           margin: EdgeInsets.only(right: 8.0, top: 8.0, left: 8.0, bottom: 8.0),
           child: widget.path!.contains('.jpg') ||
                   widget.path!.contains('.png') ||
-                  widget.path!.contains('.jpeg')
+                  widget.path!.contains('.jpeg') ||
+                  widget.path!.contains('.webp')
               ? Container(
                   child: PhotoView(
                     backgroundDecoration: BoxDecoration(),
@@ -225,7 +120,8 @@ class DocumentViewScreen1 extends StatelessWidget {
                   EdgeInsets.only(right: 8.0, top: 8.0, left: 8.0, bottom: 8.0),
               child: path!.contains('.jpg') ||
                       path!.contains('.png') ||
-                      path!.contains('.jpeg') || path!.contains('.webp')
+                      path!.contains('.jpeg') ||
+                      path!.contains('.webp')
                   ? Container(
                       child: PhotoView(
                         backgroundDecoration: BoxDecoration(),
