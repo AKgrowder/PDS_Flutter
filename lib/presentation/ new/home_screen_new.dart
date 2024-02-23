@@ -1259,6 +1259,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
           '${AllGuestPostRoomData?.object?.content?[index ?? 0].postUid}',
           context);
       AllGuestPostRoomData?.object?.content?.removeAt(index ?? 0);
+      readmoree.removeAt(index ?? 0);
     }
   }
 
@@ -3552,7 +3553,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                     ? "${AllGuestPostRoomData?.object?.content?[index].repostOn?.description}${(AllGuestPostRoomData?.object?.content?[index].repostOn?.description?.length ?? 0) > maxLength ? '....ReadLess' : ''}"
                                                                                     : "${AllGuestPostRoomData?.object?.content?[index].repostOn?.translatedDescription}"
                                                                                 : (AllGuestPostRoomData?.object?.content?[index].repostOn?.isTrsnalteoption == false || AllGuestPostRoomData?.object?.content?[index].repostOn?.isTrsnalteoption == null)
-                                                                                    ?  "${AllGuestPostRoomData?.object?.content?[index].repostOn?.description != null ?'': AllGuestPostRoomData?.object?.content?[index].repostOn?.description?.substring(0, maxLength)}....ReadMore"
+                                                                                    ? "${AllGuestPostRoomData?.object?.content?[index].repostOn?.description != null ? '' : AllGuestPostRoomData?.object?.content?[index].repostOn?.description?.substring(0, maxLength)}....ReadMore"
                                                                                     : "${AllGuestPostRoomData?.object?.content?[index].repostOn?.translatedDescription?.substring(0, maxLength)}....ReadMore", // as
 
                                                                             linkStyle:
