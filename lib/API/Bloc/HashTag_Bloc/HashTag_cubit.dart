@@ -23,7 +23,7 @@ class HashTagCubit extends Cubit<HashTagState> {
       } else {
         print("failed--check---${settionExperied}");
       }
-      // }
+      // }`
     } catch (e) {
       print('errorstate-$e');
       // emit(GetGuestAllPostErrorState(e.toString()));
