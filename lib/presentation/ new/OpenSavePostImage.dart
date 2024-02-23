@@ -288,25 +288,32 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
                                     child: ListTile(
                                         leading: GestureDetector(
                                           onTap: () {
-                                            Navigator.push(context,
-                                                MaterialPageRoute(
-                                                    builder: (context) {
-                                              return MultiBlocProvider(
-                                                  providers: [
-                                                    BlocProvider<
-                                                        NewProfileSCubit>(
-                                                      create: (context) =>
-                                                          NewProfileSCubit(),
-                                                    ),
-                                                  ],
-                                                  child: ProfileScreen(
-                                                      User_ID:
-                                                          "${OpenSaveModelData?.object?.userUid}",
-                                                      isFollowing:
-                                                          OpenSaveModelData
-                                                              ?.object
-                                                              ?.isFollowing));
-                                            }));
+                                            if (uuid == null) {
+                                              Navigator.of(context).push(
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          RegisterCreateAccountScreen()));
+                                            } else {
+                                              Navigator.push(context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) {
+                                                return MultiBlocProvider(
+                                                    providers: [
+                                                      BlocProvider<
+                                                          NewProfileSCubit>(
+                                                        create: (context) =>
+                                                            NewProfileSCubit(),
+                                                      ),
+                                                    ],
+                                                    child: ProfileScreen(
+                                                        User_ID:
+                                                            "${OpenSaveModelData?.object?.userUid}",
+                                                        isFollowing:
+                                                            OpenSaveModelData
+                                                                ?.object
+                                                                ?.isFollowing));
+                                              }));
+                                            }
 
                                             ///
                                           },
@@ -374,14 +381,22 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
                                                           ?.object?.userUid)
                                                     GestureDetector(
                                                       onTap: () async {
-                                                        await BlocProvider.of<
-                                                                    OpenSaveCubit>(
-                                                                context)
-                                                            .followWIngMethodd(
-                                                                OpenSaveModelData
-                                                                    ?.object
-                                                                    ?.userUid,
-                                                                context);
+                                                        if (uuid == null) {
+                                                          Navigator.of(context).push(
+                                                              MaterialPageRoute(
+                                                                  builder:
+                                                                      (context) =>
+                                                                          RegisterCreateAccountScreen()));
+                                                        } else {
+                                                          await BlocProvider.of<
+                                                                      OpenSaveCubit>(
+                                                                  context)
+                                                              .followWIngMethodd(
+                                                                  OpenSaveModelData
+                                                                      ?.object
+                                                                      ?.userUid,
+                                                                  context);
+                                                        }
                                                       },
                                                       child: Container(
                                                         height: 25,
@@ -530,7 +545,7 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
                                                                       ?.object
                                                                       ?.isTrsnalteoption ==
                                                                   null)
-                                                          ? "${OpenSaveModelData?.object?.description}${(OpenSaveModelData?.object?.description?.length ?? 0) > maxLength ? '....ReadLess' : ''}"
+                                                          ? "${OpenSaveModelData?.object?.description ?? ""}${(OpenSaveModelData?.object?.description?.length ?? 0) > maxLength ? ' ...ReadLess' : ''}"
                                                           : "${OpenSaveModelData?.object?.translatedDescription}"
                                                       : (OpenSaveModelData
                                                                       ?.object
@@ -540,8 +555,8 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
                                                                       ?.object
                                                                       ?.isTrsnalteoption ==
                                                                   null)
-                                                          ? "${OpenSaveModelData?.object?.description?.substring(0, maxLength)}...ReadMore"
-                                                          : "${OpenSaveModelData?.object?.translatedDescription?.substring(0, maxLength)}...ReadMore",
+                                                          ? "${OpenSaveModelData?.object?.description?.substring(0, maxLength)} ...ReadMore"
+                                                          : "${OpenSaveModelData?.object?.translatedDescription?.substring(0, maxLength)} ...ReadMore",
                                                   linkStyle: TextStyle(
                                                     color: Colors.blue,
                                                     fontFamily: 'outfit',
@@ -1097,26 +1112,35 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
                                             child: ListTile(
                                                 leading: GestureDetector(
                                                   onTap: () {
-                                                    Navigator.push(context,
-                                                        MaterialPageRoute(
-                                                            builder: (context) {
-                                                      return MultiBlocProvider(
-                                                          providers: [
-                                                            BlocProvider<
-                                                                NewProfileSCubit>(
-                                                              create: (context) =>
-                                                                  NewProfileSCubit(),
-                                                            ),
-                                                          ],
-                                                          child: ProfileScreen(
-                                                              User_ID:
-                                                                  "${OpenSaveModelData?.object?.repostOn?.userUid}",
-                                                              isFollowing:
-                                                                  OpenSaveModelData
-                                                                      ?.object
-                                                                      ?.repostOn
-                                                                      ?.isFollowing));
-                                                    }));
+                                                    if (uuid == null) {
+                                                      Navigator.of(context).push(
+                                                          MaterialPageRoute(
+                                                              builder: (context) =>
+                                                                  RegisterCreateAccountScreen()));
+                                                    } else {
+                                                      Navigator.push(context,
+                                                          MaterialPageRoute(
+                                                              builder:
+                                                                  (context) {
+                                                        return MultiBlocProvider(
+                                                            providers: [
+                                                              BlocProvider<
+                                                                  NewProfileSCubit>(
+                                                                create: (context) =>
+                                                                    NewProfileSCubit(),
+                                                              ),
+                                                            ],
+                                                            child: ProfileScreen(
+                                                                User_ID:
+                                                                    "${OpenSaveModelData?.object?.repostOn?.userUid}",
+                                                                isFollowing:
+                                                                    OpenSaveModelData
+                                                                        ?.object
+                                                                        ?.repostOn
+                                                                        ?.isFollowing));
+                                                      }));
+                                                    }
+
                                                     //
                                                   },
                                                   child: OpenSaveModelData
@@ -1243,7 +1267,7 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
                                                                             ?.repostOn
                                                                             ?.isTrsnalteoption ==
                                                                         null)
-                                                                ? "${OpenSaveModelData?.object?.repostOn?.description}${(OpenSaveModelData?.object?.repostOn?.description?.length ?? 0) > maxLength ? '....ReadLess' : ''}"
+                                                                ? "${OpenSaveModelData?.object?.repostOn?.description ?? ""}${(OpenSaveModelData?.object?.repostOn?.description?.length ?? 0) > maxLength ? ' ...ReadLess' : ''}"
                                                                 : "${OpenSaveModelData?.object?.repostOn?.translatedDescription}"
                                                             : (OpenSaveModelData
                                                                             ?.object
@@ -1255,8 +1279,8 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
                                                                             ?.repostOn
                                                                             ?.isTrsnalteoption ==
                                                                         null)
-                                                                ? "${OpenSaveModelData?.object?.repostOn?.description?.substring(0, maxLength)}...ReadMore "
-                                                                : "${OpenSaveModelData?.object?.repostOn?.translatedDescription?.substring(0, maxLength)}...ReadMore",
+                                                                ? "${OpenSaveModelData?.object?.repostOn?.description?.substring(0, maxLength)} ...ReadMore "
+                                                                : "${OpenSaveModelData?.object?.repostOn?.translatedDescription?.substring(0, maxLength)} ...ReadMore",
                                                         // opem save post image
                                                         linkStyle: TextStyle(
                                                           color: Colors.blue,
@@ -1464,7 +1488,8 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
                                                 });
                                               },
                                               child: Container(
-                                                margin: EdgeInsets.only(left: 10,top: 10),
+                                                  margin: EdgeInsets.only(
+                                                      left: 10, top: 10),
                                                   width: 80,
                                                   decoration: BoxDecoration(
                                                       color: ColorConstant
@@ -2095,15 +2120,22 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
                                   child: Row(children: [
                                     GestureDetector(
                                       onTap: () {
-                                        Navigator.push(context,
-                                            MaterialPageRoute(
-                                                builder: (context) {
-                                          return ProfileScreen(
-                                              User_ID:
-                                                  "${OpenSaveModelData?.object?.userUid}",
-                                              isFollowing: OpenSaveModelData
-                                                  ?.object?.isFollowing);
-                                        }));
+                                        if (uuid == null) {
+                                          Navigator.of(context).push(
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      RegisterCreateAccountScreen()));
+                                        } else {
+                                          Navigator.push(context,
+                                              MaterialPageRoute(
+                                                  builder: (context) {
+                                            return ProfileScreen(
+                                                User_ID:
+                                                    "${OpenSaveModelData?.object?.userUid}",
+                                                isFollowing: OpenSaveModelData
+                                                    ?.object?.isFollowing);
+                                          }));
+                                        }
                                       },
                                       child: OpenSaveModelData?.object
                                                       ?.userProfilePic !=
@@ -2175,12 +2207,19 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
                                         OpenSaveModelData?.object?.userUid)
                                       GestureDetector(
                                         onTap: () async {
-                                          await BlocProvider.of<OpenSaveCubit>(
-                                                  context)
-                                              .followWIngMethodd(
-                                                  OpenSaveModelData
-                                                      ?.object?.userUid,
-                                                  context);
+                                          if (uuid == null) {
+                                            Navigator.of(context).push(
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        RegisterCreateAccountScreen()));
+                                          } else {
+                                            await BlocProvider.of<
+                                                    OpenSaveCubit>(context)
+                                                .followWIngMethodd(
+                                                    OpenSaveModelData
+                                                        ?.object?.userUid,
+                                                    context);
+                                          }
                                         },
                                         child: Container(
                                           height: 25,
@@ -2296,7 +2335,7 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
                                                       OpenSaveModelData?.object
                                                               ?.isTrsnalteoption ==
                                                           null)
-                                                  ? "${OpenSaveModelData?.object?.description}${(OpenSaveModelData?.object?.description?.length ?? 0) > maxLength ? '....ReadLess' : ''}"
+                                                  ? "${OpenSaveModelData?.object?.description ?? ""}${(OpenSaveModelData?.object?.description?.length ?? 0) > maxLength ? ' ...ReadLess' : ''}"
                                                   : "${OpenSaveModelData?.object?.translatedDescription}"
                                               : (OpenSaveModelData?.object
                                                               ?.isTrsnalteoption ==
@@ -2304,8 +2343,8 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
                                                       OpenSaveModelData?.object
                                                               ?.isTrsnalteoption ==
                                                           null)
-                                                  ? "${OpenSaveModelData?.object?.description?.substring(0, maxLength)}...ReadMore "
-                                                  : "${OpenSaveModelData?.object?.translatedDescription?.substring(0, maxLength)}...ReadMore",
+                                                  ? "${OpenSaveModelData?.object?.description?.substring(0, maxLength)} ...ReadMore "
+                                                  : "${OpenSaveModelData?.object?.translatedDescription?.substring(0, maxLength)} ...ReadMore",
                                           linkStyle: TextStyle(
                                             color: Colors.blue,
                                             fontFamily: 'outfit',
@@ -2592,8 +2631,8 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> {
                                                                   ?.postDataType ==
                                                               "IMAGE"
                                                           ? Container(
-                                                              height:
-                                                                  _height / 2,
+                                                              // height:
+                                                              //     _height / 2,
                                                               width: _width,
                                                               child:
                                                                   CustomImageView(

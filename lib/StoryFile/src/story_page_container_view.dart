@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:collection';
+import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:flutter/gestures.dart';
@@ -65,18 +66,19 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
   StoryViewListModel? StoryViewListModelData;
   late PointerUpEvent event1;
   PointerUpEvent eventdata = PointerUpEvent();
-
   DeleteStory? deleteStory;
   bool ifVideoPlayer = false;
+  bool isMounted = true;
   String lastLoggedTime = "";
   Duration? durationOfVideo;
   int countcheck = 0;
   TextEditingController reactionData = TextEditingController();
-
   dataFunctionSetup() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     User_ID = prefs.getString(PreferencesKey.loginUserID);
-    super.setState(() {});
+    if (mounted) {
+      super.setState(() {});
+    }
   }
 
   FocusNode? _focusNode;
@@ -96,7 +98,6 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
 
     imageLoads =
         List.generate(widget.buttonData.images.length, (index) => false);
-
     dataSetUpAPi();
     super.initState();
   }
@@ -112,11 +113,13 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
       _controller = VideoPlayerController.networkUrl(
           (Uri.parse('${widget.buttonData.images[_curSegmentIndex].image}')))
         ..initialize().then((_) {
-          super.setState(() {
-            ifVideoPlayer = true;
-            durationOfVideo = _controller!.value.duration;
-            _controller?.play();
-          });
+          if (mounted) {
+            super.setState(() {
+              ifVideoPlayer = true;
+              durationOfVideo = _controller!.value.duration;
+              _controller?.play();
+            });
+          }
         });
     }
   }
@@ -146,20 +149,26 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
         _controller = VideoPlayerController.networkUrl(
             (Uri.parse('${widget.buttonData.images[_curSegmentIndex].image}')))
           ..initialize().then((_) {
-            super.setState(() {
-              ifVideoPlayer = true;
-              durationOfVideo = _controller!.value.duration;
-              _controller?.play();
-            });
+            if (mounted) {
+              super.setState(() {
+                ifVideoPlayer = true;
+                durationOfVideo = _controller!.value.duration;
+                _controller?.play();
+              });
+            }
           });
       } else {
-        super.setState(() {
-          ifVideoPlayer = false;
-          _controller?.dispose();
-        });
+        if (mounted) {
+          super.setState(() {
+            ifVideoPlayer = false;
+            _controller?.dispose();
+          });
+        }
       }
     }
-    super.setState(() {});
+    if (mounted) {
+      super.setState(() {});
+    }
   }
 
   Widget _buildCloseButton() {
@@ -173,12 +182,32 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
         child: MaterialButton(
           padding: EdgeInsets.zero,
           onPressed: () {
-            if (widget.onClosePressed != null) {
+            print("this is the check -${isDataGet}");
+            if (isDataGet == true) {
+              print("this is Data Get");
+              _storyController!.unpause();
+
+              WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+                if (mounted) {
+                  super.setState(() {
+                    _focusNode?.unfocus();
+                    isDataGet = false;
+                    isBottomSheetOpen = false;
+                  });
+                }
+              });
+              widget.onClosePressed!.call();
+            } else if (widget.onClosePressed != null) {
+              widget.onClosePressed!.call();
+            } else {
+              Navigator.of(context).pop();
+            }
+            /*  if (widget.onClosePressed != null) {
               widget.onClosePressed!.call();
             } else {
               _controller?.dispose();
               Navigator.of(context).pop();
-            }
+            } */
           },
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(
@@ -343,9 +372,7 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
 
           // Image has been loaded
           imageLoaded = true;
-
           _storyController!.unpause();
-
           if (DummyStoryViewBool == true) {
             StoryView = true;
             BlocProvider.of<ViewStoryCubit>(context).StoryViewList(context,
@@ -390,47 +417,43 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
             ),
           )
         : StoryPageScaffold(
-            body: widget.buttonData.images[_curSegmentIndex].image!
-                    .contains("car")
-                ? Container(
-                    width: double.infinity,
-                    height: double.infinity,
-                    decoration: BoxDecoration(
-                      image: widget.buttonData.images[_curSegmentIndex].image!
-                              .contains("car")
-                          ? DecorationImage(
-                              image: AssetImage(ImageConstant.pdslogo),
-                              fit: BoxFit.cover,
-                            )
-                          : DecorationImage(
-                              image: networkImage,
-                              fit: BoxFit.cover,
-                            ),
+            body: Container(
+            width: double.infinity,
+            height: double.infinity,
+            decoration: BoxDecoration(
+              image: widget.buttonData.images[_curSegmentIndex].image!
+                      .contains("car")
+                  ? DecorationImage(
+                      image: AssetImage(ImageConstant.pdslogo),
+                      fit: BoxFit.cover,
+                    )
+                  : DecorationImage(
+                      image: networkImage,
+                      fit: BoxFit.cover,
                     ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          Text(
-                            '',
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 30.0,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          )
-                        ],
-                      ),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Text(
+                    '',
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 30.0,
+                      fontWeight: FontWeight.bold,
                     ),
                   )
-                : ZoomableImage(
-                    imageUrl: widget.buttonData.images[_curSegmentIndex].image!,
-                  ));
+                ],
+              ),
+            ),
+          ));
   }
 
   Widget _buildPageContent1() {
+    _controller?.dispose();
     dataFunctionSetup();
 
     bool imageLoaded = false;
@@ -512,6 +535,7 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
   Widget _buildPageStructure() {
     var _height = MediaQuery.of(context).size.height;
     var _width = MediaQuery.of(context).size.width;
+
     return Listener(
       onPointerDown: (PointerDownEvent event) async {
         _pointerDownMillis = _stopwatch.elapsedMilliseconds;
@@ -549,7 +573,7 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
               final distance = (position - _pointerDownPosition).distance;
               if (distance < 5.0) {
                 final isLeft = _isLeftPartOfStory(position);
-                if (isLeft) {
+                if (isLeft) { 
                   _storyController!.previousSegment();
                 } else {
                   _storyController!.nextSegment();
@@ -623,14 +647,290 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
                             User_ID
                         ? GestureDetector(
                             onTapDown: (details) {
+                              print("dfgdgdfhgdfhhfghghdfhgdfhgdfh");
                               _pointerDownMillis =
                                   _stopwatch.elapsedMilliseconds;
                               _pointerDownPosition = details.localPosition;
                               _storyController!.pause();
-                              super.setState(() {
-                                isBottomSheetOpen = true;
-                              });
+                              if (mounted) {
+                                super.setState(() {
+                                  isBottomSheetOpen = true;
+                                });
+                              }
                               showModalBottomSheet(
+                                  isScrollControlled: true,
+                                  useSafeArea: true,
+                                  isDismissible: true,
+                                  showDragHandle: false,
+                                  enableDrag: true,
+                                  context: context,
+                                  builder: (context) {
+                                    return StatefulBuilder(builder:
+                                        (BuildContext context,
+                                            StateSetter setState) {
+                                      return BlocConsumer<ViewStoryCubit,
+                                          ViewStoryState>(
+                                        listener: (context, state) {
+                                          if (state is PostLikeLoadedState) {
+                                            print(
+                                                "check State-${state.likePost.message.toString()}");
+                                                 BlocProvider.of<ViewStoryCubit>(
+                                                    context)
+                                                .StoryViewList(context,
+                                                    "${widget.buttonData.images[_curSegmentIndex].storyUid}");
+                                          }
+                                        },
+                                        builder: (context, state) {
+                                          return Column(
+                                            children: [
+                                              SizedBox(
+                                                height: 30,
+                                              ),
+                                              Container(
+                                                width: _width,
+                                                child: Row(
+                                                  children: [
+                                                    SizedBox(
+                                                      width: _width / 2.3,
+                                                    ),
+                                                    // Spacer(),
+                                                    Container(
+                                                      height: 2,
+                                                      width: 50,
+                                                      alignment:
+                                                          Alignment.center,
+                                                      padding:
+                                                          EdgeInsets.all(8.0),
+                                                      decoration: BoxDecoration(
+                                                        color: Colors.grey,
+                                                      ),
+                                                    ),
+                                                    Spacer(),
+                                                    GestureDetector(
+                                                      onTap: () async {
+                                                        await BlocProvider.of<
+                                                                    ViewStoryCubit>(
+                                                                context)
+                                                            .delete_story(
+                                                                context,
+                                                                "${widget.buttonData.images[_curSegmentIndex].storyUid}");
+                                                      },
+                                                      child: Icon(
+                                                        Icons.delete,
+                                                        color: ColorConstant
+                                                            .primary_color,
+                                                      ),
+                                                    ),
+                                                    SizedBox(
+                                                      width: 30,
+                                                    )
+                                                  ],
+                                                ),
+                                              ),
+                                              Expanded(
+                                                child: ListView.separated(
+                                                    shrinkWrap: true,
+                                                    primary: true,
+                                                    itemCount:
+                                                        StoryViewListModelData
+                                                                ?.object?.length ??
+                                                            0,
+                                                    separatorBuilder:
+                                                        (BuildContext context,
+                                                                int index) =>
+                                                            const Divider(),
+                                                    itemBuilder:
+                                                        (BuildContext context,
+                                                            int index) {
+                                                      return Container(
+                                                        // height: 40,
+                                                        width: _width,
+                                                        // color: Colors.green,
+                                                        child: ListTile(
+                                                          leading:
+                                                              GestureDetector(
+                                                            onTap: () {
+                                                              Navigator.push(
+                                                                  context,
+                                                                  MaterialPageRoute(
+                                                                      builder:
+                                                                          (context) {
+                                                                return MultiBlocProvider(
+                                                                    providers: [
+                                                                      BlocProvider<
+                                                                          NewProfileSCubit>(
+                                                                        create: (context) =>
+                                                                            NewProfileSCubit(),
+                                                                      ),
+                                                                    ],
+                                                                    child:
+                                                                        ProfileScreen(
+                                                                      User_ID:
+                                                                          "${StoryViewListModelData?.object?[index].userUid}",
+                                                                      isFollowing:
+                                                                          "${StoryViewListModelData?.object?[index].isFollowing}",
+                                                                    ));
+                                                              }));
+
+                                                              // Navigator.push(
+                                                              //     context,
+                                                              //     MaterialPageRoute(
+                                                              //         builder: (context) =>
+                                                              //             ProfileScreen(
+                                                              //               User_ID:
+                                                              //                   "${StoryViewListModelData?.object?[index].userUid}",
+                                                              //               isFollowing:
+                                                              //                   "${StoryViewListModelData?.object?[index].isFollowing}",
+                                                              //             )));
+                                                            },
+                                                            child: StoryViewListModelData
+                                                                            ?.object?[
+                                                                                index]
+                                                                            .profilePic !=
+                                                                        null &&
+                                                                    StoryViewListModelData
+                                                                            ?.object?[
+                                                                                index]
+                                                                            .profilePic !=
+                                                                        ""
+                                                                ? CircleAvatar(
+                                                                    backgroundColor:
+                                                                        Colors
+                                                                            .white,
+                                                                    backgroundImage:
+                                                                        NetworkImage(
+                                                                            "${StoryViewListModelData?.object?[index].profilePic}"),
+                                                                    radius: 25,
+                                                                  )
+                                                                : CustomImageView(
+                                                                    imagePath:
+                                                                        (ImageConstant
+                                                                            .tomcruse)),
+                                                          ),
+                                                          title: Column(
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .start,
+                                                            children: [
+                                                              SizedBox(
+                                                                height: 6,
+                                                              ),
+                                                              Container(
+                                                                // color: Colors.amber,
+                                                                child: Text(
+                                                                  "${StoryViewListModelData?.object?[index].userName}",
+                                                                  style: TextStyle(
+                                                                      fontSize:
+                                                                          20,
+                                                                      fontFamily:
+                                                                          "outfit",
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .bold),
+                                                                ),
+                                                              ),
+                                                              // Text(
+                                                              //   customFormat(
+                                                              //       parsedDateTime),
+                                                              //   style: TextStyle(
+                                                              //     fontSize: 12,
+                                                              //     fontFamily: "outfit",
+                                                              //   ),
+                                                              // ),
+                                                            ],
+                                                          ),
+                                                          trailing: User_ID ==
+                                                                  StoryViewListModelData
+                                                                      ?.object?[
+                                                                          index]
+                                                                      .userUid
+                                                              ? SizedBox()
+                                                              : GestureDetector(
+                                                                  onTap:
+                                                                      () async {
+                                                                    BlocProvider.of<ViewStoryCubit>(context).followWIngMethodd(
+                                                                        StoryViewListModelData
+                                                                            ?.object?[index]
+                                                                            .userUid,
+                                                                        context);
+                                                                  },
+                                                                  child:
+                                                                      Container(
+                                                                    height: 25,
+                                                                    alignment:
+                                                                        Alignment
+                                                                            .center,
+                                                                    width: 65,
+                                                                    margin: EdgeInsets.only(
+                                                                        bottom:
+                                                                            5),
+                                                                    decoration: BoxDecoration(
+                                                                        color: ColorConstant
+                                                                            .primary_color,
+                                                                        borderRadius:
+                                                                            BorderRadius.circular(4)),
+                                                                    child: StoryViewListModelData?.object?[index].isFollowing ==
+                                                                            'FOLLOW'
+                                                                        ? Text(
+                                                                            'Follow',
+                                                                            style: TextStyle(
+                                                                                fontFamily: "outfit",
+                                                                                fontSize: 12,
+                                                                                fontWeight: FontWeight.bold,
+                                                                                color: Colors.white),
+                                                                          )
+                                                                        : StoryViewListModelData?.object?[index].isFollowing ==
+                                                                                'REQUESTED'
+                                                                            ? Text(
+                                                                                'Requested',
+                                                                                style: TextStyle(fontFamily: "outfit", fontSize: 12, fontWeight: FontWeight.bold, color: Colors.white),
+                                                                              )
+                                                                            : Text(
+                                                                                'Following ',
+                                                                                style: TextStyle(fontFamily: "outfit", fontSize: 12, fontWeight: FontWeight.bold, color: Colors.white),
+                                                                              ),
+                                                                  ),
+                                                                ),
+                                                        ),
+                                                      );
+                                                    }),
+                                              ),
+                                            ],
+                                          );
+                                        },
+                                      );
+                                    });
+                                  }).then((value) {
+                                final pointerUpMillis =
+                                    _stopwatch.elapsedMilliseconds;
+                                final maxPressMillis =
+                                    kPressTimeout.inMilliseconds * 2;
+                                final diffMillis =
+                                    pointerUpMillis - _pointerDownMillis;
+                                if (diffMillis <= maxPressMillis) {
+                                  final position = event1.position;
+                                  final distance =
+                                      (position - _pointerDownPosition)
+                                          .distance;
+                                  if (distance < 5.0) {
+                                    final isLeft = _isLeftPartOfStory(position);
+                                    if (isLeft) {
+                                      _storyController!.previousSegment();
+                                    } else {
+                                      _storyController!.nextSegment();
+                                    }
+                                  }
+                                }
+                                print("bottom sheet closed : unpause");
+                                if (mounted) {
+                                  super.setState(() {
+                                    isBottomSheetOpen = false;
+                                  });
+                                }
+
+                                _storyController!.unpause();
+                              });
+                              /* showModalBottomSheet(
                                   isScrollControlled: true,
                                   useSafeArea: true,
                                   isDismissible: true,
@@ -796,7 +1096,23 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
                                                                 .userUid
                                                         ? SizedBox()
                                                         : GestureDetector(
-                                                            onTap: () {
+                                                            onTap: () async {
+                                                              Repository().folliwingMethod(
+                                                                  StoryViewListModelData
+                                                                      ?.object?[
+                                                                          index]
+                                                                      .userUid,
+                                                                  context);
+                                                              await BlocProvider
+                                                                      .of<ViewStoryCubit>(
+                                                                          context)
+                                                                  .StoryViewList(
+                                                                      context,
+                                                                      "${widget.buttonData.images[_curSegmentIndex].storyUid}");
+                                                                      setState(() {
+                                                                        
+                                                                      });
+                                                              // this is the bottosheet
                                                               // followFunction(
                                                               //   apiName: 'Follow',
                                                               //   index: index,
@@ -849,7 +1165,7 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
                                                                               color: Colors.white),
                                                                         )
                                                                       : Text(
-                                                                          'Following ',
+                                                                          'Following',
                                                                           style: TextStyle(
                                                                               fontFamily: "outfit",
                                                                               fontSize: 12,
@@ -886,11 +1202,14 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
                                   }
                                 }
                                 print("bottom sheet closed : unpause");
-                                super.setState(() {
-                                  isBottomSheetOpen = false;
-                                });
+                                if (mounted) {
+                                  super.setState(() {
+                                    isBottomSheetOpen = false;
+                                  });
+                                }
+
                                 _storyController!.unpause();
-                              });
+                              }); */
                             },
                             //this is the view counet
                             child: Container(
@@ -946,70 +1265,72 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
                       child: Row(
                         children: [
                           Expanded(
-                            child: TextField(
-                              controller: reactionData,
-                              focusNode: _focusNode,
-                              minLines: 1,
-                              maxLines: null,
-                              onTap: () {
-                                if (User_ID !=
-                                    widget.buttonData.images[_curSegmentIndex]
-                                        .userUid) {
-                                  final pointerUpMillis =
-                                      _stopwatch.elapsedMilliseconds;
-                                  final maxPressMillis =
-                                      kPressTimeout.inMilliseconds * 2;
-                                  final diffMillis =
-                                      pointerUpMillis - _pointerDownMillis;
-                                  if (diffMillis <= maxPressMillis) {
-                                    final position = event1.position;
-                                    final distance =
-                                        (position - _pointerDownPosition)
-                                            .distance;
-                                    if (distance < 5.0) {
-                                      final isLeft =
-                                          _isLeftPartOfStory(position);
-                                      if (isLeft) {
-                                        _storyController!.previousSegment();
-                                      } else {
-                                        _storyController!.nextSegment();
-                                      }
+                            child: Container(
+                              color: Colors.transparent,
+                              child: TextField(
+                                controller: reactionData,
+                                focusNode: _focusNode,
+                                minLines: 1,
+                                maxLines: null,
+                                onTap: () {
+                                  print("else working");
+                                  print(
+                                      "checkOntap -${_stopwatch.elapsedMilliseconds}");
+                                  if (User_ID !=
+                                      widget.buttonData.images[_curSegmentIndex]
+                                          .userUid) {
+                                    print(
+                                        "eventDataPosttion-${eventdata.position}");
+                                    RenderBox renderBox =
+                                        context.findRenderObject() as RenderBox;
+                                    Offset position =
+                                        renderBox.localToGlobal(Offset.zero);
+                                    print("posttion check -${position}");
+                                    print(
+                                        "posttion check1-${_stopwatch.elapsedMilliseconds}");
+                                    _pointerDownMillis =
+                                        _stopwatch.elapsedMilliseconds;
+                                    _pointerDownPosition = position;
+                                    _storyController?.pause();
+                                    FocusScope.of(context)
+                                        .requestFocus(_focusNode);
+                                    if (mounted) {
+                                      super.setState(() {
+                                        isBottomSheetOpen = true;
+                                        isDataGet = true;
+                                      });
+                                    }
+                                    /*   WidgetsBinding.instance
+                                        .addPostFrameCallback((timeStamp) {
+                                      
+                                    }); */
+                                  }
+                                },
+                                onChanged: (value) {
+                                  if (value.isEmpty) {
+                                    if (mounted) {
+                                      setState(() {
+                                        isDataGet = true;
+                                      });
+                                    }
+                                  } else {
+                                    if (mounted) {
+                                      setState(() {
+                                        isDataGet = false;
+                                      });
                                     }
                                   }
-                                  FocusScope.of(context)
-                                      .requestFocus(_focusNode);
-                                  WidgetsBinding.instance
-                                      .addPostFrameCallback((timeStamp) {
-                                    super.setState(() {
-                                      isBottomSheetOpen = true;
-                                    });
-                                  });
-                                }
-
-                                setState(() {
-                                  isDataGet = true;
-                                });
-                              },
-                              onChanged: (value) {
-                                if (value.isEmpty) {
-                                  setState(() {
-                                    isDataGet = true;
-                                  });
-                                } else {
-                                  setState(() {
-                                    isDataGet = false;
-                                  });
-                                }
-                              },
-                              style: TextStyle(color: Colors.white),
-                              decoration: InputDecoration(
-                                  contentPadding: EdgeInsets.only(
-                                    left: 15,
-                                    right: 15,
-                                  ),
-                                  hintText: 'Send Meesage',
-                                  hintStyle: TextStyle(color: Colors.white),
-                                  border: InputBorder.none),
+                                },
+                                style: TextStyle(color: Colors.white),
+                                decoration: InputDecoration(
+                                    contentPadding: EdgeInsets.only(
+                                      left: 15,
+                                      right: 15,
+                                    ),
+                                    hintText: 'Send Meesage',
+                                    hintStyle: TextStyle(color: Colors.white),
+                                    border: InputBorder.none),
+                              ),
                             ),
                           ),
                           TextButton(
@@ -1020,35 +1341,21 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
                                   widget.buttonData.images[_curSegmentIndex]
                                       .storyUid
                                       .toString());
+
                               if (User_ID !=
                                   widget.buttonData.images[_curSegmentIndex]
                                       .userUid) {
-                                final pointerUpMillis =
-                                    _stopwatch.elapsedMilliseconds;
-                                final maxPressMillis =
-                                    kPressTimeout.inMilliseconds * 2;
-                                final diffMillis =
-                                    pointerUpMillis - _pointerDownMillis;
-                                if (diffMillis <= maxPressMillis) {
-                                  final position = event1.position;
-                                  final distance =
-                                      (position - _pointerDownPosition)
-                                          .distance;
-                                  if (distance < 5.0) {
-                                    final isLeft = _isLeftPartOfStory(position);
-                                    if (isLeft) {
-                                      _storyController!.previousSegment();
-                                    } else {
-                                      _storyController!.nextSegment();
-                                    }
-                                  }
-                                }
-                                FocusScope.of(context).requestFocus(_focusNode);
+                                reactionData.clear();
+                                _storyController!.unpause();
                                 WidgetsBinding.instance
                                     .addPostFrameCallback((timeStamp) {
-                                  super.setState(() {
-                                    isBottomSheetOpen = true;
-                                  });
+                                  if (mounted) {
+                                    super.setState(() {
+                                      _focusNode?.unfocus();
+                                      isDataGet = false;
+                                      isBottomSheetOpen = false;
+                                    });
+                                  }
                                 });
                               }
                             },
@@ -1146,6 +1453,7 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
     _stopwatch.stop();
     _storyController!.removeListener(_onTimelineEvent);
     _controller?.dispose();
+    durationOfVideo = null;
     super.dispose();
   }
 
@@ -1214,33 +1522,20 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
     Repository().reactionMessageAddedOnStory(context, emoji,
         widget.buttonData.images[_curSegmentIndex].storyUid.toString(),
         emojiReaction: true);
+
     if (User_ID != widget.buttonData.images[_curSegmentIndex].userUid) {
-      final pointerUpMillis = _stopwatch.elapsedMilliseconds;
-      final maxPressMillis = kPressTimeout.inMilliseconds * 2;
-      final diffMillis = pointerUpMillis - _pointerDownMillis;
-      if (diffMillis <= maxPressMillis) {
-        final position = event1.position;
-        final distance = (position - _pointerDownPosition).distance;
-        if (distance < 5.0) {
-          final isLeft = _isLeftPartOfStory(position);
-          if (isLeft) {
-            _storyController!.previousSegment();
-          } else {
-            _storyController!.nextSegment();
-          }
-        }
-      }
-      FocusScope.of(context).requestFocus(_focusNode);
+      _storyController!.unpause();
       WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-        super.setState(() {
-          isBottomSheetOpen = true;
-        });
+        if (mounted) {
+          super.setState(() {
+            _focusNode?.unfocus();
+            isDataGet = false;
+            isBottomSheetOpen = false;
+          });
+        }
       });
     }
-    setState(() {
-      _focusNode?.unfocus();
-      isDataGet = false;
-    });
+
     // Navigator.of(context).pop(); // Close the dialog
   }
 
@@ -1584,10 +1879,11 @@ class _ZoomableImageState extends State<ZoomableImage> {
     bytes = response.bodyBytes;
 
     final memoryImage = MemoryImage(Uint8List.fromList(bytes!));
-
-    super.setState(() {
-      _memoryImage = memoryImage;
-    });
+    if (mounted) {
+      super.setState(() {
+        _memoryImage = memoryImage;
+      });
+    }
   }
 
   Widget build(BuildContext context) {

@@ -336,8 +336,7 @@ class _InboxScreenState extends State<InboxScreen> {
                           borderRadius: BorderRadius.circular(10),
                           onPressed: (context) {
                             super.setState(() {
-                              BlocProvider.of<PersonalChatListCubit>(
-                                      context)
+                              BlocProvider.of<PersonalChatListCubit>(context)
                                   .UserChatDelete(
                                       "${PersonalChatListModelData?.object?[index].userChatInboxUid}",
                                       context);
@@ -390,6 +389,8 @@ class _InboxScreenState extends State<InboxScreen> {
                       Navigator.push(context,
                           MaterialPageRoute(builder: (context) {
                         return DmScreen(
+                          isBlock:
+                              PersonalChatListModelData?.object?[index].isBlock,
                           isExpert: PersonalChatListModelData
                               ?.object?[index].isExpert,
                           UserUID:
@@ -440,14 +441,13 @@ class _InboxScreenState extends State<InboxScreen> {
                                               height: 60,
                                               width: 60,
                                               fit: BoxFit.cover,
-                                              radius:
-                                                  BorderRadius.circular(30),
+                                              radius: BorderRadius.circular(30),
                                             )
                                           : CustomImageView(
                                               imagePath:
                                                   ImageConstant.tomcruse)),
-                                  PersonalChatListModelData?.object?[index]
-                                              .onlineStatus ==
+                                  PersonalChatListModelData
+                                              ?.object?[index].onlineStatus ==
                                           true
                                       ? Positioned(
                                           bottom: 1,
@@ -483,17 +483,14 @@ class _InboxScreenState extends State<InboxScreen> {
                                               "${PersonalChatListModelData?.object?[index].userName ?? ""}",
                                               style: TextStyle(
                                                   fontSize: 15,
-                                                  fontWeight:
-                                                      FontWeight.w600),
+                                                  fontWeight: FontWeight.w600),
                                             ),
                                             if (PersonalChatListModelData
-                                                    ?.object?[index]
-                                                    .isExpert ==
+                                                    ?.object?[index].isExpert ==
                                                 true)
                                               Padding(
-                                                padding:
-                                                    const EdgeInsets.only(
-                                                        left: 2),
+                                                padding: const EdgeInsets.only(
+                                                    left: 2),
                                                 child: Image.asset(
                                                   ImageConstant.Star,
                                                   height: 18,
@@ -501,8 +498,7 @@ class _InboxScreenState extends State<InboxScreen> {
                                               ),
                                             Spacer(),
                                             Text(
-                                              getTimeDifference(
-                                                  parsedDateTime),
+                                              getTimeDifference(parsedDateTime),
                                               style: TextStyle(
                                                 fontSize: 11,
                                                 fontWeight: FontWeight.w400,
@@ -548,15 +544,15 @@ class _InboxScreenState extends State<InboxScreen> {
                                                       TextOverflow.ellipsis,
                                                   style: TextStyle(
                                                     fontSize: 15,
-                                                    fontWeight:
-                                                        FontWeight.w600,
-                                                    color: PersonalChatListModelData
-                                                                ?.object?[
-                                                                    index]
-                                                                .isSeen ==
-                                                            true
-                                                        ? Colors.grey
-                                                        : Colors.black,
+                                                    fontWeight: FontWeight.w600,
+                                                    color:
+                                                        PersonalChatListModelData
+                                                                    ?.object?[
+                                                                        index]
+                                                                    .isSeen ==
+                                                                true
+                                                            ? Colors.grey
+                                                            : Colors.black,
                                                   ),
                                                 ),
                                         ),

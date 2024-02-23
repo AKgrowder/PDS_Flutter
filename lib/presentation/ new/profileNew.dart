@@ -53,6 +53,7 @@ import '../../API/Model/HasTagModel/hasTagModel.dart';
 import '../../API/Model/UserTagModel/UserTag_model.dart';
 import '../../API/Model/WorkExperience_Model/WorkExperience_model.dart';
 import '../../API/Model/serchForInboxModel/serchForinboxModel.dart';
+import '../../widgets/Block_dailog.dart';
 import '../Create_Post_Screen/Ceratepost_Screen.dart';
 import 'comment_bottom_sheet.dart';
 
@@ -163,7 +164,8 @@ class _ProfileScreenState extends State<ProfileScreen>
   int selectedIndex = 0;
   bool swipLeft = false;
   bool swipeRigth = false;
-  final key = GlobalKey();
+  GlobalKey key = GlobalKey();
+  GlobalKey blockKey = GlobalKey();
   String getTimeDifference(DateTime dateTime) {
     final difference = DateTime.now().difference(dateTime);
     if (difference.inDays > 0) {
@@ -309,6 +311,7 @@ class _ProfileScreenState extends State<ProfileScreen>
       if (state is DMChatListLoadedState) {
         Navigator.push(context, MaterialPageRoute(builder: (context) {
           return DmScreen(
+            isBlock: NewProfileData?.object?.isBlock,
             UserUID: "${NewProfileData?.object?.userUid}",
             UserName: "${NewProfileData?.object?.userName}",
             ChatInboxUid: state.DMChatList.object ?? "",
@@ -650,6 +653,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                 alignment: Alignment.bottomCenter,
                                 child: GestureDetector(
                                   onTap: () {
+                                    print("frgfgdfggdfgdfhghfdgh");
                                     if (NewProfileData?.object?.userProfilePic
                                                 ?.isNotEmpty ==
                                             true &&
@@ -877,18 +881,20 @@ class _ProfileScreenState extends State<ProfileScreen>
                               ),
                             ),
                             NewProfileData?.object?.approvalStatus ==
-                                    'PENDING' ||
-                                NewProfileData?.object?.approvalStatus ==
-                                    'REJECTED' ? SizedBox():
-                              NewProfileData?.object?.module == "EXPERT" ?
-                                Padding(
-                                  padding:
-                                      const EdgeInsets.only(bottom: 4, left: 3),
-                                  child: Image.asset(
-                                    ImageConstant.Star,
-                                    height: 18,
-                                  ),
-                                ) : SizedBox()
+                                        'PENDING' ||
+                                    NewProfileData?.object?.approvalStatus ==
+                                        'REJECTED'
+                                ? SizedBox()
+                                : NewProfileData?.object?.module == "EXPERT"
+                                    ? Padding(
+                                        padding: const EdgeInsets.only(
+                                            bottom: 4, left: 3),
+                                        child: Image.asset(
+                                          ImageConstant.Star,
+                                          height: 18,
+                                        ),
+                                      )
+                                    : SizedBox()
                           ],
                         ),
 
@@ -1073,6 +1079,39 @@ class _ProfileScreenState extends State<ProfileScreen>
                                           ),
                                         )
                                       : SizedBox(),
+                                  // Padding(
+                                  //   padding: const EdgeInsets.only(left: 10),
+                                  //   child: GestureDetector(
+                                  //     key: blockKey,
+                                  //     onTap: () {
+                                  //       showPopupMenuBlock(
+                                  //           context,
+                                  //           NewProfileData?.object?.userUid,
+                                  //           NewProfileData?.object?.name,
+                                  //           blockKey);
+                                  //     },
+                                  //     child: Container(
+                                  //       height: 40,
+                                  //       width: 40,
+                                  //       decoration: BoxDecoration(
+                                  //         color: ColorConstant.primary_color,
+                                  //         borderRadius:
+                                  //             BorderRadius.circular(10),
+                                  //       ),
+                                  //       child: Center(
+                                  //         child: Icon(
+                                  //           Icons.more_vert_rounded,
+                                  //           color: Colors.white,
+                                  //         ) /* CustomImageView(
+                                  //                       height: 20,
+                                  //                       width: 20,
+                                  //                       imagePath:
+                                  //                           ImageConstant.chat) */
+                                  //         ,
+                                  //       ),
+                                  //     ),
+                                  //   ),
+                                  // ),
                                   Spacer(),
                                 ],
                               ),
@@ -1325,13 +1364,20 @@ class _ProfileScreenState extends State<ProfileScreen>
                         /* NewProfileData?.object?.isFollowing == 'FOLLOWING' ||
                         User_ID == NewProfileData?.object?.userUid || NewProfileData?.object?.accountType == 'PUBLIC' */
 
-                        if (User_ID == NewProfileData?.object?.userUid ||
+                        /*  if (User_ID == NewProfileData?.object?.userUid ||
                             (NewProfileData?.object?.isFollowing ==
                                     'FOLLOWING' &&
                                 (NewProfileData?.object?.accountType ==
                                         'PRIVATE' ||
                                     NewProfileData?.object?.accountType ==
-                                        'PUBLIC')))
+                                        'PUBLIC'))) */
+
+                        if (User_ID == NewProfileData?.object?.userUid ||
+                            (NewProfileData?.object?.accountType == 'PUBLIC') ||
+                            (NewProfileData?.object?.isFollowing ==
+                                    'FOLLOWING' &&
+                                NewProfileData?.object?.accountType ==
+                                    'PRIVATE'))
                           Container(
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -1561,12 +1607,11 @@ class _ProfileScreenState extends State<ProfileScreen>
                             ),
                           ),
                         if (User_ID == NewProfileData?.object?.userUid ||
+                            (NewProfileData?.object?.accountType == 'PUBLIC') ||
                             (NewProfileData?.object?.isFollowing ==
                                     'FOLLOWING' &&
-                                (NewProfileData?.object?.accountType ==
-                                        'PRIVATE' ||
-                                    NewProfileData?.object?.accountType ==
-                                        'PUBLIC')))
+                                NewProfileData?.object?.accountType ==
+                                    'PRIVATE'))
 
                           /* Container(
                         // color: Colors.red,
@@ -1681,7 +1726,792 @@ class _ProfileScreenState extends State<ProfileScreen>
                                               crossAxisAlignment:
                                                   CrossAxisAlignment.start,
                                               children: [
-                                                User_ID !=
+                                                if (User_ID ==
+                                                    NewProfileData
+                                                        ?.object?.userUid)
+                                                  Card(
+                                                      color: Colors.white,
+                                                      borderOnForeground: true,
+                                                      elevation: 10,
+                                                      shape:
+                                                          RoundedRectangleBorder(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(15.0),
+                                                      ),
+                                                      child: Column(
+                                                        children: [
+                                                          Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                        .only(
+                                                                    top: 10,
+                                                                    right: 20,
+                                                                    left: 20),
+                                                            child: Row(
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .spaceBetween,
+                                                              children: [
+                                                                Text(
+                                                                  'About Me',
+                                                                  style:
+                                                                      TextStyle(
+                                                                    color: Colors
+                                                                        .black,
+                                                                    fontSize:
+                                                                        18,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w600,
+                                                                  ),
+                                                                ),
+                                                                User_ID !=
+                                                                        NewProfileData
+                                                                            ?.object
+                                                                            ?.userUid
+                                                                    ? SizedBox
+                                                                        .shrink()
+                                                                    : GestureDetector(
+                                                                        onTap:
+                                                                            () {
+                                                                          super.setState(
+                                                                              () {
+                                                                            isUpDate =
+                                                                                true;
+                                                                            isAbourtMe =
+                                                                                false;
+                                                                            AbboutMeShow =
+                                                                                false;
+                                                                          });
+                                                                        },
+                                                                        child: isUpDate ==
+                                                                                true
+                                                                            ? GestureDetector(
+                                                                                onTap: () {
+                                                                                  if (aboutMe.text.isNotEmpty) {
+                                                                                    BlocProvider.of<NewProfileSCubit>(context).abboutMeApi(context, aboutMe.text);
+                                                                                  } else {
+                                                                                    SnackBar snackBar = SnackBar(
+                                                                                      content: Text('Please Enter About Me'),
+                                                                                      backgroundColor: ColorConstant.primary_color,
+                                                                                    );
+                                                                                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                                                                  }
+                                                                                },
+                                                                                child: Container(
+                                                                                  alignment: Alignment.center,
+                                                                                  height: 24,
+                                                                                  width: 50,
+                                                                                  decoration: BoxDecoration(
+                                                                                    borderRadius: BorderRadius.circular(5),
+                                                                                    color: ColorConstant.primary_color,
+                                                                                  ),
+                                                                                  child: Text(
+                                                                                    'SAVE',
+                                                                                    style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                                                                                  ),
+                                                                                ),
+                                                                              )
+                                                                            : Icon(
+                                                                                Icons.edit,
+                                                                                color: Colors.black,
+                                                                              ),
+                                                                      )
+                                                              ],
+                                                            ),
+                                                          ),
+                                                          isUpDate == false
+                                                              ? Padding(
+                                                                  padding: const EdgeInsets
+                                                                          .only(
+                                                                      top: 12,
+                                                                      left: 10,
+                                                                      right: 10,
+                                                                      bottom:
+                                                                          15),
+                                                                  child:
+                                                                      Container(
+                                                                    child:
+                                                                        LinkifyText(
+                                                                      "${aboutMe.text}",
+                                                                      linkStyle:
+                                                                          TextStyle(
+                                                                        color: Colors
+                                                                            .blue,
+                                                                        fontFamily:
+                                                                            'outfit',
+                                                                      ),
+                                                                      textStyle:
+                                                                          TextStyle(
+                                                                        color: Colors
+                                                                            .black,
+                                                                        fontFamily:
+                                                                            'outfit',
+                                                                      ),
+                                                                      linkTypes: [
+                                                                        LinkType
+                                                                            .url,
+                                                                        LinkType
+                                                                            .userTag,
+                                                                        LinkType
+                                                                            .hashTag,
+                                                                        // LinkType
+                                                                        //     .email
+                                                                      ],
+                                                                      onTap:
+                                                                          (link) async {
+                                                                        /// do stuff with `link` like
+                                                                        /// if(link.type == Link.url) launchUrl(link.value);
+
+                                                                        var SelectedTest = link
+                                                                            .value
+                                                                            .toString();
+                                                                        var Link =
+                                                                            SelectedTest.startsWith('https');
+                                                                        var Link1 =
+                                                                            SelectedTest.startsWith('http');
+                                                                        var Link2 =
+                                                                            SelectedTest.startsWith('www');
+                                                                        var Link3 =
+                                                                            SelectedTest.startsWith('WWW');
+                                                                        var Link4 =
+                                                                            SelectedTest.startsWith('HTTPS');
+                                                                        var Link5 =
+                                                                            SelectedTest.startsWith('HTTP');
+                                                                        var Link6 =
+                                                                            SelectedTest.startsWith('https://pdslink.page.link/');
+                                                                        print(SelectedTest
+                                                                            .toString());
+
+                                                                        if (User_ID ==
+                                                                            null) {
+                                                                          Navigator.of(context)
+                                                                              .push(MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
+                                                                        } else {
+                                                                          if (Link == true ||
+                                                                              Link1 == true ||
+                                                                              Link2 == true ||
+                                                                              Link3 == true ||
+                                                                              Link4 == true ||
+                                                                              Link5 == true ||
+                                                                              Link6 == true) {
+                                                                            if (Link2 == true ||
+                                                                                Link3 == true) {
+                                                                              launchUrl(Uri.parse("https://${link.value.toString()}"));
+                                                                              print("qqqqqqqqhttps://${link.value}");
+                                                                            } else {
+                                                                              if (Link6 == true) {
+                                                                                print("yes i am inList =   room");
+                                                                                Navigator.push(context, MaterialPageRoute(
+                                                                                  builder: (context) {
+                                                                                    return NewBottomBar(
+                                                                                      buttomIndex: 1,
+                                                                                    );
+                                                                                  },
+                                                                                ));
+                                                                              } else {
+                                                                                launchUrl(Uri.parse(link.value.toString()));
+                                                                                print("link.valuelink.value -- ${link.value}");
+                                                                              }
+                                                                            }
+                                                                          } else {
+                                                                            if (link.value!.startsWith('#')) {
+                                                                              Navigator.push(
+                                                                                  context,
+                                                                                  MaterialPageRoute(
+                                                                                    builder: (context) => HashTagViewScreen(title: "${link.value}"),
+                                                                                  ));
+                                                                            } else if (link.value!.startsWith('@')) {
+                                                                              var name;
+                                                                              var tagName;
+                                                                              name = SelectedTest;
+                                                                              tagName = name.replaceAll("@", "");
+                                                                              await BlocProvider.of<NewProfileSCubit>(context).UserTagAPI(context, tagName);
+                                                                            } else {
+                                                                              launchUrl(Uri.parse("https://${link.value.toString()}"));
+                                                                            }
+                                                                          }
+                                                                        }
+                                                                      },
+                                                                    ),
+                                                                  ),
+                                                                )
+                                                              : Padding(
+                                                                  padding: const EdgeInsets
+                                                                          .only(
+                                                                      left: 0),
+                                                                  child: Column(
+                                                                    crossAxisAlignment:
+                                                                        CrossAxisAlignment
+                                                                            .start,
+                                                                    children: [
+                                                                      SizedBox(
+                                                                        height:
+                                                                            15,
+                                                                      ),
+
+                                                                      SizedBox(
+                                                                        height:
+                                                                            5,
+                                                                      ),
+                                                                      AbboutMeShow ==
+                                                                              true
+                                                                          ? Padding(
+                                                                              padding: const EdgeInsets.only(left: 20, right: 20),
+                                                                              child: Container(
+                                                                                alignment: Alignment.center,
+                                                                                height: 50,
+                                                                                // width:
+                                                                                //     _width /
+                                                                                //         1.5,
+                                                                                decoration: BoxDecoration(
+                                                                                    // color: Colors.amber
+                                                                                    borderRadius: BorderRadius.circular(10),
+                                                                                    border: Border.all(color: Color(0xffEFEFEF))),
+                                                                                child: Text(
+                                                                                  'Enter About Me',
+                                                                                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w300, color: Colors.black),
+                                                                                ),
+                                                                              ),
+                                                                            )
+                                                                          : Padding(
+                                                                              padding: EdgeInsets.only(
+                                                                                left: 16,
+                                                                                right: 16,
+                                                                                top: 0,
+                                                                              ),
+                                                                              child: Stack(
+                                                                                children: [
+                                                                                  Column(
+                                                                                    children: [
+                                                                                      SizedBox(
+                                                                                        height: 100,
+                                                                                        child: FlutterMentions(
+                                                                                          readOnly: isAbourtMe,
+                                                                                          defaultText: aboutMe.text,
+                                                                                          onChanged: (value) {
+                                                                                            onChangeMethod(value);
+                                                                                          },
+                                                                                          suggestionPosition: SuggestionPosition.values.first,
+                                                                                          maxLines: 5,
+                                                                                          decoration: InputDecoration(
+                                                                                            hintText: 'Enter About Me',
+                                                                                            border: InputBorder.none,
+                                                                                            focusedBorder: InputBorder.none,
+                                                                                          ),
+                                                                                          mentions: [
+                                                                                            Mention(
+                                                                                                trigger: "@",
+                                                                                                data: tageData,
+                                                                                                matchAll: true,
+                                                                                                style: TextStyle(color: Colors.blue),
+                                                                                                suggestionBuilder: (tageData) {
+                                                                                                  if (istageData) {
+                                                                                                    return Container(
+                                                                                                      padding: EdgeInsets.all(10.0),
+                                                                                                      child: Row(
+                                                                                                        children: <Widget>[
+                                                                                                          tageData['photo'] != null
+                                                                                                              ? CircleAvatar(
+                                                                                                                  backgroundImage: NetworkImage(
+                                                                                                                    tageData['photo'],
+                                                                                                                  ),
+                                                                                                                )
+                                                                                                              : CircleAvatar(
+                                                                                                                  backgroundImage: AssetImage(ImageConstant.tomcruse),
+                                                                                                                ),
+                                                                                                          SizedBox(
+                                                                                                            width: 20.0,
+                                                                                                          ),
+                                                                                                          Column(
+                                                                                                            children: <Widget>[
+                                                                                                              Text('@${tageData['display']}'),
+                                                                                                            ],
+                                                                                                          )
+                                                                                                        ],
+                                                                                                      ),
+                                                                                                    );
+                                                                                                  }
+
+                                                                                                  return Container(
+                                                                                                    color: Colors.amber,
+                                                                                                  );
+                                                                                                }),
+                                                                                            Mention(
+                                                                                                trigger: "#",
+                                                                                                style: TextStyle(color: Colors.blue),
+                                                                                                disableMarkup: true,
+                                                                                                data: heshTageData,
+                                                                                                // matchAll: true,
+                                                                                                suggestionBuilder: (tageData) {
+                                                                                                  if (isHeshTegData) {
+                                                                                                    return Container(
+                                                                                                        padding: EdgeInsets.all(10.0),
+                                                                                                        child: ListTile(
+                                                                                                          leading: CircleAvatar(
+                                                                                                            child: Text('#'),
+                                                                                                          ),
+                                                                                                          title: Text('${tageData['display']}'),
+                                                                                                        )
+                                                                                                        /* Column(
+                                                                                                                                crossAxisAlignment:
+                                                                                                                                    CrossAxisAlignment
+                                                                                                                                                .start,
+                                                                                                                                children: <Widget>[
+                                                                                                                                  Text(
+                                                                                                                                      '${tageData['display']}'),
+                                                                                                                                ],
+                                                                                                                              ), */
+                                                                                                        );
+                                                                                                  }
+
+                                                                                                  return Container(
+                                                                                                    color: Colors.amber,
+                                                                                                  );
+                                                                                                }),
+                                                                                          ],
+                                                                                        ),
+                                                                                      ),
+                                                                                    ],
+                                                                                  ),
+                                                                                ],
+                                                                              ),
+                                                                            ),
+
+                                                                      // Padding(
+                                                                      //         padding: const EdgeInsets
+                                                                      //                 .only(
+                                                                      //             left:
+                                                                      //                 20,
+                                                                      //             right:
+                                                                      //                 20),
+                                                                      //         child:
+                                                                      //             TextFormField(
+                                                                      //           inputFormatters: [
+                                                                      //             LengthLimitingTextInputFormatter(
+                                                                      //                 500),
+                                                                      //           ],
+                                                                      //           readOnly:
+                                                                      //               isAbourtMe,
+                                                                      //           controller:
+                                                                      //               aboutMe,
+                                                                      //           maxLines:
+                                                                      //               5,
+                                                                      //           decoration:
+                                                                      //               InputDecoration(
+                                                                      //             border:
+                                                                      //                 OutlineInputBorder(),
+                                                                      //           ),
+                                                                      //         ),
+                                                                      //       ),
+                                                                      //wiil DataGet
+                                                                      /*   : */
+                                                                      SizedBox(
+                                                                        height:
+                                                                            12,
+                                                                      ),
+                                                                    ],
+                                                                  ),
+                                                                ),
+                                                        ],
+                                                      )),
+                                                if (User_ID !=
+                                                    NewProfileData
+                                                        ?.object?.userUid && (NewProfileData?.object
+                                                            ?.accountType ==
+                                                        'PUBLIC') ||
+                                                    (NewProfileData?.object
+                                                                ?.isFollowing ==
+                                                            'FOLLOWING' &&
+                                                        NewProfileData?.object
+                                                                ?.accountType ==
+                                                            'PRIVATE'))
+                                                  Card(
+                                                      color: Colors.white,
+                                                      borderOnForeground: true,
+                                                      elevation: 10,
+                                                      shape:
+                                                          RoundedRectangleBorder(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(15.0),
+                                                      ),
+                                                      /*  child: expertUser(_height, _width) */
+                                                      child: Column(
+                                                        children: [
+                                                          ListTile(
+                                                              /*     leading:
+                                                                      Container(
+                                                                    width: 35,
+                                                                    height: 35,
+                                                                    decoration:
+                                                                        ShapeDecoration(
+                                                                      color:ColorConstant.primary_color,
+                                                                      shape:
+                                                                          OvalBorder(),
+                                                                    ),
+                                                                  ), */
+                                                              title: Text(
+                                                                'About Me',
+                                                                style:
+                                                                    TextStyle(
+                                                                  color: Colors
+                                                                      .black,
+                                                                  fontSize: 18,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w600,
+                                                                ),
+                                                              ),
+                                                              subtitle: /* Text(
+                                                                  '${NewProfileData?.object?.aboutMe}',
+                                                                  style: TextStyle(
+                                                                      color: Colors
+                                                                          .black,
+                                                                      fontSize: 14,
+                                                                      fontFamily:
+                                                                          "outfit"),
+                                                                ), */
+
+                                                                  LinkifyText(
+                                                                "${NewProfileData?.object?.aboutMe}",
+                                                                linkStyle:
+                                                                    TextStyle(
+                                                                  color: Colors
+                                                                      .blue,
+                                                                  fontFamily:
+                                                                      'outfit',
+                                                                ),
+                                                                textStyle:
+                                                                    TextStyle(
+                                                                  color: Colors
+                                                                      .black,
+                                                                  fontFamily:
+                                                                      'outfit',
+                                                                ),
+                                                                linkTypes: [
+                                                                  LinkType.url,
+                                                                  LinkType
+                                                                      .userTag,
+                                                                  LinkType
+                                                                      .hashTag,
+                                                                  // LinkType
+                                                                  //     .email
+                                                                ],
+                                                                onTap:
+                                                                    (link) async {
+                                                                  /// do stuff with `link` like
+                                                                  /// if(link.type == Link.url) launchUrl(link.value);
+
+                                                                  var SelectedTest =
+                                                                      link.value
+                                                                          .toString();
+                                                                  var Link = SelectedTest
+                                                                      .startsWith(
+                                                                          'https');
+                                                                  var Link1 = SelectedTest
+                                                                      .startsWith(
+                                                                          'http');
+                                                                  var Link2 = SelectedTest
+                                                                      .startsWith(
+                                                                          'www');
+                                                                  var Link3 = SelectedTest
+                                                                      .startsWith(
+                                                                          'WWW');
+                                                                  var Link4 = SelectedTest
+                                                                      .startsWith(
+                                                                          'HTTPS');
+                                                                  var Link5 = SelectedTest
+                                                                      .startsWith(
+                                                                          'HTTP');
+                                                                  var Link6 = SelectedTest
+                                                                      .startsWith(
+                                                                          'https://pdslink.page.link/');
+                                                                  print(SelectedTest
+                                                                      .toString());
+
+                                                                  if (User_ID ==
+                                                                      null) {
+                                                                    Navigator.of(
+                                                                            context)
+                                                                        .push(MaterialPageRoute(
+                                                                            builder: (context) =>
+                                                                                RegisterCreateAccountScreen()));
+                                                                  } else {
+                                                                    if (Link ==
+                                                                            true ||
+                                                                        Link1 ==
+                                                                            true ||
+                                                                        Link2 ==
+                                                                            true ||
+                                                                        Link3 ==
+                                                                            true ||
+                                                                        Link4 ==
+                                                                            true ||
+                                                                        Link5 ==
+                                                                            true ||
+                                                                        Link6 ==
+                                                                            true) {
+                                                                      if (Link2 ==
+                                                                              true ||
+                                                                          Link3 ==
+                                                                              true) {
+                                                                        launchUrl(
+                                                                            Uri.parse("https://${link.value.toString()}"));
+                                                                        print(
+                                                                            "qqqqqqqqhttps://${link.value}");
+                                                                      } else {
+                                                                        if (Link6 ==
+                                                                            true) {
+                                                                          print(
+                                                                              "yes i am inList =   room");
+                                                                          Navigator.push(
+                                                                              context,
+                                                                              MaterialPageRoute(
+                                                                            builder:
+                                                                                (context) {
+                                                                              return NewBottomBar(
+                                                                                buttomIndex: 1,
+                                                                              );
+                                                                            },
+                                                                          ));
+                                                                        } else {
+                                                                          launchUrl(Uri.parse(link
+                                                                              .value
+                                                                              .toString()));
+                                                                          print(
+                                                                              "link.valuelink.value -- ${link.value}");
+                                                                        }
+                                                                      }
+                                                                    } else {
+                                                                      if (link
+                                                                          .value!
+                                                                          .startsWith(
+                                                                              '#')) {
+                                                                        Navigator.push(
+                                                                            context,
+                                                                            MaterialPageRoute(
+                                                                              builder: (context) => HashTagViewScreen(title: "${link.value}"),
+                                                                            ));
+                                                                      } else if (link
+                                                                          .value!
+                                                                          .startsWith(
+                                                                              '@')) {
+                                                                        var name;
+                                                                        var tagName;
+                                                                        name =
+                                                                            SelectedTest;
+                                                                        tagName = name.replaceAll(
+                                                                            "@",
+                                                                            "");
+                                                                        await BlocProvider.of<NewProfileSCubit>(context).UserTagAPI(
+                                                                            context,
+                                                                            tagName);
+                                                                      } else {
+                                                                        launchUrl(
+                                                                            Uri.parse("https://${link.value.toString()}"));
+                                                                      }
+                                                                    }
+                                                                  }
+                                                                },
+                                                              )),
+                                                        ],
+                                                      )),
+
+                                                /* Card(
+                                                      color: Colors.white,
+                                                      borderOnForeground: true,
+                                                      elevation: 10,
+                                                      shape:
+                                                          RoundedRectangleBorder(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(15.0),
+                                                      ),
+                                                      /*  child: expertUser(_height, _width) */
+                                                      child: Column(
+                                                        children: [
+                                                          ListTile(
+                                                              /*     leading:
+                                                                      Container(
+                                                                    width: 35,
+                                                                    height: 35,
+                                                                    decoration:
+                                                                        ShapeDecoration(
+                                                                      color:ColorConstant.primary_color,
+                                                                      shape:
+                                                                          OvalBorder(),
+                                                                    ),
+                                                                  ), */
+                                                              title: Text(
+                                                                'About Me',
+                                                                style:
+                                                                    TextStyle(
+                                                                  color: Colors
+                                                                      .black,
+                                                                  fontSize: 18,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w600,
+                                                                ),
+                                                              ),
+                                                              subtitle: /* Text(
+                                                                  '${NewProfileData?.object?.aboutMe}',
+                                                                  style: TextStyle(
+                                                                      color: Colors
+                                                                          .black,
+                                                                      fontSize: 14,
+                                                                      fontFamily:
+                                                                          "outfit"),
+                                                                ), */
+
+                                                                  LinkifyText(
+                                                                "${NewProfileData?.object?.aboutMe}",
+                                                                linkStyle:
+                                                                    TextStyle(
+                                                                  color: Colors
+                                                                      .blue,
+                                                                  fontFamily:
+                                                                      'outfit',
+                                                                ),
+                                                                textStyle:
+                                                                    TextStyle(
+                                                                  color: Colors
+                                                                      .black,
+                                                                  fontFamily:
+                                                                      'outfit',
+                                                                ),
+                                                                linkTypes: [
+                                                                  LinkType.url,
+                                                                  LinkType
+                                                                      .userTag,
+                                                                  LinkType
+                                                                      .hashTag,
+                                                                  // LinkType
+                                                                  //     .email
+                                                                ],
+                                                                onTap:
+                                                                    (link) async {
+                                                                  /// do stuff with `link` like
+                                                                  /// if(link.type == Link.url) launchUrl(link.value);
+
+                                                                  var SelectedTest =
+                                                                      link.value
+                                                                          .toString();
+                                                                  var Link = SelectedTest
+                                                                      .startsWith(
+                                                                          'https');
+                                                                  var Link1 = SelectedTest
+                                                                      .startsWith(
+                                                                          'http');
+                                                                  var Link2 = SelectedTest
+                                                                      .startsWith(
+                                                                          'www');
+                                                                  var Link3 = SelectedTest
+                                                                      .startsWith(
+                                                                          'WWW');
+                                                                  var Link4 = SelectedTest
+                                                                      .startsWith(
+                                                                          'HTTPS');
+                                                                  var Link5 = SelectedTest
+                                                                      .startsWith(
+                                                                          'HTTP');
+                                                                  var Link6 = SelectedTest
+                                                                      .startsWith(
+                                                                          'https://pdslink.page.link/');
+                                                                  print(SelectedTest
+                                                                      .toString());
+
+                                                                  if (User_ID ==
+                                                                      null) {
+                                                                    Navigator.of(
+                                                                            context)
+                                                                        .push(MaterialPageRoute(
+                                                                            builder: (context) =>
+                                                                                RegisterCreateAccountScreen()));
+                                                                  } else {
+                                                                    if (Link ==
+                                                                            true ||
+                                                                        Link1 ==
+                                                                            true ||
+                                                                        Link2 ==
+                                                                            true ||
+                                                                        Link3 ==
+                                                                            true ||
+                                                                        Link4 ==
+                                                                            true ||
+                                                                        Link5 ==
+                                                                            true ||
+                                                                        Link6 ==
+                                                                            true) {
+                                                                      if (Link2 ==
+                                                                              true ||
+                                                                          Link3 ==
+                                                                              true) {
+                                                                        launchUrl(
+                                                                            Uri.parse("https://${link.value.toString()}"));
+                                                                        print(
+                                                                            "qqqqqqqqhttps://${link.value}");
+                                                                      } else {
+                                                                        if (Link6 ==
+                                                                            true) {
+                                                                          print(
+                                                                              "yes i am inList =   room");
+                                                                          Navigator.push(
+                                                                              context,
+                                                                              MaterialPageRoute(
+                                                                            builder:
+                                                                                (context) {
+                                                                              return NewBottomBar(
+                                                                                buttomIndex: 1,
+                                                                              );
+                                                                            },
+                                                                          ));
+                                                                        } else {
+                                                                          launchUrl(Uri.parse(link
+                                                                              .value
+                                                                              .toString()));
+                                                                          print(
+                                                                              "link.valuelink.value -- ${link.value}");
+                                                                        }
+                                                                      }
+                                                                    } else {
+                                                                      if (link
+                                                                          .value!
+                                                                          .startsWith(
+                                                                              '#')) {
+                                                                        Navigator.push(
+                                                                            context,
+                                                                            MaterialPageRoute(
+                                                                              builder: (context) => HashTagViewScreen(title: "${link.value}"),
+                                                                            ));
+                                                                      } else if (link
+                                                                          .value!
+                                                                          .startsWith(
+                                                                              '@')) {
+                                                                        var name;
+                                                                        var tagName;
+                                                                        name =
+                                                                            SelectedTest;
+                                                                        tagName = name.replaceAll(
+                                                                            "@",
+                                                                            "");
+                                                                        await BlocProvider.of<NewProfileSCubit>(context).UserTagAPI(
+                                                                            context,
+                                                                            tagName);
+                                                                      } else {
+                                                                        launchUrl(
+                                                                            Uri.parse("https://${link.value.toString()}"));
+                                                                      }
+                                                                    }
+                                                                  }
+                                                                },
+                                                              )),
+                                                        ],
+                                                      )),
+ */
+                                                /* User_ID !=
                                                         NewProfileData
                                                             ?.object?.userUid
                                                     ? NewProfileData?.object
@@ -2226,10 +3056,10 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                     ),
                                                                   ),
                                                           ],
-                                                        )),
+                                                        )), */
                                                 NewProfileData
                                                             ?.object?.module ==
-                                                        "EXPERT" 
+                                                        "EXPERT"
                                                     ? Card(
                                                         color: Colors.white,
                                                         borderOnForeground:
@@ -8594,14 +9424,16 @@ class _ProfileScreenState extends State<ProfileScreen>
 
   Widget expertUser(_height, _width) {
     if (User_ID == NewProfileData?.object?.userUid ||
-        (NewProfileData?.object?.isFollowing == 'FOLLOWING' &&
-            NewProfileData?.object?.accountType == 'PRIVATE' &&
+        (NewProfileData?.object?.accountType == 'PUBLIC' &&
             NewProfileData?.object?.approvalStatus != "PENDING" &&
-            NewProfileData?.object?.approvalStatus == "REJECTED")){
-              return Column(
-      children: [
-        ListTile(
-          /*  leading: Container(
+            NewProfileData?.object?.approvalStatus != "REJECTED") ||
+        (NewProfileData?.object?.isFollowing == 'FOLLOWING' &&
+            NewProfileData?.object?.approvalStatus != "PENDING" &&
+            NewProfileData?.object?.approvalStatus != "REJECTED")) {
+      return Column(
+        children: [
+          ListTile(
+            /*  leading: Container(
             width: 35,
             height: 35,
             decoration: ShapeDecoration(
@@ -8609,187 +9441,49 @@ class _ProfileScreenState extends State<ProfileScreen>
               shape: OvalBorder(),
             ),
           ), */
-          title: Text(
-            'Work/ Business Details',
-            style: TextStyle(
-              color: Colors.black,
-              fontSize: 18,
-              fontWeight: FontWeight.w600,
+            title: Text(
+              'Work/ Business Details',
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 18,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            trailing: GestureDetector(
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => EditProfileScreen(
+                              newProfileData: NewProfileData,
+                            ))).then((value) =>
+                    widget.ProfileNotification == true
+                        ? BlocProvider.of<NewProfileSCubit>(context)
+                            .NewProfileSAPI(context, widget.User_ID, true)
+                        : BlocProvider.of<NewProfileSCubit>(context)
+                            .NewProfileSAPI(context, widget.User_ID, false));
+              },
+              child: User_ID == NewProfileData?.object?.userUid
+                  ? Icon(
+                      Icons.edit,
+                      color: Colors.black,
+                    )
+                  : SizedBox(),
             ),
           ),
-          trailing: GestureDetector(
-            onTap: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => EditProfileScreen(
-                            newProfileData: NewProfileData,
-                          ))).then((value) => widget.ProfileNotification == true
-                  ? BlocProvider.of<NewProfileSCubit>(context)
-                      .NewProfileSAPI(context, widget.User_ID, true)
-                  : BlocProvider.of<NewProfileSCubit>(context)
-                      .NewProfileSAPI(context, widget.User_ID, false));
-            },
-            child: User_ID == NewProfileData?.object?.userUid
-                ? Icon(
-                    Icons.edit,
-                    color: Colors.black,
-                  )
-                : SizedBox(),
-          ),
-        ),
-        Container(
-          height: User_ID == NewProfileData?.object?.userUid
-              ? _height / 1.3
-              : _height / 1.5,
-          width: _width,
-          //  color: Colors.amber,
-          child: Padding(
-            padding: const EdgeInsets.only(left: 16, right: 16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  "Job Profile",
-                  overflow: TextOverflow.ellipsis,
-                  textAlign: TextAlign.left,
-                  style: TextStyle(
-                    fontFamily: 'outfit',
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                Container(
-                  width: _width,
-                  child: CustomTextFormField(
-                    readOnly: true,
-                    controller: jobprofileController,
-                    margin: EdgeInsets.only(
-                      top: 10,
-                    ),
-
-                    validator: (value) {
-                      RegExp nameRegExp = RegExp(r"^[a-zA-Z0-9\s'@]+$");
-                      if (value!.isEmpty) {
-                        return 'Please Enter Name';
-                      } else if (!nameRegExp.hasMatch(value)) {
-                        return 'Input cannot contains prohibited special characters';
-                      } else if (value.length <= 0 || value.length > 50) {
-                        return 'Minimum length required';
-                      } else if (value.contains('..')) {
-                        return 'username does not contain is correct';
-                      }
-
-                      return null;
-                    },
-                    // textStyle: theme.textTheme.titleMedium!,
-                    hintText: "Job Profile",
-                    // hintStyle: theme.textTheme.titleMedium!,
-                    textInputAction: TextInputAction.next,
-                    filled: true,
-                    maxLength: 100,
-                    fillColor: appTheme.gray100,
-                  ),
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                Text(
-                  "Industry Type",
-                  overflow: TextOverflow.ellipsis,
-                  textAlign: TextAlign.left,
-                  style: TextStyle(
-                    fontFamily: 'outfit',
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                Container(
-                  width: _width,
-                  child: CustomTextFormField(
-                    readOnly: true, maxLines: 4,
-                    controller: IndustryType,
-                    margin: EdgeInsets.only(
-                      top: 10,
-                    ),
-
-                    validator: (value) {
-                      RegExp nameRegExp = RegExp(r"^[a-zA-Z0-9\s'@]+$");
-                      if (value!.isEmpty) {
-                        return 'Please Enter Name';
-                      } else if (!nameRegExp.hasMatch(value)) {
-                        return 'Input cannot contains prohibited special characters';
-                      } else if (value.length <= 0 || value.length > 50) {
-                        return 'Minimum length required';
-                      } else if (value.contains('..')) {
-                        return 'username does not contain is correct';
-                      }
-
-                      return null;
-                    },
-                    // textStyle: theme.textTheme.titleMedium!,
-                    hintText: "Industry Type",
-                    textStyle: TextStyle(
-                        fontWeight: FontWeight.w400,
-                        wordSpacing: 1,
-                        letterSpacing: 1,
-                        fontFamily: 'outfit'),
-                    // hintStyle: theme.textTheme.titleMedium!,
-                    textInputAction: TextInputAction.next,
-                    filled: true,
-                    maxLength: 100,
-                    fillColor: appTheme.gray100,
-                  ),
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                Text(
-                  "Expertise in",
-                  overflow: TextOverflow.ellipsis,
-                  textAlign: TextAlign.left,
-                  style: TextStyle(
-                    fontFamily: 'outfit',
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                Container(
-                  width: _width,
-                  child: CustomTextFormField(
-                    readOnly: true,
-                    controller: Expertise,
-                    margin: EdgeInsets.only(
-                      top: 10,
-                    ),
-
-                    validator: (value) {
-                      RegExp nameRegExp = RegExp(r"^[a-zA-Z0-9\s'@]+$");
-                      if (value!.isEmpty) {
-                        return 'Please Enter Name';
-                      } else if (!nameRegExp.hasMatch(value)) {
-                        return 'Input cannot contains prohibited special characters';
-                      } else if (value.length <= 0 || value.length > 50) {
-                        return 'Minimum length required';
-                      } else if (value.contains('..')) {
-                        return 'username does not contain is correct';
-                      }
-
-                      return null;
-                    },
-                    // textStyle: theme.textTheme.titleMedium!,
-                    hintText: "Expertise in",
-                    // hintStyle: theme.textTheme.titleMedium!,
-                    textInputAction: TextInputAction.next,
-                    filled: true,
-                    maxLength: 100,
-                    fillColor: appTheme.gray100,
-                  ),
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                if (NewProfileData?.object?.module == "EXPERT")
-                  //ss
+          Container(
+            height: User_ID == NewProfileData?.object?.userUid
+                ? _height / 1.3
+                : _height / 1.5,
+            width: _width,
+            //  color: Colors.amber,
+            child: Padding(
+              padding: const EdgeInsets.only(left: 16, right: 16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
                   Text(
-                    "Fees",
+                    "Job Profile",
                     overflow: TextOverflow.ellipsis,
                     textAlign: TextAlign.left,
                     style: TextStyle(
@@ -8797,173 +9491,43 @@ class _ProfileScreenState extends State<ProfileScreen>
                       fontWeight: FontWeight.w500,
                     ),
                   ),
-                NewProfileData?.object?.module == "EXPERT"
-                    ? NewProfileData?.object?.fees == null
-                        ? Container(
-                            width: _width,
-                            child: CustomTextFormField(
-                              readOnly: true,
-                              margin: EdgeInsets.only(
-                                top: 10,
-                              ),
+                  Container(
+                    width: _width,
+                    child: CustomTextFormField(
+                      readOnly: true,
+                      controller: jobprofileController,
+                      margin: EdgeInsets.only(
+                        top: 10,
+                      ),
 
-                              // textStyle: theme.textTheme.titleMedium!,
-                              hintText: "Price / hr",
-                              // hintStyle: theme.textTheme.titleMedium!,
-                              textInputAction: TextInputAction.next,
-                              filled: true,
-                              maxLength: 100,
-                              fillColor: appTheme.gray100,
-                            ),
-                          )
-                        : Container(
-                            width: _width,
-                            child: CustomTextFormField(
-                              readOnly: true,
-                              controller: priceContrller,
-                              margin: EdgeInsets.only(
-                                top: 10,
-                              ),
+                      validator: (value) {
+                        RegExp nameRegExp = RegExp(r"^[a-zA-Z0-9\s'@]+$");
+                        if (value!.isEmpty) {
+                          return 'Please Enter Name';
+                        } else if (!nameRegExp.hasMatch(value)) {
+                          return 'Input cannot contains prohibited special characters';
+                        } else if (value.length <= 0 || value.length > 50) {
+                          return 'Minimum length required';
+                        } else if (value.contains('..')) {
+                          return 'username does not contain is correct';
+                        }
 
-                              validator: (value) {
-                                RegExp nameRegExp =
-                                    RegExp(r"^[a-zA-Z0-9\s'@]+$");
-                                if (value!.isEmpty) {
-                                  return 'Please Enter Name';
-                                } else if (!nameRegExp.hasMatch(value)) {
-                                  return 'Input cannot contains prohibited special characters';
-                                } else if (value.length <= 0 ||
-                                    value.length > 50) {
-                                  return 'Minimum length required';
-                                } else if (value.contains('..')) {
-                                  return 'username does not contain is correct';
-                                }
-
-                                return null;
-                              },
-                              // textStyle: theme.textTheme.titleMedium!,
-                              hintText: "Price / hr",
-                              // hintStyle: theme.textTheme.titleMedium!,
-                              textInputAction: TextInputAction.next,
-                              filled: true,
-                              maxLength: 100,
-                              fillColor: appTheme.gray100,
-                            ),
-                          )
-                    : SizedBox(),
-                SizedBox(
-                  height: 10,
-                ),
-                Text(
-                  "Working Hours",
-                  overflow: TextOverflow.ellipsis,
-                  textAlign: TextAlign.left,
-                  style: TextStyle(
-                    fontFamily: 'outfit',
-                    fontWeight: FontWeight.w500,
+                        return null;
+                      },
+                      // textStyle: theme.textTheme.titleMedium!,
+                      hintText: "Job Profile",
+                      // hintStyle: theme.textTheme.titleMedium!,
+                      textInputAction: TextInputAction.next,
+                      filled: true,
+                      maxLength: 100,
+                      fillColor: appTheme.gray100,
+                    ),
                   ),
-                  // style: theme.textTheme.bodyLarge,
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 10),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      GestureDetector(
-                        onTap: () {
-                          if (isDataSet == false) {
-                            _selectStartTime(context);
-                          }
-                        },
-                        child: Container(
-                          height: 40,
-                          width: 130,
-                          decoration: BoxDecoration(
-                              color: Color(0xffF6F6F6),
-                              borderRadius: BorderRadius.circular(10)),
-                          child: Row(
-                            children: [
-                              Padding(
-                                  padding: EdgeInsets.only(left: 20),
-                                  child: Text(
-                                    start != null ? start.toString() : '00:00',
-                                    style: TextStyle(
-                                        fontSize: 15, color: Color(0xff989898)),
-                                  )),
-                              SizedBox(
-                                width: 7,
-                              ),
-                              VerticalDivider(
-                                thickness: 2,
-                                color: Color(0xff989898),
-                              ),
-                              Text(startAm != null ? startAm.toString() : 'AM',
-                                  style: TextStyle(
-                                      fontSize: 15, color: Color(0xff989898))),
-                            ],
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      Text(
-                        'TO',
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 14,
-                          fontFamily: "outfit",
-                          fontWeight: FontWeight.bold,
-                          height: 0,
-                        ),
-                      ),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      GestureDetector(
-                        onTap: () {
-                          if (isDataSet == false) {
-                            _selectStartTime(context);
-                          }
-                        },
-                        child: Container(
-                          height: 40,
-                          width: 130,
-                          decoration: BoxDecoration(
-                              color: Color(0xffF6F6F6),
-                              borderRadius: BorderRadius.circular(10)),
-                          child: Row(
-                            children: [
-                              Padding(
-                                  padding: EdgeInsets.only(left: 20),
-                                  child: Text(
-                                    end != null ? end.toString() : "00:00",
-                                    style: TextStyle(
-                                        fontSize: 15, color: Color(0xff989898)),
-                                  )),
-                              SizedBox(
-                                width: 7,
-                              ),
-                              VerticalDivider(
-                                thickness: 2,
-                                color: Color(0xff989898),
-                              ),
-                              Text(endAm != null ? endAm.toString() : "PM",
-                                  style: TextStyle(
-                                      fontSize: 15, color: Color(0xff989898))),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
+                  SizedBox(
+                    height: 10,
                   ),
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                if (User_ID == NewProfileData?.object?.userUid)
                   Text(
-                    "Document",
+                    "Industry Type",
                     overflow: TextOverflow.ellipsis,
                     textAlign: TextAlign.left,
                     style: TextStyle(
@@ -8971,108 +9535,385 @@ class _ProfileScreenState extends State<ProfileScreen>
                       fontWeight: FontWeight.w500,
                     ),
                   ),
-                if (User_ID == NewProfileData?.object?.userUid)
-                  Row(
-                    children: [
-                      Container(
-                          height: 50,
-                          width: _width - 175,
-                          decoration: BoxDecoration(
-                              color: Color(0XFFF6F6F6),
-                              borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(5),
-                                  bottomLeft: Radius.circular(5))),
-                          child: Padding(
-                            padding: const EdgeInsets.only(top: 15, left: 20),
-                            child: Text(
-                              '${NewProfileData?.object?.documentName}',
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(fontSize: 16),
-                            ),
-                          )),
-                      dopcument == "Upload Image"
-                          ? GestureDetector(
-                              onTap: () async {
-                                filepath = await prepareTestPdf(0);
-                              },
-                              child: Container(
-                                height: 50,
-                                width: _width / 4.5,
-                                decoration: BoxDecoration(
-                                    color: Color(0XFF777777),
-                                    borderRadius: BorderRadius.only(
-                                        topRight: Radius.circular(5),
-                                        bottomRight: Radius.circular(5))),
-                                child: Center(
-                                  child: Text(
-                                    "Choose",
-                                    style: TextStyle(
-                                      fontFamily: 'outfit',
-                                      fontSize: 15,
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
+                  Container(
+                    width: _width,
+                    child: CustomTextFormField(
+                      readOnly: true, maxLines: 4,
+                      controller: IndustryType,
+                      margin: EdgeInsets.only(
+                        top: 10,
+                      ),
+
+                      validator: (value) {
+                        RegExp nameRegExp = RegExp(r"^[a-zA-Z0-9\s'@]+$");
+                        if (value!.isEmpty) {
+                          return 'Please Enter Name';
+                        } else if (!nameRegExp.hasMatch(value)) {
+                          return 'Input cannot contains prohibited special characters';
+                        } else if (value.length <= 0 || value.length > 50) {
+                          return 'Minimum length required';
+                        } else if (value.contains('..')) {
+                          return 'username does not contain is correct';
+                        }
+
+                        return null;
+                      },
+                      // textStyle: theme.textTheme.titleMedium!,
+                      hintText: "Industry Type",
+                      textStyle: TextStyle(
+                          fontWeight: FontWeight.w400,
+                          wordSpacing: 1,
+                          letterSpacing: 1,
+                          fontFamily: 'outfit'),
+                      // hintStyle: theme.textTheme.titleMedium!,
+                      textInputAction: TextInputAction.next,
+                      filled: true,
+                      maxLength: 100,
+                      fillColor: appTheme.gray100,
+                    ),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Text(
+                    "Expertise in",
+                    overflow: TextOverflow.ellipsis,
+                    textAlign: TextAlign.left,
+                    style: TextStyle(
+                      fontFamily: 'outfit',
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  Container(
+                    width: _width,
+                    child: CustomTextFormField(
+                      readOnly: true,
+                      controller: Expertise,
+                      margin: EdgeInsets.only(
+                        top: 10,
+                      ),
+
+                      validator: (value) {
+                        RegExp nameRegExp = RegExp(r"^[a-zA-Z0-9\s'@]+$");
+                        if (value!.isEmpty) {
+                          return 'Please Enter Name';
+                        } else if (!nameRegExp.hasMatch(value)) {
+                          return 'Input cannot contains prohibited special characters';
+                        } else if (value.length <= 0 || value.length > 50) {
+                          return 'Minimum length required';
+                        } else if (value.contains('..')) {
+                          return 'username does not contain is correct';
+                        }
+
+                        return null;
+                      },
+                      // textStyle: theme.textTheme.titleMedium!,
+                      hintText: "Expertise in",
+                      // hintStyle: theme.textTheme.titleMedium!,
+                      textInputAction: TextInputAction.next,
+                      filled: true,
+                      maxLength: 100,
+                      fillColor: appTheme.gray100,
+                    ),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  if (NewProfileData?.object?.module == "EXPERT")
+                    //ss
+                    Text(
+                      "Fees",
+                      overflow: TextOverflow.ellipsis,
+                      textAlign: TextAlign.left,
+                      style: TextStyle(
+                        fontFamily: 'outfit',
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  NewProfileData?.object?.module == "EXPERT"
+                      ? NewProfileData?.object?.fees == null
+                          ? Container(
+                              width: _width,
+                              child: CustomTextFormField(
+                                readOnly: true,
+                                margin: EdgeInsets.only(
+                                  top: 10,
                                 ),
+
+                                // textStyle: theme.textTheme.titleMedium!,
+                                hintText: "Price / hr",
+                                // hintStyle: theme.textTheme.titleMedium!,
+                                textInputAction: TextInputAction.next,
+                                filled: true,
+                                maxLength: 100,
+                                fillColor: appTheme.gray100,
                               ),
                             )
                           : Container(
-                              height: 50,
-                              width: _width / 4.5,
-                              decoration: BoxDecoration(
-                                  color: Color.fromARGB(255, 228, 228, 228),
-                                  borderRadius: BorderRadius.only(
-                                      topRight: Radius.circular(5),
-                                      bottomRight: Radius.circular(5))),
-                              child: GestureDetector(
-                                onTap: () async {
-                                  if (dopcument != null) {
-                                    Navigator.of(context).push(
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                DocumentViewScreen(
-                                                  path: NewProfileData
-                                                      ?.object?.userDocument,
-                                                  title: 'Pdf',
-                                                )));
+                              width: _width,
+                              child: CustomTextFormField(
+                                readOnly: true,
+                                controller: priceContrller,
+                                margin: EdgeInsets.only(
+                                  top: 10,
+                                ),
+
+                                validator: (value) {
+                                  RegExp nameRegExp =
+                                      RegExp(r"^[a-zA-Z0-9\s'@]+$");
+                                  if (value!.isEmpty) {
+                                    return 'Please Enter Name';
+                                  } else if (!nameRegExp.hasMatch(value)) {
+                                    return 'Input cannot contains prohibited special characters';
+                                  } else if (value.length <= 0 ||
+                                      value.length > 50) {
+                                    return 'Minimum length required';
+                                  } else if (value.contains('..')) {
+                                    return 'username does not contain is correct';
                                   }
+
+                                  return null;
                                 },
-                                child: Center(
-                                  child: Text(
-                                    "Open",
+                                // textStyle: theme.textTheme.titleMedium!,
+                                hintText: "Price / hr",
+                                // hintStyle: theme.textTheme.titleMedium!,
+                                textInputAction: TextInputAction.next,
+                                filled: true,
+                                maxLength: 100,
+                                fillColor: appTheme.gray100,
+                              ),
+                            )
+                      : SizedBox(),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Text(
+                    "Working Hours",
+                    overflow: TextOverflow.ellipsis,
+                    textAlign: TextAlign.left,
+                    style: TextStyle(
+                      fontFamily: 'outfit',
+                      fontWeight: FontWeight.w500,
+                    ),
+                    // style: theme.textTheme.bodyLarge,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 10),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            if (isDataSet == false) {
+                              _selectStartTime(context);
+                            }
+                          },
+                          child: Container(
+                            height: 40,
+                            width: 130,
+                            decoration: BoxDecoration(
+                                color: Color(0xffF6F6F6),
+                                borderRadius: BorderRadius.circular(10)),
+                            child: Row(
+                              children: [
+                                Padding(
+                                    padding: EdgeInsets.only(left: 20),
+                                    child: Text(
+                                      start != null
+                                          ? start.toString()
+                                          : '00:00',
+                                      style: TextStyle(
+                                          fontSize: 15,
+                                          color: Color(0xff989898)),
+                                    )),
+                                SizedBox(
+                                  width: 7,
+                                ),
+                                VerticalDivider(
+                                  thickness: 2,
+                                  color: Color(0xff989898),
+                                ),
+                                Text(
+                                    startAm != null ? startAm.toString() : 'AM',
                                     style: TextStyle(
-                                      fontFamily: 'outfit',
-                                      fontSize: 15,
-                                      color: ColorConstant.primary_color,
-                                      fontWeight: FontWeight.w500,
+                                        fontSize: 15,
+                                        color: Color(0xff989898))),
+                              ],
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        Text(
+                          'TO',
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 14,
+                            fontFamily: "outfit",
+                            fontWeight: FontWeight.bold,
+                            height: 0,
+                          ),
+                        ),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            if (isDataSet == false) {
+                              _selectStartTime(context);
+                            }
+                          },
+                          child: Container(
+                            height: 40,
+                            width: 130,
+                            decoration: BoxDecoration(
+                                color: Color(0xffF6F6F6),
+                                borderRadius: BorderRadius.circular(10)),
+                            child: Row(
+                              children: [
+                                Padding(
+                                    padding: EdgeInsets.only(left: 20),
+                                    child: Text(
+                                      end != null ? end.toString() : "00:00",
+                                      style: TextStyle(
+                                          fontSize: 15,
+                                          color: Color(0xff989898)),
+                                    )),
+                                SizedBox(
+                                  width: 7,
+                                ),
+                                VerticalDivider(
+                                  thickness: 2,
+                                  color: Color(0xff989898),
+                                ),
+                                Text(endAm != null ? endAm.toString() : "PM",
+                                    style: TextStyle(
+                                        fontSize: 15,
+                                        color: Color(0xff989898))),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  if (User_ID == NewProfileData?.object?.userUid)
+                    Text(
+                      "Document",
+                      overflow: TextOverflow.ellipsis,
+                      textAlign: TextAlign.left,
+                      style: TextStyle(
+                        fontFamily: 'outfit',
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  if (User_ID == NewProfileData?.object?.userUid)
+                    Row(
+                      children: [
+                        Container(
+                            height: 50,
+                            width: _width - 175,
+                            decoration: BoxDecoration(
+                                color: Color(0XFFF6F6F6),
+                                borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(5),
+                                    bottomLeft: Radius.circular(5))),
+                            child: Padding(
+                              padding: const EdgeInsets.only(top: 15, left: 20),
+                              child: Text(
+                                '${NewProfileData?.object?.documentName}',
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(fontSize: 16),
+                              ),
+                            )),
+                        dopcument == "Upload Image"
+                            ? GestureDetector(
+                                onTap: () async {
+                                  filepath = await prepareTestPdf(0);
+                                },
+                                child: Container(
+                                  height: 50,
+                                  width: _width / 4.5,
+                                  decoration: BoxDecoration(
+                                      color: Color(0XFF777777),
+                                      borderRadius: BorderRadius.only(
+                                          topRight: Radius.circular(5),
+                                          bottomRight: Radius.circular(5))),
+                                  child: Center(
+                                    child: Text(
+                                      "Choose",
+                                      style: TextStyle(
+                                        fontFamily: 'outfit',
+                                        fontSize: 15,
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w500,
+                                      ),
                                     ),
                                   ),
-                                ), /* Icon(
+                                ),
+                              )
+                            : Container(
+                                height: 50,
+                                width: _width / 4.5,
+                                decoration: BoxDecoration(
+                                    color: Color.fromARGB(255, 228, 228, 228),
+                                    borderRadius: BorderRadius.only(
+                                        topRight: Radius.circular(5),
+                                        bottomRight: Radius.circular(5))),
+                                child: GestureDetector(
+                                  onTap: () async {
+                                    if (dopcument != null) {
+                                      Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  DocumentViewScreen(
+                                                    path: NewProfileData
+                                                        ?.object?.userDocument,
+                                                    title: 'Pdf',
+                                                  )));
+                                    }
+                                  },
+                                  child: Center(
+                                    child: Text(
+                                      "Open",
+                                      style: TextStyle(
+                                        fontFamily: 'outfit',
+                                        fontSize: 15,
+                                        color: ColorConstant.primary_color,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ), /* Icon(
                                   Icons.delete_forever,
                                   color: ColorConstant.primary_color,
                                 ) */
+                                ),
                               ),
-                            ),
-                    ],
-                  ),
-              ],
+                      ],
+                    ),
+                ],
+              ),
             ),
           ),
-        ),
-      ],
-    );
-            }
-    else{
+        ],
+      );
+    } else {
       return SizedBox();
     }
   }
 
   Widget experience(_height, _width) {
-  if (User_ID == NewProfileData?.object?.userUid ||
-        (NewProfileData?.object?.isFollowing == 'FOLLOWING' &&
-            NewProfileData?.object?.accountType == 'PRIVATE' &&
+    if (User_ID == NewProfileData?.object?.userUid ||
+        (NewProfileData?.object?.accountType == 'PUBLIC' &&
             NewProfileData?.object?.approvalStatus != "PENDING" &&
-            NewProfileData?.object?.approvalStatus == "REJECTED")) {
+            NewProfileData?.object?.approvalStatus != "REJECTED") ||
+        (NewProfileData?.object?.isFollowing == 'FOLLOWING' &&
+            NewProfileData?.object?.approvalStatus != "PENDING" &&
+            NewProfileData?.object?.approvalStatus != "REJECTED")) {
       return Column(
         children: [
           ListTile(
@@ -9260,9 +10101,16 @@ class _ProfileScreenState extends State<ProfileScreen>
   }
 
   Widget compnayUser(_height, _width) {
-    if (User_ID == NewProfileData?.object?.userUid ||
+    /*  if (User_ID == NewProfileData?.object?.userUid ||
         (NewProfileData?.object?.isFollowing == 'FOLLOWING' &&
             NewProfileData?.object?.accountType == 'PRIVATE' &&
+            NewProfileData?.object?.approvalStatus != "PENDING" &&
+            NewProfileData?.object?.approvalStatus != "REJECTED")) */
+    if (User_ID == NewProfileData?.object?.userUid ||
+        (NewProfileData?.object?.accountType == 'PUBLIC' &&
+            NewProfileData?.object?.approvalStatus != "PENDING" &&
+            NewProfileData?.object?.approvalStatus != "REJECTED") ||
+        (NewProfileData?.object?.isFollowing == 'FOLLOWING' &&
             NewProfileData?.object?.approvalStatus != "PENDING" &&
             NewProfileData?.object?.approvalStatus != "REJECTED")) {
       return Column(
@@ -10054,6 +10902,74 @@ class _ProfileScreenState extends State<ProfileScreen>
       default:
         return '';
     }
+  }
+
+  void showPopupMenuBlock(
+      BuildContext context, String? userID, String? userName, buttonKey) async {
+    final RenderBox button =
+        buttonKey.currentContext!.findRenderObject() as RenderBox;
+    final RenderBox overlay =
+        Overlay.of(context).context.findRenderObject() as RenderBox;
+
+    /*  final RelativeRect position = RelativeRect.fromRect(
+      Rect.fromPoints(
+        button.localToGlobal(Offset.zero, ancestor: overlay),
+        button.localToGlobal(button.size.bottomLeft(Offset.zero),
+            ancestor: overlay),
+      ),
+      Offset.zero & overlay.size,
+    ); */
+    final double top = button.localToGlobal(Offset.zero, ancestor: overlay).dy;
+    final double left = button.localToGlobal(Offset.zero, ancestor: overlay).dx;
+
+    final RelativeRect position = RelativeRect.fromLTRB(
+      left, // left
+      top + button.size.height, // top
+      left + button.size.width, // right
+      top + button.size.height, // bottom
+    );
+
+    await showMenu(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+      constraints: BoxConstraints(maxWidth: 180),
+      context: context,
+      position: position,
+      items: <PopupMenuItem<String>>[
+        PopupMenuItem<String>(
+          height: 25,
+          value: 'block',
+          child: GestureDetector(
+            onTap: () {
+              Navigator.pop(context);
+              showDialog(
+                context: context,
+                builder: (_) =>
+                    BlockUserdailog(blockUserID: userID, userName: userName),
+              );
+            },
+            child: Container(
+              child: Center(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Image.asset(
+                      ImageConstant.block_icon,
+                      height: 16,
+                      width: 16,
+                      color: Colors.black,
+                    ),
+                    Text(
+                      'Block',
+                      style: TextStyle(color: Colors.black, fontSize: 16),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
   }
 }
 

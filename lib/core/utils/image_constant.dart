@@ -225,7 +225,7 @@ class ImageConstant {
   static String commentarrow = "assets/images/Vector (30).png";
   static String ExitRoom = "assets/images/ExitRoom.png";
   static String likewithout = "assets/images/likewitoutcolor.png";
-  static String addroomimage = "assets/images/addrom.png"; 
+  static String addroomimage = "assets/images/addrom.png";
   static String hashTagimg = "assets/images/hastagimage.png";
   static String whiteClose = "assets/images/whiteClose.png";
   static String StoryViewListeye = "assets/images/StoryViewListeye.png";
@@ -239,8 +239,10 @@ class ImageConstant {
   static String RightArrowgrey = "assets/images/RightArrowgrey.png";
   static String inbox_search = "assets/images/inboxSearch_icon.png";
   static String inbox_picture = "assets/images/inboxPicture_icon.png";
-/// Notification Image icon List  Start
-  static String PaymentNotificationLogo = "assets/images/Payment Notification Logo.png";
+
+  /// Notification Image icon List  Start
+  static String PaymentNotificationLogo =
+      "assets/images/Payment Notification Logo.png";
   static String RoomCloseLogo = "assets/images/Room Close Logo.png";
   static String RoomDeleteLogo = "assets/images/Room Delete Logo.png";
   static String ExitMemberLogo = "assets/images/Exit Member Logo.png";
@@ -251,30 +253,17 @@ class ImageConstant {
   static String Tag_Comment_Post = "assets/images/Tag Comment Post.png";
   static String Expert_Accept_Invite = "assets/images/Expert Accept Invite.png";
   static String Expert_Reject_Invite = "assets/images/Expert Reject Invite.png";
-  static String Follow_Public_Account = "assets/images/Follow Public Account.png";
-  static String Follow_Private_Account_Request = "assets/images/Follow Private Account Request.png";
-  static String Follow_Request_Accept = "assets/images/Follow Request Accept.png";
+  static String Follow_Public_Account =
+      "assets/images/Follow Public Account.png";
+  static String Follow_Private_Account_Request =
+      "assets/images/Follow Private Account Request.png";
+  static String Follow_Request_Accept =
+      "assets/images/Follow Request Accept.png";
   static String Invite_Rejected = "assets/images/Invite Rejected.png";
+  static String block_icon = "assets/images/block_icon.png";
+  static String block_user = "assets/images/blockUser.png";
+  static String block_user_chat = "assets/images/blocked_chat.png";
+  static String no_blocked_user = "assets/images/no_blockedUser.png";
 
-
-  
-
-  
-
-  
-
-  
-
-  
-
-
-
-  
-
-
-  
-/// end
-
-
-
+  /// end
 }

@@ -1,5 +1,6 @@
 import 'package:pds/API/Model/ViewStoryModel/StoryViewList_Model.dart';
 import 'package:pds/API/Model/ViewStoryModel/ViewStory_Model.dart';
+import 'package:pds/API/Model/like_Post_Model/like_Post_Model.dart';
 import 'package:pds/API/Model/storyDeleteModel/storyDeleteModel.dart';
 
 abstract class ViewStoryState {}
@@ -26,4 +27,9 @@ class StoryViewListLoadedState extends ViewStoryState {
 class DeleteSotryLodedState extends ViewStoryState {
   final DeleteStory deleteStory;
   DeleteSotryLodedState(this.deleteStory);
+}
+
+class PostLikeLoadedState extends ViewStoryState {
+  final LikePost likePost;
+  PostLikeLoadedState(this.likePost);
 }
