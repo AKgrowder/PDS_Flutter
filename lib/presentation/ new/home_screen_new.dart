@@ -138,6 +138,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
   List<int> _currentPages = [];
   String? myUserId;
   String? UserProfileImage;
+  String? UserStatus;
   String? User_IDStroy;
   GetallBlogModel? getallBlogModel1;
   bool isDataget = false;
@@ -1380,6 +1381,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                 User_Name = state.myAccontDetails.object?.userName;
                 User_Module = state.myAccontDetails.object?.module;
                 UserProfileImage = state.myAccontDetails.object?.userProfilePic;
+                UserStatus = state.myAccontDetails.object?.approvalStatus;
 
                 Save_UserData();
               }
@@ -1807,11 +1809,17 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                               padding: EdgeInsets.only(left: 16, right: 16),
                               child: Row(
                                 children: [
-                                  SizedBox(
-                                      height: 40,
-                                      child: Image.asset(
-                                          ImageConstant.splashImage)),
+                                  InkWell(
+                                    onTap: () {
+                                      print("this seactin -${User_Module}");
+                                    },
+                                    child: SizedBox(
+                                        height: 40,
+                                        child: Image.asset(
+                                            ImageConstant.splashImage)),
+                                  ),
                                   Spacer(),
+                                  UserStatus == 'REJECTED'||
                                   User_Module == "EMPLOYEE" ||
                                           User_Module == null ||
                                           User_Module == ''
@@ -3548,14 +3556,14 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                   16),
                                                                           child:
                                                                               LinkifyText(
+                                                                                
                                                                             readmoree[index] == true
-                                                                                ? (AllGuestPostRoomData?.object?.content?[index].repostOn?.isTrsnalteoption == false || AllGuestPostRoomData?.object?.content?[index].repostOn?.isTrsnalteoption == null)
-                                                                                    ? "${AllGuestPostRoomData?.object?.content?[index].repostOn?.description}${(AllGuestPostRoomData?.object?.content?[index].repostOn?.description?.length ?? 0) > maxLength ? '....ReadLess' : ''}"
-                                                                                    : "${AllGuestPostRoomData?.object?.content?[index].repostOn?.translatedDescription}"
-                                                                                : (AllGuestPostRoomData?.object?.content?[index].repostOn?.isTrsnalteoption == false || AllGuestPostRoomData?.object?.content?[index].repostOn?.isTrsnalteoption == null)
-                                                                                    ? "${AllGuestPostRoomData?.object?.content?[index].repostOn?.description != null ? '' : AllGuestPostRoomData?.object?.content?[index].repostOn?.description?.substring(0, maxLength)}....ReadMore"
-                                                                                    : "${AllGuestPostRoomData?.object?.content?[index].repostOn?.translatedDescription?.substring(0, maxLength)}....ReadMore", // as
-
+                                                                                          ? (AllGuestPostRoomData?.object?.content?[index] .repostOn ?.isTrsnalteoption == false || AllGuestPostRoomData?.object?.content?[index].repostOn  ?.isTrsnalteoption == null)
+                                                                                              ? "${AllGuestPostRoomData?.object?.content?[index].repostOn?.description}${(AllGuestPostRoomData?.object?.content?[index].repostOn?.description?.length ?? 0) > maxLength ? ' ....ReadLess' : ''}"
+                                                                                              : "${AllGuestPostRoomData?.object?.content?[index].repostOn?.translatedDescription}"
+                                                                                          : (AllGuestPostRoomData?.object?.content?[index].repostOn?.isTrsnalteoption == false || AllGuestPostRoomData?.object?.content?[index].repostOn?.isTrsnalteoption == null)
+                                                                                              ? "${AllGuestPostRoomData?.object?.content?[index].repostOn?.description?.substring(0, maxLength)} ....ReadMore"
+                                                                                              : "${AllGuestPostRoomData?.object?.content?[index].repostOn?.translatedDescription?.substring(0, maxLength)} ....ReadMore",  // as
                                                                             linkStyle:
                                                                                 TextStyle(
                                                                               color: Colors.blue,

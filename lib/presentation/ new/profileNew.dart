@@ -2116,7 +2116,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                 ),
                                                         ],
                                                       )),
-                                                if (User_ID !=
+                                                if (NewProfileData?.object?.aboutMe !=null && User_ID !=
                                                     NewProfileData
                                                         ?.object?.userUid && (NewProfileData?.object
                                                             ?.accountType ==
@@ -10147,8 +10147,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                             .NewProfileSAPI(context, widget.User_ID, false));
               },
               child: User_ID == NewProfileData?.object?.userUid &&
-                      NewProfileData?.object?.approvalStatus != "PENDING" &&
-                      NewProfileData?.object?.approvalStatus != "REJECTED"
+                      NewProfileData?.object?.approvalStatus != "PENDING" 
                   ? Icon(
                       Icons.edit,
                       color: Colors.black,
