@@ -114,4 +114,24 @@ class OpenSaveCubit extends Cubit<OpenSaveState> {
       emit(OpenSaveErrorState(likepost));
     }
   }
+
+   Future<void> DeletePost(String postUid, BuildContext context) async {
+    dynamic Deletepost;
+    try {
+      emit(OpenSaveLoadingState());
+      Deletepost = await Repository().Deletepost(postUid, context);
+      if (Deletepost == "Something Went Wrong, Try After Some Time.") {
+        emit(OpenSaveErrorState("${Deletepost}"));
+      } else {
+        if (Deletepost.success == true) {
+          emit(DeletePostLoadedState(Deletepost));
+          Navigator.pop(context);
+        } else {
+          emit(OpenSaveErrorState(Deletepost.message));
+        }
+      }
+    } catch (e) {
+      emit(OpenSaveErrorState(Deletepost));
+    }
+  }
 }

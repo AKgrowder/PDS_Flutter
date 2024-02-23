@@ -1,11 +1,11 @@
 import 'dart:async';
 import 'dart:collection';
-import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:pds/API/Bloc/NewProfileScreen_Bloc/NewProfileScreen_cubit.dart';
 import 'package:pds/API/Bloc/viewStory_Bloc/viewStory_cubit.dart';
@@ -23,8 +23,6 @@ import 'package:pds/presentation/%20new/profileNew.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:video_player/video_player.dart';
-import 'dart:ui' as ui;
-import 'package:http/http.dart' as http;
 
 import '../../core/utils/image_constant.dart';
 import '../../widgets/custom_image_view.dart';
@@ -1254,117 +1252,119 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
               if (User_ID != widget.buttonData.images[_curSegmentIndex].userUid)
                 Positioned(
                     bottom: 30,
-                    child: Container(
-                      height: 50,
-                      margin: EdgeInsets.only(left: 15, right: 15),
-                      width: MediaQuery.of(context).size.height / 2.4,
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20),
-                          border: Border.all(color: Colors.white)),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: Container(
-                              color: Colors.transparent,
-                              child: TextField(
-                                controller: reactionData,
-                                focusNode: _focusNode,
-                                minLines: 1,
-                                maxLines: null,
-                                onTap: () {
-                                  print("else working");
-                                  print(
-                                      "checkOntap -${_stopwatch.elapsedMilliseconds}");
-                                  if (User_ID !=
-                                      widget.buttonData.images[_curSegmentIndex]
-                                          .userUid) {
+                    child: SizedBox(width:_width/1,
+                      child: Container(
+                        height: 50,
+                        margin: EdgeInsets.only(left: 15, right: 15),
+                        width: MediaQuery.of(context).size.height / 2.2,
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20),
+                            border: Border.all(color: Colors.white)),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: Container(
+                                color: Colors.transparent,
+                                child: TextField(
+                                  controller: reactionData,
+                                  focusNode: _focusNode,
+                                  minLines: 1,
+                                  maxLines: null,
+                                  onTap: () {
+                                    print("else working");
                                     print(
-                                        "eventDataPosttion-${eventdata.position}");
-                                    RenderBox renderBox =
-                                        context.findRenderObject() as RenderBox;
-                                    Offset position =
-                                        renderBox.localToGlobal(Offset.zero);
-                                    print("posttion check -${position}");
-                                    print(
-                                        "posttion check1-${_stopwatch.elapsedMilliseconds}");
-                                    _pointerDownMillis =
-                                        _stopwatch.elapsedMilliseconds;
-                                    _pointerDownPosition = position;
-                                    _storyController?.pause();
-                                    FocusScope.of(context)
-                                        .requestFocus(_focusNode);
-                                    if (mounted) {
-                                      super.setState(() {
-                                        isBottomSheetOpen = true;
-                                        isDataGet = true;
-                                      });
+                                        "checkOntap -${_stopwatch.elapsedMilliseconds}");
+                                    if (User_ID !=
+                                        widget.buttonData.images[_curSegmentIndex]
+                                            .userUid) {
+                                      print(
+                                          "eventDataPosttion-${eventdata.position}");
+                                      RenderBox renderBox =
+                                          context.findRenderObject() as RenderBox;
+                                      Offset position =
+                                          renderBox.localToGlobal(Offset.zero);
+                                      print("posttion check -${position}");
+                                      print(
+                                          "posttion check1-${_stopwatch.elapsedMilliseconds}");
+                                      _pointerDownMillis =
+                                          _stopwatch.elapsedMilliseconds;
+                                      _pointerDownPosition = position;
+                                      _storyController?.pause();
+                                      FocusScope.of(context)
+                                          .requestFocus(_focusNode);
+                                      if (mounted) {
+                                        super.setState(() {
+                                          isBottomSheetOpen = true;
+                                          isDataGet = true;
+                                        });
+                                      }
+                                      /*   WidgetsBinding.instance
+                                          .addPostFrameCallback((timeStamp) {
+                                        
+                                      }); */
                                     }
-                                    /*   WidgetsBinding.instance
-                                        .addPostFrameCallback((timeStamp) {
-                                      
-                                    }); */
-                                  }
-                                },
-                                onChanged: (value) {
-                                  if (value.isEmpty) {
-                                    if (mounted) {
-                                      setState(() {
-                                        isDataGet = true;
-                                      });
+                                  },
+                                  onChanged: (value) {
+                                    if (value.isEmpty) {
+                                      if (mounted) {
+                                        setState(() {
+                                          isDataGet = true;
+                                        });
+                                      }
+                                    } else {
+                                      if (mounted) {
+                                        setState(() {
+                                          isDataGet = false;
+                                        });
+                                      }
                                     }
-                                  } else {
-                                    if (mounted) {
-                                      setState(() {
-                                        isDataGet = false;
-                                      });
-                                    }
-                                  }
-                                },
-                                style: TextStyle(color: Colors.white),
-                                decoration: InputDecoration(
-                                    contentPadding: EdgeInsets.only(
-                                      left: 15,
-                                      right: 15,
-                                    ),
-                                    hintText: 'Send Meesage',
-                                    hintStyle: TextStyle(color: Colors.white),
-                                    border: InputBorder.none),
+                                  },
+                                  style: TextStyle(color: Colors.white),
+                                  decoration: InputDecoration(
+                                      contentPadding: EdgeInsets.only(
+                                        left: 15,
+                                        right: 15,
+                                      ),
+                                      hintText: 'Send Meesage',
+                                      hintStyle: TextStyle(color: Colors.white),
+                                      border: InputBorder.none),
+                                ),
                               ),
                             ),
-                          ),
-                          TextButton(
-                            onPressed: () {
-                              Repository().reactionMessageAddedOnStory(
-                                  context,
-                                  reactionData.text,
-                                  widget.buttonData.images[_curSegmentIndex]
-                                      .storyUid
-                                      .toString());
-
-                              if (User_ID !=
-                                  widget.buttonData.images[_curSegmentIndex]
-                                      .userUid) {
-                                reactionData.clear();
-                                _storyController!.unpause();
-                                WidgetsBinding.instance
-                                    .addPostFrameCallback((timeStamp) {
-                                  if (mounted) {
-                                    super.setState(() {
-                                      _focusNode?.unfocus();
-                                      isDataGet = false;
-                                      isBottomSheetOpen = false;
-                                    });
-                                  }
-                                });
-                              }
-                            },
-                            child: Text(
-                              'Send',
-                              style: TextStyle(color: Colors.white),
+                            TextButton(
+                              onPressed: () {
+                                Repository().reactionMessageAddedOnStory(
+                                    context,
+                                    reactionData.text,
+                                    widget.buttonData.images[_curSegmentIndex]
+                                        .storyUid
+                                        .toString());
+                      
+                                if (User_ID !=
+                                    widget.buttonData.images[_curSegmentIndex]
+                                        .userUid) {
+                                  reactionData.clear();
+                                  _storyController!.unpause();
+                                  WidgetsBinding.instance
+                                      .addPostFrameCallback((timeStamp) {
+                                    if (mounted) {
+                                      super.setState(() {
+                                        _focusNode?.unfocus();
+                                        isDataGet = false;
+                                        isBottomSheetOpen = false;
+                                      });
+                                    }
+                                  });
+                                }
+                              },
+                              child: Text(
+                                'Send',
+                                style: TextStyle(color: Colors.white),
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     )),
               if (isDataGet == true)
