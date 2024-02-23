@@ -3,6 +3,8 @@ import 'package:pds/API/Model/RePost_Model/RePost_model.dart';
 import 'package:pds/API/Model/UserTagModel/UserTag_model.dart';
 import 'package:pds/API/Model/like_Post_Model/like_Post_Model.dart';
 
+import '../../Model/Delete_Api_model/delete_api_model.dart';
+
 abstract class OpenSaveState {}
 
 class OpenSaveLoadingState extends OpenSaveState {}
@@ -34,3 +36,7 @@ class UserTagSaveLoadedState extends OpenSaveState {
   UserTagSaveLoadedState(this.userTagModel);
 }
 
+class DeletePostLoadedState extends OpenSaveState {
+  final DeletePostModel DeletePost;
+  DeletePostLoadedState(this.DeletePost);
+}

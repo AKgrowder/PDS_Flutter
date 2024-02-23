@@ -1564,7 +1564,7 @@ class _DmScreenState extends State<DmScreen> {
                                 )
                               : SizedBox(), */
                           Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
                               _image != null
                                   ? Container(
@@ -1692,6 +1692,7 @@ class _DmScreenState extends State<DmScreen> {
                                         ),
                                       ]),
                                     ),
+                                    
                               GestureDetector(
                                 onTap: () async {
                                   if (_image != null) {
