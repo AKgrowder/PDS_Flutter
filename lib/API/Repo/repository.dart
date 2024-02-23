@@ -126,7 +126,8 @@ class Repository {
       case 200:
         return PublicRoomModel.fromJson(jsonString);
       case 400:
-        return Config.somethingWentWrong;
+        return PublicRoomModel.fromJson(jsonString);
+        // return Config.somethingWentWrong;
       case 404:
         return Config.somethingWentWrong;
       case 500:
@@ -147,7 +148,8 @@ class Repository {
       case 200:
         return FetchExprtise.fromJson(jsonString);
       case 400:
-        return Config.somethingWentWrong;
+        return FetchExprtise.fromJson(jsonString);
+        // return Config.somethingWentWrong;
       case 404:
         return Config.somethingWentWrong;
       case 500:
@@ -168,7 +170,8 @@ class Repository {
       case 200:
         return FatchAllMembersModel.fromJson(jsonString);
       case 400:
-        return Config.somethingWentWrong;
+        return FatchAllMembersModel.fromJson(jsonString);
+        // return Config.somethingWentWrong;
       case 404:
         return Config.somethingWentWrong;
       case 500:
@@ -191,7 +194,8 @@ class Repository {
       case 404:
         return Config.somethingWentWrong;
       case 400:
-        return Config.somethingWentWrong;
+        return AddExpertProfile.fromJson(jsonString);
+        // return Config.somethingWentWrong;
       case 500:
         return Config.servernotreachable;
       case 701:
@@ -210,7 +214,8 @@ class Repository {
       case 200:
         return InvitationModel.fromJson(jsonString);
       case 400:
-        return Config.somethingWentWrong;
+        return InvitationModel.fromJson(jsonString);
+        // return Config.somethingWentWrong;
       case 404:
         return Config.somethingWentWrong;
       case 500:
@@ -235,7 +240,8 @@ class Repository {
       case 500:
         return Config.servernotreachable;
       case 400:
-        return Config.somethingWentWrong;
+        return CreatPublicRoomModel.fromJson(jsonString);
+        // return Config.somethingWentWrong;
 
       case 701:
         return Config.somethingWentWrong;
@@ -255,7 +261,8 @@ class Repository {
       case 404:
         return Config.somethingWentWrong;
       case 400:
-        return Config.loginerror;
+        return LoginModel.fromJson(jsonString);
+        // return Config.loginerror;
       case 500:
         return Config.servernotreachable;
       case 701:
@@ -277,7 +284,8 @@ class Repository {
       case 404:
         return Config.somethingWentWrong;
       case 400:
-        return Config.somethingWentWrong;
+        return LoginModel.fromJson(jsonString);
+        // return Config.somethingWentWrong;
       case 500:
         return Config.servernotreachable;
       case 701:
@@ -299,7 +307,8 @@ class Repository {
       case 404:
         return Config.somethingWentWrong;
       case 400:
-        return Config.somethingWentWrong;
+        return OtpModel.fromJson(jsonString);
+        // return Config.somethingWentWrong;
       case 500:
         return Config.servernotreachable;
       case 701:
@@ -324,6 +333,7 @@ class Repository {
         return Config.servernotreachable;
       case 400:
         return Config.somethingWentWrong;
+        // return Config.somethingWentWrong;
       case 701:
         return Config.somethingWentWrong;
       default:
@@ -344,7 +354,8 @@ class Repository {
       case 500:
         return Config.servernotreachable;
       case 400:
-        return Config.somethingWentWrong;
+        return sendMSGModel.fromJson(jsonString);
+        // return Config.somethingWentWrong;
       case 701:
         return Config.somethingWentWrong;
       default:
@@ -359,6 +370,8 @@ class Repository {
     var jsonString = json.decode(response.body);
     switch (response.statusCode) {
       case 200:
+        return ComentApiModel.fromJson(jsonString);
+        case 400:
         return ComentApiModel.fromJson(jsonString);
       case 404:
         return Config.somethingWentWrong;
@@ -385,7 +398,8 @@ class Repository {
       case 500:
         return Config.servernotreachable;
       case 400:
-        return Config.somethingWentWrong;
+        return GetAllPrivateRoomModel.fromJson(jsonString);
+        // return Config.somethingWentWrong;
       case 701:
         return Config.somethingWentWrong;
       default:
@@ -406,7 +420,8 @@ class Repository {
       case 500:
         return Config.servernotreachable;
       case 400:
-        return Config.somethingWentWrong;
+        return CreateRoomModel.fromJson(jsonString);
+        // return Config.somethingWentWrong;
       case 701:
         return Config.somethingWentWrong;
       default:
@@ -427,7 +442,9 @@ class Repository {
       case 500:
         return Config.servernotreachable;
       case 400:
-        return Config.somethingWentWrong;
+        return SherInvite.fromJson(jsonString);
+
+        // return Config.somethingWentWrong;
       case 701:
         return Config.somethingWentWrong;
       default:
@@ -449,7 +466,8 @@ class Repository {
       case 500:
         return Config.servernotreachable;
       case 400:
-        return Config.somethingWentWrong;
+        return CreateForm.fromJson(jsonString);
+        // return Config.somethingWentWrong;
       case 701:
         return Config.somethingWentWrong;
       default:
@@ -470,7 +488,8 @@ class Repository {
       case 500:
         return Config.servernotreachable;
       case 400:
-        return Config.somethingWentWrong;
+        return FetchAllExpertsModel.fromJson(jsonString);
+        // return Config.somethingWentWrong;
       case 701:
         return Config.somethingWentWrong;
       default:
@@ -492,7 +511,8 @@ class Repository {
       case 500:
         return Config.servernotreachable;
       case 400:
-        return Config.somethingWentWrong;
+        return EditRoomModel.fromJson(jsonString);
+        // return Config.somethingWentWrong;
       case 701:
         return Config.somethingWentWrong;
       default:
@@ -514,7 +534,8 @@ class Repository {
       case 500:
         return Config.servernotreachable;
       case 400:
-        return Config.somethingWentWrong;
+        return AcceptRejectInvitationModel.fromJson(jsonString);
+        // return Config.somethingWentWrong;
       case 701:
         return Config.somethingWentWrong;
       default:
@@ -535,7 +556,9 @@ class Repository {
       case 500:
         return Config.servernotreachable;
       case 400:
-        return Config.somethingWentWrong;
+        return RequestListModel.fromJson(jsonString);
+
+        // return Config.somethingWentWrong;
       case 701:
         return Config.somethingWentWrong;
       default:
@@ -558,7 +581,8 @@ class Repository {
       case 500:
         return Config.servernotreachable;
       case 400:
-        return Config.somethingWentWrong;
+        return accept_rejectModel.fromJson(jsonString);
+        // return Config.somethingWentWrong;
       case 701:
         return Config.somethingWentWrong;
       default:
@@ -579,7 +603,9 @@ class Repository {
       case 500:
         return Config.servernotreachable;
       case 400:
-        return Config.somethingWentWrong;
+        return GetAllNotificationModel.fromJson(jsonString);
+
+        // return Config.somethingWentWrong;
       case 701:
         return Config.somethingWentWrong;
       default:
@@ -601,7 +627,9 @@ class Repository {
       case 500:
         return Config.servernotreachable;
       case 400:
-        return Config.somethingWentWrong;
+        return seenNotificationModel.fromJson(jsonString);
+
+        // return Config.somethingWentWrong;
       case 701:
         return Config.somethingWentWrong;
       default:
@@ -622,7 +650,9 @@ class Repository {
       case 500:
         return Config.servernotreachable;
       case 400:
-        return Config.somethingWentWrong;
+        return getAllNotificationCount.fromJson(jsonString);
+
+        // return Config.somethingWentWrong;
       case 701:
         return Config.somethingWentWrong;
       default:
@@ -644,7 +674,9 @@ class Repository {
       case 500:
         return Config.servernotreachable;
       case 400:
-        return Config.somethingWentWrong;
+        return accept_rejectModel.fromJson(jsonString);
+
+        // return Config.somethingWentWrong;
       case 701:
         return Config.somethingWentWrong;
       default:
@@ -665,7 +697,9 @@ class Repository {
       case 500:
         return Config.servernotreachable;
       case 400:
-        return Config.somethingWentWrong;
+        return HashTagImageModel.fromJson(jsonString);
+
+        // return Config.somethingWentWrong;
       case 701:
         return Config.somethingWentWrong;
       default:
@@ -686,7 +720,9 @@ class Repository {
       case 500:
         return Config.servernotreachable;
       case 400:
-        return Config.somethingWentWrong;
+        return DeleteRoomModel.fromJson(jsonString);
+
+        // return Config.somethingWentWrong;
       case 701:
         return Config.somethingWentWrong;
       default:
@@ -707,7 +743,9 @@ class Repository {
       case 500:
         return Config.servernotreachable;
       case 400:
-        return Config.somethingWentWrong;
+        return CheckUserStausModel.fromJson(jsonString);
+
+        // return Config.somethingWentWrong;
       case 701:
         return Config.somethingWentWrong;
       default:
@@ -731,7 +769,9 @@ class Repository {
       case 500:
         return Config.servernotreachable;
       case 400:
-        return Config.somethingWentWrong;
+        return ChooseDocument.fromJson(jsonString);
+
+        // return Config.somethingWentWrong;
       case 701:
         return Config.somethingWentWrong;
       default:
@@ -755,7 +795,9 @@ class Repository {
       case 500:
         return Config.servernotreachable;
       case 400:
-        return Config.somethingWentWrong;
+        return ChooseDocument2.fromJson(jsonString);
+
+        // return Config.somethingWentWrong;
       case 701:
         return Config.somethingWentWrong;
       default:
@@ -776,7 +818,9 @@ class Repository {
       case 500:
         return Config.servernotreachable;
       case 400:
-        return Config.somethingWentWrong;
+        return ChooseDocument.fromJson(jsonString);
+
+        // return Config.somethingWentWrong;
       case 701:
         return Config.somethingWentWrong;
       default:
@@ -797,7 +841,9 @@ class Repository {
       case 500:
         return Config.servernotreachable;
       case 400:
-        return Config.somethingWentWrong;
+        return ChooseDocument1.fromJson(jsonString);
+
+        // return Config.somethingWentWrong;
       case 701:
         return Config.somethingWentWrong;
       default:
@@ -818,7 +864,9 @@ class Repository {
       case 500:
         return Config.servernotreachable;
       case 400:
-        return Config.somethingWentWrong;
+        return DeviceinfoModel.fromJson(jsonString);
+
+        // return Config.somethingWentWrong;
       case 701:
         return Config.somethingWentWrong;
       default:
@@ -839,7 +887,9 @@ class Repository {
       case 500:
         return Config.servernotreachable;
       case 400:
-        return Config.somethingWentWrong;
+        return UpdateProfile.fromJson(jsonString);
+
+        // return Config.somethingWentWrong;
       case 701:
         return Config.somethingWentWrong;
       default:
@@ -860,7 +910,9 @@ class Repository {
       case 500:
         return Config.servernotreachable;
       case 400:
-        return Config.somethingWentWrong;
+        return TokenvalidModel.fromJson(jsonString);
+
+        // return Config.somethingWentWrong;
       case 701:
         return Config.somethingWentWrong;
       default:
@@ -881,7 +933,9 @@ class Repository {
       case 500:
         return Config.servernotreachable;
       case 400:
-        return Config.somethingWentWrong;
+        return CreateForm.fromJson(jsonString);
+
+        // return Config.somethingWentWrong;
       case 701:
         return Config.somethingWentWrong;
       default:
@@ -907,7 +961,9 @@ class Repository {
       case 500:
         return Config.servernotreachable;
       case 400:
-        return Config.somethingWentWrong;
+        return HasDataModel.fromJson(jsonString);
+
+        // return Config.somethingWentWrong;
       case 701:
         return Config.somethingWentWrong;
       default:
@@ -927,7 +983,9 @@ class Repository {
       case 500:
         return Config.servernotreachable;
       case 400:
-        return Config.somethingWentWrong;
+        return SystemConfigModel.fromJson(jsonString);
+
+        // return Config.somethingWentWrong;
       case 701:
         return Config.somethingWentWrong;
       default:
@@ -946,7 +1004,9 @@ class Repository {
       case 404:
         return Config.somethingWentWrong;
       case 400:
-        return Config.somethingWentWrong;
+        return FetchUserModulemodel.fromJson(jsonString);
+
+        // return Config.somethingWentWrong;
       case 500:
         return Config.servernotreachable;
       case 701:
@@ -970,7 +1030,9 @@ class Repository {
       case 500:
         return Config.servernotreachable;
       case 400:
-        return Config.somethingWentWrong;
+        return MyAccontDetails.fromJson(jsonString);
+
+        // return Config.somethingWentWrong;
       case 701:
         return jsonString;
       default:
@@ -991,7 +1053,9 @@ class Repository {
       case 500:
         return Config.servernotreachable;
       case 400:
-        return Config.somethingWentWrong;
+        return SeenAllMessageModel.fromJson(jsonString);
+
+        // return Config.somethingWentWrong;
       case 701:
         return jsonString;
       default:
@@ -1012,7 +1076,9 @@ class Repository {
       case 500:
         return Config.servernotreachable;
       case 400:
-        return Config.somethingWentWrong;
+        return FetchRoomDetailModel.fromJson(jsonString);
+
+        // return Config.somethingWentWrong;
       case 701:
         return Config.somethingWentWrong;
       default:
@@ -1031,7 +1097,9 @@ class Repository {
       case 404:
         return Config.somethingWentWrong;
       case 400:
-        return Config.mobileNumberIsNotvaild;
+        return ForgetPasswordModel.fromJson(jsonString);
+
+        // return Config.mobileNumberIsNotvaild;
       case 500:
         return Config.servernotreachable;
       case 701:
@@ -1056,7 +1124,9 @@ class Repository {
       case 500:
         return Config.servernotreachable;
       case 400:
-        return Config.somethingWentWrong;
+        return LoginPublicRoomModel.fromJson(jsonString);
+
+        // return Config.somethingWentWrong;
       case 701:
         return Config.somethingWentWrong;
       default:
@@ -1078,7 +1148,9 @@ class Repository {
       case 500:
         return Config.servernotreachable;
       case 400:
-        return Config.somethingWentWrong;
+        return MyPublicRoom.fromJson(jsonString);
+
+        // return Config.somethingWentWrong;
       case 701:
         return Config.somethingWentWrong;
       default:
@@ -1099,7 +1171,9 @@ class Repository {
       case 500:
         return Config.servernotreachable;
       case 400:
-        return Config.somethingWentWrong;
+        return ChangePasswordModel.fromJson(jsonString);
+
+        // return Config.somethingWentWrong;
       case 701:
         return Config.somethingWentWrong;
       default:
@@ -1121,7 +1195,9 @@ class Repository {
       case 500:
         return Config.servernotreachable;
       case 400:
-        return Config.somethingWentWrong;
+        return ChangePasswordModelSectionPasswordChages.fromJson(jsonString);
+
+        // return Config.somethingWentWrong;
       case 701:
         return Config.somethingWentWrong;
       default:
@@ -1142,7 +1218,9 @@ class Repository {
       case 500:
         return Config.servernotreachable;
       case 400:
-        return Config.somethingWentWrong;
+        return GetallBlogModel.fromJson(jsonString);
+
+        // return Config.somethingWentWrong;
       case 701:
         return Config.somethingWentWrong;
       default:
@@ -1157,6 +1235,8 @@ class Repository {
     print(jsonString);
     switch (response.statusCode) {
       case 200:
+        return saveBlogModel.fromJson(jsonString);
+         case 400:
         return saveBlogModel.fromJson(jsonString);
       case 404:
         return Config.somethingWentWrong;
@@ -1183,7 +1263,9 @@ class Repository {
       case 500:
         return Config.servernotreachable;
       case 400:
-        return Config.somethingWentWrong;
+        return saveBlogModel.fromJson(jsonString);
+
+        // return Config.somethingWentWrong;
       case 701:
         return Config.somethingWentWrong;
       default:
@@ -1204,7 +1286,9 @@ class Repository {
       case 500:
         return Config.servernotreachable;
       case 400:
-        return Config.somethingWentWrong;
+        return FollowersClassModel.fromJson(jsonString);
+
+        // return Config.somethingWentWrong;
       case 701:
         return Config.somethingWentWrong;
       default:
@@ -1225,7 +1309,9 @@ class Repository {
       case 500:
         return Config.servernotreachable;
       case 400:
-        return Config.somethingWentWrong;
+        return Remove_Follower.fromJson(jsonString);
+
+        // return Config.somethingWentWrong;
       case 701:
         return Config.somethingWentWrong;
       default:
@@ -1246,7 +1332,9 @@ class Repository {
       case 500:
         return Config.servernotreachable;
       case 400:
-        return Config.somethingWentWrong;
+        return FollowersClassModel.fromJson(jsonString);
+
+        // return Config.somethingWentWrong;
       case 701:
         return Config.somethingWentWrong;
       default:
@@ -1267,7 +1355,9 @@ class Repository {
       case 500:
         return Config.servernotreachable;
       case 400:
-        return Config.somethingWentWrong;
+        return saveAllBlogModel.fromJson(jsonString);
+
+        // return Config.somethingWentWrong;
       case 701:
         return Config.somethingWentWrong;
       default:
@@ -1288,7 +1378,9 @@ class Repository {
       case 500:
         return Config.servernotreachable;
       case 400:
-        return Config.somethingWentWrong;
+        return LogOutModel.fromJson(jsonString);
+
+        // return Config.somethingWentWrong;
       case 701:
         return Config.somethingWentWrong;
       default:
@@ -1309,7 +1401,9 @@ class Repository {
       case 500:
         return Config.servernotreachable;
       case 400:
-        return Config.somethingWentWrong;
+        return DeleteUserModel.fromJson(jsonString);
+
+        // return Config.somethingWentWrong;
       case 701:
         return Config.somethingWentWrong;
       default:
@@ -1330,7 +1424,9 @@ class Repository {
       case 500:
         return Config.servernotreachable;
       case 400:
-        return Config.somethingWentWrong;
+        return UserReActivateModel.fromJson(jsonString);
+
+        // return Config.somethingWentWrong;
       case 701:
         return Config.somethingWentWrong;
       default:
@@ -1351,7 +1447,9 @@ class Repository {
       case 500:
         return Config.servernotreachable;
       case 400:
-        return Config.somethingWentWrong;
+        return SelectRoomModel.fromJson(jsonString);
+
+        // return Config.somethingWentWrong;
       case 701:
         return Config.somethingWentWrong;
       default:
@@ -1372,7 +1470,9 @@ class Repository {
       case 500:
         return Config.servernotreachable;
       case 400:
-        return Config.somethingWentWrong;
+        return RateUsModel.fromJson(jsonString);
+
+        // return Config.somethingWentWrong;
       case 701:
         return Config.somethingWentWrong;
       default:
@@ -1393,7 +1493,9 @@ class Repository {
       case 500:
         return Config.servernotreachable;
       case 400:
-        return Config.somethingWentWrong;
+        return EmailVerifaction.fromJson(jsonString);
+
+        // return Config.somethingWentWrong;
       case 701:
         return Config.somethingWentWrong;
       default:
@@ -1418,7 +1520,9 @@ class Repository {
       case 500:
         return Config.servernotreachable;
       case 400:
-        return Config.somethingWentWrong;
+        return jsonString;
+
+        // return Config.somethingWentWrong;
       case 701:
         return Config.somethingWentWrong;
       default:
@@ -1441,7 +1545,9 @@ class Repository {
       case 500:
         return Config.servernotreachable;
       case 400:
-        return Config.somethingWentWrong;
+        return jsonString;
+
+        // return Config.somethingWentWrong;
       case 701:
         return Config.somethingWentWrong;
       default:
@@ -1462,7 +1568,9 @@ class Repository {
       case 500:
         return Config.servernotreachable;
       case 400:
-        return Config.somethingWentWrong;
+        return UnPinModel.fromJson(jsonString);
+
+        // return Config.somethingWentWrong;
       case 701:
         return Config.somethingWentWrong;
       default:
@@ -1483,7 +1591,9 @@ class Repository {
       case 500:
         return Config.servernotreachable;
       case 400:
-        return Config.somethingWentWrong;
+        return GetCountOfSavedRoomModel.fromJson(jsonString);
+
+        // return Config.somethingWentWrong;
       case 701:
         return Config.somethingWentWrong;
       default:
@@ -1504,7 +1614,9 @@ class Repository {
       case 500:
         return Config.servernotreachable;
       case 400:
-        return Config.somethingWentWrong;
+        return AutoEnterRoomModel.fromJson(jsonString);
+
+        // return Config.somethingWentWrong;
       case 701:
         return Config.somethingWentWrong;
       default:
@@ -1525,7 +1637,9 @@ class Repository {
       case 500:
         return Config.servernotreachable;
       case 400:
-        return Config.somethingWentWrong;
+        return ShareAppOpenPostModel.fromJson(jsonString);
+
+        // return Config.somethingWentWrong;
       case 701:
         return Config.somethingWentWrong;
       default:
@@ -1546,7 +1660,9 @@ class Repository {
       case 500:
         return Config.servernotreachable;
       case 400:
-        return Config.somethingWentWrong;
+        return ViewDetailsModel.fromJson(jsonString);
+
+        // return Config.somethingWentWrong;
       case 701:
         return Config.somethingWentWrong;
       default:
@@ -1569,7 +1685,9 @@ class Repository {
       case 500:
         return Config.servernotreachable;
       case 400:
-        return Config.somethingWentWrong;
+        return RemoveUserModel.fromJson(jsonString);
+
+        // return Config.somethingWentWrong;
       case 701:
         return Config.somethingWentWrong;
       default:
@@ -1591,7 +1709,9 @@ class Repository {
       case 500:
         return Config.servernotreachable;
       case 400:
-        return Config.somethingWentWrong;
+        return RemoveUserModel.fromJson(jsonString);
+
+        // return Config.somethingWentWrong;
       case 701:
         return Config.somethingWentWrong;
       default:
@@ -1618,7 +1738,9 @@ class Repository {
       case 500:
         return Config.servernotreachable;
       case 400:
-        return Config.somethingWentWrong;
+        return GetGuestAllPostModel.fromJson(jsonString);
+
+        // return Config.somethingWentWrong;
       case 701:
         return Config.somethingWentWrong;
       default:
@@ -1644,7 +1766,9 @@ class Repository {
       case 500:
         return Config.servernotreachable;
       case 400:
-        return Config.somethingWentWrong;
+        return GetGuestAllPostModel.fromJson(jsonString);
+
+        // return Config.somethingWentWrong;
       case 701:
         return Config.somethingWentWrong;
       default:
@@ -1668,7 +1792,9 @@ class Repository {
       case 500:
         return Config.servernotreachable;
       case 400:
-        return Config.somethingWentWrong;
+        return AddPost.fromJson(jsonString);
+
+        // return Config.somethingWentWrong;
       case 701:
         return Config.somethingWentWrong;
 
@@ -1696,7 +1822,9 @@ class Repository {
       case 500:
         return Config.servernotreachable;
       case 400:
-        return Config.somethingWentWrong;
+        return ImageDataPost.fromJson(jsonString);
+
+        // return Config.somethingWentWrong;
       case 701:
         return Config.somethingWentWrong;
       default:
@@ -1717,7 +1845,9 @@ class Repository {
       case 500:
         return Config.servernotreachable;
       case 400:
-        return Config.somethingWentWrong;
+        return ImageDataPost.fromJson(jsonString);
+
+        // return Config.somethingWentWrong;
       case 701:
         return Config.somethingWentWrong;
       default:
@@ -1738,7 +1868,9 @@ class Repository {
       case 500:
         return Config.servernotreachable;
       case 400:
-        return Config.somethingWentWrong;
+        return LikePost.fromJson(jsonString);
+
+        // return Config.somethingWentWrong;
       case 701:
         return Config.somethingWentWrong;
       default:
@@ -1759,7 +1891,9 @@ class Repository {
       case 500:
         return Config.servernotreachable;
       case 400:
-        return Config.somethingWentWrong;
+        return LikePost.fromJson(jsonString);
+
+        // return Config.somethingWentWrong;
       case 701:
         return Config.somethingWentWrong;
       default:
@@ -1780,7 +1914,9 @@ class Repository {
       case 500:
         return Config.servernotreachable;
       case 400:
-        return Config.somethingWentWrong;
+        return LikePost.fromJson(jsonString);
+
+        // return Config.somethingWentWrong;
       case 701:
         return Config.somethingWentWrong;
       default:
@@ -1802,7 +1938,9 @@ class Repository {
       case 500:
         return Config.servernotreachable;
       case 400:
-        return Config.somethingWentWrong;
+        return GetPostLikeModel.fromJson(jsonString);
+
+        // return Config.somethingWentWrong;
       case 701:
         return Config.somethingWentWrong;
       default:
@@ -1825,7 +1963,9 @@ class Repository {
       case 500:
         return Config.servernotreachable;
       case 400:
-        return Config.somethingWentWrong;
+        return AddCommentModel.fromJson(jsonString);
+
+        // return Config.somethingWentWrong;
       case 701:
         return Config.somethingWentWrong;
       default:
@@ -1850,7 +1990,9 @@ class Repository {
       case 500:
         return Config.servernotreachable;
       case 400:
-        return Config.somethingWentWrong;
+        return jsonString;
+
+        // return Config.somethingWentWrong;
       case 701:
         return Config.somethingWentWrong;
 
@@ -1898,7 +2040,9 @@ class Repository {
       case 500:
         return Config.servernotreachable;
       case 400:
-        return Config.somethingWentWrong;
+        return NewProfileScreen_Model.fromJson(jsonString);
+
+        // return Config.somethingWentWrong;
       case 701:
         return Config.somethingWentWrong;
       default:
@@ -1921,7 +2065,9 @@ class Repository {
       case 500:
         return Config.servernotreachable;
       case 400:
-        return Config.somethingWentWrong;
+        return seenNotificationModel.fromJson(jsonString);
+
+        // return Config.somethingWentWrong;
       case 701:
         return Config.somethingWentWrong;
       default:
@@ -1943,7 +2089,9 @@ class Repository {
       case 500:
         return Config.servernotreachable;
       case 400:
-        return Config.somethingWentWrong;
+        return GetAppUserPostModel.fromJson(jsonString);
+
+        // return Config.somethingWentWrong;
       case 701:
         return Config.somethingWentWrong;
       default:
@@ -1966,7 +2114,9 @@ class Repository {
       case 500:
         return Config.servernotreachable;
       case 400:
-        return Config.somethingWentWrong;
+        return GetUserPostCommetModel.fromJson(jsonString);
+
+        // return Config.somethingWentWrong;
       case 701:
         return Config.somethingWentWrong;
       default:
@@ -1988,7 +2138,9 @@ class Repository {
       case 500:
         return Config.servernotreachable;
       case 400:
-        return Config.somethingWentWrong;
+        return GetSavePostModel.fromJson(jsonString);
+
+        // return Config.somethingWentWrong;
       case 701:
         return Config.somethingWentWrong;
       default:
@@ -2009,7 +2161,9 @@ class Repository {
       case 500:
         return Config.servernotreachable;
       case 400:
-        return Config.somethingWentWrong;
+        return GetAllStoryModel.fromJson(jsonString);
+
+        // return Config.somethingWentWrong;
       case 701:
         return Config.somethingWentWrong;
       default:
@@ -2030,7 +2184,9 @@ class Repository {
       case 500:
         return Config.servernotreachable;
       case 400:
-        return Config.somethingWentWrong;
+        return CreateStroy.fromJson(jsonString);
+
+        // return Config.somethingWentWrong;
       case 701:
         return Config.somethingWentWrong;
       default:
@@ -2050,7 +2206,9 @@ class Repository {
       case 500:
         return Config.servernotreachable;
       case 400:
-        return Config.somethingWentWrong;
+        return IndustryTypeModel.fromJson(jsonString);
+
+        // return Config.somethingWentWrong;
       case 701:
         return Config.somethingWentWrong;
       default:
@@ -2071,7 +2229,9 @@ class Repository {
       case 500:
         return Config.servernotreachable;
       case 400:
-        return Config.somethingWentWrong;
+        return DeletePostModel.fromJson(jsonString);
+
+        // return Config.somethingWentWrong;
       case 701:
         return Config.somethingWentWrong;
       default:
@@ -2095,7 +2255,9 @@ class Repository {
       case 500:
         return Config.servernotreachable;
       case 400:
-        return Config.somethingWentWrong;
+        return HashtagModel.fromJson(jsonString);
+
+        // return Config.somethingWentWrong;
       case 701:
         return Config.somethingWentWrong;
       default:
@@ -2122,7 +2284,9 @@ class Repository {
       case 500:
         return Config.servernotreachable;
       case 400:
-        return Config.somethingWentWrong;
+        return HashtagViewDataModel.fromJson(jsonString);
+
+        // return Config.somethingWentWrong;
       case 701:
         return Config.somethingWentWrong;
       default:
@@ -2149,7 +2313,9 @@ class Repository {
       case 500:
         return Config.servernotreachable;
       case 400:
-        return Config.somethingWentWrong;
+        return ViewStoryModel.fromJson(jsonString);
+
+        // return Config.somethingWentWrong;
       case 701:
         return Config.somethingWentWrong;
       default:
@@ -2197,7 +2363,9 @@ class Repository {
       case 500:
         return Config.servernotreachable;
       case 400:
-        return Config.somethingWentWrong;
+        return GetAllUserListModel.fromJson(jsonString);
+
+        // return Config.somethingWentWrong;
       case 701:
         return Config.somethingWentWrong;
       default:
@@ -2223,7 +2391,9 @@ class Repository {
       case 500:
         return Config.servernotreachable;
       case 400:
-        return Config.somethingWentWrong;
+        return ImageDataPostOne.fromJson(jsonString);
+
+        // return Config.somethingWentWrong;
       case 701:
         return Config.somethingWentWrong;
       default:
@@ -2244,7 +2414,9 @@ class Repository {
       case 500:
         return Config.servernotreachable;
       case 400:
-        return Config.somethingWentWrong;
+        return AboutMe.fromJson(jsonString);
+
+        // return Config.somethingWentWrong;
       case 701:
         return Config.somethingWentWrong;
       default:
@@ -2274,7 +2446,9 @@ class Repository {
       case 500:
         return Config.servernotreachable;
       case 400:
-        return Config.somethingWentWrong;
+        return OpenSaveImagepostModel.fromJson(jsonString);
+
+        // return Config.somethingWentWrong;
       case 701:
         return Config.somethingWentWrong;
       default:
@@ -2295,7 +2469,9 @@ class Repository {
       case 500:
         return Config.servernotreachable;
       case 400:
-        return Config.somethingWentWrong;
+        return AboutMe.fromJson(jsonString);
+
+        // return Config.somethingWentWrong;
       case 701:
         return Config.somethingWentWrong;
       default:
@@ -2316,7 +2492,9 @@ class Repository {
       case 500:
         return Config.servernotreachable;
       case 400:
-        return Config.somethingWentWrong;
+        return DeleteCommentModel.fromJson(jsonString);
+
+        // return Config.somethingWentWrong;
       case 701:
         return Config.somethingWentWrong;
       default:
@@ -2340,7 +2518,9 @@ class Repository {
       case 500:
         return Config.servernotreachable;
       case 400:
-        return Config.somethingWentWrong;
+        return StoryViewListModel.fromJson(jsonString);
+
+        // return Config.somethingWentWrong;
       case 701:
         return Config.somethingWentWrong;
       default:
@@ -2363,7 +2543,9 @@ class Repository {
       case 500:
         return Config.servernotreachable;
       case 400:
-        return Config.somethingWentWrong;
+        return PersonalChatListModel.fromJson(jsonString);
+
+        // return Config.somethingWentWrong;
       case 701:
         return Config.somethingWentWrong;
       default:
@@ -2384,7 +2566,9 @@ class Repository {
       case 500:
         return Config.servernotreachable;
       case 400:
-        return Config.somethingWentWrong;
+        return SerchDataAdd.fromJson(jsonString);
+
+        // return Config.somethingWentWrong;
       case 701:
         return Config.somethingWentWrong;
       default:
@@ -2405,7 +2589,9 @@ class Repository {
       case 500:
         return Config.servernotreachable;
       case 400:
-        return Config.somethingWentWrong;
+        return GetDataInSerch.fromJson(jsonString);
+
+        // return Config.somethingWentWrong;
       case 701:
         return Config.somethingWentWrong;
       default:
@@ -2429,7 +2615,9 @@ class Repository {
       case 500:
         return Config.servernotreachable;
       case 400:
-        return Config.somethingWentWrong;
+        return RePostModel.fromJson(jsonString);
+
+        // return Config.somethingWentWrong;
       case 701:
         return Config.somethingWentWrong;
       default:
@@ -2450,7 +2638,9 @@ class Repository {
       case 500:
         return Config.servernotreachable;
       case 400:
-        return Config.somethingWentWrong;
+        return SelectChatMemberModel.fromJson(jsonString);
+
+        // return Config.somethingWentWrong;
       case 701:
         return Config.somethingWentWrong;
       default:
@@ -2472,7 +2662,9 @@ class Repository {
       case 500:
         return Config.servernotreachable;
       case 400:
-        return Config.somethingWentWrong;
+        return IsTokenExpired.fromJson(jsonString);
+
+        // return Config.somethingWentWrong;
       case 701:
         return Config.somethingWentWrong;
       default:
@@ -2494,7 +2686,9 @@ class Repository {
       case 500:
         return Config.servernotreachable;
       case 400:
-        return Config.somethingWentWrong;
+        return RoomExistsModel.fromJson(jsonString);
+
+        // return Config.somethingWentWrong;
       case 701:
         return Config.somethingWentWrong;
       default:
@@ -2517,7 +2711,9 @@ class Repository {
       case 500:
         return Config.servernotreachable;
       case 400:
-        return Config.somethingWentWrong;
+        return SearchUserForInbox.fromJson(jsonString);
+
+        // return Config.somethingWentWrong;
       case 701:
         return Config.somethingWentWrong;
       default:
@@ -2540,7 +2736,9 @@ class Repository {
       case 500:
         return Config.servernotreachable;
       case 400:
-        return Config.somethingWentWrong;
+        return SearchUserForInbox.fromJson(jsonString);
+
+        // return Config.somethingWentWrong;
       case 701:
         return Config.somethingWentWrong;
       default:
@@ -2562,7 +2760,9 @@ class Repository {
       case 500:
         return Config.servernotreachable;
       case 400:
-        return Config.somethingWentWrong;
+        return AccountType.fromJson(jsonString);
+
+        // return Config.somethingWentWrong;
       case 701:
         return Config.somethingWentWrong;
       default:
@@ -2583,7 +2783,9 @@ class Repository {
       case 500:
         return Config.servernotreachable;
       case 400:
-        return Config.somethingWentWrong;
+        return ADDWorkExperienceModel.fromJson(jsonString);
+
+        // return Config.somethingWentWrong;
 
       case 701:
         return Config.somethingWentWrong;
@@ -2604,7 +2806,9 @@ class Repository {
       case 500:
         return Config.servernotreachable;
       case 400:
-        return Config.somethingWentWrong;
+        return GetWorkExperienceModel.fromJson(jsonString);
+
+        // return Config.somethingWentWrong;
       case 701:
         return Config.somethingWentWrong;
       default:
@@ -2627,7 +2831,9 @@ class Repository {
       case 500:
         return Config.servernotreachable;
       case 400:
-        return Config.somethingWentWrong;
+        return DeleteWorkExperienceModel.fromJson(jsonString);
+
+        // return Config.somethingWentWrong;
       case 701:
         return Config.somethingWentWrong;
       default:
@@ -2649,7 +2855,9 @@ class Repository {
       case 500:
         return Config.servernotreachable;
       case 400:
-        return Config.somethingWentWrong;
+        return DeleteStory.fromJson(jsonString);
+
+        // return Config.somethingWentWrong;
       case 701:
         return Config.somethingWentWrong;
       default:
@@ -2675,7 +2883,9 @@ class Repository {
       case 500:
         return Config.servernotreachable;
       case 400:
-        return Config.somethingWentWrong;
+        return GetInboxMessagesModel.fromJson(jsonString);
+
+        // return Config.somethingWentWrong;
       case 701:
         return Config.somethingWentWrong;
       default:
@@ -2698,7 +2908,9 @@ class Repository {
       case 500:
         return Config.servernotreachable;
       case 400:
-        return Config.somethingWentWrong;
+        return BlogCommentModel.fromJson(jsonString);
+
+        // return Config.somethingWentWrong;
       case 701:
         return Config.somethingWentWrong;
       default:
@@ -2722,7 +2934,9 @@ class Repository {
       case 500:
         return Config.servernotreachable;
       case 400:
-        return Config.somethingWentWrong;
+        return OnTimeDMModel.fromJson(jsonString);
+
+        // return Config.somethingWentWrong;
       case 701:
         return Config.somethingWentWrong;
       default:
@@ -2747,7 +2961,9 @@ class Repository {
       case 500:
         return Config.servernotreachable;
       case 400:
-        return Config.somethingWentWrong;
+        return jsonString;
+
+        // return Config.somethingWentWrong;
       case 701:
         return Config.somethingWentWrong;
 
@@ -2771,7 +2987,9 @@ class Repository {
       case 500:
         return Config.servernotreachable;
       case 400:
-        return Config.somethingWentWrong;
+        return DeleteBlogCommentModel.fromJson(jsonString);
+
+        // return Config.somethingWentWrong;
       case 701:
         return Config.somethingWentWrong;
       default:
@@ -2793,7 +3011,9 @@ class Repository {
       case 500:
         return Config.servernotreachable;
       case 400:
-        return Config.somethingWentWrong;
+        return DeleteUserChatModel.fromJson(jsonString);
+
+        // return Config.somethingWentWrong;
       case 701:
         return Config.somethingWentWrong;
       default:
@@ -2816,7 +3036,9 @@ class Repository {
       case 500:
         return Config.servernotreachable;
       case 400:
-        return Config.somethingWentWrong;
+        return BlogLikeListModel.fromJson(jsonString);
+
+        // return Config.somethingWentWrong;
       case 701:
         return Config.somethingWentWrong;
       default:
@@ -2838,7 +3060,9 @@ class Repository {
       case 500:
         return Config.servernotreachable;
       case 400:
-        return Config.somethingWentWrong;
+        return GetUsersChatByUsername.fromJson(jsonString);
+
+        // return Config.somethingWentWrong;
       case 701:
         return Config.somethingWentWrong;
       default:
@@ -2860,7 +3084,9 @@ class Repository {
       case 500:
         return Config.servernotreachable;
       case 400:
-        return Config.somethingWentWrong;
+        return SelectMultipleUsersChatModel.fromJson(jsonString);
+
+        // return Config.somethingWentWrong;
       case 701:
         return Config.somethingWentWrong;
       default:
@@ -2882,7 +3108,9 @@ class Repository {
       case 500:
         return Config.servernotreachable;
       case 400:
-        return Config.somethingWentWrong;
+        return UserTagModel.fromJson(jsonString);
+
+        // return Config.somethingWentWrong;
       case 701:
         return Config.somethingWentWrong;
       default:
@@ -2906,7 +3134,9 @@ class Repository {
       case 500:
         return Config.servernotreachable;
       case 400:
-        return Config.somethingWentWrong;
+        return GetAllInboxImages.fromJson(jsonString);
+
+        // return Config.somethingWentWrong;
       case 701:
         return Config.somethingWentWrong;
       default:
@@ -2935,7 +3165,9 @@ class Repository {
       case 500:
         return Config.servernotreachable;
       case 400:
-        return Config.somethingWentWrong;
+        return jsonString;
+
+        // return Config.somethingWentWrong;
       case 701:
         return Config.somethingWentWrong;
       default:
@@ -2956,7 +3188,9 @@ class Repository {
       case 500:
         return Config.servernotreachable;
       case 400:
-        return Config.somethingWentWrong;
+        return ReadAllModel.fromJson(jsonString);
+
+        // return Config.somethingWentWrong;
       case 701:
         return Config.somethingWentWrong;
       default:
@@ -2977,7 +3211,9 @@ class Repository {
       case 500:
         return Config.servernotreachable;
       case 400:
-        return Config.somethingWentWrong;
+        return ReadAllModel.fromJson(jsonString);
+
+        // return Config.somethingWentWrong;
       case 701:
         return Config.somethingWentWrong;
       default:
@@ -3000,7 +3236,9 @@ class Repository {
       case 500:
         return Config.servernotreachable;
       case 400:
-        return Config.somethingWentWrong;
+        return BlockUserModel.fromJson(jsonString);
+
+        // return Config.somethingWentWrong;
       case 701:
         return Config.somethingWentWrong;
       default:
@@ -3021,7 +3259,9 @@ class Repository {
       case 500:
         return Config.servernotreachable;
       case 400:
-        return Config.somethingWentWrong;
+        return BlockUserListModel.fromJson(jsonString);
+
+        // return Config.somethingWentWrong;
       case 701:
         return Config.somethingWentWrong;
       default:
