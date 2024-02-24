@@ -1,11 +1,8 @@
 import 'dart:async';
 
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stomp_dart_client/stomp.dart';
 import 'package:stomp_dart_client/stomp_config.dart';
 import 'package:stomp_dart_client/stomp_frame.dart';
-
-import '../../core/utils/sharedPreferences.dart';
 
 var Room_ID_stomp = "";
 var baseURL = "";
@@ -15,7 +12,7 @@ void onConnect(StompFrame frame) {
   stompClient.subscribe(
     destination: "/topic/getMessage/${Room_ID_stomp}",
     callback: (StompFrame frame) {
-      print('Received message AA <->: ${frame.body}');
+      print('Received message BB <->: ${frame.body}');
       // Process the received message
     },
   );
