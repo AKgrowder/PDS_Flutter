@@ -41,6 +41,7 @@ import 'package:video_thumbnail/video_thumbnail.dart';
 
 import '../../API/Bloc/dmInbox_bloc/dminbox_blcok.dart';
 import '../register_create_account_screen/register_create_account_screen.dart';
+  ScrollController scrollController = ScrollController();
 
 class DmScreen extends StatefulWidget {
   String UserName;
@@ -75,7 +76,6 @@ class _DmScreenState extends State<DmScreen> {
   String? UserLogin_ID;
   ImagePicker picker = ImagePicker();
   XFile? pickedImageFile;
-  ScrollController scrollController = ScrollController();
   ScrollController scrollController1 = ScrollController();
   TextEditingController videoId = TextEditingController();
   bool isScroll = false;
