@@ -19,11 +19,10 @@ void onConnect(StompFrame frame) {
     callback: (StompFrame frame) {
       print('Received message AA <->: ${frame.body}');
       // Process the received message
-     Map<String, dynamic>
-                                                    jsonString = json.decode(
-                                                        frame.body ?? "");
-     
-     BlocProvider.of<DmInboxCubit>(navigatorKey.currentContext!).updateInbox(jsonString);
+      Map<String, dynamic> jsonString = json.decode(frame.body ?? "");
+
+      /* BlocProvider.of<DmInboxCubit>(navigatorKey.currentContext!)
+          .updateInbox(jsonString); */
     },
   );
 
@@ -36,8 +35,6 @@ void onConnect(StompFrame frame) {
   );
 
   Timer.periodic(Duration(seconds: 5), (_) {
-    
-
     DMstompClient.subscribe(
       destination: "/topic/getInboxMessage/${DMChatInboxUid}",
       callback: (StompFrame frame) {
@@ -48,7 +45,8 @@ void onConnect(StompFrame frame) {
     DMstompClient.subscribe(
       destination: "/topic/getDeletedInboxMessage/${DMChatInboxUid}",
       callback: (StompFrame frame) {
-        print("Delete Meassge --------------------------------------------------------------------");
+        print(
+            "Delete Meassge --------------------------------------------------------------------");
         print('Received message Delete --->: ${frame.body}');
         // Process the received message
       },
@@ -56,11 +54,9 @@ void onConnect(StompFrame frame) {
   });
 }
 
-var  DMstompClient/*  = StompClient(
+var DMstompClient = StompClient(
   config: StompConfig(
-    url:
-         "wss://uatapi.inpackaging.com/user/pdsChat",
-    // DMbaseURL,
+    url: DMbaseURL,
     onConnect: onConnect,
     beforeConnect: () async {
       print('waiting to connect...');
@@ -73,7 +69,7 @@ var  DMstompClient/*  = StompClient(
       error.toString(),
     ),
   ),
-) */;
+);
 
 onConnectCallback(StompFrame connectFrame) {
   // client is connected and ready
