@@ -156,9 +156,9 @@ class _SplashScreenState extends State<SplashScreen> {
     prefs.setString(PreferencesKey.appApkLatestVersion, "1");
     prefs.setString(PreferencesKey.appApkRouteVersion, "8");
 
-    prefs.setString(PreferencesKey.IPAIosMainversion, "1");
+    prefs.setString(PreferencesKey.IPAIosMainversion, "9");
     prefs.setString(PreferencesKey.IPAIosLatestVersion, "1");
-    prefs.setString(PreferencesKey.IPAIosRoutVersion, "0");
+    prefs.setString(PreferencesKey.IPAIosRoutVersion, "8");
 
     // prefs.setBool(PreferencesKey.RoutURlChnage, false);
 

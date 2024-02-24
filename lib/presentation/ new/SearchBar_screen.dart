@@ -140,6 +140,9 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
             if (state is GetSerchData) {
               getDataInSerch = state.getDataInSerch;
               if (getDataInSerch?.object != null) {
+                getDataInSerch?.object?.forEach((element) {
+                  print("foreachcheck-${element}");
+                });
                 if (getDataInSerch!.object!.length <= 5) {
                   length = getDataInSerch!.object!.length;
                 } else {
@@ -633,12 +636,18 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                                         },
                                         child: Row(
                                           children: [
-                                            Icon(Icons.history),
+                                            if (getDataInSerch?.object?[index]
+                                                    .isNotEmpty ==
+                                                true)
+                                              Icon(Icons.history),
                                             SizedBox(
                                               width: 5,
                                             ),
-                                            Text(
-                                                '${getDataInSerch?.object?[index]}')
+                                            if (getDataInSerch?.object?[index]
+                                                    .isNotEmpty ==
+                                                true)
+                                              Text(
+                                                  '${getDataInSerch?.object?[index]}')
                                           ],
                                         ),
                                       ),

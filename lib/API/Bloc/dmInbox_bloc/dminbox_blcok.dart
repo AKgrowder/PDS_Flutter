@@ -1,10 +1,12 @@
 import 'dart:io';
 
-import 'package:pds/API/ApiService/ApiService.dart';
-import 'package:pds/API/Bloc/dmInbox_bloc/dmMessageState.dart';
-import 'package:pds/API/Repo/repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pds/API/ApiService/ApiService.dart';
+import 'package:pds/API/Bloc/dmInbox_bloc/dmMessageState.dart';
+import 'package:pds/API/Model/inboxScreenModel/inboxScrrenModel.dart';
+import 'package:pds/API/Repo/repository.dart';
+import 'package:pds/presentation/DMAll_Screen/Dm_Screen.dart';
 
 class DmInboxCubit extends Cubit<getInboxState> {
   DmInboxCubit() : super(getInboxInitialState()) {}
@@ -27,6 +29,27 @@ class DmInboxCubit extends Cubit<getInboxState> {
     } catch (e) {
       emit(getInboxErrorState(e.toString()));
     }
+  }
+
+  updateInbox(dynamic jsonString) {
+    Map<String, dynamic>? mapDataAdd;
+
+    print('Received message cc <->: ${jsonString}');
+    mapDataAdd = {
+      "userUid": jsonString['object']['uid'],
+      "userChatMessageUid": jsonString['object']['userChatInboxUid'],
+      "userName": jsonString['object']['userName'],
+      "userProfilePic": jsonString['object']['userProfilePic'],
+      "message": jsonString['object']['message'],
+      "createdDate": jsonString['object']['createdAt'],
+      "messageType": jsonString['object']['messageType'],
+      "isDeleted": jsonString['object']['isDeleted']
+    };
+
+    Content content = Content.fromJson(mapDataAdd);
+    DmInbox?.object?.content?.add(content);
+    scrollController.jumpTo(scrollController.position.maxScrollExtent + 100);
+    emit(getInboxLoadedState(DmInbox));
   }
 
   Future<void> DMChatListApiPagantion(
