@@ -45,7 +45,7 @@ class _StoryPageContainerBuilderState extends State<StoryPageContainerBuilder>
       initialPage: _currentPage,
     );
     _pageController.addListener(() {
-      super.setState(() {
+      setState(() {
         _currentPage = _pageController.page!.floor();
         _pageDelta = _pageController.page! - _currentPage;
         final isFirst = _currentPage == 0;
@@ -229,7 +229,6 @@ class _StoryPageContainerBuilderState extends State<StoryPageContainerBuilder>
                       final childIndex = index % itemCount;
                       final buttonData =
                           widget.settings.allButtonDatas[childIndex];
-
                       final child = StoryPageContainerView(
                         onTap: widget.onTap,
                         buttonData: buttonData,
