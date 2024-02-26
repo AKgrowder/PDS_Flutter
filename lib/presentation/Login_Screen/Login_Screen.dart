@@ -625,9 +625,11 @@ class _LoginScreenState extends State<LoginScreen> {
 
   saveUserProfile() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-
+        print("dsfsdgfsdfg${getUserDataModelData?.object?.userName}");
     prefs.setString(PreferencesKey.ProfileUserName,
         "${getUserDataModelData?.object?.userName}");
+
+       print("chehck value-${getUserDataModelData?.object?.userName}"); 
     prefs.setString(
         PreferencesKey.ProfileName, "${getUserDataModelData?.object?.name}");
     prefs.setString(
