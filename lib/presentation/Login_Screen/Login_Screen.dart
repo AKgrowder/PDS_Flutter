@@ -5,16 +5,8 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:pds/API/Bloc/Fatch_All_PRoom_Bloc/Fatch_PRoom_cubit.dart';
-import 'package:pds/API/Bloc/FetchExprtise_Bloc/fetchExprtise_cubit.dart';
-import 'package:pds/API/Bloc/Forget_password_Bloc/forget_password_cubit.dart';
-import 'package:pds/API/Bloc/GuestAllPost_Bloc/GuestAllPost_cubit.dart';
-import 'package:pds/API/Bloc/PublicRoom_Bloc/CreatPublicRoom_cubit.dart';
 import 'package:pds/API/Bloc/auth/login_Block.dart';
 import 'package:pds/API/Bloc/auth/login_state.dart';
-import 'package:pds/API/Bloc/auth/otp_block.dart';
-import 'package:pds/API/Bloc/auth/register_Block.dart';
-import 'package:pds/API/Bloc/senMSG_Bloc/senMSG_cubit.dart';
 import 'package:pds/core/app_export.dart';
 import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/core/utils/sharedPreferences.dart';
@@ -26,8 +18,8 @@ import 'package:pds/widgets/custom_elevated_button.dart';
 import 'package:pds/widgets/custom_text_form_field.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
+
 import '../../API/Bloc/UserReActivate_Bloc/UserReActivate_cubit.dart';
-import '../../API/Bloc/creatForum_Bloc/creat_Forum_cubit.dart';
 import '../../API/Bloc/device_info_Bloc/device_info_bloc.dart';
 import '../../API/Model/authModel/getUserDetailsMdoel.dart';
 import '../../API/Model/authModel/loginModel.dart';
@@ -253,7 +245,8 @@ class _LoginScreenState extends State<LoginScreen> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         SizedBox(
-                          height: 348,
+                          height: _height/2,
+                          // height: 348,
                           // width: double.maxFinite,
                           child: Stack(
                             children: [
@@ -632,9 +625,11 @@ class _LoginScreenState extends State<LoginScreen> {
 
   saveUserProfile() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-
+        print("dsfsdgfsdfg${getUserDataModelData?.object?.userName}");
     prefs.setString(PreferencesKey.ProfileUserName,
         "${getUserDataModelData?.object?.userName}");
+
+       print("chehck value-${getUserDataModelData?.object?.userName}"); 
     prefs.setString(
         PreferencesKey.ProfileName, "${getUserDataModelData?.object?.name}");
     prefs.setString(

@@ -1,11 +1,13 @@
 import 'dart:async';
+import 'dart:convert';
 
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pds/API/Bloc/dmInbox_bloc/dminbox_blcok.dart';
 import 'package:stomp_dart_client/stomp.dart';
 import 'package:stomp_dart_client/stomp_config.dart';
 import 'package:stomp_dart_client/stomp_frame.dart';
 
-import '../../core/utils/sharedPreferences.dart';
+import '../../main.dart';
 
 var DMChatInboxUid = "";
 var DMbaseURL = "";
@@ -17,6 +19,10 @@ void onConnect(StompFrame frame) {
     callback: (StompFrame frame) {
       print('Received message AA <->: ${frame.body}');
       // Process the received message
+      Map<String, dynamic> jsonString = json.decode(frame.body ?? "");
+
+      /* BlocProvider.of<DmInboxCubit>(navigatorKey.currentContext!)
+          .updateInbox(jsonString); */
     },
   );
 
@@ -29,8 +35,6 @@ void onConnect(StompFrame frame) {
   );
 
   Timer.periodic(Duration(seconds: 5), (_) {
-    
-
     DMstompClient.subscribe(
       destination: "/topic/getInboxMessage/${DMChatInboxUid}",
       callback: (StompFrame frame) {
@@ -41,7 +45,8 @@ void onConnect(StompFrame frame) {
     DMstompClient.subscribe(
       destination: "/topic/getDeletedInboxMessage/${DMChatInboxUid}",
       callback: (StompFrame frame) {
-        print("Delete Meassge --------------------------------------------------------------------");
+        print(
+            "Delete Meassge --------------------------------------------------------------------");
         print('Received message Delete --->: ${frame.body}');
         // Process the received message
       },
@@ -49,11 +54,9 @@ void onConnect(StompFrame frame) {
   });
 }
 
-var  DMstompClient = StompClient(
+var DMstompClient = StompClient(
   config: StompConfig(
-    url:
-        // "ws://d91d-2405-201-200b-a0cf-d0c7-a57a-7eba-c736.ngrok.io/user/pdsChat",
-    DMbaseURL,
+    url: DMbaseURL,
     onConnect: onConnect,
     beforeConnect: () async {
       print('waiting to connect...');

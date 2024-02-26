@@ -33,6 +33,7 @@ import 'package:pds/presentation/%20new/HashTagView_screen.dart';
 import 'package:pds/presentation/%20new/OpenSavePostImage.dart';
 import 'package:pds/presentation/%20new/RePost_Screen.dart';
 import 'package:pds/presentation/%20new/ShowAllPostLike.dart';
+import 'package:pds/presentation/%20new/commenwigetReposrt.dart';
 import 'package:pds/presentation/%20new/editproilescreen.dart';
 import 'package:pds/presentation/%20new/followers.dart';
 import 'package:pds/presentation/%20new/newbottembar.dart';
@@ -2116,11 +2117,16 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                 ),
                                                         ],
                                                       )),
-                                                if (User_ID !=
-                                                    NewProfileData
-                                                        ?.object?.userUid && (NewProfileData?.object
-                                                            ?.accountType ==
-                                                        'PUBLIC') ||
+                                                if (NewProfileData?.object
+                                                                ?.aboutMe !=
+                                                            null &&
+                                                        User_ID !=
+                                                            NewProfileData
+                                                                ?.object
+                                                                ?.userUid &&
+                                                        (NewProfileData?.object
+                                                                ?.accountType ==
+                                                            'PUBLIC') ||
                                                     (NewProfileData?.object
                                                                 ?.isFollowing ==
                                                             'FOLLOWING' &&
@@ -4004,7 +4010,23 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                 Icons.more_vert_rounded,
                                               ),
                                             )
-                                          : SizedBox()
+                                          : GestureDetector(
+                                              key: buttonKey,
+                                              onTap: () async {
+                                                showPopupMenu1(
+                                                  context,
+                                                  index,
+                                                  buttonKey,
+                                                  getAllPostData
+                                                      .object?[index].postUid,
+                                                );
+                                              },
+                                              child: Container(
+                                                  height: 25,
+                                                  width: 40,
+                                                  color: Colors.transparent,
+                                                  child: Icon(
+                                                      Icons.more_vert_rounded)))
                                     ],
                                   ),
                                 ),
@@ -5547,6 +5569,21 @@ class _ProfileScreenState extends State<ProfileScreen>
                                 ),
                               ],
                             ),
+                            trailing: GestureDetector(
+                                key: buttonKey,
+                                onTap: () async {
+                                  showPopupMenu1(
+                                    context,
+                                    index,
+                                    buttonKey,
+                                    getAllPostData.object?[index].postUid,
+                                  );
+                                },
+                                child: Container(
+                                    height: 25,
+                                    width: 40,
+                                    color: Colors.transparent,
+                                    child: Icon(Icons.more_vert_rounded))),
                           ),
                         ),
                         SizedBox(
@@ -10147,8 +10184,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                             .NewProfileSAPI(context, widget.User_ID, false));
               },
               child: User_ID == NewProfileData?.object?.userUid &&
-                      NewProfileData?.object?.approvalStatus != "PENDING" &&
-                      NewProfileData?.object?.approvalStatus != "REJECTED"
+                      NewProfileData?.object?.approvalStatus != "PENDING"
                   ? Icon(
                       Icons.edit,
                       color: Colors.black,

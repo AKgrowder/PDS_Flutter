@@ -333,6 +333,7 @@ import 'API/Bloc/BlockUser_Bloc/Block_user_cubit.dart';
 import 'API/Bloc/postData_Bloc/postData_Bloc.dart';
 import 'presentation/splash_screen/splash_screen.dart';
 import 'package:flutter_langdetect/flutter_langdetect.dart' as langdetect;
+final navigatorKey = GlobalKey<NavigatorState>();
 
 Future<void> _messageHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
@@ -512,7 +513,8 @@ class MyApp extends StatelessWidget {
             ),
             title: 'pds',
             debugShowCheckedModeBanner: false,
-            home: SplashScreen()
+            home: SplashScreen(),
+            navigatorKey: navigatorKey,
             //BottombarPage(buttomIndex: 0),
             ),
       ),

@@ -459,163 +459,158 @@ class _InviteMeesageState extends State<InviteMeesage> {
                     : Container(
                         height: 70,
                         // color: Colors.red[100],
-                        child: Row(
-                          children: [
-                            SizedBox(
-                              width: 15,
-                            ),
-                            Container(
-                              height: 50,
-                              // width: _width - 90,
-                              decoration: BoxDecoration(
-                                  color: Color(0xFFF5F5F5),
-                                  borderRadius: BorderRadius.circular(20)),
-                              child: Row(children: [
-                                SizedBox(
-                                  width: 10,
-                                ),
-                                Container(
-                                  width: _width / 1.32,
-                                  // color: Colors.amber,
-                                  child: Row(
-                                    children: [
-                                      /*  Container(
-                                        // color: Colors.amber,
-                                        child: IconButton(
-                                          icon: Icon(
-                                            isEmojiVisible
-                                                ? Icons.keyboard_rounded
-                                                : Icons.emoji_emotions_outlined,
-                                          ),
-                                          onPressed: onClickedEmoji,
-                                        ),
-                                      ), */
-                                      SizedBox(
-                                        width: 5,
-                                      ),
-                                      Container(
-                                        width: _width / 1.5, //old is 1.8
-                                        // color: Colors.red,
-                                        child: TextField(
-                                          maxLines: null,
-                                          controller: Add_Comment,
-                                          cursorColor: Colors.grey,
-                                          decoration: InputDecoration(
-                                            border: InputBorder.none,
-                                            hintText: "Add Comment",
-                                          ),
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        width: 5,
-                                      ),
-                                      /* GestureDetector(
-                                        onTap: () {
-                                          prepareTestPdf(0);
-                                        },
-                                        child: Image.asset(
-                                          "assets/images/paperclip-2.png",
-                                          height: 23,
-                                        ),
-                                      ), */
-                                      SizedBox(
-                                        width: 13,
-                                      ),
-                                      /* GestureDetector(
-                                        onTap: () {
-                                          camerapicker();
-                                        },
-                                        child: Image.asset(
-                                          "assets/images/Vector (12).png",
-                                          height: 20,
-                                        ),
-                                      ), */
-                                      SizedBox(
-                                        width: 8,
-                                      ),
-                                    ],
+                        child: SizedBox(width: _width/1,
+                          child: Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              SizedBox(
+                                width: 15,
+                              ),
+                              Container(
+                                height: 50,
+                                // width: _width - 90,
+                                decoration: BoxDecoration(
+                                    color: Color(0xFFF5F5F5),
+                                    borderRadius: BorderRadius.circular(20)),
+                                child: Row(children: [
+                                  SizedBox(
+                                    width: 10,
                                   ),
-                                ),
-                              ]),
-                            ),
-                            SizedBox(
-                              width: 10,
-                            ),
-                            GestureDetector(
-                              onTap: () async {
-                                if (singleTap == false) {
-                                  print(
-                                      'MultiUserLengthCheck-${MultiUsermap.length}');
-                                  if (Add_Comment.text.isNotEmpty) {
-                                    if (Add_Comment.text.length >= 1000) {
+                                  Container(
+                                    width: _width / 1.32,
+                                    // color: Colors.amber,
+                                    child: Row(
+                                      children: [
+                                        /*  Container(
+                                          // color: Colors.amber,
+                                          child: IconButton(
+                                            icon: Icon(
+                                              isEmojiVisible
+                                                  ? Icons.keyboard_rounded
+                                                  : Icons.emoji_emotions_outlined,
+                                            ),
+                                            onPressed: onClickedEmoji,
+                                          ),
+                                        ), */
+                                        SizedBox(
+                                          width: 5,
+                                        ),
+                                        Container(
+                                          width: _width / 1.5, //old is 1.8
+                                          // color: Colors.red,
+                                          child: TextField(
+                                            maxLines: null,
+                                            controller: Add_Comment,
+                                            cursorColor: Colors.grey,
+                                            decoration: InputDecoration(
+                                              border: InputBorder.none,
+                                              hintText: "Add Comment",
+                                            ),
+                                          ),
+                                        ),
+                                        
+                                        /* GestureDetector(
+                                          onTap: () {
+                                            prepareTestPdf(0);
+                                          },
+                                          child: Image.asset(
+                                            "assets/images/paperclip-2.png",
+                                            height: 23,
+                                          ),
+                                        ), */
+                                        
+                                        /* GestureDetector(
+                                          onTap: () {
+                                            camerapicker();
+                                          },
+                                          child: Image.asset(
+                                            "assets/images/Vector (12).png",
+                                            height: 20,
+                                          ),
+                                        ), */
+                                       
+                                      ],
+                                    ),
+                                  ),
+                                ]),
+                              ),
+                              
+                              
+                              GestureDetector(
+                                onTap: () async {
+                                  if (singleTap == false) {
+                                    print(
+                                        'MultiUserLengthCheck-${MultiUsermap.length}');
+                                    if (Add_Comment.text.isNotEmpty) {
+                                      if (Add_Comment.text.length >= 1000) {
+                                        SnackBar snackBar = SnackBar(
+                                          content: Text(
+                                              'One Time Message Lenght only for 1000 Your Meassge -> ${Add_Comment.text.length}'),
+                                          backgroundColor:
+                                              ColorConstant.primary_color,
+                                        );
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(snackBar);
+                                      } else {
+                                        if (MultiUser.isNotEmpty) {
+                                          print("check Multi User-$MultiUser");
+                        
+                                          var parmes = {
+                                            "message": Add_Comment.text,
+                                            "messageType": "TEXT",
+                                            "usersIds": MultiUser
+                                          };
+                                          BlocProvider.of<PersonalChatListCubit>(
+                                                  context)
+                                              .selectMultipleUsers_ChatMethod(
+                                                  parmes, context);
+                                        }
+                                      }
+                                    } else if (MultiUser.isNotEmpty &&
+                                        _image != null) {
+                                      var parmes = {
+                                        "message": imageDataPost?.object,
+                                        "messageType": "IMAGE",
+                                        "usersIds": MultiUser
+                                      };
+                                      BlocProvider.of<PersonalChatListCubit>(
+                                              context)
+                                          .selectMultipleUsers_ChatMethod(
+                                              parmes, context);
+                                    } else {
                                       SnackBar snackBar = SnackBar(
-                                        content: Text(
-                                            'One Time Message Lenght only for 1000 Your Meassge -> ${Add_Comment.text.length}'),
+                                        content: Text('Please Enter Comment'),
                                         backgroundColor:
                                             ColorConstant.primary_color,
                                       );
                                       ScaffoldMessenger.of(context)
                                           .showSnackBar(snackBar);
-                                    } else {
-                                      if (MultiUser.isNotEmpty) {
-                                        print("check Multi User-$MultiUser");
-
-                                        var parmes = {
-                                          "message": Add_Comment.text,
-                                          "messageType": "TEXT",
-                                          "usersIds": MultiUser
-                                        };
-                                        BlocProvider.of<PersonalChatListCubit>(
-                                                context)
-                                            .selectMultipleUsers_ChatMethod(
-                                                parmes, context);
-                                      }
                                     }
-                                  } else if (MultiUser.isNotEmpty &&
-                                      _image != null) {
-                                    var parmes = {
-                                      "message": imageDataPost?.object,
-                                      "messageType": "IMAGE",
-                                      "usersIds": MultiUser
-                                    };
-                                    BlocProvider.of<PersonalChatListCubit>(
-                                            context)
-                                        .selectMultipleUsers_ChatMethod(
-                                            parmes, context);
-                                  } else {
-                                    SnackBar snackBar = SnackBar(
-                                      content: Text('Please Enter Comment'),
-                                      backgroundColor:
-                                          ColorConstant.primary_color,
-                                    );
-                                    ScaffoldMessenger.of(context)
-                                        .showSnackBar(snackBar);
+                                    singleTap = true;
+                                    MultiUser = [];
+                                    MultiUsermap.clear();
+                                    _image = null;
+                                    isDataGet = false;
+                                    Add_Comment.clear();
+                                    searchController.clear();
                                   }
-                                  singleTap = true;
-                                  MultiUser = [];
-                                  MultiUsermap.clear();
-                                  _image = null;
-                                  isDataGet = false;
-                                  Add_Comment.clear();
-                                  searchController.clear();
-                                }
-                                Navigator.pop(context);
-                              },
-                              child: Container(
-                                height: 50,
-                                // width: 50,
-                                decoration: BoxDecoration(
-                                    color: ColorConstant.primary_color,
-                                    borderRadius: BorderRadius.circular(25)),
-                                child: Image.asset(
-                                  "assets/images/Vector (13).png",
-                                  color: Colors.white,
+                                  Navigator.pop(context);
+                                },
+                                child: Container(
+                                  height: 50,
+                                  // width: 50,
+                                  decoration: BoxDecoration(
+                                      color: ColorConstant.primary_color,
+                                      borderRadius: BorderRadius.circular(25)),
+                                  child: Image.asset(
+                                    "assets/images/Vector (13).png",
+                                    color: Colors.white,
+                                  ),
+                        
+                                  // width: width - 95,
                                 ),
-
-                                // width: width - 95,
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                 MultiUser.isEmpty == true

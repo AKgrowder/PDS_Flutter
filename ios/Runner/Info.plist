@@ -13,7 +13,7 @@
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>IP</string>
+	<string>InPackaging</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
@@ -32,7 +32,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>0.3</string>
+	<string>0.4</string>
 	<key>FDAllFilesDownloadedMessage</key>
 	<string>All files have been downloaded</string>
 	<key>FDMaximumConcurrentTasks</key>
@@ -64,13 +64,13 @@
 		</dict>
 	</dict>
 	<key>NSCameraUsageDescription</key>
-	<string>IP Application User Profile image and Create Post time user photo library please Allow</string>
+	<string>InPackaging Application wants to upload Image/Video for create &amp; share post,story and profile image please Allow</string>
 	<key>NSMotionUsageDescription</key>
 	<string>Motion usage description</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
-	<string>NSPhotoLibraryAddUsageDescription</string>
+	<string>InPackaging Application wants to upload Image/Video for create &amp; share post,story and profile image please Allow</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Privacy - Photo Library Usage Description</string>
+	<string>InPackaging Application wants to upload Image/Video for create &amp; share post,story and profile image please Allow</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UIBackgroundModes</key>

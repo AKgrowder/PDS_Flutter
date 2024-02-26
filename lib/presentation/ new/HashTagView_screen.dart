@@ -16,6 +16,7 @@ import 'package:pds/core/utils/image_constant.dart';
 import 'package:pds/presentation/%20new/OpenSavePostImage.dart';
 import 'package:pds/presentation/%20new/ShowAllPostLike.dart';
 import 'package:pds/presentation/%20new/comment_bottom_sheet.dart';
+import 'package:pds/presentation/%20new/commenwigetReposrt.dart';
 import 'package:pds/presentation/%20new/home_screen_new.dart';
 import 'package:pds/presentation/%20new/newbottembar.dart';
 import 'package:pds/presentation/%20new/profileNew.dart';
@@ -111,11 +112,10 @@ class _HashTagViewScreenState extends State<HashTagViewScreen> {
           ScaffoldMessenger.of(context).showSnackBar(snackBar);
         }
         if (state is HashTagViewDataLoadedState) {
-          
           hashTagViewData = state.HashTagViewData;
           print("HashTagViewDataLoadedState${hashTagViewData}");
-          
-              hashTagViewData?.object?.posts?.forEach((element) {
+
+          hashTagViewData?.object?.posts?.forEach((element) {
             _pageControllers.add(PageController());
             print(
                 "_pageControllers-${_pageControllers.length}-${hashTagViewData?.object?.posts?.length}");
@@ -198,6 +198,7 @@ class _HashTagViewScreenState extends State<HashTagViewScreen> {
                     physics: AlwaysScrollableScrollPhysics(),
                     itemCount: hashTagViewData?.object?.posts?.length,
                     itemBuilder: (context, index) {
+                      GlobalKey buttonKey = GlobalKey(); //
                       hashTagViewData?.object?.posts?[index].postData
                           ?.forEach((element) {
                         _pageControllers.add(PageController());
@@ -343,44 +344,34 @@ class _HashTagViewScreenState extends State<HashTagViewScreen> {
                                             child: Icon(
                                               Icons.more_vert_rounded,
                                             ))
-                                        : GestureDetector(
-                                            onTap: () async {
-                                              await soicalFunation(
-                                                  apiName: 'Follow',
-                                                  index: index);
-                                            },
-                                            child: Container(
-                                              height: 25,
-                                              alignment: Alignment.center,
-                                              width: 65,
-                                              margin:
-                                                  EdgeInsets.only(bottom: 5),
-                                              decoration: BoxDecoration(
-                                                  color: ColorConstant
-                                                      .primary_color,
-                                                  borderRadius:
-                                                      BorderRadius.circular(4)),
-                                              child: hashTagViewData
-                                                          ?.object
-                                                          ?.posts?[index]
-                                                          .isFollowing ==
-                                                      'FOLLOW'
-                                                  ? Text(
-                                                      'Follow',
-                                                      style: TextStyle(
-                                                          fontFamily: "outfit",
-                                                          fontSize: 12,
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          color: Colors.white),
-                                                    )
-                                                  : hashTagViewData
+                                        : Row(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              GestureDetector(
+                                                onTap: () async {
+                                                  await soicalFunation(
+                                                      apiName: 'Follow',
+                                                      index: index);
+                                                },
+                                                child: Container(
+                                                  height: 25,
+                                                  alignment: Alignment.center,
+                                                  width: 65,
+                                                  margin: EdgeInsets.only(
+                                                      bottom: 5),
+                                                  decoration: BoxDecoration(
+                                                      color: ColorConstant
+                                                          .primary_color,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              4)),
+                                                  child: hashTagViewData
                                                               ?.object
                                                               ?.posts?[index]
                                                               .isFollowing ==
-                                                          'REQUESTED'
+                                                          'FOLLOW'
                                                       ? Text(
-                                                          'Requested',
+                                                          'Follow',
                                                           style: TextStyle(
                                                               fontFamily:
                                                                   "outfit",
@@ -391,19 +382,58 @@ class _HashTagViewScreenState extends State<HashTagViewScreen> {
                                                               color:
                                                                   Colors.white),
                                                         )
-                                                      : Text(
-                                                          'Following ',
-                                                          style: TextStyle(
-                                                              fontFamily:
-                                                                  "outfit",
-                                                              fontSize: 12,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold,
-                                                              color:
-                                                                  Colors.white),
-                                                        ),
-                                            ),
+                                                      : hashTagViewData
+                                                                  ?.object
+                                                                  ?.posts?[
+                                                                      index]
+                                                                  .isFollowing ==
+                                                              'REQUESTED'
+                                                          ? Text(
+                                                              'Requested',
+                                                              style: TextStyle(
+                                                                  fontFamily:
+                                                                      "outfit",
+                                                                  fontSize: 12,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold,
+                                                                  color: Colors
+                                                                      .white),
+                                                            )
+                                                          : Text(
+                                                              'Following ',
+                                                              style: TextStyle(
+                                                                  fontFamily:
+                                                                      "outfit",
+                                                                  fontSize: 12,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold,
+                                                                  color: Colors
+                                                                      .white),
+                                                            ),
+                                                ),
+                                              ),
+                                              GestureDetector(
+                                                  key: buttonKey,
+                                                  onTap: () async {
+                                                    showPopupMenu1(
+                                                        context,
+                                                        index,
+                                                        buttonKey,
+                                                        hashTagViewData
+                                                            ?.object
+                                                            ?.posts?[index]
+                                                            .postUid,);
+                                   
+                                                  },
+                                                  child: Container(
+                                                      height: 25,
+                                                      width: 40,
+                                                      color: Colors.transparent,
+                                                      child: Icon(Icons
+                                                          .more_vert_rounded))),
+                                            ],
                                           ),
                                   ),
                                 ),

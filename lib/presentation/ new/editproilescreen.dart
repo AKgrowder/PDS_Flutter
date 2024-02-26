@@ -244,13 +244,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               }
               Navigator.pop(context);
             }
-            if(state is UserExistLoadedState){
-             print("this is the check${state.UserExist}"); 
+            if (state is UserExistLoadedState) {
+              print("this is the check${state.UserExist}");
               SnackBar snackBar = SnackBar(
-                  content: Text(state.UserExist.toString()),
-                  backgroundColor: ColorConstant.primary_color,
-                );
-             ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                content: Text(state.UserExist.toString()),
+                backgroundColor: ColorConstant.primary_color,
+              );
+              ScaffoldMessenger.of(context).showSnackBar(snackBar);
             }
             if (state is AddExportLoadedState) {
               if (state.addExpertProfile.message.toString() ==
@@ -1123,7 +1123,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         print("both condison");
         //ankur is working on
         var params = {
-           "userName": userNameController.text,
+          "userName": userNameController.text,
           "document": chooseDocumentuploded2?.object != null
               ? chooseDocumentuploded2?.object.toString()
               : "${widget.newProfileData?.object?.userDocument?.toString()}",
@@ -1135,7 +1135,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           "email": emailController.text,
           "userProfilePic": chooseDocumentuploded?.object.toString(),
           "userBackgroundPic": chooseDocumentuploded1?.object.toString(),
-         
           "uid": User_ID,
           "name": nameController.text,
           "documentName": dopcumentNameUpdate
@@ -1281,8 +1280,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         if (widget.newProfileData?.object?.companyName != null &&
-            widget.newProfileData?.object?.approvalStatus != "PENDING" &&
-            widget.newProfileData?.object?.approvalStatus != "REJECTED")
+            widget.newProfileData?.object?.approvalStatus != "PENDING" )
           Padding(
             padding: const EdgeInsets.only(top: 10, bottom: 10),
             child: Text(
@@ -1295,15 +1293,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             ),
           ),
         if (widget.newProfileData?.object?.companyName != null &&
-            widget.newProfileData?.object?.approvalStatus != "PENDING" &&
-            widget.newProfileData?.object?.approvalStatus != "REJECTED")
+            widget.newProfileData?.object?.approvalStatus != "PENDING")
           customTextFeild(
               controller: companyName,
               width: _width / 1.1,
               color: Color(0xffFFF3F4)),
         if (widget.newProfileData?.object?.jobProfile != null &&
-            widget.newProfileData?.object?.approvalStatus != "PENDING" &&
-            widget.newProfileData?.object?.approvalStatus != "REJECTED")
+            widget.newProfileData?.object?.approvalStatus != "PENDING" )
           Padding(
             padding: const EdgeInsets.only(top: 10, bottom: 10),
             child: Text(
@@ -1316,16 +1312,14 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             ),
           ),
         if (widget.newProfileData?.object?.jobProfile != null &&
-            widget.newProfileData?.object?.approvalStatus != "PENDING" &&
-            widget.newProfileData?.object?.approvalStatus != "REJECTED")
+            widget.newProfileData?.object?.approvalStatus != "PENDING")
           customTextFeild(
             color: Color(0xffFFF3F4),
             controller: jobProfile,
             width: _width / 1.1,
           ),
         if (widget.newProfileData?.object?.industryTypes?.isNotEmpty == true &&
-            widget.newProfileData?.object?.approvalStatus != "PENDING" &&
-            widget.newProfileData?.object?.approvalStatus != "REJECTED")
+            widget.newProfileData?.object?.approvalStatus != "PENDING")
           Padding(
             padding: const EdgeInsets.only(top: 10, bottom: 10),
             child: Text(
@@ -1338,8 +1332,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             ),
           ),
         if (widget.newProfileData?.object?.industryTypes?.isNotEmpty == true &&
-            widget.newProfileData?.object?.approvalStatus != "PENDING" &&
-            widget.newProfileData?.object?.approvalStatus != "REJECTED")
+            widget.newProfileData?.object?.approvalStatus != "PENDING")
           /*  Container(
             decoration: BoxDecoration(color: Color(0xffEFEFEF)),
             child: DropdownButtonHideUnderline(
@@ -1400,8 +1393,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             ),
           ),
         if (widget.newProfileData?.object?.expertise?.isNotEmpty == true &&
-            widget.newProfileData?.object?.approvalStatus != "PENDING" &&
-            widget.newProfileData?.object?.approvalStatus != "REJECTED")
+            widget.newProfileData?.object?.approvalStatus != "PENDING")
           Padding(
             padding: const EdgeInsets.only(top: 10, bottom: 10),
             child: Text(
@@ -1414,8 +1406,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             ),
           ),
         if (widget.newProfileData?.object?.expertise?.isNotEmpty == true &&
-            widget.newProfileData?.object?.approvalStatus != "PENDING" &&
-            widget.newProfileData?.object?.approvalStatus != "REJECTED")
+            widget.newProfileData?.object?.approvalStatus != "PENDING")
           Container(
             height: 50,
             width: _width,
@@ -1459,8 +1450,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             ),
           ),
         if (widget.newProfileData?.object?.module == "EXPERT" &&
-            widget.newProfileData?.object?.approvalStatus != "PENDING" &&
-            widget.newProfileData?.object?.approvalStatus != "REJECTED")
+            widget.newProfileData?.object?.approvalStatus != "PENDING")
           Padding(
             padding: const EdgeInsets.only(top: 10, bottom: 10),
             child: Text(
@@ -1472,9 +1462,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               ),
             ),
           ),
-        if (widget.newProfileData?.object?.module == "EXPERT" &&
-            widget.newProfileData?.object?.approvalStatus != "PENDING" &&
-            widget.newProfileData?.object?.approvalStatus != "REJECTED")
+        if (widget.newProfileData?.object?.module == "EXPERT" )
           customTextFeild(
               controller: fees,
               width: _width / 1.1,
@@ -1485,8 +1473,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               ],
               color: Color(0xffFFF3F4)),
         if (widget.newProfileData?.object?.workingHours != null &&
-            widget.newProfileData?.object?.approvalStatus != "PENDING" &&
-            widget.newProfileData?.object?.approvalStatus != "REJECTED")
+            widget.newProfileData?.object?.approvalStatus != "PENDING")
           Padding(
             padding: const EdgeInsets.only(top: 10, bottom: 10),
             child: Text(
@@ -1499,8 +1486,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             ),
           ),
         if (widget.newProfileData?.object?.workingHours != null &&
-            widget.newProfileData?.object?.approvalStatus != "PENDING" &&
-            widget.newProfileData?.object?.approvalStatus != "REJECTED")
+            widget.newProfileData?.object?.approvalStatus != "PENDING")
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -1586,8 +1572,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             ],
           ),
         if (widget.newProfileData?.object?.module != 'EMPLOYEE' &&
-            widget.newProfileData?.object?.approvalStatus != "PENDING" &&
-            widget.newProfileData?.object?.approvalStatus != "REJECTED")
+            widget.newProfileData?.object?.approvalStatus != "PENDING")
           Padding(
             padding: const EdgeInsets.only(top: 10, bottom: 10),
             child: Text(
@@ -1600,8 +1585,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             ),
           ),
         if (widget.newProfileData?.object?.module != 'EMPLOYEE' &&
-            widget.newProfileData?.object?.approvalStatus != "PENDING" &&
-            widget.newProfileData?.object?.approvalStatus != "REJECTED")
+            widget.newProfileData?.object?.approvalStatus != "PENDING" )
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
@@ -1819,11 +1803,17 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   }
 
   void _settingModalBottomSheet(context) {
+    print(
+        "this is the Data Get-${widget.newProfileData?.object?.userProfilePic}");
     showModalBottomSheet(
         context: context,
         builder: (BuildContext bc) {
           return Container(
-            height: 250,
+            height: widget.newProfileData?.object?.userProfilePic?.isNotEmpty ==
+                        true &&
+                    widget.newProfileData?.object?.userProfilePic != null
+                ? 250
+                : 180,
             child: new Wrap(
               children: [
                 Container(
@@ -1888,16 +1878,19 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 SizedBox(
                   height: 20,
                 ),
-                Center(
-                  child: new ListTile(
-                      leading: Icon(
-                        Icons.delete,
-                        size: 40,
-                        color: ColorConstant.primary_color,
-                      ),
-                      title: new Text('Remove Profile Picture'),
-                      onTap: () => removeuserProfilePic()),
-                ),
+                if (widget.newProfileData?.object?.userProfilePic?.isNotEmpty ==
+                        true &&
+                    widget.newProfileData?.object?.userProfilePic != null)
+                  Center(
+                    child: new ListTile(
+                        leading: Icon(
+                          Icons.delete,
+                          size: 40,
+                          color: ColorConstant.primary_color,
+                        ),
+                        title: new Text('Remove Profile Picture'),
+                        onTap: () => removeuserProfilePic()),
+                  ),
               ],
             ),
           );
@@ -1919,11 +1912,18 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   }
 
   void _settingModalBottomSheet1(context) {
+    print(
+        "this is the Data check-${widget.newProfileData?.object?.userBackgroundPic}");
     showModalBottomSheet(
         context: context,
         builder: (BuildContext bc) {
           return Container(
-            height: 230,
+            height: widget.newProfileData?.object?.userBackgroundPic != null &&
+                    widget.newProfileData?.object?.userBackgroundPic
+                            ?.isNotEmpty ==
+                        true
+                ? 230
+                : 175,
             child: new Wrap(
               children: [
                 Container(
@@ -2005,16 +2005,20 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 SizedBox(
                   height: 20,
                 ),
-                Center(
-                  child: new ListTile(
-                      leading: Icon(
-                        Icons.delete,
-                        size: 40,
-                        color: ColorConstant.primary_color,
-                      ),
-                      title: new Text('Remove Cover Picture'),
-                      onTap: () => removeUserCover()),
-                ),
+                if (widget.newProfileData?.object?.userBackgroundPic != null &&
+                    widget.newProfileData?.object?.userBackgroundPic
+                            ?.isNotEmpty ==
+                        true)
+                  Center(
+                    child: new ListTile(
+                        leading: Icon(
+                          Icons.delete,
+                          size: 40,
+                          color: ColorConstant.primary_color,
+                        ),
+                        title: new Text('Remove Cover Picture'),
+                        onTap: () => removeUserCover()),
+                  ),
               ],
             ),
           );
