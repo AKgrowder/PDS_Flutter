@@ -105,7 +105,7 @@ class Object {
   String? reactionMessage;
   String? storyUid;
   bool? emojiReaction;
-
+  int? messageSeenStatus;
 
   Content(
       {this.userUid,
@@ -116,7 +116,7 @@ class Object {
       this.createdDate,
       this.messageType,
       this.isDeleted,
-      this.reactionMessage,this.storyUid,this.emojiReaction});
+      this.reactionMessage,this.storyUid,this.emojiReaction,this.messageSeenStatus,});
 
   Content.fromJson(Map<String, dynamic> json) {
     userUid = json['userUid'];
@@ -130,6 +130,7 @@ class Object {
     reactionMessage = json['reactionMessage'];
     storyUid = json['storyUid'];
     emojiReaction = json['emojiReaction'];
+    messageSeenStatus = json['messageSeenStatus'];
   }
 
   Map<String, dynamic> toJson() {
@@ -143,6 +144,7 @@ class Object {
     data['messageType'] = this.messageType;
     data['storyUid']= this.storyUid;
     data['emojiReaction'] = this.emojiReaction;
+    data['messageSeenStatus'] = this.messageSeenStatus;
     return data;
   }
 }
