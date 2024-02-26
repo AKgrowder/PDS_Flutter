@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:another_flushbar/flushbar.dart';
 import 'package:chewie/chewie.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:dio/dio.dart';
@@ -50,6 +51,7 @@ import 'package:pds/presentation/%20new/OpenSavePostImage.dart';
 import 'package:pds/presentation/%20new/RePost_Screen.dart';
 import 'package:pds/presentation/%20new/ShowAllPostLike.dart';
 import 'package:pds/presentation/%20new/comment_bottom_sheet.dart';
+import 'package:pds/presentation/%20new/commenwigetReposrt.dart';
 import 'package:pds/presentation/%20new/newbottembar.dart';
 import 'package:pds/presentation/%20new/profileNew.dart';
 import 'package:pds/presentation/%20new/videoScreen.dart';
@@ -1819,8 +1821,8 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                             ImageConstant.splashImage)),
                                   ),
                                   Spacer(),
-                                  UserStatus == 'REJECTED'||
-                                  User_Module == "EMPLOYEE" ||
+                                  UserStatus == 'REJECTED' ||
+                                          User_Module == "EMPLOYEE" ||
                                           User_Module == null ||
                                           User_Module == ''
                                       ? GestureDetector(
@@ -2820,63 +2822,87 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                       Icons
                                                                           .more_vert_rounded,
                                                                     ))
-                                                                : GestureDetector(
-                                                                    onTap:
-                                                                        () async {
-                                                                      await soicalFunation(
-                                                                        apiName:
-                                                                            'Follow',
-                                                                        index:
-                                                                            index,
-                                                                      );
-                                                                    },
-                                                                    child:
-                                                                        Container(
-                                                                      height:
-                                                                          25,
-                                                                      alignment:
-                                                                          Alignment
-                                                                              .center,
-                                                                      width: 65,
-                                                                      margin: EdgeInsets.only(
-                                                                          bottom:
-                                                                              5),
-                                                                      decoration: BoxDecoration(
-                                                                          color: ColorConstant
-                                                                              .primary_color,
-                                                                          borderRadius:
-                                                                              BorderRadius.circular(4)),
-                                                                      child: uuid ==
-                                                                              null
-                                                                          ? Text(
-                                                                              'Follow',
-                                                                              style: TextStyle(fontFamily: "outfit", fontSize: 12, fontWeight: FontWeight.bold, color: Colors.white),
-                                                                            )
-                                                                          : AllGuestPostRoomData?.object?.content?[index].userAccountType == "PUBLIC"
-                                                                              ? (AllGuestPostRoomData?.object?.content?[index].isFollowing == 'FOLLOW'
-                                                                                  ? Text(
-                                                                                      'Follow',
-                                                                                      style: TextStyle(fontFamily: "outfit", fontSize: 12, fontWeight: FontWeight.bold, color: Colors.white),
-                                                                                    )
-                                                                                  : Text(
-                                                                                      'Following ',
-                                                                                      style: TextStyle(fontFamily: "outfit", fontSize: 12, fontWeight: FontWeight.bold, color: Colors.white),
-                                                                                    ))
-                                                                              : AllGuestPostRoomData?.object?.content?[index].isFollowing == 'FOLLOW'
-                                                                                  ? Text(
-                                                                                      'Follow',
-                                                                                      style: TextStyle(fontFamily: "outfit", fontSize: 12, fontWeight: FontWeight.bold, color: Colors.white),
-                                                                                    )
-                                                                                  : AllGuestPostRoomData?.object?.content?[index].isFollowing == 'REQUESTED'
+                                                                : Row(
+                                                                    mainAxisSize:
+                                                                        MainAxisSize
+                                                                            .min,
+                                                                    children: [
+                                                                      GestureDetector(
+                                                                        onTap:
+                                                                            () async {
+                                                                          await soicalFunation(
+                                                                            apiName:
+                                                                                'Follow',
+                                                                            index:
+                                                                                index,
+                                                                          );
+                                                                        },
+                                                                        child:
+                                                                            Container(
+                                                                          height:
+                                                                              25,
+                                                                          alignment:
+                                                                              Alignment.center,
+                                                                          width:
+                                                                              65,
+                                                                          margin:
+                                                                              EdgeInsets.only(bottom: 5),
+                                                                          decoration: BoxDecoration(
+                                                                              color: ColorConstant.primary_color,
+                                                                              borderRadius: BorderRadius.circular(4)),
+                                                                          child: uuid == null
+                                                                              ? Text(
+                                                                                  'Follow',
+                                                                                  style: TextStyle(fontFamily: "outfit", fontSize: 12, fontWeight: FontWeight.bold, color: Colors.white),
+                                                                                )
+                                                                              : AllGuestPostRoomData?.object?.content?[index].userAccountType == "PUBLIC"
+                                                                                  ? (AllGuestPostRoomData?.object?.content?[index].isFollowing == 'FOLLOW'
                                                                                       ? Text(
-                                                                                          'Requested',
+                                                                                          'Follow',
                                                                                           style: TextStyle(fontFamily: "outfit", fontSize: 12, fontWeight: FontWeight.bold, color: Colors.white),
                                                                                         )
                                                                                       : Text(
-                                                                                          'Following ',
+                                                                                          'Following',
                                                                                           style: TextStyle(fontFamily: "outfit", fontSize: 12, fontWeight: FontWeight.bold, color: Colors.white),
-                                                                                        ),
-                                                                    ),
+                                                                                        ))
+                                                                                  : AllGuestPostRoomData?.object?.content?[index].isFollowing == 'FOLLOW'
+                                                                                      ? Text(
+                                                                                          'Follow',
+                                                                                          style: TextStyle(fontFamily: "outfit", fontSize: 12, fontWeight: FontWeight.bold, color: Colors.white),
+                                                                                        )
+                                                                                      : AllGuestPostRoomData?.object?.content?[index].isFollowing == 'REQUESTED'
+                                                                                          ? Text(
+                                                                                              'Requested',
+                                                                                              style: TextStyle(fontFamily: "outfit", fontSize: 12, fontWeight: FontWeight.bold, color: Colors.white),
+                                                                                            )
+                                                                                          : Text(
+                                                                                              'Following ',
+                                                                                              style: TextStyle(fontFamily: "outfit", fontSize: 12, fontWeight: FontWeight.bold, color: Colors.white),
+                                                                                            ),
+                                                                        ),
+                                                                      ),
+                                                                      GestureDetector(
+                                                                          key:
+                                                                              buttonKey,
+                                                                          onTap:
+                                                                              () async {
+                                                                            bool isupdate = await showPopupMenu1(
+                                                                                context,
+                                                                                index,
+                                                                                buttonKey,
+                                                                                AllGuestPostRoomData?.object?.content?[index].postUid);
+                                                                            if (isupdate ==
+                                                                                true) {
+                                                                                  await BlocProvider.of<GetGuestAllPostCubit>(context)
+        .GetUserAllPostAPI(context, '1', showAlert: true);
+                                                                                }
+                                                                          },
+                                                                          child: Container(
+                                                                              height: 25,
+                                                                              width: 40,
+                                                                              color: Colors.transparent,
+                                                                              child: Icon(Icons.more_vert_rounded))),
+                                                                    ],
                                                                   ),
                                                           ),
                                                         ),
@@ -3556,14 +3582,13 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                   16),
                                                                           child:
                                                                               LinkifyText(
-                                                                                
                                                                             readmoree[index] == true
-                                                                                          ? (AllGuestPostRoomData?.object?.content?[index] .repostOn ?.isTrsnalteoption == false || AllGuestPostRoomData?.object?.content?[index].repostOn  ?.isTrsnalteoption == null)
-                                                                                              ? "${AllGuestPostRoomData?.object?.content?[index].repostOn?.description}${(AllGuestPostRoomData?.object?.content?[index].repostOn?.description?.length ?? 0) > maxLength ? ' ....ReadLess' : ''}"
-                                                                                              : "${AllGuestPostRoomData?.object?.content?[index].repostOn?.translatedDescription}"
-                                                                                          : (AllGuestPostRoomData?.object?.content?[index].repostOn?.isTrsnalteoption == false || AllGuestPostRoomData?.object?.content?[index].repostOn?.isTrsnalteoption == null)
-                                                                                              ? "${AllGuestPostRoomData?.object?.content?[index].repostOn?.description?.substring(0, maxLength)} ....ReadMore"
-                                                                                              : "${AllGuestPostRoomData?.object?.content?[index].repostOn?.translatedDescription?.substring(0, maxLength)} ....ReadMore",  // as
+                                                                                ? (AllGuestPostRoomData?.object?.content?[index].repostOn?.isTrsnalteoption == false || AllGuestPostRoomData?.object?.content?[index].repostOn?.isTrsnalteoption == null)
+                                                                                    ? "${AllGuestPostRoomData?.object?.content?[index].repostOn?.description}${(AllGuestPostRoomData?.object?.content?[index].repostOn?.description?.length ?? 0) > maxLength ? ' ....ReadLess' : ''}"
+                                                                                    : "${AllGuestPostRoomData?.object?.content?[index].repostOn?.translatedDescription}"
+                                                                                : (AllGuestPostRoomData?.object?.content?[index].repostOn?.isTrsnalteoption == false || AllGuestPostRoomData?.object?.content?[index].repostOn?.isTrsnalteoption == null)
+                                                                                    ? "${AllGuestPostRoomData?.object?.content?[index].repostOn?.description?.substring(0, maxLength)} ....ReadMore"
+                                                                                    : "${AllGuestPostRoomData?.object?.content?[index].repostOn?.translatedDescription?.substring(0, maxLength)} ....ReadMore", // as
                                                                             linkStyle:
                                                                                 TextStyle(
                                                                               color: Colors.blue,
@@ -4651,63 +4676,82 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                       Icons
                                                                           .more_vert_rounded,
                                                                     ))
-                                                                : GestureDetector(
-                                                                    onTap:
-                                                                        () async {
-                                                                      await soicalFunation(
-                                                                        apiName:
-                                                                            'Follow',
-                                                                        index:
-                                                                            index,
-                                                                      );
-                                                                    },
-                                                                    child:
-                                                                        Container(
-                                                                      height:
-                                                                          25,
-                                                                      alignment:
-                                                                          Alignment
-                                                                              .center,
-                                                                      width: 65,
-                                                                      margin: EdgeInsets.only(
-                                                                          bottom:
-                                                                              5),
-                                                                      decoration: BoxDecoration(
-                                                                          color: ColorConstant
-                                                                              .primary_color,
-                                                                          borderRadius:
-                                                                              BorderRadius.circular(4)),
-                                                                      child: uuid ==
-                                                                              null
-                                                                          ? Text(
-                                                                              'Follow',
-                                                                              style: TextStyle(fontFamily: "outfit", fontSize: 12, fontWeight: FontWeight.bold, color: Colors.white),
-                                                                            )
-                                                                          : AllGuestPostRoomData?.object?.content?[index].userAccountType == "PUBLIC"
-                                                                              ? (AllGuestPostRoomData?.object?.content?[index].isFollowing == 'FOLLOW'
-                                                                                  ? Text(
-                                                                                      'Follow',
-                                                                                      style: TextStyle(fontFamily: "outfit", fontSize: 12, fontWeight: FontWeight.bold, color: Colors.white),
-                                                                                    )
-                                                                                  : Text(
-                                                                                      'Following ',
-                                                                                      style: TextStyle(fontFamily: "outfit", fontSize: 12, fontWeight: FontWeight.bold, color: Colors.white),
-                                                                                    ))
-                                                                              : AllGuestPostRoomData?.object?.content?[index].isFollowing == 'FOLLOW'
-                                                                                  ? Text(
-                                                                                      'Follow',
-                                                                                      style: TextStyle(fontFamily: "outfit", fontSize: 12, fontWeight: FontWeight.bold, color: Colors.white),
-                                                                                    )
-                                                                                  : AllGuestPostRoomData?.object?.content?[index].isFollowing == 'REQUESTED'
+                                                                : Row(
+                                                                    mainAxisSize:
+                                                                        MainAxisSize
+                                                                            .min,
+                                                                    children: [
+                                                                      GestureDetector(
+                                                                        onTap:
+                                                                            () async {
+                                                                          await soicalFunation(
+                                                                            apiName:
+                                                                                'Follow',
+                                                                            index:
+                                                                                index,
+                                                                          );
+                                                                        },
+                                                                        child:
+                                                                            Container(
+                                                                          height:
+                                                                              25,
+                                                                          alignment:
+                                                                              Alignment.center,
+                                                                          width:
+                                                                              65,
+                                                                          margin:
+                                                                              EdgeInsets.only(bottom: 5),
+                                                                          decoration: BoxDecoration(
+                                                                              color: ColorConstant.primary_color,
+                                                                              borderRadius: BorderRadius.circular(4)),
+                                                                          child: uuid == null
+                                                                              ? Text(
+                                                                                  'Follow',
+                                                                                  style: TextStyle(fontFamily: "outfit", fontSize: 12, fontWeight: FontWeight.bold, color: Colors.white),
+                                                                                )
+                                                                              : AllGuestPostRoomData?.object?.content?[index].userAccountType == "PUBLIC"
+                                                                                  ? (AllGuestPostRoomData?.object?.content?[index].isFollowing == 'FOLLOW'
                                                                                       ? Text(
-                                                                                          'Requested',
+                                                                                          'Follow',
                                                                                           style: TextStyle(fontFamily: "outfit", fontSize: 12, fontWeight: FontWeight.bold, color: Colors.white),
                                                                                         )
                                                                                       : Text(
                                                                                           'Following ',
                                                                                           style: TextStyle(fontFamily: "outfit", fontSize: 12, fontWeight: FontWeight.bold, color: Colors.white),
-                                                                                        ),
-                                                                    ),
+                                                                                        ))
+                                                                                  : AllGuestPostRoomData?.object?.content?[index].isFollowing == 'FOLLOW'
+                                                                                      ? Text(
+                                                                                          'Follow',
+                                                                                          style: TextStyle(fontFamily: "outfit", fontSize: 12, fontWeight: FontWeight.bold, color: Colors.white),
+                                                                                        )
+                                                                                      : AllGuestPostRoomData?.object?.content?[index].isFollowing == 'REQUESTED'
+                                                                                          ? Text(
+                                                                                              'Requested',
+                                                                                              style: TextStyle(fontFamily: "outfit", fontSize: 12, fontWeight: FontWeight.bold, color: Colors.white),
+                                                                                            )
+                                                                                          : Text(
+                                                                                              'Following ',
+                                                                                              style: TextStyle(fontFamily: "outfit", fontSize: 12, fontWeight: FontWeight.bold, color: Colors.white),
+                                                                                            ),
+                                                                        ),
+                                                                      ),
+                                                                      GestureDetector(
+                                                                          key:
+                                                                              buttonKey,
+                                                                          onTap:
+                                                                              () async {
+                                                                            showPopupMenu1(
+                                                                                context,
+                                                                                index,
+                                                                                buttonKey,
+                                                                                AllGuestPostRoomData?.object?.content?[index].postUid);
+                                                                          },
+                                                                          child: Container(
+                                                                              height: 25,
+                                                                              width: 40,
+                                                                              color: Colors.transparent,
+                                                                              child: Icon(Icons.more_vert_rounded))),
+                                                                    ],
                                                                   ),
                                                           ),
                                                         ),
