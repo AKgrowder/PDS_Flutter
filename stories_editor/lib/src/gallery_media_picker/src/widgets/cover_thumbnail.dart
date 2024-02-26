@@ -56,7 +56,7 @@ class _CoverThumbnailState extends State<CoverThumbnail> {
     } else {
       /// if result is fail, you can call `PhotoManager.openSetting();`
       /// to open android/ios application's setting to get permission
-      PhotoManager.openSetting();
+      // PhotoManager.openSetting();
     }
   }
 
