@@ -41,7 +41,8 @@ import 'package:video_thumbnail/video_thumbnail.dart';
 
 import '../../API/Bloc/dmInbox_bloc/dminbox_blcok.dart';
 import '../register_create_account_screen/register_create_account_screen.dart';
-  ScrollController scrollController = ScrollController();
+
+ScrollController scrollController = ScrollController();
 
 class DmScreen extends StatefulWidget {
   String UserName;
@@ -51,11 +52,13 @@ class DmScreen extends StatefulWidget {
   String? videoId;
   bool? isExpert;
   bool? isBlock;
+  bool? online;
   DmScreen(
       {required this.ChatInboxUid,
       required this.UserName,
       required this.UserUID,
       required this.UserImage,
+      this.online,
       this.videoId,
       this.isExpert,
       this.isBlock});
@@ -510,35 +513,57 @@ class _DmScreenState extends State<DmScreen> {
                                       ),
                                     ),
                                   ),
-                                  GestureDetector(
-                                    onTap: () {
-                                      Navigator.push(context, MaterialPageRoute(
-                                        builder: (context) {
-                                          return ProfileScreen(
-                                              User_ID: widget.UserUID,
-                                              isFollowing: "");
+                                  Stack(
+                                    children: [
+                                      GestureDetector(
+                                        onTap: () {
+                                          Navigator.push(context,
+                                              MaterialPageRoute(
+                                            builder: (context) {
+                                              return ProfileScreen(
+                                                  User_ID: widget.UserUID,
+                                                  isFollowing: "");
+                                            },
+                                          ));
                                         },
-                                      ));
-                                    },
-                                    child: Container(
-                                      child: widget.UserImage != null &&
-                                              widget.UserImage != ""
-                                          ? Container(
-                                              child: CustomImageView(
-                                                url: "${widget.UserImage}",
-                                                height: 30,
-                                                width: 30,
-                                                fit: BoxFit.cover,
-                                                radius:
-                                                    BorderRadius.circular(30),
-                                              ),
-                                            )
-                                          : CustomImageView(
-                                              imagePath: ImageConstant.tomcruse,
-                                              height: 30,
-                                              width: 30,
-                                            ),
-                                    ),
+                                        child: Container(
+                                          child: widget.UserImage != null &&
+                                                  widget.UserImage != ""
+                                              ? Container(
+                                                  child: CustomImageView(
+                                                    url: "${widget.UserImage}",
+                                                    height: 30,
+                                                    width: 30,
+                                                    fit: BoxFit.cover,
+                                                    radius:
+                                                        BorderRadius.circular(
+                                                            30),
+                                                  ),
+                                                )
+                                              : CustomImageView(
+                                                  imagePath:
+                                                      ImageConstant.tomcruse,
+                                                  height: 30,
+                                                  width: 30,
+                                                ),
+                                        ),
+                                      ),
+                                      widget.online == true
+                                          ? Positioned(
+                                              bottom: 1,
+                                              right: 1,
+                                              child: Container(
+                                                height: 12,
+                                                width: 12,
+                                                decoration: BoxDecoration(
+                                                    color: Colors.green,
+                                                    shape: BoxShape.circle,
+                                                    border: Border.all(
+                                                        color: Colors.white,
+                                                        width: 2)),
+                                              ))
+                                          : SizedBox()
+                                    ],
                                   ),
                                   Padding(
                                     padding:
@@ -821,20 +846,18 @@ class _DmScreenState extends State<DmScreen> {
                                                                         .userName !=
                                                                     User_Name
                                                                 ? GestureDetector(
-                                                                  onTap: () {
-                                                                    print("check Value-${getInboxMessagesModel
-                                                                        ?.object
-                                                                        ?.content?[
-                                                                            index]
-                                                                        .userName}");
-                                                                        print("sdfsdfsdg-${User_Name}");
-                                                                  },
-                                                                  child: Container(
+                                                                    onTap: () {
+                                                                      print(
+                                                                          "check Value-${getInboxMessagesModel?.object?.content?[index].userName}");
+                                                                      print(
+                                                                          "sdfsdfsdg-${User_Name}");
+                                                                    },
+                                                                    child:
+                                                                        Container(
                                                                       child:
                                                                           Padding(
-                                                                        padding: const EdgeInsets
-                                                                                .symmetric(
-                                                                            /* horizontal: 35, vertical: 5 */),
+                                                                        padding:
+                                                                            const EdgeInsets.symmetric(/* horizontal: 35, vertical: 5 */),
                                                                         child:
                                                                             GestureDetector(
                                                                           onTap:
@@ -943,7 +966,7 @@ class _DmScreenState extends State<DmScreen> {
                                                                                                     ),
                                                                                                   ),
                                                                                                   // Padding(
-                                                                
+
                                                                                                   //   padding: const EdgeInsets.only(left: 4, right: 4),
                                                                                                   //   child: Text(
                                                                                                   //     getTimeDifference(parsedDateTime),
@@ -951,13 +974,18 @@ class _DmScreenState extends State<DmScreen> {
                                                                                                   //     style: TextStyle(fontWeight: FontWeight.normal, color: Colors.black, fontFamily: "outfit", fontSize: 10),
                                                                                                   //   ),
                                                                                                   // ),
-                                                                                                   
+
                                                                                                   Padding(
                                                                                                     padding: const EdgeInsets.only(left: 4, right: 8, bottom: 2),
                                                                                                     child: Text(
                                                                                                       customFormat(parsedDateTime),
                                                                                                       textScaleFactor: 1.0,
-                                                                                                      style: TextStyle(fontWeight: FontWeight.normal, color: Colors.black, fontFamily: "outfit", fontSize: 10,),
+                                                                                                      style: TextStyle(
+                                                                                                        fontWeight: FontWeight.normal,
+                                                                                                        color: Colors.black,
+                                                                                                        fontFamily: "outfit",
+                                                                                                        fontSize: 10,
+                                                                                                      ),
                                                                                                     ),
                                                                                                   ),
                                                                                                 ],
@@ -965,7 +993,7 @@ class _DmScreenState extends State<DmScreen> {
                                                                                             ),
                                                                                           ),
                                                                                         ),
-                                                                
+
                                                                                         SizedBox(
                                                                                           width: 70,
                                                                                         ),
@@ -1058,13 +1086,13 @@ class _DmScreenState extends State<DmScreen> {
                                                                                                     : AnimatedNetworkImage(imageUrl: "${getInboxMessagesModel?.object?.content?[index].message}"),
                                                                                               ),
                                                                                             ),
-                                                                
+
                                                                                             /* Container(
                                                                                           height: 50,
                                                                                           width: 50,
                                                                                           color: Colors.amber,
                                                                                         ) */
-                                                                
+
                                                                                             /*  Row(
                                                                           children: [
                                                                             Expanded(
@@ -1094,8 +1122,7 @@ class _DmScreenState extends State<DmScreen> {
                                                                                 0,
                                                                                 0),
                                                                           ), */
-                                                                              if (getInboxMessagesModel?.object?.content?[index].reactionMessage != null &&
-                                                                                  getInboxMessagesModel?.object?.content?[index].emojiReaction != true)
+                                                                              if (getInboxMessagesModel?.object?.content?[index].reactionMessage != null && getInboxMessagesModel?.object?.content?[index].emojiReaction != true)
                                                                                 Row(
                                                                                   children: [
                                                                                     Align(
@@ -1118,7 +1145,7 @@ class _DmScreenState extends State<DmScreen> {
                                                                         ),
                                                                       ),
                                                                     ),
-                                                                )
+                                                                  )
                                                                 : Padding(
                                                                     padding:
                                                                         const EdgeInsets
@@ -1314,14 +1341,14 @@ class _DmScreenState extends State<DmScreen> {
                                                                                       child: Padding(
                                                                                         padding: const EdgeInsets.only(top: 3),
                                                                                         child: Container(
-                                                                                          margin: EdgeInsets.only(left: 10, right: 10),
+                                                                                          margin: EdgeInsets.only(left: 10, right: 0),
                                                                                           decoration: BoxDecoration(color: ColorConstant.otheruserchat, borderRadius: BorderRadius.circular(13)),
                                                                                           child: Column(
                                                                                             crossAxisAlignment: CrossAxisAlignment.end,
                                                                                             mainAxisAlignment: MainAxisAlignment.end,
                                                                                             children: [
                                                                                               Padding(
-                                                                                                padding: const EdgeInsets.only(left: 4, right: 4,top: 3),
+                                                                                                padding: const EdgeInsets.only(left: 4, right: 4, top: 3),
                                                                                                 /*  child: Text(
                                                                                               "${getInboxMessagesModel?.object?.content?[index].message ?? ""}", //ankurChek
                                                                                               // maxLines: 3,
@@ -1330,13 +1357,8 @@ class _DmScreenState extends State<DmScreen> {
                                                                                             ), */
                                                                                                 child: LinkifyText(
                                                                                                   "${getInboxMessagesModel?.object?.content?[index].message ?? ""}",
-                                                                                                  linkStyle: TextStyle(fontWeight: FontWeight.w500, color: Colors.blue, fontFamily: "outfit", fontSize: 13, decoration: TextDecoration.underline, decorationColor: Colors.blue),
-                                                                                                  textStyle: TextStyle(
-                                                                                                    fontWeight: FontWeight.w500,
-                                                                                                    color: Colors.black,
-                                                                                                    fontFamily: "outfit",
-                                                                                                    fontSize: 13,
-                                                                                                  ),
+                                                                                                  linkStyle: TextStyle(fontWeight: FontWeight.w500, color: Colors.blue, fontFamily: "outfit", fontSize: 15, decoration: TextDecoration.underline, decorationColor: Colors.blue),
+                                                                                                  textStyle: TextStyle(fontWeight: FontWeight.w400, color: Colors.black, fontFamily: "outfit", fontSize: 15),
                                                                                                   linkTypes: [
                                                                                                     LinkType.url,
 
@@ -1371,6 +1393,7 @@ class _DmScreenState extends State<DmScreen> {
                                                                                               //     style: TextStyle(fontWeight: FontWeight.normal, color: Colors.white, fontFamily: "outfit", fontSize: 10),
                                                                                               //   ),
                                                                                               // ),
+                                                                                              /// ----------------------------------------------------------------
                                                                                               Padding(
                                                                                                 padding: const EdgeInsets.only(left: 3, right: 5, bottom: 2),
                                                                                                 child: Text(
@@ -1379,11 +1402,57 @@ class _DmScreenState extends State<DmScreen> {
                                                                                                   style: TextStyle(fontWeight: FontWeight.normal, color: Colors.black, fontFamily: "outfit", fontSize: 10),
                                                                                                 ),
                                                                                               ),
+                                                                                              /* Container(
+                                                                                                  // color: Colors.red,
+                                                                                                  width: 47,
+                                                                                                  child: Row(
+                                                                                                    children: [
+                                                                                                      Padding(
+                                                                                                        padding: const EdgeInsets.only(left: 3, right: 5, bottom: 2),
+                                                                                                        child: Text(
+                                                                                                          customFormat(parsedDateTime),
+                                                                                                          textScaleFactor: 1.0,
+                                                                                                          style: TextStyle(fontWeight: FontWeight.normal, color: Colors.black, fontFamily: "outfit", fontSize: 10),
+                                                                                                        ),
+                                                                                                      ),
+                                                                                                      Container(
+                                                                                                        height: 12,
+                                                                                                        width: 12,
+                                                                                                        child: Center(
+                                                                                                          child: getInboxMessagesModel?.object?.content?[index].messageSeenStatus == 0
+                                                                                                              ? CustomImageView(
+                                                                                                                  imagePath: ImageConstant.messagecheck,
+                                                                                                                  // height: 15,
+                                                                                                                )
+                                                                                                              : getInboxMessagesModel?.object?.content?[index].messageSeenStatus == 1
+                                                                                                                  ? CustomImageView(
+                                                                                                                      imagePath: ImageConstant.checksend,
+                                                                                                                      // height: 15,
+                                                                                                                    )
+                                                                                                                  : getInboxMessagesModel?.object?.content?[index].messageSeenStatus == 2
+                                                                                                                      ? CustomImageView(
+                                                                                                                          imagePath: ImageConstant.checkseen,
+                                                                                                                          // height: 15,
+                                                                                                                        )
+                                                                                                                      : widget.online == true
+                                                                                                                          ? CustomImageView(
+                                                                                                                              imagePath: ImageConstant.checksend,
+                                                                                                                              // height: 15,
+                                                                                                                            )
+                                                                                                                          : CustomImageView(
+                                                                                                                              imagePath: ImageConstant.messagecheck,
+                                                                                                                              // height: 15,
+                                                                                                                            ),
+                                                                                                        ),
+                                                                                                      ),
+                                                                                                    ],
+                                                                                                  )), */
                                                                                             ],
                                                                                           ),
                                                                                         ),
                                                                                       ),
                                                                                     ),
+
                                                                                     Padding(
                                                                                       padding: const EdgeInsets.only(left: 3, right: 0),
                                                                                       child: GestureDetector(
@@ -1703,7 +1772,6 @@ class _DmScreenState extends State<DmScreen> {
                                         ),
                                       ]),
                                     ),
-                                    
                               GestureDetector(
                                 onTap: () async {
                                   if (_image != null) {
