@@ -30,7 +30,8 @@ import '../../core/utils/image_constant.dart';
 import '../../widgets/custom_image_view.dart';
 
 bool isBottomSheetOpen = false;
-
+bool isReply = false;
+VideoPlayerController? controller;
 class StoryPageContainerView extends StatefulWidget {
   final StoryButtonData buttonData;
   final VoidCallback onStoryComplete;
@@ -56,7 +57,7 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
   final Stopwatch _stopwatch = Stopwatch();
   Offset _pointerDownPosition = Offset.zero;
   int _pointerDownMillis = 0;
-  VideoPlayerController? _controller;
+
   double _pageValue = 0.0;
   List<bool> imageLoads = [];
   bool? StoryView = false;
@@ -77,13 +78,14 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     User_ID = prefs.getString(PreferencesKey.loginUserID);
     if (mounted) {
-      super.setState(() {});
+      setState(() {});
     }
   }
 
   FocusNode? _focusNode;
   bool isDataGet = false;
   bool isStoryViewData = false;
+  bool isReplied = false;
 
   @override
   void initState() {
@@ -95,10 +97,10 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
     _stopwatch.start();
     // GetUserID();
     _storyController!.addListener(_onTimelineEvent);
-
     imageLoads =
         List.generate(widget.buttonData.images.length, (index) => false);
     dataSetUpAPi();
+
     super.initState();
   }
 
@@ -110,14 +112,15 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
 
   dataSetUpAPi() async {
     if (widget.buttonData.images[_curSegmentIndex].image!.endsWith('.mp4')) {
-      _controller = VideoPlayerController.networkUrl(
-          (Uri.parse('${widget.buttonData.images[_curSegmentIndex].image}')))
+      ifVideoPlayer = true;
+      controller = VideoPlayerController.networkUrl(
+          (Uri.parse('${widget.buttonData.images[_curSegmentIndex].image}')),videoPlayerOptions:VideoPlayerOptions(allowBackgroundPlayback: false))
         ..initialize().then((_) {
           if (mounted) {
-            super.setState(() {
-              ifVideoPlayer = true;
-              durationOfVideo = _controller!.value.duration;
-              _controller?.play();
+            setState(() {
+
+              durationOfVideo = controller!.value.duration;
+              controller?.play();
             });
           }
         });
@@ -142,32 +145,59 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
   }
 
   void _onTimelineEvent(StoryTimelineEvent event) {
+    print("Video Player ${_curSegmentIndex}");
     if (event == StoryTimelineEvent.storyComplete) {
-      widget.onStoryComplete.call();
-    } else if (event == StoryTimelineEvent.segmentComplete) {
       if (widget.buttonData.images[_curSegmentIndex].image!.endsWith('.mp4')) {
-        _controller = VideoPlayerController.networkUrl(
+        print("Video Player ${_curSegmentIndex}");
+        controller = VideoPlayerController.networkUrl(
             (Uri.parse('${widget.buttonData.images[_curSegmentIndex].image}')))
           ..initialize().then((_) {
             if (mounted) {
-              super.setState(() {
+              setState(() {
                 ifVideoPlayer = true;
-                durationOfVideo = _controller!.value.duration;
-                _controller?.play();
+                durationOfVideo = controller!.value.duration;
+                controller?.play();
               });
             }
           });
+
       } else {
+        print("Image Player ${_curSegmentIndex}");
         if (mounted) {
-          super.setState(() {
+          setState(() {
             ifVideoPlayer = false;
-            _controller?.dispose();
+            controller?.dispose();
+          });
+        }
+      }
+      widget.onStoryComplete.call();
+    } else if (event == StoryTimelineEvent.segmentComplete) {
+      if (widget.buttonData.images[_curSegmentIndex].image!.endsWith('.mp4')) {
+        print("Video Player ${_curSegmentIndex}");
+        controller = VideoPlayerController.networkUrl(
+            (Uri.parse('${widget.buttonData.images[_curSegmentIndex].image}')))
+          ..initialize().then((_) {
+            if (mounted) {
+              setState(() {
+                ifVideoPlayer = true;
+                durationOfVideo = controller!.value.duration;
+                controller?.play();
+              });
+            }
+          });
+
+      } else {
+        print("Image Player ${_curSegmentIndex}");
+        if (mounted) {
+          setState(() {
+            ifVideoPlayer = false;
+            controller?.dispose();
           });
         }
       }
     }
     if (mounted) {
-      super.setState(() {});
+      setState(() {});
     }
   }
 
@@ -189,10 +219,11 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
 
               WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
                 if (mounted) {
-                  super.setState(() {
+                  setState(() {
                     _focusNode?.unfocus();
                     isDataGet = false;
                     isBottomSheetOpen = false;
+                    isReply = false;
                   });
                 }
               });
@@ -201,6 +232,9 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
               widget.onClosePressed!.call();
             } else {
               Navigator.of(context).pop();
+            }
+            if(controller != null){
+              controller?.dispose();
             }
             /*  if (widget.onClosePressed != null) {
               widget.onClosePressed!.call();
@@ -377,7 +411,7 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
             StoryView = true;
             BlocProvider.of<ViewStoryCubit>(context).StoryViewList(context,
                 "${widget.buttonData.images[_curSegmentIndex].storyUid}");
-            super.setState(() {});
+            setState(() {});
           }
         }
       }),
@@ -453,33 +487,34 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
   }
 
   Widget _buildPageContent1() {
-    _controller?.dispose();
+    // _controller?.dispose();
     dataFunctionSetup();
 
     bool imageLoaded = false;
     // BlocProvider.of<ViewStoryCubit>(context).StoryViewList(
     //     context, "${widget.buttonData.images[_curSegmentIndex].storyUid}");
-    _controller?.addListener(() {
-      if (mounted) {
-        if (DummyStoryView == _curSegmentIndex) {
-          DummyStoryViewBool = false;
-        } else {
-          DummyStoryView = _curSegmentIndex;
-          DummyStoryViewBool = true;
-        }
+    if(controller != null && controller!.value.isInitialized) {
+      controller!.addListener(() {
+        if (mounted) {
+          if (DummyStoryView == _curSegmentIndex) {
+            DummyStoryViewBool = false;
+          } else {
+            DummyStoryView = _curSegmentIndex;
+            DummyStoryViewBool = true;
+          }
 
-        // Image has been loaded
-        imageLoaded = true;
-        _storyController!.unpause();
+          // Image has been loaded
+          imageLoaded = true;
+          _storyController!.unpause();
 
-        if (DummyStoryViewBool == true) {
-          StoryView = true;
-          BlocProvider.of<ViewStoryCubit>(context).StoryViewList(context,
-              "${widget.buttonData.images[_curSegmentIndex].storyUid}");
-          super.setState(() {});
+          if (DummyStoryViewBool == true) {
+            StoryView = true;
+            // BlocProvider.of<ViewStoryCubit>(context).StoryViewList(context, "${widget.buttonData.images[_curSegmentIndex].storyUid}");
+            setState(() {});
+          }
         }
-      }
-    });
+      });
+    }
 
     _storyController!.pause();
 
@@ -515,10 +550,10 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
       body: Container(
           width: double.infinity,
           height: double.infinity,
-          child: _controller?.value.isInitialized != null
+          child: controller != null && controller?.value.isInitialized != null
               ? AspectRatio(
-                  aspectRatio: _controller!.value.aspectRatio,
-                  child: VideoPlayer(_controller!),
+                  aspectRatio: controller!.value.aspectRatio,
+                  child: VideoPlayer(controller!),
                 )
               : Container()),
     );
@@ -532,10 +567,14 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
     return position.dx <= (storyWidth * .499);
   }
 
+
+
+
+
+
   Widget _buildPageStructure() {
     var _height = MediaQuery.of(context).size.height;
     var _width = MediaQuery.of(context).size.width;
-
     return Listener(
       onPointerDown: (PointerDownEvent event) async {
         _pointerDownMillis = _stopwatch.elapsedMilliseconds;
@@ -543,24 +582,40 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
         _storyController?.pause();
       },
       onPointerUp: (PointerUpEvent event) {
-        event1 = event;
-        final pointerUpMillis = _stopwatch.elapsedMilliseconds;
-        final maxPressMillis = kPressTimeout.inMilliseconds * 2;
-        final diffMillis = pointerUpMillis - _pointerDownMillis;
-        if (diffMillis <= maxPressMillis) {
-          final position = event.position;
-          final distance = (position - _pointerDownPosition).distance;
-          if (distance < 5.0) {
-            final isLeft = _isLeftPartOfStory(position);
-            if (isLeft) {
-              _storyController!.previousSegment();
-            } else {
-              _storyController!.nextSegment();
+        if ((event.localPosition.dy < MediaQuery.of(context).size.height - 120 && !_focusNode!.hasFocus)) {
+          event1 = event;
+          final pointerUpMillis = _stopwatch.elapsedMilliseconds;
+          final maxPressMillis = kPressTimeout.inMilliseconds * 2;
+          final diffMillis = pointerUpMillis - _pointerDownMillis;
+          if (diffMillis <= maxPressMillis) {
+            final position = event.position;
+            final distance = (position - _pointerDownPosition).distance;
+            if (distance < 5.0) {
+              final isLeft = _isLeftPartOfStory(position);
+              if (isLeft) {
+                print("Previous1 ${event.localPosition.dy} ${MediaQuery
+                    .of(context)
+                    .size
+                    .height}");
+                if (!isReply) {
+                  _storyController!.previousSegment();
+                }
+              } else {
+                _storyController!.nextSegment();
+              }
             }
           }
+          setState(() {
+            isReply = false;
+          });
+
+          _storyController!.unpause();
+        }else{
+          setState(() {
+            isReply = true;
+          });
         }
 
-        _storyController!.unpause();
       },
       child: GestureDetector(
         /*  onVerticalDragStart: (details) {
@@ -582,7 +637,7 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
             }
             FocusScope.of(context).requestFocus(_focusNode);
             WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-              super.setState(() {
+              setState(() {
                 isDataGet = true;
                 isBottomSheetOpen = true;
               });
@@ -595,7 +650,7 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
           _storyController?.pause();
           _focusNode?.unfocus();
           WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-            super.setState(() {
+            setState(() {
               isDataGet = false;
               isBottomSheetOpen = false;
             });
@@ -621,7 +676,7 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
         _storyController!.unpause();
         FocusScope.of(context).unfocus();
         WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-              super.setState(() {
+              setState(() {
                 isDataGet = false;
                 
               });
@@ -653,7 +708,7 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
                               _pointerDownPosition = details.localPosition;
                               _storyController!.pause();
                               if (mounted) {
-                                super.setState(() {
+                                setState(() {
                                   isBottomSheetOpen = true;
                                 });
                               }
@@ -915,6 +970,7 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
                                   if (distance < 5.0) {
                                     final isLeft = _isLeftPartOfStory(position);
                                     if (isLeft) {
+                                      print("Previous2");
                                       _storyController!.previousSegment();
                                     } else {
                                       _storyController!.nextSegment();
@@ -923,7 +979,7 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
                                 }
                                 print("bottom sheet closed : unpause");
                                 if (mounted) {
-                                  super.setState(() {
+                                  setState(() {
                                     isBottomSheetOpen = false;
                                   });
                                 }
@@ -1203,7 +1259,7 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
                                 }
                                 print("bottom sheet closed : unpause");
                                 if (mounted) {
-                                  super.setState(() {
+                                  setState(() {
                                     isBottomSheetOpen = false;
                                   });
                                 }
@@ -1251,7 +1307,7 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
                       ),
                     )
                   : SizedBox(),
-              if (User_ID != widget.buttonData.images[_curSegmentIndex].userUid)
+              if (User_ID != widget.buttonData.images[_curSegmentIndex].userUid && !isReplied)
                 Positioned(
                     bottom: 30,
                     child: Container(
@@ -1272,40 +1328,6 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
                                 focusNode: _focusNode,
                                 minLines: 1,
                                 maxLines: null,
-                                onTap: () {
-                                  print("else working");
-                                  print(
-                                      "checkOntap -${_stopwatch.elapsedMilliseconds}");
-                                  if (User_ID !=
-                                      widget.buttonData.images[_curSegmentIndex]
-                                          .userUid) {
-                                    print(
-                                        "eventDataPosttion-${eventdata.position}");
-                                    RenderBox renderBox =
-                                        context.findRenderObject() as RenderBox;
-                                    Offset position =
-                                        renderBox.localToGlobal(Offset.zero);
-                                    print("posttion check -${position}");
-                                    print(
-                                        "posttion check1-${_stopwatch.elapsedMilliseconds}");
-                                    _pointerDownMillis =
-                                        _stopwatch.elapsedMilliseconds;
-                                    _pointerDownPosition = position;
-                                    _storyController?.pause();
-                                    FocusScope.of(context)
-                                        .requestFocus(_focusNode);
-                                    if (mounted) {
-                                      super.setState(() {
-                                        isBottomSheetOpen = true;
-                                        isDataGet = true;
-                                      });
-                                    }
-                                    /*   WidgetsBinding.instance
-                                        .addPostFrameCallback((timeStamp) {
-                                      
-                                    }); */
-                                  }
-                                },
                                 onChanged: (value) {
                                   if (value.isEmpty) {
                                     if (mounted) {
@@ -1347,13 +1369,15 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
                                       .userUid) {
                                 reactionData.clear();
                                 _storyController!.unpause();
+                                _focusNode?.unfocus();
                                 WidgetsBinding.instance
                                     .addPostFrameCallback((timeStamp) {
                                   if (mounted) {
-                                    super.setState(() {
-                                      _focusNode?.unfocus();
+                                    setState(() {
+                                      isReplied = true;
                                       isDataGet = false;
                                       isBottomSheetOpen = false;
+                                      isReply = false;
                                     });
                                   }
                                 });
@@ -1448,11 +1472,18 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
   }
 
   @override
-  void dispose() {
-    widget.pageController?.removeListener(_onPageControllerUpdate);
+  void dispose() async{
     _stopwatch.stop();
     _storyController!.removeListener(_onTimelineEvent);
-    _controller?.dispose();
+    if(controller != null) {
+      controller!.pause();
+      controller?.removeListener(() { });
+      await controller?.dispose();
+      print("Disposed");
+      controller = null;
+    }
+    widget.pageController?.removeListener(_onPageControllerUpdate);
+
     durationOfVideo = null;
     super.dispose();
   }
@@ -1475,6 +1506,7 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
               backgroundColor: ColorConstant.primary_color,
             );
             ScaffoldMessenger.of(context).showSnackBar(snackBar);
+
           }
 
           if (state is ViewStoryLoadingState) {
@@ -1489,7 +1521,12 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
               ),
             );
           }
-          if (state is ViewStoryLoadedState) {}
+          if (state is ViewStoryLoadedState) {
+            if(controller != null){
+              controller!.dispose();
+
+            }
+          }
           if (state is StoryViewListLoadedState) {
             StoryViewListModelData = state.StoryViewListModelData;
           }
@@ -1527,10 +1564,11 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
       _storyController!.unpause();
       WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
         if (mounted) {
-          super.setState(() {
+          setState(() {
             _focusNode?.unfocus();
             isDataGet = false;
             isBottomSheetOpen = false;
+            isReply = false;
           });
         }
       });
@@ -1597,7 +1635,7 @@ class StoryTimelineController {
   }
 
   void unpause() {
-    if (!isBottomSheetOpen) {
+    if (!isBottomSheetOpen && !isReply) {
       _state?.unpause();
     }
   }
@@ -1674,7 +1712,7 @@ class _StoryTimelineState extends State<StoryTimeline> {
         }
       }
       if (mounted) {
-        super.setState(() {});
+        setState(() {});
       }
     }
   }
@@ -1880,7 +1918,7 @@ class _ZoomableImageState extends State<ZoomableImage> {
 
     final memoryImage = MemoryImage(Uint8List.fromList(bytes!));
     if (mounted) {
-      super.setState(() {
+      setState(() {
         _memoryImage = memoryImage;
       });
     }
