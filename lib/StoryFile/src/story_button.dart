@@ -48,7 +48,7 @@ class _StoryButtonState extends State<StoryButton>
 
   @override
   void didFirstBuildFinish(BuildContext context) {
-    super.setState(() {
+    setState(() {
       _buttonWidth = context.size?.width;
     });
   }
@@ -108,7 +108,7 @@ class _StoryButtonState extends State<StoryButton>
   }
 
   void _onTap() {
-    super.setState(() {
+    setState(() {
       widget.buttonData.markAsWatched();
     });
     widget.onPressed.call(widget.buttonData);
