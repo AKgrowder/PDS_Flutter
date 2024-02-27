@@ -6,9 +6,11 @@ import 'package:pds/API/Repo/repository.dart';
 import 'package:pds/core/utils/color_constant.dart';
 import 'package:flutter/services.dart';
 
- List<ReportOption> reportOptions = [];
+List<ReportOption> reportOptions = [];
 
 _showBottomSheet(
+  int index,
+  String screen,
   BuildContext context,
   String postuid,
 ) {
@@ -16,6 +18,10 @@ _showBottomSheet(
   double bottomSheetHeight = screenHeight * 0.75;
   TextEditingController otherTextData = TextEditingController();
   bool showOtherTextField = false;
+  otherTextData.clear();
+  reportOptions.forEach((option) {
+    option.selected = false;
+  });
   showModalBottomSheet(
     isScrollControlled: true,
     context: context,
@@ -56,7 +62,8 @@ _showBottomSheet(
                                   reportOptions[i].selected =
                                       ((i == index) ? value : false)!;
 
-                                  if (reportOptions[index].label == 'OTHER') {
+                                  if (reportOptions[index].properString ==
+                                      'Others') {
                                     showOtherTextField = value ?? false;
                                   } else {
                                     showOtherTextField = false;
@@ -74,7 +81,8 @@ _showBottomSheet(
                         padding: EdgeInsets.symmetric(horizontal: 20),
                         child: TextField(
                           inputFormatters: [
-                            LengthLimitingTextInputFormatter(3),
+                            LengthLimitingTextInputFormatter(250),
+                            FilteringTextInputFormatter.deny(RegExp(r'^\s+')),
                           ],
                           controller: otherTextData,
                           decoration: InputDecoration(
@@ -102,11 +110,18 @@ _showBottomSheet(
                               if (reportOptions[i].selected == true) {
                                 print("chck-${reportOptions[i].label}");
                                 _handleSubmit(
-                                    reportOptions[i].label, postuid, ctx);
+                                  index,
+                                  screen,
+                                  reportOptions[i].label,
+                                  postuid,
+                                  ctx,
+                                  ishandelsubmit: reportOptions[i].selected,
+                                );
                               }
                             }
                           } else if (otherTextData.text.isNotEmpty) {
-                            _handleSubmit(otherTextData, postuid, ctx,
+                            _handleSubmit(
+                                index, screen, otherTextData, postuid, ctx,
                                 othersDescription: 'othersDescription',
                                 otherTextData: otherTextData);
                           } else {
@@ -133,32 +148,57 @@ _showBottomSheet(
 }
 
 _handleSubmit(
+  int index,
+  String screen,
   content,
   String postuid,
   BuildContext context, {
+  bool? ishandelsubmit,
   String? othersDescription,
   TextEditingController? otherTextData,
 }) async {
-  print('Other content: $content');
-  print('postuid: $postuid');
+  print('Other content: $othersDescription');
+  print('postuid: $otherTextData');
+  print('postuid: $otherTextData');
   dynamic meesage;
-  if ((othersDescription?.length ?? 0) >= 3) {
+  if (othersDescription != null && othersDescription != "") {
+    if (otherTextData?.text.trim().isEmpty == true) {
+      CustomFlushBar().flushBar(
+          text: 'Report can\'t be just blank spaces',
+          context: context,
+          duration: 2,
+          backgroundColor: ColorConstant.primary_color);
+    } else if (otherTextData?.text.isEmpty == true) {
+      CustomFlushBar().flushBar(
+          text: 'Report can\'t be Empty',
+          context: context,
+          duration: 2,
+          backgroundColor: ColorConstant.primary_color);
+    } else if (((otherTextData?.text.length ?? 0) >= 250)) {
+      CustomFlushBar().flushBar(
+          text: 'Mex characters length 250',
+          context: context,
+          duration: 2,
+          backgroundColor: ColorConstant.primary_color);
+    } else {
+      Map<String, dynamic> parems = {
+        'postUid': postuid,
+        'reportType': 'OTHERS',
+        "othersDescription": otherTextData?.text,
+      };
+      meesage = await Repository().report_post(context, parems);
+    }
+  } else if (ishandelsubmit == true && content != 'OTHERS') {
+    Map<String, dynamic> parems = {'postUid': postuid, 'reportType': content};
+    meesage = await Repository().report_post(context, parems);
+  } else {
     CustomFlushBar().flushBar(
-        text: '',
+        text: 'Please Select Reason',
         context: context,
         duration: 2,
         backgroundColor: ColorConstant.primary_color);
-  } else if (othersDescription != null) {
-    Map<String, dynamic> parems = {
-      'postUid': postuid,
-      'reportType': 'OTHERS',
-      "othersDescription": content,
-    };
-    meesage = await Repository().report_post(context, parems);
-  } else {
-    Map<String, dynamic> parems = {'postUid': postuid, 'reportType': content};
-    meesage = await Repository().report_post(context, parems);
   }
+
   reportOptions.forEach((option) {
     option.selected = false;
   });
@@ -167,6 +207,11 @@ _handleSubmit(
     backgroundColor: ColorConstant.primary_color,
   );
   ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  dynamic data = {
+    'index': index,
+  };
+
+  Observable.instance.notifyObservers([screen], map: data);
   Navigator.pop(context);
 }
 
@@ -233,12 +278,8 @@ showPopupMenu1(
           child: GestureDetector(
             onTap: () async {
               Navigator.pop(context);
-              dynamic data = {
-                'index': index,
-              };
 
-              Observable.instance.notifyObservers([screen], map: data);
-              await _showBottomSheet(context, postuid);
+              await _showBottomSheet(index, screen, context, postuid);
             },
             child: Center(
               child: Text(
