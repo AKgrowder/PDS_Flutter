@@ -268,7 +268,7 @@ class ImageConstant {
   static String messagecheck = "assets/images/0_check.png";
   static String checksend = "assets/images/1_check.png";
   static String checkseen = "assets/images/2_check.png";
-
+    static String greenseen  = 'assets/images/grrenicon.png';
 
   /// end
 }
