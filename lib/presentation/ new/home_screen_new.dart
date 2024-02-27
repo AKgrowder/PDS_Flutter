@@ -240,7 +240,8 @@ class _HomeScreenNewState extends State<HomeScreenNew>
 
   @override
   void initState() {
-    Repository().get_all_master_report_type(context);
+    
+    
     Observable.instance.addObserver(this);
 
     super.initState();

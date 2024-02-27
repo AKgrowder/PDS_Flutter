@@ -178,7 +178,7 @@ _handleSubmit(
           backgroundColor: ColorConstant.primary_color);
     } else if (((otherTextData?.text.length ?? 0) >= 250)) {
       CustomFlushBar().flushBar(
-          text: 'Mex characters length 250',
+          text: 'Max characters length 250 allowed',
           context: context,
           duration: 2,
           backgroundColor: ColorConstant.primary_color);
