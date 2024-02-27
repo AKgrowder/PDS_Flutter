@@ -106,6 +106,10 @@ class _DmScreenState extends State<DmScreen> {
   TextEditingController Add_Comment = TextEditingController();
   String formattedDate = DateFormat('dd-MM-yyyy').format(now);
   List<StoryButtonData> buttonDatas = [];
+  // List<GetInboxMessagesModel> messages = [
+  //   // list of messages
+  // ];
+  List<String> selectedMessages = [];
 
   void onSendCallInvitationFinished(
     String code,
@@ -392,7 +396,8 @@ class _DmScreenState extends State<DmScreen> {
                   "message": data['object']['message'],
                   "createdDate": data['object']['createdAt'],
                   "messageType": data['object']['messageType'],
-                  "isDeleted": data['object']['isDeleted']
+                  "isDeleted": data['object']['isDeleted'],
+                  "isDelivered": data['object']['isDelivered']
                 };
 
                 Content content = Content.fromJson(mapDataAdd!);
@@ -817,6 +822,14 @@ class _DmScreenState extends State<DmScreen> {
                                                             // });
                                                           });
                                                         } else {}
+                                                        // getInboxMessagesModel?.object?.content?[index].message
+                                                        String message =
+                                                            "${getInboxMessagesModel?.object?.content?[index].message}";
+                                                        // messages[index];
+                                                        bool isSelected =
+                                                            selectedMessages
+                                                                .contains(
+                                                                    message);
 
                                                         ///
                                                         return Column(
@@ -846,14 +859,43 @@ class _DmScreenState extends State<DmScreen> {
                                                                         .userName !=
                                                                     User_Name
                                                                 ? GestureDetector(
-                                                                    onTap: () {
-                                                                      print(
-                                                                          "check Value-${getInboxMessagesModel?.object?.content?[index].userName}");
-                                                                      print(
-                                                                          "sdfsdfsdg-${User_Name}");
+                                                                    /*     onTap: () {
+                                                                      selectedMessages.length !=
+                                                                              0
+                                                                          ? setState(
+                                                                              () {
+                                                                              if (isSelected) {
+                                                                                selectedMessages.remove(message);
+                                                                                print("RemoveRemoveRemoveRemoveRemove=> 1");
+                                                                              } else {
+                                                                                print("AddAddAddAddAddAddAdd=> 1");
+                                                                                if (!isSelected) {
+                                                                                  print("AddAddAddAddAddAddAdd=> 2");
+                                                                                  selectedMessages.add(message);
+                                                                                }
+                                                                              }
+                                                                            })
+                                                                          : setState(
+                                                                              () {print("RemoveRemoveRemoveRemoveRemove=> 2");},
+                                                                            );
                                                                     },
+                                                                    onLongPress:
+                                                                        () {
+                                                                      if (!isSelected) {
+                                                                        setState(
+                                                                            () {
+                                                                          selectedMessages
+                                                                              .add(message);
+                                                                        });
+                                                                      }
+                                                                    }, */
+
                                                                     child:
                                                                         Container(
+                                                                      decoration: isSelected
+                                                                          ? BoxDecoration(
+                                                                              border: Border.all(color: Colors.blue))
+                                                                          : null,
                                                                       child:
                                                                           Padding(
                                                                         padding:
@@ -867,53 +909,6 @@ class _DmScreenState extends State<DmScreen> {
                                                                             crossAxisAlignment:
                                                                                 CrossAxisAlignment.start,
                                                                             children: [
-                                                                              /*   Row(
-                                                                            crossAxisAlignment:
-                                                                                CrossAxisAlignment.start,
-                                                                            mainAxisAlignment:
-                                                                                MainAxisAlignment.start,
-                                                                            children: [
-                                                                              Padding(
-                                                                                padding:
-                                                                                    const EdgeInsets.only(left: 10, right: 3),
-                                                                                child: getInboxMessagesModel?.object?.content?[index].userName != null
-                                                                                    ? CustomImageView(
-                                                                                        url: "${getInboxMessagesModel?.object?.content?[index].userProfilePic}",
-                                                                                        height: 20,
-                                                                                        radius: BorderRadius.circular(20),
-                                                                                        width: 20,
-                                                                                        fit: BoxFit.fill,
-                                                                                      )
-                                                                                    : CustomImageView(
-                                                                                        imagePath: ImageConstant.tomcruse,
-                                                                                        height: 20,
-                                                                                      ),
-                                                                              ),
-                                                                              Text(
-                                                                                "${getInboxMessagesModel?.object?.content?[index].userName}",
-                                                                                style: TextStyle(
-                                                                                    fontWeight: FontWeight.w400,
-                                                                                    color: Colors.black,
-                                                                                    fontFamily: "outfit",
-                                                                                    fontSize: 14),
-                                                                              ),
-                                                                              Spacer(),
-                                                                              Align(
-                                                                                alignment:
-                                                                                    Alignment.centerRight,
-                                                                                child:
-                                                                                    Padding(
-                                                                                  padding: const EdgeInsets.only(right: 16),
-                                                                                  child: Text(
-                                                                                    customFormat(parsedDateTime),
-                                                                                    // maxLines: 3,
-                                                                                    textScaleFactor: 1.0,
-                                                                                    style: TextStyle(fontWeight: FontWeight.bold, color: Colors.grey, fontFamily: "outfit", fontSize: 12),
-                                                                                  ),
-                                                                                ),
-                                                                              ),
-                                                                            ],
-                                                                          ), */
                                                                               SizedBox(
                                                                                 height: 10,
                                                                               ),
@@ -1790,9 +1785,9 @@ class _DmScreenState extends State<DmScreen> {
                                         ScaffoldMessenger.of(context)
                                             .showSnackBar(snackBar);
                                       } else {
-                                        if (widget.ChatInboxUid == "") {
-                                          print("New chat ");
-                                        } else {
+                                        // if (widget.ChatInboxUid == "") {
+                                        //   print("New chat ");
+                                        // } else {
                                           checkGuestUser();
                                           print(
                                               "this Data Get-${widget.ChatInboxUid}");
@@ -1856,7 +1851,10 @@ class _DmScreenState extends State<DmScreen> {
                                                                 ['messageType'],
                                                         "isDeleted":
                                                             jsonString['object']
-                                                                ['isDeleted']
+                                                                ['isDeleted'],
+                                                        "isDelivered":
+                                                            jsonString['object']
+                                                                ['isDelivered']
                                                       };
 
                                                       Content content =
@@ -1897,10 +1895,14 @@ class _DmScreenState extends State<DmScreen> {
                                               "userChatInboxUid":
                                                   "${widget.ChatInboxUid}",
                                               //  "${widget.Room_ID}",
-                                              "userCode": "${UserCode}"
+                                              "userCode": "${UserCode}",
+                                              "isDelivered":
+                                                  widget.online == true
+                                                      ? true
+                                                      : false
                                             }),
                                           );
-                                        }
+                                        // }
                                       }
                                     } else {
                                       SnackBar snackBar = SnackBar(
