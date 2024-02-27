@@ -3297,6 +3297,7 @@ class Repository {
   }
 
   get_all_master_report_type(BuildContext context) async {
+    reportOptions.clear();
     final responce = await apiServices.getApiCall(
         '${Config.get_all_master_report_type}', context);
     var jsonString = json.decode(responce.body);
