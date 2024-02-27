@@ -62,8 +62,10 @@ _showBottomSheet(
                                   reportOptions[i].selected =
                                       ((i == index) ? value : false)!;
 
+
                                   if (reportOptions[index].properString ==
                                       'Others') {
+
                                     showOtherTextField = value ?? false;
                                   } else {
                                     showOtherTextField = false;
