@@ -4061,24 +4061,29 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                     Icons.more_vert_rounded,
                                                   ),
                                                 )
-                                              : GestureDetector(
-                                                  key: buttonKey,
-                                                  onTap: () async {
-                                                    showPopupMenu1(
-                                                        context,
-                                                        index,
-                                                        buttonKey,
-                                                        getAllPostData
-                                                            .object?[index]
-                                                            .postUid,
-                                                        '_ProfileScreenState');
-                                                  },
-                                                  child: Container(
-                                                      height: 25,
-                                                      width: 40,
-                                                      color: Colors.transparent,
-                                                      child: Icon(Icons
-                                                          .more_vert_rounded)))
+                                              : getAllPostData.object?[index]
+                                                          .userUid ==
+                                                      User_ID
+                                                  ? SizedBox()
+                                                  : GestureDetector(
+                                                      key: buttonKey,
+                                                      onTap: () async {
+                                                        showPopupMenu1(
+                                                            context,
+                                                            index,
+                                                            buttonKey,
+                                                            getAllPostData
+                                                                .object?[index]
+                                                                .postUid,
+                                                            '_ProfileScreenState');
+                                                      },
+                                                      child: Container(
+                                                          height: 25,
+                                                          width: 40,
+                                                          color: Colors
+                                                              .transparent,
+                                                          child: Icon(Icons
+                                                              .more_vert_rounded)))
                                         ],
                                       ),
                                     ),
@@ -5670,39 +5675,55 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                 (value) => Get_UserToken());
                                             //
                                           },
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Container(
-                                                // color: Colors.amber,
-                                                child: Text(
-                                                  "${getAllPostData.object?[index].postUserName}",
-                                                  style: TextStyle(
-                                                      fontSize: 20,
-                                                      fontFamily: "outfit",
-                                                      fontWeight:
-                                                          FontWeight.bold),
+                                          child: Container(
+                                            // color: Colors.purple,
+                                            // width: 300,
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Container(
+                                                  // color: Colors.red,
+                                                  child: Text(
+                                                    "${getAllPostData.object?[index].postUserName}",
+                                                    style: TextStyle(
+                                                        fontSize: 20,
+                                                        fontFamily: "outfit",
+                                                        fontWeight:
+                                                            FontWeight.bold),
+                                                  ),
                                                 ),
-                                              ),
-                                              getAllPostData.object?[index]
-                                                          .userUid ==
-                                                      User_ID
-                                                  ? GestureDetector(
-                                                      key: buttonKey,
-                                                      onTap: () {
-                                                        showPopupMenu(
-                                                            context,
-                                                            index,
-                                                            buttonKey,
-                                                            getAllPostData);
-                                                      },
-                                                      child: Icon(
-                                                        Icons.more_vert_rounded,
-                                                      ),
-                                                    )
-                                                  : SizedBox()
-                                            ],
+                                                // Spacer(),
+                                                getAllPostData.object?[index]
+                                                            .userUid ==
+                                                        User_ID
+                                                    ? Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                    .only(
+                                                                left: 150),
+                                                        child: GestureDetector(
+                                                          key: buttonKey,
+                                                          onTap: () {
+                                                            showPopupMenu(
+                                                                context,
+                                                                index,
+                                                                buttonKey,
+                                                                getAllPostData);
+                                                          },
+                                                          child: Container(
+                                                            // color: Colors.green,
+                                                            child: Icon(
+                                                              Icons
+                                                                  .more_vert_rounded,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      )
+                                                    : SizedBox()
+                                              ],
+                                            ),
                                           ),
                                         ),
                                         //FIndText
@@ -5715,23 +5736,28 @@ class _ProfileScreenState extends State<ProfileScreen>
                                         ),
                                       ],
                                     ),
-                                    trailing: GestureDetector(
-                                        key: buttonKey,
-                                        onTap: () async {
-                                          showPopupMenu1(
-                                              context,
-                                              index,
-                                              buttonKey,
-                                              getAllPostData
-                                                  .object?[index].postUid,
-                                              '_ProfileScreenState');
-                                        },
-                                        child: Container(
-                                            height: 25,
-                                            width: 40,
-                                            color: Colors.transparent,
-                                            child:
-                                                Icon(Icons.more_vert_rounded))),
+                                    trailing: getAllPostData
+                                                .object?[index].userUid !=
+                                            User_ID
+                                        ? GestureDetector(
+                                            key: buttonKey,
+                                            onTap: () async {
+                                              showPopupMenu1(
+                                                  context,
+                                                  index,
+                                                  buttonKey,
+                                                  getAllPostData
+                                                      .object?[index].postUid,
+                                                  '_ProfileScreenState');
+                                            },
+                                            child: Container(
+                                                height: 25,
+                                                width: 40,
+                                                color: Color.fromARGB(
+                                                    219, 189, 3, 3),
+                                                child: Icon(
+                                                    Icons.more_vert_rounded)))
+                                        : SizedBox(),
                                   ),
                                 ),
                                 SizedBox(
