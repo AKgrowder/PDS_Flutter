@@ -5,6 +5,7 @@ import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:pds/API/Bloc/System_Config_Bloc/system_config_cubit.dart';
 import 'package:pds/API/Bloc/System_Config_Bloc/system_config_state.dart';
 import 'package:pds/API/Model/System_Config_model/system_config_model.dart';
+import 'package:pds/API/Repo/repository.dart';
 import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/core/utils/sharedPreferences.dart';
 import 'package:flutter/material.dart';
@@ -61,6 +62,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   void initState() {
+    Repository().get_all_master_report_type(context);
     super.initState();
     initDynamicLinks(context);
     getData();
