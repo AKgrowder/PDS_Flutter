@@ -147,4 +147,6 @@ class Config {
   static const String blockUser = "user/api/block_unblock_user";
   static const String blockUserList = "user/api/get_all_blocked_users";
   static const String reportpost = "user/api/report_post";
+  static const String get_all_master_report_type = "user/api/get_all_master_report_type";
+
 }
