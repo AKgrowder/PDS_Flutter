@@ -171,11 +171,14 @@ class _LoginScreenState extends State<LoginScreen> {
                     ), (route) => false);
                   }
 
-                  SnackBar snackBar = SnackBar(
+                  if (state.loginModel.object?.verified == true) {
+                    SnackBar snackBar = SnackBar(
                     content: Text(state.loginModel.message ?? ""),
                     backgroundColor: ColorConstant.primary_color,
                   );
                   ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                  } 
+                  
                   print('check Status--${state.loginModel.message}');
                 }
               }
