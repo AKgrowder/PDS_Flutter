@@ -21,7 +21,7 @@ _showBottomSheet(
   bool showOtherTextField = false;
   String? selcted;
   String? selcted1;
-
+  
   otherTextData.clear();
   reportOptions.forEach((option) {
     option.selected = false;

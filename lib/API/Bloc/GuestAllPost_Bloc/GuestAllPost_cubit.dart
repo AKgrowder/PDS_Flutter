@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pds/API/ApiService/ApiService.dart';
 import 'package:pds/API/Bloc/GuestAllPost_Bloc/GuestAllPost_state.dart';
 import 'package:pds/API/Repo/repository.dart';
+import 'package:pds/presentation/%20new/commenwigetReposrt.dart';
 
 class GetGuestAllPostCubit extends Cubit<GetGuestAllPostState> {
   dynamic gestUserData;
@@ -481,6 +482,26 @@ class GetGuestAllPostCubit extends Cubit<GetGuestAllPostState> {
       }
     } catch (e) {
       emit(GetGuestAllPostErrorState(acceptRejectInvitationModel));
+    }
+  }
+
+  Future<void> get_all_master_report_typeApiMethod(BuildContext context) async {
+    dynamic get_all_master_report_type;
+   
+    try {
+      emit(GetGuestAllPostLoadingState());
+      get_all_master_report_type =
+          await Repository().get_all_master_report_type(context);
+  /*     get_all_master_report_type.forEach((e) {
+       
+      }); */
+       /* reportOptions.add(ReportOption(
+          properString: e.toString(),
+          label: '${e.replaceAll(" ", '_').toUpperCase()}',
+        )) */;
+      emit(Getallmasterreporttype(get_all_master_report_type));
+    } catch (e) {
+      emit(GetGuestAllPostErrorState(e));
     }
   }
 }
