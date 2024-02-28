@@ -338,8 +338,8 @@ class _SettingScreenState extends State<SettingScreen> {
                         if (index == 1 ||
                             index == 4 ||
                             index == 0 ||
-                            index == 3 ||
-                            index == 10) {
+                            index == 3 /* ||
+                            index == 10 */) {
                           return SizedBox();
                         }
                         return GestureDetector(
@@ -522,7 +522,7 @@ class _SettingScreenState extends State<SettingScreen> {
                                     children: [
                                       Padding(
                                         padding: const EdgeInsets.only(
-                                            left: 15, right: 15),
+                                            left: 10, right: 10),
                                         child: Container(
                                           height: 25,
                                           width: 25,

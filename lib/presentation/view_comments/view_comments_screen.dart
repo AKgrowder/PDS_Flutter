@@ -65,7 +65,7 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
   String? UserLogin_ID;
   ImagePicker picker = ImagePicker();
   XFile? pickedImageFile;
-  ScrollController  scrollController = ScrollController();
+  ScrollController scrollController = ScrollController();
   ScrollController scrollController1 = ScrollController();
   bool isScroll = false;
   bool AddNewData = false;
@@ -276,7 +276,7 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                   ),
                                 ),
                                 Container(
-                                  width: _width / 1.2,
+                                  width: _width / 1.3,
                                   child: Text(
                                     "${widget.Title}  ",
                                     style: TextStyle(
@@ -424,9 +424,39 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                                                 child:
                                                                     GestureDetector(
                                                                   onTap: () {
-                                                                    print(
-                                                                        "recieve user id -- ${AllChatmodelData?.object?.messageOutputList?.content?[index].uid}");
-                                                                    Navigator.push(
+                                                                    AllChatmodelData
+                                                                        ?.object
+                                                                        ?.blockedUsers
+                                                                        ?.forEach(
+                                                                            (element) {
+                                                                      if (element ==
+                                                                          AllChatmodelData
+                                                                              ?.object
+                                                                              ?.messageOutputList
+                                                                              ?.content?[index]
+                                                                              .userCode) {
+                                                                        SnackBar
+                                                                            snackBar =
+                                                                            SnackBar(
+                                                                          content:
+                                                                              Text('You Can block This User'),
+                                                                          backgroundColor:
+                                                                              ColorConstant.primary_color,
+                                                                        );
+                                                                        ScaffoldMessenger.of(context)
+                                                                            .showSnackBar(snackBar);
+                                                                      } else {
+                                                                        Navigator.push(
+                                                                            context,
+                                                                            MaterialPageRoute(builder:
+                                                                                (context) {
+                                                                          return ProfileScreen(
+                                                                              User_ID: "${AllChatmodelData?.object?.messageOutputList?.content?[index].userCode}",
+                                                                              isFollowing: "");
+                                                                        }));
+                                                                      }
+                                                                    });
+                                                                    /* Navigator.push(
                                                                         context,
                                                                         MaterialPageRoute(builder:
                                                                             (context) {
@@ -435,7 +465,7 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                                                               "${AllChatmodelData?.object?.messageOutputList?.content?[index].userCode}",
                                                                           isFollowing:
                                                                               "");
-                                                                    }));
+                                                                    })); */
                                                                   },
                                                                   child: Column(
                                                                     crossAxisAlignment:
@@ -1617,4 +1647,11 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
       }
     }
   }
+}
+
+bool compareLists(List<String> list1, List<String> list2) {
+  // Sort the lists before comparison to ensure order doesn't affect the comparison
+  list1.sort();
+  list2.sort();
+  return list1.toString() == list2.toString();
 }
