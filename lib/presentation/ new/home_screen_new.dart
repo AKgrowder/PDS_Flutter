@@ -240,8 +240,6 @@ class _HomeScreenNewState extends State<HomeScreenNew>
 
   @override
   void initState() {
-    
-    
     Observable.instance.addObserver(this);
 
     super.initState();
@@ -257,7 +255,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
 
   @override
   update(Observable observable, String? notifyName, Map? map) async {
-  AllGuestPostRoomData?.object?.content?[map?['index']].isReports = true;
+    AllGuestPostRoomData?.object?.content?[map?['index']].isReports = true;
 
     setState(() {});
   }
