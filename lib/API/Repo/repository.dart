@@ -3297,14 +3297,17 @@ class Repository {
   }
 
   get_all_master_report_type(BuildContext context) async {
+    reportOptions.clear();
     final responce = await apiServices.getApiCall(
         '${Config.get_all_master_report_type}', context);
     var jsonString = json.decode(responce.body);
     print('json stering -$jsonString');
     jsonString['object'].forEach((e) {
-   /*    String properString = e.replaceAll(' ', '_').toUpperCase(); */
-      reportOptions
-          .add(ReportOption( properString: e.toString(),label: '${e.replaceAll(" ",'_').toUpperCase()}',));
+      /*    String properString = e.replaceAll(' ', '_').toUpperCase(); */
+      reportOptions.add(ReportOption(
+        properString: e.toString(),
+        label: '${e.replaceAll(" ", '_').toUpperCase()}',
+      ));
     });
     /*  List<ReportOption> reportOptions1 = jsonString['object'].map((String option) {
       String properString = option.replaceAll(' ', '_').toUpperCase();

@@ -1843,6 +1843,8 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                           15),
                                                                   child:
                                                                       Container(
+                                                                        alignment: Alignment.topLeft,
+                                                                        margin: EdgeInsets.only(left: 13),
                                                                     child:
                                                                         LinkifyText(
                                                                       "${aboutMe.text}",
@@ -4059,26 +4061,32 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                   },
                                                   child: Icon(
                                                     Icons.more_vert_rounded,
+                                                    size: 25,
                                                   ),
                                                 )
-                                              : GestureDetector(
-                                                  key: buttonKey,
-                                                  onTap: () async {
-                                                    showPopupMenu1(
-                                                        context,
-                                                        index,
-                                                        buttonKey,
-                                                        getAllPostData
-                                                            .object?[index]
-                                                            .postUid,
-                                                        '_ProfileScreenState');
-                                                  },
-                                                  child: Container(
-                                                      height: 25,
-                                                      width: 40,
-                                                      color: Colors.transparent,
-                                                      child: Icon(Icons
-                                                          .more_vert_rounded)))
+                                              : getAllPostData.object?[index]
+                                                          .userUid ==
+                                                      User_ID
+                                                  ? SizedBox()
+                                                  : GestureDetector(
+                                                      key: buttonKey,
+                                                      onTap: () async {
+                                                        showPopupMenu1(
+                                                            context,
+                                                            index,
+                                                            buttonKey,
+                                                            getAllPostData
+                                                                .object?[index]
+                                                                .postUid,
+                                                            '_ProfileScreenState');
+                                                      },
+                                                      child: Container(
+                                                          height: 25,
+                                                          width: 40,
+                                                          color: Colors
+                                                              .transparent,
+                                                          child: Icon(Icons
+                                                              .more_vert_rounded)))
                                         ],
                                       ),
                                     ),
@@ -5591,148 +5599,171 @@ class _ProfileScreenState extends State<ProfileScreen>
                                 ),
                                 Container(
                                   height: 60,
+                                  // color: Colors.amber,
                                   child: ListTile(
-                                    leading: GestureDetector(
-                                      onTap: () async {
-                                        /*   await BlocProvider.of<GetGuestAllPostCubit>(
+                                      leading: GestureDetector(
+                                        onTap: () async {
+                                          /*   await BlocProvider.of<GetGuestAllPostCubit>(
                                         context)
                                     .seetinonExpried(context); */
-                                        Navigator.push(context,
-                                            MaterialPageRoute(
-                                                builder: (context) {
-                                          return MultiBlocProvider(
-                                              providers: [
-                                                BlocProvider<NewProfileSCubit>(
-                                                  create: (context) =>
-                                                      NewProfileSCubit(),
-                                                ),
-                                              ],
-                                              child: ProfileScreen(
-                                                  User_ID:
-                                                      "${getAllPostData.object?[index].userUid}",
-                                                  isFollowing: getAllPostData
-                                                      .object?[index]
-                                                      .isFollowing));
-                                        })).then((value) => Get_UserToken());
-                                        //
-                                      },
-                                      child: getAllPostData.object?[index]
-                                                      .userProfilePic !=
-                                                  null &&
-                                              getAllPostData.object?[index]
-                                                      .userProfilePic !=
-                                                  ""
-                                          ? CircleAvatar(
-                                              backgroundImage: NetworkImage(
-                                                  "${getAllPostData.object?[index].userProfilePic}"),
-                                              backgroundColor: Colors.white,
-                                              radius: 25,
-                                            )
-                                          : CustomImageView(
-                                              imagePath: ImageConstant.tomcruse,
-                                              height: 50,
-                                              width: 50,
-                                              fit: BoxFit.fill,
-                                              radius: BorderRadius.circular(25),
-                                            ),
-                                    ),
-                                    title: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        // SizedBox(
-                                        //   height: 6,
-                                        // ),
-                                        GestureDetector(
-                                          onTap: () async {
-                                            /*    await BlocProvider.of<GetGuestAllPostCubit>(
+                                          Navigator.push(context,
+                                              MaterialPageRoute(
+                                                  builder: (context) {
+                                            return MultiBlocProvider(
+                                                providers: [
+                                                  BlocProvider<
+                                                      NewProfileSCubit>(
+                                                    create: (context) =>
+                                                        NewProfileSCubit(),
+                                                  ),
+                                                ],
+                                                child: ProfileScreen(
+                                                    User_ID:
+                                                        "${getAllPostData.object?[index].userUid}",
+                                                    isFollowing: getAllPostData
+                                                        .object?[index]
+                                                        .isFollowing));
+                                          })).then((value) => Get_UserToken());
+                                          //
+                                        },
+                                        child: getAllPostData.object?[index]
+                                                        .userProfilePic !=
+                                                    null &&
+                                                getAllPostData.object?[index]
+                                                        .userProfilePic !=
+                                                    ""
+                                            ? CircleAvatar(
+                                                backgroundImage: NetworkImage(
+                                                    "${getAllPostData.object?[index].userProfilePic}"),
+                                                backgroundColor: Colors.white,
+                                                radius: 25,
+                                              )
+                                            : CustomImageView(
+                                                imagePath:
+                                                    ImageConstant.tomcruse,
+                                                height: 50,
+                                                width: 50,
+                                                fit: BoxFit.fill,
+                                                radius:
+                                                    BorderRadius.circular(25),
+                                              ),
+                                      ),
+                                      title: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          // SizedBox(
+                                          //   height: 6,
+                                          // ),
+                                          GestureDetector(
+                                            onTap: () async {
+                                              /*    await BlocProvider.of<GetGuestAllPostCubit>(
                                             context)
                                         .seetinonExpried(context); */
-                                            Navigator.push(context,
-                                                MaterialPageRoute(
-                                                    builder: (context) {
-                                              return MultiBlocProvider(
-                                                  providers: [
-                                                    BlocProvider<
-                                                        NewProfileSCubit>(
-                                                      create: (context) =>
-                                                          NewProfileSCubit(),
-                                                    ),
-                                                  ],
-                                                  child: ProfileScreen(
-                                                      User_ID:
-                                                          "${getAllPostData.object?[index].userUid}",
-                                                      isFollowing:
-                                                          getAllPostData
-                                                              .object?[index]
-                                                              .isFollowing));
-                                            })).then(
-                                                (value) => Get_UserToken());
-                                            //
-                                          },
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Container(
-                                                // color: Colors.amber,
-                                                child: Text(
-                                                  "${getAllPostData.object?[index].postUserName}",
-                                                  style: TextStyle(
-                                                      fontSize: 20,
-                                                      fontFamily: "outfit",
-                                                      fontWeight:
-                                                          FontWeight.bold),
+                                              Navigator.push(context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) {
+                                                return MultiBlocProvider(
+                                                    providers: [
+                                                      BlocProvider<
+                                                          NewProfileSCubit>(
+                                                        create: (context) =>
+                                                            NewProfileSCubit(),
+                                                      ),
+                                                    ],
+                                                    child: ProfileScreen(
+                                                        User_ID:
+                                                            "${getAllPostData.object?[index].userUid}",
+                                                        isFollowing:
+                                                            getAllPostData
+                                                                .object?[index]
+                                                                .isFollowing));
+                                              })).then(
+                                                  (value) => Get_UserToken());
+                                              //
+                                            },
+                                            child: Row(
+                                              children: [
+                                                Container(
+                                                  // color: Colors.red,
+                                                  child: Text(
+                                                    "${getAllPostData.object?[index].postUserName}",
+                                                    style: TextStyle(
+                                                        fontSize: 20,
+                                                        fontFamily: "outfit",
+                                                        fontWeight:
+                                                            FontWeight.bold),
+                                                  ),
+                                                ),
+                                                /*  Spacer(),
+                                                getAllPostData.object?[index]
+                                                            .userUid ==
+                                                        User_ID
+                                                    ? GestureDetector(
+                                                        key: buttonKey,
+                                                        onTap: () {
+                                                          showPopupMenu(
+                                                              context,
+                                                              index,
+                                                              buttonKey,
+                                                              getAllPostData);
+                                                        },
+                                                        child: Icon(
+                                                          Icons.abc,
+                                                        ),
+                                                      )
+                                                    : SizedBox() */
+                                              ],
+                                            ),
+                                          ),
+                                          //FIndText
+                                          Text(
+                                            getTimeDifference(parsedDateTime),
+                                            style: TextStyle(
+                                              fontSize: 12,
+                                              fontFamily: "outfit",
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      trailing: getAllPostData
+                                                  .object?[index].userUid !=
+                                              User_ID
+                                          ? GestureDetector(
+                                              key: buttonKey,
+                                              onTap: () async {
+                                                showPopupMenu1(
+                                                    context,
+                                                    index,
+                                                    buttonKey,
+                                                    getAllPostData
+                                                        .object?[index].postUid,
+                                                    '_ProfileScreenState');
+                                              },
+                                              child: Container(
+                                                  height: 25,
+                                                  width: 40,
+                                                  /*   color: Color.fromARGB(
+                                                    219, 189, 3, 3), */
+                                                  child: Icon(
+                                                      Icons.more_vert_rounded)))
+                                          : Container(
+                                              height: 25,
+                                              width: 40,
+                                              child: GestureDetector(
+                                                key: buttonKey,
+                                                onTap: () {
+                                                  showPopupMenu(
+                                                      context,
+                                                      index,
+                                                      buttonKey,
+                                                      getAllPostData);
+                                                },
+                                                child: Icon(
+                                                  Icons.more_vert_outlined,
                                                 ),
                                               ),
-                                              getAllPostData.object?[index]
-                                                          .userUid ==
-                                                      User_ID
-                                                  ? GestureDetector(
-                                                      key: buttonKey,
-                                                      onTap: () {
-                                                        showPopupMenu(
-                                                            context,
-                                                            index,
-                                                            buttonKey,
-                                                            getAllPostData);
-                                                      },
-                                                      child: Icon(
-                                                        Icons.more_vert_rounded,
-                                                      ),
-                                                    )
-                                                  : SizedBox()
-                                            ],
-                                          ),
-                                        ),
-                                        //FIndText
-                                        Text(
-                                          getTimeDifference(parsedDateTime),
-                                          style: TextStyle(
-                                            fontSize: 12,
-                                            fontFamily: "outfit",
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    trailing: GestureDetector(
-                                        key: buttonKey,
-                                        onTap: () async {
-                                          showPopupMenu1(
-                                              context,
-                                              index,
-                                              buttonKey,
-                                              getAllPostData
-                                                  .object?[index].postUid,
-                                              '_ProfileScreenState');
-                                        },
-                                        child: Container(
-                                            height: 25,
-                                            width: 40,
-                                            color: Colors.transparent,
-                                            child:
-                                                Icon(Icons.more_vert_rounded))),
-                                  ),
+                                            )),
                                 ),
                                 SizedBox(
                                   height: 10,

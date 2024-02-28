@@ -5,10 +5,13 @@ import 'package:flutter_observer/Observable.dart';
 import 'package:pds/API/Repo/repository.dart';
 import 'package:pds/core/utils/color_constant.dart';
 import 'package:flutter/services.dart';
+import 'package:pds/presentation/%20new/newbottembar.dart';
 
- List<ReportOption> reportOptions = [];
+List<ReportOption> reportOptions = [];
 
 _showBottomSheet(
+  int index,
+  String screen,
   BuildContext context,
   String postuid,
 ) {
@@ -16,6 +19,13 @@ _showBottomSheet(
   double bottomSheetHeight = screenHeight * 0.75;
   TextEditingController otherTextData = TextEditingController();
   bool showOtherTextField = false;
+  String? selcted;
+  String? selcted1;
+
+  otherTextData.clear();
+  reportOptions.forEach((option) {
+    option.selected = false;
+  });
   showModalBottomSheet(
     isScrollControlled: true,
     context: context,
@@ -56,7 +66,8 @@ _showBottomSheet(
                                   reportOptions[i].selected =
                                       ((i == index) ? value : false)!;
 
-                                  if (reportOptions[index].label == 'OTHER') {
+                                  if (reportOptions[index].properString ==
+                                      'Others') {
                                     showOtherTextField = value ?? false;
                                   } else {
                                     showOtherTextField = false;
@@ -73,8 +84,10 @@ _showBottomSheet(
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: 20),
                         child: TextField(
+                          maxLines: null,
                           inputFormatters: [
-                            LengthLimitingTextInputFormatter(3),
+                            LengthLimitingTextInputFormatter(250),
+                            FilteringTextInputFormatter.deny(RegExp(r'^\s+')),
                           ],
                           controller: otherTextData,
                           decoration: InputDecoration(
@@ -93,28 +106,105 @@ _showBottomSheet(
                         style: ButtonStyle(
                             backgroundColor: MaterialStatePropertyAll(
                                 ColorConstant.primary_color)),
-                        onPressed: () {
+                        onPressed: () async {
                           print(
-                              "chck Data -${reportOptions.any((option) => option.selected)}");
-                          if (reportOptions.any((option) => option.selected) ==
-                              true) {
-                            for (int i = 0; i < reportOptions.length; i++) {
-                              if (reportOptions[i].selected == true) {
-                                print("chck-${reportOptions[i].label}");
-                                _handleSubmit(
-                                    reportOptions[i].label, postuid, ctx);
+                              "dffsdfd-${reportOptions.any((element) => element.selected) == true}");
+                          for (int i = 0; i < reportOptions.length; i++) {
+                            if (reportOptions[i].selected == true) {
+                              selcted = reportOptions[i].properString;
+                              selcted1 = reportOptions[i].label;
+                              print(
+                                  "otherTextData.text.length-${otherTextData.text.length}");
+                              print("onlu one -$selcted");
+                              print("onlu one1 -$selcted1");
+                            }
+                          }
+                          if (reportOptions
+                                      .any((element) => element.selected) ==
+                                  true &&
+                              selcted == 'Others') {
+                            if (otherTextData.text.isEmpty) {
+                              CustomFlushBar().flushBar(
+                                  text: 'Report Reason can\'t be blank',
+                                  context: context,
+                                  duration: 2,
+                                  backgroundColor: ColorConstant.primary_color);
+                            } else if ((otherTextData.text.length ?? 0) > 250) {
+                              CustomFlushBar().flushBar(
+                                  text: 'Max characters length 250 allowed',
+                                  context: context,
+                                  duration: 2,
+                                  backgroundColor: ColorConstant.primary_color);
+                            } else {
+                              Map<String, dynamic> parems = {
+                                'postUid': postuid,
+                                'reportType': 'OTHERS',
+                                "othersDescription": otherTextData.text,
+                              };
+                              dynamic meesage = await Repository()
+                                  .report_post(context, parems);
+                              SnackBar snackBar = SnackBar(
+                                content: Text(meesage.object),
+                                backgroundColor: ColorConstant.primary_color,
+                              );
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(snackBar);
+                              dynamic data = {
+                                'index': index,
+                              };
+                              Observable.instance
+                                  .notifyObservers([screen], map: data);
+
+                              if (screen == '_OpenSavePostImageState') {
+                                Navigator.pushAndRemoveUntil(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          NewBottomBar(buttomIndex: 0),
+                                    ),
+                                    (route) => false);
+                              } else {
+                                Navigator.pop(context);
                               }
                             }
-                          } else if (otherTextData.text.isNotEmpty) {
-                            _handleSubmit(otherTextData, postuid, ctx,
-                                othersDescription: 'othersDescription',
-                                otherTextData: otherTextData);
-                          } else {
+                          } else if (reportOptions
+                                  .any((element) => element.selected) ==
+                              false) {
                             CustomFlushBar().flushBar(
                                 text: 'Please Select Reason',
                                 context: ctx,
                                 duration: 2,
                                 backgroundColor: ColorConstant.primary_color);
+                          } else {
+                            Map<String, dynamic> parems = {
+                              'postUid': postuid,
+                              'reportType': selcted1
+                            };
+                            dynamic meesage =
+                                await Repository().report_post(context, parems);
+                            SnackBar snackBar = SnackBar(
+                              content: Text(meesage.object),
+                              backgroundColor: ColorConstant.primary_color,
+                            );
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(snackBar);
+                            dynamic data = {
+                              'index': index,
+                            };
+                            print("rthis is the Data Get-${screen}");
+                            Observable.instance
+                                .notifyObservers([screen], map: data);
+                            if (screen == '_OpenSavePostImageState') {
+                              Navigator.pushAndRemoveUntil(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        NewBottomBar(buttomIndex: 0),
+                                  ),
+                                  (route) => false);
+                            } else {
+                              Navigator.pop(context);
+                            }
                           }
                         },
                         child: Text('Submit'),
@@ -130,44 +220,6 @@ _showBottomSheet(
       );
     },
   );
-}
-
-_handleSubmit(
-  content,
-  String postuid,
-  BuildContext context, {
-  String? othersDescription,
-  TextEditingController? otherTextData,
-}) async {
-  print('Other content: $content');
-  print('postuid: $postuid');
-  dynamic meesage;
-  if ((othersDescription?.length ?? 0) >= 3) {
-    CustomFlushBar().flushBar(
-        text: '',
-        context: context,
-        duration: 2,
-        backgroundColor: ColorConstant.primary_color);
-  } else if (othersDescription != null) {
-    Map<String, dynamic> parems = {
-      'postUid': postuid,
-      'reportType': 'OTHERS',
-      "othersDescription": content,
-    };
-    meesage = await Repository().report_post(context, parems);
-  } else {
-    Map<String, dynamic> parems = {'postUid': postuid, 'reportType': content};
-    meesage = await Repository().report_post(context, parems);
-  }
-  reportOptions.forEach((option) {
-    option.selected = false;
-  });
-  SnackBar snackBar = SnackBar(
-    content: Text(meesage.object),
-    backgroundColor: ColorConstant.primary_color,
-  );
-  ScaffoldMessenger.of(context).showSnackBar(snackBar);
-  Navigator.pop(context);
 }
 
 class ReportOption {
@@ -233,12 +285,8 @@ showPopupMenu1(
           child: GestureDetector(
             onTap: () async {
               Navigator.pop(context);
-              dynamic data = {
-                'index': index,
-              };
 
-              Observable.instance.notifyObservers([screen], map: data);
-              await _showBottomSheet(context, postuid);
+              await _showBottomSheet(index, screen, context, postuid);
             },
             child: Center(
               child: Text(
