@@ -414,8 +414,8 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                                                 MainAxisAlignment.center,
                                             children: [
                                               Container(
-                                                width: 300,
-                                                // color: Colors.amber,
+                                                width: _width/1.4,
+                                                // color: Colors.red,
                                                 child: Row(
                                                   children: [
                                                     GestureDetector(
