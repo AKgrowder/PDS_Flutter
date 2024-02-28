@@ -3193,9 +3193,15 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> with Observer {
                                                         height: 18,
                                                         color: Colors.white,
                                                       )
-                                                    : Image.asset(
-                                                        ImageConstant.Savefill,
+                                                    :uuid == null?
+                                                     Image.asset(
+                                                        ImageConstant.savePin,
                                                         height: 18,
+                                                        color: Colors.white,
+                                                      )
+                                                    :  Image.asset(
+                                                        ImageConstant.Savefill,
+                                                        height: 20,
                                                       )
 
                                                 // color: Colors.white,
