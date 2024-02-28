@@ -73,7 +73,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:video_player/video_player.dart';
 import 'package:visibility_detector/visibility_detector.dart';
-
+import 'package:flutter/foundation.dart' as foundation;
 // import 'package:flutter_langdetect/flutter_langdetect.dart' as langdetect;
 import '../../API/Model/Get_all_blog_Model/get_all_blog_model.dart';
 import '../../API/Model/UserTagModel/UserTag_model.dart';
@@ -1938,11 +1938,12 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                             SizedBox(
                               height: 15,
                             ),
+                         Platform.isIOS == true ? SizedBox():
                             storyButtons == null
                                 ? Container(
                                     height: 40,
                                     width: 200,
-                                    color: Colors.amber,
+                                    color: const Color.fromARGB(255, 255, 255, 255),
                                   )
                                 : Container(
                                     height: 90,
