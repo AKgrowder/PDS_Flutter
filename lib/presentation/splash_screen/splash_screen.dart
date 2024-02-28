@@ -62,7 +62,6 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   void initState() {
-    Repository().get_all_master_report_type(context);
     super.initState();
     initDynamicLinks(context);
     getData();
