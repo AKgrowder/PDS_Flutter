@@ -5,6 +5,7 @@ import 'package:flutter_observer/Observable.dart';
 import 'package:pds/API/Repo/repository.dart';
 import 'package:pds/core/utils/color_constant.dart';
 import 'package:flutter/services.dart';
+import 'package:pds/presentation/%20new/newbottembar.dart';
 
 List<ReportOption> reportOptions = [];
 
@@ -18,6 +19,9 @@ _showBottomSheet(
   double bottomSheetHeight = screenHeight * 0.75;
   TextEditingController otherTextData = TextEditingController();
   bool showOtherTextField = false;
+  String? selcted;
+  String? selcted1;
+
   otherTextData.clear();
   reportOptions.forEach((option) {
     option.selected = false;
@@ -62,10 +66,8 @@ _showBottomSheet(
                                   reportOptions[i].selected =
                                       ((i == index) ? value : false)!;
 
-
                                   if (reportOptions[index].properString ==
                                       'Others') {
-
                                     showOtherTextField = value ?? false;
                                   } else {
                                     showOtherTextField = false;
@@ -82,6 +84,7 @@ _showBottomSheet(
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: 20),
                         child: TextField(
+                          maxLines: null,
                           inputFormatters: [
                             LengthLimitingTextInputFormatter(250),
                             FilteringTextInputFormatter.deny(RegExp(r'^\s+')),
@@ -103,35 +106,105 @@ _showBottomSheet(
                         style: ButtonStyle(
                             backgroundColor: MaterialStatePropertyAll(
                                 ColorConstant.primary_color)),
-                        onPressed: () {
+                        onPressed: () async {
                           print(
-                              "chck Data -${reportOptions.any((option) => option.selected)}");
-                          if (reportOptions.any((option) => option.selected) ==
-                              true) {
-                            for (int i = 0; i < reportOptions.length; i++) {
-                              if (reportOptions[i].selected == true) {
-                                print("chck-${reportOptions[i].label}");
-                                _handleSubmit(
-                                  index,
-                                  screen,
-                                  reportOptions[i].label,
-                                  postuid,
-                                  ctx,
-                                  ishandelsubmit: reportOptions[i].selected,
-                                );
+                              "dffsdfd-${reportOptions.any((element) => element.selected) == true}");
+                          for (int i = 0; i < reportOptions.length; i++) {
+                            if (reportOptions[i].selected == true) {
+                              selcted = reportOptions[i].properString;
+                              selcted1 = reportOptions[i].label;
+                              print(
+                                  "otherTextData.text.length-${otherTextData.text.length}");
+                              print("onlu one -$selcted");
+                              print("onlu one1 -$selcted1");
+                            }
+                          }
+                          if (reportOptions
+                                      .any((element) => element.selected) ==
+                                  true &&
+                              selcted == 'Others') {
+                            if (otherTextData.text.isEmpty) {
+                              CustomFlushBar().flushBar(
+                                  text: 'Report Reason can\'t be blank',
+                                  context: context,
+                                  duration: 2,
+                                  backgroundColor: ColorConstant.primary_color);
+                            } else if ((otherTextData.text.length ?? 0) > 250) {
+                              CustomFlushBar().flushBar(
+                                  text: 'Max characters length 250 allowed',
+                                  context: context,
+                                  duration: 2,
+                                  backgroundColor: ColorConstant.primary_color);
+                            } else {
+                              Map<String, dynamic> parems = {
+                                'postUid': postuid,
+                                'reportType': 'OTHERS',
+                                "othersDescription": otherTextData.text,
+                              };
+                              dynamic meesage = await Repository()
+                                  .report_post(context, parems);
+                              SnackBar snackBar = SnackBar(
+                                content: Text(meesage.object),
+                                backgroundColor: ColorConstant.primary_color,
+                              );
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(snackBar);
+                              dynamic data = {
+                                'index': index,
+                              };
+                              Observable.instance
+                                  .notifyObservers([screen], map: data);
+
+                              if (screen == '_OpenSavePostImageState') {
+                                Navigator.pushAndRemoveUntil(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          NewBottomBar(buttomIndex: 0),
+                                    ),
+                                    (route) => false);
+                              } else {
+                                Navigator.pop(context);
                               }
                             }
-                          } else if (otherTextData.text.isNotEmpty) {
-                            _handleSubmit(
-                                index, screen, otherTextData, postuid, ctx,
-                                othersDescription: 'othersDescription',
-                                otherTextData: otherTextData);
-                          } else {
+                          } else if (reportOptions
+                                  .any((element) => element.selected) ==
+                              false) {
                             CustomFlushBar().flushBar(
                                 text: 'Please Select Reason',
                                 context: ctx,
                                 duration: 2,
                                 backgroundColor: ColorConstant.primary_color);
+                          } else {
+                            Map<String, dynamic> parems = {
+                              'postUid': postuid,
+                              'reportType': selcted1
+                            };
+                            dynamic meesage =
+                                await Repository().report_post(context, parems);
+                            SnackBar snackBar = SnackBar(
+                              content: Text(meesage.object),
+                              backgroundColor: ColorConstant.primary_color,
+                            );
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(snackBar);
+                            dynamic data = {
+                              'index': index,
+                            };
+                            print("rthis is the Data Get-${screen}");
+                            Observable.instance
+                                .notifyObservers([screen], map: data);
+                            if (screen == '_OpenSavePostImageState') {
+                              Navigator.pushAndRemoveUntil(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        NewBottomBar(buttomIndex: 0),
+                                  ),
+                                  (route) => false);
+                            } else {
+                              Navigator.pop(context);
+                            }
                           }
                         },
                         child: Text('Submit'),
@@ -147,74 +220,6 @@ _showBottomSheet(
       );
     },
   );
-}
-
-_handleSubmit(
-  int index,
-  String screen,
-  content,
-  String postuid,
-  BuildContext context, {
-  bool? ishandelsubmit,
-  String? othersDescription,
-  TextEditingController? otherTextData,
-}) async {
-  print('Other content: $othersDescription');
-  print('postuid: $otherTextData');
-  print('postuid: $otherTextData');
-  dynamic meesage;
-  if (othersDescription != null && othersDescription != "") {
-    if (otherTextData?.text.trim().isEmpty == true) {
-      CustomFlushBar().flushBar(
-          text: 'Report can\'t be just blank spaces',
-          context: context,
-          duration: 2,
-          backgroundColor: ColorConstant.primary_color);
-    } else if (otherTextData?.text.isEmpty == true) {
-      CustomFlushBar().flushBar(
-          text: 'Report can\'t be Empty',
-          context: context,
-          duration: 2,
-          backgroundColor: ColorConstant.primary_color);
-    } else if (((otherTextData?.text.length ?? 0) >= 250)) {
-      CustomFlushBar().flushBar(
-          text: 'Max characters length 250 allowed',
-          context: context,
-          duration: 2,
-          backgroundColor: ColorConstant.primary_color);
-    } else {
-      Map<String, dynamic> parems = {
-        'postUid': postuid,
-        'reportType': 'OTHERS',
-        "othersDescription": otherTextData?.text,
-      };
-      meesage = await Repository().report_post(context, parems);
-    }
-  } else if (ishandelsubmit == true && content != 'OTHERS') {
-    Map<String, dynamic> parems = {'postUid': postuid, 'reportType': content};
-    meesage = await Repository().report_post(context, parems);
-  } else {
-    CustomFlushBar().flushBar(
-        text: 'Please Select Reason',
-        context: context,
-        duration: 2,
-        backgroundColor: ColorConstant.primary_color);
-  }
-
-  reportOptions.forEach((option) {
-    option.selected = false;
-  });
-  SnackBar snackBar = SnackBar(
-    content: Text(meesage.object),
-    backgroundColor: ColorConstant.primary_color,
-  );
-  ScaffoldMessenger.of(context).showSnackBar(snackBar);
-  dynamic data = {
-    'index': index,
-  };
-
-  Observable.instance.notifyObservers([screen], map: data);
-  Navigator.pop(context);
 }
 
 class ReportOption {

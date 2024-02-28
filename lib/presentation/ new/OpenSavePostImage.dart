@@ -97,7 +97,7 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> with Observer {
   @override
   update(Observable observable, String? notifyName, Map? map) async {
     print("msp-$map");
-  }
+  } 
 
   @override
   Widget build(BuildContext context) {
