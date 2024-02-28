@@ -216,7 +216,6 @@
 //   }
 // }
 
-
 import 'dart:developer';
 
 class ComentApiModel {
@@ -227,7 +226,6 @@ class ComentApiModel {
   ComentApiModel({this.message, this.object, this.success});
 
   ComentApiModel.fromJson(Map<String, dynamic> json) {
-  
     message = json['message'];
     object =
         json['object'] != null ? new Object.fromJson(json['object']) : null;
@@ -252,14 +250,15 @@ class Object {
   String? ownerUserUid;
   String? createdAt;
   MessageOutputList? messageOutputList;
-
+  List<dynamic>? blockedUsers;
   Object(
       {this.roomUid,
       this.roomQuestion,
       this.ownerUserName,
       this.ownerUserUid,
       this.createdAt,
-      this.messageOutputList});
+      this.messageOutputList,
+      this.blockedUsers});
 
   Object.fromJson(Map<String, dynamic> json) {
     roomUid = json['roomUid'];
@@ -270,6 +269,7 @@ class Object {
     messageOutputList = json['messageOutputList'] != null
         ? new MessageOutputList.fromJson(json['messageOutputList'])
         : null;
+    blockedUsers = json['blockedUsers'] != null? json['blockedUsers']:null;
   }
 
   Map<String, dynamic> toJson() {
