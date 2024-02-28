@@ -276,7 +276,7 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                   ),
                                 ),
                                 Container(
-                                  width: _width / 1.2,
+                                  width: _width / 1.3,
                                   child: Text(
                                     "${widget.Title}  ",
                                     style: TextStyle(

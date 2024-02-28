@@ -1149,7 +1149,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                                     left: 10),
                                                 child: Container(
                                                   // color: Colors.amber,
-                                                  width: _width / 1.3,
+                                                  width: _width / 1.4,
                                                   child: Text(
                                                     "${PriveateRoomData?.object?[index].roomQuestion}",
                                                     style: TextStyle(
@@ -1948,7 +1948,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                                             );
                                                           },
                                                           child: Container(
-                                                            width: 140,
+                                                            width: _width/3,
                                                             height: 22.51,
                                                             decoration:
                                                                 ShapeDecoration(

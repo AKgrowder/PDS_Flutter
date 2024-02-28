@@ -486,7 +486,7 @@ if(state is ReadAllMSGLoadedState){
                                 null
                             ? Padding(
                                 padding: const EdgeInsets.only(
-                                    top: 16, left: 16, right: 16),
+                                    top: 16, left: 0, right: 0),
                                 child: GestureDetector(
                                   onTap: () {
                                     AllNotificationData?.object?[index].subject == "TAG_POST" ||
