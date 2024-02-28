@@ -12,6 +12,7 @@
         android:label="InPackaging"
         android:name="${applicationName}"
         android:usesCleartextTraffic="true"
+        android:resizeableActivity="true"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"

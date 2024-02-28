@@ -328,7 +328,7 @@ class _BlogCommentBottomSheetState extends State<BlogCommentBottomSheet> {
                                                       MainAxisAlignment.center,
                                                   children: [
                                                     Container(
-                                                      width: 280,
+                                                      width: _width/1.5,
                                                       // color: Colors.amber,
                                                       child: Row(
                                                         children: [

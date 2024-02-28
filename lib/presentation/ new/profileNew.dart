@@ -10,6 +10,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_mentions/flutter_mentions.dart';
+import 'package:flutter_observer/Observable.dart';
+import 'package:flutter_observer/Observer.dart';
 import 'package:intl/intl.dart';
 import 'package:linkfy_text/linkfy_text.dart';
 import 'package:path_provider/path_provider.dart';
@@ -50,8 +52,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:translator/translator.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import 'package:flutter_observer/Observable.dart';
-import 'package:flutter_observer/Observer.dart';
 import '../../API/Model/HasTagModel/hasTagModel.dart';
 import '../../API/Model/UserTagModel/UserTag_model.dart';
 import '../../API/Model/WorkExperience_Model/WorkExperience_model.dart';
@@ -1090,39 +1090,39 @@ class _ProfileScreenState extends State<ProfileScreen>
                                           ),
                                         )
                                       : SizedBox(),
-                                  // Padding(
-                                  //   padding: const EdgeInsets.only(left: 10),
-                                  //   child: GestureDetector(
-                                  //     key: blockKey,
-                                  //     onTap: () {
-                                  //       showPopupMenuBlock(
-                                  //           context,
-                                  //           NewProfileData?.object?.userUid,
-                                  //           NewProfileData?.object?.name,
-                                  //           blockKey);
-                                  //     },
-                                  //     child: Container(
-                                  //       height: 40,
-                                  //       width: 40,
-                                  //       decoration: BoxDecoration(
-                                  //         color: ColorConstant.primary_color,
-                                  //         borderRadius:
-                                  //             BorderRadius.circular(10),
-                                  //       ),
-                                  //       child: Center(
-                                  //         child: Icon(
-                                  //           Icons.more_vert_rounded,
-                                  //           color: Colors.white,
-                                  //         ) /* CustomImageView(
-                                  //                       height: 20,
-                                  //                       width: 20,
-                                  //                       imagePath:
-                                  //                           ImageConstant.chat) */
-                                  //         ,
-                                  //       ),
-                                  //     ),
-                                  //   ),
-                                  // ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(left: 10),
+                                    child: GestureDetector(
+                                      key: blockKey,
+                                      onTap: () {
+                                        showPopupMenuBlock(
+                                            context,
+                                            NewProfileData?.object?.userUid,
+                                            NewProfileData?.object?.name,
+                                            blockKey);
+                                      },
+                                      child: Container(
+                                        height: 40,
+                                        width: 40,
+                                        decoration: BoxDecoration(
+                                          color: ColorConstant.primary_color,
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                        ),
+                                        child: Center(
+                                          child: Icon(
+                                            Icons.more_vert_rounded,
+                                            color: Colors.white,
+                                          ) /* CustomImageView(
+                                                        height: 20,
+                                                        width: 20,
+                                                        imagePath:
+                                                            ImageConstant.chat) */
+                                          ,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
                                   Spacer(),
                                 ],
                               ),
@@ -1319,8 +1319,8 @@ class _ProfileScreenState extends State<ProfileScreen>
                                     } else {}
                                   },
                                   child: Container(
-                                    color: Colors.transparent,
-                                    width: _width / 4.3,
+                                    // color: Colors.amber,
+                                    width: _width / 4.4,
                                     child: Column(
                                       children: [
                                         SizedBox(
@@ -1527,7 +1527,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                               // color: arrNotiyTypeList[3].isSelected
                                                               //     ? Colors.white
                                                               //     : Colors.black,
-                                                              fontSize: 18,
+                                                              fontSize: 16,
                                                               fontFamily:
                                                                   'Outfit',
                                                               fontWeight:
@@ -1843,8 +1843,6 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                           15),
                                                                   child:
                                                                       Container(
-                                                                        alignment: Alignment.topLeft,
-                                                                        margin: EdgeInsets.only(left: 13),
                                                                     child:
                                                                         LinkifyText(
                                                                       "${aboutMe.text}",
@@ -3594,7 +3592,8 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                       GetUserPostCommetData?.object?[index].description !=
                                                                               null
                                                                           ? Container(
-                                                                              width: _width / 1.35,
+                                                                            // color: Colors.amber,
+                                                                              width: _width / 1.45,
                                                                               child: Text(
                                                                                 '${GetUserPostCommetData?.object?[index].description}',
                                                                                 style: TextStyle(
@@ -3666,7 +3665,8 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                                       ),
                                                                                     ),
                                                                                     Container(
-                                                                                      width: _width / 1.7,
+                                                                                      // color: Colors.red,
+                                                                                      width: _width / 2,
                                                                                       child: Text(
                                                                                         '${GetUserPostCommetData?.object?[index].comments?[index2].comment}',
                                                                                         // maxLines: 1,
