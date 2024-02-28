@@ -73,7 +73,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:video_player/video_player.dart';
 import 'package:visibility_detector/visibility_detector.dart';
-import 'package:flutter/foundation.dart' as foundation;
+
 // import 'package:flutter_langdetect/flutter_langdetect.dart' as langdetect;
 import '../../API/Model/Get_all_blog_Model/get_all_blog_model.dart';
 import '../../API/Model/UserTagModel/UserTag_model.dart';
@@ -1159,6 +1159,8 @@ class _HomeScreenNewState extends State<HomeScreenNew>
   }
 
   NewApi() async {
+    await BlocProvider.of<GetGuestAllPostCubit>(context)
+        .get_all_master_report_typeApiMethod(context);
     timer = Timer.periodic(Duration(seconds: 15), (timer) async {
       super.setState(() {
         secound = timer.tick;
@@ -1345,6 +1347,15 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                 : SizedBox(),
             body: BlocConsumer<GetGuestAllPostCubit, GetGuestAllPostState>(
                 listener: (context, state) async {
+              if (state is Getallmasterreporttype) {
+                reportOptions = [];
+                state.get_all_master_report_type.forEach((e) {
+                  reportOptions.add(ReportOption(
+                    properString: e.toString(),
+                    label: '${e.replaceAll(" ", '_').toUpperCase()}',
+                  ));
+                });
+              }
               if (state is GetGuestAllPostErrorState) {
                 print("i want check responce---${state.error}");
                 if (state.error['errorCode'] == '701') {
@@ -1938,12 +1949,12 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                             SizedBox(
                               height: 15,
                             ),
-                         Platform.isIOS == true ? SizedBox():
+                            Platform.isIOS == true ? SizedBox():
                             storyButtons == null
                                 ? Container(
                                     height: 40,
                                     width: 200,
-                                    color: const Color.fromARGB(255, 255, 255, 255),
+                                    color: Colors.amber,
                                   )
                                 : Container(
                                     height: 90,
