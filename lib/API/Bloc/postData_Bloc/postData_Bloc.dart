@@ -122,7 +122,7 @@ class AddPostCubit extends Cubit<AddPostState> {
     }
   }
 
-   Future<void> seetinonExpried(BuildContext context,
+  Future<void> seetinonExpried(BuildContext context,
       {bool showAlert = false}) async {
     try {
       emit(AddPostLoadingState());

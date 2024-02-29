@@ -1589,7 +1589,6 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                           storyListViewController: ScrollController()));
                       userName.clear();
                       userName.add(element.userName ?? '');
-
                       storyAdded = true;
                     } else if (element.userUid != User_ID) {
                       print("check Data get -${element.userName.toString()}");
@@ -2400,7 +2399,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                           buttonDatas,
                                                       storyListViewController:
                                                           ScrollController());
-                                                  userName[0] = User_Name!;
+                                                  userName[0] = "Your Story";
 
                                                   if (mounted)
                                                     super.setState(() {
@@ -2479,7 +2478,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                     flex: 1,
                                                   ),
                                                   Text(
-                                                    '${userName[index]}',
+                                                    'Your Story',
                                                     style: TextStyle(
                                                         color: Colors.black,
                                                         fontSize: 16),

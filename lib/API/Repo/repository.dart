@@ -1816,6 +1816,7 @@ class Repository {
         AadPost: true);
     print('AddPost$response');
     var jsonString = json.decode(response.body);
+    print("dfdgsfgsd-$jsonString");
     switch (response.statusCode) {
       case 200:
         return ImageDataPost.fromJson(jsonString);
