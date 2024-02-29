@@ -272,7 +272,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                                     textAlign: TextAlign.left)),
                           ),
                           Align(
-                              alignment: Alignment.centerLeft,
+                              alignment: Alignment.center,
                               child: Padding(
                                   padding: EdgeInsets.only(left: 14, top: 33),
                                   child: Text("Enter OTP",
