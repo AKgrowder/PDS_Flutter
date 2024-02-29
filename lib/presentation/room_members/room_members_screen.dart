@@ -243,34 +243,21 @@ class _RoomMembersScreenState extends State<RoomMembersScreen> {
                             children: [
                               GestureDetector(
                                 onTap: () {
-                                   if (_data?.object?.blockedUsers?.isNotEmpty ==
-                                      true) {
-                                    _data?.object?.blockedUsers
-                                        ?.forEach((element) {
-                                      if (element ==
-                                          _data
-                                              ?.object
-                                              ?.roomMemberOutputDTOList?[index]
-                                              .userUuid) {
-                                        SnackBar snackBar = SnackBar(
-                                          content:
-                                              Text('You Can block This User'),
-                                          backgroundColor:
-                                              ColorConstant.primary_color,
-                                        );
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(snackBar);
-                                      } else {
-                                        Navigator.push(context,
-                                            MaterialPageRoute(
-                                                builder: (context) {
-                                          return ProfileScreen(
-                                              User_ID:
-                                                  "${_data?.object?.roomMemberOutputDTOList?[index].userUuid}",
-                                              isFollowing: "");
-                                        }));
-                                      }
-                                    });
+                                  bool? isBlock = _data?.object?.blockedUsers
+                                      ?.contains(_data
+                                          ?.object
+                                          ?.roomMemberOutputDTOList?[index]
+                                          .userUuid);
+
+                                  print("this i want to check-${isBlock}");
+                                  if (isBlock == true) {
+                                    SnackBar snackBar = SnackBar(
+                                      content: Text('You Can block This User'),
+                                      backgroundColor:
+                                          ColorConstant.primary_color,
+                                    );
+                                    ScaffoldMessenger.of(context)
+                                        .showSnackBar(snackBar);
                                   } else {
                                     Navigator.push(context,
                                         MaterialPageRoute(builder: (context) {
@@ -350,34 +337,21 @@ class _RoomMembersScreenState extends State<RoomMembersScreen> {
                               ),
                               GestureDetector(
                                 onTap: () {
-                                  if (_data?.object?.blockedUsers?.isNotEmpty ==
-                                      true) {
-                                    _data?.object?.blockedUsers
-                                        ?.forEach((element) {
-                                      if (element ==
-                                          _data
-                                              ?.object
-                                              ?.roomMemberOutputDTOList?[index]
-                                              .userUuid) {
-                                        SnackBar snackBar = SnackBar(
-                                          content:
-                                              Text('You Can block This User'),
-                                          backgroundColor:
-                                              ColorConstant.primary_color,
-                                        );
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(snackBar);
-                                      } else {
-                                        Navigator.push(context,
-                                            MaterialPageRoute(
-                                                builder: (context) {
-                                          return ProfileScreen(
-                                              User_ID:
-                                                  "${_data?.object?.roomMemberOutputDTOList?[index].userUuid}",
-                                              isFollowing: "");
-                                        }));
-                                      }
-                                    });
+                                  bool? isBlock = _data?.object?.blockedUsers
+                                      ?.contains(_data
+                                          ?.object
+                                          ?.roomMemberOutputDTOList?[index]
+                                          .userUuid);
+
+                                  print("this i want to check-${isBlock}");
+                                  if (isBlock == true) {
+                                    SnackBar snackBar = SnackBar(
+                                      content: Text('You Can block This User'),
+                                      backgroundColor:
+                                          ColorConstant.primary_color,
+                                    );
+                                    ScaffoldMessenger.of(context)
+                                        .showSnackBar(snackBar);
                                   } else {
                                     Navigator.push(context,
                                         MaterialPageRoute(builder: (context) {

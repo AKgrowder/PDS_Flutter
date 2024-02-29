@@ -430,7 +430,41 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                                                     GestureDetector(
                                                                   onTap:
                                                                       () async {
-                                                                    if (AllChatmodelData
+                                                                    bool? isBlock = AllChatmodelData
+                                                                            ?.object
+                                                                            ?.blockedUsers
+                                                                        ?.contains(AllChatmodelData?.object?.messageOutputList?.content?[index].userCode);
+
+                                                                    print(
+                                                                        "this i want to check-${isBlock}");
+                                                                    if (isBlock ==
+                                                                        true) {
+                                                                      SnackBar
+                                                                          snackBar =
+                                                                          SnackBar(
+                                                                        content:
+                                                                            Text('You Can block This User'),
+                                                                        backgroundColor:
+                                                                            ColorConstant.primary_color,
+                                                                      );
+                                                                      ScaffoldMessenger.of(
+                                                                              context)
+                                                                          .showSnackBar(
+                                                                              snackBar);
+                                                                    } else {
+                                                                      Navigator.push(
+                                                                          context,
+                                                                          MaterialPageRoute(builder:
+                                                                              (context) {
+                                                                        return ProfileScreen(
+                                                                            User_ID:
+                                                                                "${AllChatmodelData?.object?.messageOutputList?.content?[index].userCode}",
+                                                                            isFollowing:
+                                                                                "");
+                                                                      }));
+                                                                    }
+
+                                                                    /*  if (AllChatmodelData
                                                                             ?.object
                                                                             ?.blockedUsers
                                                                             ?.isNotEmpty ==
@@ -498,7 +532,7 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                                                               "${AllChatmodelData?.object?.messageOutputList?.content?[index].userCode}",
                                                                           isFollowing:
                                                                               "");
-                                                                    })); */
+                                                                    })); */ */
                                                                   },
                                                                   child: Column(
                                                                     crossAxisAlignment:
