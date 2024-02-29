@@ -68,6 +68,7 @@ import 'package:pds/API/Model/emailVerfiaction/emailVerfiaction.dart';
 import 'package:pds/API/Model/forget_password_model/forget_password_model.dart';
 import 'package:pds/API/Model/getCountOfSavedRoomModel/getCountOfSavedRoomModel.dart';
 import 'package:pds/API/Model/getSerchDataModel/getSerchDataModel.dart';
+import 'package:pds/API/Model/inboxScreenModel/LiveStatusModel.dart';
 import 'package:pds/API/Model/inboxScreenModel/SeenAllMessageModel.dart';
 import 'package:pds/API/Model/inboxScreenModel/inboxScrrenModel.dart';
 import 'package:pds/API/Model/like_Post_Model/like_Post_Model.dart';
@@ -1056,6 +1057,30 @@ class Repository {
         return Config.servernotreachable;
       case 400:
         return SeenAllMessageModel.fromJson(jsonString);
+
+      // return Config.somethingWentWrong;
+      case 701:
+        return jsonString;
+      default:
+        return jsonString;
+    }
+  }
+
+  LiveStatus(BuildContext context, String inboxUid) async {
+    final response = await apiServices.getApiCallWithToken(
+        "${Config.onlineLiveStatus}?inboxChatUid=${inboxUid}", context);
+    var jsonString = json.decode(response.body);
+    print('Myaccount${response.statusCode}');
+    switch (response.statusCode) {
+      case 200:
+      print("LiveStatusModelDataLiveStatusModelData");
+        return LiveStatusModel.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+      case 400:
+        return LiveStatusModel.fromJson(jsonString);
 
       // return Config.somethingWentWrong;
       case 701:
