@@ -16,6 +16,7 @@ import 'package:linkfy_text/linkfy_text.dart';
 import 'package:pds/API/ApiService/DMSocket.dart';
 import 'package:pds/API/Bloc/dmInbox_bloc/dmMessageState.dart';
 import 'package:pds/API/Model/createDocumentModel/createDocumentModel.dart';
+import 'package:pds/API/Model/inboxScreenModel/LiveStatusModel.dart';
 import 'package:pds/API/Model/inboxScreenModel/inboxScrrenModel.dart';
 import 'package:pds/API/Model/story_model.dart';
 import 'package:pds/StoryFile/src/story_button.dart';
@@ -98,6 +99,7 @@ class _DmScreenState extends State<DmScreen> {
   double value2 = 0.0;
   double finalFileSize = 0;
   ChooseDocument1? imageDataPost;
+  LiveStatusModel? LiveStatusModelData;
   String? stroyUid;
   GetInboxMessagesModel? getInboxMessagesModel;
   final focusNode = FocusNode();
@@ -145,7 +147,10 @@ class _DmScreenState extends State<DmScreen> {
   }
 
   getDocumentSize() async {
+    // 111111
     await BlocProvider.of<DmInboxCubit>(context).seetinonExpried(context);
+    await BlocProvider.of<DmInboxCubit>(context)
+        .LiveStatus(context, widget.ChatInboxUid);
     await BlocProvider.of<DmInboxCubit>(context)
         .SeenMessage(context, widget.ChatInboxUid);
     await BlocProvider.of<DmInboxCubit>(context)
@@ -296,7 +301,7 @@ class _DmScreenState extends State<DmScreen> {
     }
     getUserID();
     getToken();
-    getDocumentSize();
+    // getDocumentSize();
 
     keyboardVisibilityController.onChange.listen((bool isKeyboardVisible) {
       this.isKeyboardVisible = isKeyboardVisible;
@@ -305,33 +310,6 @@ class _DmScreenState extends State<DmScreen> {
         isEmojiVisible = false;
       }
     });
-
-    if (widget.isBlock == true) {
-      Future.delayed(
-        Duration(
-          milliseconds: 2,
-        ),
-        () {
-          showDialog(
-            barrierDismissible: false,
-            context: context,
-            builder: (_) => WillPopScope(
-              onWillPop: () async {
-                Navigator.of(context).pushAndRemoveUntil(
-                    MaterialPageRoute(
-                        builder: (context) => NewBottomBar(buttomIndex: 3)),
-                    (Route<dynamic> route) => false);
-
-                return true;
-              },
-              child: UnBlockUserChatdailog(
-                userName: widget.UserName,
-              ),
-            ),
-          );
-        },
-      );
-    }
 
     super.initState();
   }
@@ -383,6 +361,39 @@ class _DmScreenState extends State<DmScreen> {
               }
               if (state is SeenAllMessageLoadedState) {
                 print(state.SeenAllMessageModelData.object);
+              }
+              if (state is LiveStatusLoadedState) {
+                print("LiveStatusModelDataLiveStatusModelData");
+                LiveStatusModelData = state.LiveStatusModelData;
+                if (LiveStatusModelData?.object?.isBlock == true) {
+                  Future.delayed(
+                    Duration(
+                      milliseconds: 2,
+                    ),
+                    () {
+                      showDialog(
+                        barrierDismissible: false,
+                        context: context,
+                        builder: (_) => WillPopScope(
+                          onWillPop: () async {
+                            Navigator.pop(context);
+                Navigator.pop(context);
+                            // Navigator.of(context).pushAndRemoveUntil(
+                            //     MaterialPageRoute(
+                            //         builder: (context) =>
+                            //             NewBottomBar(buttomIndex: 3)),
+                            //     (Route<dynamic> route) => false);
+
+                            return true;
+                          },
+                          child: UnBlockUserChatdailog(
+                            userName: widget.UserName,
+                          ),
+                        ),
+                      );
+                    },
+                  );
+                }
               }
               if (state is AddPostImaegState) {
                 imageDataPost = state.imageDataPost;

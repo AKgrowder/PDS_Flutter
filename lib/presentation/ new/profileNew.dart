@@ -11218,6 +11218,14 @@ class _ProfileScreenState extends State<ProfileScreen>
       position: position,
       items: <PopupMenuItem<String>>[
         PopupMenuItem<String>(
+           onTap: () {
+            Navigator.pop(context);
+            showDialog(
+              context: context,
+              builder: (_) =>
+                  BlockUserdailog(blockUserID: userID, userName: userName),
+            );
+          },
           height: 25,
           value: 'block',
           child: GestureDetector(
