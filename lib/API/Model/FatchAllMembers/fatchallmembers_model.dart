@@ -70,22 +70,17 @@ class Object {
  */
 
 
-
 class FatchAllMembersModel {
   String? message;
-  List<Object>? object;
+  Object? object;
   bool? success;
 
   FatchAllMembersModel({this.message, this.object, this.success});
 
   FatchAllMembersModel.fromJson(Map<String, dynamic> json) {
     message = json['message'];
-    if (json['object'] != null) {
-      object = <Object>[];
-      json['object'].forEach((v) {
-        object!.add(new Object.fromJson(v));
-      });
-    }
+    object =
+        json['object'] != null ? new Object.fromJson(json['object']) : null;
     success = json['success'];
   }
 
@@ -93,7 +88,7 @@ class FatchAllMembersModel {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['message'] = this.message;
     if (this.object != null) {
-      data['object'] = this.object!.map((v) => v.toJson()).toList();
+      data['object'] = this.object!.toJson();
     }
     data['success'] = this.success;
     return data;
@@ -101,6 +96,33 @@ class FatchAllMembersModel {
 }
 
 class Object {
+  List<RoomMemberOutputDTOList>? roomMemberOutputDTOList;
+  List<String>? blockedUsers;
+
+  Object({this.roomMemberOutputDTOList, this.blockedUsers});
+
+  Object.fromJson(Map<String, dynamic> json) {
+    if (json['roomMemberOutputDTOList'] != null) {
+      roomMemberOutputDTOList = <RoomMemberOutputDTOList>[];
+      json['roomMemberOutputDTOList'].forEach((v) {
+        roomMemberOutputDTOList!.add(new RoomMemberOutputDTOList.fromJson(v));
+      });
+    }
+    blockedUsers = json['blockedUsers'].cast<String>();
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    if (this.roomMemberOutputDTOList != null) {
+      data['roomMemberOutputDTOList'] =
+          this.roomMemberOutputDTOList!.map((v) => v.toJson()).toList();
+    }
+    data['blockedUsers'] = this.blockedUsers;
+    return data;
+  }
+}
+
+class RoomMemberOutputDTOList {
   String? userUuid;
   String? email;
   String? userName;
@@ -110,7 +132,7 @@ class Object {
   bool? isActive;
   bool? isAdmin;
 
-  Object(
+  RoomMemberOutputDTOList(
       {this.userUuid,
       this.email,
       this.userName,
@@ -120,7 +142,7 @@ class Object {
       this.isActive,
       this.isAdmin});
 
-  Object.fromJson(Map<String, dynamic> json) {
+  RoomMemberOutputDTOList.fromJson(Map<String, dynamic> json) {
     userUuid = json['userUuid'];
     email = json['email'];
     userName = json['userName'];

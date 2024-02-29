@@ -799,7 +799,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
                                   color: theme.colorScheme.primary,
-                                  fontSize: 14,
+                                  fontSize: _width/30,
                                   fontFamily: 'Outfit',
                                   fontWeight: FontWeight.w500,
                                   decoration: TextDecoration.underline,
@@ -825,7 +825,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                                     overflow: TextOverflow.ellipsis,
                                     style: TextStyle(
                                       color: theme.colorScheme.primary,
-                                      fontSize: 14,
+                                      fontSize: _width/30,
                                       fontFamily: 'Outfit',
                                       fontWeight: FontWeight.w500,
                                       decoration: TextDecoration.underline,
