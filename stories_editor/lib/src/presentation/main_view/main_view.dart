@@ -421,6 +421,7 @@ class _MainViewState extends State<MainView> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 /// preview gallery
+                                Platform.isIOS == true ? SizedBox() :
                                 Expanded(
                                   child: Container(
                                     alignment: Alignment.centerLeft,
