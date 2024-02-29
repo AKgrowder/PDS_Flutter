@@ -265,5 +265,10 @@ class ImageConstant {
   static String block_user_chat = "assets/images/blocked_chat.png";
   static String no_blocked_user = "assets/images/no_blockedUser.png";
 
+  static String messagecheck = "assets/images/0_check.png";
+  static String checksend = "assets/images/1_check.png";
+  static String checkseen = "assets/images/2_check.png";
+    static String greenseen  = 'assets/images/grrenicon.png';
+
   /// end
 }

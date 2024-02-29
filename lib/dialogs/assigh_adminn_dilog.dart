@@ -284,24 +284,24 @@ class _AssignAdminScreennState extends State<AssignAdminScreenn>
                                     },
                                   )
                                 : ListView.builder(
-                                    itemCount: widget.data?.object?.length,
+                                    itemCount: widget.data?.object?.roomMemberOutputDTOList?.length,
                                     shrinkWrap: true,
                                     itemBuilder: (context, index) {
                                       return User_ID ==
                                               widget
-                                                  .data?.object?[index].userUuid
+                                                  .data?.object?.roomMemberOutputDTOList?[index].userUuid
                                           ? SizedBox()
                                           : Padding(
                                               padding:
                                                   const EdgeInsets.all(8.0),
                                               child: Row(
                                                 children: [
-                                                  widget.data?.object?[index]
+                                                  widget.data?.object?.roomMemberOutputDTOList?[index]
                                                                   .userProfilePic !=
                                                               null &&
                                                           widget
                                                                   .data
-                                                                  ?.object?[
+                                                                  ?.object?.roomMemberOutputDTOList?[
                                                                       index]
                                                                   .userProfilePic
                                                                   ?.isNotEmpty ==
@@ -309,7 +309,7 @@ class _AssignAdminScreennState extends State<AssignAdminScreenn>
                                                       ? CircleAvatar(
                                                           backgroundImage:
                                                               NetworkImage(
-                                                                  "${widget.data?.object?[index].userProfilePic}"),
+                                                                  "${widget.data?.object?.roomMemberOutputDTOList?[index].userProfilePic}"),
                                                           backgroundColor:
                                                               Colors.white,
                                                           radius: 25,
@@ -330,7 +330,7 @@ class _AssignAdminScreennState extends State<AssignAdminScreenn>
                                                     child: Text(
                                                       widget
                                                               .data
-                                                              ?.object?[index]
+                                                              ?.object?.roomMemberOutputDTOList?[index]
                                                               .fullName
                                                               .toString() ??
                                                           "",
@@ -342,7 +342,7 @@ class _AssignAdminScreennState extends State<AssignAdminScreenn>
                                                     ),
                                                   ),
                                                   Spacer(),
-                                                  widget.data?.object?[index]
+                                                  widget.data?.object?.roomMemberOutputDTOList?[index]
                                                               .isAdmin ==
                                                           true
                                                       ? SizedBox()
@@ -354,7 +354,7 @@ class _AssignAdminScreennState extends State<AssignAdminScreenn>
                                                                 .RoomExistsAPI(
                                                                     widget
                                                                         .data
-                                                                        ?.object?[
+                                                                        ?.object?.roomMemberOutputDTOList?[
                                                                             index]
                                                                         .userUuid,
                                                                     widget

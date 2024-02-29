@@ -110,7 +110,6 @@ class GetNotificationCountLoadedState extends GetGuestAllPostState {
   GetNotificationCountLoadedState(this.GetNotificationCountData);
 }
 
-
 class OnlineChatStatusLoadedState extends GetGuestAllPostState {
   final accept_rejectModel accept_rejectModelData;
   OnlineChatStatusLoadedState(this.accept_rejectModelData);
@@ -121,4 +120,7 @@ class WatchTimeSaveLoadedState extends GetGuestAllPostState {
   WatchTimeSaveLoadedState(this.accept_rejectModelData);
 }
 
-
+class Getallmasterreporttype extends GetGuestAllPostState {
+  dynamic get_all_master_report_type;
+  Getallmasterreporttype(this.get_all_master_report_type);
+}

@@ -66,6 +66,7 @@ class Posts {
   int? commentCount;
   String? thumbnailImageUrl;
   String? postLink;
+  bool? isReports; 
 
   Posts({
     this.postUid,
@@ -84,6 +85,7 @@ class Posts {
     this.commentCount,
     this.thumbnailImageUrl,
     this.postLink,
+    this.isReports
   });
 
   Posts.fromJson(Map<String, dynamic> json) {

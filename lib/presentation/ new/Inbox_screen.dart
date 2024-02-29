@@ -389,22 +389,24 @@ class _InboxScreenState extends State<InboxScreen> {
                       Navigator.push(context,
                           MaterialPageRoute(builder: (context) {
                         return DmScreen(
-                          isBlock:
-                              PersonalChatListModelData?.object?[index].isBlock,
-                          isExpert: PersonalChatListModelData
-                              ?.object?[index].isExpert,
-                          UserUID:
-                              "${PersonalChatListModelData?.object?[index].userUid}",
-                          UserName:
-                              "${PersonalChatListModelData?.object?[index].userName}",
-                          ChatInboxUid:
-                              "${PersonalChatListModelData?.object?[index].userChatInboxUid}",
-                          UserImage:
-                              "${PersonalChatListModelData?.object?[index].userProfilePic}",
-                          videoId:
-                              "${PersonalChatListModelData?.object?[index].videoId}",
-                          // UserUID: "${PersonalChatListModelData?.object?[index].}",
-                        );
+                            isBlock: PersonalChatListModelData
+                                ?.object?[index].isBlock,
+                            isExpert: PersonalChatListModelData
+                                ?.object?[index].isExpert,
+                            UserUID:
+                                "${PersonalChatListModelData?.object?[index].userUid}",
+                            UserName:
+                                "${PersonalChatListModelData?.object?[index].userName}",
+                            ChatInboxUid:
+                                "${PersonalChatListModelData?.object?[index].userChatInboxUid}",
+                            UserImage:
+                                "${PersonalChatListModelData?.object?[index].userProfilePic}",
+                            videoId:
+                                "${PersonalChatListModelData?.object?[index].videoId}",
+                            online: PersonalChatListModelData
+                                ?.object?[index].onlineStatus
+                            // UserUID: "${PersonalChatListModelData?.object?[index].}",
+                            );
                       })).then((value) => CallBackFunc());
                     },
                     child: Container(
@@ -476,7 +478,7 @@ class _InboxScreenState extends State<InboxScreen> {
                                         CrossAxisAlignment.start,
                                     children: [
                                       Container(
-                                        width: _width / 1.4,
+                                        width: _width / 1.55,
                                         child: Row(
                                           children: [
                                             Text(

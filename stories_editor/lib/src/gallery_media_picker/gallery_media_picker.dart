@@ -151,7 +151,7 @@ class _GalleryMediaPickerState extends State<GalleryMediaPicker> {
     } else {
       /// if result is fail, you can call `PhotoManager.openSetting();`
       /// to open android/ios application's setting to get permission
-      PhotoManager.openSetting();
+      // PhotoManager.openSetting();
     }
   }
 
