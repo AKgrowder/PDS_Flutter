@@ -252,7 +252,7 @@ class _RoomMembersScreenState extends State<RoomMembersScreen> {
                                   print("this i want to check-${isBlock}");
                                   if (isBlock == true) {
                                     SnackBar snackBar = SnackBar(
-                                      content: Text('You Can block This User'),
+                                      content: Text('User Blocked.'),
                                       backgroundColor:
                                           ColorConstant.primary_color,
                                     );
@@ -346,7 +346,7 @@ class _RoomMembersScreenState extends State<RoomMembersScreen> {
                                   print("this i want to check-${isBlock}");
                                   if (isBlock == true) {
                                     SnackBar snackBar = SnackBar(
-                                      content: Text('You Can block This User'),
+                                      content: Text('User Blocked.'),
                                       backgroundColor:
                                           ColorConstant.primary_color,
                                     );

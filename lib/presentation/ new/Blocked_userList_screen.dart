@@ -105,7 +105,7 @@ class _BlockedUserScreenState extends State<BlockedUserScreen> {
                                       onTap: () {
                                          SnackBar snackBar = SnackBar(
                                           content:
-                                              Text('You Can block This User'),
+                                              Text('User Blocked.'),
                                           backgroundColor:
                                               ColorConstant.primary_color,
                                         );
