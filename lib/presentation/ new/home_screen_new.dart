@@ -1561,15 +1561,17 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                               StoryRoute(
                                 // hii working Date
                                 onTap: () async {
+
                                   await BlocProvider.of<GetGuestAllPostCubit>(
                                           context)
                                       .seetinonExpried(context);
-                                  Navigator.push(context,
+                                  Navigator.pushAndRemoveUntil(context,
                                       MaterialPageRoute(builder: (context) {
                                     return ProfileScreen(
+                                      Screen:'Profile',
                                         User_ID: "${element.userUid}",
                                         isFollowing: "");
-                                  })).then((value) => Get_UserToken());
+                                  }),(route) => false,).then((value) => Get_UserToken());
                                 },
                                 storyContainerSettings: StoryContainerSettings(
                                   buttonData: buttonDatas[0],
@@ -1676,12 +1678,13 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                   await BlocProvider.of<GetGuestAllPostCubit>(
                                           context)
                                       .seetinonExpried(context);
-                                  Navigator.push(context,
+                                  Navigator.pushAndRemoveUntil(context,
                                       MaterialPageRoute(builder: (context) {
                                     return ProfileScreen(
+                                      Screen: 'Proifile',
                                         User_ID: "${element.userUid}",
                                         isFollowing: "");
-                                  })).then((value) => Get_UserToken());
+                                  }),(route) => false,).then((value) => Get_UserToken());
                                 },
                                 storyContainerSettings: StoryContainerSettings(
                                   buttonData: buttonData1,
@@ -2348,7 +2351,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                       onPressed: (data) {
                                                         Navigator.of(
                                                                 storycontext!)
-                                                            .push(
+                                                            .pushAndRemoveUntil(
                                                               StoryRoute(
                                                                 onTap:
                                                                     () async {
@@ -2363,6 +2366,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                           builder:
                                                                               (context) {
                                                                     return ProfileScreen(
+                                                                      Screen: 'Profile',
                                                                         User_ID:
                                                                             "${User_ID}",
                                                                         isFollowing:
@@ -2390,6 +2394,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                 duration: buttonData
                                                                     .pageAnimationDuration,
                                                               ),
+                                                              (route) => false,
                                                             )
                                                             .then((value) =>
                                                                 Get_UserToken());
