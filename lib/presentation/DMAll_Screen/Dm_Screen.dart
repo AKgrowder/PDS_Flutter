@@ -39,6 +39,7 @@ import 'package:stomp_dart_client/stomp_frame.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
 
+import '../ new/newbottembar.dart';
 import '../../API/Bloc/dmInbox_bloc/dminbox_blcok.dart';
 import '../register_create_account_screen/register_create_account_screen.dart';
 
@@ -106,6 +107,10 @@ class _DmScreenState extends State<DmScreen> {
   TextEditingController Add_Comment = TextEditingController();
   String formattedDate = DateFormat('dd-MM-yyyy').format(now);
   List<StoryButtonData> buttonDatas = [];
+  // List<GetInboxMessagesModel> messages = [
+  //   // list of messages
+  // ];
+  List<String> selectedMessages = [];
 
   void onSendCallInvitationFinished(
     String code,
@@ -308,9 +313,20 @@ class _DmScreenState extends State<DmScreen> {
         ),
         () {
           showDialog(
+            barrierDismissible: false,
             context: context,
-            builder: (_) => UnBlockUserChatdailog(
-              userName: widget.UserName,
+            builder: (_) => WillPopScope(
+              onWillPop: () async {
+                Navigator.of(context).pushAndRemoveUntil(
+                    MaterialPageRoute(
+                        builder: (context) => NewBottomBar(buttomIndex: 3)),
+                    (Route<dynamic> route) => false);
+
+                return true;
+              },
+              child: UnBlockUserChatdailog(
+                userName: widget.UserName,
+              ),
             ),
           );
         },
@@ -392,7 +408,8 @@ class _DmScreenState extends State<DmScreen> {
                   "message": data['object']['message'],
                   "createdDate": data['object']['createdAt'],
                   "messageType": data['object']['messageType'],
-                  "isDeleted": data['object']['isDeleted']
+                  "isDeleted": data['object']['isDeleted'],
+                  "isDelivered": data['object']['isDelivered']
                 };
 
                 Content content = Content.fromJson(mapDataAdd!);
@@ -817,6 +834,14 @@ class _DmScreenState extends State<DmScreen> {
                                                             // });
                                                           });
                                                         } else {}
+                                                        // getInboxMessagesModel?.object?.content?[index].message
+                                                        String message =
+                                                            "${getInboxMessagesModel?.object?.content?[index].message}";
+                                                        // messages[index];
+                                                        bool isSelected =
+                                                            selectedMessages
+                                                                .contains(
+                                                                    message);
 
                                                         ///
                                                         return Column(
@@ -846,14 +871,43 @@ class _DmScreenState extends State<DmScreen> {
                                                                         .userName !=
                                                                     User_Name
                                                                 ? GestureDetector(
-                                                                    onTap: () {
-                                                                      print(
-                                                                          "check Value-${getInboxMessagesModel?.object?.content?[index].userName}");
-                                                                      print(
-                                                                          "sdfsdfsdg-${User_Name}");
+                                                                    /*     onTap: () {
+                                                                      selectedMessages.length !=
+                                                                              0
+                                                                          ? setState(
+                                                                              () {
+                                                                              if (isSelected) {
+                                                                                selectedMessages.remove(message);
+                                                                                print("RemoveRemoveRemoveRemoveRemove=> 1");
+                                                                              } else {
+                                                                                print("AddAddAddAddAddAddAdd=> 1");
+                                                                                if (!isSelected) {
+                                                                                  print("AddAddAddAddAddAddAdd=> 2");
+                                                                                  selectedMessages.add(message);
+                                                                                }
+                                                                              }
+                                                                            })
+                                                                          : setState(
+                                                                              () {print("RemoveRemoveRemoveRemoveRemove=> 2");},
+                                                                            );
                                                                     },
+                                                                    onLongPress:
+                                                                        () {
+                                                                      if (!isSelected) {
+                                                                        setState(
+                                                                            () {
+                                                                          selectedMessages
+                                                                              .add(message);
+                                                                        });
+                                                                      }
+                                                                    }, */
+
                                                                     child:
                                                                         Container(
+                                                                      decoration: isSelected
+                                                                          ? BoxDecoration(
+                                                                              border: Border.all(color: Colors.blue))
+                                                                          : null,
                                                                       child:
                                                                           Padding(
                                                                         padding:
@@ -867,53 +921,6 @@ class _DmScreenState extends State<DmScreen> {
                                                                             crossAxisAlignment:
                                                                                 CrossAxisAlignment.start,
                                                                             children: [
-                                                                              /*   Row(
-                                                                            crossAxisAlignment:
-                                                                                CrossAxisAlignment.start,
-                                                                            mainAxisAlignment:
-                                                                                MainAxisAlignment.start,
-                                                                            children: [
-                                                                              Padding(
-                                                                                padding:
-                                                                                    const EdgeInsets.only(left: 10, right: 3),
-                                                                                child: getInboxMessagesModel?.object?.content?[index].userName != null
-                                                                                    ? CustomImageView(
-                                                                                        url: "${getInboxMessagesModel?.object?.content?[index].userProfilePic}",
-                                                                                        height: 20,
-                                                                                        radius: BorderRadius.circular(20),
-                                                                                        width: 20,
-                                                                                        fit: BoxFit.fill,
-                                                                                      )
-                                                                                    : CustomImageView(
-                                                                                        imagePath: ImageConstant.tomcruse,
-                                                                                        height: 20,
-                                                                                      ),
-                                                                              ),
-                                                                              Text(
-                                                                                "${getInboxMessagesModel?.object?.content?[index].userName}",
-                                                                                style: TextStyle(
-                                                                                    fontWeight: FontWeight.w400,
-                                                                                    color: Colors.black,
-                                                                                    fontFamily: "outfit",
-                                                                                    fontSize: 14),
-                                                                              ),
-                                                                              Spacer(),
-                                                                              Align(
-                                                                                alignment:
-                                                                                    Alignment.centerRight,
-                                                                                child:
-                                                                                    Padding(
-                                                                                  padding: const EdgeInsets.only(right: 16),
-                                                                                  child: Text(
-                                                                                    customFormat(parsedDateTime),
-                                                                                    // maxLines: 3,
-                                                                                    textScaleFactor: 1.0,
-                                                                                    style: TextStyle(fontWeight: FontWeight.bold, color: Colors.grey, fontFamily: "outfit", fontSize: 12),
-                                                                                  ),
-                                                                                ),
-                                                                              ),
-                                                                            ],
-                                                                          ), */
                                                                               SizedBox(
                                                                                 height: 10,
                                                                               ),
@@ -1707,7 +1714,7 @@ class _DmScreenState extends State<DmScreen> {
                                           width: 10,
                                         ),
                                         Container(
-                                          width: _width / 1.32,
+                                          width: _width / 1.34,
                                           // color: Colors.amber,
                                           child: Row(
                                             children: [
@@ -1727,7 +1734,7 @@ class _DmScreenState extends State<DmScreen> {
                                                 width: 5,
                                               ),
                                               Container(
-                                                width: _width / 1.8,
+                                                width: _width / 1.90,
                                                 // color: Colors.red,
                                                 child: TextField(
                                                   controller: Add_Comment,
@@ -1753,7 +1760,7 @@ class _DmScreenState extends State<DmScreen> {
                                                 ),
                                               ),
                                               SizedBox(
-                                                width: 13,
+                                                width: 10.50,
                                               ),
                                               GestureDetector(
                                                 onTap: () {
@@ -1790,117 +1797,116 @@ class _DmScreenState extends State<DmScreen> {
                                         ScaffoldMessenger.of(context)
                                             .showSnackBar(snackBar);
                                       } else {
-                                        if (widget.ChatInboxUid == "") {
-                                          print("New chat ");
-                                        } else {
-                                          checkGuestUser();
-                                          print(
-                                              "this Data Get-${widget.ChatInboxUid}");
-                                          DMChatInboxUid =
-                                              "${widget.ChatInboxUid}";
+                                        // if (widget.ChatInboxUid == "") {
+                                        //   print("New chat ");
+                                        // } else {
+                                        checkGuestUser();
+                                        print(
+                                            "this Data Get-${widget.ChatInboxUid}");
+                                        DMChatInboxUid =
+                                            "${widget.ChatInboxUid}";
 
-                                          // "${widget.Room_ID}";
-                                          DMstompClient.subscribe(
-                                              destination:
-                                                  "/topic/getInboxMessage/${widget.ChatInboxUid}",
-                                              // "/topic/getMessage/${widget.Room_ID}",
-                                              callback: (StompFrame frame) {
-                                                Map<String, dynamic>
-                                                    jsonString = json.decode(
-                                                        frame.body ?? "");
+                                        // "${widget.Room_ID}";
+                                        DMstompClient.subscribe(
+                                            destination:
+                                                "/topic/getInboxMessage/${widget.ChatInboxUid}",
+                                            // "/topic/getMessage/${widget.Room_ID}",
+                                            callback: (StompFrame frame) {
+                                              Map<String, dynamic> jsonString =
+                                                  json.decode(frame.body ?? "");
 
-                                                var msgUUID =
-                                                    jsonString['object']['uid'];
-                                                if (AddNewData == false) {
-                                                  print(getInboxMessagesModel
-                                                      ?.object
-                                                      ?.content
-                                                      ?.length);
-                                                  if (getInboxMessagesModel
-                                                          ?.object?.content ==
-                                                      null) {
-                                                    // BlocProvider.of<senMSGCubit>(
-                                                    //         context)
-                                                    //     .coomentPage(widget.Room_ID,
-                                                    //         context, "${0}",
-                                                    //         ShowLoader: true);
-                                                  } else {
-                                                    if (addmsg != msgUUID) {
-                                                      mapDataAdd?.clear();
-                                                      print(
-                                                          "jsonStringDaatGet-${jsonString}");
+                                              var msgUUID =
+                                                  jsonString['object']['uid'];
+                                              if (AddNewData == false) {
+                                                print(getInboxMessagesModel
+                                                    ?.object?.content?.length);
+                                                if (getInboxMessagesModel
+                                                        ?.object?.content ==
+                                                    null) {
+                                                  // BlocProvider.of<senMSGCubit>(
+                                                  //         context)
+                                                  //     .coomentPage(widget.Room_ID,
+                                                  //         context, "${0}",
+                                                  //         ShowLoader: true);
+                                                } else {
+                                                  if (addmsg != msgUUID) {
+                                                    mapDataAdd?.clear();
+                                                    print(
+                                                        "jsonStringDaatGet-${jsonString}");
 
-                                                      mapDataAdd = {
-                                                        "userUid":
-                                                            jsonString['object']
-                                                                ['uid'],
-                                                        "userChatMessageUid":
-                                                            jsonString['object']
-                                                                [
-                                                                'userChatInboxUid'],
-                                                        "userName":
-                                                            jsonString['object']
-                                                                ['userName'],
-                                                        "userProfilePic":
-                                                            jsonString['object']
-                                                                [
-                                                                'userProfilePic'],
-                                                        "message":
-                                                            jsonString['object']
-                                                                ['message'],
-                                                        "createdDate":
-                                                            jsonString['object']
-                                                                ['createdAt'],
-                                                        "messageType":
-                                                            jsonString['object']
-                                                                ['messageType'],
-                                                        "isDeleted":
-                                                            jsonString['object']
-                                                                ['isDeleted']
-                                                      };
+                                                    mapDataAdd = {
+                                                      "userUid":
+                                                          jsonString['object']
+                                                              ['uid'],
+                                                      "userChatMessageUid":
+                                                          jsonString['object'][
+                                                              'userChatInboxUid'],
+                                                      "userName":
+                                                          jsonString['object']
+                                                              ['userName'],
+                                                      "userProfilePic":
+                                                          jsonString['object'][
+                                                              'userProfilePic'],
+                                                      "message":
+                                                          jsonString['object']
+                                                              ['message'],
+                                                      "createdDate":
+                                                          jsonString['object']
+                                                              ['createdAt'],
+                                                      "messageType":
+                                                          jsonString['object']
+                                                              ['messageType'],
+                                                      "isDeleted":
+                                                          jsonString['object']
+                                                              ['isDeleted'],
+                                                      "isDelivered":
+                                                          jsonString['object']
+                                                              ['isDelivered']
+                                                    };
 
-                                                      Content content =
-                                                          Content.fromJson(
-                                                              mapDataAdd!);
-                                                      print(
-                                                          "Content${content.createdDate}");
-                                                      getInboxMessagesModel
-                                                          ?.object?.content
-                                                          ?.add(content);
-                                                      _goToElement();
-                                                      /*  _goToElement(AllChatmodelData
+                                                    Content content =
+                                                        Content.fromJson(
+                                                            mapDataAdd!);
+                                                    print(
+                                                        "Content${content.createdDate}");
+                                                    getInboxMessagesModel
+                                                        ?.object?.content
+                                                        ?.add(content);
+                                                    _goToElement();
+                                                    /*  _goToElement(AllChatmodelData
                                                             ?.object
                                                             ?.messageOutputList
                                                             ?.content
                                                             ?.length ??
                                                         0); */
 
-                                                      setState(() {
-                                                        addDataSccesfully =
-                                                            true;
-                                                        addmsg =
-                                                            content.userUid ??
-                                                                "";
-                                                      });
-                                                    }
+                                                    setState(() {
+                                                      addDataSccesfully = true;
+                                                      addmsg =
+                                                          content.userUid ?? "";
+                                                    });
                                                   }
                                                 }
-                                              });
+                                              }
+                                            });
 
-                                          DMstompClient.send(
-                                            destination:
-                                                "/send_message_in_user_chat/${widget.ChatInboxUid}",
-                                            // "/sendMessage/${widget.Room_ID}",
-                                            body: json.encode({
-                                              "message": "${Add_Comment.text}",
-                                              "messageType": "TEXT",
-                                              "userChatInboxUid":
-                                                  "${widget.ChatInboxUid}",
-                                              //  "${widget.Room_ID}",
-                                              "userCode": "${UserCode}"
-                                            }),
-                                          );
-                                        }
+                                        DMstompClient.send(
+                                          destination:
+                                              "/send_message_in_user_chat/${widget.ChatInboxUid}",
+                                          // "/sendMessage/${widget.Room_ID}",
+                                          body: json.encode({
+                                            "message": "${Add_Comment.text}",
+                                            "messageType": "TEXT",
+                                            "userChatInboxUid":
+                                                "${widget.ChatInboxUid}",
+                                            //  "${widget.Room_ID}",
+                                            "userCode": "${UserCode}",
+                                            "isDelivered": widget.online == true
+                                                ? true
+                                                : false
+                                          }),
+                                        );
+                                        // }
                                       }
                                     } else {
                                       SnackBar snackBar = SnackBar(

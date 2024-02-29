@@ -166,7 +166,7 @@ class _RoomMembersScreenState extends State<RoomMembersScreen> {
                     height: _height / 8,
                     width: _width / 1.2,
                     decoration: BoxDecoration(
-                      color:ColorConstant.primaryLight_color,
+                      color: ColorConstant.primaryLight_color,
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: Column(
@@ -673,8 +673,8 @@ class _RoomMembersScreenState extends State<RoomMembersScreen> {
                                                     margin: EdgeInsets.only(
                                                         bottom: 5),
                                                     decoration: BoxDecoration(
-                                                        color:
-                                                            ColorConstant.primary_color,
+                                                        color: ColorConstant
+                                                            .primary_color,
                                                         borderRadius:
                                                             BorderRadius
                                                                 .circular(4)),
@@ -969,7 +969,8 @@ class _RoomMembersScreenState extends State<RoomMembersScreen> {
                                                         margin: EdgeInsets.only(
                                                             bottom: 5),
                                                         decoration: BoxDecoration(
-                                                            color: ColorConstant.primary_color,
+                                                            color: ColorConstant
+                                                                .primary_color,
                                                             borderRadius:
                                                                 BorderRadius
                                                                     .circular(
@@ -1141,7 +1142,8 @@ class _RoomMembersScreenState extends State<RoomMembersScreen> {
                                                             fontFamily:
                                                                 'outfit',
                                                             fontSize: 15,
-                                                            color:ColorConstant.primary_color,
+                                                            color: ColorConstant
+                                                                .primary_color,
                                                             fontWeight:
                                                                 FontWeight.w400,
                                                           ),
@@ -1167,7 +1169,8 @@ class _RoomMembersScreenState extends State<RoomMembersScreen> {
                                                         height: 43,
                                                         width: _width / 3.5,
                                                         decoration: BoxDecoration(
-                                                            color:ColorConstant.primary_color,
+                                                            color: ColorConstant
+                                                                .primary_color,
                                                             borderRadius:
                                                                 BorderRadius
                                                                     .circular(

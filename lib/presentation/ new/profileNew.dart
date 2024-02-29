@@ -10,6 +10,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_mentions/flutter_mentions.dart';
+import 'package:flutter_observer/Observable.dart';
+import 'package:flutter_observer/Observer.dart';
 import 'package:intl/intl.dart';
 import 'package:linkfy_text/linkfy_text.dart';
 import 'package:path_provider/path_provider.dart';
@@ -80,7 +82,7 @@ class NotificationModel {
 }
 
 class _ProfileScreenState extends State<ProfileScreen>
-    with SingleTickerProviderStateMixin {
+    with SingleTickerProviderStateMixin, Observer {
   List<String> tabData = ["Details", "Post", "Comments", "Saved"];
   List<String> soicalScreen = [
     "Details",
@@ -226,6 +228,7 @@ class _ProfileScreenState extends State<ProfileScreen>
 
   @override
   void initState() {
+    Observable.instance.addObserver(this);
     _tabController = TabController(length: tabData.length, vsync: this);
     getAllAPI_Data();
     getUserSavedData();
@@ -253,6 +256,13 @@ class _ProfileScreenState extends State<ProfileScreen>
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     User_ID = prefs.getString(PreferencesKey.loginUserID);
     User_Module = prefs.getString(PreferencesKey.module);
+  }
+
+  @override
+  update(Observable observable, String? notifyName, Map? map) async {
+    print("dfgsdfgdfgsdg-${map?['index']}");
+    GetAllPostData?.object?[map?['index']].isReports = true;
+    setState(() {});
   }
 
   @override
@@ -1080,39 +1090,39 @@ class _ProfileScreenState extends State<ProfileScreen>
                                           ),
                                         )
                                       : SizedBox(),
-                                  // Padding(
-                                  //   padding: const EdgeInsets.only(left: 10),
-                                  //   child: GestureDetector(
-                                  //     key: blockKey,
-                                  //     onTap: () {
-                                  //       showPopupMenuBlock(
-                                  //           context,
-                                  //           NewProfileData?.object?.userUid,
-                                  //           NewProfileData?.object?.name,
-                                  //           blockKey);
-                                  //     },
-                                  //     child: Container(
-                                  //       height: 40,
-                                  //       width: 40,
-                                  //       decoration: BoxDecoration(
-                                  //         color: ColorConstant.primary_color,
-                                  //         borderRadius:
-                                  //             BorderRadius.circular(10),
-                                  //       ),
-                                  //       child: Center(
-                                  //         child: Icon(
-                                  //           Icons.more_vert_rounded,
-                                  //           color: Colors.white,
-                                  //         ) /* CustomImageView(
-                                  //                       height: 20,
-                                  //                       width: 20,
-                                  //                       imagePath:
-                                  //                           ImageConstant.chat) */
-                                  //         ,
-                                  //       ),
-                                  //     ),
-                                  //   ),
-                                  // ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(left: 10),
+                                    child: GestureDetector(
+                                      key: blockKey,
+                                      onTap: () {
+                                        showPopupMenuBlock(
+                                            context,
+                                            NewProfileData?.object?.userUid,
+                                            NewProfileData?.object?.name,
+                                            blockKey);
+                                      },
+                                      child: Container(
+                                        height: 40,
+                                        width: 40,
+                                        decoration: BoxDecoration(
+                                          color: ColorConstant.primary_color,
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                        ),
+                                        child: Center(
+                                          child: Icon(
+                                            Icons.more_vert_rounded,
+                                            color: Colors.white,
+                                          ) /* CustomImageView(
+                                                        height: 20,
+                                                        width: 20,
+                                                        imagePath:
+                                                            ImageConstant.chat) */
+                                          ,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
                                   Spacer(),
                                 ],
                               ),
@@ -1309,8 +1319,8 @@ class _ProfileScreenState extends State<ProfileScreen>
                                     } else {}
                                   },
                                   child: Container(
-                                    color: Colors.transparent,
-                                    width: _width / 4.3,
+                                    // color: Colors.amber,
+                                    width: _width / 4.4,
                                     child: Column(
                                       children: [
                                         SizedBox(
@@ -1517,7 +1527,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                               // color: arrNotiyTypeList[3].isSelected
                                                               //     ? Colors.white
                                                               //     : Colors.black,
-                                                              fontSize: 18,
+                                                              fontSize: 16,
                                                               fontFamily:
                                                                   'Outfit',
                                                               fontWeight:
@@ -3582,7 +3592,8 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                       GetUserPostCommetData?.object?[index].description !=
                                                                               null
                                                                           ? Container(
-                                                                              width: _width / 1.35,
+                                                                            // color: Colors.amber,
+                                                                              width: _width / 1.45,
                                                                               child: Text(
                                                                                 '${GetUserPostCommetData?.object?[index].description}',
                                                                                 style: TextStyle(
@@ -3654,7 +3665,8 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                                       ),
                                                                                     ),
                                                                                     Container(
-                                                                                      width: _width / 1.7,
+                                                                                      // color: Colors.red,
+                                                                                      width: _width / 2,
                                                                                       child: Text(
                                                                                         '${GetUserPostCommetData?.object?[index].comments?[index2].comment}',
                                                                                         // maxLines: 1,
@@ -3890,82 +3902,71 @@ class _ProfileScreenState extends State<ProfileScreen>
             getAllPostData.object?[index].description != '') {
           DataGet = _isLink('${getAllPostData.object?[index].description}');
         }
-        return getAllPostData.object?[index].repostOn != null
-            ? Padding(
-                padding:
-                    EdgeInsets.only(left: 16, right: 16, top: 10, bottom: 10),
-                child: GestureDetector(
-                  onDoubleTap: () async {
-                    await soicalFunation(apiName: 'like_post', index: index);
-                  },
-                  child: Container(
-                    decoration: BoxDecoration(
-                        color: Colors.white,
-                        border:
-                            Border.all(color: Color.fromRGBO(0, 0, 0, 0.25)),
-                        borderRadius: BorderRadius.circular(15)),
-                    // height: 300,
-                    width: _width,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Container(
-                          height: 60,
-                          child: ListTile(
-                            leading: GestureDetector(
-                              onTap: () async {
-                                /*  await BlocProvider.of<GetGuestAllPostCubit>(
+        return getAllPostData.object?[index].isReports == true
+            ? Container(
+                width: _width,
+                decoration: BoxDecoration(
+                  color: Color(0xffF0F0F0),
+                ),
+                child: Column(
+                  children: [
+                    SizedBox(
+                      height: 10,
+                    ),
+                    SizedBox(
+                        height: 20,
+                        child: Image.asset(ImageConstant.greenseen)),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Text(
+                      'Thanks for reporting',
+                      style: TextStyle(color: Colors.black),
+                    ),
+                    SizedBox(
+                      height: 5,
+                    ),
+                    Text(
+                      'Post Reported and under review',
+                      style: TextStyle(color: Colors.grey),
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                  ],
+                ),
+              )
+            : getAllPostData.object?[index].repostOn != null
+                ? Padding(
+                    padding: EdgeInsets.only(
+                        left: 16, right: 16, top: 10, bottom: 10),
+                    child: GestureDetector(
+                      onDoubleTap: () async {
+                        await soicalFunation(
+                            apiName: 'like_post', index: index);
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            border: Border.all(
+                                color: Color.fromRGBO(0, 0, 0, 0.25)),
+                            borderRadius: BorderRadius.circular(15)),
+                        // height: 300,
+                        width: _width,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Container(
+                              height: 60,
+                              child: ListTile(
+                                leading: GestureDetector(
+                                  onTap: () async {
+                                    /*  await BlocProvider.of<GetGuestAllPostCubit>(
                                         context)
                                     .seetinonExpried(context); */
-                                Navigator.push(context,
-                                    MaterialPageRoute(builder: (context) {
-                                  return MultiBlocProvider(
-                                      providers: [
-                                        BlocProvider<NewProfileSCubit>(
-                                          create: (context) =>
-                                              NewProfileSCubit(),
-                                        ),
-                                      ],
-                                      child: ProfileScreen(
-                                          User_ID:
-                                              "${getAllPostData.object?[index].userUid}",
-                                          isFollowing: getAllPostData
-                                              .object?[index].isFollowing));
-                                })).then((value) => Get_UserToken());
-
-                                ///
-                              },
-                              child: getAllPostData
-                                              .object?[index].userProfilePic !=
-                                          null &&
-                                      getAllPostData
-                                              .object?[index].userProfilePic !=
-                                          ""
-                                  ? CircleAvatar(
-                                      backgroundImage: NetworkImage(
-                                          "${getAllPostData.object?[index].userProfilePic}"),
-                                      backgroundColor: Colors.white,
-                                      radius: 25,
-                                    )
-                                  : CustomImageView(
-                                      imagePath: ImageConstant.tomcruse,
-                                      height: 50,
-                                      width: 50,
-                                      fit: BoxFit.fill,
-                                      radius: BorderRadius.circular(25),
-                                    ),
-                            ),
-                            title: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                GestureDetector(
-                                  onTap: () async {
-                                    /*   await BlocProvider.of<GetGuestAllPostCubit>(
-                                            context)
-                                        .seetinonExpried(context); */
                                     Navigator.push(context,
                                         MaterialPageRoute(builder: (context) {
                                       return MultiBlocProvider(
@@ -3982,96 +3983,156 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                   .object?[index].isFollowing));
                                     })).then((value) => Get_UserToken());
 
-                                    //
+                                    ///
                                   },
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Container(
-                                        // color: Colors.amber,
-                                        child: Text(
-                                          "${getAllPostData.object?[index].postUserName}",
-                                          style: TextStyle(
-                                              fontSize: 20,
-                                              fontFamily: "outfit",
-                                              fontWeight: FontWeight.bold),
+                                  child: getAllPostData.object?[index]
+                                                  .userProfilePic !=
+                                              null &&
+                                          getAllPostData.object?[index]
+                                                  .userProfilePic !=
+                                              ""
+                                      ? CircleAvatar(
+                                          backgroundImage: NetworkImage(
+                                              "${getAllPostData.object?[index].userProfilePic}"),
+                                          backgroundColor: Colors.white,
+                                          radius: 25,
+                                        )
+                                      : CustomImageView(
+                                          imagePath: ImageConstant.tomcruse,
+                                          height: 50,
+                                          width: 50,
+                                          fit: BoxFit.fill,
+                                          radius: BorderRadius.circular(25),
                                         ),
-                                      ),
-                                      getAllPostData.object?[index].userUid ==
-                                              User_ID
-                                          ? GestureDetector(
-                                              key: buttonKey,
-                                              onTap: () {
-                                                showPopupMenu(context, index,
-                                                    buttonKey, getAllPostData);
-                                              },
-                                              child: Icon(
-                                                Icons.more_vert_rounded,
-                                              ),
-                                            )
-                                          : GestureDetector(
-                                              key: buttonKey,
-                                              onTap: () async {
-                                                showPopupMenu1(
-                                                  context,
-                                                  index,
-                                                  buttonKey,
-                                                  getAllPostData
-                                                      .object?[index].postUid,
-                                                );
-                                              },
-                                              child: Container(
-                                                  height: 25,
-                                                  width: 40,
-                                                  color: Colors.transparent,
-                                                  child: Icon(
-                                                      Icons.more_vert_rounded)))
-                                    ],
-                                  ),
                                 ),
-                                Text(
-                                  getTimeDifference(parsedDateTime),
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    fontFamily: "outfit",
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
+                                title: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    GestureDetector(
+                                      onTap: () async {
+                                        /*   await BlocProvider.of<GetGuestAllPostCubit>(
+                                            context)
+                                        .seetinonExpried(context); */
+                                        Navigator.push(context,
+                                            MaterialPageRoute(
+                                                builder: (context) {
+                                          return MultiBlocProvider(
+                                              providers: [
+                                                BlocProvider<NewProfileSCubit>(
+                                                  create: (context) =>
+                                                      NewProfileSCubit(),
+                                                ),
+                                              ],
+                                              child: ProfileScreen(
+                                                  User_ID:
+                                                      "${getAllPostData.object?[index].userUid}",
+                                                  isFollowing: getAllPostData
+                                                      .object?[index]
+                                                      .isFollowing));
+                                        })).then((value) => Get_UserToken());
 
-                        getAllPostData.object?[index].description != null
-                            ? Padding(
-                                padding: const EdgeInsets.only(left: 16),
-                                child: GestureDetector(
-                                    onTap: () async {
-                                      if (DataGet == true) {
-                                        await launch(
-                                            '${getAllPostData.object?[index].description}',
-                                            forceWebView: true,
-                                            enableJavaScript: true);
-                                      } else {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  OpenSavePostImage(
-                                                    PostID: getAllPostData
-                                                        .object?[index].postUid,
-                                                  )),
-                                        );
-                                      }
-                                    },
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        /*                  GestureDetector(
+                                        //
+                                      },
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Container(
+                                            // color: Colors.amber,
+                                            child: Text(
+                                              "${getAllPostData.object?[index].postUserName}",
+                                              style: TextStyle(
+                                                  fontSize: 20,
+                                                  fontFamily: "outfit",
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                          ),
+                                          getAllPostData
+                                                      .object?[index].userUid ==
+                                                  User_ID
+                                              ? GestureDetector(
+                                                  key: buttonKey,
+                                                  onTap: () {
+                                                    showPopupMenu(
+                                                        context,
+                                                        index,
+                                                        buttonKey,
+                                                        getAllPostData);
+                                                  },
+                                                  child: Icon(
+                                                    Icons.more_vert_rounded,
+                                                    size: 25,
+                                                  ),
+                                                )
+                                              : getAllPostData.object?[index]
+                                                          .userUid ==
+                                                      User_ID
+                                                  ? SizedBox()
+                                                  : GestureDetector(
+                                                      key: buttonKey,
+                                                      onTap: () async {
+                                                        showPopupMenu1(
+                                                            context,
+                                                            index,
+                                                            buttonKey,
+                                                            getAllPostData
+                                                                .object?[index]
+                                                                .postUid,
+                                                            '_ProfileScreenState');
+                                                      },
+                                                      child: Container(
+                                                          height: 25,
+                                                          width: 40,
+                                                          color: Colors
+                                                              .transparent,
+                                                          child: Icon(Icons
+                                                              .more_vert_rounded)))
+                                        ],
+                                      ),
+                                    ),
+                                    Text(
+                                      getTimeDifference(parsedDateTime),
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        fontFamily: "outfit",
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+
+                            getAllPostData.object?[index].description != null
+                                ? Padding(
+                                    padding: const EdgeInsets.only(left: 16),
+                                    child: GestureDetector(
+                                        onTap: () async {
+                                          if (DataGet == true) {
+                                            await launch(
+                                                '${getAllPostData.object?[index].description}',
+                                                forceWebView: true,
+                                                enableJavaScript: true);
+                                          } else {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      OpenSavePostImage(
+                                                        PostID: getAllPostData
+                                                            .object?[index]
+                                                            .postUid,
+                                                      )),
+                                            );
+                                          }
+                                        },
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            /*                  GestureDetector(
                                                 onTap: () async {
 
                                                                                 String inputText = "${getAllPostData.object?[index].description}";
@@ -4107,1556 +4168,6 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                                     getAllPostData?.object?[index].description = _translatedTextenglish;
                                                                                     getAllPostData?.object?[index].isfalsegu = null;
                                                                                     getAllPostData?.object?[index].isfalsehin = null;
-                                                                                  });
-                                                                                }
-                                                                              },
-                                                                              child: Container(
-                                                                                  width: 80,
-                                                                                  decoration: BoxDecoration(color: ColorConstant.primaryLight_color, borderRadius: BorderRadius.circular(10)),
-                                                                                  child: Center(
-                                                                                      child: Text(
-                                                                                    "Translate",
-                                                                                    style: TextStyle(
-                                                                                      fontFamily: 'outfit',
-                                                                                      fontWeight: FontWeight.bold,
-                                                                                    ),
-                                                                                  ))),
-                                                                            ), */
-                                        getAllPostData.object?[index]
-                                                    .translatedDescription !=
-                                                null
-                                            ? GestureDetector(
-                                                onTap: () async {
-                                                  super.setState(() {
-                                                    if (getAllPostData
-                                                                .object?[index]
-                                                                .isTrsnalteoption ==
-                                                            false ||
-                                                        getAllPostData
-                                                                .object?[index]
-                                                                .isTrsnalteoption ==
-                                                            null) {
-                                                      getAllPostData
-                                                              .object?[index]
-                                                              .isTrsnalteoption =
-                                                          true;
-                                                    } else {
-                                                      getAllPostData
-                                                              .object?[index]
-                                                              .isTrsnalteoption =
-                                                          false;
-                                                    }
-                                                  });
-                                                },
-                                                child: Container(
-                                                    width: 80,
-                                                    decoration: BoxDecoration(
-                                                      color: ColorConstant
-                                                          .primaryLight_color,
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              10),
-                                                    ),
-                                                    child: Center(
-                                                        child: Text(
-                                                      "Translate",
-                                                      style: TextStyle(
-                                                        fontFamily: 'outfit',
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                      ),
-                                                    ))),
-                                              )
-                                            : SizedBox(),
-                                        SizedBox(
-                                          height: 10,
-                                        ),
-                                        Row(
-                                          children: [
-                                            Expanded(
-                                              child: Container(
-                                                // color: Colors.amber,
-                                                child: LinkifyText(
-                                                  getAllPostData.object?[index]
-                                                                  .isTrsnalteoption ==
-                                                              false ||
-                                                          getAllPostData
-                                                                  .object?[
-                                                                      index]
-                                                                  .isTrsnalteoption ==
-                                                              null
-                                                      ? "${getAllPostData.object?[index].description}"
-                                                      : "${getAllPostData.object?[index].translatedDescription}",
-                                                  linkStyle: TextStyle(
-                                                    color: Colors.blue,
-                                                    fontFamily: 'outfit',
-                                                  ),
-                                                  textStyle: TextStyle(
-                                                    color: Colors.black,
-                                                    fontFamily: 'outfit',
-                                                  ),
-                                                  linkTypes: [
-                                                    LinkType.url,
-                                                    LinkType.userTag,
-                                                    LinkType.hashTag,
-                                                    // LinkType
-                                                    //     .email
-                                                  ],
-                                                  onTap: (link) async {
-                                                    /// do stuff with `link` like
-                                                    /// if(link.type == Link.url) launchUrl(link.value);
-
-                                                    var SelectedTest =
-                                                        link.value.toString();
-                                                    var Link =
-                                                        SelectedTest.startsWith(
-                                                            'https');
-                                                    var Link1 =
-                                                        SelectedTest.startsWith(
-                                                            'http');
-                                                    var Link2 =
-                                                        SelectedTest.startsWith(
-                                                            'www');
-                                                    var Link3 =
-                                                        SelectedTest.startsWith(
-                                                            'WWW');
-                                                    var Link4 =
-                                                        SelectedTest.startsWith(
-                                                            'HTTPS');
-                                                    var Link5 =
-                                                        SelectedTest.startsWith(
-                                                            'HTTP');
-                                                    var Link6 =
-                                                        SelectedTest.startsWith(
-                                                            'https://pdslink.page.link/');
-                                                    print(SelectedTest
-                                                        .toString());
-
-                                                    if (User_ID == null) {
-                                                      Navigator.of(context).push(
-                                                          MaterialPageRoute(
-                                                              builder: (context) =>
-                                                                  RegisterCreateAccountScreen()));
-                                                    } else {
-                                                      if (Link == true ||
-                                                          Link1 == true ||
-                                                          Link2 == true ||
-                                                          Link3 == true ||
-                                                          Link4 == true ||
-                                                          Link5 == true ||
-                                                          Link6 == true) {
-                                                        if (Link2 == true ||
-                                                            Link3 == true) {
-                                                          launchUrl(Uri.parse(
-                                                              "https://${link.value.toString()}"));
-                                                          print(
-                                                              "qqqqqqqqhttps://${link.value}");
-                                                        } else {
-                                                          if (Link6 == true) {
-                                                            print(
-                                                                "yes i am inList =   room");
-                                                            Navigator.push(
-                                                                context,
-                                                                MaterialPageRoute(
-                                                              builder:
-                                                                  (context) {
-                                                                return NewBottomBar(
-                                                                  buttomIndex:
-                                                                      1,
-                                                                );
-                                                              },
-                                                            ));
-                                                          } else {
-                                                            launchUrl(Uri.parse(
-                                                                link.value
-                                                                    .toString()));
-                                                            print(
-                                                                "link.valuelink.value -- ${link.value}");
-                                                          }
-                                                        }
-                                                      } else {
-                                                        if (link.value!
-                                                            .startsWith('#')) {
-                                                          /*  await BlocProvider.of<
-                                                                      GetGuestAllPostCubit>(
-                                                                  context)
-                                                              .seetinonExpried(
-                                                                  context); */
-                                                          Navigator.push(
-                                                              context,
-                                                              MaterialPageRoute(
-                                                                builder: (context) =>
-                                                                    HashTagViewScreen(
-                                                                        title:
-                                                                            "${link.value}"),
-                                                              ));
-                                                        } else if (link.value!
-                                                            .startsWith('@')) {
-                                                          /*  await BlocProvider.of<
-                                                                      GetGuestAllPostCubit>(
-                                                                  context)
-                                                              .seetinonExpried(
-                                                                  context); */
-                                                          var name;
-                                                          var tagName;
-                                                          name = SelectedTest;
-                                                          tagName =
-                                                              name.replaceAll(
-                                                                  "@", "");
-                                                          await BlocProvider.of<
-                                                                      NewProfileSCubit>(
-                                                                  context)
-                                                              .UserTagAPI(
-                                                                  context,
-                                                                  tagName);
-
-                                                          Navigator.push(
-                                                              context,
-                                                              MaterialPageRoute(
-                                                                  builder:
-                                                                      (context) {
-                                                            return ProfileScreen(
-                                                                User_ID:
-                                                                    "${userTagModel?.object}",
-                                                                isFollowing:
-                                                                    "");
-                                                          })).then((value) =>
-                                                              Get_UserToken());
-
-                                                          print(
-                                                              "tagName -- ${tagName}");
-                                                          print(
-                                                              "user id -- ${userTagModel?.object}");
-                                                        } else {
-                                                          launchUrl(Uri.parse(
-                                                              "https://${link.value.toString()}"));
-                                                        }
-                                                      }
-                                                    }
-                                                  },
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    )),
-                              )
-                            : SizedBox(),
-
-                        (getAllPostData.object?[index].postData?.isEmpty ??
-                                false)
-                            ? SizedBox()
-                            : Container(
-                                // height: 200,
-                                width: _width,
-                                child: getAllPostData
-                                            .object?[index].postDataType ==
-                                        null
-                                    ? SizedBox()
-                                    : getAllPostData.object?[index].postData
-                                                ?.length ==
-                                            1
-                                        ? (getAllPostData.object?[index]
-                                                    .postDataType ==
-                                                "IMAGE"
-                                            ? GestureDetector(
-                                                onTap: () {
-                                                  Navigator.push(
-                                                    context,
-                                                    MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            OpenSavePostImage(
-                                                              PostID:
-                                                                  getAllPostData
-                                                                      .object?[
-                                                                          index]
-                                                                      .postUid,
-                                                              index: index,
-                                                            )),
-                                                  );
-                                                },
-                                                child: Container(
-                                                  height: 200,
-                                                  width: _width,
-                                                  margin: EdgeInsets.only(
-                                                      left: 16,
-                                                      top: 15,
-                                                      right: 16),
-                                                  child: Center(
-                                                      child: CustomImageView(
-                                                    url:
-                                                        "${getAllPostData.object?[index].postData?[0]}",
-                                                  )),
-                                                ),
-                                              )
-                                            : getAllPostData.object?[index]
-                                                        .postDataType ==
-                                                    "VIDEO"
-                                                ? /* repostControllers[0].value.isInitialized
-                                                                                    ?   */
-                                                Padding(
-                                                    padding:
-                                                        const EdgeInsets.only(
-                                                            right: 20, top: 15),
-                                                    child: Column(
-                                                      mainAxisSize:
-                                                          MainAxisSize.min,
-                                                      children: [
-                                                        Container(
-                                                          // height: 180,
-                                                          width: _width,
-                                                          child: VideoListItem1(
-                                                            videoUrl: videoUrls[
-                                                                index],
-                                                            PostID:
-                                                                getAllPostData
-                                                                    .object?[
-                                                                        index]
-                                                                    .postUid,
-                                                            /*  isData:
-                                                                User_ID == null
-                                                                    ? false
-                                                                    : true, */
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  )
-                                                // : SizedBox()
-                                                //this is the ATTACHMENT
-                                                : getAllPostData.object?[index]
-                                                            .postDataType ==
-                                                        "ATTACHMENT"
-                                                    ? (getAllPostData
-                                                                .object?[index]
-                                                                .postData
-                                                                ?.isNotEmpty ==
-                                                            true)
-                                                        ? /* Container(
-                                                                                            height: 200,
-                                                                                            width: _width,
-                                                                                            child: DocumentViewScreen1(
-                                                                                              path: getAllPostData?.object?[index].postData?[0].toString(),
-                                                                                            )) */
-                                                        Stack(
-                                                            children: [
-                                                              Container(
-                                                                height: 400,
-                                                                width: _width,
-                                                                color: Colors
-                                                                    .transparent,
-                                                              ),
-                                                              GestureDetector(
-                                                                onTap: () {
-                                                                  print(
-                                                                      "objectobjectobjectobject");
-                                                                  Navigator.push(
-                                                                      context,
-                                                                      MaterialPageRoute(
-                                                                    builder:
-                                                                        (context) {
-                                                                      return DocumentViewScreen1(
-                                                                        path: getAllPostData
-                                                                            .object?[index]
-                                                                            .postData?[0]
-                                                                            .toString(),
-                                                                      );
-                                                                    },
-                                                                  ));
-                                                                },
-                                                                child:
-                                                                    Container(
-                                                                  child:
-                                                                      CachedNetworkImage(
-                                                                    imageUrl: getAllPostData
-                                                                            .object?[index]
-                                                                            .thumbnailImageUrl ??
-                                                                        "",
-                                                                    fit: BoxFit
-                                                                        .cover,
-                                                                  ),
-                                                                ),
-                                                              )
-                                                            ],
-                                                          )
-                                                        : SizedBox()
-                                                    : SizedBox())
-                                        : Column(
-                                            children: [
-                                              Stack(
-                                                children: [
-                                                  if ((getAllPostData
-                                                          .object?[index]
-                                                          .postData
-                                                          ?.isNotEmpty ??
-                                                      false)) ...[
-                                                    SizedBox(
-                                                      height: 200,
-                                                      child: PageView.builder(
-                                                        onPageChanged: (page) {
-                                                          super.setState(() {
-                                                            _currentPages[
-                                                                index] = page;
-                                                            imageCount1 =
-                                                                page + 1;
-                                                          });
-                                                        },
-                                                        controller:
-                                                            _pageControllers[
-                                                                index],
-                                                        itemCount:
-                                                            getAllPostData
-                                                                .object?[index]
-                                                                .postData
-                                                                ?.length,
-                                                        itemBuilder:
-                                                            (BuildContext
-                                                                    context,
-                                                                int index1) {
-                                                          if (getAllPostData
-                                                                  .object?[
-                                                                      index]
-                                                                  .postDataType ==
-                                                              "IMAGE") {
-                                                            return Container(
-                                                              width: _width,
-                                                              margin: EdgeInsets
-                                                                  .only(
-                                                                      left: 16,
-                                                                      top: 15,
-                                                                      right:
-                                                                          16),
-                                                              child: Center(
-                                                                  child:
-                                                                      GestureDetector(
-                                                                onTap: () {
-                                                                  Navigator
-                                                                      .push(
-                                                                    context,
-                                                                    MaterialPageRoute(
-                                                                        builder: (context) =>
-                                                                            OpenSavePostImage(
-                                                                              PostID: getAllPostData.object?[index].postUid,
-                                                                              index: index1,
-                                                                            )),
-                                                                  );
-                                                                },
-                                                                child: Stack(
-                                                                  children: [
-                                                                    Align(
-                                                                      alignment:
-                                                                          Alignment
-                                                                              .topCenter,
-                                                                      child:
-                                                                          CustomImageView(
-                                                                        url:
-                                                                            "${getAllPostData.object?[index].postData?[index1]}",
-                                                                      ),
-                                                                    ),
-                                                                    Align(
-                                                                      alignment:
-                                                                          Alignment
-                                                                              .topRight,
-                                                                      child:
-                                                                          Card(
-                                                                        color: Colors
-                                                                            .transparent,
-                                                                        elevation:
-                                                                            0,
-                                                                        child: Container(
-                                                                            alignment: Alignment.center,
-                                                                            height: 30,
-                                                                            width: 50,
-                                                                            decoration: BoxDecoration(
-                                                                              color: Color.fromARGB(255, 2, 1, 1),
-                                                                              borderRadius: BorderRadius.all(Radius.circular(50)),
-                                                                            ),
-                                                                            child: Text(
-                                                                              imageCount1.toString() + '/' + '${getAllPostData.object?[index].postData?.length}',
-                                                                              style: TextStyle(color: Colors.white),
-                                                                            )),
-                                                                      ),
-                                                                    )
-                                                                  ],
-                                                                ),
-                                                              )),
-                                                            );
-                                                          } else if (getAllPostData
-                                                                  .object?[
-                                                                      index]
-                                                                  .postDataType ==
-                                                              "ATTACHMENT") {
-                                                            return Container(
-                                                                height: 200,
-                                                                width: _width,
-                                                                child:
-                                                                    DocumentViewScreen1(
-                                                                  path: getAllPostData
-                                                                      .object?[
-                                                                          index]
-                                                                      .postData?[
-                                                                          index1]
-                                                                      .toString(),
-                                                                ));
-                                                          }
-                                                        },
-                                                      ),
-                                                    ),
-                                                    Positioned(
-                                                        bottom: 5,
-                                                        left: 0,
-                                                        right: 0,
-                                                        child: Padding(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                  .only(top: 0),
-                                                          child: Container(
-                                                            height: 20,
-                                                            child:
-                                                                DotsIndicator(
-                                                              dotsCount: getAllPostData
-                                                                      .object?[
-                                                                          index]
-                                                                      .postData
-                                                                      ?.length ??
-                                                                  0,
-                                                              position:
-                                                                  _currentPages[
-                                                                          index]
-                                                                      .toDouble(),
-                                                              decorator:
-                                                                  DotsDecorator(
-                                                                size:
-                                                                    const Size(
-                                                                        10.0,
-                                                                        7.0),
-                                                                activeSize:
-                                                                    const Size(
-                                                                        10.0,
-                                                                        10.0),
-                                                                spacing: const EdgeInsets
-                                                                        .symmetric(
-                                                                    horizontal:
-                                                                        2),
-                                                                activeColor:
-                                                                    ColorConstant
-                                                                        .primary_color,
-                                                                color: Color(
-                                                                    0xff6A6A6A),
-                                                              ),
-                                                            ),
-                                                          ),
-                                                        ))
-                                                  ]
-                                                  // : SizedBox()
-                                                ],
-                                              ),
-                                            ],
-                                          ),
-                              ),
-                        // inner post portion
-
-                        Padding(
-                          padding: const EdgeInsets.only(
-                              left: 10, right: 10, bottom: 10, top: 20),
-                          child: Container(
-                            decoration: BoxDecoration(
-                                color: Colors.white,
-                                border: Border.all(
-                                    color: Color.fromRGBO(0, 0, 0, 0.25)),
-                                borderRadius: BorderRadius.circular(15)),
-                            // height: 300,
-                            width: _width,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                SizedBox(
-                                  height: 10,
-                                ),
-                                Container(
-                                  height: 60,
-                                  child: ListTile(
-                                    leading: GestureDetector(
-                                      onTap: () async {
-                                        /*    await BlocProvider.of<
-                                                GetGuestAllPostCubit>(context)
-                                            .seetinonExpried(context); */
-                                        Navigator.push(context,
-                                            MaterialPageRoute(
-                                                builder: (context) {
-                                          return MultiBlocProvider(
-                                              providers: [
-                                                BlocProvider<NewProfileSCubit>(
-                                                  create: (context) =>
-                                                      NewProfileSCubit(),
-                                                ),
-                                              ],
-                                              child: ProfileScreen(
-                                                  User_ID:
-                                                      "${getAllPostData.object?[index].repostOn?.userUid}",
-                                                  isFollowing: getAllPostData
-                                                      .object?[index]
-                                                      .repostOn
-                                                      ?.isFollowing));
-                                        })).then((value) => Get_UserToken());
-                                        //
-                                      },
-                                      child: getAllPostData
-                                                      .object?[index]
-                                                      .repostOn
-                                                      ?.userProfilePic !=
-                                                  null &&
-                                              getAllPostData
-                                                      .object?[index]
-                                                      .repostOn
-                                                      ?.userProfilePic !=
-                                                  ""
-                                          ? CircleAvatar(
-                                              backgroundImage: NetworkImage(
-                                                  "${getAllPostData.object?[index].repostOn?.userProfilePic}"),
-                                              backgroundColor: Colors.white,
-                                              radius: 25,
-                                            )
-                                          : CustomImageView(
-                                              imagePath: ImageConstant.tomcruse,
-                                              height: 50,
-                                              width: 50,
-                                              fit: BoxFit.fill,
-                                              radius: BorderRadius.circular(25),
-                                            ),
-                                    ),
-                                    title: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        GestureDetector(
-                                          onTap: () async {
-                                            /*    await BlocProvider.of<
-                                                          GetGuestAllPostCubit>(
-                                                      context)
-                                                  .seetinonExpried(context); */
-                                            Navigator.push(context,
-                                                MaterialPageRoute(
-                                                    builder: (context) {
-                                              return MultiBlocProvider(
-                                                  providers: [
-                                                    BlocProvider<
-                                                        NewProfileSCubit>(
-                                                      create: (context) =>
-                                                          NewProfileSCubit(),
-                                                    ),
-                                                  ],
-                                                  child: ProfileScreen(
-                                                      User_ID:
-                                                          "${getAllPostData.object?[index].repostOn?.userUid}",
-                                                      isFollowing:
-                                                          getAllPostData
-                                                              .object?[index]
-                                                              .repostOn
-                                                              ?.isFollowing));
-                                            })).then(
-                                                (value) => Get_UserToken());
-                                            //
-                                          },
-                                          child: Container(
-                                            // color:
-                                            // Colors.amber,
-                                            child: Text(
-                                              "${getAllPostData.object?[index].repostOn?.postUserName}",
-                                              style: TextStyle(
-                                                  fontSize: 20,
-                                                  fontFamily: "outfit",
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                          ),
-                                        ),
-                                        Text(
-                                          getAllPostData.object?[index]
-                                                      .repostOn ==
-                                                  null
-                                              ? ""
-                                              : getTimeDifference(repostTime!),
-                                          style: TextStyle(
-                                            fontSize: 12,
-                                            fontFamily: "outfit",
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: 10,
-                                ),
-                                getAllPostData.object?[index].repostOn
-                                            ?.description !=
-                                        null
-                                    ? Padding(
-                                        padding:
-                                            const EdgeInsets.only(left: 16),
-                                        child: LinkifyText(
-                                          "${getAllPostData.object?[index].repostOn?.description}",
-                                          linkStyle: TextStyle(
-                                            color: Colors.blue,
-                                            fontFamily: 'outfit',
-                                          ),
-                                          textStyle: TextStyle(
-                                            color: Colors.black,
-                                            fontFamily: 'outfit',
-                                          ),
-                                          linkTypes: [
-                                            LinkType.url,
-                                            LinkType.userTag,
-                                            LinkType.hashTag,
-                                            // LinkType
-                                            //     .email
-                                          ],
-                                          onTap: (link) async {
-                                            /// do stuff with `link` like
-                                            /// if(link.type == Link.url) launchUrl(link.value);
-
-                                            var SelectedTest =
-                                                link.value.toString();
-                                            var Link = SelectedTest.startsWith(
-                                                'https');
-                                            var Link1 =
-                                                SelectedTest.startsWith('http');
-                                            var Link2 =
-                                                SelectedTest.startsWith('www');
-                                            var Link3 =
-                                                SelectedTest.startsWith('WWW');
-                                            var Link4 = SelectedTest.startsWith(
-                                                'HTTPS');
-                                            var Link5 =
-                                                SelectedTest.startsWith('HTTP');
-                                            var Link6 = SelectedTest.startsWith(
-                                                'https://pdslink.page.link/');
-                                            print(SelectedTest.toString());
-
-                                            if (User_ID == null) {
-                                              Navigator.of(context).push(
-                                                  MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          RegisterCreateAccountScreen()));
-                                            } else {
-                                              if (Link == true ||
-                                                  Link1 == true ||
-                                                  Link2 == true ||
-                                                  Link3 == true ||
-                                                  Link4 == true ||
-                                                  Link5 == true ||
-                                                  Link6 == true) {
-                                                if (Link2 == true ||
-                                                    Link3 == true) {
-                                                  launchUrl(Uri.parse(
-                                                      "https://${link.value.toString()}"));
-                                                  print(
-                                                      "qqqqqqqqhttps://${link.value}");
-                                                } else {
-                                                  if (Link6 == true) {
-                                                    print(
-                                                        "yes i am inList =   room");
-                                                    Navigator.push(context,
-                                                        MaterialPageRoute(
-                                                      builder: (context) {
-                                                        return NewBottomBar(
-                                                          buttomIndex: 1,
-                                                        );
-                                                      },
-                                                    ));
-                                                  } else {
-                                                    launchUrl(Uri.parse(
-                                                        link.value.toString()));
-                                                    print(
-                                                        "link.valuelink.value -- ${link.value}");
-                                                  }
-                                                }
-                                              } else {
-                                                if (link.value!
-                                                    .startsWith('#')) {
-                                                  /*   await BlocProvider.of<
-                                                              GetGuestAllPostCubit>(
-                                                          context)
-                                                      .seetinonExpried(context); */
-                                                  print(
-                                                      "aaaaaaaaaa == ${link}");
-                                                  Navigator.push(
-                                                      context,
-                                                      MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            HashTagViewScreen(
-                                                                title:
-                                                                    "${link.value}"),
-                                                      ));
-                                                } else if (link.value!
-                                                    .startsWith('@')) {
-                                                  /*  await BlocProvider.of<
-                                                              GetGuestAllPostCubit>(
-                                                          context)
-                                                      .seetinonExpried(context); */
-                                                  var name;
-                                                  var tagName;
-                                                  name = SelectedTest;
-                                                  tagName =
-                                                      name.replaceAll("@", "");
-                                                  await BlocProvider.of<
-                                                              NewProfileSCubit>(
-                                                          context)
-                                                      .UserTagAPI(
-                                                          context, tagName);
-
-                                                  Navigator.push(context,
-                                                      MaterialPageRoute(
-                                                          builder: (context) {
-                                                    return ProfileScreen(
-                                                        User_ID:
-                                                            "${userTagModel?.object}",
-                                                        isFollowing: "");
-                                                  })).then((value) =>
-                                                      Get_UserToken());
-
-                                                  print(
-                                                      "tagName -- ${tagName}");
-                                                  print(
-                                                      "user id -- ${userTagModel?.object}");
-                                                }
-                                              }
-                                            }
-                                          },
-                                        ))
-                                    : SizedBox(),
-                                Container(
-                                  width: _width,
-                                  child: getAllPostData.object?[index].repostOn
-                                              ?.postDataType ==
-                                          null
-                                      ? SizedBox()
-                                      : getAllPostData.object?[index].repostOn
-                                                  ?.postData?.length ==
-                                              1
-                                          ? (getAllPostData.object?[index]
-                                                      .repostOn?.postDataType ==
-                                                  "IMAGE"
-                                              ? GestureDetector(
-                                                  onTap: () {
-                                                    Navigator.push(
-                                                      context,
-                                                      MaterialPageRoute(
-                                                          builder: (context) =>
-                                                              OpenSavePostImage(
-                                                                PostID: getAllPostData
-                                                                    .object?[
-                                                                        index]
-                                                                    .repostOn
-                                                                    ?.postUid,
-                                                                index: index,
-                                                              )),
-                                                    );
-                                                  },
-                                                  child: Container(
-                                                    width: _width,
-                                                    height: 150,
-                                                    margin: EdgeInsets.only(
-                                                        left: 16,
-                                                        top: 15,
-                                                        right: 16),
-                                                    child: Center(
-                                                        child: CustomImageView(
-                                                      url:
-                                                          "${getAllPostData.object?[index].repostOn?.postData?[0]}",
-                                                    )),
-                                                  ),
-                                                )
-                                              : getAllPostData
-                                                          .object?[index]
-                                                          .repostOn
-                                                          ?.postDataType ==
-                                                      "VIDEO"
-                                                  ? /* repostMainControllers[0].value.isInitialized
-                                                                                      ? */
-                                                  Padding(
-                                                      padding:
-                                                          const EdgeInsets.only(
-                                                              right: 20,
-                                                              top: 15),
-                                                      child: Column(
-                                                        mainAxisSize:
-                                                            MainAxisSize.min,
-                                                        children: [
-                                                          VideoListItem1(
-                                                            videoUrl: videoUrls[
-                                                                index],
-                                                            discrption:
-                                                                getAllPostData
-                                                                    .object?[
-                                                                        index]
-                                                                    .repostOn
-                                                                    ?.description,
-                                                            PostID:
-                                                                getAllPostData
-                                                                    .object?[
-                                                                        index]
-                                                                    .postUid,
-                                                            /*  isData:
-                                                                User_ID == null
-                                                                    ? false
-                                                                    : true, */
-                                                          )
-                                                        ],
-                                                      ),
-                                                    )
-                                                  // : SizedBox()
-                                                  : getAllPostData
-                                                              .object?[index]
-                                                              .repostOn
-                                                              ?.postDataType ==
-                                                          "ATTACHMENT"
-                                                      ? Stack(
-                                                          children: [
-                                                            Container(
-                                                              height: 400,
-                                                              width: _width,
-                                                              color: Colors
-                                                                  .transparent,
-                                                            ),
-                                                            GestureDetector(
-                                                              onTap: () {
-                                                                print(
-                                                                    "objectobjectobjectobject");
-                                                                Navigator.push(
-                                                                    context,
-                                                                    MaterialPageRoute(
-                                                                  builder:
-                                                                      (context) {
-                                                                    return DocumentViewScreen1(
-                                                                      path: getAllPostData
-                                                                          .object?[
-                                                                              index]
-                                                                          .repostOn
-                                                                          ?.postData?[
-                                                                              0]
-                                                                          .toString(),
-                                                                    );
-                                                                  },
-                                                                ));
-                                                              },
-                                                              child: Container(
-                                                                child:
-                                                                    CachedNetworkImage(
-                                                                  imageUrl: getAllPostData
-                                                                          .object?[
-                                                                              index]
-                                                                          .repostOn
-                                                                          ?.thumbnailImageUrl ??
-                                                                      "",
-                                                                  fit: BoxFit
-                                                                      .cover,
-                                                                ),
-                                                              ),
-                                                            )
-                                                          ],
-                                                        )
-                                                      : SizedBox())
-                                          : Column(
-                                              children: [
-                                                Stack(
-                                                  children: [
-                                                    if ((getAllPostData
-                                                            .object?[index]
-                                                            .repostOn
-                                                            ?.postData
-                                                            ?.isNotEmpty ??
-                                                        false)) ...[
-                                                      SizedBox(
-                                                        height: 300,
-                                                        child: PageView.builder(
-                                                          onPageChanged:
-                                                              (page) {
-                                                            super.setState(() {
-                                                              _currentPages[
-                                                                  index] = page;
-                                                              imageCount2 =
-                                                                  page + 1;
-                                                            });
-                                                          },
-                                                          controller:
-                                                              _pageControllers[
-                                                                  index],
-                                                          itemCount:
-                                                              getAllPostData
-                                                                  .object?[
-                                                                      index]
-                                                                  .repostOn
-                                                                  ?.postData
-                                                                  ?.length,
-                                                          itemBuilder:
-                                                              (BuildContext
-                                                                      context,
-                                                                  int index1) {
-                                                            if (getAllPostData
-                                                                    .object?[
-                                                                        index]
-                                                                    .repostOn
-                                                                    ?.postDataType ==
-                                                                "IMAGE") {
-                                                              return GestureDetector(
-                                                                onTap: () {
-                                                                  print(
-                                                                      "Repost Opne Full screen");
-
-                                                                  Navigator
-                                                                      .push(
-                                                                    context,
-                                                                    MaterialPageRoute(
-                                                                        builder: (context) =>
-                                                                            OpenSavePostImage(
-                                                                              PostID: getAllPostData.object?[index].repostOn?.postUid,
-                                                                              index: index1,
-                                                                            )),
-                                                                  );
-                                                                },
-                                                                child:
-                                                                    Container(
-                                                                  width: _width,
-                                                                  margin: EdgeInsets
-                                                                      .only(
-                                                                          left:
-                                                                              16,
-                                                                          top:
-                                                                              15,
-                                                                          right:
-                                                                              16),
-                                                                  child: Center(
-                                                                      child:
-                                                                          Stack(
-                                                                    children: [
-                                                                      Align(
-                                                                        alignment:
-                                                                            Alignment.topCenter,
-                                                                        child:
-                                                                            CustomImageView(
-                                                                          url:
-                                                                              "${getAllPostData.object?[index].repostOn?.postData?[index1]}",
-                                                                        ),
-                                                                      ),
-                                                                      Align(
-                                                                        alignment:
-                                                                            Alignment.topRight,
-                                                                        child:
-                                                                            Card(
-                                                                          color:
-                                                                              Colors.transparent,
-                                                                          elevation:
-                                                                              0,
-                                                                          child: Container(
-                                                                              alignment: Alignment.center,
-                                                                              height: 30,
-                                                                              width: 50,
-                                                                              decoration: BoxDecoration(
-                                                                                color: Color.fromARGB(255, 2, 1, 1),
-                                                                                borderRadius: BorderRadius.all(Radius.circular(50)),
-                                                                              ),
-                                                                              child: Text(
-                                                                                imageCount2.toString() + '/' + '${getAllPostData.object?[index].repostOn?.postData?.length}',
-                                                                                style: TextStyle(color: Colors.white),
-                                                                              )),
-                                                                        ),
-                                                                      )
-                                                                    ],
-                                                                  )),
-                                                                ),
-                                                              );
-                                                            } else if (getAllPostData
-                                                                    .object?[
-                                                                        index]
-                                                                    .repostOn
-                                                                    ?.postDataType ==
-                                                                "ATTACHMENT") {
-                                                              return Container(
-                                                                  height: 400,
-                                                                  width: _width,
-                                                                  child:
-                                                                      DocumentViewScreen1(
-                                                                    path: getAllPostData
-                                                                        .object?[
-                                                                            index]
-                                                                        .repostOn
-                                                                        ?.postData?[
-                                                                            index1]
-                                                                        .toString(),
-                                                                  ));
-                                                            }
-                                                          },
-                                                        ),
-                                                      ),
-                                                      Positioned(
-                                                          bottom: 5,
-                                                          left: 0,
-                                                          right: 0,
-                                                          child: Padding(
-                                                            padding:
-                                                                const EdgeInsets
-                                                                        .only(
-                                                                    top: 0),
-                                                            child: Container(
-                                                              height: 20,
-                                                              child:
-                                                                  DotsIndicator(
-                                                                dotsCount: getAllPostData
-                                                                        .object?[
-                                                                            index]
-                                                                        .repostOn
-                                                                        ?.postData
-                                                                        ?.length ??
-                                                                    1,
-                                                                position: _currentPages[
-                                                                        index]
-                                                                    .toDouble(),
-                                                                decorator:
-                                                                    DotsDecorator(
-                                                                  size:
-                                                                      const Size(
-                                                                          10.0,
-                                                                          7.0),
-                                                                  activeSize:
-                                                                      const Size(
-                                                                          10.0,
-                                                                          10.0),
-                                                                  spacing: const EdgeInsets
-                                                                          .symmetric(
-                                                                      horizontal:
-                                                                          2),
-                                                                  activeColor:
-                                                                      ColorConstant
-                                                                          .primary_color,
-                                                                  color: Color(
-                                                                      0xff6A6A6A),
-                                                                ),
-                                                              ),
-                                                            ),
-                                                          ))
-                                                    ]
-                                                  ],
-                                                ),
-                                              ],
-                                            ),
-                                ),
-                                SizedBox(
-                                  height: 10,
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 13),
-                          child: Divider(
-                            thickness: 1,
-                          ),
-                        ),
-                        SizedBox(
-                          height: 5,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 0, right: 16),
-                          child: Row(
-                            children: [
-                              SizedBox(
-                                width: 14,
-                              ),
-                              GestureDetector(
-                                onTap: () async {
-                                  await soicalFunation(
-                                      apiName: 'like_post', index: index);
-                                },
-                                child: Container(
-                                  color: Colors.transparent,
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(5.0),
-                                    child:
-                                        getAllPostData.object?[index].isLiked !=
-                                                true
-                                            ? Image.asset(
-                                                ImageConstant.likewithout,
-                                                height: 20,
-                                              )
-                                            : Image.asset(
-                                                ImageConstant.like,
-                                                height: 20,
-                                              ),
-                                  ),
-                                ),
-                              ),
-                              SizedBox(
-                                width: 0,
-                              ),
-                              getAllPostData.object?[index].likedCount == 0
-                                  ? SizedBox()
-                                  : GestureDetector(
-                                      onTap: () {
-                                        /* Navigator.push(
-                                                    context,
-                                                    MaterialPageRoute(
-                                                        builder: (context) =>
-                                                       
-                                                            ShowAllPostLike("${getAllPostData?.object?[index].postUid}"))); */
-
-                                        Navigator.push(context,
-                                            MaterialPageRoute(
-                                          builder: (context) {
-                                            return ShowAllPostLike(
-                                                "${getAllPostData.object?[index].postUid}");
-                                          },
-                                        ));
-                                      },
-                                      child: Container(
-                                        color: Colors.transparent,
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(5.0),
-                                          child: Text(
-                                            "${getAllPostData.object?[index].likedCount}",
-                                            style: TextStyle(
-                                                fontFamily: "outfit",
-                                                fontSize: 14),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                              SizedBox(
-                                width: 8,
-                              ),
-                              GestureDetector(
-                                onTap: () async {
-                                  BlocProvider.of<AddcommentCubit>(context)
-                                      .Addcomment(context,
-                                          '${getAllPostData.object?[index].postUid}');
-
-                                  _settingModalBottomSheet1(
-                                      context, index, _width);
-                                },
-                                child: Container(
-                                  color: Colors.transparent,
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(5.0),
-                                    child: Image.asset(
-                                      ImageConstant.meesage,
-                                      height: 15,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              SizedBox(
-                                width: 5,
-                              ),
-                              getAllPostData.object?[index].commentCount == 0
-                                  ? SizedBox()
-                                  : Text(
-                                      "${getAllPostData.object?[index].commentCount}",
-                                      style: TextStyle(
-                                          fontFamily: "outfit", fontSize: 14),
-                                    ),
-                              SizedBox(
-                                width: 8,
-                              ),
-                              GestureDetector(
-                                onTap: () {
-                                  rePostBottomSheet(context, index);
-                                },
-                                child: Container(
-                                  color: Colors.transparent,
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(5.0),
-                                    child: Image.asset(
-                                      ImageConstant.vector2,
-                                      height: 13,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              SizedBox(
-                                width: 5,
-                              ),
-                              getAllPostData.object?[index].repostCount ==
-                                          null ||
-                                      getAllPostData
-                                              .object?[index].repostCount ==
-                                          0
-                                  ? SizedBox()
-                                  : Text(
-                                      '${getAllPostData.object?[index].repostCount}',
-                                      style: TextStyle(
-                                          fontFamily: "outfit", fontSize: 14),
-                                    ),
-                              GestureDetector(
-                                onTap: () {
-                                  _onShareXFileFromAssets(context,
-                                      androidLink:
-                                          '${getAllPostData.object?[index].postLink}'
-                                      /* iosLink:
-                                                      "https://apps.apple.com/inList =  /app/growder-b2b-platform/id6451333863" */
-                                      );
-                                },
-                                child: Container(
-                                  height: 20,
-                                  width: 30,
-                                  color: Colors.transparent,
-                                  child: Icon(Icons.share_rounded, size: 20),
-                                ),
-                              ),
-                              Spacer(),
-                              GestureDetector(
-                                onTap: () async {
-                                  await soicalFunation(
-                                      apiName: 'savedata', index: index);
-                                },
-                                child: Container(
-                                  color: Colors.transparent,
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(5.0),
-                                    child: Image.asset(
-                                      getAllPostData.object?[index].isSaved ==
-                                              false
-                                          ? ImageConstant.savePin
-                                          : ImageConstant.Savefill,
-                                      height: 17,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        SizedBox(
-                          height: 5,
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              )
-            : Padding(
-                padding:
-                    EdgeInsets.only(left: 16, right: 16, top: 10, bottom: 10),
-                child: GestureDetector(
-                  onDoubleTap: () async {
-                    await soicalFunation(apiName: 'like_post', index: index);
-                  },
-                  child: Container(
-                    decoration: BoxDecoration(
-                        color: Colors.white,
-                        border:
-                            Border.all(color: Color.fromRGBO(0, 0, 0, 0.25)),
-                        borderRadius: BorderRadius.circular(15)),
-                    // height: 300,
-                    width: _width,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Container(
-                          height: 60,
-                          child: ListTile(
-                            leading: GestureDetector(
-                              onTap: () async {
-                                /*   await BlocProvider.of<GetGuestAllPostCubit>(
-                                        context)
-                                    .seetinonExpried(context); */
-                                Navigator.push(context,
-                                    MaterialPageRoute(builder: (context) {
-                                  return MultiBlocProvider(
-                                      providers: [
-                                        BlocProvider<NewProfileSCubit>(
-                                          create: (context) =>
-                                              NewProfileSCubit(),
-                                        ),
-                                      ],
-                                      child: ProfileScreen(
-                                          User_ID:
-                                              "${getAllPostData.object?[index].userUid}",
-                                          isFollowing: getAllPostData
-                                              .object?[index].isFollowing));
-                                })).then((value) => Get_UserToken());
-                                //
-                              },
-                              child: getAllPostData
-                                              .object?[index].userProfilePic !=
-                                          null &&
-                                      getAllPostData
-                                              .object?[index].userProfilePic !=
-                                          ""
-                                  ? CircleAvatar(
-                                      backgroundImage: NetworkImage(
-                                          "${getAllPostData.object?[index].userProfilePic}"),
-                                      backgroundColor: Colors.white,
-                                      radius: 25,
-                                    )
-                                  : CustomImageView(
-                                      imagePath: ImageConstant.tomcruse,
-                                      height: 50,
-                                      width: 50,
-                                      fit: BoxFit.fill,
-                                      radius: BorderRadius.circular(25),
-                                    ),
-                            ),
-                            title: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                // SizedBox(
-                                //   height: 6,
-                                // ),
-                                GestureDetector(
-                                  onTap: () async {
-                                    /*    await BlocProvider.of<GetGuestAllPostCubit>(
-                                            context)
-                                        .seetinonExpried(context); */
-                                    Navigator.push(context,
-                                        MaterialPageRoute(builder: (context) {
-                                      return MultiBlocProvider(
-                                          providers: [
-                                            BlocProvider<NewProfileSCubit>(
-                                              create: (context) =>
-                                                  NewProfileSCubit(),
-                                            ),
-                                          ],
-                                          child: ProfileScreen(
-                                              User_ID:
-                                                  "${getAllPostData.object?[index].userUid}",
-                                              isFollowing: getAllPostData
-                                                  .object?[index].isFollowing));
-                                    })).then((value) => Get_UserToken());
-                                    //
-                                  },
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Container(
-                                        // color: Colors.amber,
-                                        child: Text(
-                                          "${getAllPostData.object?[index].postUserName}",
-                                          style: TextStyle(
-                                              fontSize: 20,
-                                              fontFamily: "outfit",
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                      ),
-                                      getAllPostData.object?[index].userUid ==
-                                              User_ID
-                                          ? GestureDetector(
-                                              key: buttonKey,
-                                              onTap: () {
-                                                showPopupMenu(context, index,
-                                                    buttonKey, getAllPostData);
-                                              },
-                                              child: Icon(
-                                                Icons.more_vert_rounded,
-                                              ),
-                                            )
-                                          : SizedBox()
-                                    ],
-                                  ),
-                                ),
-                                //FIndText
-                                Text(
-                                  getTimeDifference(parsedDateTime),
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    fontFamily: "outfit",
-                                  ),
-                                ),
-                              ],
-                            ),
-                            trailing: GestureDetector(
-                                key: buttonKey,
-                                onTap: () async {
-                                  showPopupMenu1(
-                                    context,
-                                    index,
-                                    buttonKey,
-                                    getAllPostData.object?[index].postUid,
-                                  );
-                                },
-                                child: Container(
-                                    height: 25,
-                                    width: 40,
-                                    color: Colors.transparent,
-                                    child: Icon(Icons.more_vert_rounded))),
-                          ),
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        getAllPostData.object?[index].description != null
-                            ? Padding(
-                                padding: const EdgeInsets.only(left: 16),
-                                child:
-                                    //this is the despcation
-                                    GestureDetector(
-                                        onTap: () async {
-                                          if (DataGet == true) {
-                                            await launch(
-                                                '${getAllPostData.object?[index].description}',
-                                                forceWebView: true,
-                                                enableJavaScript: true);
-                                          } else {
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      OpenSavePostImage(
-                                                        PostID: getAllPostData
-                                                            .object?[index]
-                                                            .postUid,
-                                                      )),
-                                            );
-                                          }
-                                        },
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            /*  GestureDetector(
-                                                                              onTap: () async {
-                                                                                print("value cheak${getAllPostData?.object?[index].isfalsegu}");
-                                                                                print("value cheak${getAllPostData?.object?[index].isfalsehin}");
-                                                                                String inputText = "${getAllPostData?.object?[index].description}";
-                                                                                String translatedTextGujarati = await translateText(inputText, 'gu');
-                                                                                String translatedTextHindi = await translateText(inputText, 'hi');
-                                                                                String translatedTextenglish = await translateText(inputText, 'en');
-
-                                                                                if (getAllPostData?.object?[index].isfalsehin == null && getAllPostData?.object?[index].isfalsegu == null) {
-                                                                                  super.setState(() {
-                                                                                    _translatedTextHindi = translatedTextHindi;
-
-                                                                                    // getAllPostData?.object?[index].description = _translatedTextGujarati;
-                                                                                    getAllPostData?.object?[index].description = _translatedTextHindi;
-                                                                                    getAllPostData?.object?[index].isfalsehin = true;
-                                                                                  });
-                                                                                } else if (getAllPostData?.object?[index].isfalsehin == true && getAllPostData?.object?[index].isfalsegu == null) {
-                                                                                  super.setState(() {
-                                                                                    // isDataSet = false;
-                                                                                    _translatedTextGujarati = translatedTextGujarati;
-                                                                                    // _translatedTextHindi = translatedTextHindi;
-
-                                                                                    // getAllPostData?.object?[index].description = _translatedTextGujarati;
-                                                                                    getAllPostData?.object?[index].description = _translatedTextGujarati;
-                                                                                    getAllPostData?.object?[index].isfalsegu = true;
-                                                                                    //  isDataSet = true;
-                                                                                  });
-                                                                                } else if (getAllPostData?.object?[index].isfalsehin == true && getAllPostData?.object?[index].isfalsehin == true) {
-                                                                                  print("this condison is working");
-
-                                                                                  super.setState(() {
-                                                                                    print("i'm cheaking dataa--------------------------------$initalData");
-                                                                                    // isDataSet = false;
-                                                                                    _translatedTextenglish = translatedTextenglish;
-                                                                                    getAllPostData?.object?[index].description = _translatedTextenglish;
-                                                                                    getAllPostData?.object?[index].isfalsegu = null;
-                                                                                    getAllPostData?.object?[index].isfalsehin = null;
-                                                                                    // isDataSet = true;
                                                                                   });
                                                                                 }
                                                                               },
@@ -5723,13 +4234,13 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                   )
                                                 : SizedBox(),
                                             SizedBox(
-                                              // color: Colors.red,
                                               height: 10,
                                             ),
                                             Row(
                                               children: [
                                                 Expanded(
                                                   child: Container(
+                                                    // color: Colors.amber,
                                                     child: LinkifyText(
                                                       getAllPostData
                                                                       .object?[
@@ -5782,9 +4293,8 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                         var Link6 = SelectedTest
                                                             .startsWith(
                                                                 'https://pdslink.page.link/');
-                                                        print("tag -- " +
-                                                            SelectedTest
-                                                                .toString());
+                                                        print(SelectedTest
+                                                            .toString());
 
                                                         if (User_ID == null) {
                                                           Navigator.of(context).push(
@@ -5831,17 +4341,15 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                     "link.valuelink.value -- ${link.value}");
                                                               }
                                                             }
-                                                          } else if (link
-                                                                  .value !=
-                                                              null) {
+                                                          } else {
                                                             if (link.value!
                                                                 .startsWith(
                                                                     '#')) {
-                                                              /*   await BlocProvider
-                                                                      .of<GetGuestAllPostCubit>(
-                                                                          context)
-                                                                  .seetinonExpried(
-                                                                      context); */
+                                                              /*  await BlocProvider.of<
+                                                                      GetGuestAllPostCubit>(
+                                                                  context)
+                                                              .seetinonExpried(
+                                                                  context); */
                                                               Navigator.push(
                                                                   context,
                                                                   MaterialPageRoute(
@@ -5854,11 +4362,11 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                 .value!
                                                                 .startsWith(
                                                                     '@')) {
-                                                              /*  await BlocProvider
-                                                                      .of<GetGuestAllPostCubit>(
-                                                                          context)
-                                                                  .seetinonExpried(
-                                                                      context); */
+                                                              /*  await BlocProvider.of<
+                                                                      GetGuestAllPostCubit>(
+                                                                  context)
+                                                              .seetinonExpried(
+                                                                  context); */
                                                               var name;
                                                               var tagName;
                                                               name =
@@ -5890,6 +4398,9 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                   "tagName -- ${tagName}");
                                                               print(
                                                                   "user id -- ${userTagModel?.object}");
+                                                            } else {
+                                                              launchUrl(Uri.parse(
+                                                                  "https://${link.value.toString()}"));
                                                             }
                                                           }
                                                         }
@@ -5897,490 +4408,2213 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                     ),
                                                   ),
                                                 ),
-                                                SizedBox(
-                                                  width: 10,
-                                                ),
                                               ],
                                             ),
                                           ],
                                         )),
-                              )
-                            : SizedBox(),
-                        // index == 0
+                                  )
+                                : SizedBox(),
 
-                        Container(
-                          width: _width,
-                          child: getAllPostData.object?[index].postDataType ==
-                                  null
-                              ? SizedBox()
-                              : getAllPostData
-                                          .object?[index].postData?.length ==
-                                      1
-                                  ? (getAllPostData
-                                              .object?[index].postDataType ==
-                                          "IMAGE"
-                                      ? GestureDetector(
-                                          onTap: () {
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      OpenSavePostImage(
-                                                        PostID: getAllPostData
-                                                            .object?[index]
-                                                            .postUid,
-                                                        index: index,
+                            (getAllPostData.object?[index].postData?.isEmpty ??
+                                    false)
+                                ? SizedBox()
+                                : Container(
+                                    // height: 200,
+                                    width: _width,
+                                    child: getAllPostData
+                                                .object?[index].postDataType ==
+                                            null
+                                        ? SizedBox()
+                                        : getAllPostData.object?[index].postData
+                                                    ?.length ==
+                                                1
+                                            ? (getAllPostData.object?[index]
+                                                        .postDataType ==
+                                                    "IMAGE"
+                                                ? GestureDetector(
+                                                    onTap: () {
+                                                      Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                OpenSavePostImage(
+                                                                  PostID: getAllPostData
+                                                                      .object?[
+                                                                          index]
+                                                                      .postUid,
+                                                                  index: index,
+                                                                )),
+                                                      );
+                                                    },
+                                                    child: Container(
+                                                      height: 200,
+                                                      width: _width,
+                                                      margin: EdgeInsets.only(
+                                                          left: 16,
+                                                          top: 15,
+                                                          right: 16),
+                                                      child: Center(
+                                                          child:
+                                                              CustomImageView(
+                                                        url:
+                                                            "${getAllPostData.object?[index].postData?[0]}",
                                                       )),
-                                            );
-                                          },
-                                          child: Container(
-                                            width: _width,
-                                            margin: EdgeInsets.only(
-                                                left: 16, top: 15, right: 16),
-                                            child: Center(
-                                                child: CustomImageView(
-                                              url:
-                                                  "${getAllPostData.object?[index].postData?[0]}",
-                                            )),
-                                          ),
-                                        )
-                                      : getAllPostData.object?[index]
-                                                  .postDataType ==
-                                              "VIDEO"
-                                          ? /*  mainPostControllers[0].value.isInitialized
-                                                                              ? */
-
-                                          Padding(
-                                              padding: const EdgeInsets.only(
-                                                  right: 20, top: 15),
-                                              child: Column(
-                                                mainAxisSize: MainAxisSize.min,
-                                                children: [
-                                                  /* Container(
-                                                                                            height: 250,
+                                                    ),
+                                                  )
+                                                : getAllPostData.object?[index]
+                                                            .postDataType ==
+                                                        "VIDEO"
+                                                    ? /* repostControllers[0].value.isInitialized
+                                                                                    ?   */
+                                                    Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                    .only(
+                                                                right: 20,
+                                                                top: 15),
+                                                        child: Column(
+                                                          mainAxisSize:
+                                                              MainAxisSize.min,
+                                                          children: [
+                                                            Container(
+                                                              // height: 180,
+                                                              width: _width,
+                                                              child:
+                                                                  VideoListItem1(
+                                                                videoUrl:
+                                                                    videoUrls[
+                                                                        index],
+                                                                PostID: getAllPostData
+                                                                    .object?[
+                                                                        index]
+                                                                    .postUid,
+                                                                /*  isData:
+                                                                User_ID == null
+                                                                    ? false
+                                                                    : true, */
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      )
+                                                    // : SizedBox()
+                                                    //this is the ATTACHMENT
+                                                    : getAllPostData
+                                                                .object?[index]
+                                                                .postDataType ==
+                                                            "ATTACHMENT"
+                                                        ? (getAllPostData
+                                                                    .object?[
+                                                                        index]
+                                                                    .postData
+                                                                    ?.isNotEmpty ==
+                                                                true)
+                                                            ? /* Container(
+                                                                                            height: 200,
                                                                                             width: _width,
-                                                                                            child: Chewie(
-                                                                                              controller: chewieController[index],
-                                                                                            )), */
-
-                                                  VideoListItem1(
-                                                    videoUrl: videoUrls[index],
-                                                    PostID: getAllPostData
-                                                        .object?[index].postUid,
-                                                    /* isData: User_ID == null
-                                                        ? false
-                                                        : true, */
+                                                                                            child: DocumentViewScreen1(
+                                                                                              path: getAllPostData?.object?[index].postData?[0].toString(),
+                                                                                            )) */
+                                                            Stack(
+                                                                children: [
+                                                                  Container(
+                                                                    height: 400,
+                                                                    width:
+                                                                        _width,
+                                                                    color: Colors
+                                                                        .transparent,
+                                                                  ),
+                                                                  GestureDetector(
+                                                                    onTap: () {
+                                                                      print(
+                                                                          "objectobjectobjectobject");
+                                                                      Navigator.push(
+                                                                          context,
+                                                                          MaterialPageRoute(
+                                                                        builder:
+                                                                            (context) {
+                                                                          return DocumentViewScreen1(
+                                                                            path:
+                                                                                getAllPostData.object?[index].postData?[0].toString(),
+                                                                          );
+                                                                        },
+                                                                      ));
+                                                                    },
+                                                                    child:
+                                                                        Container(
+                                                                      child:
+                                                                          CachedNetworkImage(
+                                                                        imageUrl:
+                                                                            getAllPostData.object?[index].thumbnailImageUrl ??
+                                                                                "",
+                                                                        fit: BoxFit
+                                                                            .cover,
+                                                                      ),
+                                                                    ),
+                                                                  )
+                                                                ],
+                                                              )
+                                                            : SizedBox()
+                                                        : SizedBox())
+                                            : Column(
+                                                children: [
+                                                  Stack(
+                                                    children: [
+                                                      if ((getAllPostData
+                                                              .object?[index]
+                                                              .postData
+                                                              ?.isNotEmpty ??
+                                                          false)) ...[
+                                                        SizedBox(
+                                                          height: 200,
+                                                          child:
+                                                              PageView.builder(
+                                                            onPageChanged:
+                                                                (page) {
+                                                              super
+                                                                  .setState(() {
+                                                                _currentPages[
+                                                                        index] =
+                                                                    page;
+                                                                imageCount1 =
+                                                                    page + 1;
+                                                              });
+                                                            },
+                                                            controller:
+                                                                _pageControllers[
+                                                                    index],
+                                                            itemCount:
+                                                                getAllPostData
+                                                                    .object?[
+                                                                        index]
+                                                                    .postData
+                                                                    ?.length,
+                                                            itemBuilder:
+                                                                (BuildContext
+                                                                        context,
+                                                                    int index1) {
+                                                              if (getAllPostData
+                                                                      .object?[
+                                                                          index]
+                                                                      .postDataType ==
+                                                                  "IMAGE") {
+                                                                return Container(
+                                                                  width: _width,
+                                                                  margin: EdgeInsets
+                                                                      .only(
+                                                                          left:
+                                                                              16,
+                                                                          top:
+                                                                              15,
+                                                                          right:
+                                                                              16),
+                                                                  child: Center(
+                                                                      child:
+                                                                          GestureDetector(
+                                                                    onTap: () {
+                                                                      Navigator
+                                                                          .push(
+                                                                        context,
+                                                                        MaterialPageRoute(
+                                                                            builder: (context) =>
+                                                                                OpenSavePostImage(
+                                                                                  PostID: getAllPostData.object?[index].postUid,
+                                                                                  index: index1,
+                                                                                )),
+                                                                      );
+                                                                    },
+                                                                    child:
+                                                                        Stack(
+                                                                      children: [
+                                                                        Align(
+                                                                          alignment:
+                                                                              Alignment.topCenter,
+                                                                          child:
+                                                                              CustomImageView(
+                                                                            url:
+                                                                                "${getAllPostData.object?[index].postData?[index1]}",
+                                                                          ),
+                                                                        ),
+                                                                        Align(
+                                                                          alignment:
+                                                                              Alignment.topRight,
+                                                                          child:
+                                                                              Card(
+                                                                            color:
+                                                                                Colors.transparent,
+                                                                            elevation:
+                                                                                0,
+                                                                            child: Container(
+                                                                                alignment: Alignment.center,
+                                                                                height: 30,
+                                                                                width: 50,
+                                                                                decoration: BoxDecoration(
+                                                                                  color: Color.fromARGB(255, 2, 1, 1),
+                                                                                  borderRadius: BorderRadius.all(Radius.circular(50)),
+                                                                                ),
+                                                                                child: Text(
+                                                                                  imageCount1.toString() + '/' + '${getAllPostData.object?[index].postData?.length}',
+                                                                                  style: TextStyle(color: Colors.white),
+                                                                                )),
+                                                                          ),
+                                                                        )
+                                                                      ],
+                                                                    ),
+                                                                  )),
+                                                                );
+                                                              } else if (getAllPostData
+                                                                      .object?[
+                                                                          index]
+                                                                      .postDataType ==
+                                                                  "ATTACHMENT") {
+                                                                return Container(
+                                                                    height: 200,
+                                                                    width:
+                                                                        _width,
+                                                                    child:
+                                                                        DocumentViewScreen1(
+                                                                      path: getAllPostData
+                                                                          .object?[
+                                                                              index]
+                                                                          .postData?[
+                                                                              index1]
+                                                                          .toString(),
+                                                                    ));
+                                                              }
+                                                            },
+                                                          ),
+                                                        ),
+                                                        Positioned(
+                                                            bottom: 5,
+                                                            left: 0,
+                                                            right: 0,
+                                                            child: Padding(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                          .only(
+                                                                      top: 0),
+                                                              child: Container(
+                                                                height: 20,
+                                                                child:
+                                                                    DotsIndicator(
+                                                                  dotsCount: getAllPostData
+                                                                          .object?[
+                                                                              index]
+                                                                          .postData
+                                                                          ?.length ??
+                                                                      0,
+                                                                  position: _currentPages[
+                                                                          index]
+                                                                      .toDouble(),
+                                                                  decorator:
+                                                                      DotsDecorator(
+                                                                    size: const Size(
+                                                                        10.0,
+                                                                        7.0),
+                                                                    activeSize:
+                                                                        const Size(
+                                                                            10.0,
+                                                                            10.0),
+                                                                    spacing: const EdgeInsets
+                                                                            .symmetric(
+                                                                        horizontal:
+                                                                            2),
+                                                                    activeColor:
+                                                                        ColorConstant
+                                                                            .primary_color,
+                                                                    color: Color(
+                                                                        0xff6A6A6A),
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            ))
+                                                      ]
+                                                      // : SizedBox()
+                                                    ],
                                                   ),
                                                 ],
                                               ),
-                                            )
-                                          // : SizedBox()
+                                  ),
+                            // inner post portion
 
-                                          : getAllPostData.object?[index]
-                                                      .postDataType ==
-                                                  "ATTACHMENT"
-                                              ? (getAllPostData
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                  left: 10, right: 10, bottom: 10, top: 20),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    border: Border.all(
+                                        color: Color.fromRGBO(0, 0, 0, 0.25)),
+                                    borderRadius: BorderRadius.circular(15)),
+                                // height: 300,
+                                width: _width,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    SizedBox(
+                                      height: 10,
+                                    ),
+                                    Container(
+                                      height: 60,
+                                      child: ListTile(
+                                        leading: GestureDetector(
+                                          onTap: () async {
+                                            /*    await BlocProvider.of<
+                                                GetGuestAllPostCubit>(context)
+                                            .seetinonExpried(context); */
+                                            Navigator.push(context,
+                                                MaterialPageRoute(
+                                                    builder: (context) {
+                                              return MultiBlocProvider(
+                                                  providers: [
+                                                    BlocProvider<
+                                                        NewProfileSCubit>(
+                                                      create: (context) =>
+                                                          NewProfileSCubit(),
+                                                    ),
+                                                  ],
+                                                  child: ProfileScreen(
+                                                      User_ID:
+                                                          "${getAllPostData.object?[index].repostOn?.userUid}",
+                                                      isFollowing:
+                                                          getAllPostData
+                                                              .object?[index]
+                                                              .repostOn
+                                                              ?.isFollowing));
+                                            })).then(
+                                                (value) => Get_UserToken());
+                                            //
+                                          },
+                                          child: getAllPostData
                                                           .object?[index]
-                                                          .postData
-                                                          ?.isNotEmpty ==
-                                                      true)
-                                                  ? Stack(
-                                                      children: [
-                                                        Container(
-                                                          height: 400,
-                                                          width: _width,
-                                                          color: Colors
-                                                              .transparent,
-                                                          /* child: DocumentViewScreen1(
-                                                                                            path: getAllPostData?.object?[index].postData?[0].toString(),
-                                                                                          ) */
+                                                          .repostOn
+                                                          ?.userProfilePic !=
+                                                      null &&
+                                                  getAllPostData
+                                                          .object?[index]
+                                                          .repostOn
+                                                          ?.userProfilePic !=
+                                                      ""
+                                              ? CircleAvatar(
+                                                  backgroundImage: NetworkImage(
+                                                      "${getAllPostData.object?[index].repostOn?.userProfilePic}"),
+                                                  backgroundColor: Colors.white,
+                                                  radius: 25,
+                                                )
+                                              : CustomImageView(
+                                                  imagePath:
+                                                      ImageConstant.tomcruse,
+                                                  height: 50,
+                                                  width: 50,
+                                                  fit: BoxFit.fill,
+                                                  radius:
+                                                      BorderRadius.circular(25),
+                                                ),
+                                        ),
+                                        title: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            GestureDetector(
+                                              onTap: () async {
+                                                /*    await BlocProvider.of<
+                                                          GetGuestAllPostCubit>(
+                                                      context)
+                                                  .seetinonExpried(context); */
+                                                Navigator.push(context,
+                                                    MaterialPageRoute(
+                                                        builder: (context) {
+                                                  return MultiBlocProvider(
+                                                      providers: [
+                                                        BlocProvider<
+                                                            NewProfileSCubit>(
+                                                          create: (context) =>
+                                                              NewProfileSCubit(),
                                                         ),
-                                                        GestureDetector(
-                                                          onTap: () {
-                                                            print(
-                                                                "objectobjectobjectobject");
-                                                            Navigator.push(
-                                                                context,
-                                                                MaterialPageRoute(
+                                                      ],
+                                                      child: ProfileScreen(
+                                                          User_ID:
+                                                              "${getAllPostData.object?[index].repostOn?.userUid}",
+                                                          isFollowing:
+                                                              getAllPostData
+                                                                  .object?[
+                                                                      index]
+                                                                  .repostOn
+                                                                  ?.isFollowing));
+                                                })).then(
+                                                    (value) => Get_UserToken());
+                                                //
+                                              },
+                                              child: Container(
+                                                // color:
+                                                // Colors.amber,
+                                                child: Text(
+                                                  "${getAllPostData.object?[index].repostOn?.postUserName}",
+                                                  style: TextStyle(
+                                                      fontSize: 20,
+                                                      fontFamily: "outfit",
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                ),
+                                              ),
+                                            ),
+                                            Text(
+                                              getAllPostData.object?[index]
+                                                          .repostOn ==
+                                                      null
+                                                  ? ""
+                                                  : getTimeDifference(
+                                                      repostTime!),
+                                              style: TextStyle(
+                                                fontSize: 12,
+                                                fontFamily: "outfit",
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: 10,
+                                    ),
+                                    getAllPostData.object?[index].repostOn
+                                                ?.description !=
+                                            null
+                                        ? Padding(
+                                            padding:
+                                                const EdgeInsets.only(left: 16),
+                                            child: LinkifyText(
+                                              "${getAllPostData.object?[index].repostOn?.description}",
+                                              linkStyle: TextStyle(
+                                                color: Colors.blue,
+                                                fontFamily: 'outfit',
+                                              ),
+                                              textStyle: TextStyle(
+                                                color: Colors.black,
+                                                fontFamily: 'outfit',
+                                              ),
+                                              linkTypes: [
+                                                LinkType.url,
+                                                LinkType.userTag,
+                                                LinkType.hashTag,
+                                                // LinkType
+                                                //     .email
+                                              ],
+                                              onTap: (link) async {
+                                                /// do stuff with `link` like
+                                                /// if(link.type == Link.url) launchUrl(link.value);
+
+                                                var SelectedTest =
+                                                    link.value.toString();
+                                                var Link =
+                                                    SelectedTest.startsWith(
+                                                        'https');
+                                                var Link1 =
+                                                    SelectedTest.startsWith(
+                                                        'http');
+                                                var Link2 =
+                                                    SelectedTest.startsWith(
+                                                        'www');
+                                                var Link3 =
+                                                    SelectedTest.startsWith(
+                                                        'WWW');
+                                                var Link4 =
+                                                    SelectedTest.startsWith(
+                                                        'HTTPS');
+                                                var Link5 =
+                                                    SelectedTest.startsWith(
+                                                        'HTTP');
+                                                var Link6 = SelectedTest.startsWith(
+                                                    'https://pdslink.page.link/');
+                                                print(SelectedTest.toString());
+
+                                                if (User_ID == null) {
+                                                  Navigator.of(context).push(
+                                                      MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              RegisterCreateAccountScreen()));
+                                                } else {
+                                                  if (Link == true ||
+                                                      Link1 == true ||
+                                                      Link2 == true ||
+                                                      Link3 == true ||
+                                                      Link4 == true ||
+                                                      Link5 == true ||
+                                                      Link6 == true) {
+                                                    if (Link2 == true ||
+                                                        Link3 == true) {
+                                                      launchUrl(Uri.parse(
+                                                          "https://${link.value.toString()}"));
+                                                      print(
+                                                          "qqqqqqqqhttps://${link.value}");
+                                                    } else {
+                                                      if (Link6 == true) {
+                                                        print(
+                                                            "yes i am inList =   room");
+                                                        Navigator.push(context,
+                                                            MaterialPageRoute(
+                                                          builder: (context) {
+                                                            return NewBottomBar(
+                                                              buttomIndex: 1,
+                                                            );
+                                                          },
+                                                        ));
+                                                      } else {
+                                                        launchUrl(Uri.parse(link
+                                                            .value
+                                                            .toString()));
+                                                        print(
+                                                            "link.valuelink.value -- ${link.value}");
+                                                      }
+                                                    }
+                                                  } else {
+                                                    if (link.value!
+                                                        .startsWith('#')) {
+                                                      /*   await BlocProvider.of<
+                                                              GetGuestAllPostCubit>(
+                                                          context)
+                                                      .seetinonExpried(context); */
+                                                      print(
+                                                          "aaaaaaaaaa == ${link}");
+                                                      Navigator.push(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                HashTagViewScreen(
+                                                                    title:
+                                                                        "${link.value}"),
+                                                          ));
+                                                    } else if (link.value!
+                                                        .startsWith('@')) {
+                                                      /*  await BlocProvider.of<
+                                                              GetGuestAllPostCubit>(
+                                                          context)
+                                                      .seetinonExpried(context); */
+                                                      var name;
+                                                      var tagName;
+                                                      name = SelectedTest;
+                                                      tagName = name.replaceAll(
+                                                          "@", "");
+                                                      await BlocProvider.of<
+                                                                  NewProfileSCubit>(
+                                                              context)
+                                                          .UserTagAPI(
+                                                              context, tagName);
+
+                                                      Navigator.push(context,
+                                                          MaterialPageRoute(
                                                               builder:
                                                                   (context) {
-                                                                return DocumentViewScreen1(
-                                                                  path: getAllPostData
-                                                                      .object?[
-                                                                          index]
-                                                                      .postData?[
-                                                                          0]
-                                                                      .toString(),
-                                                                );
-                                                              },
-                                                            ));
-                                                          },
-                                                          child: Container(
-                                                            child:
-                                                                CachedNetworkImage(
-                                                              imageUrl: getAllPostData
-                                                                      .object?[
-                                                                          index]
-                                                                      .thumbnailImageUrl ??
-                                                                  "",
-                                                              fit: BoxFit.cover,
-                                                            ),
-                                                          ),
-                                                        )
-                                                      ],
-                                                    )
-                                                  : SizedBox()
-                                              : SizedBox())
-                                  : Column(
-                                      children: [
-                                        Stack(
-                                          children: [
-                                            if ((getAllPostData.object?[index]
-                                                    .postData?.isNotEmpty ??
-                                                false)) ...[
-                                              SizedBox(
-                                                height: 300,
-                                                child: PageView.builder(
-                                                  onPageChanged: (page) {
-                                                    super.setState(() {
-                                                      _currentPages[index] =
-                                                          page;
-                                                      imageCount = page + 1;
-                                                    });
-                                                  },
-                                                  controller:
-                                                      _pageControllers[index],
-                                                  itemCount: getAllPostData
+                                                        return ProfileScreen(
+                                                            User_ID:
+                                                                "${userTagModel?.object}",
+                                                            isFollowing: "");
+                                                      })).then((value) =>
+                                                          Get_UserToken());
+
+                                                      print(
+                                                          "tagName -- ${tagName}");
+                                                      print(
+                                                          "user id -- ${userTagModel?.object}");
+                                                    }
+                                                  }
+                                                }
+                                              },
+                                            ))
+                                        : SizedBox(),
+                                    Container(
+                                      width: _width,
+                                      child: getAllPostData.object?[index]
+                                                  .repostOn?.postDataType ==
+                                              null
+                                          ? SizedBox()
+                                          : getAllPostData
                                                       .object?[index]
-                                                      .postData
-                                                      ?.length,
-                                                  itemBuilder:
-                                                      (BuildContext context,
-                                                          int index1) {
-                                                    if (getAllPostData
-                                                            .object?[index]
-                                                            .postDataType ==
-                                                        "IMAGE") {
-                                                      return Container(
+                                                      .repostOn
+                                                      ?.postData
+                                                      ?.length ==
+                                                  1
+                                              ? (getAllPostData
+                                                          .object?[index]
+                                                          .repostOn
+                                                          ?.postDataType ==
+                                                      "IMAGE"
+                                                  ? GestureDetector(
+                                                      onTap: () {
+                                                        Navigator.push(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                              builder: (context) =>
+                                                                  OpenSavePostImage(
+                                                                    PostID: getAllPostData
+                                                                        .object?[
+                                                                            index]
+                                                                        .repostOn
+                                                                        ?.postUid,
+                                                                    index:
+                                                                        index,
+                                                                  )),
+                                                        );
+                                                      },
+                                                      child: Container(
                                                         width: _width,
+                                                        height: 150,
                                                         margin: EdgeInsets.only(
                                                             left: 16,
                                                             top: 15,
                                                             right: 16),
                                                         child: Center(
                                                             child:
-                                                                GestureDetector(
-                                                          onTap: () {
-                                                            Navigator.push(
-                                                              context,
-                                                              MaterialPageRoute(
-                                                                  builder:
-                                                                      (context) =>
-                                                                          OpenSavePostImage(
-                                                                            PostID:
-                                                                                getAllPostData.object?[index].postUid,
-                                                                            index:
-                                                                                index1,
-                                                                          )),
-                                                            );
-                                                          },
-                                                          child: Stack(
+                                                                CustomImageView(
+                                                          url:
+                                                              "${getAllPostData.object?[index].repostOn?.postData?[0]}",
+                                                        )),
+                                                      ),
+                                                    )
+                                                  : getAllPostData
+                                                              .object?[index]
+                                                              .repostOn
+                                                              ?.postDataType ==
+                                                          "VIDEO"
+                                                      ? /* repostMainControllers[0].value.isInitialized
+                                                                                      ? */
+                                                      Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                      .only(
+                                                                  right: 20,
+                                                                  top: 15),
+                                                          child: Column(
+                                                            mainAxisSize:
+                                                                MainAxisSize
+                                                                    .min,
                                                             children: [
-                                                              Align(
-                                                                alignment:
-                                                                    Alignment
-                                                                        .topCenter,
-                                                                child:
-                                                                    CustomImageView(
-                                                                  url:
-                                                                      "${getAllPostData.object?[index].postData?[index1]}",
-                                                                ),
-                                                              ),
-                                                              Align(
-                                                                alignment:
-                                                                    Alignment
-                                                                        .topRight,
-                                                                child: Card(
-                                                                  color: Colors
-                                                                      .transparent,
-                                                                  elevation: 0,
-                                                                  child: Container(
-                                                                      alignment: Alignment.center,
-                                                                      height: 30,
-                                                                      width: 50,
-                                                                      decoration: BoxDecoration(
-                                                                        color: Color.fromARGB(
-                                                                            255,
-                                                                            2,
-                                                                            1,
-                                                                            1),
-                                                                        borderRadius:
-                                                                            BorderRadius.all(Radius.circular(50)),
-                                                                      ),
-                                                                      child: Text(
-                                                                        imageCount.toString() +
-                                                                            '/' +
-                                                                            '${getAllPostData.object?[index].postData?.length}',
-                                                                        style: TextStyle(
-                                                                            color:
-                                                                                Colors.white),
-                                                                      )),
-                                                                ),
+                                                              VideoListItem1(
+                                                                videoUrl:
+                                                                    videoUrls[
+                                                                        index],
+                                                                discrption: getAllPostData
+                                                                    .object?[
+                                                                        index]
+                                                                    .repostOn
+                                                                    ?.description,
+                                                                PostID: getAllPostData
+                                                                    .object?[
+                                                                        index]
+                                                                    .postUid,
+                                                                /*  isData:
+                                                                User_ID == null
+                                                                    ? false
+                                                                    : true, */
                                                               )
                                                             ],
                                                           ),
-                                                        )),
-                                                      );
-                                                    } else if (getAllPostData
-                                                            .object?[index]
-                                                            .postDataType ==
-                                                        "ATTACHMENT") {
-                                                      return Container(
-                                                          height: 400,
-                                                          width: _width,
-                                                          child:
-                                                              DocumentViewScreen1(
-                                                            path: getAllPostData
+                                                        )
+                                                      // : SizedBox()
+                                                      : getAllPostData
+                                                                  .object?[
+                                                                      index]
+                                                                  .repostOn
+                                                                  ?.postDataType ==
+                                                              "ATTACHMENT"
+                                                          ? Stack(
+                                                              children: [
+                                                                Container(
+                                                                  height: 400,
+                                                                  width: _width,
+                                                                  color: Colors
+                                                                      .transparent,
+                                                                ),
+                                                                GestureDetector(
+                                                                  onTap: () {
+                                                                    print(
+                                                                        "objectobjectobjectobject");
+                                                                    Navigator.push(
+                                                                        context,
+                                                                        MaterialPageRoute(
+                                                                      builder:
+                                                                          (context) {
+                                                                        return DocumentViewScreen1(
+                                                                          path: getAllPostData
+                                                                              .object?[index]
+                                                                              .repostOn
+                                                                              ?.postData?[0]
+                                                                              .toString(),
+                                                                        );
+                                                                      },
+                                                                    ));
+                                                                  },
+                                                                  child:
+                                                                      Container(
+                                                                    child:
+                                                                        CachedNetworkImage(
+                                                                      imageUrl: getAllPostData
+                                                                              .object?[index]
+                                                                              .repostOn
+                                                                              ?.thumbnailImageUrl ??
+                                                                          "",
+                                                                      fit: BoxFit
+                                                                          .cover,
+                                                                    ),
+                                                                  ),
+                                                                )
+                                                              ],
+                                                            )
+                                                          : SizedBox())
+                                              : Column(
+                                                  children: [
+                                                    Stack(
+                                                      children: [
+                                                        if ((getAllPostData
                                                                 .object?[index]
-                                                                .postData?[
-                                                                    index1]
-                                                                .toString(),
-                                                          ));
-                                                    }
-                                                  },
-                                                ),
-                                              ),
-                                              Positioned(
-                                                  bottom: 5,
-                                                  left: 0,
-                                                  right: 0,
-                                                  child: Padding(
-                                                    padding:
-                                                        const EdgeInsets.only(
-                                                            top: 0),
-                                                    child: Container(
-                                                      height: 20,
-                                                      child: DotsIndicator(
-                                                        dotsCount:
-                                                            getAllPostData
-                                                                    .object?[
-                                                                        index]
-                                                                    .postData
-                                                                    ?.length ??
-                                                                0,
-                                                        position:
-                                                            _currentPages[index]
-                                                                .toDouble(),
-                                                        decorator:
-                                                            DotsDecorator(
-                                                          size: const Size(
-                                                              10.0, 7.0),
-                                                          activeSize:
-                                                              const Size(
-                                                                  10.0, 10.0),
-                                                          spacing:
-                                                              const EdgeInsets
-                                                                      .symmetric(
-                                                                  horizontal:
-                                                                      2),
-                                                          activeColor:
-                                                              ColorConstant
-                                                                  .primary_color,
-                                                          color:
-                                                              Color(0xff6A6A6A),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ))
-                                            ]
-                                            // : SizedBox()
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                        ),
+                                                                .repostOn
+                                                                ?.postData
+                                                                ?.isNotEmpty ??
+                                                            false)) ...[
+                                                          SizedBox(
+                                                            height: 300,
+                                                            child: PageView
+                                                                .builder(
+                                                              onPageChanged:
+                                                                  (page) {
+                                                                super.setState(
+                                                                    () {
+                                                                  _currentPages[
+                                                                          index] =
+                                                                      page;
+                                                                  imageCount2 =
+                                                                      page + 1;
+                                                                });
+                                                              },
+                                                              controller:
+                                                                  _pageControllers[
+                                                                      index],
+                                                              itemCount:
+                                                                  getAllPostData
+                                                                      .object?[
+                                                                          index]
+                                                                      .repostOn
+                                                                      ?.postData
+                                                                      ?.length,
+                                                              itemBuilder:
+                                                                  (BuildContext
+                                                                          context,
+                                                                      int index1) {
+                                                                if (getAllPostData
+                                                                        .object?[
+                                                                            index]
+                                                                        .repostOn
+                                                                        ?.postDataType ==
+                                                                    "IMAGE") {
+                                                                  return GestureDetector(
+                                                                    onTap: () {
+                                                                      print(
+                                                                          "Repost Opne Full screen");
 
-                        Padding(
-                          padding: const EdgeInsets.only(left: 13),
-                          child: Divider(
-                            thickness: 1,
-                          ),
-                        ),
-                        SizedBox(
-                          height: 5,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 0, right: 16),
-                          child: Row(
-                            children: [
-                              SizedBox(
-                                width: 14,
+                                                                      Navigator
+                                                                          .push(
+                                                                        context,
+                                                                        MaterialPageRoute(
+                                                                            builder: (context) =>
+                                                                                OpenSavePostImage(
+                                                                                  PostID: getAllPostData.object?[index].repostOn?.postUid,
+                                                                                  index: index1,
+                                                                                )),
+                                                                      );
+                                                                    },
+                                                                    child:
+                                                                        Container(
+                                                                      width:
+                                                                          _width,
+                                                                      margin: EdgeInsets.only(
+                                                                          left:
+                                                                              16,
+                                                                          top:
+                                                                              15,
+                                                                          right:
+                                                                              16),
+                                                                      child: Center(
+                                                                          child: Stack(
+                                                                        children: [
+                                                                          Align(
+                                                                            alignment:
+                                                                                Alignment.topCenter,
+                                                                            child:
+                                                                                CustomImageView(
+                                                                              url: "${getAllPostData.object?[index].repostOn?.postData?[index1]}",
+                                                                            ),
+                                                                          ),
+                                                                          Align(
+                                                                            alignment:
+                                                                                Alignment.topRight,
+                                                                            child:
+                                                                                Card(
+                                                                              color: Colors.transparent,
+                                                                              elevation: 0,
+                                                                              child: Container(
+                                                                                  alignment: Alignment.center,
+                                                                                  height: 30,
+                                                                                  width: 50,
+                                                                                  decoration: BoxDecoration(
+                                                                                    color: Color.fromARGB(255, 2, 1, 1),
+                                                                                    borderRadius: BorderRadius.all(Radius.circular(50)),
+                                                                                  ),
+                                                                                  child: Text(
+                                                                                    imageCount2.toString() + '/' + '${getAllPostData.object?[index].repostOn?.postData?.length}',
+                                                                                    style: TextStyle(color: Colors.white),
+                                                                                  )),
+                                                                            ),
+                                                                          )
+                                                                        ],
+                                                                      )),
+                                                                    ),
+                                                                  );
+                                                                } else if (getAllPostData
+                                                                        .object?[
+                                                                            index]
+                                                                        .repostOn
+                                                                        ?.postDataType ==
+                                                                    "ATTACHMENT") {
+                                                                  return Container(
+                                                                      height:
+                                                                          400,
+                                                                      width:
+                                                                          _width,
+                                                                      child:
+                                                                          DocumentViewScreen1(
+                                                                        path: getAllPostData
+                                                                            .object?[index]
+                                                                            .repostOn
+                                                                            ?.postData?[index1]
+                                                                            .toString(),
+                                                                      ));
+                                                                }
+                                                              },
+                                                            ),
+                                                          ),
+                                                          Positioned(
+                                                              bottom: 5,
+                                                              left: 0,
+                                                              right: 0,
+                                                              child: Padding(
+                                                                padding:
+                                                                    const EdgeInsets
+                                                                            .only(
+                                                                        top: 0),
+                                                                child:
+                                                                    Container(
+                                                                  height: 20,
+                                                                  child:
+                                                                      DotsIndicator(
+                                                                    dotsCount: getAllPostData
+                                                                            .object?[index]
+                                                                            .repostOn
+                                                                            ?.postData
+                                                                            ?.length ??
+                                                                        1,
+                                                                    position: _currentPages[
+                                                                            index]
+                                                                        .toDouble(),
+                                                                    decorator:
+                                                                        DotsDecorator(
+                                                                      size: const Size(
+                                                                          10.0,
+                                                                          7.0),
+                                                                      activeSize: const Size(
+                                                                          10.0,
+                                                                          10.0),
+                                                                      spacing: const EdgeInsets
+                                                                              .symmetric(
+                                                                          horizontal:
+                                                                              2),
+                                                                      activeColor:
+                                                                          ColorConstant
+                                                                              .primary_color,
+                                                                      color: Color(
+                                                                          0xff6A6A6A),
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                              ))
+                                                        ]
+                                                      ],
+                                                    ),
+                                                  ],
+                                                ),
+                                    ),
+                                    SizedBox(
+                                      height: 10,
+                                    ),
+                                  ],
+                                ),
                               ),
-                              GestureDetector(
-                                onTap: () async {
-                                  await soicalFunation(
-                                      apiName: 'like_post', index: index);
-                                },
-                                child: Container(
-                                  color: Colors.transparent,
-                                  child: Padding(
-                                    padding: EdgeInsets.all(5.0),
-                                    child:
-                                        getAllPostData.object?[index].isLiked !=
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 13),
+                              child: Divider(
+                                thickness: 1,
+                              ),
+                            ),
+                            SizedBox(
+                              height: 5,
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 0, right: 16),
+                              child: Row(
+                                children: [
+                                  SizedBox(
+                                    width: 14,
+                                  ),
+                                  GestureDetector(
+                                    onTap: () async {
+                                      await soicalFunation(
+                                          apiName: 'like_post', index: index);
+                                    },
+                                    child: Container(
+                                      color: Colors.transparent,
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(5.0),
+                                        child: getAllPostData
+                                                    .object?[index].isLiked !=
                                                 true
                                             ? Image.asset(
                                                 ImageConstant.likewithout,
-                                                height: 18,
+                                                height: 20,
                                               )
                                             : Image.asset(
                                                 ImageConstant.like,
-                                                height: 18,
+                                                height: 20,
                                               ),
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: 0,
+                                  ),
+                                  getAllPostData.object?[index].likedCount == 0
+                                      ? SizedBox()
+                                      : GestureDetector(
+                                          onTap: () {
+                                            /* Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                        builder: (context) =>
+                                                       
+                                                            ShowAllPostLike("${getAllPostData?.object?[index].postUid}"))); */
+
+                                            Navigator.push(context,
+                                                MaterialPageRoute(
+                                              builder: (context) {
+                                                return ShowAllPostLike(
+                                                    "${getAllPostData.object?[index].postUid}");
+                                              },
+                                            ));
+                                          },
+                                          child: Container(
+                                            color: Colors.transparent,
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.all(5.0),
+                                              child: Text(
+                                                "${getAllPostData.object?[index].likedCount}",
+                                                style: TextStyle(
+                                                    fontFamily: "outfit",
+                                                    fontSize: 14),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                  SizedBox(
+                                    width: 8,
+                                  ),
+                                  GestureDetector(
+                                    onTap: () async {
+                                      BlocProvider.of<AddcommentCubit>(context)
+                                          .Addcomment(context,
+                                              '${getAllPostData.object?[index].postUid}');
+
+                                      _settingModalBottomSheet1(
+                                          context, index, _width);
+                                    },
+                                    child: Container(
+                                      color: Colors.transparent,
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(5.0),
+                                        child: Image.asset(
+                                          ImageConstant.meesage,
+                                          height: 15,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: 5,
+                                  ),
+                                  getAllPostData.object?[index].commentCount ==
+                                          0
+                                      ? SizedBox()
+                                      : Text(
+                                          "${getAllPostData.object?[index].commentCount}",
+                                          style: TextStyle(
+                                              fontFamily: "outfit",
+                                              fontSize: 14),
+                                        ),
+                                  SizedBox(
+                                    width: 8,
+                                  ),
+                                  GestureDetector(
+                                    onTap: () {
+                                      rePostBottomSheet(context, index);
+                                    },
+                                    child: Container(
+                                      color: Colors.transparent,
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(5.0),
+                                        child: Image.asset(
+                                          ImageConstant.vector2,
+                                          height: 13,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: 5,
+                                  ),
+                                  getAllPostData.object?[index].repostCount ==
+                                              null ||
+                                          getAllPostData
+                                                  .object?[index].repostCount ==
+                                              0
+                                      ? SizedBox()
+                                      : Text(
+                                          '${getAllPostData.object?[index].repostCount}',
+                                          style: TextStyle(
+                                              fontFamily: "outfit",
+                                              fontSize: 14),
+                                        ),
+                                  GestureDetector(
+                                    onTap: () {
+                                      _onShareXFileFromAssets(context,
+                                          androidLink:
+                                              '${getAllPostData.object?[index].postLink}'
+                                          /* iosLink:
+                                                      "https://apps.apple.com/inList =  /app/growder-b2b-platform/id6451333863" */
+                                          );
+                                    },
+                                    child: Container(
+                                      height: 20,
+                                      width: 30,
+                                      color: Colors.transparent,
+                                      child:
+                                          Icon(Icons.share_rounded, size: 20),
+                                    ),
+                                  ),
+                                  Spacer(),
+                                  GestureDetector(
+                                    onTap: () async {
+                                      await soicalFunation(
+                                          apiName: 'savedata', index: index);
+                                    },
+                                    child: Container(
+                                      color: Colors.transparent,
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(5.0),
+                                        child: Image.asset(
+                                          getAllPostData
+                                                      .object?[index].isSaved ==
+                                                  false
+                                              ? ImageConstant.savePin
+                                              : ImageConstant.Savefill,
+                                          height: 17,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            SizedBox(
+                              height: 5,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  )
+                : getAllPostData.object?[index].isReports == true
+                    ? Container(
+                        width: _width,
+                        decoration: BoxDecoration(
+                          color: Color(0xffF0F0F0),
+                        ),
+                        child: Column(
+                          children: [
+                            SizedBox(
+                              height: 10,
+                            ),
+                            SizedBox(
+                                height: 20,
+                                child: Image.asset(ImageConstant.greenseen)),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Text(
+                              'Thanks for reporting',
+                              style: TextStyle(color: Colors.black),
+                            ),
+                            SizedBox(
+                              height: 5,
+                            ),
+                            Text(
+                              'Post Reported and under review',
+                              style: TextStyle(color: Colors.grey),
+                            ),
+                            SizedBox(
+                              height: 20,
+                            ),
+                          ],
+                        ),
+                      )
+                    : Padding(
+                        padding: EdgeInsets.only(
+                            left: 16, right: 16, top: 10, bottom: 10),
+                        child: GestureDetector(
+                          onDoubleTap: () async {
+                            await soicalFunation(
+                                apiName: 'like_post', index: index);
+                          },
+                          child: Container(
+                            decoration: BoxDecoration(
+                                color: Colors.white,
+                                border: Border.all(
+                                    color: Color.fromRGBO(0, 0, 0, 0.25)),
+                                borderRadius: BorderRadius.circular(15)),
+                            // height: 300,
+                            width: _width,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                Container(
+                                  height: 60,
+                                  // color: Colors.amber,
+                                  child: ListTile(
+                                      leading: GestureDetector(
+                                        onTap: () async {
+                                          /*   await BlocProvider.of<GetGuestAllPostCubit>(
+                                        context)
+                                    .seetinonExpried(context); */
+                                          Navigator.push(context,
+                                              MaterialPageRoute(
+                                                  builder: (context) {
+                                            return MultiBlocProvider(
+                                                providers: [
+                                                  BlocProvider<
+                                                      NewProfileSCubit>(
+                                                    create: (context) =>
+                                                        NewProfileSCubit(),
+                                                  ),
+                                                ],
+                                                child: ProfileScreen(
+                                                    User_ID:
+                                                        "${getAllPostData.object?[index].userUid}",
+                                                    isFollowing: getAllPostData
+                                                        .object?[index]
+                                                        .isFollowing));
+                                          })).then((value) => Get_UserToken());
+                                          //
+                                        },
+                                        child: getAllPostData.object?[index]
+                                                        .userProfilePic !=
+                                                    null &&
+                                                getAllPostData.object?[index]
+                                                        .userProfilePic !=
+                                                    ""
+                                            ? CircleAvatar(
+                                                backgroundImage: NetworkImage(
+                                                    "${getAllPostData.object?[index].userProfilePic}"),
+                                                backgroundColor: Colors.white,
+                                                radius: 25,
+                                              )
+                                            : CustomImageView(
+                                                imagePath:
+                                                    ImageConstant.tomcruse,
+                                                height: 50,
+                                                width: 50,
+                                                fit: BoxFit.fill,
+                                                radius:
+                                                    BorderRadius.circular(25),
+                                              ),
+                                      ),
+                                      title: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          // SizedBox(
+                                          //   height: 6,
+                                          // ),
+                                          GestureDetector(
+                                            onTap: () async {
+                                              /*    await BlocProvider.of<GetGuestAllPostCubit>(
+                                            context)
+                                        .seetinonExpried(context); */
+                                              Navigator.push(context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) {
+                                                return MultiBlocProvider(
+                                                    providers: [
+                                                      BlocProvider<
+                                                          NewProfileSCubit>(
+                                                        create: (context) =>
+                                                            NewProfileSCubit(),
+                                                      ),
+                                                    ],
+                                                    child: ProfileScreen(
+                                                        User_ID:
+                                                            "${getAllPostData.object?[index].userUid}",
+                                                        isFollowing:
+                                                            getAllPostData
+                                                                .object?[index]
+                                                                .isFollowing));
+                                              })).then(
+                                                  (value) => Get_UserToken());
+                                              //
+                                            },
+                                            child: Row(
+                                              children: [
+                                                Container(
+                                                  // color: Colors.red,
+                                                  child: Text(
+                                                    "${getAllPostData.object?[index].postUserName}",
+                                                    style: TextStyle(
+                                                        fontSize: 20,
+                                                        fontFamily: "outfit",
+                                                        fontWeight:
+                                                            FontWeight.bold),
+                                                  ),
+                                                ),
+                                                /*  Spacer(),
+                                                getAllPostData.object?[index]
+                                                            .userUid ==
+                                                        User_ID
+                                                    ? GestureDetector(
+                                                        key: buttonKey,
+                                                        onTap: () {
+                                                          showPopupMenu(
+                                                              context,
+                                                              index,
+                                                              buttonKey,
+                                                              getAllPostData);
+                                                        },
+                                                        child: Icon(
+                                                          Icons.abc,
+                                                        ),
+                                                      )
+                                                    : SizedBox() */
+                                              ],
+                                            ),
+                                          ),
+                                          //FIndText
+                                          Text(
+                                            getTimeDifference(parsedDateTime),
+                                            style: TextStyle(
+                                              fontSize: 12,
+                                              fontFamily: "outfit",
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      trailing: getAllPostData
+                                                  .object?[index].userUid !=
+                                              User_ID
+                                          ? GestureDetector(
+                                              key: buttonKey,
+                                              onTap: () async {
+                                                showPopupMenu1(
+                                                    context,
+                                                    index,
+                                                    buttonKey,
+                                                    getAllPostData
+                                                        .object?[index].postUid,
+                                                    '_ProfileScreenState');
+                                              },
+                                              child: Container(
+                                                  height: 25,
+                                                  width: 40,
+                                                  /*   color: Color.fromARGB(
+                                                    219, 189, 3, 3), */
+                                                  child: Icon(
+                                                      Icons.more_vert_rounded)))
+                                          : Container(
+                                              height: 25,
+                                              width: 40,
+                                              child: GestureDetector(
+                                                key: buttonKey,
+                                                onTap: () {
+                                                  showPopupMenu(
+                                                      context,
+                                                      index,
+                                                      buttonKey,
+                                                      getAllPostData);
+                                                },
+                                                child: Icon(
+                                                  Icons.more_vert_outlined,
+                                                ),
+                                              ),
+                                            )),
+                                ),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                getAllPostData.object?[index].description !=
+                                        null
+                                    ? Padding(
+                                        padding:
+                                            const EdgeInsets.only(left: 16),
+                                        child:
+                                            //this is the despcation
+                                            GestureDetector(
+                                                onTap: () async {
+                                                  if (DataGet == true) {
+                                                    await launch(
+                                                        '${getAllPostData.object?[index].description}',
+                                                        forceWebView: true,
+                                                        enableJavaScript: true);
+                                                  } else {
+                                                    Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              OpenSavePostImage(
+                                                                PostID: getAllPostData
+                                                                    .object?[
+                                                                        index]
+                                                                    .postUid,
+                                                              )),
+                                                    );
+                                                  }
+                                                },
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    /*  GestureDetector(
+                                                                              onTap: () async {
+                                                                                print("value cheak${getAllPostData?.object?[index].isfalsegu}");
+                                                                                print("value cheak${getAllPostData?.object?[index].isfalsehin}");
+                                                                                String inputText = "${getAllPostData?.object?[index].description}";
+                                                                                String translatedTextGujarati = await translateText(inputText, 'gu');
+                                                                                String translatedTextHindi = await translateText(inputText, 'hi');
+                                                                                String translatedTextenglish = await translateText(inputText, 'en');
+
+                                                                                if (getAllPostData?.object?[index].isfalsehin == null && getAllPostData?.object?[index].isfalsegu == null) {
+                                                                                  super.setState(() {
+                                                                                    _translatedTextHindi = translatedTextHindi;
+
+                                                                                    // getAllPostData?.object?[index].description = _translatedTextGujarati;
+                                                                                    getAllPostData?.object?[index].description = _translatedTextHindi;
+                                                                                    getAllPostData?.object?[index].isfalsehin = true;
+                                                                                  });
+                                                                                } else if (getAllPostData?.object?[index].isfalsehin == true && getAllPostData?.object?[index].isfalsegu == null) {
+                                                                                  super.setState(() {
+                                                                                    // isDataSet = false;
+                                                                                    _translatedTextGujarati = translatedTextGujarati;
+                                                                                    // _translatedTextHindi = translatedTextHindi;
+
+                                                                                    // getAllPostData?.object?[index].description = _translatedTextGujarati;
+                                                                                    getAllPostData?.object?[index].description = _translatedTextGujarati;
+                                                                                    getAllPostData?.object?[index].isfalsegu = true;
+                                                                                    //  isDataSet = true;
+                                                                                  });
+                                                                                } else if (getAllPostData?.object?[index].isfalsehin == true && getAllPostData?.object?[index].isfalsehin == true) {
+                                                                                  print("this condison is working");
+
+                                                                                  super.setState(() {
+                                                                                    print("i'm cheaking dataa--------------------------------$initalData");
+                                                                                    // isDataSet = false;
+                                                                                    _translatedTextenglish = translatedTextenglish;
+                                                                                    getAllPostData?.object?[index].description = _translatedTextenglish;
+                                                                                    getAllPostData?.object?[index].isfalsegu = null;
+                                                                                    getAllPostData?.object?[index].isfalsehin = null;
+                                                                                    // isDataSet = true;
+                                                                                  });
+                                                                                }
+                                                                              },
+                                                                              child: Container(
+                                                                                  width: 80,
+                                                                                  decoration: BoxDecoration(color: ColorConstant.primaryLight_color, borderRadius: BorderRadius.circular(10)),
+                                                                                  child: Center(
+                                                                                      child: Text(
+                                                                                    "Translate",
+                                                                                    style: TextStyle(
+                                                                                      fontFamily: 'outfit',
+                                                                                      fontWeight: FontWeight.bold,
+                                                                                    ),
+                                                                                  ))),
+                                                                            ), */
+                                                    getAllPostData
+                                                                .object?[index]
+                                                                .translatedDescription !=
+                                                            null
+                                                        ? GestureDetector(
+                                                            onTap: () async {
+                                                              super
+                                                                  .setState(() {
+                                                                if (getAllPostData
+                                                                            .object?[
+                                                                                index]
+                                                                            .isTrsnalteoption ==
+                                                                        false ||
+                                                                    getAllPostData
+                                                                            .object?[index]
+                                                                            .isTrsnalteoption ==
+                                                                        null) {
+                                                                  getAllPostData
+                                                                      .object?[
+                                                                          index]
+                                                                      .isTrsnalteoption = true;
+                                                                } else {
+                                                                  getAllPostData
+                                                                      .object?[
+                                                                          index]
+                                                                      .isTrsnalteoption = false;
+                                                                }
+                                                              });
+                                                            },
+                                                            child: Container(
+                                                                width: 80,
+                                                                decoration:
+                                                                    BoxDecoration(
+                                                                  color: ColorConstant
+                                                                      .primaryLight_color,
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              10),
+                                                                ),
+                                                                child: Center(
+                                                                    child: Text(
+                                                                  "Translate",
+                                                                  style:
+                                                                      TextStyle(
+                                                                    fontFamily:
+                                                                        'outfit',
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold,
+                                                                  ),
+                                                                ))),
+                                                          )
+                                                        : SizedBox(),
+                                                    SizedBox(
+                                                      // color: Colors.red,
+                                                      height: 10,
+                                                    ),
+                                                    Row(
+                                                      children: [
+                                                        Expanded(
+                                                          child: Container(
+                                                            child: LinkifyText(
+                                                              getAllPostData.object?[index].isTrsnalteoption ==
+                                                                          false ||
+                                                                      getAllPostData
+                                                                              .object?[index]
+                                                                              .isTrsnalteoption ==
+                                                                          null
+                                                                  ? "${getAllPostData.object?[index].description}"
+                                                                  : "${getAllPostData.object?[index].translatedDescription}",
+                                                              linkStyle:
+                                                                  TextStyle(
+                                                                color:
+                                                                    Colors.blue,
+                                                                fontFamily:
+                                                                    'outfit',
+                                                              ),
+                                                              textStyle:
+                                                                  TextStyle(
+                                                                color: Colors
+                                                                    .black,
+                                                                fontFamily:
+                                                                    'outfit',
+                                                              ),
+                                                              linkTypes: [
+                                                                LinkType.url,
+                                                                LinkType
+                                                                    .userTag,
+                                                                LinkType
+                                                                    .hashTag,
+                                                                // LinkType
+                                                                //     .email
+                                                              ],
+                                                              onTap:
+                                                                  (link) async {
+                                                                /// do stuff with `link` like
+                                                                /// if(link.type == Link.url) launchUrl(link.value);
+
+                                                                var SelectedTest =
+                                                                    link.value
+                                                                        .toString();
+                                                                var Link = SelectedTest
+                                                                    .startsWith(
+                                                                        'https');
+                                                                var Link1 = SelectedTest
+                                                                    .startsWith(
+                                                                        'http');
+                                                                var Link2 =
+                                                                    SelectedTest
+                                                                        .startsWith(
+                                                                            'www');
+                                                                var Link3 =
+                                                                    SelectedTest
+                                                                        .startsWith(
+                                                                            'WWW');
+                                                                var Link4 = SelectedTest
+                                                                    .startsWith(
+                                                                        'HTTPS');
+                                                                var Link5 = SelectedTest
+                                                                    .startsWith(
+                                                                        'HTTP');
+                                                                var Link6 = SelectedTest
+                                                                    .startsWith(
+                                                                        'https://pdslink.page.link/');
+                                                                print("tag -- " +
+                                                                    SelectedTest
+                                                                        .toString());
+
+                                                                if (User_ID ==
+                                                                    null) {
+                                                                  Navigator.of(
+                                                                          context)
+                                                                      .push(MaterialPageRoute(
+                                                                          builder: (context) =>
+                                                                              RegisterCreateAccountScreen()));
+                                                                } else {
+                                                                  if (Link ==
+                                                                          true ||
+                                                                      Link1 ==
+                                                                          true ||
+                                                                      Link2 ==
+                                                                          true ||
+                                                                      Link3 ==
+                                                                          true ||
+                                                                      Link4 ==
+                                                                          true ||
+                                                                      Link5 ==
+                                                                          true ||
+                                                                      Link6 ==
+                                                                          true) {
+                                                                    if (Link2 ==
+                                                                            true ||
+                                                                        Link3 ==
+                                                                            true) {
+                                                                      launchUrl(
+                                                                          Uri.parse(
+                                                                              "https://${link.value.toString()}"));
+                                                                      print(
+                                                                          "qqqqqqqqhttps://${link.value}");
+                                                                    } else {
+                                                                      if (Link6 ==
+                                                                          true) {
+                                                                        print(
+                                                                            "yes i am inList =   room");
+                                                                        Navigator.push(
+                                                                            context,
+                                                                            MaterialPageRoute(
+                                                                          builder:
+                                                                              (context) {
+                                                                            return NewBottomBar(
+                                                                              buttomIndex: 1,
+                                                                            );
+                                                                          },
+                                                                        ));
+                                                                      } else {
+                                                                        launchUrl(Uri.parse(link
+                                                                            .value
+                                                                            .toString()));
+                                                                        print(
+                                                                            "link.valuelink.value -- ${link.value}");
+                                                                      }
+                                                                    }
+                                                                  } else if (link
+                                                                          .value !=
+                                                                      null) {
+                                                                    if (link
+                                                                        .value!
+                                                                        .startsWith(
+                                                                            '#')) {
+                                                                      /*   await BlocProvider
+                                                                      .of<GetGuestAllPostCubit>(
+                                                                          context)
+                                                                  .seetinonExpried(
+                                                                      context); */
+                                                                      Navigator.push(
+                                                                          context,
+                                                                          MaterialPageRoute(
+                                                                            builder: (context) =>
+                                                                                HashTagViewScreen(title: "${link.value}"),
+                                                                          ));
+                                                                    } else if (link
+                                                                        .value!
+                                                                        .startsWith(
+                                                                            '@')) {
+                                                                      /*  await BlocProvider
+                                                                      .of<GetGuestAllPostCubit>(
+                                                                          context)
+                                                                  .seetinonExpried(
+                                                                      context); */
+                                                                      var name;
+                                                                      var tagName;
+                                                                      name =
+                                                                          SelectedTest;
+                                                                      tagName =
+                                                                          name.replaceAll(
+                                                                              "@",
+                                                                              "");
+                                                                      await BlocProvider.of<NewProfileSCubit>(context).UserTagAPI(
+                                                                          context,
+                                                                          tagName);
+
+                                                                      Navigator.push(
+                                                                          context,
+                                                                          MaterialPageRoute(builder:
+                                                                              (context) {
+                                                                        return ProfileScreen(
+                                                                            User_ID:
+                                                                                "${userTagModel?.object}",
+                                                                            isFollowing:
+                                                                                "");
+                                                                      })).then(
+                                                                          (value) =>
+                                                                              Get_UserToken());
+
+                                                                      print(
+                                                                          "tagName -- ${tagName}");
+                                                                      print(
+                                                                          "user id -- ${userTagModel?.object}");
+                                                                    }
+                                                                  }
+                                                                }
+                                                              },
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        SizedBox(
+                                                          width: 10,
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ],
+                                                )),
+                                      )
+                                    : SizedBox(),
+                                // index == 0
+
+                                Container(
+                                  width: _width,
+                                  child: getAllPostData
+                                              .object?[index].postDataType ==
+                                          null
+                                      ? SizedBox()
+                                      : getAllPostData.object?[index].postData
+                                                  ?.length ==
+                                              1
+                                          ? (getAllPostData.object?[index]
+                                                      .postDataType ==
+                                                  "IMAGE"
+                                              ? GestureDetector(
+                                                  onTap: () {
+                                                    Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              OpenSavePostImage(
+                                                                PostID: getAllPostData
+                                                                    .object?[
+                                                                        index]
+                                                                    .postUid,
+                                                                index: index,
+                                                              )),
+                                                    );
+                                                  },
+                                                  child: Container(
+                                                    width: _width,
+                                                    margin: EdgeInsets.only(
+                                                        left: 16,
+                                                        top: 15,
+                                                        right: 16),
+                                                    child: Center(
+                                                        child: CustomImageView(
+                                                      url:
+                                                          "${getAllPostData.object?[index].postData?[0]}",
+                                                    )),
+                                                  ),
+                                                )
+                                              : getAllPostData.object?[index]
+                                                          .postDataType ==
+                                                      "VIDEO"
+                                                  ? /*  mainPostControllers[0].value.isInitialized
+                                                                              ? */
+
+                                                  Padding(
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                              right: 20,
+                                                              top: 15),
+                                                      child: Column(
+                                                        mainAxisSize:
+                                                            MainAxisSize.min,
+                                                        children: [
+                                                          /* Container(
+                                                                                            height: 250,
+                                                                                            width: _width,
+                                                                                            child: Chewie(
+                                                                                              controller: chewieController[index],
+                                                                                            )), */
+
+                                                          VideoListItem1(
+                                                            videoUrl: videoUrls[
+                                                                index],
+                                                            PostID:
+                                                                getAllPostData
+                                                                    .object?[
+                                                                        index]
+                                                                    .postUid,
+                                                            /* isData: User_ID == null
+                                                        ? false
+                                                        : true, */
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    )
+                                                  // : SizedBox()
+
+                                                  : getAllPostData
+                                                              .object?[index]
+                                                              .postDataType ==
+                                                          "ATTACHMENT"
+                                                      ? (getAllPostData
+                                                                  .object?[
+                                                                      index]
+                                                                  .postData
+                                                                  ?.isNotEmpty ==
+                                                              true)
+                                                          ? Stack(
+                                                              children: [
+                                                                Container(
+                                                                  height: 400,
+                                                                  width: _width,
+                                                                  color: Colors
+                                                                      .transparent,
+                                                                  /* child: DocumentViewScreen1(
+                                                                                            path: getAllPostData?.object?[index].postData?[0].toString(),
+                                                                                          ) */
+                                                                ),
+                                                                GestureDetector(
+                                                                  onTap: () {
+                                                                    print(
+                                                                        "objectobjectobjectobject");
+                                                                    Navigator.push(
+                                                                        context,
+                                                                        MaterialPageRoute(
+                                                                      builder:
+                                                                          (context) {
+                                                                        return DocumentViewScreen1(
+                                                                          path: getAllPostData
+                                                                              .object?[index]
+                                                                              .postData?[0]
+                                                                              .toString(),
+                                                                        );
+                                                                      },
+                                                                    ));
+                                                                  },
+                                                                  child:
+                                                                      Container(
+                                                                    child:
+                                                                        CachedNetworkImage(
+                                                                      imageUrl:
+                                                                          getAllPostData.object?[index].thumbnailImageUrl ??
+                                                                              "",
+                                                                      fit: BoxFit
+                                                                          .cover,
+                                                                    ),
+                                                                  ),
+                                                                )
+                                                              ],
+                                                            )
+                                                          : SizedBox()
+                                                      : SizedBox())
+                                          : Column(
+                                              children: [
+                                                Stack(
+                                                  children: [
+                                                    if ((getAllPostData
+                                                            .object?[index]
+                                                            .postData
+                                                            ?.isNotEmpty ??
+                                                        false)) ...[
+                                                      SizedBox(
+                                                        height: 300,
+                                                        child: PageView.builder(
+                                                          onPageChanged:
+                                                              (page) {
+                                                            super.setState(() {
+                                                              _currentPages[
+                                                                  index] = page;
+                                                              imageCount =
+                                                                  page + 1;
+                                                            });
+                                                          },
+                                                          controller:
+                                                              _pageControllers[
+                                                                  index],
+                                                          itemCount:
+                                                              getAllPostData
+                                                                  .object?[
+                                                                      index]
+                                                                  .postData
+                                                                  ?.length,
+                                                          itemBuilder:
+                                                              (BuildContext
+                                                                      context,
+                                                                  int index1) {
+                                                            if (getAllPostData
+                                                                    .object?[
+                                                                        index]
+                                                                    .postDataType ==
+                                                                "IMAGE") {
+                                                              return Container(
+                                                                width: _width,
+                                                                margin: EdgeInsets
+                                                                    .only(
+                                                                        left:
+                                                                            16,
+                                                                        top: 15,
+                                                                        right:
+                                                                            16),
+                                                                child: Center(
+                                                                    child:
+                                                                        GestureDetector(
+                                                                  onTap: () {
+                                                                    Navigator
+                                                                        .push(
+                                                                      context,
+                                                                      MaterialPageRoute(
+                                                                          builder: (context) =>
+                                                                              OpenSavePostImage(
+                                                                                PostID: getAllPostData.object?[index].postUid,
+                                                                                index: index1,
+                                                                              )),
+                                                                    );
+                                                                  },
+                                                                  child: Stack(
+                                                                    children: [
+                                                                      Align(
+                                                                        alignment:
+                                                                            Alignment.topCenter,
+                                                                        child:
+                                                                            CustomImageView(
+                                                                          url:
+                                                                              "${getAllPostData.object?[index].postData?[index1]}",
+                                                                        ),
+                                                                      ),
+                                                                      Align(
+                                                                        alignment:
+                                                                            Alignment.topRight,
+                                                                        child:
+                                                                            Card(
+                                                                          color:
+                                                                              Colors.transparent,
+                                                                          elevation:
+                                                                              0,
+                                                                          child: Container(
+                                                                              alignment: Alignment.center,
+                                                                              height: 30,
+                                                                              width: 50,
+                                                                              decoration: BoxDecoration(
+                                                                                color: Color.fromARGB(255, 2, 1, 1),
+                                                                                borderRadius: BorderRadius.all(Radius.circular(50)),
+                                                                              ),
+                                                                              child: Text(
+                                                                                imageCount.toString() + '/' + '${getAllPostData.object?[index].postData?.length}',
+                                                                                style: TextStyle(color: Colors.white),
+                                                                              )),
+                                                                        ),
+                                                                      )
+                                                                    ],
+                                                                  ),
+                                                                )),
+                                                              );
+                                                            } else if (getAllPostData
+                                                                    .object?[
+                                                                        index]
+                                                                    .postDataType ==
+                                                                "ATTACHMENT") {
+                                                              return Container(
+                                                                  height: 400,
+                                                                  width: _width,
+                                                                  child:
+                                                                      DocumentViewScreen1(
+                                                                    path: getAllPostData
+                                                                        .object?[
+                                                                            index]
+                                                                        .postData?[
+                                                                            index1]
+                                                                        .toString(),
+                                                                  ));
+                                                            }
+                                                          },
+                                                        ),
+                                                      ),
+                                                      Positioned(
+                                                          bottom: 5,
+                                                          left: 0,
+                                                          right: 0,
+                                                          child: Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                        .only(
+                                                                    top: 0),
+                                                            child: Container(
+                                                              height: 20,
+                                                              child:
+                                                                  DotsIndicator(
+                                                                dotsCount: getAllPostData
+                                                                        .object?[
+                                                                            index]
+                                                                        .postData
+                                                                        ?.length ??
+                                                                    0,
+                                                                position: _currentPages[
+                                                                        index]
+                                                                    .toDouble(),
+                                                                decorator:
+                                                                    DotsDecorator(
+                                                                  size:
+                                                                      const Size(
+                                                                          10.0,
+                                                                          7.0),
+                                                                  activeSize:
+                                                                      const Size(
+                                                                          10.0,
+                                                                          10.0),
+                                                                  spacing: const EdgeInsets
+                                                                          .symmetric(
+                                                                      horizontal:
+                                                                          2),
+                                                                  activeColor:
+                                                                      ColorConstant
+                                                                          .primary_color,
+                                                                  color: Color(
+                                                                      0xff6A6A6A),
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ))
+                                                    ]
+                                                    // : SizedBox()
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
+                                ),
+
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 13),
+                                  child: Divider(
+                                    thickness: 1,
                                   ),
                                 ),
-                              ),
-                              SizedBox(
-                                width: 0,
-                              ),
-                              getAllPostData.object?[index].likedCount == 0
-                                  ? SizedBox()
-                                  : GestureDetector(
-                                      onTap: () {
-                                        Navigator.push(context,
-                                            MaterialPageRoute(
-                                          builder: (context) {
-                                            return ShowAllPostLike(
-                                                "${getAllPostData.object?[index].postUid}");
+                                SizedBox(
+                                  height: 5,
+                                ),
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.only(top: 0, right: 16),
+                                  child: Row(
+                                    children: [
+                                      SizedBox(
+                                        width: 14,
+                                      ),
+                                      GestureDetector(
+                                        onTap: () async {
+                                          await soicalFunation(
+                                              apiName: 'like_post',
+                                              index: index);
+                                        },
+                                        child: Container(
+                                          color: Colors.transparent,
+                                          child: Padding(
+                                            padding: EdgeInsets.all(5.0),
+                                            child: getAllPostData.object?[index]
+                                                        .isLiked !=
+                                                    true
+                                                ? Image.asset(
+                                                    ImageConstant.likewithout,
+                                                    height: 18,
+                                                  )
+                                                : Image.asset(
+                                                    ImageConstant.like,
+                                                    height: 18,
+                                                  ),
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width: 0,
+                                      ),
+                                      getAllPostData
+                                                  .object?[index].likedCount ==
+                                              0
+                                          ? SizedBox()
+                                          : GestureDetector(
+                                              onTap: () {
+                                                Navigator.push(context,
+                                                    MaterialPageRoute(
+                                                  builder: (context) {
+                                                    return ShowAllPostLike(
+                                                        "${getAllPostData.object?[index].postUid}");
+                                                  },
+                                                ));
+                                              },
+                                              child: Container(
+                                                color: Colors.transparent,
+                                                child: Padding(
+                                                  padding: EdgeInsets.all(5.0),
+                                                  child: Align(
+                                                    alignment:
+                                                        Alignment.centerLeft,
+                                                    child: Text(
+                                                      "${getAllPostData.object?[index].likedCount}",
+                                                      style: TextStyle(
+                                                          fontFamily: "outfit",
+                                                          fontSize: 14),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                      SizedBox(
+                                        width: 8,
+                                      ),
+                                      GestureDetector(
+                                          onTap: () async {
+                                            BlocProvider.of<AddcommentCubit>(
+                                                    context)
+                                                .Addcomment(context,
+                                                    '${getAllPostData.object?[index].postUid}');
+
+                                            _settingModalBottomSheet1(
+                                                context, index, _width);
                                           },
-                                        ));
-                                      },
-                                      child: Container(
-                                        color: Colors.transparent,
-                                        child: Padding(
-                                          padding: EdgeInsets.all(5.0),
-                                          child: Align(
-                                            alignment: Alignment.centerLeft,
-                                            child: Text(
-                                              "${getAllPostData.object?[index].likedCount}",
+                                          child: Container(
+                                              color: Colors.transparent,
+                                              child: Padding(
+                                                  padding: EdgeInsets.all(5.0),
+                                                  child: Image.asset(
+                                                    ImageConstant.meesage,
+                                                    height: 15,
+                                                    // width: 15,
+                                                  )))),
+                                      SizedBox(
+                                        width: 5,
+                                      ),
+                                      getAllPostData.object?[index]
+                                                  .commentCount ==
+                                              0
+                                          ? SizedBox()
+                                          : Text(
+                                              "${getAllPostData.object?[index].commentCount}",
                                               style: TextStyle(
                                                   fontFamily: "outfit",
                                                   fontSize: 14),
                                             ),
+                                      SizedBox(
+                                        width: 5,
+                                      ),
+                                      GestureDetector(
+                                        onTap: () {
+                                          rePostBottomSheet(context, index);
+                                        },
+                                        child: Container(
+                                          color: Colors.transparent,
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(5.0),
+                                            child: Image.asset(
+                                              ImageConstant.vector2,
+                                              height: 13,
+                                            ),
                                           ),
                                         ),
                                       ),
-                                    ),
-                              SizedBox(
-                                width: 8,
-                              ),
-                              GestureDetector(
-                                  onTap: () async {
-                                    BlocProvider.of<AddcommentCubit>(context)
-                                        .Addcomment(context,
-                                            '${getAllPostData.object?[index].postUid}');
-
-                                    _settingModalBottomSheet1(
-                                        context, index, _width);
-                                  },
-                                  child: Container(
-                                      color: Colors.transparent,
-                                      child: Padding(
-                                          padding: EdgeInsets.all(5.0),
-                                          child: Image.asset(
-                                            ImageConstant.meesage,
-                                            height: 15,
-                                            // width: 15,
-                                          )))),
-                              SizedBox(
-                                width: 5,
-                              ),
-                              getAllPostData.object?[index].commentCount == 0
-                                  ? SizedBox()
-                                  : Text(
-                                      "${getAllPostData.object?[index].commentCount}",
-                                      style: TextStyle(
-                                          fontFamily: "outfit", fontSize: 14),
-                                    ),
-                              SizedBox(
-                                width: 5,
-                              ),
-                              GestureDetector(
-                                onTap: () {
-                                  rePostBottomSheet(context, index);
-                                },
-                                child: Container(
-                                  color: Colors.transparent,
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(5.0),
-                                    child: Image.asset(
-                                      ImageConstant.vector2,
-                                      height: 13,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              SizedBox(
-                                width: 5,
-                              ),
-                              getAllPostData.object?[index].repostCount ==
-                                          null ||
-                                      getAllPostData
-                                              .object?[index].repostCount ==
-                                          0
-                                  ? SizedBox()
-                                  : Text(
-                                      '${getAllPostData.object?[index].repostCount}',
-                                      style: TextStyle(
-                                          fontFamily: "outfit", fontSize: 14),
-                                    ),
-                              GestureDetector(
-                                onTap: () {
-                                  _onShareXFileFromAssets(
-                                    context,
-                                    androidLink:
-                                        '${getAllPostData.object?[index].postLink}',
-                                    /* iosLink:
+                                      SizedBox(
+                                        width: 5,
+                                      ),
+                                      getAllPostData.object?[index]
+                                                      .repostCount ==
+                                                  null ||
+                                              getAllPostData.object?[index]
+                                                      .repostCount ==
+                                                  0
+                                          ? SizedBox()
+                                          : Text(
+                                              '${getAllPostData.object?[index].repostCount}',
+                                              style: TextStyle(
+                                                  fontFamily: "outfit",
+                                                  fontSize: 14),
+                                            ),
+                                      GestureDetector(
+                                        onTap: () {
+                                          _onShareXFileFromAssets(
+                                            context,
+                                            androidLink:
+                                                '${getAllPostData.object?[index].postLink}',
+                                            /* iosLink:
                                                       "https://apps.apple.com/inList =  /app/growder-b2b-platform/id6451333863" */
-                                  );
-                                },
-                                child: Container(
-                                  height: 20,
-                                  width: 30,
-                                  color: Colors.transparent,
-                                  child: Icon(Icons.share_rounded, size: 20),
-                                ),
-                              ),
-                              Spacer(),
-                              GestureDetector(
-                                onTap: () async {
-                                  await soicalFunation(
-                                      apiName: 'savedata', index: index);
-                                },
-                                child: Container(
-                                  color: Colors.transparent,
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(5.0),
-                                    child: Image.asset(
-                                      getAllPostData.object?[index].isSaved ==
-                                              false
-                                          ? ImageConstant.savePin
-                                          : ImageConstant.Savefill,
-                                      height: 17,
-                                    ),
+                                          );
+                                        },
+                                        child: Container(
+                                          height: 20,
+                                          width: 30,
+                                          color: Colors.transparent,
+                                          child: Icon(Icons.share_rounded,
+                                              size: 20),
+                                        ),
+                                      ),
+                                      Spacer(),
+                                      GestureDetector(
+                                        onTap: () async {
+                                          await soicalFunation(
+                                              apiName: 'savedata',
+                                              index: index);
+                                        },
+                                        child: Container(
+                                          color: Colors.transparent,
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(5.0),
+                                            child: Image.asset(
+                                              getAllPostData.object?[index]
+                                                          .isSaved ==
+                                                      false
+                                                  ? ImageConstant.savePin
+                                                  : ImageConstant.Savefill,
+                                              height: 17,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
-                              ),
-                            ],
+                                SizedBox(
+                                  height: 5,
+                                ),
+                              ],
+                            ),
                           ),
                         ),
-                        SizedBox(
-                          height: 5,
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              );
+                      );
       },
     );
   }

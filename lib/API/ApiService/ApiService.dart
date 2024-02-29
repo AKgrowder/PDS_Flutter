@@ -28,9 +28,9 @@ class ApiServices {
     } else {
       baseURL =
           // "https://0b8e-2405-201-200b-a0cf-4523-3bc3-2996-dc22.ngrok.io/";
-          // "https://uatapi.inpackaging.com/";
-          // "https://api.inpackaging.com/";
-          "http://192.168.29.100:8081/";
+          "https://uatapi.inpackaging.com/";
+      // "https://api.inpackaging.com/";
+      // "http://192.168.29.100:8081/";
     }
 
     print(baseURL);
@@ -59,16 +59,18 @@ class ApiServices {
       }
     } else {}
   }
-/// make:- fction
+
+  /// make:- fction
   getApiCall(String APIurl, BuildContext context) async {
     await UpdateBaseURL();
     if (APIurl == "user/api/fetchSysConfig") {
       baseURL =
           // "https://0b8e-2405-201-200b-a0cf-4523-3bc3-2996-dc22.ngrok.io/";
-          // "https://uatapi.inpackaging.com/";
-          // "https://api.inpackaging.com/";
-          "http://192.168.29.100:8081/";
+          "https://uatapi.inpackaging.com/";
+      // "https://api.inpackaging.com/";
+      // "http://192.168.29.100:8081/";
     }
+
     print("API => ******** ${baseURL + APIurl}");
 
     final hasInternet = await checkInternet();

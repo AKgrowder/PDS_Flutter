@@ -85,6 +85,7 @@ import 'package:pds/API/Model/storyDeleteModel/storyDeleteModel.dart';
 import 'package:pds/API/Model/storyModel/stroyModel.dart';
 import 'package:pds/API/Model/updateprofileModel/updateprofileModel.dart';
 import 'package:pds/core/utils/sharedPreferences.dart';
+import 'package:pds/presentation/%20new/commenwigetReposrt.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../ApiService/ApiService.dart';
@@ -2029,7 +2030,7 @@ class Repository {
       bool profileNotification) async {
     print("sdfhsdfhsdfh-$otherUserUid");
     final response = await apiServices.getApiCallWithToken(
-        "${Config.myaccountApi}?otherUserUid=${otherUserUid}&profileNotification=${profileNotification}",
+        "${Config.myaccountApi}?otherUserUid=${otherUserUid}&fromNotification=${profileNotification}",
         context);
     print('AddPost$response');
     var jsonString = json.decode(response.body);
@@ -3274,7 +3275,6 @@ class Repository {
     BuildContext context,
     Map<String, dynamic> params,
   ) async {
-    print("parmes -$params");
     final responce =
         await apiServices.postApiCall('${Config.reportpost}', params, context);
     var jsonString = json.decode(responce.body);
@@ -3294,6 +3294,46 @@ class Repository {
       default:
         return jsonString;
     }
+  }
+
+  get_all_master_report_type(BuildContext context) async {
+    
+    final responce = await apiServices.getApiCall(
+        '${Config.get_all_master_report_type}', context);
+    var jsonString = json.decode(responce.body);
+
+    switch (responce.statusCode) {
+      case 200:
+        return jsonString['object'];
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+      case 400:
+        return jsonString['object'];
+      // return Config.somethingWentWrong;
+      case 701:
+        return Config.somethingWentWrong;
+      default:
+        return jsonString;
+    }
+    /* print('json stering -$jsonString');
+    jsonString['object'].forEach((e) {
+      /*    String properString = e.replaceAll(' ', '_').toUpperCase(); */
+      reportOptions.add(ReportOption(
+        properString: e.toString(),
+        label: '${e.replaceAll(" ", '_').toUpperCase()}',
+      ));
+    }); */
+    /*  List<ReportOption> reportOptions1 = jsonString['object'].map((String option) {
+      String properString = option.replaceAll(' ', '_').toUpperCase();
+      return ReportOption(label: option, properString: properString);
+    }).toList();
+    print("rereportOptions1-${reportOptions1.length}");
+    reportOptions1.forEach((element) {
+      reportOptions.add(element);
+
+    }); */
   }
 }
 // var headers = {
