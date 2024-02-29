@@ -130,6 +130,10 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
   Widget build(BuildContext context) {
     double _width = MediaQuery.of(context).size.width;
     double _height = MediaQuery.of(context).size.height;
+    final screenWidth = MediaQuery.of(context).size.width;
+    double baseFontSize = 12.5;
+    double scaleFactor = screenWidth / 375;
+    double responsiveFontSize = baseFontSize * scaleFactor;
 
     return Scaffold(
       backgroundColor: theme.colorScheme.onPrimary,
@@ -488,7 +492,7 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                             },
                             child: Container(
                               height: 50,
-                              width: 140,
+                              width: _width / 2.8,
                               decoration: BoxDecoration(
                                   color: Color(0xffF6F6F6),
                                   borderRadius: BorderRadius.circular(5)),
@@ -509,7 +513,7 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                                             color: Color(0xff989898)),
                                       )),
                                   SizedBox(
-                                    width: 20,
+                                    width: 5,
                                   ),
                                   Padding(
                                     padding: const EdgeInsets.only(
@@ -544,7 +548,7 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                             },
                             child: Container(
                               height: 50,
-                              width: 140,
+                              width: _width / 2.8,
                               decoration: BoxDecoration(
                                   color: Color(0xffF6F6F6),
                                   borderRadius: BorderRadius.circular(5)),
@@ -565,7 +569,7 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                                             color: Color(0xff989898)),
                                       )),
                                   SizedBox(
-                                    width: 20,
+                                    width: 5,
                                   ),
                                   Padding(
                                     padding: const EdgeInsets.only(
@@ -684,7 +688,7 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                         children: [
                           Container(
                               height: 50,
-                              width: _width / 1.6,
+                              width: _width / 1.68,
                               decoration: BoxDecoration(
                                   color: Color(0XFFF6F6F6),
                                   borderRadius: BorderRadius.only(
@@ -756,9 +760,10 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                         children: [
                           Text(
                             "Only JPG, PNG & PDF allowed",
+                            textScaleFactor: 1,
                             style: TextStyle(
                               fontFamily: 'outfit',
-                              fontSize: 15,
+                              fontSize: responsiveFontSize,
                               color: Colors.grey,
                               fontWeight: FontWeight.w500,
                             ),
@@ -767,7 +772,8 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                             "Max size ${finalFileSize}MB",
                             style: TextStyle(
                               fontFamily: 'outfit',
-                              fontSize: 15,
+                              fontSize: responsiveFontSize,
+                              // fontSize: 15,
                               color: Colors.black.withOpacity(0.6),
                               fontWeight: FontWeight.w500,
                             ),
@@ -910,7 +916,7 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                                 "uid": userid.toString(),
                                 "workingHours": time.toString(),
                                 "industryTypesUid": industryUUID,
-                                'documentName' : dopcument
+                                'documentName': dopcument
                               };
                               print('working time-$time');
                               print('pwarems-$params');
@@ -1068,7 +1074,7 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                               "Terms & Conditions",
                               style: TextStyle(
                                 color: theme.colorScheme.primary,
-                                fontSize: 14,
+                                fontSize: _width / 30,
                                 fontFamily: 'Outfit',
                                 fontWeight: FontWeight.w500,
                                 decoration: TextDecoration.underline,
@@ -1091,7 +1097,7 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                                 "Privacy & Policy of PDS Terms",
                                 style: TextStyle(
                                   color: theme.colorScheme.primary,
-                                  fontSize: 14,
+                                  fontSize: responsiveFontSize,
                                   fontFamily: 'Outfit',
                                   fontWeight: FontWeight.w500,
                                   decoration: TextDecoration.underline,
@@ -1120,7 +1126,12 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
 
     FilePickerResult? result = await FilePicker.platform.pickFiles(
       type: FileType.custom,
-      allowedExtensions: ['pdf', 'png', 'doc', 'jpg',],
+      allowedExtensions: [
+        'pdf',
+        'png',
+        'doc',
+        'jpg',
+      ],
     );
     {
       if (result != null) {
