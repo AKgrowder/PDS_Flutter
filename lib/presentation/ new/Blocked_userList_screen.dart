@@ -87,15 +87,15 @@ class _BlockedUserScreenState extends State<BlockedUserScreen> {
                     itemCount: blockUserListModel?.object?.length,
                     itemBuilder: (context, index) {
                       return Padding(
-                        padding: const EdgeInsets.all(15),
+                        padding: EdgeInsets.only(left: 15,right: 15,bottom: 10),
                         child: Container(
-                          height: 80,
+                          height: 70,
                           decoration: BoxDecoration(
                             border: Border.all(color: Colors.grey),
                             borderRadius: BorderRadius.circular(10),
                           ),
                           child: Padding(
-                            padding: const EdgeInsets.only(left: 20, right: 15),
+                            padding: const EdgeInsets.only(left: 10, right: 15),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
@@ -103,15 +103,14 @@ class _BlockedUserScreenState extends State<BlockedUserScreen> {
                                   children: [
                                     GestureDetector(
                                       onTap: () {
-                                        Navigator.push(context,
-                                            MaterialPageRoute(
-                                                builder: (context) {
-                                          return ProfileScreen(
-                                              User_ID:
-                                                  "${blockUserListModel?.object?[index].userUid}",
-                                              isFollowing: "",
-                                              ProfileNotification: true);
-                                        }));
+                                         SnackBar snackBar = SnackBar(
+                                          content:
+                                              Text('You Can block This User'),
+                                          backgroundColor:
+                                              ColorConstant.primary_color,
+                                        );
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(snackBar);
                                       },
                                       child: blockUserListModel?.object?[index]
                                                   .userProfilePic !=

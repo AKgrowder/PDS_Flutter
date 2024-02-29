@@ -2525,7 +2525,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                     AllGuestPostRoomData
                                             ?.object?.content?.isNotEmpty ==
                                         true
-                                ? PaginationWidget(
+                                ? PaginationWidget1(
                                     scrollController: widget.scrollController,
                                     totalSize: AllGuestPostRoomData
                                         ?.object?.totalElements,
