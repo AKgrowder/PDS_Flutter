@@ -64,11 +64,12 @@ class ProfileScreen extends StatefulWidget {
   String User_ID;
   String? isFollowing;
   bool? ProfileNotification;
-
+  String? Screen;
   ProfileScreen(
       {required this.User_ID,
       required this.isFollowing,
-      this.ProfileNotification});
+      this.ProfileNotification,
+      this.Screen});
 
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
@@ -643,7 +644,16 @@ class _ProfileScreenState extends State<ProfileScreen>
                                 padding: EdgeInsets.only(top: 55, left: 16),
                                 child: GestureDetector(
                                   onTap: () {
-                                    Navigator.pop(context);
+                                    if (widget.Screen?.isNotEmpty == true) {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                NewBottomBar(buttomIndex: 0),
+                                          ));
+                                    } else {
+                                      Navigator.pop(context);
+                                    }
                                   },
                                   child: Container(
                                     height: 30,
@@ -1102,7 +1112,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                             blockKey);
                                       },
                                       child: Container(
-                                   /*  */     height: 40,
+                                        /*  */ height: 40,
                                         width: 40,
                                         decoration: BoxDecoration(
                                           color: ColorConstant.primary_color,
@@ -1843,8 +1853,13 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                           15),
                                                                   child:
                                                                       Container(
-                                                                        margin: EdgeInsets.only(left: 10),
-                                                                        alignment: Alignment.topLeft,
+                                                                    margin: EdgeInsets
+                                                                        .only(
+                                                                            left:
+                                                                                10),
+                                                                    alignment:
+                                                                        Alignment
+                                                                            .topLeft,
                                                                     child:
                                                                         LinkifyText(
                                                                       "${aboutMe.text}",
@@ -2130,39 +2145,44 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                         ],
                                                       )),
                                                 if ((NewProfileData?.object
-                                                                ?.aboutMe !=
-                                                            null &&
-                                                        User_ID !=
-                                                            NewProfileData
-                                                                ?.object
-                                                                ?.userUid)&&
+                                                                    ?.aboutMe !=
+                                                                null &&
+                                                            User_ID !=
+                                                                NewProfileData
+                                                                    ?.object
+                                                                    ?.userUid) &&
                                                         (NewProfileData?.object
-                                                                ?.accountType ==
-                                                            'PUBLIC' && NewProfileData?.object
-                                                                ?.aboutMe !=
-                                                            null) ||
+                                                                    ?.accountType ==
+                                                                'PUBLIC' &&
+                                                            NewProfileData
+                                                                    ?.object
+                                                                    ?.aboutMe !=
+                                                                null) ||
                                                     (NewProfileData?.object
                                                                 ?.isFollowing ==
                                                             'FOLLOWING' &&
                                                         NewProfileData?.object
                                                                 ?.accountType ==
-                                                            'PRIVATE' &&NewProfileData?.object
+                                                            'PRIVATE' &&
+                                                        NewProfileData?.object
                                                                 ?.aboutMe !=
                                                             null))
                                                   GestureDetector(
                                                     onTap: () {
-                                                      print("thid is -${NewProfileData?.object
-                                                                ?.aboutMe}");
+                                                      print(
+                                                          "thid is -${NewProfileData?.object?.aboutMe}");
                                                     },
                                                     child: Card(
                                                         color: Colors.white,
-                                                        borderOnForeground: true,
+                                                        borderOnForeground:
+                                                            true,
                                                         elevation: 10,
                                                         shape:
                                                             RoundedRectangleBorder(
                                                           borderRadius:
                                                               BorderRadius
-                                                                  .circular(15.0),
+                                                                  .circular(
+                                                                      15.0),
                                                         ),
                                                         /*  child: expertUser(_height, _width) */
                                                         child: Column(
@@ -2185,7 +2205,8 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                       TextStyle(
                                                                     color: Colors
                                                                         .black,
-                                                                    fontSize: 18,
+                                                                    fontSize:
+                                                                        18,
                                                                     fontWeight:
                                                                         FontWeight
                                                                             .w600,
@@ -2200,7 +2221,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                         fontFamily:
                                                                             "outfit"),
                                                                   ), */
-                                                  
+
                                                                     LinkifyText(
                                                                   "${NewProfileData?.object?.aboutMe}",
                                                                   linkStyle:
@@ -2218,7 +2239,8 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                         'outfit',
                                                                   ),
                                                                   linkTypes: [
-                                                                    LinkType.url,
+                                                                    LinkType
+                                                                        .url,
                                                                     LinkType
                                                                         .userTag,
                                                                     LinkType
@@ -2230,44 +2252,42 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                       (link) async {
                                                                     /// do stuff with `link` like
                                                                     /// if(link.type == Link.url) launchUrl(link.value);
-                                                  
-                                                                    var SelectedTest =
-                                                                        link.value
-                                                                            .toString();
+
+                                                                    var SelectedTest = link
+                                                                        .value
+                                                                        .toString();
                                                                     var Link = SelectedTest
                                                                         .startsWith(
                                                                             'https');
-                                                                    var Link1 = SelectedTest
-                                                                        .startsWith(
+                                                                    var Link1 =
+                                                                        SelectedTest.startsWith(
                                                                             'http');
-                                                                    var Link2 = SelectedTest
-                                                                        .startsWith(
+                                                                    var Link2 =
+                                                                        SelectedTest.startsWith(
                                                                             'www');
-                                                                    var Link3 = SelectedTest
-                                                                        .startsWith(
+                                                                    var Link3 =
+                                                                        SelectedTest.startsWith(
                                                                             'WWW');
-                                                                    var Link4 = SelectedTest
-                                                                        .startsWith(
+                                                                    var Link4 =
+                                                                        SelectedTest.startsWith(
                                                                             'HTTPS');
-                                                                    var Link5 = SelectedTest
-                                                                        .startsWith(
+                                                                    var Link5 =
+                                                                        SelectedTest.startsWith(
                                                                             'HTTP');
-                                                                    var Link6 = SelectedTest
-                                                                        .startsWith(
+                                                                    var Link6 =
+                                                                        SelectedTest.startsWith(
                                                                             'https://pdslink.page.link/');
                                                                     print(SelectedTest
                                                                         .toString());
-                                                  
+
                                                                     if (User_ID ==
                                                                         null) {
                                                                       Navigator.of(
                                                                               context)
-                                                                          .push(MaterialPageRoute(
-                                                                              builder: (context) =>
-                                                                                  RegisterCreateAccountScreen()));
+                                                                          .push(
+                                                                              MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
                                                                     } else {
-                                                                      if (Link ==
-                                                                              true ||
+                                                                      if (Link == true ||
                                                                           Link1 ==
                                                                               true ||
                                                                           Link2 ==
@@ -2291,24 +2311,18 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                         } else {
                                                                           if (Link6 ==
                                                                               true) {
-                                                                            print(
-                                                                                "yes i am inList =   room");
-                                                                            Navigator.push(
-                                                                                context,
+                                                                            print("yes i am inList =   room");
+                                                                            Navigator.push(context,
                                                                                 MaterialPageRoute(
-                                                                              builder:
-                                                                                  (context) {
+                                                                              builder: (context) {
                                                                                 return NewBottomBar(
                                                                                   buttomIndex: 1,
                                                                                 );
                                                                               },
                                                                             ));
                                                                           } else {
-                                                                            launchUrl(Uri.parse(link
-                                                                                .value
-                                                                                .toString()));
-                                                                            print(
-                                                                                "link.valuelink.value -- ${link.value}");
+                                                                            launchUrl(Uri.parse(link.value.toString()));
+                                                                            print("link.valuelink.value -- ${link.value}");
                                                                           }
                                                                         }
                                                                       } else {
@@ -2323,8 +2337,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                               ));
                                                                         } else if (link
                                                                             .value!
-                                                                            .startsWith(
-                                                                                '@')) {
+                                                                            .startsWith('@')) {
                                                                           var name;
                                                                           var tagName;
                                                                           name =
@@ -3604,7 +3617,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                       GetUserPostCommetData?.object?[index].description !=
                                                                               null
                                                                           ? Container(
-                                                                            // color: Colors.amber,
+                                                                              // color: Colors.amber,
                                                                               width: _width / 1.45,
                                                                               child: Text(
                                                                                 '${GetUserPostCommetData?.object?[index].description}',
@@ -6742,7 +6755,16 @@ class _ProfileScreenState extends State<ProfileScreen>
                             param,
                             GetAllPostData?.object?[index].postUid,
                             "Repost");
-                        Navigator.pop(context);
+                        if (widget.Screen?.isNotEmpty == true) {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    NewBottomBar(buttomIndex: 0),
+                              ));
+                        } else {
+                          Navigator.pop(context);
+                        }
                       }),
                 ),
                 SizedBox(
@@ -6924,7 +6946,17 @@ class _ProfileScreenState extends State<ProfileScreen>
                             param,
                             GetSavePostData?.object?[index].postUid,
                             "Repost");
-                        Navigator.pop(context);
+
+                        if (widget.Screen?.isNotEmpty == true) {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    NewBottomBar(buttomIndex: 0),
+                              ));
+                        } else {
+                          Navigator.pop(context);
+                        }
                       }),
                 ),
                 SizedBox(
@@ -10816,7 +10848,16 @@ class _ProfileScreenState extends State<ProfileScreen>
                                 getAllPostData?.object?[index].postData?.first,
                           ),
                         )).then((value) {
-                      Navigator.pop(context);
+                      if (widget.Screen?.isNotEmpty == true) {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  NewBottomBar(buttomIndex: 0),
+                            ));
+                      } else {
+                        Navigator.pop(context);
+                      }
                       BlocProvider.of<NewProfileSCubit>(context).GetAppPostAPI(
                           context, "${NewProfileData?.object?.userUid}");
                     });
@@ -10833,7 +10874,16 @@ class _ProfileScreenState extends State<ProfileScreen>
                                 getAllPostData?.object?[index].postData,
                           ),
                         )).then((value) {
-                      Navigator.pop(context);
+                      if (widget.Screen?.isNotEmpty == true) {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  NewBottomBar(buttomIndex: 0),
+                            ));
+                      } else {
+                        Navigator.pop(context);
+                      }
                       BlocProvider.of<NewProfileSCubit>(context).GetAppPostAPI(
                           context, "${NewProfileData?.object?.userUid}");
                     });
@@ -10849,7 +10899,16 @@ class _ProfileScreenState extends State<ProfileScreen>
                                 getAllPostData?.object?[index].description,
                           ),
                         )).then((value) {
-                      Navigator.pop(context);
+                      if (widget.Screen?.isNotEmpty == true) {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  NewBottomBar(buttomIndex: 0),
+                            ));
+                      } else {
+                        Navigator.pop(context);
+                      }
                       BlocProvider.of<NewProfileSCubit>(context).GetAppPostAPI(
                           context, "${NewProfileData?.object?.userUid}");
                     });
@@ -11218,8 +11277,16 @@ class _ProfileScreenState extends State<ProfileScreen>
       position: position,
       items: <PopupMenuItem<String>>[
         PopupMenuItem<String>(
-           onTap: () {
-            Navigator.pop(context);
+          onTap: () {
+            if (widget.Screen?.isNotEmpty == true) {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => NewBottomBar(buttomIndex: 0),
+                  ));
+            } else {
+              Navigator.pop(context);
+            }
             showDialog(
               context: context,
               builder: (_) =>
@@ -11230,7 +11297,15 @@ class _ProfileScreenState extends State<ProfileScreen>
           value: 'block',
           child: GestureDetector(
             onTap: () {
-              Navigator.pop(context);
+              if (widget.Screen?.isNotEmpty == true) {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => NewBottomBar(buttomIndex: 0),
+                    ));
+              } else {
+                Navigator.pop(context);
+              }
               showDialog(
                 context: context,
                 builder: (_) =>
