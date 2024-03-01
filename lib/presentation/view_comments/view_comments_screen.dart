@@ -443,7 +443,7 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                                                           snackBar =
                                                                           SnackBar(
                                                                         content:
-                                                                            Text('You Can block This User'),
+                                                                            Text('User Blocked.'),
                                                                         backgroundColor:
                                                                             ColorConstant.primary_color,
                                                                       );
@@ -480,7 +480,7 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                                                               snackBar =
                                                                               SnackBar(
                                                                             content:
-                                                                                Text('You Can block This User'),
+                                                                                Text('User Blocked.'),
                                                                             backgroundColor:
                                                                                 ColorConstant.primary_color,
                                                                           );

@@ -168,6 +168,7 @@ class _ProfileScreenState extends State<ProfileScreen>
   int selectedIndex = 0;
   bool swipLeft = false;
   bool swipeRigth = false;
+  bool Blockuser = false;
   GlobalKey key = GlobalKey();
   GlobalKey blockKey = GlobalKey();
   String getTimeDifference(DateTime dateTime) {
@@ -1105,6 +1106,12 @@ class _ProfileScreenState extends State<ProfileScreen>
                                     child: GestureDetector(
                                       key: blockKey,
                                       onTap: () {
+                                        if (Blockuser == false) {
+                                          Blockuser = true;
+                                        } else {
+                                          Blockuser = false;
+                                        }
+                                        ;
                                         showPopupMenuBlock(
                                             context,
                                             NewProfileData?.object?.userUid,
@@ -11290,11 +11297,11 @@ class _ProfileScreenState extends State<ProfileScreen>
             showDialog(
               context: context,
               builder: (_) =>
-                  BlockUserdailog(blockUserID: userID, userName: userName),
+                  BlockUserdailog(blockUserID: userID, userName: userName,Blockuser : Blockuser),
             );
           },
           height: 25,
-          value: 'block',
+          value: Blockuser == true ? 'Block' : 'UnBlock',
           child: GestureDetector(
             onTap: () {
               if (widget.Screen?.isNotEmpty == true) {
@@ -11309,7 +11316,7 @@ class _ProfileScreenState extends State<ProfileScreen>
               showDialog(
                 context: context,
                 builder: (_) =>
-                    BlockUserdailog(blockUserID: userID, userName: userName),
+                    BlockUserdailog(blockUserID: userID, userName: userName,Blockuser : Blockuser),
               );
             },
             child: Container(
@@ -11324,7 +11331,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                       color: Colors.black,
                     ),
                     Text(
-                      'Block',
+                       Blockuser == true ? 'Block' : 'UnBlock',
                       style: TextStyle(color: Colors.black, fontSize: 16),
                     ),
                   ],
