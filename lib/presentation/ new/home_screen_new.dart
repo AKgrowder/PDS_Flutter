@@ -54,6 +54,7 @@ import 'package:pds/presentation/%20new/RePost_Screen.dart';
 import 'package:pds/presentation/%20new/ShowAllPostLike.dart';
 import 'package:pds/presentation/%20new/comment_bottom_sheet.dart';
 import 'package:pds/presentation/%20new/commenwigetReposrt.dart';
+import 'package:pds/presentation/%20new/new_story_view_page.dart';
 import 'package:pds/presentation/%20new/newbottembar.dart';
 import 'package:pds/presentation/%20new/profileNew.dart';
 import 'package:pds/presentation/%20new/videoScreen.dart';
@@ -1557,7 +1558,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
 
                       storyButtons[0] = (StoryButton(
                           onPressed: (data) {
-                            Navigator.of(storycontext!).push(
+                            /*Navigator.of(storycontext!).push(
                               StoryRoute(
                                 // hii working Date
                                 onTap: () async {
@@ -1582,7 +1583,11 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                 ),
                                 duration: buttonDatas[0].pageAnimationDuration,
                               ),
-                            );
+                            );*/
+                            Navigator.push(context,
+                                MaterialPageRoute(builder: (context) {
+                                  return NewStoryViewPage(data,buttonDatas,0);
+                                })).then((value) => Get_UserToken());
                           },
                           buttonData: buttonDatas[0],
                           allButtonDatas: buttonDatas,
