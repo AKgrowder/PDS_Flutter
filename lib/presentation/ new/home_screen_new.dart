@@ -1951,7 +1951,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                             SizedBox(
                               height: 15,
                             ),
-                            Platform.isIOS == true ? SizedBox():
+                            // Platform.isIOS == true ? SizedBox():
                             storyButtons == null
                                 ? Container(
                                     height: 40,

@@ -11,7 +11,8 @@ import '../API/Bloc/NewProfileScreen_Bloc/NewProfileScreen_cubit.dart';
 class BlockUserdailog extends StatefulWidget {
   String? blockUserID;
   String? userName;
-  BlockUserdailog({Key? key, this.blockUserID, this.userName})
+  bool? Blockuser;
+  BlockUserdailog({Key? key, this.blockUserID, this.userName,this.Blockuser})
       : super(key: key);
 
   @override
@@ -103,7 +104,7 @@ class BlockUserdailogState extends State<BlockUserdailog>
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   Expanded(
-                                    child: Text("Block ${widget.userName}?",
+                                    child: Text("${widget.Blockuser == true ? 'Block' : 'UnBlock'} ${widget.userName}?",
                                         style: TextStyle(
                                           fontFamily: 'outfit',
                                           fontSize: 20,
@@ -171,7 +172,7 @@ class BlockUserdailogState extends State<BlockUserdailog>
                                         color: ColorConstant.primary_color,
                                       ),
                                       child: Center(
-                                        child: Text("Block",
+                                        child: Text( widget.Blockuser == true ? 'Block' : 'UnBlock',
                                             textScaleFactor: 1.0,
                                             style: TextStyle(
                                                 fontFamily: 'outfit',
