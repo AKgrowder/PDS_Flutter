@@ -149,4 +149,5 @@ class Config {
   static const String reportpost = "user/api/report_post";
   static const String get_all_master_report_type =
       "user/api/get_all_master_report_type";
+  static const String onlineLiveStatus = "user/get_online_live";
 }

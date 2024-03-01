@@ -145,7 +145,6 @@ class _RoomMembersScreenState extends State<RoomMembersScreen> {
           }
           if (state is FatchAllMembersLoadedState) {
             _data = state.FatchAllMembersData;
-            print("@@@@@@@@@@@@@@@@@@${_data?.object?.length}");
           }
           if (state is RoomExistsLoadedState) {
             SnackBar snackBar = SnackBar(
@@ -158,7 +157,6 @@ class _RoomMembersScreenState extends State<RoomMembersScreen> {
           if (state is FatchAllMembersLoadedState) {
             _data = state.FatchAllMembersData;
 
-            print("@@@@@@@@@@@@@@@@@@${_data?.object?.length}");
             return Column(
               children: [
                 Center(
@@ -221,12 +219,13 @@ class _RoomMembersScreenState extends State<RoomMembersScreen> {
                 ),
                 ListView.builder(
                   physics: BouncingScrollPhysics(),
-                  itemCount: _data?.object?.length,
+                  itemCount: _data?.object?.roomMemberOutputDTOList?.length,
                   // itemCount: 2,
 
                   shrinkWrap: true,
                   itemBuilder: (context, index) {
-                    print('axfhsdfh-${_data?.object?.length}');
+                    print(
+                        'axfhsdfh-${_data?.object?.roomMemberOutputDTOList?.length}');
                     return Padding(
                       padding:
                           const EdgeInsets.only(left: 35, right: 35, top: 20),
@@ -244,15 +243,35 @@ class _RoomMembersScreenState extends State<RoomMembersScreen> {
                             children: [
                               GestureDetector(
                                 onTap: () {
-                                  Navigator.push(context,
-                                      MaterialPageRoute(builder: (context) {
-                                    return ProfileScreen(
-                                        User_ID:
-                                            "${_data?.object?[index].userUuid}",
-                                        isFollowing: "");
-                                  }));
+                                  bool? isBlock = _data?.object?.blockedUsers
+                                      ?.contains(_data
+                                          ?.object
+                                          ?.roomMemberOutputDTOList?[index]
+                                          .userUuid);
+
+                                  print("this i want to check-${isBlock}");
+                                  if (isBlock == true) {
+                                    SnackBar snackBar = SnackBar(
+                                      content: Text('User Blocked.'),
+                                      backgroundColor:
+                                          ColorConstant.primary_color,
+                                    );
+                                    ScaffoldMessenger.of(context)
+                                        .showSnackBar(snackBar);
+                                  } else {
+                                    Navigator.push(context,
+                                        MaterialPageRoute(builder: (context) {
+                                      return ProfileScreen(
+                                          User_ID:
+                                              "${_data?.object?.roomMemberOutputDTOList?[index].userUuid}",
+                                          isFollowing: "");
+                                    }));
+                                  }
                                 },
-                                child: _data?.object?[index].userProfilePic
+                                child: _data
+                                            ?.object
+                                            ?.roomMemberOutputDTOList?[index]
+                                            .userProfilePic
                                             ?.isNotEmpty ??
                                         false
                                     ? Stack(
@@ -260,13 +279,18 @@ class _RoomMembersScreenState extends State<RoomMembersScreen> {
                                         children: [
                                           CustomImageView(
                                             url:
-                                                "${_data?.object?[index].userProfilePic}",
+                                                "${_data?.object?.roomMemberOutputDTOList?[index].userProfilePic}",
                                             height: 50,
                                             radius: BorderRadius.circular(25),
                                             width: 50,
                                             fit: BoxFit.fill,
                                           ),
-                                          _data?.object?[index].isExpert == true
+                                          _data
+                                                      ?.object
+                                                      ?.roomMemberOutputDTOList?[
+                                                          index]
+                                                      .isExpert ==
+                                                  true
                                               ? Padding(
                                                   padding:
                                                       const EdgeInsets.only(
@@ -289,7 +313,12 @@ class _RoomMembersScreenState extends State<RoomMembersScreen> {
                                             width: 50,
                                             fit: BoxFit.fill,
                                           ),
-                                          _data?.object?[index].isExpert == true
+                                          _data
+                                                      ?.object
+                                                      ?.roomMemberOutputDTOList?[
+                                                          index]
+                                                      .isExpert ==
+                                                  true
                                               ? Padding(
                                                   padding:
                                                       const EdgeInsets.only(
@@ -308,17 +337,34 @@ class _RoomMembersScreenState extends State<RoomMembersScreen> {
                               ),
                               GestureDetector(
                                 onTap: () {
-                                  Navigator.push(context,
-                                      MaterialPageRoute(builder: (context) {
-                                    return ProfileScreen(
-                                        User_ID:
-                                            "${_data?.object?[index].userUuid}",
-                                        isFollowing: "");
-                                  }));
+                                  bool? isBlock = _data?.object?.blockedUsers
+                                      ?.contains(_data
+                                          ?.object
+                                          ?.roomMemberOutputDTOList?[index]
+                                          .userUuid);
+
+                                  print("this i want to check-${isBlock}");
+                                  if (isBlock == true) {
+                                    SnackBar snackBar = SnackBar(
+                                      content: Text('User Blocked.'),
+                                      backgroundColor:
+                                          ColorConstant.primary_color,
+                                    );
+                                    ScaffoldMessenger.of(context)
+                                        .showSnackBar(snackBar);
+                                  } else {
+                                    Navigator.push(context,
+                                        MaterialPageRoute(builder: (context) {
+                                      return ProfileScreen(
+                                          User_ID:
+                                              "${_data?.object?.roomMemberOutputDTOList?[index].userUuid}",
+                                          isFollowing: "");
+                                    }));
+                                  }
                                 },
                                 child: Container(
                                   child: Text(
-                                    "${_data?.object?[index].fullName ?? ""}",
+                                    "${_data?.object?.roomMemberOutputDTOList?[index].fullName ?? ""}",
                                     style: TextStyle(
                                         fontWeight: FontWeight.bold,
                                         color: Colors.black,
@@ -335,7 +381,9 @@ class _RoomMembersScreenState extends State<RoomMembersScreen> {
                               //       )
                               //     : SizedBox(),
                               Spacer(),
-                              _data?.object?[index].isAdmin == true
+                              _data?.object?.roomMemberOutputDTOList?[index]
+                                          .isAdmin ==
+                                      true
                                   ? Container(
                                       height: 50,
                                       child: Column(
@@ -357,10 +405,16 @@ class _RoomMembersScreenState extends State<RoomMembersScreen> {
                                                 )),
                                           ),
                                           User_ID ==
-                                                  _data?.object?[index].userUuid
+                                                  _data
+                                                      ?.object
+                                                      ?.roomMemberOutputDTOList?[
+                                                          index]
+                                                      .userUuid
                                               ? GestureDetector(
                                                   onTap: () {
-                                                    if ((_data?.object
+                                                    if ((_data
+                                                                ?.object
+                                                                ?.roomMemberOutputDTOList
                                                                 ?.length ??
                                                             0) <=
                                                         1) {
@@ -753,7 +807,10 @@ class _RoomMembersScreenState extends State<RoomMembersScreen> {
                                       ),
                                     )
                                   : widget.CreateUserID !=
-                                          _data?.object?[index].userUuid
+                                          _data
+                                              ?.object
+                                              ?.roomMemberOutputDTOList?[index]
+                                              .userUuid
                                       ? GestureDetector(
                                           onTapDown: (details) {
                                             if (widget.RoomOwner == true) {
@@ -1543,15 +1600,12 @@ class _RoomMembersScreenState extends State<RoomMembersScreen> {
           print("selected==>$value");
         }
         if (value == 0) {
-          print(
-              "object object object object object object object object object ");
-          print(_data?.object?[MemberIndex].userUuid);
-
           Navigator.push(
               context,
               MaterialPageRoute(
                   builder: (context) => ViewDetailsScreen(
-                        uuID: _data?.object?[MemberIndex].userUuid,
+                        uuID: _data?.object
+                            ?.roomMemberOutputDTOList?[MemberIndex].userUuid,
                       )));
         }
         if (value == 1) {
@@ -1623,7 +1677,11 @@ class _RoomMembersScreenState extends State<RoomMembersScreen> {
                                     BlocProvider.of<ViewDetailsCubit>(context)
                                         .ReamoveMemberAPI(
                                       widget.room_Id,
-                                      _data?.object?[MemberIndex].userUuid,
+                                      _data
+                                          ?.object
+                                          ?.roomMemberOutputDTOList?[
+                                              MemberIndex]
+                                          .userUuid,
                                       context,
                                     );
                                   },
@@ -1821,13 +1879,14 @@ class _RoomMembersScreenState extends State<RoomMembersScreen> {
         if (value == 0) {
           print(
               "object object object object object object object object object ");
-          print(_data?.object?[MemberIndex].userUuid);
+          print(_data?.object?.roomMemberOutputDTOList?[MemberIndex].userUuid);
 
           Navigator.push(
               context,
               MaterialPageRoute(
                   builder: (context) => ViewDetailsScreen(
-                        uuID: _data?.object?[MemberIndex].userUuid,
+                        uuID: _data?.object
+                            ?.roomMemberOutputDTOList?[MemberIndex].userUuid,
                       )));
         }
 
@@ -1900,7 +1959,11 @@ class _RoomMembersScreenState extends State<RoomMembersScreen> {
                                     BlocProvider.of<ViewDetailsCubit>(context)
                                         .ReamoveMemberAPI(
                                       widget.room_Id,
-                                      _data?.object?[MemberIndex].userUuid,
+                                      _data
+                                          ?.object
+                                          ?.roomMemberOutputDTOList?[
+                                              MemberIndex]
+                                          .userUuid,
                                       context,
                                     );
                                   },
@@ -1962,11 +2025,12 @@ class _RoomMembersScreenState extends State<RoomMembersScreen> {
         if (value == 2) {
           print(
               "object object object object object object object object object ");
-          print(_data?.object?[MemberIndex].userUuid);
 
           BlocProvider.of<FatchAllMembersCubit>(context)
               .RoomExistsAPI(
-                  _data?.object?[MemberIndex].userUuid, widget.room_Id, context)
+                  _data?.object?.roomMemberOutputDTOList?[MemberIndex].userUuid,
+                  widget.room_Id,
+                  context)
               .then((value) async =>
                   await BlocProvider.of<FatchAllMembersCubit>(context)
                       .FatchAllMembersAPI("${widget.room_Id}", context));

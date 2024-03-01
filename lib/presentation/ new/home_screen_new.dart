@@ -1561,15 +1561,17 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                               StoryRoute(
                                 // hii working Date
                                 onTap: () async {
+
                                   await BlocProvider.of<GetGuestAllPostCubit>(
                                           context)
                                       .seetinonExpried(context);
-                                  Navigator.push(context,
+                                  Navigator.pushAndRemoveUntil(context,
                                       MaterialPageRoute(builder: (context) {
                                     return ProfileScreen(
+                                      Screen:'Profile',
                                         User_ID: "${element.userUid}",
                                         isFollowing: "");
-                                  })).then((value) => Get_UserToken());
+                                  }),(route) => false,).then((value) => Get_UserToken());
                                 },
                                 storyContainerSettings: StoryContainerSettings(
                                   buttonData: buttonDatas[0],
@@ -1589,7 +1591,6 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                           storyListViewController: ScrollController()));
                       userName.clear();
                       userName.add(element.userName ?? '');
-
                       storyAdded = true;
                     } else if (element.userUid != User_ID) {
                       print("check Data get -${element.userName.toString()}");
@@ -1677,12 +1678,13 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                   await BlocProvider.of<GetGuestAllPostCubit>(
                                           context)
                                       .seetinonExpried(context);
-                                  Navigator.push(context,
+                                  Navigator.pushAndRemoveUntil(context,
                                       MaterialPageRoute(builder: (context) {
                                     return ProfileScreen(
+                                      Screen: 'Proifile',
                                         User_ID: "${element.userUid}",
                                         isFollowing: "");
-                                  })).then((value) => Get_UserToken());
+                                  }),(route) => false,).then((value) => Get_UserToken());
                                 },
                                 storyContainerSettings: StoryContainerSettings(
                                   buttonData: buttonData1,
@@ -1949,7 +1951,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                             SizedBox(
                               height: 15,
                             ),
-                            Platform.isIOS == true ? SizedBox():
+                            // Platform.isIOS == true ? SizedBox():
                             storyButtons == null
                                 ? Container(
                                     height: 40,
@@ -2349,7 +2351,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                       onPressed: (data) {
                                                         Navigator.of(
                                                                 storycontext!)
-                                                            .push(
+                                                            .pushAndRemoveUntil(
                                                               StoryRoute(
                                                                 onTap:
                                                                     () async {
@@ -2364,6 +2366,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                           builder:
                                                                               (context) {
                                                                     return ProfileScreen(
+                                                                      Screen: 'Profile',
                                                                         User_ID:
                                                                             "${User_ID}",
                                                                         isFollowing:
@@ -2391,6 +2394,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                 duration: buttonData
                                                                     .pageAnimationDuration,
                                                               ),
+                                                              (route) => false,
                                                             )
                                                             .then((value) =>
                                                                 Get_UserToken());
@@ -2400,7 +2404,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                           buttonDatas,
                                                       storyListViewController:
                                                           ScrollController());
-                                                  userName[0] = User_Name!;
+                                                  userName[0] = "Your Story";
 
                                                   if (mounted)
                                                     super.setState(() {
@@ -2479,7 +2483,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                     flex: 1,
                                                   ),
                                                   Text(
-                                                    '${userName[index]}',
+                                                    'Your Story',
                                                     style: TextStyle(
                                                         color: Colors.black,
                                                         fontSize: 16),
@@ -2526,7 +2530,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                     AllGuestPostRoomData
                                             ?.object?.content?.isNotEmpty ==
                                         true
-                                ? PaginationWidget(
+                                ? PaginationWidget1(
                                     scrollController: widget.scrollController,
                                     totalSize: AllGuestPostRoomData
                                         ?.object?.totalElements,

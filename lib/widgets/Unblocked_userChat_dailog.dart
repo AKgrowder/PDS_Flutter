@@ -105,9 +105,20 @@ class UnBlockUserChatdailogState extends State<UnBlockUserChatdailog>
                           height: _height / 6,
                           width: _width,
                         ),
+                        Text(
+                              "User Blocked",
+                              textScaleFactor: 1.0,
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontFamily: 'outfit',
+                                fontSize: 22,
+                                fontWeight: FontWeight.w400,
+                                color:
+                                    Color(0xff797979), /* textCenter: true, */
+                              )),
                         Padding(
                           padding: const EdgeInsets.only(
-                              top: 30, left: 20, right: 20),
+                              top: 15, left: 20, right: 20),
                           child: Text(
                               "You are not able to chat with ${widget.userName}",
                               textScaleFactor: 1.0,

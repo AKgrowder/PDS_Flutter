@@ -71,7 +71,7 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
   bool AddNewData = false;
   bool addDataSccesfully = false;
   bool SubmitOneTime = false;
-
+  bool isMounted = true;
   File? _image;
   bool isEmojiVisible = false;
   bool isKeyboardVisible = false;
@@ -162,13 +162,18 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     int? a = prefs.getInt(PreferencesKey.mediaSize);
     documentuploadsize = double.parse("${a}");
-    super.setState(() {});
+    if (isMounted == true) {
+      if (mounted) {
+        super.setState(() {});
+      }
+    }
   }
 
   //  @override
   void dispose() {
     //  stompClient.deactivate();
     // Delet_stompClient.deactivate();
+    isMounted = false;
     super.dispose();
   }
 
@@ -423,39 +428,101 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                                                     /* horizontal: 35, vertical: 5 */),
                                                                 child:
                                                                     GestureDetector(
-                                                                  onTap: () {
-                                                                    AllChatmodelData
-                                                                        ?.object
-                                                                        ?.blockedUsers
-                                                                        ?.forEach(
-                                                                            (element) {
-                                                                      if (element ==
-                                                                          AllChatmodelData
-                                                                              ?.object
-                                                                              ?.messageOutputList
-                                                                              ?.content?[index]
-                                                                              .userCode) {
-                                                                        SnackBar
-                                                                            snackBar =
-                                                                            SnackBar(
-                                                                          content:
-                                                                              Text('You Can block This User'),
-                                                                          backgroundColor:
-                                                                              ColorConstant.primary_color,
-                                                                        );
-                                                                        ScaffoldMessenger.of(context)
-                                                                            .showSnackBar(snackBar);
-                                                                      } else {
-                                                                        Navigator.push(
+                                                                  onTap:
+                                                                      () async {
+                                                                    bool? isBlock = AllChatmodelData
+                                                                            ?.object
+                                                                            ?.blockedUsers
+                                                                        ?.contains(AllChatmodelData?.object?.messageOutputList?.content?[index].userCode);
+
+                                                                    print(
+                                                                        "this i want to check-${isBlock}");
+                                                                    if (isBlock ==
+                                                                        true) {
+                                                                      SnackBar
+                                                                          snackBar =
+                                                                          SnackBar(
+                                                                        content:
+                                                                            Text('User Blocked.'),
+                                                                        backgroundColor:
+                                                                            ColorConstant.primary_color,
+                                                                      );
+                                                                      ScaffoldMessenger.of(
+                                                                              context)
+                                                                          .showSnackBar(
+                                                                              snackBar);
+                                                                    } else {
+                                                                      Navigator.push(
+                                                                          context,
+                                                                          MaterialPageRoute(builder:
+                                                                              (context) {
+                                                                        return ProfileScreen(
+                                                                            User_ID:
+                                                                                "${AllChatmodelData?.object?.messageOutputList?.content?[index].userCode}",
+                                                                            isFollowing:
+                                                                                "");
+                                                                      }));
+                                                                    }
+
+                                                                    /*  if (AllChatmodelData
+                                                                            ?.object
+                                                                            ?.blockedUsers
+                                                                            ?.isNotEmpty ==
+                                                                        true) {
+                                                                      AllChatmodelData
+                                                                          ?.object
+                                                                          ?.blockedUsers
+                                                                          ?.forEach(
+                                                                              (element) {
+                                                                        if (element ==
+                                                                            AllChatmodelData?.object?.messageOutputList?.content?[index].userCode) {
+                                                                          SnackBar
+                                                                              snackBar =
+                                                                              SnackBar(
+                                                                            content:
+                                                                                Text('User Blocked.'),
+                                                                            backgroundColor:
+                                                                                ColorConstant.primary_color,
+                                                                          );
+                                                                          ScaffoldMessenger.of(context)
+                                                                              .showSnackBar(snackBar);
+                                                                        } else {
+                                                                          Navigator.push(
+                                                                              context,
+                                                                              MaterialPageRoute(builder:
+                                                                                  (context) {
+                                                                            return ProfileScreen(
+                                                                                User_ID: "${AllChatmodelData?.object?.messageOutputList?.content?[index].userCode}",
+                                                                                isFollowing: "");
+                                                                          })).then((value) => BlocProvider.of<senMSGCubit>(context).coomentPage(
+                                                                              widget.Room_ID,
+                                                                              context,
+                                                                              "${0}",
+                                                                              ShowLoader: false));
+                                                                        }
+                                                                      });
+                                                                    } else {
+                                                                      Navigator.push(
+                                                                          context,
+                                                                          MaterialPageRoute(builder:
+                                                                              (context) {
+                                                                        return ProfileScreen(
+                                                                            User_ID:
+                                                                                "${AllChatmodelData?.object?.messageOutputList?.content?[index].userCode}",
+                                                                            isFollowing:
+                                                                                "");
+                                                                      })).then(
+                                                                          (value) {
+                                                                        BlocProvider.of<senMSGCubit>(context).coomentPage(
+                                                                            widget
+                                                                                .Room_ID,
                                                                             context,
-                                                                            MaterialPageRoute(builder:
-                                                                                (context) {
-                                                                          return ProfileScreen(
-                                                                              User_ID: "${AllChatmodelData?.object?.messageOutputList?.content?[index].userCode}",
-                                                                              isFollowing: "");
-                                                                        }));
-                                                                      }
-                                                                    });
+                                                                            "${0}",
+                                                                            ShowLoader:
+                                                                                true);
+                                                                      });
+                                                                    }
+
                                                                     /* Navigator.push(
                                                                         context,
                                                                         MaterialPageRoute(builder:
@@ -465,7 +532,7 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                                                               "${AllChatmodelData?.object?.messageOutputList?.content?[index].userCode}",
                                                                           isFollowing:
                                                                               "");
-                                                                    })); */
+                                                                    })); */ */
                                                                   },
                                                                   child: Column(
                                                                     crossAxisAlignment:
@@ -678,11 +745,15 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
 
                                                                                       if (OneTimeDelete == false) {
                                                                                         OneTimeDelete = true;
-                                                                                        super.setState(() {
-                                                                                          AllChatmodelData?.object?.messageOutputList?.content = AllChatmodelData?.object?.messageOutputList?.content?.reversed.toList();
-                                                                                          ReverseBool = false;
-                                                                                          BlocProvider.of<senMSGCubit>(context).coomentPage(widget.Room_ID, context, "${0}", ShowLoader: true);
-                                                                                        });
+                                                                                        if (isMounted == true) {
+                                                                                          if (mounted) {
+                                                                                            super.setState(() {
+                                                                                              AllChatmodelData?.object?.messageOutputList?.content = AllChatmodelData?.object?.messageOutputList?.content?.reversed.toList();
+                                                                                              ReverseBool = false;
+                                                                                              BlocProvider.of<senMSGCubit>(context).coomentPage(widget.Room_ID, context, "${0}", ShowLoader: true);
+                                                                                            });
+                                                                                          }
+                                                                                        }
                                                                                       }
                                                                                     }
                                                                                   },
@@ -730,11 +801,15 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                                                                               if (content1.isDeleted == true) {
                                                                                                 if (OneTimeDelete == false) {
                                                                                                   OneTimeDelete = true;
-                                                                                                  super.setState(() {
-                                                                                                    AllChatmodelData?.object?.messageOutputList?.content = AllChatmodelData?.object?.messageOutputList?.content?.reversed.toList();
-                                                                                                    ReverseBool = false;
-                                                                                                    BlocProvider.of<senMSGCubit>(context).coomentPage(widget.Room_ID, context, "${0}", ShowLoader: true);
-                                                                                                  });
+                                                                                                  if (isMounted == true) {
+                                                                                                    if (mounted) {
+                                                                                                      super.setState(() {
+                                                                                                        AllChatmodelData?.object?.messageOutputList?.content = AllChatmodelData?.object?.messageOutputList?.content?.reversed.toList();
+                                                                                                        ReverseBool = false;
+                                                                                                        BlocProvider.of<senMSGCubit>(context).coomentPage(widget.Room_ID, context, "${0}", ShowLoader: true);
+                                                                                                      });
+                                                                                                    }
+                                                                                                  }
                                                                                                 }
                                                                                               }
                                                                                             }
@@ -782,11 +857,15 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                                                                                 if (content1.isDeleted == true) {
                                                                                                   if (OneTimeDelete == false) {
                                                                                                     OneTimeDelete = true;
-                                                                                                    super.setState(() {
-                                                                                                      AllChatmodelData?.object?.messageOutputList?.content = AllChatmodelData?.object?.messageOutputList?.content?.reversed.toList();
-                                                                                                      ReverseBool = false;
-                                                                                                      BlocProvider.of<senMSGCubit>(context).coomentPage(widget.Room_ID, context, "${0}", ShowLoader: true);
-                                                                                                    });
+                                                                                                    if (isMounted == true) {
+                                                                                                      if (mounted) {
+                                                                                                        super.setState(() {
+                                                                                                          AllChatmodelData?.object?.messageOutputList?.content = AllChatmodelData?.object?.messageOutputList?.content?.reversed.toList();
+                                                                                                          ReverseBool = false;
+                                                                                                          BlocProvider.of<senMSGCubit>(context).coomentPage(widget.Room_ID, context, "${0}", ShowLoader: true);
+                                                                                                        });
+                                                                                                      }
+                                                                                                    }
                                                                                                   }
                                                                                                 }
                                                                                               },
@@ -889,9 +968,13 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                           ),
                                           GestureDetector(
                                             onTap: () {
-                                              super.setState(() {
-                                                _image = null;
-                                              });
+                                              if (mounted == true) {
+                                                if (mounted) {
+                                                  super.setState(() {
+                                                    _image = null;
+                                                  });
+                                                }
+                                              }
                                             },
                                             child: Padding(
                                               padding: const EdgeInsets.only(
@@ -1053,12 +1136,16 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                                             ?.content
                                                             ?.length ??
                                                         0);
-
-                                                    super.setState(() {
-                                                      addDataSccesfully = true;
-                                                      addmsg =
-                                                          content.uid ?? "";
-                                                    });
+                                                    if (isMounted == true) {
+                                                      if (mounted) {
+                                                        super.setState(() {
+                                                          addDataSccesfully =
+                                                              true;
+                                                          addmsg =
+                                                              content.uid ?? "";
+                                                        });
+                                                      }
+                                                    }
                                                   }
                                                 }
                                               }
@@ -1452,14 +1539,20 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
         print("CCCCCCCC ->>>>>> ${content1}");
         var msgUUID = content1.uid;
         if (content1.isDeleted == true) {
-          super.setState(() {
-            AllChatmodelData?.object?.messageOutputList?.content =
-                AllChatmodelData?.object?.messageOutputList?.content?.reversed
-                    .toList();
-            ReverseBool = false;
-            BlocProvider.of<senMSGCubit>(context)
-                .coomentPage(widget.Room_ID, context, "${0}", ShowLoader: true);
-          });
+          if (isMounted == true) {
+            if (mounted) {
+              super.setState(() {
+                AllChatmodelData?.object?.messageOutputList?.content =
+                    AllChatmodelData
+                        ?.object?.messageOutputList?.content?.reversed
+                        .toList();
+                ReverseBool = false;
+                BlocProvider.of<senMSGCubit>(context).coomentPage(
+                    widget.Room_ID, context, "${0}",
+                    ShowLoader: true);
+              });
+            }
+          }
         }
       },
     );
@@ -1469,9 +1562,14 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
     pickedImageFile = await picker.pickImage(source: ImageSource.camera);
     if (pickedImageFile != null) {
       if (!_isGifOrSvg(pickedImageFile!.path)) {
-        super.setState(() {
-          _image = File(pickedImageFile!.path);
-        });
+        if (isMounted == true) {
+          if (mounted) {
+            super.setState(() {
+              _image = File(pickedImageFile!.path);
+            });
+          }
+        }
+
         final sizeInBytes = await _image!.length();
         final sizeInMB = sizeInBytes / (1024 * 1024);
         if (sizeInMB > documentuploadsize) {
@@ -1541,9 +1639,14 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
     pickedImageFile = await picker.pickImage(source: ImageSource.gallery);
     if (pickedImageFile != null) {
       if (!_isGifOrSvg(pickedImageFile!.path)) {
-        super.setState(() {
-          _image = File(pickedImageFile!.path);
-        });
+        if (isMounted == true) {
+          if (mounted) {
+            super.setState(() {
+              _image = File(pickedImageFile!.path);
+            });
+          }
+        }
+
         final sizeInBytes = await _image!.length();
         final sizeInMB = sizeInBytes / (1024 * 1024);
         // print('documentuploadsize-$documentuploadsize');

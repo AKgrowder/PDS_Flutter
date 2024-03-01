@@ -18,7 +18,7 @@ class SherInviteCubit extends Cubit<SherInviteState> {
       if (sherInvite.success == true) {
         emit(SherInviteLoadedState(sherInvite));
       }else{
-         emit(SherInviteLoadedState(sherInvite));
+         emit(SherInviteErrorState(sherInvite));
       }}
     } catch (e) {
       emit(SherInviteErrorState(sherInvite));

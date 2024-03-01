@@ -32,6 +32,7 @@ import '../../widgets/custom_image_view.dart';
 bool isBottomSheetOpen = false;
 bool isReply = false;
 VideoPlayerController? controller;
+
 class StoryPageContainerView extends StatefulWidget {
   final StoryButtonData buttonData;
   final VoidCallback onStoryComplete;
@@ -114,11 +115,12 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
     if (widget.buttonData.images[_curSegmentIndex].image!.endsWith('.mp4')) {
       ifVideoPlayer = true;
       controller = VideoPlayerController.networkUrl(
-          (Uri.parse('${widget.buttonData.images[_curSegmentIndex].image}')),videoPlayerOptions:VideoPlayerOptions(allowBackgroundPlayback: false))
+          (Uri.parse('${widget.buttonData.images[_curSegmentIndex].image}')),
+          videoPlayerOptions:
+              VideoPlayerOptions(allowBackgroundPlayback: false))
         ..initialize().then((_) {
           if (mounted) {
             setState(() {
-
               durationOfVideo = controller!.value.duration;
               controller?.play();
             });
@@ -160,7 +162,6 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
               });
             }
           });
-
       } else {
         print("Image Player ${_curSegmentIndex}");
         if (mounted) {
@@ -185,7 +186,6 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
               });
             }
           });
-
       } else {
         print("Image Player ${_curSegmentIndex}");
         if (mounted) {
@@ -233,7 +233,7 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
             } else {
               Navigator.of(context).pop();
             }
-            if(controller != null){
+            if (controller != null) {
               controller?.dispose();
             }
             /*  if (widget.onClosePressed != null) {
@@ -493,7 +493,7 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
     bool imageLoaded = false;
     // BlocProvider.of<ViewStoryCubit>(context).StoryViewList(
     //     context, "${widget.buttonData.images[_curSegmentIndex].storyUid}");
-    if(controller != null && controller!.value.isInitialized) {
+    if (controller != null && controller!.value.isInitialized) {
       controller!.addListener(() {
         if (mounted) {
           if (DummyStoryView == _curSegmentIndex) {
@@ -567,11 +567,6 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
     return position.dx <= (storyWidth * .499);
   }
 
-
-
-
-
-
   Widget _buildPageStructure() {
     var _height = MediaQuery.of(context).size.height;
     var _width = MediaQuery.of(context).size.width;
@@ -582,7 +577,9 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
         _storyController?.pause();
       },
       onPointerUp: (PointerUpEvent event) {
-        if ((event.localPosition.dy < MediaQuery.of(context).size.height - 120 && !_focusNode!.hasFocus)) {
+        if ((event.localPosition.dy <
+                MediaQuery.of(context).size.height - 120 &&
+            !_focusNode!.hasFocus)) {
           event1 = event;
           final pointerUpMillis = _stopwatch.elapsedMilliseconds;
           final maxPressMillis = kPressTimeout.inMilliseconds * 2;
@@ -593,10 +590,8 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
             if (distance < 5.0) {
               final isLeft = _isLeftPartOfStory(position);
               if (isLeft) {
-                print("Previous1 ${event.localPosition.dy} ${MediaQuery
-                    .of(context)
-                    .size
-                    .height}");
+                print(
+                    "Previous1 ${event.localPosition.dy} ${MediaQuery.of(context).size.height}");
                 if (!isReply) {
                   _storyController!.previousSegment();
                 }
@@ -610,12 +605,11 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
           });
 
           _storyController!.unpause();
-        }else{
+        } else {
           setState(() {
             isReply = true;
           });
         }
-
       },
       child: GestureDetector(
         /*  onVerticalDragStart: (details) {
@@ -729,7 +723,7 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
                                           if (state is PostLikeLoadedState) {
                                             print(
                                                 "check State-${state.likePost.message.toString()}");
-                                                 BlocProvider.of<ViewStoryCubit>(
+                                            BlocProvider.of<ViewStoryCubit>(
                                                     context)
                                                 .StoryViewList(context,
                                                     "${widget.buttonData.images[_curSegmentIndex].storyUid}");
@@ -1307,7 +1301,9 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
                       ),
                     )
                   : SizedBox(),
-              if (User_ID != widget.buttonData.images[_curSegmentIndex].userUid && !isReplied)
+              if (User_ID !=
+                      widget.buttonData.images[_curSegmentIndex].userUid &&
+                  !isReplied)
                 Positioned(
                     bottom: 30,
                     child: Container(
@@ -1472,12 +1468,12 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
   }
 
   @override
-  void dispose() async{
+  void dispose() async {
     _stopwatch.stop();
     _storyController!.removeListener(_onTimelineEvent);
-    if(controller != null) {
+    if (controller != null) {
       controller!.pause();
-      controller?.removeListener(() { });
+      controller?.removeListener(() {});
       await controller?.dispose();
       print("Disposed");
       controller = null;
@@ -1506,7 +1502,6 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
               backgroundColor: ColorConstant.primary_color,
             );
             ScaffoldMessenger.of(context).showSnackBar(snackBar);
-
           }
 
           if (state is ViewStoryLoadingState) {
@@ -1522,9 +1517,8 @@ class _StoryPageContainerViewState extends State<StoryPageContainerView>
             );
           }
           if (state is ViewStoryLoadedState) {
-            if(controller != null){
+            if (controller != null) {
               controller!.dispose();
-
             }
           }
           if (state is StoryViewListLoadedState) {
