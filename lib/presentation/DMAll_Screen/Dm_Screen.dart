@@ -43,6 +43,7 @@ import 'package:video_thumbnail/video_thumbnail.dart';
 import '../ new/newbottembar.dart';
 import '../../API/Bloc/dmInbox_bloc/dminbox_blcok.dart';
 import '../register_create_account_screen/register_create_account_screen.dart';
+import 'dm_new.dart';
 
 ScrollController scrollController = ScrollController();
 
@@ -101,7 +102,7 @@ class _DmScreenState extends State<DmScreen> {
   ChooseDocument1? imageDataPost;
   LiveStatusModel? LiveStatusModelData;
   String? stroyUid;
-  GetInboxMessagesModel? getInboxMessagesModel;
+  GetInboxMessagesModel? getInboxMessagesModel; 
   final focusNode = FocusNode();
   KeyboardVisibilityController keyboardVisibilityController =
       KeyboardVisibilityController();
@@ -377,7 +378,7 @@ class _DmScreenState extends State<DmScreen> {
                         builder: (_) => WillPopScope(
                           onWillPop: () async {
                             Navigator.pop(context);
-                Navigator.pop(context);
+                            Navigator.pop(context);
                             // Navigator.of(context).pushAndRemoveUntil(
                             //     MaterialPageRoute(
                             //         builder: (context) =>
@@ -545,14 +546,21 @@ class _DmScreenState extends State<DmScreen> {
                                     children: [
                                       GestureDetector(
                                         onTap: () {
-                                          Navigator.push(context,
+                                          // this is intall set
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    DmScreenNew(ChatInboxUid: widget.ChatInboxUid,),
+                                              ));
+                                          /*  Navigator.push(context,
                                               MaterialPageRoute(
                                             builder: (context) {
                                               return ProfileScreen(
                                                   User_ID: widget.UserUID,
                                                   isFollowing: "");
                                             },
-                                          ));
+                                          )); */
                                         },
                                         child: Container(
                                           child: widget.UserImage != null &&
@@ -1073,7 +1081,7 @@ class _DmScreenState extends State<DmScreen> {
                                                                                                                 children: [
                                                                                                                   CustomImageView(
                                                                                                                     url: getInboxMessagesModel?.object?.content?[index].message,
-                                                                                                                    radius: BorderRadius.circular(20),
+                                                                                                                    radius: BorderRadius.circular(20),  //Ankur1
                                                                                                                     // height: 20,
                                                                                                                   ),
                                                                                                                   Positioned.fill(

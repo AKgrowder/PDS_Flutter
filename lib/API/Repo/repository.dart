@@ -2902,7 +2902,7 @@ class Repository {
         '${Config.DMChatList}?userChatInboxUid=${userChatInboxUid}&pageNumber=${pageNumber}&numberOfRecords=20',
         context);
     var jsonString = json.decode(utf8.decode(responce.bodyBytes));
-
+        print("DMChatListApi-${jsonString}");
     switch (responce.statusCode) {
       case 200:
         return GetInboxMessagesModel.fromJson(jsonString);
