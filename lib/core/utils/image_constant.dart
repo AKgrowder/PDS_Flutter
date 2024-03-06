@@ -1,6 +1,7 @@
 class ImageConstant {
   static String imgInfo = 'assets/images/img_info.svg';
   static String splashImage = 'assets/images/splashImage.png';
+  // static String splashImage = 'assets/images/InPackaging Logo tm.png';
 
   static String unselectedimgVector = 'assets/images/Vector (10).png';
   static String tomcruse = 'assets/images/INPACKAGING.png';
