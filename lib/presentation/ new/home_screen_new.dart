@@ -73,6 +73,7 @@ import 'package:visibility_detector/visibility_detector.dart';
 // import 'package:flutter_langdetect/flutter_langdetect.dart' as langdetect;
 import '../../API/Model/Get_all_blog_Model/get_all_blog_model.dart';
 import '../../API/Model/UserTagModel/UserTag_model.dart';
+import '../../widgets/app_bar/custom_app_bar.dart';
 import '../become_an_expert_screen/become_an_expert_screen.dart';
 
 class HomeScreenNew extends StatefulWidget {
@@ -136,6 +137,10 @@ class _HomeScreenNewState extends State<HomeScreenNew>
   int sliderCurrentPosition = 0;
   List<PageController> _pageControllers = [];
   List<int> _currentPages = [];
+  List<PageController> _pageControllers1 = [];
+  List<int> _currentPages1 = [];
+  List<PageController> _pageControllers2 = [];
+  List<int> _currentPages2 = [];
   String? myUserId;
   String? UserProfileImage;
   String? UserStatus;
@@ -143,7 +148,6 @@ class _HomeScreenNewState extends State<HomeScreenNew>
   GetallBlogModel? getallBlogModel1;
   bool isDataget = false;
   DateTime? parsedDateTimeBlogs;
-  FocusNode _focusNode = FocusNode();
   String? AutoSetRoomID;
   String? appApkMinVersion;
   String? appApkLatestVersion;
@@ -355,7 +359,6 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                 ?.object?.content?[index].repostOn?.createdAt,
                             desc: AllGuestPostRoomData
                                 ?.object?.content?[index].repostOn?.description,
-                            index: index,
                             postData: AllGuestPostRoomData
                                 ?.object?.content?[index].repostOn?.postData,
                             postDataTypeRepost: AllGuestPostRoomData?.object
@@ -1363,6 +1366,130 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                     elevation: 0,
                   )
                 : SizedBox(),
+            appBar: _show
+                ? AppBar(
+                    backgroundColor: Colors.transparent,
+                    toolbarHeight: 80,
+                    elevation: 0,
+                    automaticallyImplyLeading: false,
+                    title: SizedBox(
+                        height: 50,
+                        child: Image.asset(ImageConstant.splashImage)),
+                    actions: [
+                        Row(
+                          children: [
+                            /* InkWell(
+                                    onTap: () {
+                                      print("this seactin -${User_Module}");
+                                    },
+                                    child: SizedBox(
+                                        height: 50,
+                                        child: Image.asset(
+                                            ImageConstant.splashImage)),
+                                  ),
+                                  Spacer(), */
+                            UserStatus == 'REJECTED' ||
+                                    User_Module == "EMPLOYEE" ||
+                                    User_Module == null ||
+                                    User_Module == ''
+                                ? GestureDetector(
+                                    onTapDown: (TapDownDetails details) {
+                                      _showPopupMenu(
+                                        details.globalPosition,
+                                        context,
+                                      );
+                                    },
+                                    child: Container(
+                                      height: 50,
+                                      width: 50,
+                                      decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          color: ColorConstant.primary_color),
+                                      child: Icon(
+                                        Icons.person_add_alt,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  )
+                                : SizedBox(),
+                            SizedBox(
+                              width: 17,
+                            ),
+                            GestureDetector(
+                                onTap: () async {
+                                  if (uuid == null) {
+                                    /* Navigator.of(context).push(
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      RegisterCreateAccountScreen())); */
+                                    /*     Navigator.removeRoute(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      RegisterCreateAccountScreen())); */
+                                    Navigator.pushAndRemoveUntil(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                RegisterCreateAccountScreen()),
+                                        (route) => true);
+                                  } else {
+                                    await BlocProvider.of<GetGuestAllPostCubit>(
+                                            context)
+                                        .seetinonExpried(context);
+                                    Navigator.push(context,
+                                        MaterialPageRoute(builder: (context) {
+                                      return MultiBlocProvider(
+                                          providers: [
+                                            BlocProvider<NewProfileSCubit>(
+                                              create: (context) =>
+                                                  NewProfileSCubit(),
+                                            ),
+                                          ],
+                                          child: ProfileScreen(
+                                            User_ID: "${User_ID}",
+                                            isFollowing: 'FOLLOW',
+                                          ));
+                                    })).then((value) => Get_UserToken());
+                                    /////
+                                  }
+                                },
+                                child: uuid == null
+                                    ? Text(
+                                        'Login',
+                                        style: TextStyle(
+                                            fontFamily: "outfit",
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.bold,
+                                            color: ColorConstant.primary_color),
+                                      )
+                                    : UserProfileImage != null &&
+                                            UserProfileImage != ""
+                                        ? CustomImageView(
+                                            url: "${UserProfileImage}",
+                                            // color: Colors.transparent,
+                                            height: 50,
+                                            width: 50,
+                                            fit: BoxFit.fill,
+                                            radius: BorderRadius.circular(25),
+                                          )
+                                        : CustomImageView(
+                                            imagePath: ImageConstant.tomcruse,
+                                            // color: Colors.transparent,
+                                            height: 50,
+                                            width: 50,
+                                            fit: BoxFit.fill,
+                                            radius: BorderRadius.circular(25),
+                                          )),
+                          ],
+                        ),
+                        SizedBox(
+                          width: 20,
+                        )
+                      ])
+                : CustomAppBar(
+                    height: 0,
+                  ),
             body: BlocConsumer<GetGuestAllPostCubit, GetGuestAllPostState>(
                 listener: (context, state) async {
               if (state is GetGuestAllPostErrorState) {
@@ -1836,9 +1963,9 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                         child: Column(
                           children: [
                             SizedBox(
-                              height: 55,
+                              height: 15,
                             ),
-                            Padding(
+                            /*  Padding(
                               padding: EdgeInsets.only(left: 16, right: 16),
                               child: Row(
                                 children: [
@@ -1954,10 +2081,8 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                 )),
                                 ],
                               ),
-                            ),
-                            SizedBox(
-                              height: 15,
-                            ),
+                            ), */
+
                             storyButtons == null
                                 ? Container(
                                     height: 40,
@@ -2570,6 +2695,19 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                 .add(PageController());
                                             _currentPages.add(0);
                                           });
+                                          AllGuestPostRoomData?.object?.content
+                                              ?.forEach((element) {
+                                            _pageControllers1
+                                                .add(PageController());
+                                            _currentPages1.add(0);
+                                          });
+                                          AllGuestPostRoomData?.object?.content
+                                              ?.forEach((element) {
+                                            _pageControllers2
+                                                .add(PageController());
+                                            _currentPages2.add(0);
+                                          });
+
                                           WidgetsBinding.instance
                                               .addPostFrameCallback(
                                                   (timeStamp) =>
@@ -3330,7 +3468,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                         onPageChanged: (page) {
                                                                                           super.setState(() {
                                                                                             _currentPages[index] = page;
-                                                                                            imageCount1 = page + 1;
+                                                                                            imageCount = page + 1;
                                                                                           });
                                                                                         },
                                                                                         controller: _pageControllers[index],
@@ -3382,7 +3520,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                                               borderRadius: BorderRadius.all(Radius.circular(50)),
                                                                                                             ),
                                                                                                             child: Text(
-                                                                                                              imageCount1.toString() + '/' + '${AllGuestPostRoomData?.object?.content?[index].postData?.length}',
+                                                                                                              imageCount.toString() + '/' + '${AllGuestPostRoomData?.object?.content?[index].postData?.length}',
                                                                                                               style: TextStyle(color: Colors.white),
                                                                                                             )),
                                                                                                       ),
@@ -3948,11 +4086,11 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                           child: PageView.builder(
                                                                                             onPageChanged: (page) {
                                                                                               super.setState(() {
-                                                                                                _currentPages[index] = page;
-                                                                                                imageCount2 = page + 1;
+                                                                                                _currentPages1[index] = page;
+                                                                                                imageCount1 = page + 1;
                                                                                               });
                                                                                             },
-                                                                                            controller: _pageControllers[index],
+                                                                                            controller: _pageControllers1[index],
                                                                                             itemCount: AllGuestPostRoomData?.object?.content?[index].repostOn?.postData?.length,
                                                                                             itemBuilder: (BuildContext context, int index1) {
                                                                                               if (AllGuestPostRoomData?.object?.content?[index].repostOn?.postDataType == "IMAGE") {
@@ -4002,7 +4140,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                                                   borderRadius: BorderRadius.all(Radius.circular(50)),
                                                                                                                 ),
                                                                                                                 child: Text(
-                                                                                                                  imageCount2.toString() + '/' + '${AllGuestPostRoomData?.object?.content?[index].repostOn?.postData?.length}',
+                                                                                                                  imageCount1.toString() + '/' + '${AllGuestPostRoomData?.object?.content?[index].repostOn?.postData?.length}',
                                                                                                                   style: TextStyle(color: Colors.white),
                                                                                                                 )),
                                                                                                           ),
@@ -4032,7 +4170,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                                 height: 20,
                                                                                                 child: DotsIndicator(
                                                                                                   dotsCount: AllGuestPostRoomData?.object?.content?[index].repostOn?.postData?.length ?? 1,
-                                                                                                  position: _currentPages[index].toDouble(),
+                                                                                                  position: _currentPages1[index].toDouble(),
                                                                                                   decorator: DotsDecorator(
                                                                                                     size: const Size(10.0, 7.0),
                                                                                                     activeSize: const Size(10.0, 10.0),
@@ -5206,11 +5344,11 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                 child: PageView.builder(
                                                                                   onPageChanged: (page) {
                                                                                     super.setState(() {
-                                                                                      _currentPages[index] = page;
-                                                                                      imageCount = page + 1;
+                                                                                      _currentPages2[index] = page;
+                                                                                      imageCount2 = page + 1;
                                                                                     });
                                                                                   },
-                                                                                  controller: _pageControllers[index],
+                                                                                  controller: _pageControllers2[index],
                                                                                   itemCount: AllGuestPostRoomData?.object?.content?[index].postData?.length,
                                                                                   itemBuilder: (BuildContext context, int index1) {
                                                                                     if (AllGuestPostRoomData?.object?.content?[index].postDataType == "IMAGE") {
@@ -5286,7 +5424,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                                         borderRadius: BorderRadius.all(Radius.circular(50)),
                                                                                                       ),
                                                                                                       child: Text(
-                                                                                                        imageCount.toString() + '/' + '${AllGuestPostRoomData?.object?.content?[index].postData?.length}',
+                                                                                                        imageCount2.toString() + '/' + '${AllGuestPostRoomData?.object?.content?[index].postData?.length}',
                                                                                                         style: TextStyle(color: Colors.white),
                                                                                                       )),
                                                                                                 ),
@@ -5316,7 +5454,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                       height: 20,
                                                                                       child: DotsIndicator(
                                                                                         dotsCount: AllGuestPostRoomData?.object?.content?[index].postData?.length ?? 0,
-                                                                                        position: _currentPages[index].toDouble(),
+                                                                                        position: _currentPages2[index].toDouble(),
                                                                                         decorator: DotsDecorator(
                                                                                           size: const Size(10.0, 7.0),
                                                                                           activeSize: const Size(10.0, 10.0),

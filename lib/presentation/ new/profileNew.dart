@@ -11109,7 +11109,30 @@ bool _isScrolledUp = false;
               value: 'edit',
               child: GestureDetector(
                 onTap: () {
-                  print(getAllPostData?.object?[index].description);
+                  Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => CreateNewPost(
+                            PostID: getAllPostData?.object?[index].postUid,
+                            edittextdata:
+                                getAllPostData?.object?[index].description,
+                            mutliplePost: getAllPostData?.object?[index].postData,
+                            getAllPostData: getAllPostData,
+                            date:
+                                getAllPostData?.object?[index].repostOn?.createdAt,
+                            desc: getAllPostData?.object?[index].repostOn?.description,
+                            postData:
+                                getAllPostData?.object?[index].repostOn?.postData,
+                            postDataTypeRepost: getAllPostData?.object?[index].repostOn?.postDataType,
+                            userProfile:
+                                getAllPostData?.object?[index].userProfilePic,
+                            username: getAllPostData?.object?[index].repostOn?.postUserName,
+                            thumbNailURL: getAllPostData?.object?[index].repostOn?.thumbnailImageUrl,
+                            postDataType:
+                                getAllPostData?.object?[index].postDataType,
+                          ),
+                        ));
+                 /*  print(getAllPostData?.object?[index].description);
                   if (getAllPostData?.object?[index].postType == "IMAGE" &&
                       getAllPostData?.object?[index].postData?.length == 1) {
                     print("sdfgsdvfsdfgsdfg");
@@ -11188,7 +11211,7 @@ bool _isScrolledUp = false;
                       BlocProvider.of<NewProfileSCubit>(context).GetAppPostAPI(
                           context, "${NewProfileData?.object?.userUid}");
                     });
-                  }
+                  } */
                 },
                 child: Container(
                   width: 130,
