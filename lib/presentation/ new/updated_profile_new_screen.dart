@@ -7136,8 +7136,8 @@ class _MyHomePageState extends State<ShowProfileScreen>
                             PostID: getAllPostData?.object?[index].postUid,
                             edittextdata:
                                 getAllPostData?.object?[index].description,
-                            editImage:
-                                getAllPostData?.object?[index].postData?.first,
+                            // editImage:
+                            //     getAllPostData?.object?[index].postData?.first,
                           ),
                         )).then((value) {
                       if (widget.Screen?.isNotEmpty == true) {
