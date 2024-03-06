@@ -340,7 +340,40 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                 value: 'edit',
                 child: GestureDetector(
                   onTap: () {
-                    print(AllGuestPostRoomData
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => CreateNewPost(
+                            PostID: AllGuestPostRoomData
+                                ?.object?.content?[index].postUid,
+                            edittextdata: AllGuestPostRoomData
+                                ?.object?.content?[index].description,
+                            mutliplePost: AllGuestPostRoomData
+                                ?.object?.content?[index].postData,
+                            AllGuestPostRoomData: AllGuestPostRoomData,
+                            date: AllGuestPostRoomData
+                                ?.object?.content?[index].repostOn?.createdAt,
+                            desc: AllGuestPostRoomData
+                                ?.object?.content?[index].repostOn?.description,
+                            index: index,
+                            postData: AllGuestPostRoomData
+                                ?.object?.content?[index].repostOn?.postData,
+                            postDataTypeRepost: AllGuestPostRoomData?.object
+                                ?.content?[index].repostOn?.postDataType,
+                            userProfile: AllGuestPostRoomData?.object
+                                ?.content?[index].repostOn?.userProfilePic,
+                            username: AllGuestPostRoomData?.object
+                                ?.content?[index].repostOn?.postUserName,
+                            thumbNailURL: AllGuestPostRoomData?.object
+                                ?.content?[index].repostOn?.thumbnailImageUrl,
+                            postDataType: AllGuestPostRoomData
+                                ?.object?.content?[index].postDataType,
+                          ),
+                        )).then((value) {
+                      Get_UserToken();
+                      Navigator.pop(context);
+                    });
+                    /*   print(AllGuestPostRoomData
                         ?.object?.content?[index].description);
                     if (AllGuestPostRoomData
                                 ?.object?.content?[index].postDataType ==
@@ -398,7 +431,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                         Get_UserToken();
                         Navigator.pop(context);
                       });
-                    }
+                    } */
                   },
                   child: Container(
                     width: 130,
@@ -1819,8 +1852,8 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                             ImageConstant.splashImage)),
                                   ),
                                   Spacer(),
-                                  UserStatus == 'REJECTED'||
-                                  User_Module == "EMPLOYEE" ||
+                                  UserStatus == 'REJECTED' ||
+                                          User_Module == "EMPLOYEE" ||
                                           User_Module == null ||
                                           User_Module == ''
                                       ? GestureDetector(
@@ -3556,14 +3589,13 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                   16),
                                                                           child:
                                                                               LinkifyText(
-                                                                                
                                                                             readmoree[index] == true
-                                                                                          ? (AllGuestPostRoomData?.object?.content?[index] .repostOn ?.isTrsnalteoption == false || AllGuestPostRoomData?.object?.content?[index].repostOn  ?.isTrsnalteoption == null)
-                                                                                              ? "${AllGuestPostRoomData?.object?.content?[index].repostOn?.description}${(AllGuestPostRoomData?.object?.content?[index].repostOn?.description?.length ?? 0) > maxLength ? ' ....ReadLess' : ''}"
-                                                                                              : "${AllGuestPostRoomData?.object?.content?[index].repostOn?.translatedDescription}"
-                                                                                          : (AllGuestPostRoomData?.object?.content?[index].repostOn?.isTrsnalteoption == false || AllGuestPostRoomData?.object?.content?[index].repostOn?.isTrsnalteoption == null)
-                                                                                              ? "${AllGuestPostRoomData?.object?.content?[index].repostOn?.description?.substring(0, maxLength)} ....ReadMore"
-                                                                                              : "${AllGuestPostRoomData?.object?.content?[index].repostOn?.translatedDescription?.substring(0, maxLength)} ....ReadMore",  // as
+                                                                                ? (AllGuestPostRoomData?.object?.content?[index].repostOn?.isTrsnalteoption == false || AllGuestPostRoomData?.object?.content?[index].repostOn?.isTrsnalteoption == null)
+                                                                                    ? "${AllGuestPostRoomData?.object?.content?[index].repostOn?.description}${(AllGuestPostRoomData?.object?.content?[index].repostOn?.description?.length ?? 0) > maxLength ? ' ....ReadLess' : ''}"
+                                                                                    : "${AllGuestPostRoomData?.object?.content?[index].repostOn?.translatedDescription}"
+                                                                                : (AllGuestPostRoomData?.object?.content?[index].repostOn?.isTrsnalteoption == false || AllGuestPostRoomData?.object?.content?[index].repostOn?.isTrsnalteoption == null)
+                                                                                    ? "${AllGuestPostRoomData?.object?.content?[index].repostOn?.description?.substring(0, maxLength)} ....ReadMore"
+                                                                                    : "${AllGuestPostRoomData?.object?.content?[index].repostOn?.translatedDescription?.substring(0, maxLength)} ....ReadMore", // as
                                                                             linkStyle:
                                                                                 TextStyle(
                                                                               color: Colors.blue,
