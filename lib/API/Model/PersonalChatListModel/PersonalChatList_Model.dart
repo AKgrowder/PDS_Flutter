@@ -41,7 +41,7 @@ class Object {
   String? videoId;
   bool? isExpert;
   bool? isBlock;
-
+  bool? isSelcted; 
   Object(
       {this.userChatInboxUid,
       this.userChatMessageUid,
@@ -55,7 +55,7 @@ class Object {
       this.isSeen,
       this.videoId,
       this.isExpert,
-      this.isBlock});
+      this.isBlock, this.isSelcted});
 
   Object.fromJson(Map<String, dynamic> json) {
     userChatInboxUid = json['userChatInboxUid'];

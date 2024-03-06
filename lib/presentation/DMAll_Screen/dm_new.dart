@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:linkfy_text/linkfy_text.dart';
+import 'package:pds/API/ApiService/DMSocket.dart';
 import 'package:pds/API/Bloc/dmInbox_bloc/dmMessageState.dart';
 import 'package:pds/API/Bloc/dmInbox_bloc/dminbox_blcok.dart';
 import 'package:pds/API/Model/inboxScreenModel/inboxScrrenModel.dart';
@@ -13,16 +14,17 @@ import 'package:pds/theme/theme_helper.dart';
 import 'package:pds/widgets/custom_image_view.dart';
 import 'package:pds/widgets/pagenation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:stomp_dart_client/stomp.dart';
+import 'package:stomp_dart_client/stomp_config.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 import 'package:swipe_to/swipe_to.dart';
 
 bool isLogPress = false;
 bool isMeesageReaction = false;
-String? reactionMessage;
-String? messageTypeSet;
 int selectedCount = 0;
-bool isMeesageCoppy = true;
+bool isMeesageCoppy = false;
+int? swipeToIndex;
 ScrollController scrollController = ScrollController();
 
 class DmScreenNew extends StatefulWidget {
@@ -47,6 +49,7 @@ class _DmScreenNewState extends State<DmScreenNew> {
     isMounted = true;
     BlocProvider.of<DmInboxCubit>(context).seetinonExpried(context);
     pageNumberMethod();
+
     super.initState();
   }
 
@@ -56,37 +59,24 @@ class _DmScreenNewState extends State<DmScreenNew> {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     UserLogin_ID = prefs.getString(PreferencesKey.loginUserID);
     DMbaseURL = prefs.getString(PreferencesKey.SocketLink) ?? "";
-    print("UserLoginId-${UserLogin_ID}");
-    print("DMbaseURL-${DMbaseURL}");
-    final wsUrl = Uri.parse(DMbaseURL ?? '');
-    try {
-      channel = WebSocketChannel.connect(wsUrl);
-      channel?.stream.listen((message) {
-        // Handle incoming messages
-      }, onError: (error) {
-        setState(() {
-          _isConnected = false;
-        });
-        // Handle errors
-        print('Error: $error');
-      }, onDone: () {
-        setState(() {
-          _isConnected = false;
-        });
-        // Handle disconnection
-        print('WebSocket disconnected');
-      }, cancelOnError: true);
-
-      setState(() {
-        _isConnected = true;
-      });
-    } catch (e) {
-      setState(() {
-        _isConnected = false;
-      });
-      print('Error connecting to WebSocket: $e');
-    }
-    print("-------> check soket connection-$_isConnected{}");
+    DMChatInboxUid1 = widget.ChatInboxUid;
+    print("check Value-${DMbaseURL}");
+    final stompClient = StompClient(
+      config: StompConfig(
+        url: DMbaseURL!,
+        onConnect: onConnect,
+        beforeConnect: () async {
+          print('waiting to connect...');
+          await Future.delayed(const Duration(milliseconds: 200));
+          print('connecting...');
+        },
+        onWebSocketError: (dynamic error) => print(error.toString()),
+        onStompError: (p0) {
+          print("i want to  check error-${p0}");
+        },
+      ),
+    );
+    stompClient.activate();
   }
 
   void dispose() {
@@ -128,9 +118,6 @@ class _DmScreenNewState extends State<DmScreenNew> {
                       children: [
                         Column(
                           children: [
-                            _isConnected
-                                ? Text('Connected')
-                                : Text('Not Connected'),
                             if (isLogPress == false)
                               Container(
                                 margin: EdgeInsets.only(bottom: 10),
@@ -280,13 +267,51 @@ class _DmScreenNewState extends State<DmScreenNew> {
                                     SizedBox(
                                       width: 15,
                                     ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(top: 5),
-                                      child: SizedBox(
-                                          height: 20,
-                                          child: Image.asset(
-                                            ImageConstant.forward,
-                                          )),
+                                    GestureDetector(
+                                      onTap: () async {
+                                        Map<String, dynamic> forwadList = {};
+                                        List<Map<String, dynamic>>
+                                            forwardMessageDtos = [];
+                                        getInboxMessagesModel?.object?.content
+                                            ?.forEach((element) {
+                                          if (element.isSelected == true) {
+                                            Map<String, dynamic> message = {
+                                              'chatMessageUuid':
+                                                  element.userChatMessageUid,
+                                              "isDelivered": true,
+                                              "messageType": element.messageType
+                                            };
+                                            forwardMessageDtos.add(message);
+                                          }
+                                        });
+
+                                        forwadList['forwardMessageDtos'] =
+                                            forwardMessageDtos;
+                                        print("forwardListcheck-$forwadList");
+                                        /*  getInboxMessagesModel?.object?.content
+                                            ?.forEach((element) {
+                                          if (element.isSelected == true) {
+                                            Map<String, dynamic> message = {
+                                              'chatMessageUuid':
+                                                  element.userChatMessageUid,
+                                              "isDelivered": true,
+                                              "messageType": element.messageType
+                                            };
+                                            forwadList.add(message);
+                                          }
+                                        }); */
+                                        /*   print("checl valye -${forwadList}"); */
+
+                                        Navigator.pop(context, forwadList);
+                                      },
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(top: 5),
+                                        child: SizedBox(
+                                            height: 20,
+                                            child: Image.asset(
+                                              ImageConstant.forward,
+                                            )),
+                                      ),
                                     ),
                                     SizedBox(
                                       width: 15,
@@ -520,7 +545,6 @@ class _DmScreenNewState extends State<DmScreenNew> {
                                                   if (mounted) {
                                                     setState(() {
                                                       isMeesageReaction = false;
-                                                      reactionMessage = null;
                                                     });
                                                   }
                                                 }
@@ -532,12 +556,21 @@ class _DmScreenNewState extends State<DmScreenNew> {
                                         ],
                                       ),
                                     ),
-                                    if (messageTypeSet == 'TEXT')
+                                    if (getInboxMessagesModel
+                                                ?.object
+                                                ?.content?[swipeToIndex ?? 0]
+                                                .messageType ==
+                                            'IMAGE' &&
+                                        getInboxMessagesModel
+                                                ?.object
+                                                ?.content?[swipeToIndex ?? 0]
+                                                .emojiReaction ==
+                                            true)
                                       Padding(
                                         padding: const EdgeInsets.only(
                                             left: 10, bottom: 2),
                                         child: Text(
-                                          '${reactionMessage}',
+                                          '${getInboxMessagesModel?.object?.content?[swipeToIndex ?? 0].reactionMessage}',
                                           maxLines: 1,
                                           overflow: TextOverflow.ellipsis,
                                           style: TextStyle(
@@ -547,7 +580,69 @@ class _DmScreenNewState extends State<DmScreenNew> {
                                               fontSize: 15),
                                         ),
                                       ),
-                                    if (messageTypeSet == 'IMAGE')
+                                    if (getInboxMessagesModel
+                                            ?.object
+                                            ?.content?[swipeToIndex ?? 0]
+                                            .messageType ==
+                                        'TEXT')
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                            left: 10, bottom: 2),
+                                        child: Text(
+                                          '${getInboxMessagesModel?.object?.content?[swipeToIndex ?? 0].message}',
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.w400,
+                                              color: Colors.black,
+                                              fontFamily: "outfit",
+                                              fontSize: 15),
+                                        ),
+                                      ),
+                                    if (getInboxMessagesModel
+                                                ?.object
+                                                ?.content?[swipeToIndex ?? 0]
+                                                .messageType ==
+                                            'IMAGE' &&
+                                        getInboxMessagesModel
+                                                ?.object
+                                                ?.content?[swipeToIndex ?? 0]
+                                                .emojiReaction ==
+                                            false &&
+                                        getInboxMessagesModel
+                                                ?.object
+                                                ?.content?[swipeToIndex ?? 0]
+                                                .reactionMessage !=
+                                            null)
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                            left: 10, bottom: 2),
+                                        child: Text(
+                                          '${getInboxMessagesModel?.object?.content?[swipeToIndex ?? 0].reactionMessage}',
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.w400,
+                                              color: Colors.black,
+                                              fontFamily: "outfit",
+                                              fontSize: 15),
+                                        ),
+                                      ),
+                                    if (getInboxMessagesModel
+                                                ?.object
+                                                ?.content?[swipeToIndex ?? 0]
+                                                .messageType ==
+                                            'IMAGE' &&
+                                        getInboxMessagesModel
+                                                ?.object
+                                                ?.content?[swipeToIndex ?? 0]
+                                                .emojiReaction ==
+                                            false &&
+                                        getInboxMessagesModel
+                                                ?.object
+                                                ?.content?[swipeToIndex ?? 0]
+                                                .reactionMessage ==
+                                            null)
                                       Container(
                                         margin: EdgeInsets.all(10),
                                         height: 70,
@@ -556,7 +651,8 @@ class _DmScreenNewState extends State<DmScreenNew> {
                                             borderRadius:
                                                 BorderRadius.circular(15)),
                                         child: CustomImageView(
-                                          url: "${reactionMessage}",
+                                          url:
+                                              "${getInboxMessagesModel?.object?.content?[swipeToIndex ?? 0].reactionMessage}",
                                           height: 20,
                                           radius: BorderRadius.circular(20),
                                           width: 20,
@@ -659,12 +755,23 @@ class _DmScreenNewState extends State<DmScreenNew> {
   }
 
   _hasImageMessageTypeSelected(index) {
-    if (getInboxMessagesModel?.object?.content?[index].messageType == 'IMAGE' &&
+    int counter = 0;
+    getInboxMessagesModel?.object?.content?.forEach((element) {
+      if (element.isSelected == true && element.messageType == 'TEXT') {
+        counter++;
+      }
+    });
+    isMeesageCoppy = getInboxMessagesModel?.object?.content
+            ?.where((element) => element.isSelected == true)
+            .toList()
+            .length ==
+        counter;
+    /* if (getInboxMessagesModel?.object?.content?[index].messageType == 'IMAGE' &&
         getInboxMessagesModel?.object?.content?[index].isSelected == true) {
       isMeesageCoppy = false;
     } else {
       isMeesageCoppy = true;
-    }
+    } */
   }
 
   TextUser(
@@ -676,8 +783,6 @@ class _DmScreenNewState extends State<DmScreenNew> {
       String meessageTyep,
       bool emojiReaction,
       String reactionMessageData) {
-    print("meessageTyep-$reactionMessageData");
-
     return GestureDetector(
       onTap: () {
         if (getInboxMessagesModel?.object?.content?[index].isSelected == null) {
@@ -720,14 +825,13 @@ class _DmScreenNewState extends State<DmScreenNew> {
           swipeSensitivity: 10,
           onLeftSwipe: (details) {
             isMeesageReaction = true;
-            reactionMessage = message;
-            messageTypeSet =
-                getInboxMessagesModel?.object?.content?[index].messageType;
+
+            swipeToIndex = index;
+            print("swipetoindex-$swipeToIndex");
             if (isMounted == true) {
               if (mounted) setState(() {});
             }
             print("left side-$isMeesageReaction");
-            print("left side-$reactionMessage");
 
             print("detles-${details}");
           },
@@ -817,7 +921,7 @@ class _DmScreenNewState extends State<DmScreenNew> {
                       onLongPress: () {
                         isMeesageReaction = false;
                         isLogPress = true;
-                        reactionMessage = message;
+
                         if (isMounted == true) {
                           if (mounted) {
                             setState(() {});
@@ -860,7 +964,6 @@ class _DmScreenNewState extends State<DmScreenNew> {
                         }
                       },
                       child: MessageViewWidget(
-                        message: message,
                         userMeesage: userMeesage,
                         parsedDateTime: parsedDateTime,
                         isSelected: getInboxMessagesModel
@@ -868,7 +971,6 @@ class _DmScreenNewState extends State<DmScreenNew> {
                             false,
                         meessageTyep: meessageTyep,
                         emojiReaction: emojiReaction,
-                        reactionMessage: reactionMessageData,
                         getInboxMessagesModel: getInboxMessagesModel!,
                         index: index,
                       ),
@@ -946,24 +1048,21 @@ class _DmScreenNewState extends State<DmScreenNew> {
 class MessageViewWidget extends StatelessWidget {
   MessageViewWidget({
     Key? key,
-    required this.message,
     required this.userMeesage,
     required this.parsedDateTime,
     required this.isSelected,
     required this.meessageTyep,
     required this.emojiReaction,
-    this.reactionMessage,
     required this.getInboxMessagesModel,
     required this.index,
   }) : super(key: key);
 
-  final String message;
   final bool userMeesage;
   final DateTime parsedDateTime;
   final bool isSelected;
   final String meessageTyep;
   final bool emojiReaction;
-  String? reactionMessage;
+
   final GetInboxMessagesModel getInboxMessagesModel;
   final int index;
 
@@ -984,7 +1083,7 @@ class MessageViewWidget extends StatelessWidget {
             width: 160,
             decoration: BoxDecoration(borderRadius: BorderRadius.circular(15)),
             child: CustomImageView(
-              url: "${message}",
+              url: "${getInboxMessagesModel.object?.content?[index].message}",
               height: 20,
               radius: BorderRadius.circular(20),
               width: 20,
@@ -1006,7 +1105,7 @@ class MessageViewWidget extends StatelessWidget {
             children: [
               CustomImageView(
                 margin: EdgeInsets.only(top: 10),
-                url: "${message}",
+                url: "${getInboxMessagesModel.object?.content?[index].message}",
                 height: 130,
                 radius: BorderRadius.circular(20),
                 fit: BoxFit.fill,
@@ -1021,7 +1120,7 @@ class MessageViewWidget extends StatelessWidget {
                       borderRadius: BorderRadius.circular(10)),
                   child: Text(
                     getInboxMessagesModel
-                            ?.object?.content?[index].reactionMessage ??
+                            .object?.content?[index].reactionMessage ??
                         '',
                     style: TextStyle(
                         color: Colors.black, fontWeight: FontWeight.bold),
@@ -1031,14 +1130,13 @@ class MessageViewWidget extends StatelessWidget {
         if (getInboxMessagesModel.object?.content?[index]
                     .messageType == // only user can sher image
                 'IMAGE' &&
-            getInboxMessagesModel.object?.content?[index].emojiReaction ==
-                true)
+            getInboxMessagesModel.object?.content?[index].emojiReaction == true)
           Stack(
             children: [
               Container(
                 margin: EdgeInsets.only(top: 10),
                 child: CustomImageView(
-                       height: 130,
+                  height: 130,
                   url: getInboxMessagesModel.object?.content?[index].message,
                   radius: BorderRadius.circular(20), //Ankur1
                   // height: 20,
@@ -1046,7 +1144,9 @@ class MessageViewWidget extends StatelessWidget {
               ),
               Positioned.fill(
                   child: Align(
-                alignment: userMeesage == true?Alignment.bottomLeft:Alignment.bottomRight,
+                alignment: userMeesage == true
+                    ? Alignment.bottomLeft
+                    : Alignment.bottomRight,
                 child: Container(
                   // height: 110,
                   // width: 50,
@@ -1175,4 +1275,12 @@ String customFormat(DateTime date) {
   String time = (DateFormat('HH:mm').format(date));
   String formattedDate = '$time';
   return formattedDate;
+}
+
+navigatorpop() async {
+  isLogPress = false;
+  isMeesageReaction = false;
+  selectedCount = 0;
+  isMeesageCoppy = false;
+  swipeToIndex = 0;
 }

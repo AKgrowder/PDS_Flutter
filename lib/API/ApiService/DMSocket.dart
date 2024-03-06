@@ -1,21 +1,19 @@
 import 'dart:async';
 import 'dart:convert';
-
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:pds/API/Bloc/dmInbox_bloc/dminbox_blcok.dart';
 import 'package:stomp_dart_client/stomp.dart';
 import 'package:stomp_dart_client/stomp_config.dart';
 import 'package:stomp_dart_client/stomp_frame.dart';
 
 import '../../main.dart';
 
-var DMChatInboxUid = "";
+String ? DMChatInboxUid1;
 var DMbaseURL = "";
 
 /// late StompClient stompClient;
 void onConnect(StompFrame frame) {
+  print("this is the check and value-${DMChatInboxUid1}");
   DMstompClient.subscribe(
-    destination: "/topic/getInboxMessage/${DMChatInboxUid}",
+    destination: "/topic/getInboxMessage/${DMChatInboxUid1}",
     callback: (StompFrame frame) {
       print('Received message AA <->: ${frame.body}');
       // Process the received message
@@ -27,7 +25,7 @@ void onConnect(StompFrame frame) {
   );
 
   DMstompClient.subscribe(
-    destination: "/topic/getDeletedInboxMessage/${DMChatInboxUid}",
+    destination: "/topic/getDeletedInboxMessage/${DMChatInboxUid1}",
     callback: (StompFrame frame) {
       print('Received message Delete-: ${frame.body}');
       // Process the received message
@@ -36,14 +34,14 @@ void onConnect(StompFrame frame) {
 
   Timer.periodic(Duration(seconds: 5), (_) {
     DMstompClient.subscribe(
-      destination: "/topic/getInboxMessage/${DMChatInboxUid}",
+      destination: "/topic/getInboxMessage/${DMChatInboxUid1}",
       callback: (StompFrame frame) {
         print('Received message AA ---->: ${frame.body}');
       },
     );
 
     DMstompClient.subscribe(
-      destination: "/topic/getDeletedInboxMessage/${DMChatInboxUid}",
+      destination: "/topic/getDeletedInboxMessage/${DMChatInboxUid1}",
       callback: (StompFrame frame) {
         print(
             "Delete Meassge --------------------------------------------------------------------");
@@ -64,6 +62,7 @@ var DMstompClient = StompClient(
         milliseconds: 200,
       ));
       print('connecting...');
+      
     },
     onWebSocketError: (dynamic error) => print(
       error.toString(),
