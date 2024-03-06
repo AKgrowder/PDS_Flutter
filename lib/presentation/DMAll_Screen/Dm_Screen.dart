@@ -16,6 +16,7 @@ import 'package:linkfy_text/linkfy_text.dart';
 import 'package:pds/API/ApiService/DMSocket.dart';
 import 'package:pds/API/Bloc/dmInbox_bloc/dmMessageState.dart';
 import 'package:pds/API/Model/createDocumentModel/createDocumentModel.dart';
+import 'package:pds/API/Model/inboxScreenModel/LiveStatusModel.dart';
 import 'package:pds/API/Model/inboxScreenModel/inboxScrrenModel.dart';
 import 'package:pds/API/Model/story_model.dart';
 import 'package:pds/StoryFile/src/story_button.dart';
@@ -39,9 +40,12 @@ import 'package:stomp_dart_client/stomp_frame.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
 
+import '../ new/newbottembar.dart';
 import '../../API/Bloc/dmInbox_bloc/dminbox_blcok.dart';
 import '../register_create_account_screen/register_create_account_screen.dart';
-  ScrollController scrollController = ScrollController();
+import 'dm_new.dart';
+
+ScrollController scrollController = ScrollController();
 
 class DmScreen extends StatefulWidget {
   String UserName;
@@ -51,11 +55,13 @@ class DmScreen extends StatefulWidget {
   String? videoId;
   bool? isExpert;
   bool? isBlock;
+  bool? online;
   DmScreen(
       {required this.ChatInboxUid,
       required this.UserName,
       required this.UserUID,
       required this.UserImage,
+      this.online,
       this.videoId,
       this.isExpert,
       this.isBlock});
@@ -94,8 +100,9 @@ class _DmScreenState extends State<DmScreen> {
   double value2 = 0.0;
   double finalFileSize = 0;
   ChooseDocument1? imageDataPost;
+  LiveStatusModel? LiveStatusModelData;
   String? stroyUid;
-  GetInboxMessagesModel? getInboxMessagesModel;
+  GetInboxMessagesModel? getInboxMessagesModel; 
   final focusNode = FocusNode();
   KeyboardVisibilityController keyboardVisibilityController =
       KeyboardVisibilityController();
@@ -103,6 +110,10 @@ class _DmScreenState extends State<DmScreen> {
   TextEditingController Add_Comment = TextEditingController();
   String formattedDate = DateFormat('dd-MM-yyyy').format(now);
   List<StoryButtonData> buttonDatas = [];
+  // List<GetInboxMessagesModel> messages = [
+  //   // list of messages
+  // ];
+  List<String> selectedMessages = [];
 
   void onSendCallInvitationFinished(
     String code,
@@ -137,7 +148,10 @@ class _DmScreenState extends State<DmScreen> {
   }
 
   getDocumentSize() async {
+    // 111111
     await BlocProvider.of<DmInboxCubit>(context).seetinonExpried(context);
+    await BlocProvider.of<DmInboxCubit>(context)
+        .LiveStatus(context, widget.ChatInboxUid);
     await BlocProvider.of<DmInboxCubit>(context)
         .SeenMessage(context, widget.ChatInboxUid);
     await BlocProvider.of<DmInboxCubit>(context)
@@ -240,6 +254,7 @@ class _DmScreenState extends State<DmScreen> {
     Token = prefs.getString(PreferencesKey.loginJwt) ?? "";
     UserCode = prefs.getString(PreferencesKey.loginUserID) ?? "";
     User_Name = prefs.getString(PreferencesKey.ProfileUserName) ?? "";
+    print("this is the Data Get-${User_Name}");
     DMbaseURL = prefs.getString(PreferencesKey.SocketLink) ?? "";
     DMstompClient.activate();
     // Delet_DMstompClient.activate();
@@ -287,7 +302,7 @@ class _DmScreenState extends State<DmScreen> {
     }
     getUserID();
     getToken();
-    getDocumentSize();
+    // getDocumentSize();
 
     keyboardVisibilityController.onChange.listen((bool isKeyboardVisible) {
       this.isKeyboardVisible = isKeyboardVisible;
@@ -296,22 +311,6 @@ class _DmScreenState extends State<DmScreen> {
         isEmojiVisible = false;
       }
     });
-
-    if (widget.isBlock == true) {
-      Future.delayed(
-        Duration(
-          milliseconds: 2,
-        ),
-        () {
-          showDialog(
-            context: context,
-            builder: (_) => UnBlockUserChatdailog(
-              userName: widget.UserName,
-            ),
-          );
-        },
-      );
-    }
 
     super.initState();
   }
@@ -364,6 +363,39 @@ class _DmScreenState extends State<DmScreen> {
               if (state is SeenAllMessageLoadedState) {
                 print(state.SeenAllMessageModelData.object);
               }
+              if (state is LiveStatusLoadedState) {
+                print("LiveStatusModelDataLiveStatusModelData");
+                LiveStatusModelData = state.LiveStatusModelData;
+                if (LiveStatusModelData?.object?.isBlock == true) {
+                  Future.delayed(
+                    Duration(
+                      milliseconds: 2,
+                    ),
+                    () {
+                      showDialog(
+                        barrierDismissible: false,
+                        context: context,
+                        builder: (_) => WillPopScope(
+                          onWillPop: () async {
+                            Navigator.pop(context);
+                            Navigator.pop(context);
+                            // Navigator.of(context).pushAndRemoveUntil(
+                            //     MaterialPageRoute(
+                            //         builder: (context) =>
+                            //             NewBottomBar(buttomIndex: 3)),
+                            //     (Route<dynamic> route) => false);
+
+                            return true;
+                          },
+                          child: UnBlockUserChatdailog(
+                            userName: widget.UserName,
+                          ),
+                        ),
+                      );
+                    },
+                  );
+                }
+              }
               if (state is AddPostImaegState) {
                 imageDataPost = state.imageDataPost;
               }
@@ -388,7 +420,8 @@ class _DmScreenState extends State<DmScreen> {
                   "message": data['object']['message'],
                   "createdDate": data['object']['createdAt'],
                   "messageType": data['object']['messageType'],
-                  "isDeleted": data['object']['isDeleted']
+                  "isDeleted": data['object']['isDeleted'],
+                  "isDelivered": data['object']['isDelivered']
                 };
 
                 Content content = Content.fromJson(mapDataAdd!);
@@ -509,35 +542,64 @@ class _DmScreenState extends State<DmScreen> {
                                       ),
                                     ),
                                   ),
-                                  GestureDetector(
-                                    onTap: () {
-                                      Navigator.push(context, MaterialPageRoute(
-                                        builder: (context) {
-                                          return ProfileScreen(
-                                              User_ID: widget.UserUID,
-                                              isFollowing: "");
+                                  Stack(
+                                    children: [
+                                      GestureDetector(
+                                        onTap: () {
+                                          // this is intall set
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    DmScreenNew(ChatInboxUid: widget.ChatInboxUid,),
+                                              ));
+                                          /*  Navigator.push(context,
+                                              MaterialPageRoute(
+                                            builder: (context) {
+                                              return ProfileScreen(
+                                                  User_ID: widget.UserUID,
+                                                  isFollowing: "");
+                                            },
+                                          )); */
                                         },
-                                      ));
-                                    },
-                                    child: Container(
-                                      child: widget.UserImage != null &&
-                                              widget.UserImage != ""
-                                          ? Container(
-                                              child: CustomImageView(
-                                                url: "${widget.UserImage}",
-                                                height: 30,
-                                                width: 30,
-                                                fit: BoxFit.cover,
-                                                radius:
-                                                    BorderRadius.circular(30),
-                                              ),
-                                            )
-                                          : CustomImageView(
-                                              imagePath: ImageConstant.tomcruse,
-                                              height: 30,
-                                              width: 30,
-                                            ),
-                                    ),
+                                        child: Container(
+                                          child: widget.UserImage != null &&
+                                                  widget.UserImage != ""
+                                              ? Container(
+                                                  child: CustomImageView(
+                                                    url: "${widget.UserImage}",
+                                                    height: 30,
+                                                    width: 30,
+                                                    fit: BoxFit.cover,
+                                                    radius:
+                                                        BorderRadius.circular(
+                                                            30),
+                                                  ),
+                                                )
+                                              : CustomImageView(
+                                                  imagePath:
+                                                      ImageConstant.tomcruse,
+                                                  height: 30,
+                                                  width: 30,
+                                                ),
+                                        ),
+                                      ),
+                                      widget.online == true
+                                          ? Positioned(
+                                              bottom: 1,
+                                              right: 1,
+                                              child: Container(
+                                                height: 12,
+                                                width: 12,
+                                                decoration: BoxDecoration(
+                                                    color: Colors.green,
+                                                    shape: BoxShape.circle,
+                                                    border: Border.all(
+                                                        color: Colors.white,
+                                                        width: 2)),
+                                              ))
+                                          : SizedBox()
+                                    ],
                                   ),
                                   Padding(
                                     padding:
@@ -791,6 +853,14 @@ class _DmScreenState extends State<DmScreen> {
                                                             // });
                                                           });
                                                         } else {}
+                                                        // getInboxMessagesModel?.object?.content?[index].message
+                                                        String message =
+                                                            "${getInboxMessagesModel?.object?.content?[index].message}";
+                                                        // messages[index];
+                                                        bool isSelected =
+                                                            selectedMessages
+                                                                .contains(
+                                                                    message);
 
                                                         ///
                                                         return Column(
@@ -819,80 +889,147 @@ class _DmScreenState extends State<DmScreen> {
                                                                             index]
                                                                         .userName !=
                                                                     User_Name
-                                                                ? Container(
+                                                                ? GestureDetector(
+                                                                    /*     onTap: () {
+                                                                      selectedMessages.length !=
+                                                                              0
+                                                                          ? setState(
+                                                                              () {
+                                                                              if (isSelected) {
+                                                                                selectedMessages.remove(message);
+                                                                                print("RemoveRemoveRemoveRemoveRemove=> 1");
+                                                                              } else {
+                                                                                print("AddAddAddAddAddAddAdd=> 1");
+                                                                                if (!isSelected) {
+                                                                                  print("AddAddAddAddAddAddAdd=> 2");
+                                                                                  selectedMessages.add(message);
+                                                                                }
+                                                                              }
+                                                                            })
+                                                                          : setState(
+                                                                              () {print("RemoveRemoveRemoveRemoveRemove=> 2");},
+                                                                            );
+                                                                    },
+                                                                    onLongPress:
+                                                                        () {
+                                                                      if (!isSelected) {
+                                                                        setState(
+                                                                            () {
+                                                                          selectedMessages
+                                                                              .add(message);
+                                                                        });
+                                                                      }
+                                                                    }, */
+
                                                                     child:
-                                                                        Padding(
-                                                                      padding: const EdgeInsets
-                                                                              .symmetric(
-                                                                          /* horizontal: 35, vertical: 5 */),
+                                                                        Container(
+                                                                      decoration: isSelected
+                                                                          ? BoxDecoration(
+                                                                              border: Border.all(color: Colors.blue))
+                                                                          : null,
                                                                       child:
-                                                                          GestureDetector(
-                                                                        onTap:
-                                                                            () {},
+                                                                          Padding(
+                                                                        padding:
+                                                                            const EdgeInsets.symmetric(/* horizontal: 35, vertical: 5 */),
                                                                         child:
-                                                                            Column(
-                                                                          crossAxisAlignment:
-                                                                              CrossAxisAlignment.start,
-                                                                          children: [
-                                                                            /*   Row(
-                                                                          crossAxisAlignment:
-                                                                              CrossAxisAlignment.start,
-                                                                          mainAxisAlignment:
-                                                                              MainAxisAlignment.start,
-                                                                          children: [
-                                                                            Padding(
-                                                                              padding:
-                                                                                  const EdgeInsets.only(left: 10, right: 3),
-                                                                              child: getInboxMessagesModel?.object?.content?[index].userName != null
-                                                                                  ? CustomImageView(
-                                                                                      url: "${getInboxMessagesModel?.object?.content?[index].userProfilePic}",
-                                                                                      height: 20,
-                                                                                      radius: BorderRadius.circular(20),
-                                                                                      width: 20,
-                                                                                      fit: BoxFit.fill,
-                                                                                    )
-                                                                                  : CustomImageView(
-                                                                                      imagePath: ImageConstant.tomcruse,
-                                                                                      height: 20,
-                                                                                    ),
-                                                                            ),
-                                                                            Text(
-                                                                              "${getInboxMessagesModel?.object?.content?[index].userName}",
-                                                                              style: TextStyle(
-                                                                                  fontWeight: FontWeight.w400,
-                                                                                  color: Colors.black,
-                                                                                  fontFamily: "outfit",
-                                                                                  fontSize: 14),
-                                                                            ),
-                                                                            Spacer(),
-                                                                            Align(
-                                                                              alignment:
-                                                                                  Alignment.centerRight,
-                                                                              child:
-                                                                                  Padding(
-                                                                                padding: const EdgeInsets.only(right: 16),
-                                                                                child: Text(
-                                                                                  customFormat(parsedDateTime),
-                                                                                  // maxLines: 3,
-                                                                                  textScaleFactor: 1.0,
-                                                                                  style: TextStyle(fontWeight: FontWeight.bold, color: Colors.grey, fontFamily: "outfit", fontSize: 12),
-                                                                                ),
+                                                                            GestureDetector(
+                                                                          onTap:
+                                                                              () {},
+                                                                          child:
+                                                                              Column(
+                                                                            crossAxisAlignment:
+                                                                                CrossAxisAlignment.start,
+                                                                            children: [
+                                                                              SizedBox(
+                                                                                height: 10,
                                                                               ),
-                                                                            ),
-                                                                          ],
-                                                                        ), */
-                                                                            SizedBox(
-                                                                              height: 10,
-                                                                            ),
-                                                                            getInboxMessagesModel?.object?.content?[index].messageType != 'IMAGE'
-                                                                                ? Row(
-                                                                                    mainAxisAlignment: MainAxisAlignment.start,
-                                                                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                                                                    children: [
-                                                                                      // Spacer(),
-                                                                                      Padding(
-                                                                                        padding: const EdgeInsets.only(left: 3, right: 0),
-                                                                                        child: GestureDetector(
+                                                                              getInboxMessagesModel?.object?.content?[index].messageType != 'IMAGE'
+                                                                                  ? Row(
+                                                                                      mainAxisAlignment: MainAxisAlignment.start,
+                                                                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                      children: [
+                                                                                        // Spacer(),
+                                                                                        Padding(
+                                                                                          padding: const EdgeInsets.only(left: 3, right: 0),
+                                                                                          child: GestureDetector(
+                                                                                            onTap: () {
+                                                                                              Navigator.push(context, MaterialPageRoute(
+                                                                                                builder: (context) {
+                                                                                                  return ProfileScreen(User_ID: getInboxMessagesModel?.object?.content?[index].userUid ?? "", isFollowing: "");
+                                                                                                },
+                                                                                              ));
+                                                                                            },
+                                                                                            child: getInboxMessagesModel?.object?.content?[index].userProfilePic != null && getInboxMessagesModel?.object?.content?[index].userProfilePic != ""
+                                                                                                ? CustomImageView(
+                                                                                                    url: "${getInboxMessagesModel?.object?.content?[index].userProfilePic}",
+                                                                                                    height: 20,
+                                                                                                    radius: BorderRadius.circular(20),
+                                                                                                    width: 20,
+                                                                                                    fit: BoxFit.fill,
+                                                                                                  )
+                                                                                                : CustomImageView(
+                                                                                                    imagePath: ImageConstant.tomcruse,
+                                                                                                    height: 20,
+                                                                                                  ),
+                                                                                          ),
+                                                                                        ),
+                                                                                        Flexible(
+                                                                                          child: Padding(
+                                                                                            padding: const EdgeInsets.only(top: 0, left: 3),
+                                                                                            child: Container(
+                                                                                              decoration: BoxDecoration(color: ColorConstant.ChatBackColor, borderRadius: BorderRadius.only(bottomLeft: Radius.circular(13), bottomRight: Radius.circular(13), topRight: Radius.circular(13))),
+                                                                                              child: Column(
+                                                                                                crossAxisAlignment: CrossAxisAlignment.end,
+                                                                                                mainAxisAlignment: MainAxisAlignment.start,
+                                                                                                children: [
+                                                                                                  Padding(
+                                                                                                    padding: const EdgeInsets.only(left: 10, right: 10),
+                                                                                                    child: Text(
+                                                                                                      "${getInboxMessagesModel?.object?.content?[index].message ?? ""}",
+                                                                                                      // maxLines: 3,
+                                                                                                      textScaleFactor: 1.0,
+                                                                                                      style: TextStyle(fontWeight: FontWeight.w400, color: Colors.black, fontFamily: "outfit", fontSize: 15),
+                                                                                                    ),
+                                                                                                  ),
+                                                                                                  // Padding(
+
+                                                                                                  //   padding: const EdgeInsets.only(left: 4, right: 4),
+                                                                                                  //   child: Text(
+                                                                                                  //     getTimeDifference(parsedDateTime),
+                                                                                                  //     textScaleFactor: 1.0,
+                                                                                                  //     style: TextStyle(fontWeight: FontWeight.normal, color: Colors.black, fontFamily: "outfit", fontSize: 10),
+                                                                                                  //   ),
+                                                                                                  // ),
+
+                                                                                                  Padding(
+                                                                                                    padding: const EdgeInsets.only(left: 4, right: 8, bottom: 2),
+                                                                                                    child: Text(
+                                                                                                      customFormat(parsedDateTime),
+                                                                                                      textScaleFactor: 1.0,
+                                                                                                      style: TextStyle(
+                                                                                                        fontWeight: FontWeight.normal,
+                                                                                                        color: Colors.black,
+                                                                                                        fontFamily: "outfit",
+                                                                                                        fontSize: 10,
+                                                                                                      ),
+                                                                                                    ),
+                                                                                                  ),
+                                                                                                ],
+                                                                                              ),
+                                                                                            ),
+                                                                                          ),
+                                                                                        ),
+
+                                                                                        SizedBox(
+                                                                                          width: 70,
+                                                                                        ),
+                                                                                      ],
+                                                                                    )
+                                                                                  : Row(
+                                                                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                      mainAxisAlignment: MainAxisAlignment.start,
+                                                                                      children: [
+                                                                                        GestureDetector(
                                                                                           onTap: () {
                                                                                             Navigator.push(context, MaterialPageRoute(
                                                                                               builder: (context) {
@@ -901,209 +1038,136 @@ class _DmScreenState extends State<DmScreen> {
                                                                                             ));
                                                                                           },
                                                                                           child: getInboxMessagesModel?.object?.content?[index].userProfilePic != null && getInboxMessagesModel?.object?.content?[index].userProfilePic != ""
-                                                                                              ? CustomImageView(
-                                                                                                  url: "${getInboxMessagesModel?.object?.content?[index].userProfilePic}",
-                                                                                                  height: 20,
-                                                                                                  radius: BorderRadius.circular(20),
-                                                                                                  width: 20,
-                                                                                                  fit: BoxFit.fill,
+                                                                                              ? Padding(
+                                                                                                  padding: EdgeInsets.only(top: 10, left: 3),
+                                                                                                  child: CustomImageView(
+                                                                                                    url: "${getInboxMessagesModel?.object?.content?[index].userProfilePic}",
+                                                                                                    height: 20,
+                                                                                                    radius: BorderRadius.circular(20),
+                                                                                                    width: 20,
+                                                                                                    fit: BoxFit.fill,
+                                                                                                  ),
                                                                                                 )
-                                                                                              : CustomImageView(
-                                                                                                  imagePath: ImageConstant.tomcruse,
-                                                                                                  height: 20,
-                                                                                                ),
-                                                                                        ),
-                                                                                      ),
-                                                                                      Flexible(
-                                                                                        child: Padding(
-                                                                                          padding: const EdgeInsets.only(top: 0, left: 3),
-                                                                                          child: Container(
-                                                                                            decoration: BoxDecoration(color: ColorConstant.ChatBackColor, borderRadius: BorderRadius.only(bottomLeft: Radius.circular(13), bottomRight: Radius.circular(13), topRight: Radius.circular(13))),
-                                                                                            child: Column(
-                                                                                              crossAxisAlignment: CrossAxisAlignment.end,
-                                                                                              mainAxisAlignment: MainAxisAlignment.start,
-                                                                                              children: [
-                                                                                                Padding(
-                                                                                                  padding: const EdgeInsets.only(left: 10, right: 10),
-                                                                                                  child: Text(
-                                                                                                    "${getInboxMessagesModel?.object?.content?[index].message ?? ""}",
-                                                                                                    // maxLines: 3,
-                                                                                                    textScaleFactor: 1.0,
-                                                                                                    style: TextStyle(fontWeight: FontWeight.w400, color: Colors.black, fontFamily: "outfit", fontSize: 15),
+                                                                                              : Padding(
+                                                                                                  padding: EdgeInsets.only(top: 10, left: 3),
+                                                                                                  child: CustomImageView(
+                                                                                                    imagePath: ImageConstant.tomcruse,
+                                                                                                    height: 20,
                                                                                                   ),
                                                                                                 ),
-                                                                                                // Padding(
-
-                                                                                                //   padding: const EdgeInsets.only(left: 4, right: 4),
-                                                                                                //   child: Text(
-                                                                                                //     getTimeDifference(parsedDateTime),
-                                                                                                //     textScaleFactor: 1.0,
-                                                                                                //     style: TextStyle(fontWeight: FontWeight.normal, color: Colors.black, fontFamily: "outfit", fontSize: 10),
-                                                                                                //   ),
-                                                                                                // ),
-                                                                                                 
-                                                                                                Padding(
-                                                                                                  padding: const EdgeInsets.only(left: 4, right: 8, bottom: 2),
-                                                                                                  child: Text(
-                                                                                                    customFormat(parsedDateTime),
-                                                                                                    textScaleFactor: 1.0,
-                                                                                                    style: TextStyle(fontWeight: FontWeight.normal, color: Colors.black, fontFamily: "outfit", fontSize: 10,),
-                                                                                                  ),
-                                                                                                ),
-                                                                                              ],
-                                                                                            ),
-                                                                                          ),
                                                                                         ),
-                                                                                      ),
-
-                                                                                      SizedBox(
-                                                                                        width: 70,
-                                                                                      ),
-                                                                                    ],
-                                                                                  )
-                                                                                : Row(
-                                                                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                                                                    mainAxisAlignment: MainAxisAlignment.start,
-                                                                                    children: [
-                                                                                      GestureDetector(
-                                                                                        onTap: () {
-                                                                                          Navigator.push(context, MaterialPageRoute(
-                                                                                            builder: (context) {
-                                                                                              return ProfileScreen(User_ID: getInboxMessagesModel?.object?.content?[index].userUid ?? "", isFollowing: "");
-                                                                                            },
-                                                                                          ));
-                                                                                        },
-                                                                                        child: getInboxMessagesModel?.object?.content?[index].userProfilePic != null && getInboxMessagesModel?.object?.content?[index].userProfilePic != ""
-                                                                                            ? Padding(
-                                                                                                padding: EdgeInsets.only(top: 10, left: 3),
-                                                                                                child: CustomImageView(
-                                                                                                  url: "${getInboxMessagesModel?.object?.content?[index].userProfilePic}",
-                                                                                                  height: 20,
-                                                                                                  radius: BorderRadius.circular(20),
-                                                                                                  width: 20,
-                                                                                                  fit: BoxFit.fill,
-                                                                                                ),
-                                                                                              )
-                                                                                            : Padding(
-                                                                                                padding: EdgeInsets.only(top: 10, left: 3),
-                                                                                                child: CustomImageView(
-                                                                                                  imagePath: ImageConstant.tomcruse,
-                                                                                                  height: 20,
-                                                                                                ),
-                                                                                              ),
-                                                                                      ),
-                                                                                      Row(
-                                                                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                                                                        mainAxisAlignment: MainAxisAlignment.end,
-                                                                                        children: [
-                                                                                          Padding(
-                                                                                            padding: EdgeInsets.only(top: 10, left: 3),
-                                                                                            child: Container(
-                                                                                              height: getInboxMessagesModel?.object?.content?[index].reactionMessage != null ? 130 : 100,
-                                                                                              width: getInboxMessagesModel?.object?.content?[index].reactionMessage != null ? 70 : 150,
-                                                                                              child: getInboxMessagesModel?.object?.content?[index].reactionMessage != null
-                                                                                                  ? GestureDetector(
-                                                                                                      onTapDown: (detalis) {
-                                                                                                        print('sdgfgdfgdfgsdfdgfg');
-                                                                                                        print('emojiReaction-${getInboxMessagesModel?.object?.content?[index].reactionMessage}');
-                                                                                                        print('emojiReaction-${getInboxMessagesModel?.object?.content?[index].emojiReaction}');
-                                                                                                        print("dsdfdffffff-${getInboxMessagesModel?.object?.content?[index].storyUid}");
-                                                                                                        stroyUid = getInboxMessagesModel?.object?.content?[index].storyUid;
-                                                                                                        BlocProvider.of<DmInboxCubit>(context).get_all_story(context).then((value) {});
-                                                                                                        dataGet = detalis;
-                                                                                                      },
-                                                                                                      child: getInboxMessagesModel?.object?.content?[index].emojiReaction == true
-                                                                                                          ? Stack(
-                                                                                                              children: [
-                                                                                                                CustomImageView(
-                                                                                                                  url: getInboxMessagesModel?.object?.content?[index].message,
-                                                                                                                  radius: BorderRadius.circular(20),
-                                                                                                                  // height: 20,
-                                                                                                                ),
-                                                                                                                Positioned.fill(
-                                                                                                                    child: Align(
-                                                                                                                  alignment: Alignment.bottomRight,
-                                                                                                                  child: Container(
-                                                                                                                    // height: 110,
-                                                                                                                    // width: 50,
-                                                                                                                    margin: EdgeInsets.only(bottom: 2, right: 2),
-                                                                                                                    child: Text(
-                                                                                                                      '${getInboxMessagesModel?.object?.content?[index].reactionMessage}',
-                                                                                                                      style: TextStyle(fontSize: 20),
-                                                                                                                    ),
+                                                                                        Row(
+                                                                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                          mainAxisAlignment: MainAxisAlignment.end,
+                                                                                          children: [
+                                                                                            Padding(
+                                                                                              padding: EdgeInsets.only(top: 10, left: 3),
+                                                                                              child: Container(
+                                                                                                height: getInboxMessagesModel?.object?.content?[index].reactionMessage != null ? 130 : 100,
+                                                                                                width: getInboxMessagesModel?.object?.content?[index].reactionMessage != null ? 70 : 150,
+                                                                                                child: getInboxMessagesModel?.object?.content?[index].reactionMessage != null
+                                                                                                    ? GestureDetector(
+                                                                                                        onTapDown: (detalis) {
+                                                                                                          print('sdgfgdfgdfgsdfdgfg');
+                                                                                                          print('emojiReaction-${getInboxMessagesModel?.object?.content?[index].reactionMessage}');
+                                                                                                          print('emojiReaction-${getInboxMessagesModel?.object?.content?[index].emojiReaction}');
+                                                                                                          print("dsdfdffffff-${getInboxMessagesModel?.object?.content?[index].storyUid}");
+                                                                                                          stroyUid = getInboxMessagesModel?.object?.content?[index].storyUid;
+                                                                                                          BlocProvider.of<DmInboxCubit>(context).get_all_story(context).then((value) {});
+                                                                                                          dataGet = detalis;
+                                                                                                        },
+                                                                                                        child: getInboxMessagesModel?.object?.content?[index].emojiReaction == true
+                                                                                                            ? Stack(
+                                                                                                                children: [
+                                                                                                                  CustomImageView(
+                                                                                                                    url: getInboxMessagesModel?.object?.content?[index].message,
+                                                                                                                    radius: BorderRadius.circular(20),  //Ankur1
+                                                                                                                    // height: 20,
                                                                                                                   ),
-                                                                                                                ))
-                                                                                                              ],
-                                                                                                            )
-                                                                                                          : getInboxMessagesModel?.object?.content?[index].message?.endsWith('.mp4') == true
-                                                                                                              ? VideoThumbnailPage(
-                                                                                                                  videoUrl: getInboxMessagesModel?.object?.content?[index].message ?? '',
-                                                                                                                )
-                                                                                                              : CustomImageView(
-                                                                                                                  url: getInboxMessagesModel?.object?.content?[index].message,
-                                                                                                                  radius: BorderRadius.circular(20),
-                                                                                                                  // height: 20,
-                                                                                                                ),
-                                                                                                    )
-                                                                                                  : AnimatedNetworkImage(imageUrl: "${getInboxMessagesModel?.object?.content?[index].message}"),
+                                                                                                                  Positioned.fill(
+                                                                                                                      child: Align(
+                                                                                                                    alignment: Alignment.bottomRight,
+                                                                                                                    child: Container(
+                                                                                                                      // height: 110,
+                                                                                                                      // width: 50,
+                                                                                                                      margin: EdgeInsets.only(bottom: 2, right: 2),
+                                                                                                                      child: Text(
+                                                                                                                        '${getInboxMessagesModel?.object?.content?[index].reactionMessage}',
+                                                                                                                        style: TextStyle(fontSize: 20),
+                                                                                                                      ),
+                                                                                                                    ),
+                                                                                                                  ))
+                                                                                                                ],
+                                                                                                              )
+                                                                                                            : getInboxMessagesModel?.object?.content?[index].message?.endsWith('.mp4') == true
+                                                                                                                ? VideoThumbnailPage(
+                                                                                                                    videoUrl: getInboxMessagesModel?.object?.content?[index].message ?? '',
+                                                                                                                  )
+                                                                                                                : CustomImageView(
+                                                                                                                    url: getInboxMessagesModel?.object?.content?[index].message,
+                                                                                                                    radius: BorderRadius.circular(20),
+                                                                                                                    // height: 20,
+                                                                                                                  ),
+                                                                                                      )
+                                                                                                    : AnimatedNetworkImage(imageUrl: "${getInboxMessagesModel?.object?.content?[index].message}"),
+                                                                                              ),
                                                                                             ),
-                                                                                          ),
 
-                                                                                          /* Container(
-                                                                                        height: 50,
-                                                                                        width: 50,
-                                                                                        color: Colors.amber,
-                                                                                      ) */
+                                                                                            /* Container(
+                                                                                          height: 50,
+                                                                                          width: 50,
+                                                                                          color: Colors.amber,
+                                                                                        ) */
 
-                                                                                          /*  Row(
-                                                                        children: [
-                                                                          Expanded(
-                                                                            child: Align(
-                                                                                alignment: Alignment.topRight,
-                                                                                child: Padding(
-                                                                                  padding: const EdgeInsets.only(right: 20),
-                                                                                  child: Container(
-                                                                                      padding: EdgeInsets.all(10),
-                                                                                      decoration: BoxDecoration(color: ColorConstant.primary_color, borderRadius: BorderRadius.circular(10)),
-                                                                                      child: Text(
-                                                                                        getInboxMessagesModel?.object?.content?[index].reactionMessage ?? '',
-                                                                                        style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-                                                                                      )),
-                                                                                )),
-                                                                          ),
-                                                                        ],
-                                                                      ) */
-                                                                                        ],
-                                                                                      ),
-                                                                                    ],
-                                                                                  ),
-                                                                            /* Divider(
-                                                                          color: const Color.fromARGB(
-                                                                              117,
-                                                                              0,
-                                                                              0,
-                                                                              0),
-                                                                        ), */
-                                                                            if (getInboxMessagesModel?.object?.content?[index].reactionMessage != null &&
-                                                                                getInboxMessagesModel?.object?.content?[index].emojiReaction != true)
-                                                                              Row(
-                                                                                children: [
-                                                                                  Align(
-                                                                                      alignment: Alignment.topRight,
-                                                                                      child: Padding(
-                                                                                        padding: EdgeInsets.only(top: getInboxMessagesModel?.object?.content?[index].messageType == 'TEXT' ? 10 : 0, left: 20),
-                                                                                        child: Container(
-                                                                                            margin: EdgeInsets.only(top: 3),
-                                                                                            padding: EdgeInsets.all(10),
-                                                                                            decoration: BoxDecoration(color: ColorConstant.chatcolor, borderRadius: BorderRadius.circular(10)),
-                                                                                            child: Text(
-                                                                                              getInboxMessagesModel?.object?.content?[index].reactionMessage ?? '',
-                                                                                              style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
-                                                                                            )),
-                                                                                      )),
-                                                                                ],
-                                                                              )
+                                                                                            /*  Row(
+                                                                          children: [
+                                                                            Expanded(
+                                                                              child: Align(
+                                                                                  alignment: Alignment.topRight,
+                                                                                  child: Padding(
+                                                                                    padding: const EdgeInsets.only(right: 20),
+                                                                                    child: Container(
+                                                                                        padding: EdgeInsets.all(10),
+                                                                                        decoration: BoxDecoration(color: ColorConstant.primary_color, borderRadius: BorderRadius.circular(10)),
+                                                                                        child: Text(
+                                                                                          getInboxMessagesModel?.object?.content?[index].reactionMessage ?? '',
+                                                                                          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                                                                                        )),
+                                                                                  )),
+                                                                            ),
                                                                           ],
+                                                                        ) */
+                                                                                          ],
+                                                                                        ),
+                                                                                      ],
+                                                                                    ),
+                                                                              /* Divider(
+                                                                            color: const Color.fromARGB(
+                                                                                117,
+                                                                                0,
+                                                                                0,
+                                                                                0),
+                                                                          ), */
+                                                                              if (getInboxMessagesModel?.object?.content?[index].reactionMessage != null && getInboxMessagesModel?.object?.content?[index].emojiReaction != true)
+                                                                                Row(
+                                                                                  children: [
+                                                                                    Align(
+                                                                                        alignment: Alignment.topRight,
+                                                                                        child: Padding(
+                                                                                          padding: EdgeInsets.only(top: getInboxMessagesModel?.object?.content?[index].messageType == 'TEXT' ? 10 : 0, left: 20),
+                                                                                          child: Container(
+                                                                                              margin: EdgeInsets.only(top: 3),
+                                                                                              padding: EdgeInsets.all(10),
+                                                                                              decoration: BoxDecoration(color: ColorConstant.chatcolor, borderRadius: BorderRadius.circular(10)),
+                                                                                              child: Text(
+                                                                                                getInboxMessagesModel?.object?.content?[index].reactionMessage ?? '',
+                                                                                                style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+                                                                                              )),
+                                                                                        )),
+                                                                                  ],
+                                                                                )
+                                                                            ],
+                                                                          ),
                                                                         ),
                                                                       ),
                                                                     ),
@@ -1303,14 +1367,14 @@ class _DmScreenState extends State<DmScreen> {
                                                                                       child: Padding(
                                                                                         padding: const EdgeInsets.only(top: 3),
                                                                                         child: Container(
-                                                                                          margin: EdgeInsets.only(left: 10, right: 10),
+                                                                                          margin: EdgeInsets.only(left: 10, right: 0),
                                                                                           decoration: BoxDecoration(color: ColorConstant.otheruserchat, borderRadius: BorderRadius.circular(13)),
                                                                                           child: Column(
                                                                                             crossAxisAlignment: CrossAxisAlignment.end,
                                                                                             mainAxisAlignment: MainAxisAlignment.end,
                                                                                             children: [
                                                                                               Padding(
-                                                                                                padding: const EdgeInsets.only(left: 4, right: 4,top: 3),
+                                                                                                padding: const EdgeInsets.only(left: 4, right: 4, top: 3),
                                                                                                 /*  child: Text(
                                                                                               "${getInboxMessagesModel?.object?.content?[index].message ?? ""}", //ankurChek
                                                                                               // maxLines: 3,
@@ -1319,13 +1383,8 @@ class _DmScreenState extends State<DmScreen> {
                                                                                             ), */
                                                                                                 child: LinkifyText(
                                                                                                   "${getInboxMessagesModel?.object?.content?[index].message ?? ""}",
-                                                                                                  linkStyle: TextStyle(fontWeight: FontWeight.w500, color: Colors.blue, fontFamily: "outfit", fontSize: 13, decoration: TextDecoration.underline, decorationColor: Colors.blue),
-                                                                                                  textStyle: TextStyle(
-                                                                                                    fontWeight: FontWeight.w500,
-                                                                                                    color: Colors.black,
-                                                                                                    fontFamily: "outfit",
-                                                                                                    fontSize: 13,
-                                                                                                  ),
+                                                                                                  linkStyle: TextStyle(fontWeight: FontWeight.w500, color: Colors.blue, fontFamily: "outfit", fontSize: 15, decoration: TextDecoration.underline, decorationColor: Colors.blue),
+                                                                                                  textStyle: TextStyle(fontWeight: FontWeight.w400, color: Colors.black, fontFamily: "outfit", fontSize: 15),
                                                                                                   linkTypes: [
                                                                                                     LinkType.url,
 
@@ -1360,6 +1419,7 @@ class _DmScreenState extends State<DmScreen> {
                                                                                               //     style: TextStyle(fontWeight: FontWeight.normal, color: Colors.white, fontFamily: "outfit", fontSize: 10),
                                                                                               //   ),
                                                                                               // ),
+                                                                                              /// ----------------------------------------------------------------
                                                                                               Padding(
                                                                                                 padding: const EdgeInsets.only(left: 3, right: 5, bottom: 2),
                                                                                                 child: Text(
@@ -1368,11 +1428,57 @@ class _DmScreenState extends State<DmScreen> {
                                                                                                   style: TextStyle(fontWeight: FontWeight.normal, color: Colors.black, fontFamily: "outfit", fontSize: 10),
                                                                                                 ),
                                                                                               ),
+                                                                                              /* Container(
+                                                                                                  // color: Colors.red,
+                                                                                                  width: 47,
+                                                                                                  child: Row(
+                                                                                                    children: [
+                                                                                                      Padding(
+                                                                                                        padding: const EdgeInsets.only(left: 3, right: 5, bottom: 2),
+                                                                                                        child: Text(
+                                                                                                          customFormat(parsedDateTime),
+                                                                                                          textScaleFactor: 1.0,
+                                                                                                          style: TextStyle(fontWeight: FontWeight.normal, color: Colors.black, fontFamily: "outfit", fontSize: 10),
+                                                                                                        ),
+                                                                                                      ),
+                                                                                                      Container(
+                                                                                                        height: 12,
+                                                                                                        width: 12,
+                                                                                                        child: Center(
+                                                                                                          child: getInboxMessagesModel?.object?.content?[index].messageSeenStatus == 0
+                                                                                                              ? CustomImageView(
+                                                                                                                  imagePath: ImageConstant.messagecheck,
+                                                                                                                  // height: 15,
+                                                                                                                )
+                                                                                                              : getInboxMessagesModel?.object?.content?[index].messageSeenStatus == 1
+                                                                                                                  ? CustomImageView(
+                                                                                                                      imagePath: ImageConstant.checksend,
+                                                                                                                      // height: 15,
+                                                                                                                    )
+                                                                                                                  : getInboxMessagesModel?.object?.content?[index].messageSeenStatus == 2
+                                                                                                                      ? CustomImageView(
+                                                                                                                          imagePath: ImageConstant.checkseen,
+                                                                                                                          // height: 15,
+                                                                                                                        )
+                                                                                                                      : widget.online == true
+                                                                                                                          ? CustomImageView(
+                                                                                                                              imagePath: ImageConstant.checksend,
+                                                                                                                              // height: 15,
+                                                                                                                            )
+                                                                                                                          : CustomImageView(
+                                                                                                                              imagePath: ImageConstant.messagecheck,
+                                                                                                                              // height: 15,
+                                                                                                                            ),
+                                                                                                        ),
+                                                                                                      ),
+                                                                                                    ],
+                                                                                                  )), */
                                                                                             ],
                                                                                           ),
                                                                                         ),
                                                                                       ),
                                                                                     ),
+
                                                                                     Padding(
                                                                                       padding: const EdgeInsets.only(left: 3, right: 0),
                                                                                       child: GestureDetector(
@@ -1627,7 +1733,7 @@ class _DmScreenState extends State<DmScreen> {
                                           width: 10,
                                         ),
                                         Container(
-                                          width: _width / 1.32,
+                                          width: _width / 1.34,
                                           // color: Colors.amber,
                                           child: Row(
                                             children: [
@@ -1647,7 +1753,7 @@ class _DmScreenState extends State<DmScreen> {
                                                 width: 5,
                                               ),
                                               Container(
-                                                width: _width / 1.8,
+                                                width: _width / 1.90,
                                                 // color: Colors.red,
                                                 child: TextField(
                                                   controller: Add_Comment,
@@ -1673,7 +1779,7 @@ class _DmScreenState extends State<DmScreen> {
                                                 ),
                                               ),
                                               SizedBox(
-                                                width: 13,
+                                                width: 10.50,
                                               ),
                                               GestureDetector(
                                                 onTap: () {
@@ -1692,7 +1798,6 @@ class _DmScreenState extends State<DmScreen> {
                                         ),
                                       ]),
                                     ),
-                                    
                               GestureDetector(
                                 onTap: () async {
                                   if (_image != null) {
@@ -1711,117 +1816,116 @@ class _DmScreenState extends State<DmScreen> {
                                         ScaffoldMessenger.of(context)
                                             .showSnackBar(snackBar);
                                       } else {
-                                        if (widget.ChatInboxUid == "") {
-                                          print("New chat ");
-                                        } else {
-                                          checkGuestUser();
-                                          print(
-                                              "this Data Get-${widget.ChatInboxUid}");
-                                          DMChatInboxUid =
-                                              "${widget.ChatInboxUid}";
+                                        // if (widget.ChatInboxUid == "") {
+                                        //   print("New chat ");
+                                        // } else {
+                                        checkGuestUser();
+                                        print(
+                                            "this Data Get-${widget.ChatInboxUid}");
+                                        DMChatInboxUid =
+                                            "${widget.ChatInboxUid}";
 
-                                          // "${widget.Room_ID}";
-                                          DMstompClient.subscribe(
-                                              destination:
-                                                  "/topic/getInboxMessage/${widget.ChatInboxUid}",
-                                              // "/topic/getMessage/${widget.Room_ID}",
-                                              callback: (StompFrame frame) {
-                                                Map<String, dynamic>
-                                                    jsonString = json.decode(
-                                                        frame.body ?? "");
+                                        // "${widget.Room_ID}";
+                                        DMstompClient.subscribe(
+                                            destination:
+                                                "/topic/getInboxMessage/${widget.ChatInboxUid}",
+                                            // "/topic/getMessage/${widget.Room_ID}",
+                                            callback: (StompFrame frame) {
+                                              Map<String, dynamic> jsonString =
+                                                  json.decode(frame.body ?? "");
 
-                                                var msgUUID =
-                                                    jsonString['object']['uid'];
-                                                if (AddNewData == false) {
-                                                  print(getInboxMessagesModel
-                                                      ?.object
-                                                      ?.content
-                                                      ?.length);
-                                                  if (getInboxMessagesModel
-                                                          ?.object?.content ==
-                                                      null) {
-                                                    // BlocProvider.of<senMSGCubit>(
-                                                    //         context)
-                                                    //     .coomentPage(widget.Room_ID,
-                                                    //         context, "${0}",
-                                                    //         ShowLoader: true);
-                                                  } else {
-                                                    if (addmsg != msgUUID) {
-                                                      mapDataAdd?.clear();
-                                                      print(
-                                                          "jsonStringDaatGet-${jsonString}");
+                                              var msgUUID =
+                                                  jsonString['object']['uid'];
+                                              if (AddNewData == false) {
+                                                print(getInboxMessagesModel
+                                                    ?.object?.content?.length);
+                                                if (getInboxMessagesModel
+                                                        ?.object?.content ==
+                                                    null) {
+                                                  // BlocProvider.of<senMSGCubit>(
+                                                  //         context)
+                                                  //     .coomentPage(widget.Room_ID,
+                                                  //         context, "${0}",
+                                                  //         ShowLoader: true);
+                                                } else {
+                                                  if (addmsg != msgUUID) {
+                                                    mapDataAdd?.clear();
+                                                    print(
+                                                        "jsonStringDaatGet-${jsonString}");
 
-                                                      mapDataAdd = {
-                                                        "userUid":
-                                                            jsonString['object']
-                                                                ['uid'],
-                                                        "userChatMessageUid":
-                                                            jsonString['object']
-                                                                [
-                                                                'userChatInboxUid'],
-                                                        "userName":
-                                                            jsonString['object']
-                                                                ['userName'],
-                                                        "userProfilePic":
-                                                            jsonString['object']
-                                                                [
-                                                                'userProfilePic'],
-                                                        "message":
-                                                            jsonString['object']
-                                                                ['message'],
-                                                        "createdDate":
-                                                            jsonString['object']
-                                                                ['createdAt'],
-                                                        "messageType":
-                                                            jsonString['object']
-                                                                ['messageType'],
-                                                        "isDeleted":
-                                                            jsonString['object']
-                                                                ['isDeleted']
-                                                      };
+                                                    mapDataAdd = {
+                                                      "userUid":
+                                                          jsonString['object']
+                                                              ['uid'],
+                                                      "userChatMessageUid":
+                                                          jsonString['object'][
+                                                              'userChatInboxUid'],
+                                                      "userName":
+                                                          jsonString['object']
+                                                              ['userName'],
+                                                      "userProfilePic":
+                                                          jsonString['object'][
+                                                              'userProfilePic'],
+                                                      "message":
+                                                          jsonString['object']
+                                                              ['message'],
+                                                      "createdDate":
+                                                          jsonString['object']
+                                                              ['createdAt'],
+                                                      "messageType":
+                                                          jsonString['object']
+                                                              ['messageType'],
+                                                      "isDeleted":
+                                                          jsonString['object']
+                                                              ['isDeleted'],
+                                                      "isDelivered":
+                                                          jsonString['object']
+                                                              ['isDelivered']
+                                                    };
 
-                                                      Content content =
-                                                          Content.fromJson(
-                                                              mapDataAdd!);
-                                                      print(
-                                                          "Content${content.createdDate}");
-                                                      getInboxMessagesModel
-                                                          ?.object?.content
-                                                          ?.add(content);
-                                                      _goToElement();
-                                                      /*  _goToElement(AllChatmodelData
+                                                    Content content =
+                                                        Content.fromJson(
+                                                            mapDataAdd!);
+                                                    print(
+                                                        "Content${content.createdDate}");
+                                                    getInboxMessagesModel
+                                                        ?.object?.content
+                                                        ?.add(content);
+                                                    _goToElement();
+                                                    /*  _goToElement(AllChatmodelData
                                                             ?.object
                                                             ?.messageOutputList
                                                             ?.content
                                                             ?.length ??
                                                         0); */
 
-                                                      setState(() {
-                                                        addDataSccesfully =
-                                                            true;
-                                                        addmsg =
-                                                            content.userUid ??
-                                                                "";
-                                                      });
-                                                    }
+                                                    setState(() {
+                                                      addDataSccesfully = true;
+                                                      addmsg =
+                                                          content.userUid ?? "";
+                                                    });
                                                   }
                                                 }
-                                              });
+                                              }
+                                            });
 
-                                          DMstompClient.send(
-                                            destination:
-                                                "/send_message_in_user_chat/${widget.ChatInboxUid}",
-                                            // "/sendMessage/${widget.Room_ID}",
-                                            body: json.encode({
-                                              "message": "${Add_Comment.text}",
-                                              "messageType": "TEXT",
-                                              "userChatInboxUid":
-                                                  "${widget.ChatInboxUid}",
-                                              //  "${widget.Room_ID}",
-                                              "userCode": "${UserCode}"
-                                            }),
-                                          );
-                                        }
+                                        DMstompClient.send(
+                                          destination:
+                                              "/send_message_in_user_chat/${widget.ChatInboxUid}",
+                                          // "/sendMessage/${widget.Room_ID}",
+                                          body: json.encode({
+                                            "message": "${Add_Comment.text}",
+                                            "messageType": "TEXT",
+                                            "userChatInboxUid":
+                                                "${widget.ChatInboxUid}",
+                                            //  "${widget.Room_ID}",
+                                            "userCode": "${UserCode}",
+                                            "isDelivered": widget.online == true
+                                                ? true
+                                                : false
+                                          }),
+                                        );
+                                        // }
                                       }
                                     } else {
                                       SnackBar snackBar = SnackBar(

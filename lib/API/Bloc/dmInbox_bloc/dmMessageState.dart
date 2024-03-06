@@ -2,6 +2,7 @@ import 'package:pds/API/Model/CreateStory_Model/all_stories.dart';
 import 'package:pds/API/Model/GetAllInboxImagesModel/GetAllInboxImagesModel.dart';
 import 'package:pds/API/Model/acceptRejectInvitaionModel/getAllNotificationCount.dart';
 import 'package:pds/API/Model/createDocumentModel/createDocumentModel.dart';
+import 'package:pds/API/Model/inboxScreenModel/LiveStatusModel.dart';
 import 'package:pds/API/Model/inboxScreenModel/SeenAllMessageModel.dart';
 import 'package:pds/API/Model/inboxScreenModel/inboxScrrenModel.dart';
 
@@ -45,6 +46,13 @@ class SeenAllMessageLoadedState extends getInboxState {
   final SeenAllMessageModel SeenAllMessageModelData;
   SeenAllMessageLoadedState(this.SeenAllMessageModelData);
 }
+
+
+class LiveStatusLoadedState extends getInboxState {
+  final LiveStatusModel LiveStatusModelData;
+  LiveStatusLoadedState(this.LiveStatusModelData);
+}
+
 
 class GetAllStoryLoadedState extends getInboxState {
   final GetAllStoryModel getAllStoryModel;

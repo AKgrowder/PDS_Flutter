@@ -1,8 +1,6 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:intl/intl.dart';
 import 'package:pds/API/Bloc/GuestAllPost_Bloc/GuestAllPost_cubit.dart';
 import 'package:pds/core/utils/sharedPreferences.dart';
 import 'package:pds/fick_players/flick_video_player.dart';
@@ -91,9 +89,10 @@ class _VideoListItem1State extends State<VideoListItem1> {
                   0));
           print(
               "video pause!!${flickManager?.flickVideoManager?.videoPlayerController?.value.position.inSeconds}");
-
-          BlocProvider.of<GetGuestAllPostCubit>(context).videowatchdetailAPI(
-              context, "${widget.PostID}", "${User_ID}", timeString);
+          if (User_ID != null) {
+            BlocProvider.of<GetGuestAllPostCubit>(context).videowatchdetailAPI(
+                context, "${widget.PostID}", "${User_ID}", timeString);
+          }
         }
       },
       child: Card(

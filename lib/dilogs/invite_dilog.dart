@@ -69,7 +69,7 @@ class _InviteDilogScreenState extends State<InviteDilogScreen>
             backgroundColor: ColorConstant.primary_color,
           );
           SubmitOneTime = false;
-          Future.delayed(const Duration(seconds: 4), () {
+          Future.delayed(const Duration(seconds: 5), () {
             Navigator.pop(context);
           });
           ScaffoldMessenger.of(context).showSnackBar(snackBar);
@@ -92,7 +92,7 @@ class _InviteDilogScreenState extends State<InviteDilogScreen>
             backgroundColor: ColorConstant.primary_color,
           );
           ScaffoldMessenger.of(context).showSnackBar(snackBar);
-          Future.delayed(const Duration(seconds: 1), () {
+          Future.delayed(const Duration(seconds: 2), () {
             Navigator.pop(context);
           });
         }

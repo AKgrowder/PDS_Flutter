@@ -267,6 +267,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   backgroundColor: ColorConstant.primary_color,
                 );
                 ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                Navigator.pop(context);
               }
             }
             if (state is UpdateProfileLoadedState) {
@@ -1280,7 +1281,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         if (widget.newProfileData?.object?.companyName != null &&
-            widget.newProfileData?.object?.approvalStatus != "PENDING" )
+            widget.newProfileData?.object?.approvalStatus != "PENDING")
           Padding(
             padding: const EdgeInsets.only(top: 10, bottom: 10),
             child: Text(
@@ -1299,7 +1300,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               width: _width / 1.1,
               color: Color(0xffFFF3F4)),
         if (widget.newProfileData?.object?.jobProfile != null &&
-            widget.newProfileData?.object?.approvalStatus != "PENDING" )
+            widget.newProfileData?.object?.approvalStatus != "PENDING")
           Padding(
             padding: const EdgeInsets.only(top: 10, bottom: 10),
             child: Text(
@@ -1462,7 +1463,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               ),
             ),
           ),
-        if (widget.newProfileData?.object?.module == "EXPERT" )
+        if (widget.newProfileData?.object?.module == "EXPERT" &&
+            widget.newProfileData?.object?.approvalStatus != "PENDING")
           customTextFeild(
               controller: fees,
               width: _width / 1.1,

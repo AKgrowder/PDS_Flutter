@@ -54,8 +54,7 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
   double value2 = 0.0;
   double finalFileSize = 0;
   double documentuploadsize = 0;
-  String? dopcument
-  ;
+  String? dopcument;
   String? filepath;
   bool? SubmitOneTime = false;
   ChooseDocument? chooseDocument;
@@ -165,7 +164,7 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
               'companyName': name.text,
               'jobProfile': profile.text,
               'industryTypesUid': industryType,
-              'documentName' : dopcument
+              'documentName': dopcument
             };
 
             // Navigator.pushAndRemoveUntil(context, MaterialPageRoute(
@@ -186,10 +185,12 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
                     params, uplopdfile.text, filepath.toString(), context));
             ScaffoldMessenger.of(context).showSnackBar(snackBar);
             print('check Status--${state.createForm.success}');
-            print("${dopcument} :- dopcumentdopcumentdopcumentdopcumentdopcumentdopcument");
+            print(
+                "${dopcument} :- dopcumentdopcumentdopcumentdopcumentdopcumentdopcument");
           }
         },
         builder: (context, state) {
+         
           return SingleChildScrollView(
             child: Form(
               key: _formKey,
@@ -222,7 +223,7 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
                     ),
                     Padding(
                       padding:
-                          const EdgeInsets.only(top: 10.0, left: 35, bottom: 5),
+                            EdgeInsets.only(top: 10, left: _width/12, bottom: 5),
                       child: Text(
                         "Company Name",
                         style: TextStyle(
@@ -259,7 +260,7 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
                     ),
                     Padding(
                       padding:
-                          const EdgeInsets.only(top: 10.0, left: 35, bottom: 5),
+                            EdgeInsets.only(top: 10.0, left: _width/12, bottom: 5),
                       child: Text(
                         "Job Profile",
                         style: TextStyle(
@@ -338,7 +339,7 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
                       ),
                     ),
                     Padding(
-                      padding: EdgeInsets.only(top: 18, left: 35, bottom: 5),
+                      padding: EdgeInsets.only(top: 18, left: _width/12, bottom: 5),
                       child: Text(
                         "Industry Type",
                         overflow: TextOverflow.ellipsis,
@@ -384,7 +385,7 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
                     ),
                     Padding(
                       padding:
-                          const EdgeInsets.only(top: 10.0, left: 35, bottom: 5),
+                            EdgeInsets.only(top: 10.0, left: _width/12, bottom: 5),
                       child: Text(
                         "Document",
                         style: TextStyle(
@@ -396,7 +397,7 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(left: 35.0),
+                      padding:   EdgeInsets.only(left: _width/12.0),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
@@ -473,8 +474,8 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(
-                          left: 35.0, right: 35.0, top: 10),
+                      padding:   EdgeInsets.only(
+                          left: _width/12, right: _width/12, top: 10),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -483,6 +484,7 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
                             style: TextStyle(
                               fontFamily: 'outfit',
                               fontSize: 15,
+                              // fontSize: _width / 35,
                               color: Colors.grey,
                               fontWeight: FontWeight.w500,
                             ),
@@ -491,7 +493,8 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
                             "Max size ${finalFileSize}MB",
                             style: TextStyle(
                               fontFamily: 'outfit',
-                              fontSize: 15,
+                              fontSize: _width / 30,
+                              // fontSize: 15,
                               color: Colors.black.withOpacity(0.6),
                               fontWeight: FontWeight.w500,
                             ),
@@ -569,7 +572,7 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
                             'companyName': name.text,
                             'jobProfile': profile.text,
                             'industryTypesUid': industryType,
-                            'documentName' : dopcument
+                            'documentName': dopcument
                           };
 
                           print('button-$params');
@@ -796,7 +799,7 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
             break;
           default:
         }
-        
+
         if (file1.path?.split('.').last != 'pdf') {
           print("this fucntion is caaling");
 
@@ -835,7 +838,6 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
             }); */
             BlocProvider.of<CreatFourmCubit>(context).chooseDocumentprofile(
                 dopcument.toString(), croppedFile.path, context);
-                
           } else {
             BlocProvider.of<CreatFourmCubit>(context).chooseDocumentprofile(
                 dopcument.toString(), file1.path!, context);

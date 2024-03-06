@@ -117,6 +117,8 @@ class Content {
   // bool? isfalsegu;
   // bool? isfalsehin;
   bool? isTrsnalteoption;
+  bool? isReports;
+  Function(bool isSelected)? onSelect;
 
   Content(
       {this.postUid,
@@ -142,7 +144,9 @@ class Content {
 
       // this.isfalsegu,
       // this.isfalsehin,
-      this.isTrsnalteoption});
+      this.isTrsnalteoption,
+      this.isReports,
+      this.onSelect});
 
   Content.fromJson(Map<String, dynamic> json) {
     postUid = json['postUid'];

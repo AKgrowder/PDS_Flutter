@@ -1,12 +1,10 @@
 import 'dart:io';
 
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pds/API/ApiService/ApiService.dart';
 import 'package:pds/API/Bloc/dmInbox_bloc/dmMessageState.dart';
-import 'package:pds/API/Model/inboxScreenModel/inboxScrrenModel.dart';
 import 'package:pds/API/Repo/repository.dart';
-import 'package:pds/presentation/DMAll_Screen/Dm_Screen.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class DmInboxCubit extends Cubit<getInboxState> {
   DmInboxCubit() : super(getInboxInitialState()) {}
@@ -29,27 +27,6 @@ class DmInboxCubit extends Cubit<getInboxState> {
     } catch (e) {
       emit(getInboxErrorState(e.toString()));
     }
-  }
-
-  updateInbox(dynamic jsonString) {
-    Map<String, dynamic>? mapDataAdd;
-
-    print('Received message cc <->: ${jsonString}');
-    mapDataAdd = {
-      "userUid": jsonString['object']['uid'],
-      "userChatMessageUid": jsonString['object']['userChatInboxUid'],
-      "userName": jsonString['object']['userName'],
-      "userProfilePic": jsonString['object']['userProfilePic'],
-      "message": jsonString['object']['message'],
-      "createdDate": jsonString['object']['createdAt'],
-      "messageType": jsonString['object']['messageType'],
-      "isDeleted": jsonString['object']['isDeleted']
-    };
-
-    Content content = Content.fromJson(mapDataAdd);
-    DmInbox?.object?.content?.add(content);
-    scrollController.jumpTo(scrollController.position.maxScrollExtent + 100);
-    emit(getInboxLoadedState(DmInbox));
   }
 
   Future<void> DMChatListApiPagantion(
@@ -189,6 +166,27 @@ class DmInboxCubit extends Cubit<getInboxState> {
         if (SeenMessgaeModelData.success == true) {
           emit(SeenAllMessageLoadedState(SeenMessgaeModelData));
 
+          print(SeenMessgaeModelData.message);
+        }
+      }
+    } catch (e) {
+      print('LoginScreen-${e.toString()}');
+      emit(getInboxErrorState(SeenMessgaeModelData));
+    }
+  }
+
+  Future<void> LiveStatus(BuildContext context, String inboxUid) async {
+    dynamic SeenMessgaeModelData;
+    try {
+      emit(getInboxLoadingState());
+      SeenMessgaeModelData = await Repository().LiveStatus(context, inboxUid);
+      if (SeenMessgaeModelData ==
+          "Something Went Wrong, Try After Some Time.") {
+        emit(getInboxErrorState("${SeenMessgaeModelData}"));
+      } else {
+        if (SeenMessgaeModelData.success == true) {
+          emit(LiveStatusLoadedState(SeenMessgaeModelData));
+          print("LiveStatusModelDataLiveStatusModelData");
           print(SeenMessgaeModelData.message);
         }
       }

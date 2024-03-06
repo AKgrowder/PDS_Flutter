@@ -171,11 +171,14 @@ class _LoginScreenState extends State<LoginScreen> {
                     ), (route) => false);
                   }
 
-                  SnackBar snackBar = SnackBar(
+                  if (state.loginModel.object?.verified == true) {
+                    SnackBar snackBar = SnackBar(
                     content: Text(state.loginModel.message ?? ""),
                     backgroundColor: ColorConstant.primary_color,
                   );
                   ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                  } 
+                  
                   print('check Status--${state.loginModel.message}');
                 }
               }
@@ -625,9 +628,11 @@ class _LoginScreenState extends State<LoginScreen> {
 
   saveUserProfile() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-
+        print("dsfsdgfsdfg${getUserDataModelData?.object?.userName}");
     prefs.setString(PreferencesKey.ProfileUserName,
         "${getUserDataModelData?.object?.userName}");
+
+       print("chehck value-${getUserDataModelData?.object?.userName}"); 
     prefs.setString(
         PreferencesKey.ProfileName, "${getUserDataModelData?.object?.name}");
     prefs.setString(

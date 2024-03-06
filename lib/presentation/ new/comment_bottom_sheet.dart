@@ -118,12 +118,12 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                 fontSize: 20),
           ),
           actions: [
-             IconButton(
-                icon: Icon(Icons.close,color: Colors.black),
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-              ),
+            IconButton(
+              icon: Icon(Icons.close, color: Colors.black),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
           ],
         ),
         body: BlocConsumer<AddcommentCubit, AddCommentState>(
@@ -335,90 +335,38 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                           ), */
                       Padding(
                         padding: const EdgeInsets.only(bottom: 70),
-                        child: ListView.builder(
-                          // physics:  NeverScrollableScrollPhysics(),
-                          itemCount: addCommentModeldata?.object?.length,
-                          shrinkWrap: true,
-                          controller: scroll,
-                          itemBuilder: (context, index) {
-                            DateTime parsedDateTime = DateTime.parse(
-                                '${addCommentModeldata?.object?[index].createdAt ?? ""}');
+                        child: addCommentModeldata?.object?.isNotEmpty ?? true
+                            ? ListView.builder(
+                                // physics:  NeverScrollableScrollPhysics(),
+                                itemCount: addCommentModeldata?.object?.length,
+                                shrinkWrap: true,
+                                controller: scroll,
+                                itemBuilder: (context, index) {
+                                  DateTime parsedDateTime = DateTime.parse(
+                                      '${addCommentModeldata?.object?[index].createdAt ?? ""}');
 
-                            return Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Padding(
-                                  padding:
-                                      EdgeInsets.only(top: 15.0, left: 35.0),
-                                  child: Container(
-                                    // height: 80,
-                                    // width: _width / 1.2,
-                                    decoration: BoxDecoration(
-                                        // color: Colors.grey,
-                                        borderRadius:
-                                            BorderRadius.circular(15)),
-                                    child: Row(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Padding(
-                                              padding:
-                                                  const EdgeInsets.all(0.0),
-                                              child: GestureDetector(
-                                                onTap: () {
-                                                  Navigator.push(context,
-                                                      MaterialPageRoute(
-                                                          builder: (context) {
-                                                    return ProfileScreen(
-                                                        User_ID:
-                                                            "${addCommentModeldata?.object?[index].userUid}",
-                                                        isFollowing:
-                                                            widget.isFoollinng);
-                                                  }));
-                                                },
-                                                child: addCommentModeldata
-                                                                ?.object?[index]
-                                                                .profilePic
-                                                                ?.isEmpty ==
-                                                            true ||
-                                                        addCommentModeldata
-                                                                ?.object?[index]
-                                                                .profilePic ==
-                                                            null
-                                                    ? CustomImageView(
-                                                        radius: BorderRadius
-                                                            .circular(50),
-                                                        imagePath: ImageConstant
-                                                            .pdslogo,
-                                                        fit: BoxFit.fill,
-                                                        height: 35,
-                                                        width: 35,
-                                                      )
-                                                    : CustomImageView(
-                                                        radius: BorderRadius
-                                                            .circular(50),
-                                                        url:
-                                                            "${addCommentModeldata?.object?[index].profilePic}",
-                                                        fit: BoxFit.fill,
-                                                        height: 35,
-                                                        width: 35,
-                                                      ),
-                                              )),
-                                          SizedBox(
-                                            width: 10,
-                                          ),
-                                          Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              Container(
-                                                width: 300,
-                                                // color: Colors.amber,
-                                                child: Row(
-                                                  children: [
-                                                    GestureDetector(
+                                  return Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      Padding(
+                                        padding: EdgeInsets.only(
+                                            top: 15.0, left: 35.0),
+                                        child: Container(
+                                          // height: 80,
+                                          // width: _width / 1.2,
+                                          decoration: BoxDecoration(
+                                              // color: Colors.grey,
+                                              borderRadius:
+                                                  BorderRadius.circular(15)),
+                                          child: Row(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            0.0),
+                                                    child: GestureDetector(
                                                       onTap: () {
                                                         Navigator.push(context,
                                                             MaterialPageRoute(
@@ -431,252 +379,324 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                                                                   .isFoollinng);
                                                         }));
                                                       },
-                                                      child: Container(
-                                                        child: Text(
-                                                          "${addCommentModeldata?.object?[index].userName}",
-                                                          style: TextStyle(
-                                                              fontFamily:
-                                                                  'outfit',
-                                                              fontSize: 18,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    SizedBox(
-                                                      width: 5,
-                                                    ),
-                                                    Text(
-                                                        // "1w",
-                                                        customadateFormat(
-                                                            parsedDateTime),
-                                                        overflow: TextOverflow
-                                                            .ellipsis,
-                                                        style: TextStyle(
-                                                            fontFamily:
-                                                                'outfit',
-                                                            fontSize: 11,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .w500)),
-                                                    Container(
-                                                      width: 30,
-                                                      child: GestureDetector(
-                                                        onTap: () {
-                                                          Deletecommentdilog(
+                                                      child: addCommentModeldata
+                                                                      ?.object?[
+                                                                          index]
+                                                                      .profilePic
+                                                                      ?.isEmpty ==
+                                                                  true ||
                                                               addCommentModeldata
                                                                       ?.object?[
                                                                           index]
-                                                                      .commentUid ??
-                                                                  "",
-                                                              index);
-                                                        },
-                                                        child: addCommentModeldata
-                                                                    ?.object?[
-                                                                        index]
-                                                                    .commentByLoggedInUser ==
-                                                                true
-                                                            ? Icon(
-                                                                Icons
-                                                                    .delete_outline_rounded,
-                                                                size: 20,
-                                                                color:
-                                                                    Colors.grey,
-                                                              )
-                                                            : SizedBox(),
-                                                      ),
-                                                    ),
-                                                    SizedBox(
-                                                      width: 5,
-                                                    ),
-                                                    addCommentModeldata
-                                                                ?.object?[index]
-                                                                .translatedComment !=
-                                                            null
-                                                        ? GestureDetector(
-                                                            onTap: () async {
-                                                              super
-                                                                  .setState(() {
-                                                                if (addCommentModeldata
-                                                                            ?.object?[
-                                                                                index]
-                                                                            .isTrsnalteoption ==
-                                                                        false ||
-                                                                    addCommentModeldata
-                                                                            ?.object?[index]
-                                                                            .isTrsnalteoption ==
-                                                                        null) {
-                                                                  addCommentModeldata
-                                                                      ?.object?[
-                                                                          index]
-                                                                      .isTrsnalteoption = true;
-                                                                } else {
-                                                                  addCommentModeldata
-                                                                      ?.object?[
-                                                                          index]
-                                                                      .isTrsnalteoption = false;
-                                                                }
-                                                              });
+                                                                      .profilePic ==
+                                                                  null
+                                                          ? CustomImageView(
+                                                              radius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          50),
+                                                              imagePath:
+                                                                  ImageConstant
+                                                                      .pdslogo,
+                                                              fit: BoxFit.fill,
+                                                              height: 35,
+                                                              width: 35,
+                                                            )
+                                                          : CustomImageView(
+                                                              radius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          50),
+                                                              url:
+                                                                  "${addCommentModeldata?.object?[index].profilePic}",
+                                                              fit: BoxFit.fill,
+                                                              height: 35,
+                                                              width: 35,
+                                                            ),
+                                                    )),
+                                                SizedBox(
+                                                  width: 10,
+                                                ),
+                                                Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  children: [
+                                                    Container(
+                                                      width: _width / 1.4,
+                                                      // color: Colors.red,
+                                                      child: Row(
+                                                        children: [
+                                                          GestureDetector(
+                                                            onTap: () {
+                                                              Navigator.push(
+                                                                  context,
+                                                                  MaterialPageRoute(
+                                                                      builder:
+                                                                          (context) {
+                                                                return ProfileScreen(
+                                                                    User_ID:
+                                                                        "${addCommentModeldata?.object?[index].userUid}",
+                                                                    isFollowing:
+                                                                        widget
+                                                                            .isFoollinng);
+                                                              }));
                                                             },
                                                             child: Container(
-                                                                width: 80,
-                                                                decoration: BoxDecoration(
-                                                                    color: ColorConstant
-                                                                        .primaryLight_color,
-                                                                    borderRadius:
-                                                                        BorderRadius.circular(
-                                                                            10)),
-                                                                child: Center(
-                                                                    child: Text(
-                                                                  "Translate",
-                                                                  style:
-                                                                      TextStyle(
+                                                              child: Text(
+                                                                "${addCommentModeldata?.object?[index].userName}",
+                                                                style: TextStyle(
                                                                     fontFamily:
                                                                         'outfit',
+                                                                    fontSize:
+                                                                        18,
                                                                     fontWeight:
                                                                         FontWeight
-                                                                            .bold,
-                                                                  ),
-                                                                ))),
-                                                          )
-                                                        : SizedBox(),
-                                                  ],
-                                                ),
-                                              ),
-                                              Container(
-                                                width: _width / 1.4,
-                                                // height: 50,
-                                                // color: Colors.amber,
-                                                child: LinkifyText(
-                                                  addCommentModeldata
-                                                                  ?.object?[
-                                                                      index]
-                                                                  .isTrsnalteoption ==
-                                                              false ||
+                                                                            .bold),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                          SizedBox(
+                                                            width: 5,
+                                                          ),
+                                                          Text(
+                                                              // "1w",
+                                                              customadateFormat(
+                                                                  parsedDateTime),
+                                                              overflow:
+                                                                  TextOverflow
+                                                                      .ellipsis,
+                                                              style: TextStyle(
+                                                                  fontFamily:
+                                                                      'outfit',
+                                                                  fontSize: 11,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w500)),
+                                                          Container(
+                                                            width: 30,
+                                                            child:
+                                                                GestureDetector(
+                                                              onTap: () {
+                                                                Deletecommentdilog(
+                                                                    addCommentModeldata
+                                                                            ?.object?[index]
+                                                                            .commentUid ??
+                                                                        "",
+                                                                    index);
+                                                              },
+                                                              child: addCommentModeldata
+                                                                          ?.object?[
+                                                                              index]
+                                                                          .commentByLoggedInUser ==
+                                                                      true
+                                                                  ? Icon(
+                                                                      Icons
+                                                                          .delete_outline_rounded,
+                                                                      size: 20,
+                                                                      color: Colors
+                                                                          .grey,
+                                                                    )
+                                                                  : SizedBox(),
+                                                            ),
+                                                          ),
+                                                          SizedBox(
+                                                            width: 5,
+                                                          ),
                                                           addCommentModeldata
-                                                                  ?.object?[
-                                                                      index]
-                                                                  .isTrsnalteoption ==
-                                                              null
-                                                      ? "${addCommentModeldata?.object?[index].comment}"
-                                                      : "${addCommentModeldata?.object?[index].translatedComment}",
-                                                  linkStyle: TextStyle(
-                                                    color: Colors.blue,
-                                                    fontFamily: 'outfit',
-                                                  ),
-                                                  textStyle: TextStyle(
-                                                    color: Colors.black,
-                                                    fontFamily: 'outfit',
-                                                  ),
-                                                  linkTypes: [
-                                                    LinkType.url,
-                                                    LinkType.userTag,
-                                                    LinkType.hashTag,
-                                                    // LinkType
-                                                    //     .email
-                                                  ],
-                                                  onTap: (link) async {
-                                                    /// do stuff with `link` like
-                                                    /// if(link.type == Link.url) launchUrl(link.value);
+                                                                      ?.object?[
+                                                                          index]
+                                                                      .translatedComment !=
+                                                                  null
+                                                              ? GestureDetector(
+                                                                  onTap:
+                                                                      () async {
+                                                                    super
+                                                                        .setState(
+                                                                            () {
+                                                                      if (addCommentModeldata?.object?[index].isTrsnalteoption ==
+                                                                              false ||
+                                                                          addCommentModeldata?.object?[index].isTrsnalteoption ==
+                                                                              null) {
+                                                                        addCommentModeldata
+                                                                            ?.object?[index]
+                                                                            .isTrsnalteoption = true;
+                                                                      } else {
+                                                                        addCommentModeldata
+                                                                            ?.object?[index]
+                                                                            .isTrsnalteoption = false;
+                                                                      }
+                                                                    });
+                                                                  },
+                                                                  child: Container(
+                                                                      width: 80,
+                                                                      decoration: BoxDecoration(color: ColorConstant.primaryLight_color, borderRadius: BorderRadius.circular(10)),
+                                                                      child: Center(
+                                                                          child: Text(
+                                                                        "Translate",
+                                                                        style:
+                                                                            TextStyle(
+                                                                          fontFamily:
+                                                                              'outfit',
+                                                                          fontWeight:
+                                                                              FontWeight.bold,
+                                                                        ),
+                                                                      ))),
+                                                                )
+                                                              : SizedBox(),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                    Container(
+                                                      width: _width / 1.4,
+                                                      // height: 50,
+                                                      // color: Colors.amber,
+                                                      child: LinkifyText(
+                                                        addCommentModeldata
+                                                                        ?.object?[
+                                                                            index]
+                                                                        .isTrsnalteoption ==
+                                                                    false ||
+                                                                addCommentModeldata
+                                                                        ?.object?[
+                                                                            index]
+                                                                        .isTrsnalteoption ==
+                                                                    null
+                                                            ? "${addCommentModeldata?.object?[index].comment}"
+                                                            : "${addCommentModeldata?.object?[index].translatedComment}",
+                                                        linkStyle: TextStyle(
+                                                          color: Colors.blue,
+                                                          fontFamily: 'outfit',
+                                                        ),
+                                                        textStyle: TextStyle(
+                                                          color: Colors.black,
+                                                          fontFamily: 'outfit',
+                                                        ),
+                                                        linkTypes: [
+                                                          LinkType.url,
+                                                          LinkType.userTag,
+                                                          LinkType.hashTag,
+                                                          // LinkType
+                                                          //     .email
+                                                        ],
+                                                        onTap: (link) async {
+                                                          /// do stuff with `link` like
+                                                          /// if(link.type == Link.url) launchUrl(link.value);
 
-                                                    var SelectedTest =
-                                                        link.value.toString();
-                                                    var Link =
-                                                        SelectedTest.startsWith(
-                                                            'https');
-                                                    var Link1 =
-                                                        SelectedTest.startsWith(
-                                                            'http');
-                                                    var Link2 =
-                                                        SelectedTest.startsWith(
-                                                            'www');
-                                                    var Link3 =
-                                                        SelectedTest.startsWith(
-                                                            'WWW');
-                                                    var Link4 =
-                                                        SelectedTest.startsWith(
-                                                            'HTTPS');
-                                                    var Link5 =
-                                                        SelectedTest.startsWith(
-                                                            'HTTP');
-                                                    var Link6 =
-                                                        SelectedTest.startsWith(
-                                                            'https://pdslink.page.link/');
-                                                    print(SelectedTest
-                                                        .toString());
-
-                                                    if (Link == true ||
-                                                        Link1 == true ||
-                                                        Link2 == true ||
-                                                        Link3 == true ||
-                                                        Link4 == true ||
-                                                        Link5 == true ||
-                                                        Link6 == true) {
-                                                      if (Link2 == true ||
-                                                          Link3 == true) {
-                                                        launchUrl(Uri.parse(
-                                                            "https://${link.value.toString()}"));
-                                                      } else {
-                                                        if (Link6 == true) {
-                                                          print(
-                                                              "yes i am in room");
-                                                          Navigator.push(
-                                                              context,
-                                                              MaterialPageRoute(
-                                                            builder: (context) {
-                                                              return NewBottomBar(
-                                                                buttomIndex: 1,
-                                                              );
-                                                            },
-                                                          ));
-                                                        } else {
-                                                          launchUrl(Uri.parse(
+                                                          var SelectedTest =
                                                               link.value
-                                                                  .toString()));
-                                                          print(
-                                                              "link.valuelink.value -- ${link.value}");
-                                                        }
-                                                      }
-                                                    } else {
-                                                      if (link.value!
-                                                          .startsWith('#')) {
-                                                        print("${link}");
-                                                        Navigator.push(
-                                                            context,
-                                                            MaterialPageRoute(
-                                                              builder: (context) =>
-                                                                  HashTagViewScreen(
-                                                                      title:
-                                                                          "${link.value}"),
-                                                            ));
-                                                      } else if (link.value!
-                                                          .startsWith('@')) {
-                                                        var name;
-                                                        var tagName;
-                                                        name = SelectedTest;
-                                                        tagName =
-                                                            name.replaceAll(
-                                                                "@", "");
-                                                        await BlocProvider.of<
-                                                                    AddcommentCubit>(
-                                                                context)
-                                                            .UserTagAPI(context,
-                                                                tagName);
+                                                                  .toString();
+                                                          var Link =
+                                                              SelectedTest
+                                                                  .startsWith(
+                                                                      'https');
+                                                          var Link1 =
+                                                              SelectedTest
+                                                                  .startsWith(
+                                                                      'http');
+                                                          var Link2 =
+                                                              SelectedTest
+                                                                  .startsWith(
+                                                                      'www');
+                                                          var Link3 =
+                                                              SelectedTest
+                                                                  .startsWith(
+                                                                      'WWW');
+                                                          var Link4 =
+                                                              SelectedTest
+                                                                  .startsWith(
+                                                                      'HTTPS');
+                                                          var Link5 =
+                                                              SelectedTest
+                                                                  .startsWith(
+                                                                      'HTTP');
+                                                          var Link6 = SelectedTest
+                                                              .startsWith(
+                                                                  'https://pdslink.page.link/');
+                                                          print(SelectedTest
+                                                              .toString());
 
-                                                        print(
-                                                            "tagName -- ${tagName}");
-                                                        print(
-                                                            "user id -- ${userTagModel?.object}");
-                                                      } else {
-                                                        launchUrl(Uri.parse(
-                                                            "https://${link.value.toString()}"));
-                                                      }
-                                                    }
-                                                  },
-                                                )
+                                                          if (Link == true ||
+                                                              Link1 == true ||
+                                                              Link2 == true ||
+                                                              Link3 == true ||
+                                                              Link4 == true ||
+                                                              Link5 == true ||
+                                                              Link6 == true) {
+                                                            if (Link2 == true ||
+                                                                Link3 == true) {
+                                                              launchUrl(Uri.parse(
+                                                                  "https://${link.value.toString()}"));
+                                                            } else {
+                                                              if (Link6 ==
+                                                                  true) {
+                                                                print(
+                                                                    "yes i am in room");
+                                                                Navigator.push(
+                                                                    context,
+                                                                    MaterialPageRoute(
+                                                                  builder:
+                                                                      (context) {
+                                                                    return NewBottomBar(
+                                                                      buttomIndex:
+                                                                          1,
+                                                                    );
+                                                                  },
+                                                                ));
+                                                              } else {
+                                                                launchUrl(Uri
+                                                                    .parse(link
+                                                                        .value
+                                                                        .toString()));
+                                                                print(
+                                                                    "link.valuelink.value -- ${link.value}");
+                                                              }
+                                                            }
+                                                          } else {
+                                                            if (link.value!
+                                                                .startsWith(
+                                                                    '#')) {
+                                                              print("${link}");
+                                                              Navigator.push(
+                                                                  context,
+                                                                  MaterialPageRoute(
+                                                                    builder: (context) =>
+                                                                        HashTagViewScreen(
+                                                                            title:
+                                                                                "${link.value}"),
+                                                                  ));
+                                                            } else if (link
+                                                                .value!
+                                                                .startsWith(
+                                                                    '@')) {
+                                                              var name;
+                                                              var tagName;
+                                                              name =
+                                                                  SelectedTest;
+                                                              tagName = name
+                                                                  .replaceAll(
+                                                                      "@", "");
+                                                              await BlocProvider
+                                                                      .of<AddcommentCubit>(
+                                                                          context)
+                                                                  .UserTagAPI(
+                                                                      context,
+                                                                      tagName);
 
-                                                /*  Text(
+                                                              print(
+                                                                  "tagName -- ${tagName}");
+                                                              print(
+                                                                  "user id -- ${userTagModel?.object}");
+                                                            } else {
+                                                              launchUrl(Uri.parse(
+                                                                  "https://${link.value.toString()}"));
+                                                            }
+                                                          }
+                                                        },
+                                                      )
+
+                                                      /*  Text(
                                                         "${addCommentModeldata?.object?[index].comment}",
                                                         // maxLines: 2,
         
@@ -687,20 +707,28 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                                                             fontSize: 16,
                                                             fontWeight:
                                                                 FontWeight.w400)) */
-                                                ,
-                                              ),
-                                            ],
-                                          ),
-                                          SizedBox(
-                                            width: 15,
-                                          ),
-                                        ]),
-                                  ),
-                                ),
-                              ],
-                            );
-                          },
-                        ),
+                                                      ,
+                                                    ),
+                                                  ],
+                                                ),
+                                                SizedBox(
+                                                  width: 15,
+                                                ),
+                                              ]),
+                                        ),
+                                      ),
+                                    ],
+                                  );
+                                },
+                              )
+                            : Center(
+                                child: Text(
+                                "No Comments available",
+                                style: TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 20),
+                              )),
                       ),
                     ],
                   ),

@@ -49,6 +49,7 @@ class Object {
   RepostOn? repostOn;
   bool? isTrsnalteoption;
   String? translatedDescription;
+  bool? isReports; 
 
   Object(
       {this.postUid,
@@ -71,7 +72,7 @@ class Object {
       this.repostCount,
       this.isTrsnalteoption,
       this.translatedDescription,
-      this.repostOn});
+      this.repostOn,this.isReports});
 
   Object.fromJson(Map<String, dynamic> json) {
     postUid = json['postUid'];
