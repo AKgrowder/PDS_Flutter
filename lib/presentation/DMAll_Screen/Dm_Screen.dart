@@ -102,7 +102,7 @@ class _DmScreenState extends State<DmScreen> {
   ChooseDocument1? imageDataPost;
   LiveStatusModel? LiveStatusModelData;
   String? stroyUid;
-  GetInboxMessagesModel? getInboxMessagesModel; 
+  GetInboxMessagesModel? getInboxMessagesModel;
   final focusNode = FocusNode();
   KeyboardVisibilityController keyboardVisibilityController =
       KeyboardVisibilityController();
@@ -256,7 +256,7 @@ class _DmScreenState extends State<DmScreen> {
     User_Name = prefs.getString(PreferencesKey.ProfileUserName) ?? "";
     print("this is the Data Get-${User_Name}");
     DMbaseURL = prefs.getString(PreferencesKey.SocketLink) ?? "";
-    DMstompClient.activate();
+    // DMstompClient.activate();
     // Delet_DMstompClient.activate();
 
     /*   DMstompClient.subscribe(
@@ -551,7 +551,10 @@ class _DmScreenState extends State<DmScreen> {
                                               context,
                                               MaterialPageRoute(
                                                 builder: (context) =>
-                                                    DmScreenNew(ChatInboxUid: widget.ChatInboxUid,),
+                                                    DmScreenNew(
+                                                  ChatInboxUid:
+                                                      widget.ChatInboxUid,
+                                                ),
                                               ));
                                           /*  Navigator.push(context,
                                               MaterialPageRoute(
@@ -1081,7 +1084,7 @@ class _DmScreenState extends State<DmScreen> {
                                                                                                                 children: [
                                                                                                                   CustomImageView(
                                                                                                                     url: getInboxMessagesModel?.object?.content?[index].message,
-                                                                                                                    radius: BorderRadius.circular(20),  //Ankur1
+                                                                                                                    radius: BorderRadius.circular(20), //Ankur1
                                                                                                                     // height: 20,
                                                                                                                   ),
                                                                                                                   Positioned.fill(
@@ -1822,7 +1825,7 @@ class _DmScreenState extends State<DmScreen> {
                                         checkGuestUser();
                                         print(
                                             "this Data Get-${widget.ChatInboxUid}");
-                                        DMChatInboxUid =
+                                        DMChatInboxUid1 =
                                             "${widget.ChatInboxUid}";
 
                                         // "${widget.Room_ID}";
