@@ -3289,8 +3289,8 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> with Observer {
                               PostID: OpenSaveModelData?.object?.postUid,
                               edittextdata:
                                   OpenSaveModelData?.object?.description,
-                              editImage:
-                                  OpenSaveModelData?.object?.postData?.first,
+                              // editImage:
+                              //     OpenSaveModelData?.object?.postData?.first,
                             ),
                           )).then((value) {
                         // Get_UserToken();
