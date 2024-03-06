@@ -1,4 +1,4 @@
-class SystemConfigModel {
+class   SystemConfigModel {
   String? message;
   List<Object>? object;
   bool? success;
