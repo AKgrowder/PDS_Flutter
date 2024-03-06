@@ -48,7 +48,6 @@ class CreateNewPost extends StatefulWidget {
   String? desc;
   String? userProfile;
   String? postDataTypeRepost;
-  int? index;
   String? thumbNailURL;
   String? postDataType;
   // RepostOn? rePostOn;
@@ -67,7 +66,6 @@ class CreateNewPost extends StatefulWidget {
       this.userProfile,
       this.postDataTypeRepost,
       this.thumbNailURL,
-      this.index,
       this.postDataType,
       // this.rePostOn,
       this.OpenSaveModelData,
@@ -127,12 +125,14 @@ class _CreateNewPostState extends State<CreateNewPost> {
   GlobalKey<FlutterMentionsState> key = GlobalKey<FlutterMentionsState>();
   List<Map<String, dynamic>> tageData = [];
   List<Map<String, dynamic>> heshTageData = [];
-  List<int> currentPages = [];
+
   bool added = false;
   bool istageData = false;
-  List<PageController> pageControllers = [];
+  int currentPages = 0;
+  PageController pageControllers = PageController();
+  int currentPagesRePost = 0;
+  PageController pageControllersRePost = PageController();
 
-  
   ScrollController scrollController = ScrollController();
 
   String? data;
@@ -220,25 +220,12 @@ class _CreateNewPostState extends State<CreateNewPost> {
   Widget build(BuildContext context) {
     var _height = MediaQuery.of(context).size.height;
     var _width = MediaQuery.of(context).size.width;
-    // if(widget.date != null ){
-    //    DateTime parsedDateTime = DateTime.parse('${widget.date}');
-    // }
-
-    if (!added) {
-      widget.postData?.forEach((element) {
-        pageControllers.add(PageController());
-        currentPages.add(0);
-      });
-      widget.mutliplePost?.forEach((element) {
-        pageControllers.add(PageController());
-        currentPages.add(0);
-      });
-
-      WidgetsBinding.instance
-          .addPostFrameCallback((timeStamp) => super.setState(() {
-                added = true;
-              }));
+    DateTime? parsedDateTime;
+    if (widget.edittextdata != null) {
+      parsedDateTime = DateTime.parse('${widget.date}');
+      print("repost time = $parsedDateTime");
     }
+
     return BlocConsumer<AddPostCubit, AddPostState>(listener: (context, state) {
       if (state is AddPostImaegState) {
         imageDataPost?.object?.data?.clear();
@@ -632,8 +619,7 @@ class _CreateNewPostState extends State<CreateNewPost> {
                                                 )
                                               : widget.postDataType ==
                                                       "ATTACHMENT"
-                                                  ? 
-                                                  Stack(
+                                                  ? Stack(
                                                       children: [
                                                         Container(
                                                           height: 400,
@@ -685,15 +671,12 @@ class _CreateNewPostState extends State<CreateNewPost> {
                                                           onPageChanged:
                                                               (page) {
                                                             super.setState(() {
-                                                              currentPages[
-                                                                  widget.index ??
-                                                                      0] = page;
+                                                              currentPages =
+                                                                  page;
                                                             });
                                                           },
                                                           controller:
-                                                              pageControllers[
-                                                                  widget.index ??
-                                                                      0],
+                                                              pageControllers,
                                                           itemCount: widget
                                                               .mutliplePost
                                                               ?.length,
@@ -754,10 +737,9 @@ class _CreateNewPostState extends State<CreateNewPost> {
                                                                         .mutliplePost
                                                                         ?.length ??
                                                                     1,
-                                                                position: currentPages[
-                                                                        widget.index ??
-                                                                            0]
-                                                                    .toDouble(),
+                                                                position:
+                                                                    currentPages
+                                                                        .toDouble(),
                                                                 decorator:
                                                                     DotsDecorator(
                                                                   size:
@@ -787,8 +769,7 @@ class _CreateNewPostState extends State<CreateNewPost> {
                                               ],
                                             ),
                                 ),
-             
-                          if (widget.postData!.isNotEmpty)
+                          if (widget.postData?.isNotEmpty ?? false)
                             Padding(
                               padding: const EdgeInsets.only(
                                   left: 10, right: 10, bottom: 10, top: 20),
@@ -865,13 +846,14 @@ class _CreateNewPostState extends State<CreateNewPost> {
                                                         FontWeight.bold),
                                               ),
                                             ),
-                                            /*   Text(
-                                                  customFormat(parsedDateTime),
-                                                  style: TextStyle(
-                                                    fontSize: 12,
-                                                    fontFamily: "outfit",
-                                                  ),
-                                                ), */
+                                            Text(
+                                              getTimeDifference(
+                                                  parsedDateTime!),
+                                              style: TextStyle(
+                                                fontSize: 12,
+                                                fontFamily: "outfit",
+                                              ),
+                                            ),
                                           ],
                                         ),
                                       ),
@@ -1018,11 +1000,11 @@ class _CreateNewPostState extends State<CreateNewPost> {
                                                                           onPageChanged:
                                                                               (page) {
                                                                             super.setState(() {
-                                                                              currentPages[widget.index ?? 0] = page;
+                                                                              currentPagesRePost = page;
                                                                             });
                                                                           },
                                                                           controller:
-                                                                              pageControllers[widget.index ?? 0],
+                                                                              pageControllersRePost,
                                                                           itemCount: widget
                                                                               .postData
                                                                               ?.length,
@@ -1066,7 +1048,7 @@ class _CreateNewPostState extends State<CreateNewPost> {
                                                                               height: 20,
                                                                               child: DotsIndicator(
                                                                                 dotsCount: widget.postData?.length ?? 1,
-                                                                                position: currentPages[widget.index ?? 0].toDouble(),
+                                                                                position: currentPagesRePost.toDouble(),
                                                                                 decorator: DotsDecorator(
                                                                                   size: const Size(10.0, 7.0),
                                                                                   activeSize: const Size(10.0, 10.0),
@@ -1352,7 +1334,7 @@ class _CreateNewPostState extends State<CreateNewPost> {
                                 ),
                                 Container(
                                   height: 90,
-                                  width: _width - 106,
+                                  width: _width - 124,
                                   // color: Colors.green,
                                   child: _loading
                                       ? Center(
@@ -3326,14 +3308,32 @@ class _CreateNewPostState extends State<CreateNewPost> {
     }
   }
 
-  String customFormat(DateTime date) {
-    String day = date.day.toString();
-    // String month = _getMonthName(date.month);
-    String year = date.year.toString();
-    String time = DateFormat('h:mm a').format(date);
-
-    String formattedDate = '$time';
-    return formattedDate;
+  String getTimeDifference(DateTime dateTime) {
+    final difference = DateTime.now().difference(dateTime);
+    if (difference.inDays > 0) {
+      if (difference.inDays == 1) {
+        return '1 day ago';
+      } else if (difference.inDays < 7) {
+        return '${difference.inDays} days ago';
+      } else {
+        final weeks = (difference.inDays / 7).floor();
+        return '$weeks week${weeks == 1 ? '' : 's'} ago';
+      }
+    } else if (difference.inHours > 0) {
+      if (difference.inHours == 1) {
+        return '1 hour ago';
+      } else {
+        return '${difference.inHours} hours ago';
+      }
+    } else if (difference.inMinutes > 0) {
+      if (difference.inMinutes == 1) {
+        return '1 minute ago';
+      } else {
+        return '${difference.inMinutes} minutes ago';
+      }
+    } else {
+      return 'Just now';
+    }
   }
 
   void _showPopupMenu(
