@@ -268,7 +268,18 @@ class ImageConstant {
   static String messagecheck = "assets/images/0_check.png";
   static String checksend = "assets/images/1_check.png";
   static String checkseen = "assets/images/2_check.png";
-    static String greenseen  = 'assets/images/grrenicon.png';
+  static String greenseen = 'assets/images/grrenicon.png';
+  static String coppy = 'assets/images/copy.png';
+  static String replay = 'assets/images/replay.jpg';
+  static String forward = 'assets/images/forward.jpg';
+
+  ///
+  static String angry = 'assets/images/angry.png';
+  static String emoji = 'assets/images/emoji.png';
+  static String heart = 'assets/images/heart.png';
+  static String sadface = 'assets/images/sad-face.png';
+  static String surprised = 'assets/images/surprised.png';
+  static String nopostimage = 'assets/images/Frame 1171276328.png';
 
   /// end
 }

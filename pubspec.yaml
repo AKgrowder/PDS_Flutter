@@ -74,6 +74,7 @@ dependencies:
   # zego_uikit:
   flutter_styled_toast: ^2.2.1
   flutter_observer: ^2.0.0
+  swipe_to: ^1.0.6
   # dio: ^5.3.4
   
   
