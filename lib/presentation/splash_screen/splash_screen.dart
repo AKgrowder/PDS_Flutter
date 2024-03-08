@@ -2,16 +2,15 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:pds/API/Bloc/System_Config_Bloc/system_config_cubit.dart';
 import 'package:pds/API/Bloc/System_Config_Bloc/system_config_state.dart';
 import 'package:pds/API/Model/System_Config_model/system_config_model.dart';
-import 'package:pds/API/Repo/repository.dart';
 import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/core/utils/sharedPreferences.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pds/presentation/%20new/newbottembar.dart';
-import 'package:pds/widgets/videocallcommennotifaction.dart/videocallcommenmethod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../core/utils/image_constant.dart';
@@ -127,10 +126,11 @@ class _SplashScreenState extends State<SplashScreen> {
           color: Color(0XFFFFD9DA),
           alignment: Alignment.center,
           width: double.infinity,
-          child: Image.asset(
+          child: SvgPicture.asset(
             ImageConstant.splashImage,
             // fit: BoxFit.fill,
             height: 150,
+            width: double.infinity,
           ));
     });
   }

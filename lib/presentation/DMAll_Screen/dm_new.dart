@@ -1,9 +1,10 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:linkfy_text/linkfy_text.dart';
-import 'package:pds/API/ApiService/DMSocket.dart';
 import 'package:pds/API/Bloc/dmInbox_bloc/dmMessageState.dart';
 import 'package:pds/API/Bloc/dmInbox_bloc/dminbox_blcok.dart';
 import 'package:pds/API/Model/inboxScreenModel/inboxScrrenModel.dart';
@@ -16,9 +17,10 @@ import 'package:pds/widgets/pagenation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stomp_dart_client/stomp.dart';
 import 'package:stomp_dart_client/stomp_config.dart';
+import 'package:stomp_dart_client/stomp_frame.dart';
+import 'package:swipe_to/swipe_to.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
-import 'package:swipe_to/swipe_to.dart';
 
 bool isLogPress = false;
 bool isMeesageReaction = false;
@@ -42,7 +44,10 @@ class _DmScreenNewState extends State<DmScreenNew> {
   bool _isConnected = false;
   bool isMounted = true;
   GetInboxMessagesModel? getInboxMessagesModel;
+  StompClient? stompClient;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  TextEditingController addComment = TextEditingController();
+  Map<String, dynamic>? mapDataAdd;
 
   @override
   void initState() {
@@ -53,34 +58,71 @@ class _DmScreenNewState extends State<DmScreenNew> {
     super.initState();
   }
 
+  void onConnectCallback(StompFrame connectFrame) {
+    stompClient?.subscribe(
+        destination: '/topic/getInboxMessage/${widget.ChatInboxUid}',
+        headers: {},
+        callback: (frame) {
+          addComment.clear();
+          mapDataAdd?.clear();
+          Map<String, dynamic> jsonString = json.decode(frame.body ?? "");
+          print("check want to get-${jsonString}");
+          print("login user uid -${UserLogin_ID}");
+          mapDataAdd = {
+            "userUid": jsonString['object']['userCode'],
+            "userChatMessageUid": jsonString['object']['userChatInboxUid'],
+            "userName": jsonString['object']['userName'],
+            "userProfilePic": jsonString['object']['userProfilePic'],
+            "message": jsonString['object']['message'],
+            "createdDate": jsonString['object']['createdAt'],
+            "messageType": jsonString['object']['messageType'],
+            "isDeleted": jsonString['object']['isDeleted'],
+            "isDelivered": jsonString['object']['isDelivered']
+          };
+          Content content = Content.fromJson(mapDataAdd!);
+          getInboxMessagesModel?.object?.content?.add(content);
+          if (isMounted == true) if (mounted) {
+            setState(() {});
+          }
+
+          // Received a frame for this subscription
+        });
+  }
+
+  void sendMessageMethod() {
+    stompClient?.send(
+        destination: '/send_message_in_user_chat/${widget.ChatInboxUid}',
+        body: json.encode({
+          "message": "${addComment.text}",
+          "messageType": "TEXT",
+          "userChatInboxUid": "${widget.ChatInboxUid}",
+          //  "${widget.Room_ID}",
+          "userCode": "${UserLogin_ID}",
+          "isDelivered": true,
+        }));
+    /*  stompClient?.subscribe(
+      destination: "/topic/getInboxMessage/${widget.ChatInboxUid}",
+      callback: (StompFrame frame) {
+        Map<String, dynamic> jsonString = json.decode(frame.body ?? "");
+        print("jsonStringcheck-$jsonString");
+      },
+    ); */
+  }
+
   pageNumberMethod() async {
     await BlocProvider.of<DmInboxCubit>(context)
         .DMChatListApiMethod(widget.ChatInboxUid, 1, context);
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     UserLogin_ID = prefs.getString(PreferencesKey.loginUserID);
     DMbaseURL = prefs.getString(PreferencesKey.SocketLink) ?? "";
-    DMChatInboxUid1 = widget.ChatInboxUid;
-    print("check Value-${DMbaseURL}");
-    final stompClient = StompClient(
-      config: StompConfig(
-        url: DMbaseURL!,
-        onConnect: onConnect,
-        beforeConnect: () async {
-          print('waiting to connect...');
-          await Future.delayed(const Duration(milliseconds: 200));
-          print('connecting...');
-        },
-        onWebSocketError: (dynamic error) => print(error.toString()),
-        onStompError: (p0) {
-          print("i want to  check error-${p0}");
-        },
-      ),
-    );
-    stompClient.activate();
+    stompClient = StompClient(
+        config: StompConfig(url: DMbaseURL!, onConnect: onConnectCallback));
+    stompClient?.activate();
   }
 
   void dispose() {
     isMounted = false;
+    stompClient?.deactivate();
     super.dispose();
   }
 
@@ -446,6 +488,7 @@ class _DmScreenNewState extends State<DmScreenNew> {
                                     child: Padding(
                                       padding: const EdgeInsets.all(8.0),
                                       child: TextField(
+                                        controller: addComment,
                                         minLines: 1,
                                         maxLines: 5,
                                         decoration: InputDecoration(
@@ -500,17 +543,20 @@ class _DmScreenNewState extends State<DmScreenNew> {
                                       ),
                                     ),
                                   ),
-                                  Container(
-                                    margin: EdgeInsets.only(right: 10),
-                                    height: 50,
-                                    // width: 50,
-                                    decoration: BoxDecoration(
-                                        color: ColorConstant.primary_color,
-                                        borderRadius:
-                                            BorderRadius.circular(25)),
-                                    child: Image.asset(
-                                      "assets/images/Vector (13).png",
-                                      color: Colors.white,
+                                  GestureDetector(
+                                    onTap: sendMessageMethod,
+                                    child: Container(
+                                      margin: EdgeInsets.only(right: 10),
+                                      height: 50,
+                                      // width: 50,
+                                      decoration: BoxDecoration(
+                                          color: ColorConstant.primary_color,
+                                          borderRadius:
+                                              BorderRadius.circular(25)),
+                                      child: Image.asset(
+                                        "assets/images/Vector (13).png",
+                                        color: Colors.white,
+                                      ),
                                     ),
                                   )
                                 ],
@@ -724,18 +770,21 @@ class _DmScreenNewState extends State<DmScreenNew> {
                                             ),
                                           ),
                                         ),
-                                        Container(
-                                          margin: EdgeInsets.only(right: 10),
-                                          height: 50,
-                                          // width: 50,
-                                          decoration: BoxDecoration(
-                                              color:
-                                                  ColorConstant.primary_color,
-                                              borderRadius:
-                                                  BorderRadius.circular(25)),
-                                          child: Image.asset(
-                                            "assets/images/Vector (13).png",
-                                            color: Colors.white,
+                                        GestureDetector(
+                                          onTap: () {},
+                                          child: Container(
+                                            margin: EdgeInsets.only(right: 10),
+                                            height: 50,
+                                            // width: 50,
+                                            decoration: BoxDecoration(
+                                                color:
+                                                    ColorConstant.primary_color,
+                                                borderRadius:
+                                                    BorderRadius.circular(25)),
+                                            child: Image.asset(
+                                              "assets/images/Vector (13).png",
+                                              color: Colors.white,
+                                            ),
                                           ),
                                         )
                                       ],
