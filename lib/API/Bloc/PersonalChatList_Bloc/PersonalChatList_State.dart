@@ -6,6 +6,7 @@ import 'package:pds/API/Model/PersonalChatListModel/PersonalChatList_Model.dart'
 import 'package:pds/API/Model/acceptRejectInvitaionModel/accept_rejectModel.dart';
 import 'package:pds/API/Model/acceptRejectInvitaionModel/getAllNotificationCount.dart';
 import 'package:pds/API/Model/createDocumentModel/createDocumentModel.dart';
+import 'package:pds/API/Model/forwad_Meesage/forwad_Message.dart';
 import 'package:pds/API/Model/selectMultipleUsers_ChatModel/selectMultipleUsers_ChatModel.dart';
 import 'package:pds/API/Model/serchForInboxModel/serchForinboxModel.dart';
 
@@ -44,6 +45,7 @@ class SelectMultipleUsers_ChatLoadestate extends PersonalChatListState {
   final SelectMultipleUsersChatModel selectMultipleUsersChatModel;
   SelectMultipleUsers_ChatLoadestate(this.selectMultipleUsersChatModel);
 }
+
 class AddPostImaegState extends PersonalChatListState {
   final ChooseDocument1 imageDataPost;
   AddPostImaegState(this.imageDataPost);
@@ -54,7 +56,6 @@ class UserChatDeleteLoaded extends PersonalChatListState {
   UserChatDeleteLoaded(this.DeleteUserChatData);
 }
 
-
 class GetNotificationCountLoadedState extends PersonalChatListState {
   final getAllNotificationCount GetNotificationCountData;
   GetNotificationCountLoadedState(this.GetNotificationCountData);
@@ -63,4 +64,9 @@ class GetNotificationCountLoadedState extends PersonalChatListState {
 class OnlineChatStatusLoadedState extends PersonalChatListState {
   final accept_rejectModel accept_rejectModelData;
   OnlineChatStatusLoadedState(this.accept_rejectModelData);
+}
+
+class ForwadMessageLoadedState extends PersonalChatListState {
+  final ForwardMessages forwardMessages;
+  ForwadMessageLoadedState(this.forwardMessages);
 }

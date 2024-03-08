@@ -1,9 +1,10 @@
 class ImageConstant {
   static String imgInfo = 'assets/images/img_info.svg';
-  static String splashImage = 'assets/images/splashImage.png';
+  // static String splashImage = 'assets/images/splashImage.png';
+  static String splashImage = 'assets/images/InPackagingLogo resized.svg';
 
   static String unselectedimgVector = 'assets/images/Vector (10).png';
-  static String tomcruse = 'assets/images/INPACKAGING.png';
+  static String tomcruse = 'assets/images/user.png';
   static String bag = 'assets/images/iconoir_shopping-bag-alt.png';
   static String experts =
       'assets/images/pexels-tima-miroshnichenko-5452201 2 (1).png';
@@ -280,6 +281,7 @@ class ImageConstant {
   static String sadface = 'assets/images/sad-face.png';
   static String surprised = 'assets/images/surprised.png';
   static String nopostimage = 'assets/images/Frame 1171276328.png';
+  static String avatarimage = 'assets/images/avatarimage.jpg';
 
   /// end
 }

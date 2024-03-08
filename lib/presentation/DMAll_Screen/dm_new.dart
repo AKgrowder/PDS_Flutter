@@ -1,4 +1,8 @@
+import 'dart:async';
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -9,25 +13,68 @@ import 'package:pds/API/Model/inboxScreenModel/inboxScrrenModel.dart';
 import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/core/utils/image_constant.dart';
 import 'package:pds/core/utils/sharedPreferences.dart';
+import 'package:pds/presentation/DMAll_Screen/reacrtionclass.dart';
 import 'package:pds/theme/theme_helper.dart';
 import 'package:pds/widgets/custom_image_view.dart';
 import 'package:pds/widgets/pagenation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:stomp_dart_client/stomp.dart';
+import 'package:stomp_dart_client/stomp_config.dart';
+import 'package:stomp_dart_client/stomp_frame.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 import 'package:swipe_to/swipe_to.dart';
+import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
+
+enum Reaction { like, laugh, love, none }
 
 bool isLogPress = false;
 bool isMeesageReaction = false;
-String? reactionMessage;
-String? messageTypeSet;
 int selectedCount = 0;
-bool isMeesageCoppy = true;
+bool isMeesageCoppy = false;
+int? swipeToIndex;
 ScrollController scrollController = ScrollController();
+OverlayEntry? overlayEntry;
+OverlayEntry? overlayEntry1;
+TextEditingController addComment = TextEditingController();
+
+bool overlayVisible = false;
+bool isEditMessage = false;
+int isEditedindex = 0;
+
+final List<ReactionElement> reactions = [
+  ReactionElement(
+    Reaction.like,
+    const Icon(
+      Icons.thumb_up_off_alt_rounded,
+      color: Colors.blue,
+    ),
+  ),
+  ReactionElement(
+    Reaction.love,
+    const Icon(
+      Icons.favorite,
+      color: Colors.red,
+    ),
+  ),
+  ReactionElement(
+    Reaction.laugh,
+    const Icon(
+      Icons.emoji_emotions_rounded,
+      color: Colors.deepPurple,
+    ),
+  ),
+];
 
 class DmScreenNew extends StatefulWidget {
-  String ChatInboxUid;
-  DmScreenNew({required this.ChatInboxUid});
+  String chatInboxUid;
+  String chatUserName;
+  String chatUserProfile;
+
+  DmScreenNew(
+      {required this.chatInboxUid,
+      required this.chatUserName,
+      required this.chatUserProfile});
 
   @override
   State<DmScreenNew> createState() => _DmScreenNewState();
@@ -40,57 +87,138 @@ class _DmScreenNewState extends State<DmScreenNew> {
   bool _isConnected = false;
   bool isMounted = true;
   GetInboxMessagesModel? getInboxMessagesModel;
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  StompClient? stompClient;
+  final GlobalKey _scaffoldKey = GlobalKey();
+  TextEditingController addComment = TextEditingController();
+  Map<String, dynamic>? mapDataAdd;
+  bool isScrollingDown = false;
+  final focus = FocusNode();
 
   @override
   void initState() {
-    isMounted = true;
+    isEditMessage = false;
+    isEditedindex = 0;
+    selectedCount = 0;
     BlocProvider.of<DmInboxCubit>(context).seetinonExpried(context);
     pageNumberMethod();
+
     super.initState();
+  }
+
+  myscrollFunction() {
+    scrollController.addListener(() {});
+  }
+
+  void _scrollToBottom() {
+    scrollController.animateTo(
+      scrollController.position.maxScrollExtent,
+      duration: Duration(milliseconds: 300),
+      curve: Curves.easeInOut,
+    );
+  }
+
+  void onConnectCallback(StompFrame connectFrame) {
+    stompClient?.subscribe(
+        destination: '/topic/getInboxMessage/${widget.chatInboxUid}',
+        headers: {},
+        callback: (frame) {
+          addComment.clear();
+          mapDataAdd?.clear();
+          Map<String, dynamic> jsonString = json.decode(frame.body ?? "");
+          print("check want to get-${jsonString}");
+          print("login user uid -${UserLogin_ID}");
+          mapDataAdd = {
+            "uid": jsonString['object']['uid'],
+            "userUid": jsonString['object']['userCode'],
+            "userChatMessageUid": jsonString['object']['userChatInboxUid'],
+            "userName": jsonString['object']['userName'],
+            "userProfilePic": jsonString['object']['userProfilePic'],
+            "message": jsonString['object']['message'],
+            "createdDate": jsonString['object']['createdAt'],
+            "messageType": jsonString['object']['messageType'],
+            "isDeleted": jsonString['object']['isDeleted'],
+            "isDelivered": jsonString['object']['isDelivered']
+          };
+          Content content = Content.fromJson(mapDataAdd!);
+          getInboxMessagesModel?.object?.content?.add(content);
+
+          scrollController.animateTo(
+            scrollController.position.maxScrollExtent,
+            duration: Duration(milliseconds: 300),
+            curve: Curves.easeInOut,
+          );
+          if (isMounted == true) if (mounted) {
+            setState(() {});
+          }
+        });
+  }
+
+  void sendMessageMethod() {
+    if (isEditMessage == false) {
+      stompClient?.send(
+          destination: '/send_message_in_user_chat/${widget.chatInboxUid}',
+          body: json.encode({
+            "message": "${addComment.text}",
+            "messageType": "TEXT",
+            "userChatInboxUid": "${widget.chatInboxUid}",
+            //  "${widget.Room_ID}",
+            "userCode": "${UserLogin_ID}",
+            "isDelivered": true,
+          }));
+    } else {
+      print(
+          "check else condison working -${isEditedindex} -${getInboxMessagesModel?.object?.content?[isEditedindex].uid}");
+      stompClient?.send(
+          destination: '/send_message_in_user_chat/${widget.chatInboxUid}',
+          body: json.encode({
+            "message": "${addComment.text}",
+            "messageType": "TEXT",
+            "userChatInboxUid": "${widget.chatInboxUid}",
+            //  "${widget.Room_ID}",
+            "userCode": "${UserLogin_ID}",
+            "isDelivered": true,
+            'uid':
+                "${getInboxMessagesModel?.object?.content?[isEditedindex].uid}",
+          }));
+          
+
+      print("else check -${addComment.text}");
+      print(
+          "else check11 -${getInboxMessagesModel?.object?.content?[isEditedindex].message}");
+      getInboxMessagesModel?.object?.content?[isEditedindex].message =
+          addComment.text;
+      print(
+          "now check value -${getInboxMessagesModel?.object?.content?[isEditedindex].message}");
+      isEditMessage = false;
+      isEditedindex = 0;
+      addComment.clear();
+      setState(() {});
+    }
   }
 
   pageNumberMethod() async {
     await BlocProvider.of<DmInboxCubit>(context)
-        .DMChatListApiMethod(widget.ChatInboxUid, 1, context);
+        .DMChatListApiMethod(widget.chatInboxUid, 1, context);
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     UserLogin_ID = prefs.getString(PreferencesKey.loginUserID);
     DMbaseURL = prefs.getString(PreferencesKey.SocketLink) ?? "";
-    print("UserLoginId-${UserLogin_ID}");
-    print("DMbaseURL-${DMbaseURL}");
-    final wsUrl = Uri.parse(DMbaseURL ?? '');
-    try {
-      channel = WebSocketChannel.connect(wsUrl);
-      channel?.stream.listen((message) {
-        // Handle incoming messages
-      }, onError: (error) {
-        setState(() {
-          _isConnected = false;
-        });
-        // Handle errors
-        print('Error: $error');
-      }, onDone: () {
-        setState(() {
-          _isConnected = false;
-        });
-        // Handle disconnection
-        print('WebSocket disconnected');
-      }, cancelOnError: true);
-
-      setState(() {
-        _isConnected = true;
-      });
-    } catch (e) {
-      setState(() {
-        _isConnected = false;
-      });
-      print('Error connecting to WebSocket: $e');
-    }
-    print("-------> check soket connection-$_isConnected{}");
+    stompClient = StompClient(
+        config: StompConfig(url: DMbaseURL!, onConnect: onConnectCallback));
+    stompClient?.activate();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (isMounted == true) {
+        if (mounted) {
+          setState(() {
+            _scrollToBottom();
+          });
+        }
+      }
+    });
   }
 
   void dispose() {
     isMounted = false;
+    stompClient?.deactivate();
     super.dispose();
   }
 
@@ -124,531 +252,751 @@ class _DmScreenNewState extends State<DmScreenNew> {
                         ),
                       ),
                     )
-                  : Stack(
+                  : Column(
                       children: [
-                        Column(
-                          children: [
-                            _isConnected
-                                ? Text('Connected')
-                                : Text('Not Connected'),
-                            if (isLogPress == false)
-                              Container(
-                                margin: EdgeInsets.only(bottom: 10),
-                                child: Row(
-                                  children: [
-                                    GestureDetector(
-                                      onTap: () {
-                                        Navigator.pop(context);
-                                      },
-                                      child: Container(
-                                        margin: EdgeInsets.only(left: 10),
-                                        height: 30,
-                                        width: 30,
-                                        // color: Colors.red,
-                                        child: Center(
-                                          child: CustomImageView(
-                                            imagePath:
-                                                ImageConstant.RightArrowgrey,
-                                            height: 25,
-                                            width: 25,
+                        if (isLogPress == false)
+                          Container(
+                            margin: EdgeInsets.only(bottom: 10),
+                            child: Row(
+                              children: [
+                                GestureDetector(
+                                  onTap: () {
+                                    overlayEntryRemoveMethod();
+                                    Navigator.pop(context);
+                                  },
+                                  child: Container(
+                                    margin: EdgeInsets.only(left: 10),
+                                    height: 30,
+                                    width: 30,
+                                    // color: Colors.red,
+                                    child: Center(
+                                      child: CustomImageView(
+                                        imagePath: ImageConstant.RightArrowgrey,
+                                        height: 25,
+                                        width: 25,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                CustomImageView(
+                                  imagePath: ImageConstant.tomcruse,
+                                  height: 30,
+                                  width: 30,
+                                ),
+                                Container(
+                                  margin: EdgeInsets.only(left: 10),
+                                  child: Text(
+                                    "Ankur",
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(
+                                      fontFamily: 'outfit',
+                                      fontSize: 15,
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        if (isLogPress == true)
+                          Container(
+                            margin: EdgeInsets.only(bottom: 10),
+                            child: Row(
+                              children: [
+                                GestureDetector(
+                                  onTap: () {
+                                    if (isMounted == true) {
+                                      if (mounted) {
+                                        setState(() {
+                                          isLogPress = false;
+                                        });
+                                      }
+                                    }
+                                  },
+                                  child: Container(
+                                    margin: EdgeInsets.only(left: 10),
+                                    height: 30,
+                                    width: 30,
+                                    // color: Colors.red,
+                                    child: Center(
+                                      child: CustomImageView(
+                                        imagePath: ImageConstant.RightArrowgrey,
+                                        height: 25,
+                                        width: 25,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                Text(
+                                  '${selectedCount}',
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 15),
+                                ),
+                                Spacer(),
+                                /*    Visibility(
+                                  child: GestureDetector(
+                                    onTap: () {
+
+                                    },
+                                    child: Icon(Icons.edit),
+                                  ),
+                                ), */
+                                GestureDetector(
+                                  onTap: () async {
+                                    /*  await Clipboard.setData(ClipboardData(
+                                      text: reactionMessage ?? '')); */
+                                    List usercoppmessage = [];
+                                    getInboxMessagesModel?.object?.content
+                                        ?.forEach((element) {
+                                      if (element.isSelected == true) {
+                                        print(
+                                            "checl element -${element.message}");
+                                        usercoppmessage.add(element.message);
+                                      }
+                                    });
+                                    String textToCopy =
+                                        usercoppmessage.join('\n');
+                                    await Clipboard.setData(
+                                        ClipboardData(text: textToCopy));
+                                  },
+                                  child: Visibility(
+                                    visible: isMeesageCoppy,
+                                    child: SizedBox(
+                                        height: 20,
+                                        child: Image.asset(
+                                          ImageConstant.coppy,
+                                        )),
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 15,
+                                ),
+                                GestureDetector(
+                                  onTap: () {
+                                    print(
+                                        "i want to  check  selcted count-${selectedCount}");
+                                    if (isMounted == true) {
+                                      if (isMounted) {
+                                        setState(() {
+                                          isLogPress = false;
+                                          isMeesageReaction = true;
+                                        });
+                                      }
+                                    }
+                                  },
+                                  child: Visibility(
+                                    visible: selectedCount == 1,
+                                    child: SizedBox(
+                                        height: 20,
+                                        child: Image.asset(
+                                          ImageConstant.replay,
+                                        )),
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 15,
+                                ),
+                                GestureDetector(
+                                  onTap: () {},
+                                  child: SizedBox(
+                                    height: 20,
+                                    child: Icon(Icons.star),
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 15,
+                                ),
+                                GestureDetector(
+                                  onTap: () async {
+                                    Map<String, dynamic> forwadList = {};
+                                    List<Map<String, dynamic>>
+                                        forwardMessageDtos = [];
+                                    getInboxMessagesModel?.object?.content
+                                        ?.forEach((element) {
+                                      if (element.isSelected == true) {
+                                        Map<String, dynamic> message = {
+                                          'chatMessageUuid':
+                                              element.userChatMessageUid,
+                                          "isDelivered": true,
+                                          "messageType": element.messageType
+                                        };
+                                        forwardMessageDtos.add(message);
+                                      }
+                                    });
+
+                                    forwadList['forwardMessageDtos'] =
+                                        forwardMessageDtos;
+                                    print("forwardListcheck-$forwadList");
+                                    /*  getInboxMessagesModel?.object?.content
+                                      ?.forEach((element) {
+                                    if (element.isSelected == true) {
+                                      Map<String, dynamic> message = {
+                                        'chatMessageUuid':
+                                            element.userChatMessageUid,
+                                        "isDelivered": true,
+                                        "messageType": element.messageType
+                                      };
+                                      forwadList.add(message);
+                                    }
+                                  }); */
+                                    /*   print("checl valye -${forwadList}"); */
+
+                                    Navigator.pop(context, forwadList);
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(top: 5),
+                                    child: SizedBox(
+                                        height: 20,
+                                        child: Image.asset(
+                                          ImageConstant.forward,
+                                        )),
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 15,
+                                ),
+                              ],
+                            ),
+                          ),
+                        Divider(
+                          height: 5,
+                          color: Color.fromARGB(53, 117, 117, 117),
+                        ),
+                        Expanded(
+                            child: NotificationListener<ScrollNotification>(
+                          onNotification: (notification) {
+                            overlayEntryRemoveMethod();
+                            return true;
+                          },
+                          child: SingleChildScrollView(
+                            controller: scrollController,
+                            child: chatPaginationWidget(
+                              onPagination: (p0) async {
+                                await BlocProvider.of<DmInboxCubit>(context)
+                                    .DMChatListApiPagantion(
+                                        widget.chatInboxUid, p0 + 1, context);
+                              },
+                              offSet: (getInboxMessagesModel
+                                  ?.object?.pageable?.pageNumber),
+                              scrollController: scrollController,
+                              totalSize:
+                                  getInboxMessagesModel?.object?.totalElements,
+                              items: ListView.builder(
+                                itemCount: getInboxMessagesModel
+                                    ?.object?.content?.length,
+                                shrinkWrap: true,
+                                padding: EdgeInsets.zero,
+                                physics: NeverScrollableScrollPhysics(),
+                                itemBuilder: (context, index) {
+                                  final GlobalKey _widgetKey = GlobalKey();
+
+                                  final isFirstMessageForDate = index == 0 ||
+                                      _isDifferentDate(
+                                          '${getInboxMessagesModel?.object?.content?[index - 1].createdDate}',
+                                          '${getInboxMessagesModel?.object?.content?[index].createdDate}');
+                                  DateTime parsedDateTime = DateTime.parse(
+                                      '${getInboxMessagesModel?.object?.content?[index].createdDate}');
+                                  return Column(
+                                    children: [
+                                      if (isFirstMessageForDate)
+                                        Container(
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Text(
+                                              _formatDate(
+                                                  '${getInboxMessagesModel?.object?.content?[index].createdDate}'),
+                                              style: TextStyle(
+                                                  color: Color(0xff5C5C5C),
+                                                  fontWeight: FontWeight.bold),
+                                            ),
                                           ),
                                         ),
-                                      ),
-                                    ),
-                                    CustomImageView(
-                                      imagePath: ImageConstant.tomcruse,
-                                      height: 30,
-                                      width: 30,
-                                    ),
-                                    Container(
-                                      margin: EdgeInsets.only(left: 10),
-                                      child: Text(
-                                        "Ankur",
-                                        overflow: TextOverflow.ellipsis,
-                                        style: TextStyle(
-                                          fontFamily: 'outfit',
-                                          fontSize: 15,
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.w700,
+                                      if (getInboxMessagesModel?.object
+                                              ?.content?[index].userUid ==
+                                          UserLogin_ID)
+                                        // user chat
+                                        TextUser(
+                                            getInboxMessagesModel?.object
+                                                    ?.content?[index].message ??
+                                                "",
+                                            getInboxMessagesModel
+                                                    ?.object
+                                                    ?.content?[index]
+                                                    .userProfilePic ??
+                                                "",
+                                            true,
+                                            parsedDateTime,
+                                            index,
+                                            getInboxMessagesModel
+                                                    ?.object
+                                                    ?.content?[index]
+                                                    .messageType ??
+                                                "",
+                                            getInboxMessagesModel
+                                                    ?.object
+                                                    ?.content?[index]
+                                                    .emojiReaction ??
+                                                false,
+                                            '${getInboxMessagesModel?.object?.content?[index].reactionMessage}',
+                                            _widgetKey),
+                                      if (getInboxMessagesModel?.object
+                                              ?.content?[index].userUid !=
+                                          UserLogin_ID)
+                                        TextUser(
+                                            getInboxMessagesModel?.object
+                                                    ?.content?[index].message ??
+                                                "",
+                                            getInboxMessagesModel
+                                                    ?.object
+                                                    ?.content?[index]
+                                                    .userProfilePic ??
+                                                "",
+                                            false,
+                                            parsedDateTime,
+                                            index,
+                                            getInboxMessagesModel
+                                                    ?.object
+                                                    ?.content?[index]
+                                                    .messageType ??
+                                                "",
+                                            getInboxMessagesModel
+                                                    ?.object
+                                                    ?.content?[index]
+                                                    .emojiReaction ??
+                                                false,
+                                            '${getInboxMessagesModel?.object?.content?[index].reactionMessage}',
+                                            _widgetKey), // other user chat
+                                    ],
+                                  );
+                                },
+                              ),
+                            ),
+                          ),
+                        )),
+                        /*  Expanded(
+                          child: SingleChildScrollView(
+                        child: Column(
+                          children: [
+                            chatPaginationWidget(
+                              onPagination: (p0) async {
+                                await BlocProvider.of<DmInboxCubit>(
+                                        context)
+                                    .DMChatListApiPagantion(
+                                        widget.chatInboxUid,
+                                        p0 + 1,
+                                        context);
+                              },
+                              offSet: (getInboxMessagesModel
+                                  ?.object?.pageable?.pageNumber),
+                              scrollController: scrollController,
+                              totalSize: getInboxMessagesModel
+                                  ?.object?.totalElements,
+                              items: ListView.builder(
+                                controller: scrollController,
+                                itemCount: getInboxMessagesModel
+                                    ?.object?.content?.length,
+                                shrinkWrap: true,
+                                padding: EdgeInsets.zero,
+                                physics: NeverScrollableScrollPhysics(),
+                                itemBuilder: (context, index) {
+                                  final isFirstMessageForDate = index ==
+                                          0 ||
+                                      _isDifferentDate(
+                                          '${getInboxMessagesModel?.object?.content?[index - 1].createdDate}',
+                                          '${getInboxMessagesModel?.object?.content?[index].createdDate}');
+                                  DateTime parsedDateTime = DateTime.parse(
+                                      '${getInboxMessagesModel?.object?.content?[index].createdDate}');
+                                  return Column(
+                                    children: [
+                                      if (isFirstMessageForDate)
+                                        Container(
+                                          child: Padding(
+                                            padding:
+                                                const EdgeInsets.all(8.0),
+                                            child: Text(
+                                              _formatDate(
+                                                  '${getInboxMessagesModel?.object?.content?[index].createdDate}'),
+                                              style: TextStyle(
+                                                  color:
+                                                      Color(0xff5C5C5C),
+                                                  fontWeight:
+                                                      FontWeight.bold),
+                                            ),
+                                          ),
                                         ),
-                                      ),
-                                    ),
-                                  ],
+                                      if (getInboxMessagesModel?.object
+                                              ?.content?[index].userUid ==
+                                          UserLogin_ID)
+                                        // user chat
+                                        TextUser(
+                                            getInboxMessagesModel
+                                                    ?.object
+                                                    ?.content?[index]
+                                                    .message ??
+                                                "",
+                                            getInboxMessagesModel
+                                                    ?.object
+                                                    ?.content?[index]
+                                                    .userProfilePic ??
+                                                "",
+                                            true,
+                                            parsedDateTime,
+                                            index,
+                                            getInboxMessagesModel
+                                                    ?.object
+                                                    ?.content?[index]
+                                                    .messageType ??
+                                                "",
+                                            getInboxMessagesModel
+                                                    ?.object
+                                                    ?.content?[index]
+                                                    .emojiReaction ??
+                                                false,
+                                            '${getInboxMessagesModel?.object?.content?[index].reactionMessage}'),
+                                      if (getInboxMessagesModel?.object
+                                              ?.content?[index].userUid !=
+                                          UserLogin_ID)
+                                        TextUser(
+                                            getInboxMessagesModel
+                                                    ?.object
+                                                    ?.content?[index]
+                                                    .message ??
+                                                "",
+                                            getInboxMessagesModel
+                                                    ?.object
+                                                    ?.content?[index]
+                                                    .userProfilePic ??
+                                                "",
+                                            false,
+                                            parsedDateTime,
+                                            index,
+                                            getInboxMessagesModel
+                                                    ?.object
+                                                    ?.content?[index]
+                                                    .messageType ??
+                                                "",
+                                            getInboxMessagesModel
+                                                    ?.object
+                                                    ?.content?[index]
+                                                    .emojiReaction ??
+                                                false,
+                                            '${getInboxMessagesModel?.object?.content?[index].reactionMessage}'), // other user chat
+                                    ],
+                                  );
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
+                      )), */
+                        if (isMeesageReaction == false)
+                          Row(
+                            children: [
+                              Expanded(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: TextField(
+                                    focusNode: focus,
+                                    controller: addComment,
+                                    minLines: 1,
+                                    maxLines: 5,
+                                    decoration: InputDecoration(
+                                        enabledBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                              width: 3,
+                                              color: ColorConstant
+                                                  .primary_color), //<-- SEE HERE
+                                          borderRadius:
+                                              BorderRadius.circular(50.0),
+                                        ),
+                                        focusedBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                            width: 3,
+                                            color: ColorConstant
+                                                .primary_color, // Set the same color as enabledBorder
+                                          ),
+                                          borderRadius:
+                                              BorderRadius.circular(50.0),
+                                        ),
+                                        hintText: 'Type Message',
+                                        filled: true,
+                                        fillColor: Colors.white,
+                                        suffixIcon: Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            GestureDetector(
+                                              onTap: () {
+                                                // pickProfileImage();
+                                                // prepareTestPdf(0);
+                                              },
+                                              child: Image.asset(
+                                                "assets/images/paperclip-2.png",
+                                                height: 23,
+                                              ),
+                                            ),
+                                            SizedBox(
+                                              width: 10.50,
+                                            ),
+                                            GestureDetector(
+                                              onTap: () {},
+                                              child: Image.asset(
+                                                "assets/images/Vector (12).png",
+                                                height: 20,
+                                              ),
+                                            ),
+                                            SizedBox(
+                                              width: 10,
+                                            ),
+                                          ],
+                                        )),
+                                  ),
                                 ),
                               ),
-                            if (isLogPress == true)
-                              Container(
-                                margin: EdgeInsets.only(bottom: 10),
-                                child: Row(
-                                  children: [
-                                    GestureDetector(
-                                      onTap: () {
-                                        if (isMounted == true) {
-                                          if (mounted) {
-                                            setState(() {
-                                              isLogPress = false;
-                                            });
-                                          }
-                                        }
-                                      },
-                                      child: Container(
-                                        margin: EdgeInsets.only(left: 10),
-                                        height: 30,
-                                        width: 30,
-                                        // color: Colors.red,
-                                        child: Center(
-                                          child: CustomImageView(
-                                            imagePath:
-                                                ImageConstant.RightArrowgrey,
-                                            height: 25,
-                                            width: 25,
-                                          ),
-                                        ),
+                              GestureDetector(
+                                onTap: sendMessageMethod,
+                                child: Container(
+                                  margin: EdgeInsets.only(right: 10),
+                                  height: 50,
+                                  // width: 50,
+                                  decoration: BoxDecoration(
+                                      color: ColorConstant.primary_color,
+                                      borderRadius: BorderRadius.circular(25)),
+                                  child: Image.asset(
+                                    "assets/images/Vector (13).png",
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
+                        if (isMeesageReaction == true)
+                          Container(
+                            width: MediaQuery.of(context).size.width,
+                            color: Colors.white,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                    left: 10,
+                                    top: 10,
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      Text(
+                                        'Replying to Ankur',
+                                        style: TextStyle(
+                                            color: Colors.grey,
+                                            fontWeight: FontWeight.bold),
                                       ),
-                                    ),
-                                    Text(
-                                      '${selectedCount}',
+                                      Spacer(),
+                                      Padding(
+                                        padding:
+                                            const EdgeInsets.only(right: 5),
+                                        child: IconButton(
+                                          onPressed: () {
+                                            if (isMounted == true) {
+                                              if (mounted) {
+                                                setState(() {
+                                                  isMeesageReaction = false;
+                                                });
+                                              }
+                                            }
+                                          },
+                                          icon: (Icon(Icons.close)),
+                                          color: Colors.grey,
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                                if (getInboxMessagesModel
+                                            ?.object
+                                            ?.content?[swipeToIndex ?? 0]
+                                            .messageType ==
+                                        'IMAGE' &&
+                                    getInboxMessagesModel
+                                            ?.object
+                                            ?.content?[swipeToIndex ?? 0]
+                                            .emojiReaction ==
+                                        true)
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                        left: 10, bottom: 2),
+                                    child: Text(
+                                      '${getInboxMessagesModel?.object?.content?[swipeToIndex ?? 0].reactionMessage}',
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
                                       style: TextStyle(
+                                          fontWeight: FontWeight.w400,
                                           color: Colors.black,
-                                          fontWeight: FontWeight.bold,
+                                          fontFamily: "outfit",
                                           fontSize: 15),
                                     ),
-                                    Spacer(),
-                                    GestureDetector(
-                                      onTap: () async {
-                                        /*  await Clipboard.setData(ClipboardData(
-                                            text: reactionMessage ?? '')); */
-                                        List usercoppmessage = [];
-                                        getInboxMessagesModel?.object?.content
-                                            ?.forEach((element) {
-                                          if (element.isSelected == true) {
-                                            print(
-                                                "checl element -${element.message}");
-                                            usercoppmessage
-                                                .add(element.message);
-                                          }
-                                        });
-                                        String textToCopy =
-                                            usercoppmessage.join('\n');
-                                        await Clipboard.setData(
-                                            ClipboardData(text: textToCopy));
-                                      },
-                                      child: Visibility(
-                                        visible: isMeesageCoppy,
-                                        child: SizedBox(
-                                            height: 20,
-                                            child: Image.asset(
-                                              ImageConstant.coppy,
-                                            )),
+                                  ),
+                                if (getInboxMessagesModel
+                                        ?.object
+                                        ?.content?[swipeToIndex ?? 0]
+                                        .messageType ==
+                                    'TEXT')
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                        left: 10, bottom: 2),
+                                    child: Text(
+                                      '${getInboxMessagesModel?.object?.content?[swipeToIndex ?? 0].message}',
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w400,
+                                          color: Colors.black,
+                                          fontFamily: "outfit",
+                                          fontSize: 15),
+                                    ),
+                                  ),
+                                if (getInboxMessagesModel
+                                            ?.object
+                                            ?.content?[swipeToIndex ?? 0]
+                                            .messageType ==
+                                        'IMAGE' &&
+                                    getInboxMessagesModel
+                                            ?.object
+                                            ?.content?[swipeToIndex ?? 0]
+                                            .emojiReaction ==
+                                        false &&
+                                    getInboxMessagesModel
+                                            ?.object
+                                            ?.content?[swipeToIndex ?? 0]
+                                            .reactionMessage !=
+                                        null)
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                        left: 10, bottom: 2),
+                                    child: Text(
+                                      '${getInboxMessagesModel?.object?.content?[swipeToIndex ?? 0].reactionMessage}',
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w400,
+                                          color: Colors.black,
+                                          fontFamily: "outfit",
+                                          fontSize: 15),
+                                    ),
+                                  ),
+                                if (getInboxMessagesModel
+                                            ?.object
+                                            ?.content?[swipeToIndex ?? 0]
+                                            .messageType ==
+                                        'IMAGE' &&
+                                    getInboxMessagesModel
+                                            ?.object
+                                            ?.content?[swipeToIndex ?? 0]
+                                            .emojiReaction ==
+                                        false &&
+                                    getInboxMessagesModel
+                                            ?.object
+                                            ?.content?[swipeToIndex ?? 0]
+                                            .reactionMessage ==
+                                        null)
+                                  Container(
+                                    margin: EdgeInsets.all(10),
+                                    height: 70,
+                                    width: 130,
+                                    decoration: BoxDecoration(
+                                        borderRadius:
+                                            BorderRadius.circular(15)),
+                                    child: CustomImageView(
+                                      url:
+                                          "${getInboxMessagesModel?.object?.content?[swipeToIndex ?? 0].reactionMessage}",
+                                      height: 20,
+                                      radius: BorderRadius.circular(20),
+                                      width: 20,
+                                      fit: BoxFit.fill,
+                                    ),
+                                  ),
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: TextField(
+                                          minLines: 1,
+                                          maxLines: 5,
+                                          decoration: InputDecoration(
+                                              enabledBorder: OutlineInputBorder(
+                                                borderSide: BorderSide(
+                                                    width: 3,
+                                                    color: ColorConstant
+                                                        .primary_color), //<-- SEE HERE
+                                                borderRadius:
+                                                    BorderRadius.circular(50.0),
+                                              ),
+                                              focusedBorder: OutlineInputBorder(
+                                                borderSide: BorderSide(
+                                                  width: 3,
+                                                  color: ColorConstant
+                                                      .primary_color, // Set the same color as enabledBorder
+                                                ),
+                                                borderRadius:
+                                                    BorderRadius.circular(50.0),
+                                              ),
+                                              hintText: 'Type Message',
+                                              filled: true,
+                                              fillColor: Colors.white,
+                                              suffixIcon: Row(
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: [
+                                                  GestureDetector(
+                                                    onTap: () {
+                                                      // pickProfileImage();
+                                                      // prepareTestPdf(0);
+                                                    },
+                                                    child: Image.asset(
+                                                      "assets/images/paperclip-2.png",
+                                                      height: 23,
+                                                    ),
+                                                  ),
+                                                  SizedBox(
+                                                    width: 10.50,
+                                                  ),
+                                                  GestureDetector(
+                                                    onTap: () {},
+                                                    child: Image.asset(
+                                                      "assets/images/Vector (12).png",
+                                                      height: 20,
+                                                    ),
+                                                  ),
+                                                  SizedBox(
+                                                    width: 10,
+                                                  ),
+                                                ],
+                                              )),
+                                        ),
                                       ),
-                                    ),
-                                    SizedBox(
-                                      width: 15,
-                                    ),
-                                    GestureDetector(
-                                      onTap: () {
-                                        print(
-                                            "i want to  check  selcted count-${selectedCount}");
-                                        if (isMounted == true) {
-                                          if (isMounted) {
-                                            setState(() {
-                                              isLogPress = false;
-                                              isMeesageReaction = true;
-                                            });
-                                          }
-                                        }
-                                      },
-                                      child: Visibility(
-                                        visible: selectedCount == 1,
-                                        child: SizedBox(
-                                            height: 20,
-                                            child: Image.asset(
-                                              ImageConstant.replay,
-                                            )),
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      width: 15,
                                     ),
                                     GestureDetector(
                                       onTap: () {},
-                                      child: SizedBox(
-                                        height: 20,
-                                        child: Icon(Icons.star),
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      width: 15,
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(top: 5),
-                                      child: SizedBox(
-                                          height: 20,
-                                          child: Image.asset(
-                                            ImageConstant.forward,
-                                          )),
-                                    ),
-                                    SizedBox(
-                                      width: 15,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            Divider(
-                              height: 5,
-                              color: Color.fromARGB(53, 117, 117, 117),
-                            ),
-                            Expanded(
-                                child: SingleChildScrollView(
-                              controller: scrollController,
-                              child: Column(
-                                children: [
-                                  chatPaginationWidget(
-                                    onPagination: (p0) async {
-                                      await BlocProvider.of<DmInboxCubit>(
-                                              context)
-                                          .DMChatListApiPagantion(
-                                              widget.ChatInboxUid,
-                                              p0 + 1,
-                                              context);
-                                    },
-                                    offSet: (getInboxMessagesModel
-                                        ?.object?.pageable?.pageNumber),
-                                    scrollController: scrollController,
-                                    totalSize: getInboxMessagesModel
-                                        ?.object?.totalElements,
-                                    items: ListView.builder(
-                                      itemCount: getInboxMessagesModel
-                                          ?.object?.content?.length,
-                                      shrinkWrap: true,
-                                      padding: EdgeInsets.zero,
-                                      physics: NeverScrollableScrollPhysics(),
-                                      itemBuilder: (context, index) {
-                                        final isFirstMessageForDate = index ==
-                                                0 ||
-                                            _isDifferentDate(
-                                                '${getInboxMessagesModel?.object?.content?[index - 1].createdDate}',
-                                                '${getInboxMessagesModel?.object?.content?[index].createdDate}');
-                                        DateTime parsedDateTime = DateTime.parse(
-                                            '${getInboxMessagesModel?.object?.content?[index].createdDate}');
-                                        return Column(
-                                          children: [
-                                            if (isFirstMessageForDate)
-                                              Container(
-                                                child: Padding(
-                                                  padding:
-                                                      const EdgeInsets.all(8.0),
-                                                  child: Text(
-                                                    _formatDate(
-                                                        '${getInboxMessagesModel?.object?.content?[index].createdDate}'),
-                                                    style: TextStyle(
-                                                        color:
-                                                            Color(0xff5C5C5C),
-                                                        fontWeight:
-                                                            FontWeight.bold),
-                                                  ),
-                                                ),
-                                              ),
-                                            if (getInboxMessagesModel?.object
-                                                    ?.content?[index].userUid ==
-                                                UserLogin_ID)
-                                              // user chat
-                                              TextUser(
-                                                  getInboxMessagesModel
-                                                          ?.object
-                                                          ?.content?[index]
-                                                          .message ??
-                                                      "",
-                                                  getInboxMessagesModel
-                                                          ?.object
-                                                          ?.content?[index]
-                                                          .userProfilePic ??
-                                                      "",
-                                                  true,
-                                                  parsedDateTime,
-                                                  index,
-                                                  getInboxMessagesModel
-                                                          ?.object
-                                                          ?.content?[index]
-                                                          .messageType ??
-                                                      "",
-                                                  getInboxMessagesModel
-                                                          ?.object
-                                                          ?.content?[index]
-                                                          .emojiReaction ??
-                                                      false,
-                                                  '${getInboxMessagesModel?.object?.content?[index].reactionMessage}'),
-                                            if (getInboxMessagesModel?.object
-                                                    ?.content?[index].userUid !=
-                                                UserLogin_ID)
-                                              TextUser(
-                                                  getInboxMessagesModel
-                                                          ?.object
-                                                          ?.content?[index]
-                                                          .message ??
-                                                      "",
-                                                  getInboxMessagesModel
-                                                          ?.object
-                                                          ?.content?[index]
-                                                          .userProfilePic ??
-                                                      "",
-                                                  false,
-                                                  parsedDateTime,
-                                                  index,
-                                                  getInboxMessagesModel
-                                                          ?.object
-                                                          ?.content?[index]
-                                                          .messageType ??
-                                                      "",
-                                                  getInboxMessagesModel
-                                                          ?.object
-                                                          ?.content?[index]
-                                                          .emojiReaction ??
-                                                      false,
-                                                  '${getInboxMessagesModel?.object?.content?[index].reactionMessage}'), // other user chat
-                                          ],
-                                        );
-                                      },
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            )),
-                            if (isMeesageReaction == false)
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: TextField(
-                                        minLines: 1,
-                                        maxLines: 5,
-                                        decoration: InputDecoration(
-                                            enabledBorder: OutlineInputBorder(
-                                              borderSide: BorderSide(
-                                                  width: 3,
-                                                  color: ColorConstant
-                                                      .primary_color), //<-- SEE HERE
-                                              borderRadius:
-                                                  BorderRadius.circular(50.0),
-                                            ),
-                                            focusedBorder: OutlineInputBorder(
-                                              borderSide: BorderSide(
-                                                width: 3,
-                                                color: ColorConstant
-                                                    .primary_color, // Set the same color as enabledBorder
-                                              ),
-                                              borderRadius:
-                                                  BorderRadius.circular(50.0),
-                                            ),
-                                            hintText: 'Type Message',
-                                            filled: true,
-                                            fillColor: Colors.white,
-                                            suffixIcon: Row(
-                                              mainAxisSize: MainAxisSize.min,
-                                              children: [
-                                                GestureDetector(
-                                                  onTap: () {
-                                                    // pickProfileImage();
-                                                    // prepareTestPdf(0);
-                                                  },
-                                                  child: Image.asset(
-                                                    "assets/images/paperclip-2.png",
-                                                    height: 23,
-                                                  ),
-                                                ),
-                                                SizedBox(
-                                                  width: 10.50,
-                                                ),
-                                                GestureDetector(
-                                                  onTap: () {},
-                                                  child: Image.asset(
-                                                    "assets/images/Vector (12).png",
-                                                    height: 20,
-                                                  ),
-                                                ),
-                                                SizedBox(
-                                                  width: 10,
-                                                ),
-                                              ],
-                                            )),
-                                      ),
-                                    ),
-                                  ),
-                                  Container(
-                                    margin: EdgeInsets.only(right: 10),
-                                    height: 50,
-                                    // width: 50,
-                                    decoration: BoxDecoration(
-                                        color: ColorConstant.primary_color,
-                                        borderRadius:
-                                            BorderRadius.circular(25)),
-                                    child: Image.asset(
-                                      "assets/images/Vector (13).png",
-                                      color: Colors.white,
-                                    ),
-                                  )
-                                ],
-                              ),
-                            if (isMeesageReaction == true)
-                              Container(
-                                width: MediaQuery.of(context).size.width,
-                                color: Colors.white,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.only(
-                                        left: 10,
-                                        top: 10,
-                                      ),
-                                      child: Row(
-                                        children: [
-                                          Text(
-                                            'Replying to Ankur',
-                                            style: TextStyle(
-                                                color: Colors.grey,
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                          Spacer(),
-                                          Padding(
-                                            padding:
-                                                const EdgeInsets.only(right: 5),
-                                            child: IconButton(
-                                              onPressed: () {
-                                                if (isMounted == true) {
-                                                  if (mounted) {
-                                                    setState(() {
-                                                      isMeesageReaction = false;
-                                                      reactionMessage = null;
-                                                    });
-                                                  }
-                                                }
-                                              },
-                                              icon: (Icon(Icons.close)),
-                                              color: Colors.grey,
-                                            ),
-                                          )
-                                        ],
-                                      ),
-                                    ),
-                                    if (messageTypeSet == 'TEXT')
-                                      Padding(
-                                        padding: const EdgeInsets.only(
-                                            left: 10, bottom: 2),
-                                        child: Text(
-                                          '${reactionMessage}',
-                                          maxLines: 1,
-                                          overflow: TextOverflow.ellipsis,
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.w400,
-                                              color: Colors.black,
-                                              fontFamily: "outfit",
-                                              fontSize: 15),
-                                        ),
-                                      ),
-                                    if (messageTypeSet == 'IMAGE')
-                                      Container(
-                                        margin: EdgeInsets.all(10),
-                                        height: 70,
-                                        width: 130,
+                                      child: Container(
+                                        margin: EdgeInsets.only(right: 10),
+                                        height: 50,
+                                        // width: 50,
                                         decoration: BoxDecoration(
+                                            color: ColorConstant.primary_color,
                                             borderRadius:
-                                                BorderRadius.circular(15)),
-                                        child: CustomImageView(
-                                          url: "${reactionMessage}",
-                                          height: 20,
-                                          radius: BorderRadius.circular(20),
-                                          width: 20,
-                                          fit: BoxFit.fill,
+                                                BorderRadius.circular(25)),
+                                        child: Image.asset(
+                                          "assets/images/Vector (13).png",
+                                          color: Colors.white,
                                         ),
                                       ),
-                                    Row(
-                                      children: [
-                                        Expanded(
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: TextField(
-                                              minLines: 1,
-                                              maxLines: 5,
-                                              decoration: InputDecoration(
-                                                  enabledBorder:
-                                                      OutlineInputBorder(
-                                                    borderSide: BorderSide(
-                                                        width: 3,
-                                                        color: ColorConstant
-                                                            .primary_color), //<-- SEE HERE
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            50.0),
-                                                  ),
-                                                  focusedBorder:
-                                                      OutlineInputBorder(
-                                                    borderSide: BorderSide(
-                                                      width: 3,
-                                                      color: ColorConstant
-                                                          .primary_color, // Set the same color as enabledBorder
-                                                    ),
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            50.0),
-                                                  ),
-                                                  hintText: 'Type Message',
-                                                  filled: true,
-                                                  fillColor: Colors.white,
-                                                  suffixIcon: Row(
-                                                    mainAxisSize:
-                                                        MainAxisSize.min,
-                                                    children: [
-                                                      GestureDetector(
-                                                        onTap: () {
-                                                          // pickProfileImage();
-                                                          // prepareTestPdf(0);
-                                                        },
-                                                        child: Image.asset(
-                                                          "assets/images/paperclip-2.png",
-                                                          height: 23,
-                                                        ),
-                                                      ),
-                                                      SizedBox(
-                                                        width: 10.50,
-                                                      ),
-                                                      GestureDetector(
-                                                        onTap: () {},
-                                                        child: Image.asset(
-                                                          "assets/images/Vector (12).png",
-                                                          height: 20,
-                                                        ),
-                                                      ),
-                                                      SizedBox(
-                                                        width: 10,
-                                                      ),
-                                                    ],
-                                                  )),
-                                            ),
-                                          ),
-                                        ),
-                                        Container(
-                                          margin: EdgeInsets.only(right: 10),
-                                          height: 50,
-                                          // width: 50,
-                                          decoration: BoxDecoration(
-                                              color:
-                                                  ColorConstant.primary_color,
-                                              borderRadius:
-                                                  BorderRadius.circular(25)),
-                                          child: Image.asset(
-                                            "assets/images/Vector (13).png",
-                                            color: Colors.white,
-                                          ),
-                                        )
-                                      ],
-                                    ),
+                                    )
                                   ],
                                 ),
-                              )
-                          ],
-                        ),
+                              ],
+                            ),
+                          )
                       ],
                     );
             },
@@ -659,12 +1007,23 @@ class _DmScreenNewState extends State<DmScreenNew> {
   }
 
   _hasImageMessageTypeSelected(index) {
-    if (getInboxMessagesModel?.object?.content?[index].messageType == 'IMAGE' &&
+    int counter = 0;
+    getInboxMessagesModel?.object?.content?.forEach((element) {
+      if (element.isSelected == true && element.messageType == 'TEXT') {
+        counter++;
+      }
+    });
+    isMeesageCoppy = getInboxMessagesModel?.object?.content
+            ?.where((element) => element.isSelected == true)
+            .toList()
+            .length ==
+        counter;
+    /* if (getInboxMessagesModel?.object?.content?[index].messageType == 'IMAGE' &&
         getInboxMessagesModel?.object?.content?[index].isSelected == true) {
       isMeesageCoppy = false;
     } else {
       isMeesageCoppy = true;
-    }
+    } */
   }
 
   TextUser(
@@ -675,9 +1034,8 @@ class _DmScreenNewState extends State<DmScreenNew> {
       index,
       String meessageTyep,
       bool emojiReaction,
-      String reactionMessageData) {
-    print("meessageTyep-$reactionMessageData");
-
+      String reactionMessageData,
+      _widgetKey) {
     return GestureDetector(
       onTap: () {
         if (getInboxMessagesModel?.object?.content?[index].isSelected == null) {
@@ -718,18 +1076,19 @@ class _DmScreenNewState extends State<DmScreenNew> {
                 : 0),
         child: SwipeTo(
           swipeSensitivity: 10,
-          onLeftSwipe: (details) {
+          onRightSwipe: (details) {
             isMeesageReaction = true;
-            reactionMessage = message;
-            messageTypeSet =
-                getInboxMessagesModel?.object?.content?[index].messageType;
+            swipeToIndex = index;
             if (isMounted == true) {
               if (mounted) setState(() {});
             }
-            print("left side-$isMeesageReaction");
-            print("left side-$reactionMessage");
-
-            print("detles-${details}");
+          },
+          onLeftSwipe: (details) {
+            isMeesageReaction = true;
+            swipeToIndex = index;
+            if (isMounted == true) {
+              if (mounted) setState(() {});
+            }
           },
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -738,36 +1097,29 @@ class _DmScreenNewState extends State<DmScreenNew> {
               if (userMeesage == false)
                 Padding(
                   padding: const EdgeInsets.only(left: 3, right: 5, bottom: 5),
-                  child: GestureDetector(
-                    onTap: () {
-                      /* Navigator.push(context, MaterialPageRoute(
-                      builder: (context) {
-                        return ProfileScreen(
-                            User_ID: getInboxMessagesModel
-                                    ?.object?.content?[index].userUid ??
-                                "",
-                            isFollowing: "");
-                      },
-                    )); */
-                    },
-                    child: userProfilePic != null || userProfilePic.isEmpty
-                        ? CustomImageView(
-                            alignment: Alignment.bottomLeft,
-                            url: "${userProfilePic}",
-                            height: 20,
-                            radius: BorderRadius.circular(20),
-                            width: 20,
-                            fit: BoxFit.fill,
-                          )
-                        : CustomImageView(
-                            alignment: Alignment.bottomLeft,
-                            imagePath: ImageConstant.tomcruse,
-                            height: 20,
-                            radius: BorderRadius.circular(20),
-                            width: 20,
-                            fit: BoxFit.fill,
-                          ),
-                  ),
+                  child: getInboxMessagesModel
+                                  ?.object?.content?[index].userProfilePic !=
+                              null ||
+                          getInboxMessagesModel?.object?.content?[index]
+                                  .userProfilePic?.isNotEmpty ==
+                              true
+                      ? CustomImageView(
+                          alignment: Alignment.bottomLeft,
+                          url:
+                              "${getInboxMessagesModel?.object?.content?[index].userProfilePic}",
+                          height: 20,
+                          radius: BorderRadius.circular(20),
+                          width: 20,
+                          fit: BoxFit.fill,
+                        )
+                      : CustomImageView(
+                          alignment: Alignment.bottomLeft,
+                          imagePath: ImageConstant.tomcruse,
+                          height: 20,
+                          radius: BorderRadius.circular(20),
+                          width: 20,
+                          fit: BoxFit.fill,
+                        ),
                 ),
               Expanded(
                 child: Align(
@@ -775,6 +1127,7 @@ class _DmScreenNewState extends State<DmScreenNew> {
                         ? Alignment.bottomRight
                         : Alignment.bottomLeft,
                     child: GestureDetector(
+                      key: _widgetKey,
                       onTap: () {
                         if (isLogPress == true) {
                           if (getInboxMessagesModel
@@ -814,10 +1167,15 @@ class _DmScreenNewState extends State<DmScreenNew> {
                           }
                         }
                       },
-                      onLongPress: () {
+                      onLongPressStart: (details) {
                         isMeesageReaction = false;
                         isLogPress = true;
-                        reactionMessage = message;
+                        print("checl selectedCount -${selectedCount}");
+                        if (selectedCount == 0) {
+                          _showReactionPopUp(context, details.globalPosition,
+                              _widgetKey, userMeesage, index);
+                        }
+
                         if (isMounted == true) {
                           if (mounted) {
                             setState(() {});
@@ -860,7 +1218,6 @@ class _DmScreenNewState extends State<DmScreenNew> {
                         }
                       },
                       child: MessageViewWidget(
-                        message: message,
                         userMeesage: userMeesage,
                         parsedDateTime: parsedDateTime,
                         isSelected: getInboxMessagesModel
@@ -868,34 +1225,24 @@ class _DmScreenNewState extends State<DmScreenNew> {
                             false,
                         meessageTyep: meessageTyep,
                         emojiReaction: emojiReaction,
-                        reactionMessage: reactionMessageData,
                         getInboxMessagesModel: getInboxMessagesModel!,
                         index: index,
                       ),
                     )),
               ),
               if (userMeesage == true)
-                GestureDetector(
-                  onTap: () {
-                    /* Navigator.push(context, MaterialPageRoute(
-                    builder: (context) {
-                      return ProfileScreen(
-                          User_ID: getInboxMessagesModel
-                                  ?.object?.content?[index].userUid ??
-                              "",
-                          isFollowing: "");
-                    },
-                  )); */
-                  },
-                  child: Padding(
-                    padding:
-                        const EdgeInsets.only(left: 5, right: 5, bottom: 5),
-                    child: GestureDetector(
-                      onTap: () {
-                        print("this is the check -${userProfilePic.isEmpty}");
-                      },
-                      child: userProfilePic.isEmpty || userProfilePic == null
+                Padding(
+                  padding: const EdgeInsets.only(left: 5, right: 5, bottom: 5),
+                  child: GestureDetector(
+                      onTap: () {},
+                      child: getInboxMessagesModel?.object?.content?[index]
+                                      .userProfilePic?.isEmpty ==
+                                  true ||
+                              getInboxMessagesModel?.object?.content?[index]
+                                      .userProfilePic ==
+                                  null
                           ? CustomImageView(
+                              alignment: Alignment.bottomLeft,
                               imagePath: ImageConstant.tomcruse,
                               height: 20,
                               radius: BorderRadius.circular(20),
@@ -903,15 +1250,15 @@ class _DmScreenNewState extends State<DmScreenNew> {
                               fit: BoxFit.fill,
                             )
                           : CustomImageView(
-                              url: userProfilePic,
+                              alignment: Alignment.bottomLeft,
+                              url:
+                                  "${getInboxMessagesModel?.object?.content?[index].userProfilePic}",
                               height: 20,
                               radius: BorderRadius.circular(20),
                               width: 20,
                               fit: BoxFit.fill,
-                            ),
-                    ),
-                  ),
-                ),
+                            )),
+                )
             ],
           ),
         ),
@@ -941,29 +1288,168 @@ class _DmScreenNewState extends State<DmScreenNew> {
       });
     }
   }
+
+  void overlayEntryRemoveMethod() {
+    if (overlayEntry1?.mounted == true && overlayEntry?.mounted == true) {
+      overlayEntry1?.remove();
+      overlayEntry?.remove();
+    } else if (overlayEntry?.mounted == true) {
+      overlayEntry?.remove();
+
+      overlayEntry = null;
+    } else if (overlayEntry1?.mounted == true) {
+      overlayEntry1?.remove();
+    }
+  }
+
+  void _showReactionPopUp(BuildContext context, Offset tapPosition,
+      GlobalKey widgetKey, bool usermessage, int index) {
+    final RenderBox renderBox =
+        widgetKey.currentContext!.findRenderObject() as RenderBox;
+    final Offset widgetPosition = renderBox.localToGlobal(Offset.zero);
+    final screenWidth = MediaQuery.of(context).size.width;
+    double left = widgetPosition.dx;
+    double distanceToLeft = widgetPosition.dx;
+    double distanceToRight = screenWidth - widgetPosition.dx;
+    if (distanceToRight > distanceToLeft) {
+      left -= 120;
+    }
+
+    overlayEntry = OverlayEntry(
+      builder: (BuildContext context) => Positioned(
+        left: usermessage == true ? left - 60 : 10,
+        top: tapPosition.dy - 60,
+        child: Material(
+          child: Container(
+            height: 40,
+            width: 140,
+            decoration: BoxDecoration(
+              color: Colors.grey.shade300,
+              borderRadius: BorderRadius.circular(50),
+            ),
+            child: ListView.builder(
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
+              scrollDirection: Axis.horizontal,
+              itemCount: reactions.length,
+              itemBuilder: (BuildContext context, int index) {
+                return AnimationConfiguration.staggeredList(
+                  position: index,
+                  duration: const Duration(milliseconds: 375),
+                  child: SlideAnimation(
+                    verticalOffset: 15 + index * 15,
+                    child: FadeInAnimation(
+                      child: IconButton(
+                        onPressed: () {
+                          overlayEntry?.remove();
+                          // Your onPressed logic
+                        },
+                        icon: reactions[index].icon,
+                      ),
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+        ),
+      ),
+    );
+    Overlay.of(context).insert(overlayEntry!);
+
+    if (usermessage == true &&
+        getInboxMessagesModel?.object?.content?[index].messageType == 'TEXT') {
+      print("check what is get");
+      overlayEntry1 = OverlayEntry(
+        builder: (BuildContext context) => Positioned(
+          left: left - 150,
+          top: widgetPosition.dy + 20, // Adjust top position as needed
+          child: Material(
+            child: Container(
+              height: 100, // Increased height to accommodate buttons
+              width: 150,
+              // color: Colors.grey.shade300,
+              child: Container(
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(10)),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        FocusScope.of(context).requestFocus(focus);
+                        addComment.text =
+                            '${getInboxMessagesModel?.object?.content?[index].message}';
+                        isEditMessage = true;
+                        isEditedindex = index;
+                        overlayEntryRemoveMethod();
+                      },
+                      child: Container(
+                        color: Colors.transparent,
+                        width: 80,
+                        child: Row(
+                          children: [
+                            Text('Edit'),
+                            Spacer(),
+                            SizedBox(height: 20, child: Icon(Icons.edit))
+                          ],
+                        ),
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        overlayEntryRemoveMethod();
+                        // Copy button action
+                      },
+                      child: Container(
+                        width: 80,
+                        child: Row(
+                          children: [
+                            Text('Replay'),
+                            Spacer(),
+                            GestureDetector(
+                              onTap: () {},
+                              child: SizedBox(
+                                  height: 20,
+                                  child: Image.asset(
+                                    ImageConstant.replay,
+                                  )),
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+      Overlay.of(context).insert(overlayEntry1!);
+    }
+  }
 }
 
 class MessageViewWidget extends StatelessWidget {
   MessageViewWidget({
     Key? key,
-    required this.message,
     required this.userMeesage,
     required this.parsedDateTime,
     required this.isSelected,
     required this.meessageTyep,
     required this.emojiReaction,
-    this.reactionMessage,
     required this.getInboxMessagesModel,
     required this.index,
   }) : super(key: key);
 
-  final String message;
   final bool userMeesage;
   final DateTime parsedDateTime;
   final bool isSelected;
   final String meessageTyep;
   final bool emojiReaction;
-  String? reactionMessage;
+
   final GetInboxMessagesModel getInboxMessagesModel;
   final int index;
 
@@ -984,7 +1470,7 @@ class MessageViewWidget extends StatelessWidget {
             width: 160,
             decoration: BoxDecoration(borderRadius: BorderRadius.circular(15)),
             child: CustomImageView(
-              url: "${message}",
+              url: "${getInboxMessagesModel.object?.content?[index].message}",
               height: 20,
               radius: BorderRadius.circular(20),
               width: 20,
@@ -1006,7 +1492,7 @@ class MessageViewWidget extends StatelessWidget {
             children: [
               CustomImageView(
                 margin: EdgeInsets.only(top: 10),
-                url: "${message}",
+                url: "${getInboxMessagesModel.object?.content?[index].message}",
                 height: 130,
                 radius: BorderRadius.circular(20),
                 fit: BoxFit.fill,
@@ -1021,7 +1507,7 @@ class MessageViewWidget extends StatelessWidget {
                       borderRadius: BorderRadius.circular(10)),
                   child: Text(
                     getInboxMessagesModel
-                            ?.object?.content?[index].reactionMessage ??
+                            .object?.content?[index].reactionMessage ??
                         '',
                     style: TextStyle(
                         color: Colors.black, fontWeight: FontWeight.bold),
@@ -1031,14 +1517,13 @@ class MessageViewWidget extends StatelessWidget {
         if (getInboxMessagesModel.object?.content?[index]
                     .messageType == // only user can sher image
                 'IMAGE' &&
-            getInboxMessagesModel.object?.content?[index].emojiReaction ==
-                true)
+            getInboxMessagesModel.object?.content?[index].emojiReaction == true)
           Stack(
             children: [
               Container(
                 margin: EdgeInsets.only(top: 10),
                 child: CustomImageView(
-                       height: 130,
+                  height: 130,
                   url: getInboxMessagesModel.object?.content?[index].message,
                   radius: BorderRadius.circular(20), //Ankur1
                   // height: 20,
@@ -1046,7 +1531,9 @@ class MessageViewWidget extends StatelessWidget {
               ),
               Positioned.fill(
                   child: Align(
-                alignment: userMeesage == true?Alignment.bottomLeft:Alignment.bottomRight,
+                alignment: userMeesage == true
+                    ? Alignment.bottomLeft
+                    : Alignment.bottomRight,
                 child: Container(
                   // height: 110,
                   // width: 50,
@@ -1175,4 +1662,30 @@ String customFormat(DateTime date) {
   String time = (DateFormat('HH:mm').format(date));
   String formattedDate = '$time';
   return formattedDate;
+}
+
+navigatorpop() async {
+  isLogPress = false;
+  isMeesageReaction = false;
+  selectedCount = 0;
+  isMeesageCoppy = false;
+  swipeToIndex = 0;
+}
+
+Reaction? getFakeInitialReaction(int index) {
+  if (index % 5 == 0) {
+    return Reaction.like;
+  } else if (index % 7 == 0) {
+    return Reaction.love;
+  } else if (index % 9 == 0) {
+    return Reaction.laugh;
+  }
+  return null;
+}
+
+class ReactionElement {
+  final Reaction reaction;
+  final Icon icon;
+//
+  ReactionElement(this.reaction, this.icon);
 }

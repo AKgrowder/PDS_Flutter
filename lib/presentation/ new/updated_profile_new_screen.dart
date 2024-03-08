@@ -7,6 +7,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_mentions/flutter_mentions.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:linkfy_text/linkfy_text.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pds/presentation/%20new/profileNew.dart';
@@ -200,7 +201,7 @@ class _MyHomePageState extends State<ShowProfileScreen>
                   width: _width,
                   child: NewProfileData?.object?.userBackgroundPic == null ||
                           NewProfileData?.object?.userBackgroundPic == ''
-                      ? Image.asset(ImageConstant.splashImage)
+                      ? SvgPicture.asset(ImageConstant.splashImage)
                       : CustomImageView(
                           url: "${NewProfileData?.object?.userBackgroundPic}",
                           fit: BoxFit.cover,
@@ -274,7 +275,7 @@ class _MyHomePageState extends State<ShowProfileScreen>
                       padding: const EdgeInsets.all(4.0),
                       child: NewProfileData?.object?.userProfilePic == null ||
                               NewProfileData?.object?.userProfilePic == ''
-                          ? Image.asset(ImageConstant.splashImage)
+                          ? SvgPicture.asset(ImageConstant.splashImage)
                           : CircleAvatar(
                               backgroundColor: Colors.white,
                               backgroundImage: NetworkImage(
@@ -7136,8 +7137,8 @@ class _MyHomePageState extends State<ShowProfileScreen>
                             PostID: getAllPostData?.object?[index].postUid,
                             edittextdata:
                                 getAllPostData?.object?[index].description,
-                            editImage:
-                                getAllPostData?.object?[index].postData?.first,
+                            // editImage:
+                            //     getAllPostData?.object?[index].postData?.first,
                           ),
                         )).then((value) {
                       if (widget.Screen?.isNotEmpty == true) {

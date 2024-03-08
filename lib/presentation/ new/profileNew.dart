@@ -173,9 +173,8 @@ class _ProfileScreenState extends State<ProfileScreen>
   GlobalKey key = GlobalKey();
   GlobalKey blockKey = GlobalKey();
 
-ScrollController _scrollController = ScrollController();
-bool _isScrolledUp = false;
-
+  ScrollController _scrollController = ScrollController();
+  bool _isScrolledUp = false;
 
   String getTimeDifference(DateTime dateTime) {
     final difference = DateTime.now().difference(dateTime);
@@ -238,7 +237,7 @@ bool _isScrolledUp = false;
   void initState() {
     Observable.instance.addObserver(this);
     _tabController = TabController(length: tabData.length, vsync: this);
-     _scrollController.addListener(_scrollListener);
+    _scrollController.addListener(_scrollListener);
     getAllAPI_Data();
     getUserSavedData();
     dataSetup = null;
@@ -277,22 +276,23 @@ bool _isScrolledUp = false;
   @override
   void dispose() {
     _tabController!.dispose();
-      _scrollController.removeListener(_scrollListener);
-  _scrollController.dispose();
+    _scrollController.removeListener(_scrollListener);
+    _scrollController.dispose();
     super.dispose();
   }
 
   void _scrollListener() {
-  if (_scrollController.position.userScrollDirection == ScrollDirection.reverse) {
-    setState(() {
-      _isScrolledUp = true;
-    });
-  } else {
-    setState(() {
-      _isScrolledUp = false;
-    });
+    if (_scrollController.position.userScrollDirection ==
+        ScrollDirection.reverse) {
+      setState(() {
+        _isScrolledUp = true;
+      });
+    } else {
+      setState(() {
+        _isScrolledUp = false;
+      });
+    }
   }
-}
 
   @override
   Widget build(BuildContext context) {
@@ -317,7 +317,7 @@ bool _isScrolledUp = false;
           );
           ScaffoldMessenger.of(context).showSnackBar(snackBar);
         }
-    
+
         if (state is AboutMeLoadedState1) {
           print("this data i will get-->${state.aboutMe.object}");
           if (state.aboutMe.object?.isNotEmpty == true) {
@@ -372,17 +372,17 @@ bool _isScrolledUp = false;
           print(NewProfileData?.object?.module);
           BlocProvider.of<NewProfileSCubit>(context)
               .GetAppPostAPI(context, "${NewProfileData?.object?.userUid}");
-    
+
           BlocProvider.of<NewProfileSCubit>(context)
               .GetSavePostAPI(context, "${NewProfileData?.object?.userUid}");
-    
+
           BlocProvider.of<NewProfileSCubit>(context).GetPostCommetAPI(
               context, "${NewProfileData?.object?.userUid}", "desc");
           savedataFuntion(NewProfileData?.object?.userUid ?? '');
-    
+
           NewProfileData?.object?.industryTypes?.forEach((element) {
             // industryTypesArray.add("${element.industryTypeName}");
-    
+
             if (industryTypesArray == "") {
               industryTypesArray =
                   "${industryTypesArray}${element.industryTypeName}";
@@ -391,7 +391,7 @@ bool _isScrolledUp = false;
                   "${industryTypesArray}, ${element.industryTypeName}";
             }
           });
-    
+
           NewProfileData?.object?.expertise?.forEach((element) {
             if (ExpertiseData == "") {
               ExpertiseData = "${element.expertiseName}";
@@ -399,19 +399,19 @@ bool _isScrolledUp = false;
               ExpertiseData = "${element.expertiseName}";
             }
           });
-    
+
           // ExpertiseData
-    
+
           CompanyName.text = "${NewProfileData?.object?.companyName}";
           jobprofileController.text = "${NewProfileData?.object?.jobProfile}";
           IndustryType.text = industryTypesArray;
-    
+
           if (NewProfileData?.object?.userDocument != null) {
             dopcument = NewProfileData?.object?.documentName;
           } else {
             dopcument = 'Upload Image';
           }
-    
+
           priceContrller.text = "${NewProfileData?.object?.fees}";
           Expertise.text = ExpertiseData;
           if (state.PublicRoomData.object?.workingHours != null) {
@@ -419,7 +419,7 @@ bool _isScrolledUp = false;
                 .toString()
                 .split(" to ")
                 .first;
-    
+
             start = workignStart?.split(' ')[0];
             startAm = workignStart?.split(' ')[1];
             workignend = state.PublicRoomData.object?.workingHours
@@ -435,7 +435,7 @@ bool _isScrolledUp = false;
           print(state.GetAllPost);
           GetAllPostData = state.GetAllPost;
           UserProfilePostCount = GetAllPostData?.object?.length ?? 0;
-    
+
           if (UserProfilePostCount.isOdd) {
             UserProfilePostCount = UserProfilePostCount + 1;
             var PostCount = UserProfilePostCount / 2;
@@ -443,7 +443,7 @@ bool _isScrolledUp = false;
             print(
                 "PostCountPostCountPostCountPostCountPostCountPostCountPostCountPostCountPostCount : 1 :- ${PostCount}  :::::- ${UserProfilePostCount}");
             print("sadasdsadasdsadasdsadasdsadasdsadasd : ------> ${aa}");
-    
+
             int? y = int.parse(aa.split('.')[0]);
             print("sadasdsadasdsadasdsadasdsadasdsadasd : ------> ${y}");
             FinalPostCount = y;
@@ -457,15 +457,15 @@ bool _isScrolledUp = false;
                 "PostCountPostCountPostCountPostCountPostCountPostCountPostCountPostCountPostCount : 2 :- ${PostCount}  :::::- ${UserProfilePostCount}");
             var aa = "${PostCount}";
             print("sadasdsadasdsadasdsadasdsadasdsadasd : ------> ${aa}");
-    
+
             int? y = int.parse(aa.split('.')[0]);
             print("sadasdsadasdsadasdsadasdsadasdsadasd : ------> ${y}");
-    
+
             FinalPostCount = y;
             print(
                 "sadasdsadasdsadasdsadasdsadasdsadasd : ------> ${FinalPostCount}");
           }
-    
+
           GetAllPostData?.object?.forEach((element) {
             if (element.postDataType == 'VIDEO') {
               if (element.postData?.isNotEmpty == true) {
@@ -536,13 +536,13 @@ bool _isScrolledUp = false;
             return ProfileScreen(
                 User_ID: "${state.userTagModel.object}", isFollowing: "");
           }));
-    
+
           // print("tagName -- ${tagName}");
           print("user id -- ${state.userTagModel..object}");
         }
         if (state is SearchHistoryDataAddxtends) {
           searchUserForInbox1 = state.searchUserForInbox;
-    
+
           /*  isTagData = true;
             isHeshTegData = false; */
           searchUserForInbox1?.object?.content?.forEach((element) {
@@ -551,7 +551,7 @@ bool _isScrolledUp = false;
               'display': element.userName,
               'photo': element.userProfilePic,
             };
-    
+
             tageData.add(dataSetup);
             List<Map<String, dynamic>> uniqueTageData = [];
             Set<String> encounteredIds = Set<String>();
@@ -559,7 +559,7 @@ bool _isScrolledUp = false;
               if (!encounteredIds.contains(data['id'])) {
                 // If the ID hasn't been encountered, add to the result list
                 uniqueTageData.add(data);
-    
+
                 // Mark the ID as encountered
                 encounteredIds.add(data['id']);
               }
@@ -570,17 +570,18 @@ bool _isScrolledUp = false;
             }
           });
         }
-    
+
         if (state is GetAllHashtagState) {
           getAllHashtag = state.getAllHashtag;
-    
+
           for (int i = 0;
               i < (getAllHashtag?.object?.content?.length ?? 0);
               i++) {
             // getAllHashtag?.object?.content?[i].split('#').last;
             Map<String, dynamic> dataSetup = {
               'id': '${i}',
-              'display': '${getAllHashtag?.object?.content?[i].split('#').last}',
+              'display':
+                  '${getAllHashtag?.object?.content?[i].split('#').last}',
               'style': TextStyle(color: Colors.blue)
             };
             heshTageData.add(dataSetup);
@@ -614,14 +615,18 @@ bool _isScrolledUp = false;
                           ),
                         ),
                       )
-                    : CustomScrollView(controller: _scrollController,
+                    : CustomScrollView(
+                        controller: _scrollController,
                         slivers: <Widget>[
                           SliverAppBar(
+                            toolbarHeight: _height / 6.5,
                             backgroundColor: Colors.transparent,
                             leading: SizedBox(),
                             expandedHeight: _height / 3,
                             floating: false,
                             pinned: true,
+                            snap: false,
+                            stretch: true,
                             elevation: 0,
                             flexibleSpace: LayoutBuilder(
                               builder: (BuildContext context,
@@ -649,7 +654,8 @@ bool _isScrolledUp = false;
                                                   MaterialPageRoute(
                                                     builder: (context) =>
                                                         ProfileandDocumentScreen(
-                                                      path: NewProfileData?.object
+                                                      path: NewProfileData
+                                                          ?.object
                                                           ?.userBackgroundPic,
                                                       title: "",
                                                     ),
@@ -666,7 +672,7 @@ bool _isScrolledUp = false;
                                             }
                                           },
                                           child: Container(
-                                            // color: Colors.red,
+                                            color: Colors.white,
                                             height: _height / 3.4,
                                             width: _width,
                                             child: NewProfileData?.object
@@ -675,8 +681,15 @@ bool _isScrolledUp = false;
                                                     NewProfileData?.object
                                                             ?.userBackgroundPic ==
                                                         ''
-                                                ? Image.asset(
-                                                    ImageConstant.splashImage)
+                                                ? CustomImageView(
+                                                    svgPath: ImageConstant
+                                                        .splashImage, /* fit: BoxFit.fill, */
+                                                    radius: BorderRadius.only(
+                                                        bottomRight:
+                                                            Radius.circular(20),
+                                                        bottomLeft:
+                                                            Radius.circular(20)),
+                                                  )
                                                 : CustomImageView(
                                                     url:
                                                         "${NewProfileData?.object?.userBackgroundPic}",
@@ -690,40 +703,44 @@ bool _isScrolledUp = false;
                                                     ),
                                           ),
                                         ),
-                                       _isScrolledUp==false?  Padding(
-                                          padding:
-                                              EdgeInsets.only(top: 55, left: 16),
-                                          child: GestureDetector(
-                                            onTap: () {
-                                              if (widget.Screen?.isNotEmpty ==
-                                                  true) {
-                                                Navigator.push(
-                                                    context,
-                                                    MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          NewBottomBar(
-                                                              buttomIndex: 0),
-                                                    ));
-                                              } else {
-                                                Navigator.pop(context);
-                                              }
-                                            },
-                                            child: Container(
-                                              height: 30,
-                                              width: 30,
-                                              color: Color.fromRGBO(
-                                                  255, 255, 255, 0.3),
-                                              child: Center(
-                                                child: Image.asset(
-                                                  ImageConstant.backArrow,
-                                                  fit: BoxFit.fill,
-                                                  height: 25,
-                                                  width: 25,
+                                        _isScrolledUp == false
+                                            ? Padding(
+                                                padding: EdgeInsets.only(
+                                                    top: 55, left: 16),
+                                                child: GestureDetector(
+                                                  onTap: () {
+                                                    if (widget.Screen
+                                                            ?.isNotEmpty ==
+                                                        true) {
+                                                      Navigator.push(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                NewBottomBar(
+                                                                    buttomIndex:
+                                                                        0),
+                                                          ));
+                                                    } else {
+                                                      Navigator.pop(context);
+                                                    }
+                                                  },
+                                                  child: Container(
+                                                    height: 30,
+                                                    width: 30,
+                                                    color: Color.fromRGBO(
+                                                        255, 255, 255, 0.3),
+                                                    child: Center(
+                                                      child: Image.asset(
+                                                        ImageConstant.backArrow,
+                                                        fit: BoxFit.fill,
+                                                        height: 25,
+                                                        width: 25,
+                                                      ),
+                                                    ),
+                                                  ),
                                                 ),
-                                              ),
-                                            ),
-                                          ),
-                                        ):SizedBox(),
+                                              )
+                                            : SizedBox(),
                                         Align(
                                           alignment: Alignment.bottomCenter,
                                           child: GestureDetector(
@@ -774,13 +791,20 @@ bool _isScrolledUp = false;
                                                         NewProfileData?.object
                                                                 ?.userProfilePic ==
                                                             ''
-                                                    ? Image.asset(
-                                                        ImageConstant.splashImage)
+                                                    ? CustomImageView(
+                                                        imagePath: ImageConstant
+                                                            .tomcruse,
+                                                        radius:
+                                                            BorderRadius.all(
+                                                          Radius.circular(25),
+                                                        ),
+                                                      )
                                                     : CircleAvatar(
                                                         backgroundColor:
                                                             Colors.white,
-                                                        backgroundImage: NetworkImage(
-                                                            "${NewProfileData?.object?.userProfilePic}"),
+                                                        backgroundImage:
+                                                            NetworkImage(
+                                                                "${NewProfileData?.object?.userProfilePic}"),
                                                         radius: 25,
                                                       ),
                                               ),
@@ -798,7 +822,8 @@ bool _isScrolledUp = false;
                             child: Column(
                               children: [
                                 User_Module == "EMPLOYEE" &&
-                                        NewProfileData?.object?.approvalStatus ==
+                                        NewProfileData
+                                                ?.object?.approvalStatus ==
                                             "PARTIALLY_REGISTERED"
                                     ? Padding(
                                         padding: const EdgeInsets.only(top: 15),
@@ -814,8 +839,9 @@ bool _isScrolledUp = false;
                                                   color: Color(0xffD5EED5),
                                                 ),
                                                 child: Padding(
-                                                  padding: const EdgeInsets.only(
-                                                      left: 15, right: 15),
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          left: 15, right: 15),
                                                   child: Row(
                                                     mainAxisSize:
                                                         MainAxisSize.min,
@@ -827,8 +853,8 @@ bool _isScrolledUp = false;
                                                               BoxDecoration(
                                                             shape:
                                                                 BoxShape.circle,
-                                                            color:
-                                                                Color(0xff019801),
+                                                            color: Color(
+                                                                0xff019801),
                                                           )),
                                                       SizedBox(
                                                         width: 10,
@@ -838,7 +864,8 @@ bool _isScrolledUp = false;
                                                         style: TextStyle(
                                                             fontSize: 15,
                                                             fontWeight:
-                                                                FontWeight.w600),
+                                                                FontWeight
+                                                                    .w600),
                                                       )
                                                     ],
                                                   ),
@@ -867,10 +894,12 @@ bool _isScrolledUp = false;
                                                                   ?.approvalStatus ==
                                                               "PARTIALLY_REGISTERED"
                                                           ? Color(0xffB6D9EC)
-                                                          : NewProfileData?.object
+                                                          : NewProfileData
+                                                                      ?.object
                                                                       ?.approvalStatus ==
                                                                   "PENDING"
-                                                              ? Color(0xffFFDBA8)
+                                                              ? Color(
+                                                                  0xffFFDBA8)
                                                               : NewProfileData
                                                                           ?.object
                                                                           ?.approvalStatus ==
@@ -914,9 +943,7 @@ bool _isScrolledUp = false;
                                                                         "PARTIALLY_REGISTERED"
                                                                     ? Color(
                                                                         0xff1A94D7)
-                                                                    : NewProfileData
-                                                                                ?.object
-                                                                                ?.approvalStatus ==
+                                                                    : NewProfileData?.object?.approvalStatus ==
                                                                             "PENDING"
                                                                         ? Color(
                                                                             0xffC28432)
@@ -987,7 +1014,7 @@ bool _isScrolledUp = false;
                                             : SizedBox()
                                   ],
                                 ),
-    
+
                                 SizedBox(
                                   height: 10,
                                 ),
@@ -1004,28 +1031,32 @@ bool _isScrolledUp = false;
                                                     builder: (context) =>
                                                         ShowProfileScreen(),
                                                   )); */
-                                               Navigator.push(context,
-                                            MaterialPageRoute(builder: (context) {
-                                          return MultiBlocProvider(
-                                              providers: [
-                                                BlocProvider<MyAccountCubit>(
-                                                  create: (context) =>
-                                                      MyAccountCubit(),
-                                                ),
-                                              ],
-                                              child: EditProfileScreen(
-                                                newProfileData: NewProfileData,
-                                              ));
-                                        })).then((value) => widget
-                                                    .ProfileNotification ==
-                                                true
-                                            ? BlocProvider.of<NewProfileSCubit>(context)
-                                                .NewProfileSAPI(
-                                                    context, widget.User_ID, true)
-                                            : BlocProvider.of<NewProfileSCubit>(
-                                                    context)
-                                                .NewProfileSAPI(context,
-                                                    widget.User_ID, false));
+                                              Navigator.push(context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) {
+                                                return MultiBlocProvider(
+                                                    providers: [
+                                                      BlocProvider<
+                                                          MyAccountCubit>(
+                                                        create: (context) =>
+                                                            MyAccountCubit(),
+                                                      ),
+                                                    ],
+                                                    child: EditProfileScreen(
+                                                      newProfileData:
+                                                          NewProfileData,
+                                                    ));
+                                              })).then((value) => widget
+                                                          .ProfileNotification ==
+                                                      true
+                                                  ? BlocProvider.of<NewProfileSCubit>(context)
+                                                      .NewProfileSAPI(context,
+                                                          widget.User_ID, true)
+                                                  : BlocProvider.of<NewProfileSCubit>(context)
+                                                      .NewProfileSAPI(
+                                                          context,
+                                                          widget.User_ID,
+                                                          false));
                                             },
                                             child: Container(
                                               alignment: Alignment.center,
@@ -1047,7 +1078,8 @@ bool _isScrolledUp = false;
                                                     fontSize: 18,
                                                     color: ColorConstant
                                                         .primary_color,
-                                                    fontWeight: FontWeight.w500),
+                                                    fontWeight:
+                                                        FontWeight.w500),
                                               ),
                                             ),
                                           ),
@@ -1111,7 +1143,8 @@ bool _isScrolledUp = false;
                                                     color: ColorConstant
                                                         .primary_color,
                                                     borderRadius:
-                                                        BorderRadius.circular(10),
+                                                        BorderRadius.circular(
+                                                            10),
                                                   ),
                                                   child: Text(
                                                     'Following',
@@ -1130,7 +1163,8 @@ bool _isScrolledUp = false;
                                                             context)
                                                         .followWIngMethod(
                                                             NewProfileData
-                                                                ?.object?.userUid
+                                                                ?.object
+                                                                ?.userUid
                                                                 .toString(),
                                                             context);
                                                     // print(${name[0].toUpperCase()}${name.substring(1).toLowerCase()});
@@ -1159,12 +1193,13 @@ bool _isScrolledUp = false;
                                                 ),
                                           NewProfileData?.object?.isFollowing ==
                                                       "FOLLOWING" ||
-                                                  NewProfileData
-                                                          ?.object?.accountType ==
+                                                  NewProfileData?.object
+                                                          ?.accountType ==
                                                       "PUBLIC"
                                               ? Padding(
-                                                  padding: const EdgeInsets.only(
-                                                      left: 10),
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          left: 10),
                                                   child: GestureDetector(
                                                     onTap: () {
                                                       BlocProvider.of<
@@ -1181,8 +1216,8 @@ bool _isScrolledUp = false;
                                                         color: ColorConstant
                                                             .primary_color,
                                                         borderRadius:
-                                                            BorderRadius.circular(
-                                                                10),
+                                                            BorderRadius
+                                                                .circular(10),
                                                       ),
                                                       child: Center(
                                                         child: CustomImageView(
@@ -1212,15 +1247,16 @@ bool _isScrolledUp = false;
                                                     context,
                                                     NewProfileData
                                                         ?.object?.userUid,
-                                                    NewProfileData?.object?.name,
+                                                    NewProfileData
+                                                        ?.object?.name,
                                                     blockKey);
                                               },
                                               child: Container(
                                                 /*  */ height: 40,
                                                 width: 40,
                                                 decoration: BoxDecoration(
-                                                  color:
-                                                      ColorConstant.primary_color,
+                                                  color: ColorConstant
+                                                      .primary_color,
                                                   borderRadius:
                                                       BorderRadius.circular(10),
                                                 ),
@@ -1228,12 +1264,12 @@ bool _isScrolledUp = false;
                                                   child: Icon(
                                                     Icons.more_vert_rounded,
                                                     color: Colors.white,
-                                                  ) /* CustomImageView(
+                                                  ), /* CustomImageView(
                                                           height: 20,
                                                           width: 20,
                                                           imagePath:
                                                               ImageConstant.chat) */
-                                                  ,
+                                                  
                                                 ),
                                               ),
                                             ),
@@ -1241,15 +1277,16 @@ bool _isScrolledUp = false;
                                           Spacer(),
                                         ],
                                       ),
-    
+
                                 SizedBox(
                                   height: 12,
                                 ),
-    
+
                                 Center(
                                   child: Container(
                                     key: key,
-                                    margin: EdgeInsets.only(left: 15, right: 15),
+                                    margin:
+                                        EdgeInsets.only(left: 15, right: 15),
                                     height: 80,
                                     decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(10),
@@ -1321,7 +1358,8 @@ bool _isScrolledUp = false;
                                                         builder: (context) {
                                                   return MultiBlocProvider(
                                                     providers: [
-                                                      BlocProvider<FollowerBlock>(
+                                                      BlocProvider<
+                                                          FollowerBlock>(
                                                         create: (context) =>
                                                             FollowerBlock(),
                                                       ),
@@ -1427,7 +1465,8 @@ bool _isScrolledUp = false;
                                                         builder: (context) {
                                                   return MultiBlocProvider(
                                                     providers: [
-                                                      BlocProvider<FollowerBlock>(
+                                                      BlocProvider<
+                                                          FollowerBlock>(
                                                         create: (context) =>
                                                             FollowerBlock(),
                                                       ),
@@ -1442,8 +1481,10 @@ bool _isScrolledUp = false;
                                                             .ProfileNotification ==
                                                         true
                                                     ? BlocProvider.of<NewProfileSCubit>(context)
-                                                        .NewProfileSAPI(context,
-                                                            widget.User_ID, true)
+                                                        .NewProfileSAPI(
+                                                            context,
+                                                            widget.User_ID,
+                                                            true)
                                                     : BlocProvider.of<NewProfileSCubit>(context)
                                                         .NewProfileSAPI(
                                                             context,
@@ -1510,7 +1551,7 @@ bool _isScrolledUp = false;
                                 ),
                                 /* NewProfileData?.object?.isFollowing == 'FOLLOWING' ||
                           User_ID == NewProfileData?.object?.userUid || NewProfileData?.object?.accountType == 'PUBLIC' */
-    
+
                                 /*  if (User_ID == NewProfileData?.object?.userUid ||
                               (NewProfileData?.object?.isFollowing ==
                                       'FOLLOWING' &&
@@ -1518,7 +1559,7 @@ bool _isScrolledUp = false;
                                           'PRIVATE' ||
                                       NewProfileData?.object?.accountType ==
                                           'PUBLIC'))) */
-    
+
                                 /* if (User_ID == NewProfileData?.object?.userUid ||
                               (NewProfileData?.object?.accountType == 'PUBLIC') ||
                               (NewProfileData?.object?.isFollowing ==
@@ -1568,7 +1609,8 @@ bool _isScrolledUp = false;
                                                           ? Divider(
                                                               endIndent: 20,
                                                               indent: 20,
-                                                              color: Colors.black,
+                                                              color:
+                                                                  Colors.black,
                                                             )
                                                           : SizedBox(),
                                                     ],
@@ -1605,7 +1647,8 @@ bool _isScrolledUp = false;
                                                       children: [
                                                         const Spacer(),
                                                         Text("Post",
-                                                            textScaleFactor: 1.0,
+                                                            textScaleFactor:
+                                                                1.0,
                                                             style: TextStyle(
                                                                 // color: arrNotiyTypeList[3].isSelected
                                                                 //     ? Colors.white
@@ -1619,7 +1662,8 @@ bool _isScrolledUp = false;
                                                         Spacer(),
                                                       ],
                                                     ),
-                                                    arrNotiyTypeList[1].isSelected
+                                                    arrNotiyTypeList[1]
+                                                            .isSelected
                                                         ? Divider(
                                                             endIndent: 30,
                                                             indent: 30,
@@ -1672,11 +1716,8 @@ bool _isScrolledUp = false;
                                                                     //     ? Colors.white
                                                                     //     : Colors.black,
                                                                     fontSize: 16,
-                                                                    fontFamily:
-                                                                        'Outfit',
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .bold)),
+                                                                    fontFamily: 'Outfit',
+                                                                    fontWeight: FontWeight.bold)),
                                                             Spacer(),
                                                           ],
                                                         ),
@@ -1685,8 +1726,8 @@ bool _isScrolledUp = false;
                                                             ? Divider(
                                                                 endIndent: 5,
                                                                 indent: 5,
-                                                                color:
-                                                                    Colors.black,
+                                                                color: Colors
+                                                                    .black,
                                                               )
                                                             : SizedBox(),
                                                       ],
@@ -1768,7 +1809,7 @@ bool _isScrolledUp = false;
                                       'FOLLOWING' &&
                                   NewProfileData?.object?.accountType ==
                                       'PRIVATE')) */
-    
+
                                 /* Container(
                           // color: Colors.red,
                           /*  height: _height, */
@@ -1816,8 +1857,9 @@ bool _isScrolledUp = false;
                                     onHorizontalDragEnd: (details) {
                                       Scrollable.ensureVisible(
                                           key.currentContext!,
-                                          duration: Duration(microseconds: 400));
-    
+                                          duration:
+                                              Duration(microseconds: 400));
+
                                       if (User_ID !=
                                           NewProfileData?.object?.userUid) {
                                         if (swipLeft == false &&
@@ -1868,7 +1910,7 @@ bool _isScrolledUp = false;
                                           print("Swiped left");
                                         }
                                       }
-    
+
                                       scrollController.animateTo(0.0,
                                           duration: Duration(milliseconds: 300),
                                           curve: Curves.easeOut);
@@ -1879,13 +1921,15 @@ bool _isScrolledUp = false;
                                           /// Content of Tab 1
                                           arrNotiyTypeList[0].isSelected
                                               ? Padding(
-                                                  padding: const EdgeInsets.only(
-                                                      left: 16,
-                                                      right: 16,
-                                                      top: 14),
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          left: 16,
+                                                          right: 16,
+                                                          top: 14),
                                                   child: Column(
                                                     crossAxisAlignment:
-                                                        CrossAxisAlignment.start,
+                                                        CrossAxisAlignment
+                                                            .start,
                                                     children: [
                                                       /* if (User_ID ==
                                                       NewProfileData
@@ -1909,8 +1953,10 @@ bool _isScrolledUp = false;
                                                                     const EdgeInsets
                                                                             .only(
                                                                         top: 10,
-                                                                        right: 20,
-                                                                        left: 20),
+                                                                        right:
+                                                                            20,
+                                                                        left:
+                                                                            20),
                                                                 child: Row(
                                                                   mainAxisAlignment:
                                                                       MainAxisAlignment
@@ -1925,14 +1971,12 @@ bool _isScrolledUp = false;
                                                                         fontSize:
                                                                             18,
                                                                         fontWeight:
-                                                                            FontWeight
-                                                                                .w600,
+                                                                            FontWeight.w600,
                                                                       ),
                                                                     ),
                                                                     User_ID !=
                                                                             NewProfileData
-                                                                                ?.object
-                                                                                ?.userUid
+                                                                                ?.object?.userUid
                                                                         ? SizedBox
                                                                             .shrink()
                                                                         : GestureDetector(
@@ -1983,7 +2027,8 @@ bool _isScrolledUp = false;
                                                                   ? Padding(
                                                                       padding: const EdgeInsets
                                                                               .only(
-                                                                          top: 12,
+                                                                          top:
+                                                                              12,
                                                                           left:
                                                                               10,
                                                                           right:
@@ -1996,8 +2041,7 @@ bool _isScrolledUp = false;
                                                                             left:
                                                                                 10),
                                                                         alignment:
-                                                                            Alignment
-                                                                                .topLeft,
+                                                                            Alignment.topLeft,
                                                                         child:
                                                                             LinkifyText(
                                                                           "${aboutMe.text}",
@@ -2016,12 +2060,9 @@ bool _isScrolledUp = false;
                                                                                 'outfit',
                                                                           ),
                                                                           linkTypes: [
-                                                                            LinkType
-                                                                                .url,
-                                                                            LinkType
-                                                                                .userTag,
-                                                                            LinkType
-                                                                                .hashTag,
+                                                                            LinkType.url,
+                                                                            LinkType.userTag,
+                                                                            LinkType.hashTag,
                                                                             // LinkType
                                                                             //     .email
                                                                           ],
@@ -2029,10 +2070,9 @@ bool _isScrolledUp = false;
                                                                               (link) async {
                                                                             /// do stuff with `link` like
                                                                             /// if(link.type == Link.url) launchUrl(link.value);
-    
-                                                                            var SelectedTest = link
-                                                                                .value
-                                                                                .toString();
+
+                                                                            var SelectedTest =
+                                                                                link.value.toString();
                                                                             var Link =
                                                                                 SelectedTest.startsWith('https');
                                                                             var Link1 =
@@ -2047,20 +2087,13 @@ bool _isScrolledUp = false;
                                                                                 SelectedTest.startsWith('HTTP');
                                                                             var Link6 =
                                                                                 SelectedTest.startsWith('https://pdslink.page.link/');
-                                                                            print(
-                                                                                SelectedTest.toString());
-    
+                                                                            print(SelectedTest.toString());
+
                                                                             if (User_ID ==
                                                                                 null) {
                                                                               Navigator.of(context).push(MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
                                                                             } else {
-                                                                              if (Link == true ||
-                                                                                  Link1 == true ||
-                                                                                  Link2 == true ||
-                                                                                  Link3 == true ||
-                                                                                  Link4 == true ||
-                                                                                  Link5 == true ||
-                                                                                  Link6 == true) {
+                                                                              if (Link == true || Link1 == true || Link2 == true || Link3 == true || Link4 == true || Link5 == true || Link6 == true) {
                                                                                 if (Link2 == true || Link3 == true) {
                                                                                   launchUrl(Uri.parse("https://${link.value.toString()}"));
                                                                                   print("qqqqqqqqhttps://${link.value}");
@@ -2109,20 +2142,18 @@ bool _isScrolledUp = false;
                                                                       child:
                                                                           Column(
                                                                         crossAxisAlignment:
-                                                                            CrossAxisAlignment
-                                                                                .start,
+                                                                            CrossAxisAlignment.start,
                                                                         children: [
                                                                           SizedBox(
                                                                             height:
                                                                                 15,
                                                                           ),
-    
+
                                                                           SizedBox(
                                                                             height:
                                                                                 5,
                                                                           ),
-                                                                          AbboutMeShow ==
-                                                                                  true
+                                                                          AbboutMeShow == true
                                                                               ? Padding(
                                                                                   padding: const EdgeInsets.only(left: 20, right: 20),
                                                                                   child: Container(
@@ -2199,7 +2230,7 @@ bool _isScrolledUp = false;
                                                                                                           ),
                                                                                                         );
                                                                                                       }
-    
+
                                                                                                       return Container(
                                                                                                         color: Colors.amber,
                                                                                                       );
@@ -2231,7 +2262,7 @@ bool _isScrolledUp = false;
                                                                                                                                 ), */
                                                                                                             );
                                                                                                       }
-    
+
                                                                                                       return Container(
                                                                                                         color: Colors.amber,
                                                                                                       );
@@ -2244,7 +2275,7 @@ bool _isScrolledUp = false;
                                                                                     ],
                                                                                   ),
                                                                                 ),
-    
+
                                                                           // Padding(
                                                                           //         padding: const EdgeInsets
                                                                           //                 .only(
@@ -2501,7 +2532,7 @@ bool _isScrolledUp = false;
                                                           ],
                                                         )),
                                                   ), */
-    
+
                                                       /* Card(
                                                         color: Colors.white,
                                                         borderOnForeground: true,
@@ -3244,7 +3275,8 @@ bool _isScrolledUp = false;
                                                                   ?.module ==
                                                               "EXPERT"
                                                           ? Card(
-                                                              color: Colors.white,
+                                                              color:
+                                                                  Colors.white,
                                                               borderOnForeground:
                                                                   true,
                                                               elevation: 10,
@@ -3265,7 +3297,8 @@ bool _isScrolledUp = false;
                                                                   ?.module ==
                                                               "COMPANY"
                                                           ? Card(
-                                                              color: Colors.white,
+                                                              color:
+                                                                  Colors.white,
                                                               borderOnForeground:
                                                                   true,
                                                               elevation: 10,
@@ -3277,9 +3310,10 @@ bool _isScrolledUp = false;
                                                                             15.0),
                                                               ),
                                                               /*  child: expertUser(_height, _width) */
-                                                              child: compnayUser(
-                                                                  _height,
-                                                                  _width),
+                                                              child:
+                                                                  compnayUser(
+                                                                      _height,
+                                                                      _width),
                                                             )
                                                           : SizedBox(),
                                                       NewProfileData?.object
@@ -3290,7 +3324,8 @@ bool _isScrolledUp = false;
                                                                       ?.approvalStatus !=
                                                                   'PENDING'
                                                           ? Card(
-                                                              color: Colors.white,
+                                                              color:
+                                                                  Colors.white,
                                                               borderOnForeground:
                                                                   true,
                                                               elevation: 10,
@@ -3334,7 +3369,8 @@ bool _isScrolledUp = false;
                                                                       ?.approvalStatus !=
                                                                   'PENDING'
                                                           ? Card(
-                                                              color: Colors.white,
+                                                              color:
+                                                                  Colors.white,
                                                               borderOnForeground:
                                                                   true,
                                                               elevation: 10,
@@ -3355,11 +3391,11 @@ bool _isScrolledUp = false;
                                                   ),
                                                 )
                                               : SizedBox(),
-    
+
                                           /// Content of Tab 2
                                           arrNotiyTypeList[1].isSelected
                                               ? creratePostUser(
-                                                  GetAllPostData, _width)
+                                                  GetAllPostData, _width,_height)
                                               /* Container(
                                             height: FinalPostCount * 185,
                                             // color: Colors.yellow,
@@ -3541,12 +3577,12 @@ bool _isScrolledUp = false;
                                             ),
                                           ) */
                                               : SizedBox(),
-    
+
                                           /// Content of Tab 3
                                           arrNotiyTypeList[2].isSelected
                                               ? User_ID ==
-                                                          NewProfileData
-                                                              ?.object?.userUid ||
+                                                          NewProfileData?.object
+                                                              ?.userUid ||
                                                       (NewProfileData?.object
                                                               ?.accountType ==
                                                           'PUBLIC') ||
@@ -3556,7 +3592,8 @@ bool _isScrolledUp = false;
                                                           NewProfileData?.object
                                                                   ?.accountType ==
                                                               'PRIVATE')
-                                                  ? GetUserPostCommetData?.object
+                                                  ? GetUserPostCommetData
+                                                              ?.object
                                                               ?.isNotEmpty ??
                                                           true
                                                       ? Padding(
@@ -3580,8 +3617,7 @@ bool _isScrolledUp = false;
                                                                       shape:
                                                                           RoundedRectangleBorder(
                                                                         borderRadius:
-                                                                            BorderRadius.circular(
-                                                                                100),
+                                                                            BorderRadius.circular(100),
                                                                       ),
                                                                     ),
                                                                     child:
@@ -3605,10 +3641,8 @@ bool _isScrolledUp = false;
                                                                                 value,
                                                                             child:
                                                                                 Padding(
-                                                                              padding:
-                                                                                  EdgeInsets.only(left: 10),
-                                                                              child:
-                                                                                  Text(
+                                                                              padding: EdgeInsets.only(left: 10),
+                                                                              child: Text(
                                                                                 value,
                                                                                 style: TextStyle(
                                                                                   color: Color(0xFFF58E92),
@@ -3629,16 +3663,10 @@ bool _isScrolledUp = false;
                                                                               () {
                                                                             if (newValue ==
                                                                                 "Newest to oldest") {
-                                                                              BlocProvider.of<NewProfileSCubit>(context).GetPostCommetAPI(
-                                                                                  context,
-                                                                                  "${NewProfileData?.object?.userUid}",
-                                                                                  "asc"); //asc
+                                                                              BlocProvider.of<NewProfileSCubit>(context).GetPostCommetAPI(context, "${NewProfileData?.object?.userUid}", "asc"); //asc
                                                                             } else if (newValue ==
                                                                                 "oldest to Newest") {
-                                                                              BlocProvider.of<NewProfileSCubit>(context).GetPostCommetAPI(
-                                                                                  context,
-                                                                                  "${NewProfileData?.object?.userUid}",
-                                                                                  "desc");
+                                                                              BlocProvider.of<NewProfileSCubit>(context).GetPostCommetAPI(context, "${NewProfileData?.object?.userUid}", "desc");
                                                                             }
                                                                             selctedValue =
                                                                                 newValue!;
@@ -3650,7 +3678,8 @@ bool _isScrolledUp = false;
                                                                 ],
                                                               ),
                                                               ListView.builder(
-                                                                shrinkWrap: true,
+                                                                shrinkWrap:
+                                                                    true,
                                                                 physics:
                                                                     NeverScrollableScrollPhysics(),
                                                                 itemCount:
@@ -3669,180 +3698,180 @@ bool _isScrolledUp = false;
                                                                             .only(
                                                                         bottom:
                                                                             10),
-                                                                    child:
-                                                                        GestureDetector(
-                                                                            onTap:
-                                                                                () {
-                                                                              Navigator.push(
-                                                                                context,
-                                                                                MaterialPageRoute(
-                                                                                    builder: (context) => OpenSavePostImage(
-                                                                                          PostID: GetUserPostCommetData?.object?[index].postUid,
-                                                                                          profileTure: true,
-                                                                                        )),
-                                                                              );
-                                                                            },
-                                                                            child:
-                                                                                Container(
-                                                                              decoration:
-                                                                                  ShapeDecoration(
-                                                                                // color: Colors.green,
-                                                                                shape: RoundedRectangleBorder(
-                                                                                  side: BorderSide(width: 1, color: Color(0xFFD3D3D3)),
-                                                                                  borderRadius: BorderRadius.circular(10),
+                                                                    child: GestureDetector(
+                                                                        onTap: () {
+                                                                          Navigator
+                                                                              .push(
+                                                                            context,
+                                                                            MaterialPageRoute(
+                                                                                builder: (context) => OpenSavePostImage(
+                                                                                      PostID: GetUserPostCommetData?.object?[index].postUid,
+                                                                                      profileTure: true,
+                                                                                    )),
+                                                                          );
+                                                                        },
+                                                                        child: Container(
+                                                                          decoration:
+                                                                              ShapeDecoration(
+                                                                            // color: Colors.green,
+                                                                            shape:
+                                                                                RoundedRectangleBorder(
+                                                                              side: BorderSide(width: 1, color: Color(0xFFD3D3D3)),
+                                                                              borderRadius: BorderRadius.circular(10),
+                                                                            ),
+                                                                          ),
+                                                                          child:
+                                                                              Row(
+                                                                            crossAxisAlignment:
+                                                                                CrossAxisAlignment.start,
+                                                                            children: [
+                                                                              Container(
+                                                                                width: 50,
+                                                                                // height: 50,
+                                                                                margin: EdgeInsets.only(left: 5, top: 10),
+                                                                                child: GetUserPostCommetData?.object?[index].userProfilePic != null && GetUserPostCommetData?.object?[index].userProfilePic != ""
+                                                                                    ? CircleAvatar(
+                                                                                        backgroundColor: Colors.white,
+                                                                                        backgroundImage: NetworkImage("${GetUserPostCommetData?.object?[index].userProfilePic}"),
+                                                                                        radius: 25,
+                                                                                      )
+                                                                                    : CustomImageView(
+                                                                                        imagePath: ImageConstant.tomcruse,
+                                                                                        height: 50,
+                                                                                        width: 50,
+                                                                                        fit: BoxFit.fill,
+                                                                                        radius: BorderRadius.circular(25),
+                                                                                      ),
+                                                                                // decoration:
+                                                                                //     ShapeDecoration(
+                                                                                //   image:
+                                                                                //       DecorationImage(
+                                                                                //     image: AssetImage(
+                                                                                //         ImageConstant
+                                                                                //             .placeholder2),1
+                                                                                //     fit: BoxFit.fill,
+                                                                                //   ),
+                                                                                //   shape: OvalBorder(),
+                                                                                // ),
+                                                                              ),
+                                                                              Padding(
+                                                                                padding: const EdgeInsets.only(left: 10),
+                                                                                child: Column(
+                                                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                  children: [
+                                                                                    SizedBox(
+                                                                                      height: 10,
+                                                                                    ),
+                                                                                    Text(
+                                                                                      '${GetUserPostCommetData?.object?[index].postUserName}',
+                                                                                      style: TextStyle(
+                                                                                        color: Colors.black,
+                                                                                        fontSize: 16,
+                                                                                        fontFamily: 'outfit',
+                                                                                        fontWeight: FontWeight.w600,
+                                                                                      ),
+                                                                                    ),
+                                                                                    GetUserPostCommetData?.object?[index].description != null
+                                                                                        ? Container(
+                                                                                            // color: Colors.amber,
+                                                                                            width: _width / 1.45,
+                                                                                            child: Text(
+                                                                                              '${GetUserPostCommetData?.object?[index].description}',
+                                                                                              style: TextStyle(
+                                                                                                overflow: TextOverflow.visible,
+                                                                                                color: Colors.black,
+                                                                                                fontSize: 14,
+                                                                                                fontFamily: 'outfit',
+                                                                                                fontWeight: FontWeight.w400,
+                                                                                              ),
+                                                                                            ),
+                                                                                          )
+                                                                                        : SizedBox(),
+                                                                                    Text(
+                                                                                      getTimeDifference(parsedDateTime),
+                                                                                      style: TextStyle(
+                                                                                        fontSize: 12,
+                                                                                        fontFamily: "outfit",
+                                                                                      ),
+                                                                                    ),
+                                                                                    Padding(
+                                                                                      padding: const EdgeInsets.only(bottom: 10),
+                                                                                      child: Column(
+                                                                                          children: List.generate(GetUserPostCommetData?.object?[index].comments?.length == null ? 0 : ((GetUserPostCommetData?.object?[index].comments?.length ?? 0) > 2 ? 2 : GetUserPostCommetData?.object?[index].comments?.length) ?? 0, (index2) {
+                                                                                        DateTime parsedDateTime2 = DateTime.parse('${GetUserPostCommetData?.object?[index].comments?[index2].createdAt}');
+                                                                                        return Row(
+                                                                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                          children: [
+                                                                                            Container(
+                                                                                              width: 45,
+                                                                                              height: 45,
+                                                                                              margin: EdgeInsets.only(top: 15),
+                                                                                              child: GetUserPostCommetData?.object?[index].comments?[index2].profilePic != null && GetUserPostCommetData?.object?[index].comments?[index2].profilePic != ""
+                                                                                                  ? CircleAvatar(
+                                                                                                      backgroundColor: Colors.white,
+                                                                                                      backgroundImage: NetworkImage("${GetUserPostCommetData?.object?[index].comments?[index2].profilePic}"),
+                                                                                                      radius: 25,
+                                                                                                    )
+                                                                                                  : CustomImageView(
+                                                                                                      imagePath: ImageConstant.tomcruse,
+                                                                                                      height: 50,
+                                                                                                      width: 50,
+                                                                                                      fit: BoxFit.fill,
+                                                                                                      radius: BorderRadius.circular(25),
+                                                                                                    ),
+                                                                                            ),
+                                                                                            Padding(
+                                                                                              padding: const EdgeInsets.only(left: 8, top: 5, right: 3),
+                                                                                              child: Column(
+                                                                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                                children: [
+                                                                                                  SizedBox(
+                                                                                                    height: 10,
+                                                                                                  ),
+                                                                                                  Text(
+                                                                                                    '${GetUserPostCommetData?.object?[index].comments?[index2].userName}',
+                                                                                                    style: TextStyle(
+                                                                                                      color: Colors.black,
+                                                                                                      fontSize: 16,
+                                                                                                      fontFamily: "outfit",
+                                                                                                      fontWeight: FontWeight.w600,
+                                                                                                    ),
+                                                                                                  ),
+                                                                                                  Container(
+                                                                                                    // color: Colors.red,
+                                                                                                    width: _width / 2,
+                                                                                                    child: Text(
+                                                                                                      '${GetUserPostCommetData?.object?[index].comments?[index2].comment}',
+                                                                                                      // maxLines: 1,
+                                                                                                      style: TextStyle(
+                                                                                                        // overflow: TextOverflow.ellipsis,
+                                                                                                        color: Colors.black,
+                                                                                                        fontSize: 16,
+                                                                                                        fontFamily: "outfit",
+                                                                                                        fontWeight: FontWeight.w600,
+                                                                                                      ),
+                                                                                                    ),
+                                                                                                  ),
+                                                                                                  Text(
+                                                                                                    getTimeDifference(parsedDateTime2),
+                                                                                                    style: TextStyle(
+                                                                                                      fontSize: 12,
+                                                                                                      fontFamily: "outfit",
+                                                                                                    ),
+                                                                                                  ),
+                                                                                                ],
+                                                                                              ),
+                                                                                            )
+                                                                                          ],
+                                                                                        );
+                                                                                      })),
+                                                                                    ),
+                                                                                  ],
                                                                                 ),
                                                                               ),
-                                                                              child:
-                                                                                  Row(
-                                                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                                                children: [
-                                                                                  Container(
-                                                                                    width: 50,
-                                                                                    // height: 50,
-                                                                                    margin: EdgeInsets.only(left: 5, top: 10),
-                                                                                    child: GetUserPostCommetData?.object?[index].userProfilePic != null && GetUserPostCommetData?.object?[index].userProfilePic != ""
-                                                                                        ? CircleAvatar(
-                                                                                            backgroundColor: Colors.white,
-                                                                                            backgroundImage: NetworkImage("${GetUserPostCommetData?.object?[index].userProfilePic}"),
-                                                                                            radius: 25,
-                                                                                          )
-                                                                                        : CustomImageView(
-                                                                                            imagePath: ImageConstant.tomcruse,
-                                                                                            height: 50,
-                                                                                            width: 50,
-                                                                                            fit: BoxFit.fill,
-                                                                                            radius: BorderRadius.circular(25),
-                                                                                          ),
-                                                                                    // decoration:
-                                                                                    //     ShapeDecoration(
-                                                                                    //   image:
-                                                                                    //       DecorationImage(
-                                                                                    //     image: AssetImage(
-                                                                                    //         ImageConstant
-                                                                                    //             .placeholder2),1
-                                                                                    //     fit: BoxFit.fill,
-                                                                                    //   ),
-                                                                                    //   shape: OvalBorder(),
-                                                                                    // ),
-                                                                                  ),
-                                                                                  Padding(
-                                                                                    padding: const EdgeInsets.only(left: 10),
-                                                                                    child: Column(
-                                                                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                                                                      children: [
-                                                                                        SizedBox(
-                                                                                          height: 10,
-                                                                                        ),
-                                                                                        Text(
-                                                                                          '${GetUserPostCommetData?.object?[index].postUserName}',
-                                                                                          style: TextStyle(
-                                                                                            color: Colors.black,
-                                                                                            fontSize: 16,
-                                                                                            fontFamily: 'outfit',
-                                                                                            fontWeight: FontWeight.w600,
-                                                                                          ),
-                                                                                        ),
-                                                                                        GetUserPostCommetData?.object?[index].description != null
-                                                                                            ? Container(
-                                                                                                // color: Colors.amber,
-                                                                                                width: _width / 1.45,
-                                                                                                child: Text(
-                                                                                                  '${GetUserPostCommetData?.object?[index].description}',
-                                                                                                  style: TextStyle(
-                                                                                                    overflow: TextOverflow.visible,
-                                                                                                    color: Colors.black,
-                                                                                                    fontSize: 14,
-                                                                                                    fontFamily: 'outfit',
-                                                                                                    fontWeight: FontWeight.w400,
-                                                                                                  ),
-                                                                                                ),
-                                                                                              )
-                                                                                            : SizedBox(),
-                                                                                        Text(
-                                                                                          getTimeDifference(parsedDateTime),
-                                                                                          style: TextStyle(
-                                                                                            fontSize: 12,
-                                                                                            fontFamily: "outfit",
-                                                                                          ),
-                                                                                        ),
-                                                                                        Padding(
-                                                                                          padding: const EdgeInsets.only(bottom: 10),
-                                                                                          child: Column(
-                                                                                              children: List.generate(GetUserPostCommetData?.object?[index].comments?.length == null ? 0 : ((GetUserPostCommetData?.object?[index].comments?.length ?? 0) > 2 ? 2 : GetUserPostCommetData?.object?[index].comments?.length) ?? 0, (index2) {
-                                                                                            DateTime parsedDateTime2 = DateTime.parse('${GetUserPostCommetData?.object?[index].comments?[index2].createdAt}');
-                                                                                            return Row(
-                                                                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                                                                              children: [
-                                                                                                Container(
-                                                                                                  width: 45,
-                                                                                                  height: 45,
-                                                                                                  margin: EdgeInsets.only(top: 15),
-                                                                                                  child: GetUserPostCommetData?.object?[index].comments?[index2].profilePic != null && GetUserPostCommetData?.object?[index].comments?[index2].profilePic != ""
-                                                                                                      ? CircleAvatar(
-                                                                                                          backgroundColor: Colors.white,
-                                                                                                          backgroundImage: NetworkImage("${GetUserPostCommetData?.object?[index].comments?[index2].profilePic}"),
-                                                                                                          radius: 25,
-                                                                                                        )
-                                                                                                      : CustomImageView(
-                                                                                                          imagePath: ImageConstant.tomcruse,
-                                                                                                          height: 50,
-                                                                                                          width: 50,
-                                                                                                          fit: BoxFit.fill,
-                                                                                                          radius: BorderRadius.circular(25),
-                                                                                                        ),
-                                                                                                ),
-                                                                                                Padding(
-                                                                                                  padding: const EdgeInsets.only(left: 8, top: 5, right: 3),
-                                                                                                  child: Column(
-                                                                                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                                                                                    children: [
-                                                                                                      SizedBox(
-                                                                                                        height: 10,
-                                                                                                      ),
-                                                                                                      Text(
-                                                                                                        '${GetUserPostCommetData?.object?[index].comments?[index2].userName}',
-                                                                                                        style: TextStyle(
-                                                                                                          color: Colors.black,
-                                                                                                          fontSize: 16,
-                                                                                                          fontFamily: "outfit",
-                                                                                                          fontWeight: FontWeight.w600,
-                                                                                                        ),
-                                                                                                      ),
-                                                                                                      Container(
-                                                                                                        // color: Colors.red,
-                                                                                                        width: _width / 2,
-                                                                                                        child: Text(
-                                                                                                          '${GetUserPostCommetData?.object?[index].comments?[index2].comment}',
-                                                                                                          // maxLines: 1,
-                                                                                                          style: TextStyle(
-                                                                                                            // overflow: TextOverflow.ellipsis,
-                                                                                                            color: Colors.black,
-                                                                                                            fontSize: 16,
-                                                                                                            fontFamily: "outfit",
-                                                                                                            fontWeight: FontWeight.w600,
-                                                                                                          ),
-                                                                                                        ),
-                                                                                                      ),
-                                                                                                      Text(
-                                                                                                        getTimeDifference(parsedDateTime2),
-                                                                                                        style: TextStyle(
-                                                                                                          fontSize: 12,
-                                                                                                          fontFamily: "outfit",
-                                                                                                        ),
-                                                                                                      ),
-                                                                                                    ],
-                                                                                                  ),
-                                                                                                )
-                                                                                              ],
-                                                                                            );
-                                                                                          })),
-                                                                                        ),
-                                                                                      ],
-                                                                                    ),
-                                                                                  ),
-                                                                                ],
-                                                                              ),
-                                                                            )),
+                                                                            ],
+                                                                          ),
+                                                                        )),
                                                                   );
                                                                 },
                                                               )
@@ -3853,9 +3882,11 @@ bool _isScrolledUp = false;
                                                           child: Text(
                                                           "No Comments available",
                                                           style: TextStyle(
-                                                              color: Colors.black,
+                                                              color:
+                                                                  Colors.black,
                                                               fontWeight:
-                                                                  FontWeight.bold,
+                                                                  FontWeight
+                                                                      .bold,
                                                               fontFamily:
                                                                   'outfit',
                                                               fontSize: 20),
@@ -3879,9 +3910,9 @@ bool _isScrolledUp = false;
                                                       ],
                                                     )
                                               : SizedBox(),
-    
+
                                           /// Content of Tab 4
-    
+
                                           arrNotiyTypeList[3].isSelected
                                               ? Container(
                                                   // height: value1 == 0
@@ -3910,7 +3941,7 @@ bool _isScrolledUp = false;
                                                                           null;
                                                                       value1 =
                                                                           index;
-    
+
                                                                       SharedPreferencesFunction(
                                                                           value1 ??
                                                                               0);
@@ -3921,18 +3952,18 @@ bool _isScrolledUp = false;
                                                                       alignment:
                                                                           Alignment
                                                                               .center,
-                                                                      margin: EdgeInsets
-                                                                          .only(
-                                                                              left:
-                                                                                  15),
-                                                                      width: 100,
-                                                                      height: 25,
+                                                                      margin: EdgeInsets.only(
+                                                                          left:
+                                                                              15),
+                                                                      width:
+                                                                          100,
+                                                                      height:
+                                                                          25,
                                                                       decoration:
                                                                           ShapeDecoration(
                                                                         color: value1 ==
                                                                                 index
-                                                                            ? ColorConstant
-                                                                                .primary_color
+                                                                            ? ColorConstant.primary_color
                                                                             : dataSetup == index
                                                                                 ? ColorConstant.primary_color
                                                                                 : Color(0xFFFBD8D9),
@@ -3942,13 +3973,13 @@ bool _isScrolledUp = false;
                                                                               BorderRadius.circular(100),
                                                                         ),
                                                                       ),
-                                                                      child: Text(
+                                                                      child:
+                                                                          Text(
                                                                         SaveList[
                                                                             index],
                                                                         style:
                                                                             TextStyle(
-                                                                          color: value1 ==
-                                                                                  index
+                                                                          color: value1 == index
                                                                               ? Colors.white
                                                                               : dataSetup == index
                                                                                   ? Colors.white
@@ -3962,7 +3993,7 @@ bool _isScrolledUp = false;
                                                                         ),
                                                                       ),
                                                                     )))),
-                                                        NavagtionPassing(_width)
+                                                        NavagtionPassing(_width,_height)
                                                       ],
                                                     ),
                                                   ),
@@ -3974,7 +4005,6 @@ bool _isScrolledUp = false;
                                   ),
                                 ),
                                 // ),
-    
                                 SizedBox(
                                   height: 20,
                                 )
@@ -4045,6 +4075,7 @@ bool _isScrolledUp = false;
   Widget creratePostUser(
     GetAppUserPostModel? getAllPostData,
     double _width,
+    double _height,
   ) {
     return User_ID == NewProfileData?.object?.userUid ||
             (NewProfileData?.object?.accountType == 'PUBLIC') ||
@@ -4121,7 +4152,7 @@ bool _isScrolledUp = false;
                       : getAllPostData.object?[index].repostOn != null
                           ? Padding(
                               padding: EdgeInsets.only(
-                                  left: 16, right: 16, top: 10, bottom: 10),
+                                  left: 0, right: 0, top: 10, bottom: 10),
                               child: GestureDetector(
                                 onDoubleTap: () async {
                                   await soicalFunation(
@@ -4132,7 +4163,7 @@ bool _isScrolledUp = false;
                                       color: Colors.white,
                                       border: Border.all(
                                           color: Color.fromRGBO(0, 0, 0, 0.25)),
-                                      borderRadius: BorderRadius.circular(15)),
+                                      /* borderRadius: BorderRadius.circular(15) */),
                                   // height: 300,
                                   width: _width,
                                   child: Column(
@@ -4188,9 +4219,9 @@ bool _isScrolledUp = false;
                                                     radius: 25,
                                                   )
                                                 : CircleAvatar(
-                                                  child: CustomImageView(
-                                                      imagePath:
-                                                          ImageConstant.tomcruse,
+                                                    child: CustomImageView(
+                                                      imagePath: ImageConstant
+                                                          .tomcruse,
                                                       height: 50,
                                                       width: 50,
                                                       fit: BoxFit.fill,
@@ -4198,7 +4229,7 @@ bool _isScrolledUp = false;
                                                           BorderRadius.circular(
                                                               25),
                                                     ),
-                                                ),
+                                                  ),
                                           ),
                                           title: Column(
                                             crossAxisAlignment:
@@ -5774,7 +5805,7 @@ bool _isScrolledUp = false;
                                 )
                               : Padding(
                                   padding: EdgeInsets.only(
-                                      left: 16, right: 16, top: 10, bottom: 10),
+                                      left: 0, right: 0, top: 10, bottom: 10),
                                   child: GestureDetector(
                                     onDoubleTap: () async {
                                       await soicalFunation(
@@ -5786,8 +5817,8 @@ bool _isScrolledUp = false;
                                           border: Border.all(
                                               color: Color.fromRGBO(
                                                   0, 0, 0, 0.25)),
-                                          borderRadius:
-                                              BorderRadius.circular(15)),
+                                          /* borderRadius:
+                                              BorderRadius.circular(15) */),
                                       // height: 300,
                                       width: _width,
                                       child: Column(
@@ -6286,10 +6317,10 @@ bool _isScrolledUp = false;
                                                               width: _width,
                                                               margin: EdgeInsets
                                                                   .only(
-                                                                      left: 16,
+                                                                      left: 0,
                                                                       top: 15,
                                                                       right:
-                                                                          16),
+                                                                          0),
                                                               child: Center(
                                                                   child:
                                                                       CustomImageView(
@@ -6400,8 +6431,8 @@ bool _isScrolledUp = false;
                                                                       .postData
                                                                       ?.isNotEmpty ??
                                                                   false)) ...[
-                                                                SizedBox(
-                                                                  height: 300,
+                                                                Container(
+                                                                  height: _height/1.4,
                                                                   child: PageView
                                                                       .builder(
                                                                     onPageChanged:
@@ -6436,9 +6467,9 @@ bool _isScrolledUp = false;
                                                                           width:
                                                                               _width,
                                                                           margin: EdgeInsets.only(
-                                                                              left: 16,
+                                                                              left: 0,
                                                                               top: 15,
-                                                                              right: 16),
+                                                                              right: 0),
                                                                           child: Center(
                                                                               child: GestureDetector(
                                                                             onTap:
@@ -6456,7 +6487,7 @@ bool _isScrolledUp = false;
                                                                                 Stack(
                                                                               children: [
                                                                                 Align(
-                                                                                  alignment: Alignment.topCenter,
+                                                                                  alignment: Alignment.center,
                                                                                   child: CustomImageView(
                                                                                     url: "${getAllPostData.object?[index].postData?[index1]}",
                                                                                   ),
@@ -7161,7 +7192,7 @@ bool _isScrolledUp = false;
         });
   }
 
-  Widget NavagtionPassing(double _width) {
+  Widget NavagtionPassing(double _width,_height) {
     if (value1 == 0) {
       return GetSavePostData?.object?.isNotEmpty ?? true
           ? ListView.builder(
@@ -7198,7 +7229,7 @@ bool _isScrolledUp = false;
                 return GetSavePostData?.object?[index].repostOn != null
                     ? Padding(
                         padding: EdgeInsets.only(
-                            left: 16, right: 16, top: 10, bottom: 10),
+                            left: 0, right: 0, top: 10, bottom: 10),
                         child: GestureDetector(
                           onDoubleTap: () async {
                             await soicalFunationSave(
@@ -7209,7 +7240,7 @@ bool _isScrolledUp = false;
                                 color: Colors.white,
                                 border: Border.all(
                                     color: Color.fromRGBO(0, 0, 0, 0.25)),
-                                borderRadius: BorderRadius.circular(15)),
+                                /* borderRadius: BorderRadius.circular(15) */),
                             // height: 300,
                             width: _width,
                             child: Column(
@@ -8796,7 +8827,7 @@ bool _isScrolledUp = false;
                       )
                     : Padding(
                         padding: EdgeInsets.only(
-                            left: 16, right: 16, top: 10, bottom: 10),
+                            left: 0, right: 0, top: 10, bottom: 10),
                         child: GestureDetector(
                           onDoubleTap: () async {
                             await soicalFunationSave(
@@ -8804,10 +8835,10 @@ bool _isScrolledUp = false;
                           },
                           child: Container(
                             decoration: BoxDecoration(
-                                color: Colors.white,
+                                // color: Colors.red,
                                 border: Border.all(
                                     color: Color.fromRGBO(0, 0, 0, 0.25)),
-                                borderRadius: BorderRadius.circular(15)),
+                                /* borderRadius: BorderRadius.circular(15) */),
                             // height: 300,
                             width: _width,
                             child: Column(
@@ -9295,9 +9326,9 @@ bool _isScrolledUp = false;
                                                   child: Container(
                                                     width: _width,
                                                     margin: EdgeInsets.only(
-                                                        left: 16,
+                                                        left: 0,
                                                         top: 15,
-                                                        right: 16),
+                                                        right: 0),
                                                     child: Center(
                                                         child: CustomImageView(
                                                       url:
@@ -9409,8 +9440,8 @@ bool _isScrolledUp = false;
                                                             .postData
                                                             ?.isNotEmpty ??
                                                         false)) ...[
-                                                      SizedBox(
-                                                        height: 300,
+                                                      Container(
+                                                        height: _height/1.4,
                                                         child: PageView.builder(
                                                           onPageChanged:
                                                               (page) {
@@ -9444,10 +9475,10 @@ bool _isScrolledUp = false;
                                                                 margin: EdgeInsets
                                                                     .only(
                                                                         left:
-                                                                            16,
+                                                                            0,
                                                                         top: 15,
                                                                         right:
-                                                                            16),
+                                                                            0),
                                                                 child: Center(
                                                                     child:
                                                                         GestureDetector(
@@ -9467,7 +9498,7 @@ bool _isScrolledUp = false;
                                                                     children: [
                                                                       Align(
                                                                         alignment:
-                                                                            Alignment.topCenter,
+                                                                            Alignment.center,
                                                                         child:
                                                                             CustomImageView(
                                                                           url:
@@ -11103,13 +11134,43 @@ bool _isScrolledUp = false;
               showDeleteConfirmationDialog(context, getAllPostData, index);
             }
           })
-        : showMenu(context: context, position: position, items: <PopupMenuItem<
-            String>>[
-            PopupMenuItem<String>(
-              value: 'edit',
-              child: GestureDetector(
-                onTap: () {
-                  print(getAllPostData?.object?[index].description);
+        : showMenu(
+            context: context,
+            position: position,
+            items: <PopupMenuItem<String>>[
+                PopupMenuItem<String>(
+                  value: 'edit',
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => CreateNewPost(
+                              PostID: getAllPostData?.object?[index].postUid,
+                              edittextdata:
+                                  getAllPostData?.object?[index].description,
+                              mutliplePost:
+                                  getAllPostData?.object?[index].postData,
+                              getAllPostData: getAllPostData,
+                              date: getAllPostData
+                                  ?.object?[index].repostOn?.createdAt,
+                              desc: getAllPostData
+                                  ?.object?[index].repostOn?.description,
+                              postData: getAllPostData
+                                  ?.object?[index].repostOn?.postData,
+                              postDataTypeRepost: getAllPostData
+                                  ?.object?[index].repostOn?.postDataType,
+                              userProfile:
+                                  getAllPostData?.object?[index].userProfilePic,
+                              username: getAllPostData
+                                  ?.object?[index].repostOn?.postUserName,
+                              thumbNailURL: getAllPostData
+                                  ?.object?[index].repostOn?.thumbnailImageUrl,
+                              postDataType:
+                                  getAllPostData?.object?[index].postDataType,
+                            ),
+                          ));
+                      /*  print(getAllPostData?.object?[index].description);
                   if (getAllPostData?.object?[index].postType == "IMAGE" &&
                       getAllPostData?.object?[index].postData?.length == 1) {
                     print("sdfgsdvfsdfgsdfg");
@@ -11188,40 +11249,40 @@ bool _isScrolledUp = false;
                       BlocProvider.of<NewProfileSCubit>(context).GetAppPostAPI(
                           context, "${NewProfileData?.object?.userUid}");
                     });
-                  }
-                },
-                child: Container(
-                  width: 130,
-                  height: 40,
-                  child: Center(
-                    child: Text(
-                      'Edit',
-                      style: TextStyle(color: Colors.white),
+                  } */
+                    },
+                    child: Container(
+                      width: 130,
+                      height: 40,
+                      child: Center(
+                        child: Text(
+                          'Edit',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                      decoration: BoxDecoration(
+                          color: ColorConstant.primary_color,
+                          borderRadius: BorderRadius.circular(5)),
                     ),
                   ),
-                  decoration: BoxDecoration(
-                      color: ColorConstant.primary_color,
-                      borderRadius: BorderRadius.circular(5)),
                 ),
-              ),
-            ),
-            PopupMenuItem<String>(
-              value: 'delete',
-              child: Container(
-                width: 130,
-                height: 40,
-                child: Center(
-                  child: Text(
-                    'Delete',
-                    style: TextStyle(color: Colors.white),
+                PopupMenuItem<String>(
+                  value: 'delete',
+                  child: Container(
+                    width: 130,
+                    height: 40,
+                    child: Center(
+                      child: Text(
+                        'Delete',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                    decoration: BoxDecoration(
+                        color: ColorConstant.primary_color,
+                        borderRadius: BorderRadius.circular(5)),
                   ),
                 ),
-                decoration: BoxDecoration(
-                    color: ColorConstant.primary_color,
-                    borderRadius: BorderRadius.circular(5)),
-              ),
-            ),
-          ]).then((value) {
+              ]).then((value) {
             if (value == 'delete') {
               showDeleteConfirmationDialog(context, getAllPostData, index);
             }

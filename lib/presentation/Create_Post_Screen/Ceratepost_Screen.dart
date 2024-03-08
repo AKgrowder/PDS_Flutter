@@ -48,7 +48,6 @@ class CreateNewPost extends StatefulWidget {
   String? desc;
   String? userProfile;
   String? postDataTypeRepost;
-  int? index;
   String? thumbNailURL;
   String? postDataType;
   // RepostOn? rePostOn;
@@ -67,7 +66,6 @@ class CreateNewPost extends StatefulWidget {
       this.userProfile,
       this.postDataTypeRepost,
       this.thumbNailURL,
-      this.index,
       this.postDataType,
       // this.rePostOn,
       this.OpenSaveModelData,
@@ -127,12 +125,14 @@ class _CreateNewPostState extends State<CreateNewPost> {
   GlobalKey<FlutterMentionsState> key = GlobalKey<FlutterMentionsState>();
   List<Map<String, dynamic>> tageData = [];
   List<Map<String, dynamic>> heshTageData = [];
-  List<int> currentPages = [];
+
   bool added = false;
   bool istageData = false;
-  List<PageController> pageControllers = [];
+  int currentPages = 0;
+  PageController pageControllers = PageController();
+  int currentPagesRePost = 0;
+  PageController pageControllersRePost = PageController();
 
-  
   ScrollController scrollController = ScrollController();
 
   String? data;
@@ -220,25 +220,12 @@ class _CreateNewPostState extends State<CreateNewPost> {
   Widget build(BuildContext context) {
     var _height = MediaQuery.of(context).size.height;
     var _width = MediaQuery.of(context).size.width;
-    // if(widget.date != null ){
-    //    DateTime parsedDateTime = DateTime.parse('${widget.date}');
-    // }
-
-    if (!added) {
-      widget.postData?.forEach((element) {
-        pageControllers.add(PageController());
-        currentPages.add(0);
-      });
-      widget.mutliplePost?.forEach((element) {
-        pageControllers.add(PageController());
-        currentPages.add(0);
-      });
-
-      WidgetsBinding.instance
-          .addPostFrameCallback((timeStamp) => super.setState(() {
-                added = true;
-              }));
+    DateTime? parsedDateTime;
+    if (widget.edittextdata != null && widget.date != null) {
+      parsedDateTime = DateTime.parse('${widget.date}');
+      print("repost time = $parsedDateTime");
     }
+
     return BlocConsumer<AddPostCubit, AddPostState>(listener: (context, state) {
       if (state is AddPostImaegState) {
         imageDataPost?.object?.data?.clear();
@@ -335,77 +322,80 @@ class _CreateNewPostState extends State<CreateNewPost> {
     }, builder: (context, state) {
       return Scaffold(
         body: Padding(
-          padding: EdgeInsets.only(left: 16, right: 16, top: 30),
+          padding: EdgeInsets.only(left: 0, right: 0, top: 30),
           child: Column(
             children: [
-              Row(
-                children: [
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                    child: Image.asset(
-                      ImageConstant.Post_Close,
-                      height: 20,
+              Padding(
+                padding: const EdgeInsets.only(left: 15, right: 15),
+                child: Row(
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                      child: Image.asset(
+                        ImageConstant.Post_Close,
+                        height: 20,
+                      ),
                     ),
-                  ),
-                  Spacer(),
-                  widget.edittextdata != null
-                      ? GestureDetector(
-                          onTap: () {
-                            HasetagList = [];
-                            CreatePostDone = true;
+                    Spacer(),
+                    widget.edittextdata != null
+                        ? GestureDetector(
+                            onTap: () {
+                              HasetagList = [];
+                              CreatePostDone = true;
 
-                            dataPostFucntion();
-                          },
-                          child: Container(
-                            decoration: BoxDecoration(
-                                color: primaryColor,
-                                borderRadius: BorderRadius.circular(14)),
-                            height: 40,
-                            width: 70,
-                            child: Center(
-                                child: Text(
-                              "Save",
-                              style: TextStyle(
-                                fontFamily: "outfit",
-                                fontSize: 15,
-                                color: textColor,
-                              ),
-                            )),
-                          ),
-                        )
-                      : GestureDetector(
-                          onTap: () {
-                            print("DSfsdhfsdhfshd");
-                            HasetagList = [];
-                            CreatePostDone = true;
-
-                            if (isDataSet == true) {
                               dataPostFucntion();
-                            }
-                          },
-                          child: Container(
-                            decoration: BoxDecoration(
-                                color: primaryColor,
-                                borderRadius: BorderRadius.circular(14)),
-                            height: 40,
-                            width: 70,
-                            child: Center(
-                                child: Text(
-                              "Post",
-                              style: TextStyle(
-                                fontFamily: "outfit",
-                                fontSize: 15,
-                                color: textColor,
-                              ),
-                            )),
-                          ),
-                        )
-                ],
+                            },
+                            child: Container(
+                              decoration: BoxDecoration(
+                                  color: primaryColor,
+                                  borderRadius: BorderRadius.circular(14)),
+                              height: 40,
+                              width: 70,
+                              child: Center(
+                                  child: Text(
+                                "Save",
+                                style: TextStyle(
+                                  fontFamily: "outfit",
+                                  fontSize: 15,
+                                  color: textColor,
+                                ),
+                              )),
+                            ),
+                          )
+                        : GestureDetector(
+                            onTap: () {
+                              print("DSfsdhfsdhfshd");
+                              HasetagList = [];
+                              CreatePostDone = true;
+
+                              if (isDataSet == true) {
+                                dataPostFucntion();
+                              }
+                            },
+                            child: Container(
+                              decoration: BoxDecoration(
+                                  color: primaryColor,
+                                  borderRadius: BorderRadius.circular(14)),
+                              height: 40,
+                              width: 70,
+                              child: Center(
+                                  child: Text(
+                                "Post",
+                                style: TextStyle(
+                                  fontFamily: "outfit",
+                                  fontSize: 15,
+                                  color: textColor,
+                                ),
+                              )),
+                            ),
+                          )
+                  ],
+                ),
               ),
               Padding(
-                padding: const EdgeInsets.only(top: 10),
+                padding: const EdgeInsets.only(top: 10, left: 15, right: 15),
                 child: Row(
                   children: [
                     Container(
@@ -504,103 +494,106 @@ class _CreateNewPostState extends State<CreateNewPost> {
                 scrollDirection: Axis.vertical,
                 child: Column(
                   children: [
-                    FlutterMentions(
-                      scrollPhysics: AlwaysScrollableScrollPhysics(),
-                      defaultText: widget.edittextdata,
-                      onChanged: (value) {
-                        onChangeMethod(value);
-                      },
-                      suggestionPosition: SuggestionPosition.values.last,
-                      // maxLines: 22,
-                      maxLines: null,
-                      inputFormatters: <TextInputFormatter>[
-                        LengthLimitingTextInputFormatter(1000),
-                        // FilteringTextInputFormatter.deny(RegExp(r'[/\\]')),
-                      ],
-                      // style: TextStyle(fontFamily:'' ),
-                      style: TextStyle(
-                        fontFamily: 'outfit',
-                        fontSize: 16,
-                        color: Colors.black,
-                        // fontWeight: FontWeight.bold,
-                      ),
-                      decoration: InputDecoration(
-                        hintText: 'What’s on your head?',
-                        border: InputBorder.none,
-                        focusedBorder: InputBorder.none,
-                      ),
-                      mentions: [
-                        Mention(
-                            trigger: "@",
-                            data: tageData,
-                            matchAll: true,
-                            style: TextStyle(color: Colors.blue),
-                            suggestionBuilder: (tageData) {
-                              if (istageData) {
-                                return Container(
-                                  padding: EdgeInsets.all(10.0),
-                                  child: Row(
-                                    children: <Widget>[
-                                      tageData['photo'] != null
-                                          ? CircleAvatar(
-                                              backgroundImage: NetworkImage(
-                                                tageData['photo'],
-                                              ),
-                                            )
-                                          : CircleAvatar(
-                                              backgroundImage: AssetImage(
-                                                  ImageConstant.tomcruse),
-                                            ),
-                                      SizedBox(
-                                        width: 20.0,
-                                      ),
-                                      Column(
-                                        children: <Widget>[
-                                          Text('@${tageData['display']}'),
-                                        ],
-                                      )
-                                    ],
-                                  ),
-                                );
-                              }
-
-                              return Container(
-                                color: Colors.amber,
-                              );
-                            }),
-                        Mention(
-                            trigger: "#",
-                            style: TextStyle(color: Colors.blue),
-                            disableMarkup: true,
-                            data: heshTageData,
-                            // matchAll: true,
-                            suggestionBuilder: (tageData) {
-                              if (isHeshTegData) {
-                                return Container(
+                    Padding(
+                      padding: const EdgeInsets.only(left: 15, right: 15),
+                      child: FlutterMentions(
+                        scrollPhysics: AlwaysScrollableScrollPhysics(),
+                        defaultText: widget.edittextdata,
+                        onChanged: (value) {
+                          onChangeMethod(value);
+                        },
+                        suggestionPosition: SuggestionPosition.values.last,
+                        // maxLines: 22,
+                        maxLines: null,
+                        inputFormatters: <TextInputFormatter>[
+                          LengthLimitingTextInputFormatter(1000),
+                          // FilteringTextInputFormatter.deny(RegExp(r'[/\\]')),
+                        ],
+                        // style: TextStyle(fontFamily:'' ),
+                        style: TextStyle(
+                          fontFamily: 'outfit',
+                          fontSize: 16,
+                          color: Colors.black,
+                          // fontWeight: FontWeight.bold,
+                        ),
+                        decoration: InputDecoration(
+                          hintText: 'What’s on your head?',
+                          border: InputBorder.none,
+                          focusedBorder: InputBorder.none,
+                        ),
+                        mentions: [
+                          Mention(
+                              trigger: "@",
+                              data: tageData,
+                              matchAll: true,
+                              style: TextStyle(color: Colors.blue),
+                              suggestionBuilder: (tageData) {
+                                if (istageData) {
+                                  return Container(
                                     padding: EdgeInsets.all(10.0),
-                                    child: ListTile(
-                                      leading: CircleAvatar(
-                                        child: Text('#'),
-                                      ),
-                                      title: Text('${tageData['display']}'),
-                                    )
-                                    /* Column(
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
-                                                      children: <Widget>[
-                                                        Text(
-                                                            '${tageData['display']}'),
-                                                      ],
-                                                    ), */
-                                    );
-                              }
+                                    child: Row(
+                                      children: <Widget>[
+                                        tageData['photo'] != null
+                                            ? CircleAvatar(
+                                                backgroundImage: NetworkImage(
+                                                  tageData['photo'],
+                                                ),
+                                              )
+                                            : CircleAvatar(
+                                                backgroundImage: AssetImage(
+                                                    ImageConstant.tomcruse),
+                                              ),
+                                        SizedBox(
+                                          width: 20.0,
+                                        ),
+                                        Column(
+                                          children: <Widget>[
+                                            Text('@${tageData['display']}'),
+                                          ],
+                                        )
+                                      ],
+                                    ),
+                                  );
+                                }
 
-                              return Container(
-                                color: Colors.amber,
-                              );
-                            }),
-                      ],
+                                return Container(
+                                  color: Colors.amber,
+                                );
+                              }),
+                          Mention(
+                              trigger: "#",
+                              style: TextStyle(color: Colors.blue),
+                              disableMarkup: true,
+                              data: heshTageData,
+                              // matchAll: true,
+                              suggestionBuilder: (tageData) {
+                                if (isHeshTegData) {
+                                  return Container(
+                                      padding: EdgeInsets.all(10.0),
+                                      child: ListTile(
+                                        leading: CircleAvatar(
+                                          child: Text('#'),
+                                        ),
+                                        title: Text('${tageData['display']}'),
+                                      )
+                                      /* Column(
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
+                                                        children: <Widget>[
+                                                          Text(
+                                                              '${tageData['display']}'),
+                                                        ],
+                                                      ), */
+                                      );
+                                }
+
+                                return Container(
+                                  color: Colors.amber,
+                                );
+                              }),
+                        ],
+                      ),
                     ),
                     if (widget.edittextdata != null)
                       Column(
@@ -618,22 +611,16 @@ class _CreateNewPostState extends State<CreateNewPost> {
                                       : widget.mutliplePost?.length == 1
                                           ? widget.postDataType == "IMAGE"
                                               ? Container(
-                                                  width: _width,
-                                                  height: 150,
-                                                  margin: EdgeInsets.only(
-                                                      left: 16,
-                                                      top: 15,
-                                                      right: 16),
-                                                  child: Center(
-                                                      child: CustomImageView(
+                                                  height: 400,
+                                                  child: CustomImageView(
+                                                    fit: BoxFit.fill,
                                                     url:
                                                         "${widget.mutliplePost?[0]}",
-                                                  )),
+                                                  ),
                                                 )
                                               : widget.postDataType ==
                                                       "ATTACHMENT"
-                                                  ? 
-                                                  Stack(
+                                                  ? Stack(
                                                       children: [
                                                         Container(
                                                           height: 400,
@@ -679,21 +666,18 @@ class _CreateNewPostState extends State<CreateNewPost> {
                                                     if ((widget.mutliplePost
                                                             ?.isNotEmpty ??
                                                         false)) ...[
-                                                      SizedBox(
-                                                        height: 300,
+                                                      Container(
+                                                        height: 400,
                                                         child: PageView.builder(
                                                           onPageChanged:
                                                               (page) {
                                                             super.setState(() {
-                                                              currentPages[
-                                                                  widget.index ??
-                                                                      0] = page;
+                                                              currentPages =
+                                                                  page;
                                                             });
                                                           },
                                                           controller:
-                                                              pageControllers[
-                                                                  widget.index ??
-                                                                      0],
+                                                              pageControllers,
                                                           itemCount: widget
                                                               .mutliplePost
                                                               ?.length,
@@ -704,21 +688,12 @@ class _CreateNewPostState extends State<CreateNewPost> {
                                                             if (widget
                                                                     .postDataType ==
                                                                 "IMAGE") {
-                                                              return Container(
-                                                                width: _width,
-                                                                margin: EdgeInsets
-                                                                    .only(
-                                                                        left:
-                                                                            16,
-                                                                        top: 15,
-                                                                        right:
-                                                                            16),
-                                                                child: Center(
-                                                                    child:
-                                                                        CustomImageView(
-                                                                  url:
-                                                                      "${widget.mutliplePost?[index1]}",
-                                                                )),
+                                                              return CustomImageView(
+                                                                fit:
+                                                                    BoxFit.fill,
+                                                                // width: _width,
+                                                                url:
+                                                                    "${widget.mutliplePost?[index1]}",
                                                               );
                                                             } else if (widget
                                                                     .postDataType ==
@@ -754,10 +729,9 @@ class _CreateNewPostState extends State<CreateNewPost> {
                                                                         .mutliplePost
                                                                         ?.length ??
                                                                     1,
-                                                                position: currentPages[
-                                                                        widget.index ??
-                                                                            0]
-                                                                    .toDouble(),
+                                                                position:
+                                                                    currentPages
+                                                                        .toDouble(),
                                                                 decorator:
                                                                     DotsDecorator(
                                                                   size:
@@ -787,8 +761,7 @@ class _CreateNewPostState extends State<CreateNewPost> {
                                               ],
                                             ),
                                 ),
-             
-                          if (widget.postData!.isNotEmpty)
+                          if (widget.postData?.isNotEmpty ?? false)
                             Padding(
                               padding: const EdgeInsets.only(
                                   left: 10, right: 10, bottom: 10, top: 20),
@@ -865,13 +838,14 @@ class _CreateNewPostState extends State<CreateNewPost> {
                                                         FontWeight.bold),
                                               ),
                                             ),
-                                            /*   Text(
-                                                  customFormat(parsedDateTime),
-                                                  style: TextStyle(
-                                                    fontSize: 12,
-                                                    fontFamily: "outfit",
-                                                  ),
-                                                ), */
+                                            Text(
+                                              getTimeDifference(
+                                                  parsedDateTime!),
+                                              style: TextStyle(
+                                                fontSize: 12,
+                                                fontFamily: "outfit",
+                                              ),
+                                            ),
                                           ],
                                         ),
                                       ),
@@ -1018,11 +992,11 @@ class _CreateNewPostState extends State<CreateNewPost> {
                                                                           onPageChanged:
                                                                               (page) {
                                                                             super.setState(() {
-                                                                              currentPages[widget.index ?? 0] = page;
+                                                                              currentPagesRePost = page;
                                                                             });
                                                                           },
                                                                           controller:
-                                                                              pageControllers[widget.index ?? 0],
+                                                                              pageControllersRePost,
                                                                           itemCount: widget
                                                                               .postData
                                                                               ?.length,
@@ -1066,7 +1040,7 @@ class _CreateNewPostState extends State<CreateNewPost> {
                                                                               height: 20,
                                                                               child: DotsIndicator(
                                                                                 dotsCount: widget.postData?.length ?? 1,
-                                                                                position: currentPages[widget.index ?? 0].toDouble(),
+                                                                                position: currentPagesRePost.toDouble(),
                                                                                 decorator: DotsDecorator(
                                                                                   size: const Size(10.0, 7.0),
                                                                                   activeSize: const Size(10.0, 10.0),
@@ -1352,7 +1326,7 @@ class _CreateNewPostState extends State<CreateNewPost> {
                                 ),
                                 Container(
                                   height: 90,
-                                  width: _width - 106,
+                                  width: _width - 124,
                                   // color: Colors.green,
                                   child: _loading
                                       ? Center(
@@ -3326,14 +3300,32 @@ class _CreateNewPostState extends State<CreateNewPost> {
     }
   }
 
-  String customFormat(DateTime date) {
-    String day = date.day.toString();
-    // String month = _getMonthName(date.month);
-    String year = date.year.toString();
-    String time = DateFormat('h:mm a').format(date);
-
-    String formattedDate = '$time';
-    return formattedDate;
+  String getTimeDifference(DateTime dateTime) {
+    final difference = DateTime.now().difference(dateTime);
+    if (difference.inDays > 0) {
+      if (difference.inDays == 1) {
+        return '1 day ago';
+      } else if (difference.inDays < 7) {
+        return '${difference.inDays} days ago';
+      } else {
+        final weeks = (difference.inDays / 7).floor();
+        return '$weeks week${weeks == 1 ? '' : 's'} ago';
+      }
+    } else if (difference.inHours > 0) {
+      if (difference.inHours == 1) {
+        return '1 hour ago';
+      } else {
+        return '${difference.inHours} hours ago';
+      }
+    } else if (difference.inMinutes > 0) {
+      if (difference.inMinutes == 1) {
+        return '1 minute ago';
+      } else {
+        return '${difference.inMinutes} minutes ago';
+      }
+    } else {
+      return 'Just now';
+    }
   }
 
   void _showPopupMenu(
