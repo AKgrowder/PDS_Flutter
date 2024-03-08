@@ -5,6 +5,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:pds/API/Bloc/auth/otp_block.dart';
 import 'package:pds/API/Bloc/auth/otp_state.dart';
 import 'package:pds/core/app_export.dart';
@@ -16,9 +17,9 @@ import 'package:pds/widgets/app_bar/appbar_image.dart';
 import 'package:pds/widgets/app_bar/custom_app_bar.dart';
 import 'package:pinput/pinput.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 import '../../API/Model/authModel/loginModel.dart';
 import '../../core/utils/sharedPreferences.dart';
-import '../Login_Screen/Login_Screen.dart';
 
 class OtpVerificationScreen extends StatefulWidget {
   String? phonNumber;
@@ -125,10 +126,11 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                     Navigator.pop(context);
                   }),
               centerTitle: true,
-              title: AppbarImage(
+              title: SvgPicture.asset(ImageConstant.splashImage,height: 37,width: 140,) 
+              /* AppbarImage(
                   height: 37,
                   width: 140,
-                  imagePath: ImageConstant.splashImage)),
+                  imagePath: ImageConstant.splashImage) */),
           body: BlocProvider<OtpCubit>(
             create: (context) => OtpCubit(),
             child: BlocConsumer<OtpCubit, OtpState>(

@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:linkfy_text/linkfy_text.dart';
 import 'package:path_provider/path_provider.dart';
@@ -1372,9 +1373,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                     toolbarHeight: 80,
                     elevation: 0,
                     automaticallyImplyLeading: false,
-                    title: SizedBox(
-                        height: 50,
-                        child: Image.asset(ImageConstant.splashImage)),
+                    title: SvgPicture.asset(ImageConstant.splashImage,height: 60,),
                     actions: [
                         Row(
                           children: [
@@ -2761,7 +2760,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                 null
                                             ? Padding(
                                                 padding: EdgeInsets.only(
-                                                    left: 16, right: 16),
+                                                    left: 0, right: 0),
                                                 child: GestureDetector(
                                                   onTap: () {
                                                     if (AllGuestPostRoomData
@@ -2801,9 +2800,9 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                     0,
                                                                     0,
                                                                     0.25)),
-                                                        borderRadius:
+                                                       /*  borderRadius:
                                                             BorderRadius
-                                                                .circular(15)),
+                                                                .circular(15) */),
                                                     // height: 300,
                                                     width: _width,
                                                     child: Column(
@@ -3476,8 +3475,9 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                         itemBuilder: (BuildContext context, int index1) {
                                                                                           if (AllGuestPostRoomData?.object?.content?[index].postDataType == "IMAGE") {
                                                                                             return Container(
+                                                                                              // color: Colors.amber,
                                                                                               width: _width,
-                                                                                              margin: EdgeInsets.only(left: 16, top: 15, right: 16),
+                                                                                              margin: EdgeInsets.only(left: 0, top: 15, right: 0),
                                                                                               child: Center(
                                                                                                   child: GestureDetector(
                                                                                                 onTap: () {
@@ -4025,7 +4025,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                     ? /* repostMainControllers[0].value.isInitialized
                                                                                         ? */
                                                                                     Padding(
-                                                                                        padding: const EdgeInsets.only(right: 20, top: 15),
+                                                                                        padding: const EdgeInsets.only(right: 20, top: 15,),
                                                                                         child: Column(
                                                                                           mainAxisSize: MainAxisSize.min,
                                                                                           children: [
@@ -4196,10 +4196,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                           ),
                                                         ),
                                                         Padding(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                      .only(
-                                                                  left: 13),
+                                                          padding: const EdgeInsets.all(8.0),
                                                           child: Divider(
                                                             thickness: 1,
                                                           ),
@@ -4581,7 +4578,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                               )
                                             : Padding(
                                                 padding: EdgeInsets.only(
-                                                    left: 16, right: 16),
+                                                    left: 0, right: 0),
                                                 child: GestureDetector(
                                                   onTap: () {
                                                     if (AllGuestPostRoomData
@@ -4621,9 +4618,9 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                     0,
                                                                     0,
                                                                     0.25)),
-                                                        borderRadius:
+                                                       /*  borderRadius:
                                                             BorderRadius
-                                                                .circular(15)),
+                                                                .circular(15) */),
                                                     // height: 300,
                                                     width: _width,
                                                     child: Column(
@@ -5255,9 +5252,9 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                             width:
                                                                                 _width,
                                                                             margin: EdgeInsets.only(
-                                                                                left: 16,
+                                                                                left: 0,
                                                                                 top: 15,
-                                                                                right: 16),
+                                                                                right: 0),
                                                                             child: Center(
                                                                                 child: CustomImageView(
                                                                               url: "${AllGuestPostRoomData?.object?.content?[index].postData?[0]}",
@@ -5339,8 +5336,8 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                           children: [
                                                                             if ((AllGuestPostRoomData?.object?.content?[index].postData?.isNotEmpty ??
                                                                                 false)) ...[
-                                                                              SizedBox(
-                                                                                height: 300,
+                                                                              Container(
+                                                                                height: _height/1.4,
                                                                                 child: PageView.builder(
                                                                                   onPageChanged: (page) {
                                                                                     super.setState(() {
@@ -5353,8 +5350,9 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                   itemBuilder: (BuildContext context, int index1) {
                                                                                     if (AllGuestPostRoomData?.object?.content?[index].postDataType == "IMAGE") {
                                                                                       return Container(
+                                                                                        // color: Colors.amber,
                                                                                         width: _width,
-                                                                                        margin: EdgeInsets.only(left: 16, top: 15, right: 16),
+                                                                                        margin: EdgeInsets.only(left: 0, top: 15, right: 0),
                                                                                         child: Center(
                                                                                             child: GestureDetector(
                                                                                           onTap: () {
@@ -5405,7 +5403,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                           child: Stack(
                                                                                             children: [
                                                                                               Align(
-                                                                                                alignment: Alignment.topCenter,
+                                                                                                alignment: Alignment.center,
                                                                                                 child: CustomImageView(
                                                                                                   url: "${AllGuestPostRoomData?.object?.content?[index].postData?[index1]}",
                                                                                                 ),
@@ -5428,10 +5426,11 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                                         style: TextStyle(color: Colors.white),
                                                                                                       )),
                                                                                                 ),
-                                                                                              )
+                                                                                              ),
                                                                                             ],
                                                                                           ),
-                                                                                        )),
+                                                                                        ),
+                                                                                        ),
                                                                                       );
                                                                                     } else if (AllGuestPostRoomData?.object?.content?[index].postDataType == "ATTACHMENT") {
                                                                                       return Container(
@@ -5474,10 +5473,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                         ),
 
                                                         Padding(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                      .only(
-                                                                  left: 13),
+                                                          padding: const EdgeInsets.all(8.0),
                                                           child: Divider(
                                                             thickness: 1,
                                                           ),
@@ -5531,9 +5527,9 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                   ),
                                                                 ),
                                                               ),
-                                                              SizedBox(
+                                                              /* SizedBox(
                                                                 width: 0,
-                                                              ),
+                                                              ), */
                                                               AllGuestPostRoomData
                                                                           ?.object
                                                                           ?.content?[

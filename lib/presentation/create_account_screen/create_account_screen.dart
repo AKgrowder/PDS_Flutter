@@ -7,6 +7,7 @@ import 'package:country_pickers/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:pds/API/Bloc/auth/register_Block.dart';
 import 'package:pds/API/Bloc/auth/register_state.dart';
@@ -208,11 +209,13 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                               Spacer(),
                               Padding(
                                 padding: const EdgeInsets.only(right: 20),
-                                child: CustomImageView(
-                                  imagePath: ImageConstant.splashImage,
+                                child: SvgPicture.asset(ImageConstant.splashImage,height: 37,alignment: Alignment.center,)
+                                /* CustomImageView(
+                                  imagePath:  
+                                  ImageConstant.splashImage,
                                   height: 37,
                                   alignment: Alignment.center,
-                                ),
+                                ), */
                               ),
                               Spacer(),
                             ],
