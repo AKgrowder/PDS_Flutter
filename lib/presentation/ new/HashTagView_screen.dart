@@ -4,7 +4,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:intl/intl.dart';
+import 'package:flutter_observer/Observable.dart';
+import 'package:flutter_observer/Observer.dart';
 import 'package:linkfy_text/linkfy_text.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pds/API/Bloc/HashTag_Bloc/HashTag_cubit.dart';
@@ -24,9 +25,6 @@ import 'package:pds/widgets/commentPdf.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
-
-import 'package:flutter_observer/Observable.dart';
-import 'package:flutter_observer/Observer.dart';
 
 import '../../API/Bloc/GuestAllPost_Bloc/GuestAllPost_cubit.dart';
 import '../../API/Model/GetGuestAllPostModel/GetGuestAllPost_Model.dart';
@@ -168,7 +166,7 @@ class _HashTagViewScreenState extends State<HashTagViewScreen> with Observer {
         }
         return Padding(
           padding:
-              const EdgeInsets.only(top: 45, left: 15, right: 15, bottom: 20),
+              const EdgeInsets.only(top: 45, left: 0, right: 0, bottom: 20),
           child: Column(
             children: [
               Row(
@@ -271,7 +269,7 @@ class _HashTagViewScreenState extends State<HashTagViewScreen> with Observer {
                                     shape: RoundedRectangleBorder(
                                       side: BorderSide(
                                           width: 1, color: Color(0xFFD3D3D3)),
-                                      borderRadius: BorderRadius.circular(10),
+                                      /* borderRadius: BorderRadius.circular(10), */
                                     ),
                                   ),
                                   child: Column(
@@ -712,9 +710,9 @@ class _HashTagViewScreenState extends State<HashTagViewScreen> with Observer {
                                                             // width: _width,
                                                             margin:
                                                                 EdgeInsets.only(
-                                                                    left: 16,
+                                                                    left: 0,
                                                                     top: 15,
-                                                                    right: 16),
+                                                                    right: 0),
                                                             child: Center(
                                                                 child:
                                                                     CustomImageView(
@@ -787,8 +785,8 @@ class _HashTagViewScreenState extends State<HashTagViewScreen> with Observer {
                                                                     .postData
                                                                     ?.isNotEmpty ==
                                                                 true))
-                                                              SizedBox(
-                                                                height: 230,
+                                                              Container(
+                                                                height: _height/1.4,
                                                                 child: PageView
                                                                     .builder(
                                                                   onPageChanged:
@@ -841,14 +839,14 @@ class _HashTagViewScreenState extends State<HashTagViewScreen> with Observer {
                                                                           width:
                                                                               _width,
                                                                           margin: EdgeInsets.only(
-                                                                              left: 16,
+                                                                              left: 0,
                                                                               top: 15,
-                                                                              right: 16),
+                                                                              right: 0),
                                                                           child: Center(
                                                                               child: Stack(
                                                                             children: [
                                                                               Align(
-                                                                                alignment: Alignment.topCenter,
+                                                                                alignment: Alignment.center,
                                                                                 child: CustomImageView(
                                                                                   url: "${hashTagViewData?.object?.posts?[index].postData?[index1]}",
                                                                                 ),
