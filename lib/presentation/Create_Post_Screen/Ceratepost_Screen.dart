@@ -221,7 +221,7 @@ class _CreateNewPostState extends State<CreateNewPost> {
     var _height = MediaQuery.of(context).size.height;
     var _width = MediaQuery.of(context).size.width;
     DateTime? parsedDateTime;
-    if (widget.edittextdata != null) {
+    if (widget.edittextdata != null && widget.date != null) {
       parsedDateTime = DateTime.parse('${widget.date}');
       print("repost time = $parsedDateTime");
     }
@@ -322,77 +322,80 @@ class _CreateNewPostState extends State<CreateNewPost> {
     }, builder: (context, state) {
       return Scaffold(
         body: Padding(
-          padding: EdgeInsets.only(left: 16, right: 16, top: 30),
+          padding: EdgeInsets.only(left: 0, right: 0, top: 30),
           child: Column(
             children: [
-              Row(
-                children: [
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                    child: Image.asset(
-                      ImageConstant.Post_Close,
-                      height: 20,
+              Padding(
+                padding: const EdgeInsets.only(left: 15, right: 15),
+                child: Row(
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                      child: Image.asset(
+                        ImageConstant.Post_Close,
+                        height: 20,
+                      ),
                     ),
-                  ),
-                  Spacer(),
-                  widget.edittextdata != null
-                      ? GestureDetector(
-                          onTap: () {
-                            HasetagList = [];
-                            CreatePostDone = true;
+                    Spacer(),
+                    widget.edittextdata != null
+                        ? GestureDetector(
+                            onTap: () {
+                              HasetagList = [];
+                              CreatePostDone = true;
 
-                            dataPostFucntion();
-                          },
-                          child: Container(
-                            decoration: BoxDecoration(
-                                color: primaryColor,
-                                borderRadius: BorderRadius.circular(14)),
-                            height: 40,
-                            width: 70,
-                            child: Center(
-                                child: Text(
-                              "Save",
-                              style: TextStyle(
-                                fontFamily: "outfit",
-                                fontSize: 15,
-                                color: textColor,
-                              ),
-                            )),
-                          ),
-                        )
-                      : GestureDetector(
-                          onTap: () {
-                            print("DSfsdhfsdhfshd");
-                            HasetagList = [];
-                            CreatePostDone = true;
-
-                            if (isDataSet == true) {
                               dataPostFucntion();
-                            }
-                          },
-                          child: Container(
-                            decoration: BoxDecoration(
-                                color: primaryColor,
-                                borderRadius: BorderRadius.circular(14)),
-                            height: 40,
-                            width: 70,
-                            child: Center(
-                                child: Text(
-                              "Post",
-                              style: TextStyle(
-                                fontFamily: "outfit",
-                                fontSize: 15,
-                                color: textColor,
-                              ),
-                            )),
-                          ),
-                        )
-                ],
+                            },
+                            child: Container(
+                              decoration: BoxDecoration(
+                                  color: primaryColor,
+                                  borderRadius: BorderRadius.circular(14)),
+                              height: 40,
+                              width: 70,
+                              child: Center(
+                                  child: Text(
+                                "Save",
+                                style: TextStyle(
+                                  fontFamily: "outfit",
+                                  fontSize: 15,
+                                  color: textColor,
+                                ),
+                              )),
+                            ),
+                          )
+                        : GestureDetector(
+                            onTap: () {
+                              print("DSfsdhfsdhfshd");
+                              HasetagList = [];
+                              CreatePostDone = true;
+
+                              if (isDataSet == true) {
+                                dataPostFucntion();
+                              }
+                            },
+                            child: Container(
+                              decoration: BoxDecoration(
+                                  color: primaryColor,
+                                  borderRadius: BorderRadius.circular(14)),
+                              height: 40,
+                              width: 70,
+                              child: Center(
+                                  child: Text(
+                                "Post",
+                                style: TextStyle(
+                                  fontFamily: "outfit",
+                                  fontSize: 15,
+                                  color: textColor,
+                                ),
+                              )),
+                            ),
+                          )
+                  ],
+                ),
               ),
               Padding(
-                padding: const EdgeInsets.only(top: 10),
+                padding: const EdgeInsets.only(top: 10, left: 15, right: 15),
                 child: Row(
                   children: [
                     Container(
@@ -491,103 +494,106 @@ class _CreateNewPostState extends State<CreateNewPost> {
                 scrollDirection: Axis.vertical,
                 child: Column(
                   children: [
-                    FlutterMentions(
-                      scrollPhysics: AlwaysScrollableScrollPhysics(),
-                      defaultText: widget.edittextdata,
-                      onChanged: (value) {
-                        onChangeMethod(value);
-                      },
-                      suggestionPosition: SuggestionPosition.values.last,
-                      // maxLines: 22,
-                      maxLines: null,
-                      inputFormatters: <TextInputFormatter>[
-                        LengthLimitingTextInputFormatter(1000),
-                        // FilteringTextInputFormatter.deny(RegExp(r'[/\\]')),
-                      ],
-                      // style: TextStyle(fontFamily:'' ),
-                      style: TextStyle(
-                        fontFamily: 'outfit',
-                        fontSize: 16,
-                        color: Colors.black,
-                        // fontWeight: FontWeight.bold,
-                      ),
-                      decoration: InputDecoration(
-                        hintText: 'What’s on your head?',
-                        border: InputBorder.none,
-                        focusedBorder: InputBorder.none,
-                      ),
-                      mentions: [
-                        Mention(
-                            trigger: "@",
-                            data: tageData,
-                            matchAll: true,
-                            style: TextStyle(color: Colors.blue),
-                            suggestionBuilder: (tageData) {
-                              if (istageData) {
-                                return Container(
-                                  padding: EdgeInsets.all(10.0),
-                                  child: Row(
-                                    children: <Widget>[
-                                      tageData['photo'] != null
-                                          ? CircleAvatar(
-                                              backgroundImage: NetworkImage(
-                                                tageData['photo'],
-                                              ),
-                                            )
-                                          : CircleAvatar(
-                                              backgroundImage: AssetImage(
-                                                  ImageConstant.tomcruse),
-                                            ),
-                                      SizedBox(
-                                        width: 20.0,
-                                      ),
-                                      Column(
-                                        children: <Widget>[
-                                          Text('@${tageData['display']}'),
-                                        ],
-                                      )
-                                    ],
-                                  ),
-                                );
-                              }
-
-                              return Container(
-                                color: Colors.amber,
-                              );
-                            }),
-                        Mention(
-                            trigger: "#",
-                            style: TextStyle(color: Colors.blue),
-                            disableMarkup: true,
-                            data: heshTageData,
-                            // matchAll: true,
-                            suggestionBuilder: (tageData) {
-                              if (isHeshTegData) {
-                                return Container(
+                    Padding(
+                      padding: const EdgeInsets.only(left: 15, right: 15),
+                      child: FlutterMentions(
+                        scrollPhysics: AlwaysScrollableScrollPhysics(),
+                        defaultText: widget.edittextdata,
+                        onChanged: (value) {
+                          onChangeMethod(value);
+                        },
+                        suggestionPosition: SuggestionPosition.values.last,
+                        // maxLines: 22,
+                        maxLines: null,
+                        inputFormatters: <TextInputFormatter>[
+                          LengthLimitingTextInputFormatter(1000),
+                          // FilteringTextInputFormatter.deny(RegExp(r'[/\\]')),
+                        ],
+                        // style: TextStyle(fontFamily:'' ),
+                        style: TextStyle(
+                          fontFamily: 'outfit',
+                          fontSize: 16,
+                          color: Colors.black,
+                          // fontWeight: FontWeight.bold,
+                        ),
+                        decoration: InputDecoration(
+                          hintText: 'What’s on your head?',
+                          border: InputBorder.none,
+                          focusedBorder: InputBorder.none,
+                        ),
+                        mentions: [
+                          Mention(
+                              trigger: "@",
+                              data: tageData,
+                              matchAll: true,
+                              style: TextStyle(color: Colors.blue),
+                              suggestionBuilder: (tageData) {
+                                if (istageData) {
+                                  return Container(
                                     padding: EdgeInsets.all(10.0),
-                                    child: ListTile(
-                                      leading: CircleAvatar(
-                                        child: Text('#'),
-                                      ),
-                                      title: Text('${tageData['display']}'),
-                                    )
-                                    /* Column(
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
-                                                      children: <Widget>[
-                                                        Text(
-                                                            '${tageData['display']}'),
-                                                      ],
-                                                    ), */
-                                    );
-                              }
+                                    child: Row(
+                                      children: <Widget>[
+                                        tageData['photo'] != null
+                                            ? CircleAvatar(
+                                                backgroundImage: NetworkImage(
+                                                  tageData['photo'],
+                                                ),
+                                              )
+                                            : CircleAvatar(
+                                                backgroundImage: AssetImage(
+                                                    ImageConstant.tomcruse),
+                                              ),
+                                        SizedBox(
+                                          width: 20.0,
+                                        ),
+                                        Column(
+                                          children: <Widget>[
+                                            Text('@${tageData['display']}'),
+                                          ],
+                                        )
+                                      ],
+                                    ),
+                                  );
+                                }
 
-                              return Container(
-                                color: Colors.amber,
-                              );
-                            }),
-                      ],
+                                return Container(
+                                  color: Colors.amber,
+                                );
+                              }),
+                          Mention(
+                              trigger: "#",
+                              style: TextStyle(color: Colors.blue),
+                              disableMarkup: true,
+                              data: heshTageData,
+                              // matchAll: true,
+                              suggestionBuilder: (tageData) {
+                                if (isHeshTegData) {
+                                  return Container(
+                                      padding: EdgeInsets.all(10.0),
+                                      child: ListTile(
+                                        leading: CircleAvatar(
+                                          child: Text('#'),
+                                        ),
+                                        title: Text('${tageData['display']}'),
+                                      )
+                                      /* Column(
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
+                                                        children: <Widget>[
+                                                          Text(
+                                                              '${tageData['display']}'),
+                                                        ],
+                                                      ), */
+                                      );
+                                }
+
+                                return Container(
+                                  color: Colors.amber,
+                                );
+                              }),
+                        ],
+                      ),
                     ),
                     if (widget.edittextdata != null)
                       Column(
@@ -605,17 +611,12 @@ class _CreateNewPostState extends State<CreateNewPost> {
                                       : widget.mutliplePost?.length == 1
                                           ? widget.postDataType == "IMAGE"
                                               ? Container(
-                                                  width: _width,
-                                                  height: 150,
-                                                  margin: EdgeInsets.only(
-                                                      left: 16,
-                                                      top: 15,
-                                                      right: 16),
-                                                  child: Center(
-                                                      child: CustomImageView(
+                                                  height: 400,
+                                                  child: CustomImageView(
+                                                    fit: BoxFit.fill,
                                                     url:
                                                         "${widget.mutliplePost?[0]}",
-                                                  )),
+                                                  ),
                                                 )
                                               : widget.postDataType ==
                                                       "ATTACHMENT"
@@ -665,8 +666,8 @@ class _CreateNewPostState extends State<CreateNewPost> {
                                                     if ((widget.mutliplePost
                                                             ?.isNotEmpty ??
                                                         false)) ...[
-                                                      SizedBox(
-                                                        height: 300,
+                                                      Container(
+                                                        height: 400,
                                                         child: PageView.builder(
                                                           onPageChanged:
                                                               (page) {
@@ -687,21 +688,12 @@ class _CreateNewPostState extends State<CreateNewPost> {
                                                             if (widget
                                                                     .postDataType ==
                                                                 "IMAGE") {
-                                                              return Container(
-                                                                width: _width,
-                                                                margin: EdgeInsets
-                                                                    .only(
-                                                                        left:
-                                                                            16,
-                                                                        top: 15,
-                                                                        right:
-                                                                            16),
-                                                                child: Center(
-                                                                    child:
-                                                                        CustomImageView(
-                                                                  url:
-                                                                      "${widget.mutliplePost?[index1]}",
-                                                                )),
+                                                              return CustomImageView(
+                                                                fit:
+                                                                    BoxFit.fill,
+                                                                // width: _width,
+                                                                url:
+                                                                    "${widget.mutliplePost?[index1]}",
                                                               );
                                                             } else if (widget
                                                                     .postDataType ==
