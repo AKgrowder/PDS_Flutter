@@ -149,7 +149,11 @@ class _InboxScreenState extends State<InboxScreen> {
                                 "${PersonalChatListModelData?.object?[index].userUid}",
                             UserName:
                                 "${PersonalChatListModelData?.object?[index].userName}", */
-                  ChatInboxUid: "${laastChat}",
+                  chatInboxUid: "${laastChat}",
+                  chatUserName: '',
+                  chatUserProfile: '',
+                  /*   chatUserName: "${PersonalChatListModelData?.object?[index].userName}", */
+
                   /*     UserImage:
                                 "${PersonalChatListModelData?.object?[index].userProfilePic}",
                             videoId:
@@ -478,6 +482,12 @@ class _InboxScreenState extends State<InboxScreen> {
                         forwadList = await Navigator.push(context,
                             MaterialPageRoute(builder: (context) {
                           return DmScreenNew(
+                            chatUserName:
+                                "${PersonalChatListModelData?.object?[index].userName}",
+                            chatInboxUid:
+                                "${PersonalChatListModelData?.object?[index].userChatInboxUid}",
+                            chatUserProfile:
+                                "${PersonalChatListModelData?.object?[index].userProfilePic}",
                             /* isBlock: PersonalChatListModelData
                                 ?.object?[index].isBlock,
                             isExpert: PersonalChatListModelData
@@ -486,8 +496,7 @@ class _InboxScreenState extends State<InboxScreen> {
                                 "${PersonalChatListModelData?.object?[index].userUid}",
                             UserName:
                                 "${PersonalChatListModelData?.object?[index].userName}", */
-                            ChatInboxUid:
-                                "${PersonalChatListModelData?.object?[index].userChatInboxUid}",
+
                             /*     UserImage:
                                 "${PersonalChatListModelData?.object?[index].userProfilePic}",
                             videoId:

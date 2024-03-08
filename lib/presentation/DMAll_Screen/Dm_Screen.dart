@@ -547,15 +547,15 @@ class _DmScreenState extends State<DmScreen> {
                                       GestureDetector(
                                         onTap: () {
                                           // this is intall set
-                                          Navigator.push(
+                                          /*  Navigator.push(
                                               context,
                                               MaterialPageRoute(
                                                 builder: (context) =>
                                                     DmScreenNew(
-                                                  ChatInboxUid:
+                                                  chatInboxUid:
                                                       widget.ChatInboxUid,
                                                 ),
-                                              ));
+                                              )); */
                                           /*  Navigator.push(context,
                                               MaterialPageRoute(
                                             builder: (context) {
