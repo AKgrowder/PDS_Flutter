@@ -59,14 +59,12 @@
 
 // final navigatorKey = GlobalKey<NavigatorState>();
 
-
 // void main() async {
 //   WidgetsFlutterBinding.ensureInitialized();
 //   await FlutterDownloader.initialize();
 //   await WidgetsFlutterBinding.ensureInitialized();
 
 //    ZegoUIKitPrebuiltCallInvitationService().setNavigatorKey(navigatorKey);
-
 
 //   await Firebase.initializeApp();
 //   await langdetect.initLangDetect();
@@ -105,7 +103,6 @@
 //     alert: true,
 //     provisional: false,
 //   );
-
 
 //   ZegoUIKit().initLog().then((value) {
 //     ZegoUIKitPrebuiltCallInvitationService().useSystemCallingUI(
@@ -251,7 +248,7 @@
 //         BlocProvider<BlogcommentCubit>(
 //           create: (context) => BlogcommentCubit(),
 //         ),
-        
+
 //       ],
 //       child: Portal(
 //         child: MaterialApp(
@@ -281,7 +278,7 @@
 //   }
 // }
 
-
+import 'dart:io';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -327,16 +324,22 @@ import 'package:pds/API/Bloc/my_account_Bloc/my_account_cubit.dart';
 import 'package:pds/API/Bloc/senMSG_Bloc/senMSG_cubit.dart';
 import 'package:pds/API/Bloc/sherinvite_Block/sherinvite_cubit.dart';
 import 'package:pds/API/Bloc/viewStory_Bloc/viewStory_cubit.dart';
+import 'package:pds/firebase_option.dart';
+import 'package:pds/presentation/%20new/OpenSavePostImage.dart';
+import 'package:pds/presentation/%20new/profileNew.dart';
 import 'package:pds/theme/theme_helper.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'API/Bloc/BlockUser_Bloc/Block_user_cubit.dart';
 import 'API/Bloc/postData_Bloc/postData_Bloc.dart';
 import 'presentation/splash_screen/splash_screen.dart';
 import 'package:flutter_langdetect/flutter_langdetect.dart' as langdetect;
+
 final navigatorKey = GlobalKey<NavigatorState>();
 
 Future<void> _messageHandler(RemoteMessage message) async {
-  await Firebase.initializeApp();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   print('background message ${message.notification!.body}');
   print("value Gey-${message.data}");
 }
@@ -345,7 +348,13 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await FlutterDownloader.initialize();
   await WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+  if (Platform.isAndroid) {
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+  } else {
+    await Firebase.initializeApp();
+  }
   await langdetect.initLangDetect();
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
@@ -359,6 +368,72 @@ void main() async {
     print("/* onMessageOpenedApp: */ ${message.notification?.body}");
     print("/* onMessageOpenedApp: */ ${message.notification?.title}");
     print("/* onMessageOpenedApp: */ ${message.data}");
+    //  if (message.data["navigation"] == "/your_route") {
+    // int _yourId = int.tryParse(message.data["id"]) ?? 0;
+    // Navigator.push(
+    //     navigatorKey.currentState.context,
+    //     MaterialPageRoute(
+    //         builder: (context) => YourScreen(
+    //               yourId: _yourId,
+    //             )));
+    message.data["Subject"] == "TAG_POST" ||
+            message.data["Subject"] == "RE_POST"
+        ? Navigator.push(
+            navigatorKey.currentState!.context,
+            MaterialPageRoute(
+                builder: (context) => OpenSavePostImage(
+                      PostID: message.data["uid"],
+                      index: 0,
+                    )),
+          )
+        // print("opne Save Image screen RE_POST & TAG_POST");
+
+        : message.data["Subject"] == "INVITE_ROOM"
+            ? print("Notification Seen INVITE_ROOM")
+            : message.data["Subject"] == "EXPERT_LEFT_ROOM" ||
+                    message.data["Subject"] == "MEMBER_LEFT_ROOM" ||
+                    message.data["Subject"] == "DELETE_ROOM" ||
+                    message.data["Subject"] == "EXPERT_ACCEРТ_INVITE" ||
+                    message.data["Subject"] == "EXPERT_REJECT_INVITE"
+                ? print(
+                    "Notification Seen  EXPERT_LEFT_ROOM & MEMBER_LEFT_ROOM & DELETE_ROOM & EXPERT_ACCEРТ_INVITE & EXPERT_REJECT_INVITE")
+                : message.data["Subject"] == "EXPERT_REJECT_INVITE"
+                    ? print("Seen Notification EXPERT_REJECT_INVITE")
+                    : message.data["Subject"] == "LIKE_POST" ||
+                            message.data["Subject"] == "COMMENT_POST" ||
+                            message.data["Subject"] == "TAG_COMMENT_POST"
+                        ? Navigator.push(
+                            navigatorKey.currentState!.context,
+                            MaterialPageRoute(
+                                builder: (context) => OpenSavePostImage(
+                                      PostID: message.data["uid"],
+                                      index: 0,
+                                      profileTure: message.data["Subject"] ==
+                                                  "COMMENT_POST" ||
+                                              message.data["Subject"] ==
+                                                  "TAG_COMMENT_POST"
+                                          ? true
+                                          : false,
+                                    )),
+                          )
+                        // print("opne Save Image screen LIKE_POST & COMMENT_POST & TAG_COMMENT_POST")
+                        : message.data["Subject"] == "FOLLOW_PUBLIC_ACCOUNT" ||
+                                message.data["Subject"] ==
+                                    "FOLLOW_PRIVATE_ACCOUNT_REQUEST" ||
+                                message.data["Subject"] ==
+                                    "FOLLOW_REQUEST_ACCEPTED" ||
+                                message.data["Subject"] == "PROFILE_APPROVED" ||
+                                message.data["Subject"] == "PROFILE_REJECTED" ||
+                                message.data["Subject"] == "PROFILE_VIEWED"
+                            ? Navigator.push(navigatorKey.currentState!.context,
+                                MaterialPageRoute(builder: (context) {
+                                return ProfileScreen(
+                                    User_ID: "${message.data["uid"]}",
+                                    isFollowing: "",
+                                    ProfileNotification: true);
+                              }))
+                            //  print("open User Profile FOLLOW_PUBLIC_ACCOUNT & FOLLOW_PRIVATE_ACCOUNT_REQUEST & FOLLOW_REQUEST_ACCEPTED")
+                            : print("");
   });
 
   FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
@@ -502,21 +577,22 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider<BlogcommentCubit>(
           create: (context) => BlogcommentCubit(),
-        ),BlocProvider<BlockUserCubit>(
+        ),
+        BlocProvider<BlockUserCubit>(
           create: (context) => BlockUserCubit(),
         ),
       ],
       child: Portal(
         child: MaterialApp(
-            theme: ThemeData(
-              visualDensity: VisualDensity.standard,
-            ),
-            title: 'pds',
-            debugShowCheckedModeBanner: false,
-            home: SplashScreen(),
-            navigatorKey: navigatorKey,
-            //BottombarPage(buttomIndex: 0),
-            ),
+          theme: ThemeData(
+            visualDensity: VisualDensity.standard,
+          ),
+          title: 'pds',
+          debugShowCheckedModeBanner: false,
+          home: SplashScreen(),
+          navigatorKey: navigatorKey,
+          //BottombarPage(buttomIndex: 0),
+        ),
       ),
     );
   }
