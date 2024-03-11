@@ -1,8 +1,6 @@
-import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -13,7 +11,6 @@ import 'package:pds/API/Model/inboxScreenModel/inboxScrrenModel.dart';
 import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/core/utils/image_constant.dart';
 import 'package:pds/core/utils/sharedPreferences.dart';
-import 'package:pds/presentation/DMAll_Screen/reacrtionclass.dart';
 import 'package:pds/theme/theme_helper.dart';
 import 'package:pds/widgets/custom_image_view.dart';
 import 'package:pds/widgets/pagenation.dart';
@@ -37,6 +34,7 @@ ScrollController scrollController = ScrollController();
 OverlayEntry? overlayEntry;
 OverlayEntry? overlayEntry1;
 TextEditingController addComment = TextEditingController();
+TextEditingController reactionController = TextEditingController();
 
 bool overlayVisible = false;
 bool isEditMessage = false;
@@ -93,7 +91,11 @@ class _DmScreenNewState extends State<DmScreenNew> {
   Map<String, dynamic>? mapDataAdd;
   bool isScrollingDown = false;
   final focus = FocusNode();
-
+  isReplayFUnction(){
+    for(int i=0; i<(getInboxMessagesModel?.object?.content?.length ?? 0); i++){
+      
+    }
+  }
   @override
   void initState() {
     isEditMessage = false;
@@ -123,30 +125,36 @@ class _DmScreenNewState extends State<DmScreenNew> {
         headers: {},
         callback: (frame) {
           addComment.clear();
+          reactionController.clear();
+          swipeToIndex = 0;
+          isMeesageReaction = false;
           mapDataAdd?.clear();
           Map<String, dynamic> jsonString = json.decode(frame.body ?? "");
           print("check want to get-${jsonString}");
           print("login user uid -${UserLogin_ID}");
           mapDataAdd = {
-            "uid": jsonString['object']['uid'],
             "userUid": jsonString['object']['userCode'],
-            "userChatMessageUid": jsonString['object']['userChatInboxUid'],
+            "userChatMessageUid": jsonString['object']['uid'],
             "userName": jsonString['object']['userName'],
             "userProfilePic": jsonString['object']['userProfilePic'],
             "message": jsonString['object']['message'],
             "createdDate": jsonString['object']['createdAt'],
             "messageType": jsonString['object']['messageType'],
             "isDeleted": jsonString['object']['isDeleted'],
-            "isDelivered": jsonString['object']['isDelivered']
+            "isDelivered": jsonString['object']['isDelivered'],
+            "replyOnUid": jsonString['object']['replyMessageUid'],
           };
           Content content = Content.fromJson(mapDataAdd!);
           getInboxMessagesModel?.object?.content?.add(content);
+          print(
+              "check what is Get-${getInboxMessagesModel?.object?.content?[isEditedindex].message}-${jsonString['object']['uid']}");
+          /*  if (getInboxMessagesModel?.object?.content?[isEditedindex].message !=
+              content.uid) {
+            getInboxMessagesModel?.object?.content?.add(content);
+          } */
 
-          scrollController.animateTo(
-            scrollController.position.maxScrollExtent,
-            duration: Duration(milliseconds: 300),
-            curve: Curves.easeInOut,
-          );
+          scrollController
+              .jumpTo(scrollController.position.maxScrollExtent + 100);
           if (isMounted == true) if (mounted) {
             setState(() {});
           }
@@ -167,7 +175,7 @@ class _DmScreenNewState extends State<DmScreenNew> {
           }));
     } else {
       print(
-          "check else condison working -${isEditedindex} -${getInboxMessagesModel?.object?.content?[isEditedindex].uid}");
+          "check else condison working -${isEditedindex} -${getInboxMessagesModel?.object?.content?[isEditedindex].userChatMessageUid}");
       stompClient?.send(
           destination: '/send_message_in_user_chat/${widget.chatInboxUid}',
           body: json.encode({
@@ -178,11 +186,10 @@ class _DmScreenNewState extends State<DmScreenNew> {
             "userCode": "${UserLogin_ID}",
             "isDelivered": true,
             'uid':
-                "${getInboxMessagesModel?.object?.content?[isEditedindex].uid}",
+                "${getInboxMessagesModel?.object?.content?[isEditedindex].userChatMessageUid}",
           }));
-          
 
-      print("else check -${addComment.text}");
+      /* print("else check -${addComment.text}");
       print(
           "else check11 -${getInboxMessagesModel?.object?.content?[isEditedindex].message}");
       getInboxMessagesModel?.object?.content?[isEditedindex].message =
@@ -190,9 +197,10 @@ class _DmScreenNewState extends State<DmScreenNew> {
       print(
           "now check value -${getInboxMessagesModel?.object?.content?[isEditedindex].message}");
       isEditMessage = false;
+      focus.unfocus();
       isEditedindex = 0;
       addComment.clear();
-      setState(() {});
+      setState(() {}); */
     }
   }
 
@@ -286,7 +294,7 @@ class _DmScreenNewState extends State<DmScreenNew> {
                                 Container(
                                   margin: EdgeInsets.only(left: 10),
                                   child: Text(
-                                    "Ankur",
+                                    "${widget.chatUserName}",
                                     overflow: TextOverflow.ellipsis,
                                     style: TextStyle(
                                       fontFamily: 'outfit',
@@ -492,13 +500,35 @@ class _DmScreenNewState extends State<DmScreenNew> {
                                 physics: NeverScrollableScrollPhysics(),
                                 itemBuilder: (context, index) {
                                   final GlobalKey _widgetKey = GlobalKey();
-
+                                  bool isReply = false;
                                   final isFirstMessageForDate = index == 0 ||
                                       _isDifferentDate(
                                           '${getInboxMessagesModel?.object?.content?[index - 1].createdDate}',
                                           '${getInboxMessagesModel?.object?.content?[index].createdDate}');
                                   DateTime parsedDateTime = DateTime.parse(
                                       '${getInboxMessagesModel?.object?.content?[index].createdDate}');
+                                  /*     if (index <
+                                      (getInboxMessagesModel
+                                                  ?.object?.content?.length ??
+                                              0) -
+                                          1) {
+                                    int nextIndex = index + 1;
+                                    dynamic currentMessageUid =
+                                        getInboxMessagesModel
+                                            ?.object
+                                            ?.content?[index]
+                                            .userChatMessageUid;
+                                    dynamic nextMessageReplyUid =
+                                        getInboxMessagesModel?.object
+                                            ?.content?[nextIndex].replyOnUid;
+                                    if (currentMessageUid != null &&
+                                        nextMessageReplyUid != null &&
+                                        currentMessageUid ==
+                                            nextMessageReplyUid) {
+                                      // print("this condison is check value -");
+                                      isReply = true;
+                                    }
+                                  } */
                                   return Column(
                                     children: [
                                       if (isFirstMessageForDate)
@@ -787,7 +817,7 @@ class _DmScreenNewState extends State<DmScreenNew> {
                                   child: Row(
                                     children: [
                                       Text(
-                                        'Replying to Ankur',
+                                        'Replying to ${widget.chatUserName}',
                                         style: TextStyle(
                                             color: Colors.grey,
                                             fontWeight: FontWeight.bold),
@@ -922,6 +952,7 @@ class _DmScreenNewState extends State<DmScreenNew> {
                                       child: Padding(
                                         padding: const EdgeInsets.all(8.0),
                                         child: TextField(
+                                          controller: reactionController,
                                           minLines: 1,
                                           maxLines: 5,
                                           decoration: InputDecoration(
@@ -977,7 +1008,25 @@ class _DmScreenNewState extends State<DmScreenNew> {
                                       ),
                                     ),
                                     GestureDetector(
-                                      onTap: () {},
+                                      onTap: () {
+                                        print(
+                                            "this condison is check to replay message");
+                                        stompClient?.send(
+                                            destination:
+                                                '/send_message_in_user_chat/${widget.chatInboxUid}',
+                                            body: json.encode({
+                                              "message":
+                                                  "${reactionController.text}",
+                                              "messageType": "TEXT",
+                                              "userChatInboxUid":
+                                                  "${widget.chatInboxUid}",
+                                              //  "${widget.Room_ID}",
+                                              "userCode": "${UserLogin_ID}",
+                                              "isDelivered": true,
+                                              'replyMessageUid':
+                                                  "${getInboxMessagesModel?.object?.content?[swipeToIndex ?? 0].userChatMessageUid}",
+                                            }));
+                                      },
                                       child: Container(
                                         margin: EdgeInsets.only(right: 10),
                                         height: 50,
@@ -1040,8 +1089,14 @@ class _DmScreenNewState extends State<DmScreenNew> {
       onTap: () {
         if (getInboxMessagesModel?.object?.content?[index].isSelected == null) {
           if (selectedCount < 10) {
+            print("check selcecount-${selectedCount}");
+
             getInboxMessagesModel?.object?.content?[index].isSelected = true;
+            if (selectedCount == 2) {
+              overlayEntryRemoveMethod();
+            }
             _incrementSelectedCount();
+            print("this method calling");
           } else {
             final snackBar = SnackBar(
               content: Text('You can only select up to 10 messages.'),
@@ -1056,7 +1111,13 @@ class _DmScreenNewState extends State<DmScreenNew> {
           _decrementSelectedCount();
         } else {
           getInboxMessagesModel?.object?.content?[index].isSelected = true;
+          print("check selcecount-${selectedCount}");
+          if (selectedCount == 2) {
+            print("this condiso working");
+            overlayEntryRemoveMethod();
+          }
           _incrementSelectedCount();
+          print("esle check");
         }
         _hasImageMessageTypeSelected(index);
         if (isMounted == true) {
@@ -1079,6 +1140,7 @@ class _DmScreenNewState extends State<DmScreenNew> {
           onRightSwipe: (details) {
             isMeesageReaction = true;
             swipeToIndex = index;
+            print("sweip to index -$swipeToIndex");
             if (isMounted == true) {
               if (mounted) setState(() {});
             }
@@ -1137,6 +1199,10 @@ class _DmScreenNewState extends State<DmScreenNew> {
                               getInboxMessagesModel
                                   ?.object?.content?[index].isSelected = true;
                               _incrementSelectedCount();
+                              print("this is the Data Get-${selectedCount}");
+                              if (selectedCount == 2) {
+                                overlayEntryRemoveMethod();
+                              }
                             } else {
                               final snackBar = SnackBar(
                                 content: Text(
@@ -1158,6 +1224,9 @@ class _DmScreenNewState extends State<DmScreenNew> {
                                 ?.object?.content?[index].isSelected = true;
 
                             _incrementSelectedCount();
+                            if (selectedCount == 2) {
+                              overlayEntryRemoveMethod();
+                            }
                           }
                           _hasImageMessageTypeSelected(index);
                           if (isMounted == true) {
@@ -1188,6 +1257,9 @@ class _DmScreenNewState extends State<DmScreenNew> {
                           if (selectedCount < 10) {
                             getInboxMessagesModel
                                 ?.object?.content?[index].isSelected = true;
+                            if (selectedCount == 2) {
+                              overlayEntryRemoveMethod();
+                            }
                             _incrementSelectedCount();
                           } else {
                             final snackBar = SnackBar(
@@ -1208,6 +1280,9 @@ class _DmScreenNewState extends State<DmScreenNew> {
                         } else {
                           getInboxMessagesModel
                               ?.object?.content?[index].isSelected = true;
+                          if (selectedCount == 2) {
+                            overlayEntryRemoveMethod();
+                          }
                           _incrementSelectedCount();
                         }
                         _hasImageMessageTypeSelected(index);
@@ -1409,7 +1484,22 @@ class _DmScreenNewState extends State<DmScreenNew> {
                             Text('Replay'),
                             Spacer(),
                             GestureDetector(
-                              onTap: () {},
+                              onTap: () {
+                                print("text -${addComment.text}");
+                                /* stompClient?.send(
+                                    destination:
+                                        '/send_message_in_user_chat/${widget.chatInboxUid}',
+                                    body: json.encode({
+                                      "message": "${addComment.text}",
+                                      "messageType": "TEXT",
+                                      "userChatInboxUid":
+                                          "${widget.chatInboxUid}",
+                                      //  "${widget.Room_ID}",
+                                      "userCode": "${UserLogin_ID}",
+                                      "isDelivered": true,
+                                     "replyMessageUid":
+                                    })); */
+                              },
                               child: SizedBox(
                                   height: 20,
                                   child: Image.asset(
@@ -1449,12 +1539,16 @@ class MessageViewWidget extends StatelessWidget {
   final bool isSelected;
   final String meessageTyep;
   final bool emojiReaction;
-
   final GetInboxMessagesModel getInboxMessagesModel;
   final int index;
 
   @override
   Widget build(BuildContext context) {
+    bool isReply = index > 0 &&
+        getInboxMessagesModel.object?.content != null &&
+        getInboxMessagesModel.object?.content![index].replyOnUid ==
+            getInboxMessagesModel
+                .object?.content![index - 1].userChatMessageUid;
     return Column(
       children: [
         if (getInboxMessagesModel.object?.content?[index]
@@ -1564,7 +1658,7 @@ class MessageViewWidget extends StatelessWidget {
                           bottomLeft: Radius.circular(13),
                           bottomRight: Radius.circular(13),
                           topRight: Radius.circular(13))),
-              child: Row(
+              child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Flexible(
@@ -1614,7 +1708,14 @@ class MessageViewWidget extends StatelessWidget {
                       },
                     ),
                   ),
-
+                  if (isReply)
+                    Text(
+                      'Reply',
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontStyle: FontStyle.italic,
+                      ),
+                    ),
                   /* Align(
                   alignment: Alignment.topLeft,
                   child: Text(
@@ -1689,3 +1790,7 @@ class ReactionElement {
 //
   ReactionElement(this.reaction, this.icon);
 }
+
+
+
+
