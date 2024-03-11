@@ -1854,7 +1854,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           Navigator.of(context).push(MaterialPageRoute(
                               builder: (context) => ProfileandDocumentScreen(
                                     path:
-                                        'https://pds-images-live.s3.ap-south-1.amazonaws.com/misc/logo.png',
+                                        'https://inpackaging-images.s3.ap-south-1.amazonaws.com/misc/InPackaging_Logo.png',
                                     title: '',
                                   )));
                         }
@@ -1971,7 +1971,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                     builder: (context) =>
                                         ProfileandDocumentScreen(
                                           path:
-                                              'https://pds-images-live.s3.ap-south-1.amazonaws.com/misc/logo.png',
+                                              'https://inpackaging-images.s3.ap-south-1.amazonaws.com/misc/InPackaging_Logo.png',
                                           title: '',
                                         )))
                               }
