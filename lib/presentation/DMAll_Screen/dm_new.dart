@@ -1,6 +1,8 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -8,9 +10,11 @@ import 'package:linkfy_text/linkfy_text.dart';
 import 'package:pds/API/Bloc/dmInbox_bloc/dmMessageState.dart';
 import 'package:pds/API/Bloc/dmInbox_bloc/dminbox_blcok.dart';
 import 'package:pds/API/Model/inboxScreenModel/inboxScrrenModel.dart';
+import 'package:pds/StoryFile/src/story_page_container_view.dart';
 import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/core/utils/image_constant.dart';
 import 'package:pds/core/utils/sharedPreferences.dart';
+import 'package:pds/presentation/DMAll_Screen/reacrtionclass.dart';
 import 'package:pds/theme/theme_helper.dart';
 import 'package:pds/widgets/custom_image_view.dart';
 import 'package:pds/widgets/pagenation.dart';
@@ -91,11 +95,7 @@ class _DmScreenNewState extends State<DmScreenNew> {
   Map<String, dynamic>? mapDataAdd;
   bool isScrollingDown = false;
   final focus = FocusNode();
-  isReplayFUnction(){
-    for(int i=0; i<(getInboxMessagesModel?.object?.content?.length ?? 0); i++){
-      
-    }
-  }
+
   @override
   void initState() {
     isEditMessage = false;
@@ -507,28 +507,21 @@ class _DmScreenNewState extends State<DmScreenNew> {
                                           '${getInboxMessagesModel?.object?.content?[index].createdDate}');
                                   DateTime parsedDateTime = DateTime.parse(
                                       '${getInboxMessagesModel?.object?.content?[index].createdDate}');
-                                  /*     if (index <
-                                      (getInboxMessagesModel
-                                                  ?.object?.content?.length ??
-                                              0) -
-                                          1) {
-                                    int nextIndex = index + 1;
-                                    dynamic currentMessageUid =
-                                        getInboxMessagesModel
-                                            ?.object
-                                            ?.content?[index]
-                                            .userChatMessageUid;
-                                    dynamic nextMessageReplyUid =
+                                  List<Content>? lists = getInboxMessagesModel
+                                      ?.object?.content
+                                      ?.where((element) {
+                                    if (element.userChatMessageUid ==
                                         getInboxMessagesModel?.object
-                                            ?.content?[nextIndex].replyOnUid;
-                                    if (currentMessageUid != null &&
-                                        nextMessageReplyUid != null &&
-                                        currentMessageUid ==
-                                            nextMessageReplyUid) {
-                                      // print("this condison is check value -");
-                                      isReply = true;
+                                            ?.content?[index].replyOnUid) {
+                                      return true;
                                     }
-                                  } */
+                                    return false;
+                                  }).toList();
+                                  var iSReplay =
+                                      lists != null && lists.isNotEmpty
+                                          ? lists.first
+                                          : null;
+                                  print("isReplay check -$iSReplay");
                                   return Column(
                                     children: [
                                       if (isFirstMessageForDate)
@@ -571,7 +564,9 @@ class _DmScreenNewState extends State<DmScreenNew> {
                                                     .emojiReaction ??
                                                 false,
                                             '${getInboxMessagesModel?.object?.content?[index].reactionMessage}',
-                                            _widgetKey),
+                                            _widgetKey,
+                                            iSReplay,
+                                            UserLogin_ID ?? ""),
                                       if (getInboxMessagesModel?.object
                                               ?.content?[index].userUid !=
                                           UserLogin_ID)
@@ -598,7 +593,10 @@ class _DmScreenNewState extends State<DmScreenNew> {
                                                     .emojiReaction ??
                                                 false,
                                             '${getInboxMessagesModel?.object?.content?[index].reactionMessage}',
-                                            _widgetKey), // other user chat
+                                            _widgetKey,
+                                            iSReplay,
+                                            UserLogin_ID ??
+                                                ""), // other user chat
                                     ],
                                   );
                                 },
@@ -1010,7 +1008,8 @@ class _DmScreenNewState extends State<DmScreenNew> {
                                     GestureDetector(
                                       onTap: () {
                                         print(
-                                            "this condison is check to replay message");
+                                            "this iS Replay function is caliing");
+                                        print("swipeToIndex-$swipeToIndex");
                                         stompClient?.send(
                                             destination:
                                                 '/send_message_in_user_chat/${widget.chatInboxUid}',
@@ -1084,7 +1083,9 @@ class _DmScreenNewState extends State<DmScreenNew> {
       String meessageTyep,
       bool emojiReaction,
       String reactionMessageData,
-      _widgetKey) {
+      _widgetKey,
+      iSReplay,
+      String userUid) {
     return GestureDetector(
       onTap: () {
         if (getInboxMessagesModel?.object?.content?[index].isSelected == null) {
@@ -1302,6 +1303,8 @@ class _DmScreenNewState extends State<DmScreenNew> {
                         emojiReaction: emojiReaction,
                         getInboxMessagesModel: getInboxMessagesModel!,
                         index: index,
+                        isReplay: iSReplay,
+                        useruid: UserLogin_ID ?? '',
                       ),
                     )),
               ),
@@ -1532,6 +1535,8 @@ class MessageViewWidget extends StatelessWidget {
     required this.emojiReaction,
     required this.getInboxMessagesModel,
     required this.index,
+    required this.isReplay,
+    required this.useruid,
   }) : super(key: key);
 
   final bool userMeesage;
@@ -1541,14 +1546,16 @@ class MessageViewWidget extends StatelessWidget {
   final bool emojiReaction;
   final GetInboxMessagesModel getInboxMessagesModel;
   final int index;
-
+  final dynamic isReplay;
+  final String useruid;
   @override
   Widget build(BuildContext context) {
-    bool isReply = index > 0 &&
+    
+/*     bool isReply = index > 0 &&
         getInboxMessagesModel.object?.content != null &&
         getInboxMessagesModel.object?.content![index].replyOnUid ==
             getInboxMessagesModel
-                .object?.content![index - 1].userChatMessageUid;
+                .object?.content![index - 1].userChatMessageUid; */
     return Column(
       children: [
         if (getInboxMessagesModel.object?.content?[index]
@@ -1641,95 +1648,123 @@ class MessageViewWidget extends StatelessWidget {
             ],
           ),
         if (getInboxMessagesModel.object?.content?[index].messageType == 'TEXT')
-          Container(
-              constraints: BoxConstraints(
-                  maxWidth: isSelected
-                      ? MediaQuery.of(context).size.width
-                      : MediaQuery.of(context).size.width / 2),
-              padding: EdgeInsets.all(11),
-              margin: EdgeInsets.only(top: isSelected == true ? 3 : 5),
-              decoration: BoxDecoration(
-                  color: userMeesage == true
-                      ? ColorConstant.otheruserchat
-                      : ColorConstant.ChatBackColor,
-                  borderRadius: userMeesage == true
-                      ? BorderRadius.circular(13)
-                      : BorderRadius.only(
-                          bottomLeft: Radius.circular(13),
-                          bottomRight: Radius.circular(13),
-                          topRight: Radius.circular(13))),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Flexible(
-                    child: LinkifyText(
-                      getInboxMessagesModel.object?.content?[index].message ??
-                          '',
-                      linkStyle: TextStyle(
-                          fontWeight: FontWeight.w500,
-                          color: Colors.blue,
-                          fontFamily: "outfit",
-                          fontSize: 15,
-                          decoration: TextDecoration.underline,
-                          decorationColor: Colors.blue),
-                      textStyle: TextStyle(
-                          fontWeight: FontWeight.w400,
-                          color: Colors.black,
-                          fontFamily: "outfit",
-                          fontSize: 15),
-                      linkTypes: [
-                        LinkType.url,
-                      ],
-                      onTap: (link) {
-                        var SelectedTest = link.value.toString();
-                        var Link = SelectedTest.startsWith('https');
-                        var Link1 = SelectedTest.startsWith('http');
-                        var Link2 = SelectedTest.startsWith('www');
-                        var Link3 = SelectedTest.startsWith('WWW');
-                        var Link4 = SelectedTest.startsWith('HTTPS');
-                        var Link5 = SelectedTest.startsWith('HTTP');
-                        var Link6 = SelectedTest.startsWith(
-                            'https://pdslink.page.link/');
-                        print(SelectedTest.toString());
-                        if (Link == true ||
-                            Link1 == true ||
-                            Link2 == true ||
-                            Link3 == true ||
-                            Link4 == true ||
-                            Link5 == true ||
-                            Link6 == true) {
-                          print("qqqqqqqqhttps://${link.value}");
-
-                          launchUrl(Uri.parse("${link.value.toString()}"));
-                        } else {
-                          launchUrl(
-                              Uri.parse("https://${link.value.toString()}"));
-                        }
-                      },
-                    ),
-                  ),
-                  if (isReply)
-                    Text(
-                      'Reply',
-                      style: TextStyle(
-                        fontSize: 12,
-                        fontStyle: FontStyle.italic,
-                      ),
-                    ),
-                  /* Align(
-                  alignment: Alignment.topLeft,
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              if (isReplay != null)
+                Padding(
+                  padding: const EdgeInsets.only(top: 5),
                   child: Text(
-                    customFormat(parsedDateTime),
-                    textScaleFactor: 1.0,
-                    style: TextStyle(
-                        fontWeight: FontWeight.normal,
-                        color: Colors.black,
-                        fontFamily: "outfit",
-                        fontSize: 10),
+                      "Replied To ${isReplay.userUid == useruid ? 'Yourself' : '${isReplay.userName}'}"),
+                ),
+              if (isReplay != null)
+                Flexible(
+                  child: Container(
+                    constraints: BoxConstraints(
+                        maxWidth: isSelected
+                            ? MediaQuery.of(context).size.width
+                            : MediaQuery.of(context).size.width / 2),
+                    padding: EdgeInsets.all(11),
+                    margin: EdgeInsets.only(top: isSelected == true ? 3 : 5),
+                    decoration: BoxDecoration(
+                        color: userMeesage == true
+                            ? Color(0xffFFF3F1).withOpacity(0.4)
+                            : Color(0xffECECED),
+                        borderRadius: userMeesage == true
+                            ? BorderRadius.circular(13)
+                            : BorderRadius.only(
+                                bottomLeft: Radius.circular(13),
+                                bottomRight: Radius.circular(13),
+                                topRight: Radius.circular(13))),
+                    child: Text("${isReplay.message}"),
                   ),
-                ), */
-                ],
-              )),
+                ),
+              Container(
+                  constraints: BoxConstraints(
+                      maxWidth: isSelected
+                          ? MediaQuery.of(context).size.width
+                          : MediaQuery.of(context).size.width / 2),
+                  padding: EdgeInsets.all(11),
+                  margin: EdgeInsets.only(top: isSelected == true ? 3 : 5),
+                  decoration: BoxDecoration(
+                      color: userMeesage == true
+                          ? ColorConstant.otheruserchat
+                          : ColorConstant.ChatBackColor,
+                      borderRadius: userMeesage == true
+                          ? BorderRadius.circular(13)
+                          : BorderRadius.only(
+                              bottomLeft: Radius.circular(13),
+                              bottomRight: Radius.circular(13),
+                              topRight: Radius.circular(13))),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Flexible(
+                        child: LinkifyText(
+                          getInboxMessagesModel
+                                  .object?.content?[index].message ??
+                              '',
+                          linkStyle: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              color: Colors.blue,
+                              fontFamily: "outfit",
+                              fontSize: 15,
+                              decoration: TextDecoration.underline,
+                              decorationColor: Colors.blue),
+                          textStyle: TextStyle(
+                              fontWeight: FontWeight.w400,
+                              color: Colors.black,
+                              fontFamily: "outfit",
+                              fontSize: 15),
+                          linkTypes: [
+                            LinkType.url,
+                          ],
+                          onTap: (link) {
+                            var SelectedTest = link.value.toString();
+                            var Link = SelectedTest.startsWith('https');
+                            var Link1 = SelectedTest.startsWith('http');
+                            var Link2 = SelectedTest.startsWith('www');
+                            var Link3 = SelectedTest.startsWith('WWW');
+                            var Link4 = SelectedTest.startsWith('HTTPS');
+                            var Link5 = SelectedTest.startsWith('HTTP');
+                            var Link6 = SelectedTest.startsWith(
+                                'https://pdslink.page.link/');
+                            print(SelectedTest.toString());
+                            if (Link == true ||
+                                Link1 == true ||
+                                Link2 == true ||
+                                Link3 == true ||
+                                Link4 == true ||
+                                Link5 == true ||
+                                Link6 == true) {
+                              print("qqqqqqqqhttps://${link.value}");
+
+                              launchUrl(Uri.parse("${link.value.toString()}"));
+                            } else {
+                              launchUrl(Uri.parse(
+                                  "https://${link.value.toString()}"));
+                            }
+                          },
+                        ),
+                      ),
+
+                      /* Align(
+                      alignment: Alignment.topLeft,
+                      child: Text(
+                        customFormat(parsedDateTime),
+                        textScaleFactor: 1.0,
+                        style: TextStyle(
+                            fontWeight: FontWeight.normal,
+                            color: Colors.black,
+                            fontFamily: "outfit",
+                            fontSize: 10),
+                      ),
+                    ), */
+                    ],
+                  )),
+            ],
+          ),
       ],
     );
   }
@@ -1790,7 +1825,3 @@ class ReactionElement {
 //
   ReactionElement(this.reaction, this.icon);
 }
-
-
-
-
