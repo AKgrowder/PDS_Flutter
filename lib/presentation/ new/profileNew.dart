@@ -178,6 +178,7 @@ class _ProfileScreenState extends State<ProfileScreen>
 
   ScrollController _scrollController = ScrollController();
   bool _isScrolledUp = false;
+  bool scrolldown = false;
 
   void hideFloting() {
     super.setState(() {
@@ -195,22 +196,47 @@ class _ProfileScreenState extends State<ProfileScreen>
     _scrollController.addListener(() {
       if (_scrollController.position.userScrollDirection ==
           ScrollDirection.reverse) {
-        if (!isScrollingDown) {
+        if (!isScrollingDown||!scrolldown) {
           isScrollingDown = true;
-
+          scrolldown=true;
+          //  _isScrolleddown=false; 
           hideFloting();
         }
       }
       if (_scrollController.position.userScrollDirection ==
           ScrollDirection.forward) {
-        if (isScrollingDown) {
+        if (isScrollingDown||!scrolldown) {
           isScrollingDown = false;
+          scrolldown=false;
+          // _isScrolleddown=true;
 
           showFloting();
         }
       }
     });
   }
+
+  // void myScrolll() async {
+  //   _scrollController.addListener(() {
+  //     if (_scrollController.position.userScrollDirection ==
+  //         ScrollDirection.reverse) {
+  //       if (!isScrollingDown) {
+  //         // isScrollingDown = true;
+  //         //  _isScrolleddown=false; 
+  //         hideFloting();
+  //       }
+  //     }
+  //     if (_scrollController.position.userScrollDirection ==
+  //         ScrollDirection.forward) {
+  //       if (isScrollingDown) {
+  //         // isScrollingDown = false;
+  //         // _isScrolleddown=true;
+
+  //         showFloting();
+  //       }
+  //     }
+  //   });
+  // }
 
   String getTimeDifference(DateTime dateTime) {
     final difference = DateTime.now().difference(dateTime);
@@ -660,7 +686,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                             leading: SizedBox(),
                             expandedHeight: _height / 3,
                             floating: false,
-                            pinned: true,
+                            pinned: false,
                             snap: false,
                             stretch: true,
                             elevation: 0,
@@ -702,7 +728,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                       builder: (context) =>
                                                           ProfileandDocumentScreen(
                                                             path:
-                                                                'https://pds-images-live.s3.ap-south-1.amazonaws.com/misc/logo.png',
+                                                                'https://inpackaging-images.s3.ap-south-1.amazonaws.com/misc/InPackaging_Logo.png',
                                                             title: '',
                                                           )));
                                             }
@@ -717,17 +743,20 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                     NewProfileData?.object
                                                             ?.userBackgroundPic ==
                                                         ''
-                                                ? CustomImageView(
-                                                    svgPath: ImageConstant
-                                                        .splashImage,
-                                                    /* fit: BoxFit.fill, */
-                                                    radius: BorderRadius.only(
-                                                        bottomRight:
-                                                            Radius.circular(20),
-                                                        bottomLeft:
-                                                            Radius.circular(
-                                                                20)),
-                                                  )
+                                                ? Padding(
+                                                  padding: const EdgeInsets.all(8.0),
+                                                  child: CustomImageView(
+                                                      svgPath: ImageConstant
+                                                          .splashImage,
+                                                      /* fit: BoxFit.fill, */
+                                                      radius: BorderRadius.only(
+                                                          bottomRight:
+                                                              Radius.circular(20),
+                                                          bottomLeft:
+                                                              Radius.circular(
+                                                                  20)),
+                                                    ),
+                                                )
                                                 : CustomImageView(
                                                     url:
                                                         "${NewProfileData?.object?.userBackgroundPic}",
@@ -809,7 +838,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                         builder: (context) =>
                                                             ProfileandDocumentScreen(
                                                               path:
-                                                                  'https://pds-images-live.s3.ap-south-1.amazonaws.com/misc/logo.png',
+                                                                  'https://inpackaging-images.s3.ap-south-1.amazonaws.com/misc/InPackaging_Logo.png',
                                                               title: '',
                                                             )));
                                               }
