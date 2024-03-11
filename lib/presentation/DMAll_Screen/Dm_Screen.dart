@@ -256,7 +256,7 @@ class _DmScreenState extends State<DmScreen> {
     User_Name = prefs.getString(PreferencesKey.ProfileUserName) ?? "";
     print("this is the Data Get-${User_Name}");
     DMbaseURL = prefs.getString(PreferencesKey.SocketLink) ?? "";
-    // DMstompClient.activate();
+    DMstompClient.activate();
     // Delet_DMstompClient.activate();
 
     /*   DMstompClient.subscribe(
@@ -526,6 +526,9 @@ class _DmScreenState extends State<DmScreen> {
                                 children: [
                                   GestureDetector(
                                     onTap: () {
+                                      BlocProvider.of<DmInboxCubit>(context)
+                                          .OffLineUpdate(
+                                              context, widget.ChatInboxUid);
                                       Navigator.pop(context);
                                     },
                                     child: Container(
@@ -547,23 +550,20 @@ class _DmScreenState extends State<DmScreen> {
                                       GestureDetector(
                                         onTap: () {
                                           // this is intall set
-                                          /*  Navigator.push(
+                                          /* Navigator.push(
                                               context,
                                               MaterialPageRoute(
                                                 builder: (context) =>
-                                                    DmScreenNew(
-                                                  chatInboxUid:
-                                                      widget.ChatInboxUid,
-                                                ),
+                                                    DmScreenNew(ChatInboxUid: widget.ChatInboxUid,),
                                               )); */
-                                          /*  Navigator.push(context,
+                                          Navigator.push(context,
                                               MaterialPageRoute(
                                             builder: (context) {
                                               return ProfileScreen(
                                                   User_ID: widget.UserUID,
                                                   isFollowing: "");
                                             },
-                                          )); */
+                                          ));
                                         },
                                         child: Container(
                                           child: widget.UserImage != null &&
@@ -1423,15 +1423,15 @@ class _DmScreenState extends State<DmScreen> {
                                                                                               //   ),
                                                                                               // ),
                                                                                               /// ----------------------------------------------------------------
-                                                                                              Padding(
+                                                                                              /* Padding(
                                                                                                 padding: const EdgeInsets.only(left: 3, right: 5, bottom: 2),
                                                                                                 child: Text(
                                                                                                   customFormat(parsedDateTime),
                                                                                                   textScaleFactor: 1.0,
                                                                                                   style: TextStyle(fontWeight: FontWeight.normal, color: Colors.black, fontFamily: "outfit", fontSize: 10),
                                                                                                 ),
-                                                                                              ),
-                                                                                              /* Container(
+                                                                                              ), */
+                                                                                              Container(
                                                                                                   // color: Colors.red,
                                                                                                   width: 47,
                                                                                                   child: Row(
@@ -1451,31 +1451,30 @@ class _DmScreenState extends State<DmScreen> {
                                                                                                           child: getInboxMessagesModel?.object?.content?[index].messageSeenStatus == 0
                                                                                                               ? CustomImageView(
                                                                                                                   imagePath: ImageConstant.messagecheck,
-                                                                                                                  // height: 15,
                                                                                                                 )
                                                                                                               : getInboxMessagesModel?.object?.content?[index].messageSeenStatus == 1
                                                                                                                   ? CustomImageView(
                                                                                                                       imagePath: ImageConstant.checksend,
-                                                                                                                      // height: 15,
                                                                                                                     )
-                                                                                                                  : getInboxMessagesModel?.object?.content?[index].messageSeenStatus == 2
+                                                                                                                  : getInboxMessagesModel?.object?.content?[index].messageSeenStatus == 2 || LiveStatusModelData?.object?.isOtherUserLive == true
                                                                                                                       ? CustomImageView(
                                                                                                                           imagePath: ImageConstant.checkseen,
-                                                                                                                          // height: 15,
                                                                                                                         )
-                                                                                                                      : widget.online == true
+                                                                                                                      : widget.online == true || LiveStatusModelData?.object?.isOtherUserLive == true
                                                                                                                           ? CustomImageView(
                                                                                                                               imagePath: ImageConstant.checksend,
-                                                                                                                              // height: 15,
                                                                                                                             )
-                                                                                                                          : CustomImageView(
-                                                                                                                              imagePath: ImageConstant.messagecheck,
-                                                                                                                              // height: 15,
-                                                                                                                            ),
+                                                                                                                          : LiveStatusModelData?.object?.isOtherUserLive == true
+                                                                                                                              ? CustomImageView(
+                                                                                                                                  imagePath: ImageConstant.checkseen,
+                                                                                                                                )
+                                                                                                                              : CustomImageView(
+                                                                                                                                  imagePath: ImageConstant.messagecheck,
+                                                                                                                                ),
                                                                                                         ),
                                                                                                       ),
                                                                                                     ],
-                                                                                                  )), */
+                                                                                                  )),
                                                                                             ],
                                                                                           ),
                                                                                         ),
@@ -1803,6 +1802,8 @@ class _DmScreenState extends State<DmScreen> {
                                     ),
                               GestureDetector(
                                 onTap: () async {
+                                  BlocProvider.of<DmInboxCubit>(context)
+                                      .LiveStatus(context, widget.ChatInboxUid);
                                   if (_image != null) {
                                     if (SubmitOneTime == false) {
                                       await checkGuestUser();
@@ -1825,7 +1826,7 @@ class _DmScreenState extends State<DmScreen> {
                                         checkGuestUser();
                                         print(
                                             "this Data Get-${widget.ChatInboxUid}");
-                                        DMChatInboxUid1 =
+                                        DMChatInboxUid =
                                             "${widget.ChatInboxUid}";
 
                                         // "${widget.Room_ID}";
