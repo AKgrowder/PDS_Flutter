@@ -108,7 +108,8 @@ class Content {
   int? messageSeenStatus;
   bool? isSelected;
   bool? isForwarded;
-  String? uid;
+  String? replyOnUid;
+ 
   Content({
     this.userUid,
     this.userChatMessageUid,
@@ -123,7 +124,7 @@ class Content {
     this.emojiReaction,
     this.messageSeenStatus,
     this.isSelected,
-    this.isForwarded,this.uid
+    this.replyOnUid,
   });
 
   Content.fromJson(Map<String, dynamic> json) {
@@ -141,7 +142,7 @@ class Content {
     emojiReaction = json['emojiReaction'];
     messageSeenStatus = json['messageSeenStatus'];
     isForwarded = json['isForwarded'];
-    uid = json['uid']!=null?json['uid']:null;
+   replyOnUid = json['replyOnUid'];
   }
 
   Map<String, dynamic> toJson() {
