@@ -70,12 +70,14 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:video_player/video_player.dart';
 import 'package:visibility_detector/visibility_detector.dart';
-
+import 'package:pds/presentation/%20new/new_story_view_page.dart';
 // import 'package:flutter_langdetect/flutter_langdetect.dart' as langdetect;
 import '../../API/Model/Get_all_blog_Model/get_all_blog_model.dart';
 import '../../API/Model/UserTagModel/UserTag_model.dart';
-import '../../widgets/app_bar/custom_app_bar.dart';
 import '../become_an_expert_screen/become_an_expert_screen.dart';
+
+GetGuestAllPostModel? AllGuestPostRoomData;
+bool apiCalingdone = false;
 
 class HomeScreenNew extends StatefulWidget {
   ScrollController scrollController;
@@ -120,7 +122,6 @@ class _HomeScreenNewState extends State<HomeScreenNew>
   double finalvideoSize = 0;
   BlogCommentModel? blogCommentModel;
   LikePost? likePost;
-  GetGuestAllPostModel? AllGuestPostRoomData;
   DeleteCommentModel? DeletecommentDataa;
   saveBlogModel? saveBlogModeData;
   saveBlogModel? LikeBlogModeData;
@@ -133,7 +134,6 @@ class _HomeScreenNewState extends State<HomeScreenNew>
   GetAllStoryModel? getAllStoryModel;
   FetchAllExpertsModel? AllExperData;
   SystemConfigModel? systemConfigModel;
-  bool apiCalingdone = false;
   int? secound;
   int sliderCurrentPosition = 0;
   List<PageController> _pageControllers = [];
@@ -241,6 +241,32 @@ class _HomeScreenNewState extends State<HomeScreenNew>
 
   @override
   void initState() {
+     if (apiCalingdone == true) {
+      AllGuestPostRoomData?.object?.content?.forEach((element) {
+        if (element.description != null) {
+          readmoree.add((element.description?.length ?? 0) <= maxLength);
+        } else if (element.repostOn?.description != null) {
+          readmoree
+              .add((element.repostOn?.description?.length ?? 0) <= maxLength);
+        } else {
+          readmoree.add(false);
+        }
+
+        if (element.postDataType == 'VIDEO') {
+          if (element.postData?.isNotEmpty == true) {
+            videoUrls.add(element.postData?.first ?? '');
+          }
+
+        } else if (element.repostOn?.postDataType == 'VIDEO') {
+          videoUrls.add(element.repostOn?.postData?.first ?? '');
+        } else {
+          videoUrls.add('');
+        }
+
+        /*  chewieController.add(inList ??
+                      ChewieController(videoPlayerController: _controller)); */
+      });
+    }
     super.initState();
 
     Get_UserToken();
@@ -1369,6 +1395,14 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                 : SizedBox(),
             appBar: _show
                 ? AppBar(
+                  systemOverlayStyle: SystemUiOverlayStyle(
+    // Status bar color
+    statusBarColor: Colors.transparent, 
+
+    // Status bar brightness (optional)
+    statusBarIconBrightness: Brightness.dark, // For Android (dark icons)
+    statusBarBrightness: Brightness.light, // For iOS (dark icons)
+  ),
                     backgroundColor: Colors.transparent,
                     toolbarHeight: 80,
                     elevation: 0,
@@ -1486,9 +1520,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                           width: 20,
                         )
                       ])
-                : CustomAppBar(
-                    height: 0,
-                  ),
+                : null, 
             body: BlocConsumer<GetGuestAllPostCubit, GetGuestAllPostState>(
                 listener: (context, state) async {
               if (state is GetGuestAllPostErrorState) {
@@ -1692,7 +1724,12 @@ class _HomeScreenNewState extends State<HomeScreenNew>
 
                       storyButtons[0] = (StoryButton(
                           onPressed: (data) {
-                            Navigator.of(storycontext!).push(
+                                                        Navigator.push(context,
+                                MaterialPageRoute(builder: (context) {
+                              return NewStoryViewPage(
+                                  data, buttonDatas, 0, User_ID!);
+                            })).then((value) => Get_UserToken());
+                            /* Navigator.of(storycontext!).push(
                               StoryRoute(
                                 // hii working Date
                                 onTap: () async {
@@ -1717,7 +1754,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                 ),
                                 duration: buttonDatas[0].pageAnimationDuration,
                               ),
-                            );
+                            ); */
                           },
                           buttonData: buttonDatas[0],
                           allButtonDatas: buttonDatas,
@@ -2897,6 +2934,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                   CrossAxisAlignment
                                                                       .start,
                                                               children: [
+                                                                SizedBox(height: 8,),
                                                                 GestureDetector(
                                                                   onTap:
                                                                       () async {
@@ -3670,6 +3708,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                         crossAxisAlignment:
                                                                             CrossAxisAlignment.start,
                                                                         children: [
+                                                                          SizedBox(height: 8,),
                                                                           GestureDetector(
                                                                             onTap:
                                                                                 () async {
@@ -4302,12 +4341,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                               GestureDetector(
                                                                 onTap:
                                                                     () async {
-                                                                  BlocProvider.of<
-                                                                              AddcommentCubit>(
-                                                                          context)
-                                                                      .Addcomment(
-                                                                          context,
-                                                                          '${AllGuestPostRoomData?.object?.content?[index].postUid}');
+                                                                 
                                                                   if (uuid ==
                                                                       null) {
                                                                     Navigator.of(
@@ -4316,6 +4350,12 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                             builder: (context) =>
                                                                                 RegisterCreateAccountScreen()));
                                                                   } else {
+                                                                     BlocProvider.of<
+                                                                              AddcommentCubit>(
+                                                                          context)
+                                                                      .Addcomment(
+                                                                          context,
+                                                                          '${AllGuestPostRoomData?.object?.content?[index].postUid}');
                                                                     _settingModalBottomSheet1(
                                                                         context,
                                                                         index,
@@ -4714,9 +4754,9 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                   CrossAxisAlignment
                                                                       .start,
                                                               children: [
-                                                                // SizedBox(
-                                                                //   height: 6,
-                                                                // ),
+                                                                SizedBox(
+                                                                  height: 8,
+                                                                ),
                                                                 GestureDetector(
                                                                   onTap:
                                                                       () async {
@@ -5588,11 +5628,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                               GestureDetector(
                                                                   onTap:
                                                                       () async {
-                                                                    BlocProvider.of<AddcommentCubit>(
-                                                                            context)
-                                                                        .Addcomment(
-                                                                            context,
-                                                                            '${AllGuestPostRoomData?.object?.content?[index].postUid}');
+                                                                    
                                                                     if (uuid ==
                                                                         null) {
                                                                       Navigator.of(
@@ -5600,6 +5636,11 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                           .push(
                                                                               MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
                                                                     } else {
+                                                                      BlocProvider.of<AddcommentCubit>(
+                                                                            context)
+                                                                        .Addcomment(
+                                                                            context,
+                                                                            '${AllGuestPostRoomData?.object?.content?[index].postUid}');
                                                                       _settingModalBottomSheet1(
                                                                           context,
                                                                           index,
@@ -6724,15 +6765,49 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                 ))));
   }
 
-  Future<void> methodCalling() async {
+ Future<void> methodCalling() async {
     print("method caling");
     ImageDataPostOne? imageDataPost;
 
-    // if (Platform.isAndroid) {
-    print("tHIS iS THE dATA gET");
-    final info = await DeviceInfoPlugin().androidInfo;
-    if (num.parse(await info.version.release).toInt() >= 13) {
-      if (await permissionHandler(context, Permission.photos) ?? false) {
+    if (Platform.isAndroid) {
+      print("tHIS iS THE dATA gET");
+      final info = await DeviceInfoPlugin().androidInfo;
+      if (num.parse(await info.version.release).toInt() >= 13) {
+        if (await permissionHandler(context, Permission.photos) ?? false) {
+          imageDataPost = await Navigator.push(context,
+              MaterialPageRoute(builder: (context) {
+            return CreateStoryPage(
+              finalFileSize: finalFileSize,
+              finalvideoSize: finalvideoSize,
+            );
+          }));
+
+          if (imageDataPost?.object?.split('.').last == 'mp4') {
+            var parmes = {
+              "storyData": imageDataPost?.object,
+              "storyType": "VIDEO",
+              "videoDuration": imageDataPost?.videodurationGet
+            };
+            print("scdfhgsdfhsd-${parmes}");
+            Repository().cretateStoryApi(context, parmes);
+            isWatch = true;
+            Get_UserToken();
+          } else {
+            var parmes = {
+              "storyData": imageDataPost?.object.toString(),
+              "storyType": "TEXT",
+              "videoDuration": ''
+            };
+            print("CHECK:--------${parmes}");
+            Repository().cretateStoryApi(context, parmes);
+            isWatch = true;
+            Get_UserToken();
+          }
+        }
+      } else if (await permissionHandler(context, Permission.storage) ??
+          false) {
+        print("tHIS iS THE dATA ELSE");
+
         imageDataPost =
             await Navigator.push(context, MaterialPageRoute(builder: (context) {
           return CreateStoryPage(
@@ -6749,7 +6824,6 @@ class _HomeScreenNewState extends State<HomeScreenNew>
           };
           print("scdfhgsdfhsd-${parmes}");
           Repository().cretateStoryApi(context, parmes);
-          isWatch = true;
           Get_UserToken();
         } else {
           var parmes = {
@@ -6759,11 +6833,10 @@ class _HomeScreenNewState extends State<HomeScreenNew>
           };
           print("CHECK:--------${parmes}");
           Repository().cretateStoryApi(context, parmes);
-          isWatch = true;
           Get_UserToken();
         }
       }
-    } else if (await permissionHandler(context, Permission.storage) ?? false) {
+    } else if (await permissionHandler(context, Permission.photos) ?? false) {
       print("tHIS iS THE dATA ELSE");
 
       imageDataPost =
@@ -6794,7 +6867,6 @@ class _HomeScreenNewState extends State<HomeScreenNew>
         Get_UserToken();
       }
     }
-    // }
     buttonDatas[0].images.add(StoryModel(
         imageDataPost?.object,
         DateTime.now().toIso8601String(),

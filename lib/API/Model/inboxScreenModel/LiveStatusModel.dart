@@ -24,22 +24,22 @@ class LiveStatusModel {
 }
 
 class Object {
-  bool? online;
-  bool? live;
+  bool? isOtherUserOnline;
+  bool? isOtherUserLive;
   bool? isBlock;
 
-  Object({this.online, this.live, this.isBlock});
+  Object({this.isOtherUserOnline, this.isOtherUserLive, this.isBlock});
 
   Object.fromJson(Map<String, dynamic> json) {
-    online = json['online'];
-    live = json['live'];
+    isOtherUserOnline = json['isOtherUserOnline'];
+    isOtherUserLive = json['isOtherUserLive'];
     isBlock = json['isBlock'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['online'] = this.online;
-    data['live'] = this.live;
+    data['isOtherUserOnline'] = this.isOtherUserOnline;
+    data['isOtherUserLive'] = this.isOtherUserLive;
     data['isBlock'] = this.isBlock;
     return data;
   }

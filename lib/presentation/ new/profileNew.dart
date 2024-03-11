@@ -172,9 +172,45 @@ class _ProfileScreenState extends State<ProfileScreen>
   bool Blockuser = false;
   GlobalKey key = GlobalKey();
   GlobalKey blockKey = GlobalKey();
+  bool isScrollingDown = false;
+
+  bool _show = true;
 
   ScrollController _scrollController = ScrollController();
   bool _isScrolledUp = false;
+
+  void hideFloting() {
+    super.setState(() {
+      _show = false;
+    });
+  }
+
+  void showFloting() {
+    super.setState(() {
+      _show = true;
+    });
+  }
+
+  void myScroll() async {
+    _scrollController.addListener(() {
+      if (_scrollController.position.userScrollDirection ==
+          ScrollDirection.reverse) {
+        if (!isScrollingDown) {
+          isScrollingDown = true;
+
+          hideFloting();
+        }
+      }
+      if (_scrollController.position.userScrollDirection ==
+          ScrollDirection.forward) {
+        if (isScrollingDown) {
+          isScrollingDown = false;
+
+          showFloting();
+        }
+      }
+    });
+  }
 
   String getTimeDifference(DateTime dateTime) {
     final difference = DateTime.now().difference(dateTime);
@@ -619,7 +655,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                         controller: _scrollController,
                         slivers: <Widget>[
                           SliverAppBar(
-                            toolbarHeight: _height / 6.5,
+                            toolbarHeight: _height / 10,
                             backgroundColor: Colors.transparent,
                             leading: SizedBox(),
                             expandedHeight: _height / 3,
@@ -683,12 +719,14 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                         ''
                                                 ? CustomImageView(
                                                     svgPath: ImageConstant
-                                                        .splashImage, /* fit: BoxFit.fill, */
+                                                        .splashImage,
+                                                    /* fit: BoxFit.fill, */
                                                     radius: BorderRadius.only(
                                                         bottomRight:
                                                             Radius.circular(20),
                                                         bottomLeft:
-                                                            Radius.circular(20)),
+                                                            Radius.circular(
+                                                                20)),
                                                   )
                                                 : CustomImageView(
                                                     url:
@@ -791,14 +829,25 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                         NewProfileData?.object
                                                                 ?.userProfilePic ==
                                                             ''
-                                                    ? CustomImageView(
+                                                    ? CircleAvatar(
+                                                        backgroundColor:
+                                                            Colors.white,
+                                                        backgroundImage:
+                                                            AssetImage(
+                                                          ImageConstant
+                                                              .tomcruse,
+                                                        ),
+                                                        radius: 25,
+                                                      )
+                                                    /* CustomImageView(
                                                         imagePath: ImageConstant
                                                             .tomcruse,
+                                                             
                                                         radius:
                                                             BorderRadius.all(
-                                                          Radius.circular(25),
+                                                          Radius.circular(20),
                                                         ),
-                                                      )
+                                                      ) */
                                                     : CircleAvatar(
                                                         backgroundColor:
                                                             Colors.white,
@@ -1269,7 +1318,6 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                           width: 20,
                                                           imagePath:
                                                               ImageConstant.chat) */
-                                                  
                                                 ),
                                               ),
                                             ),
@@ -3394,8 +3442,8 @@ class _ProfileScreenState extends State<ProfileScreen>
 
                                           /// Content of Tab 2
                                           arrNotiyTypeList[1].isSelected
-                                              ? creratePostUser(
-                                                  GetAllPostData, _width,_height)
+                                              ? creratePostUser(GetAllPostData,
+                                                  _width, _height)
                                               /* Container(
                                             height: FinalPostCount * 185,
                                             // color: Colors.yellow,
@@ -3993,7 +4041,8 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                         ),
                                                                       ),
                                                                     )))),
-                                                        NavagtionPassing(_width,_height)
+                                                        NavagtionPassing(
+                                                            _width, _height)
                                                       ],
                                                     ),
                                                   ),
@@ -4160,10 +4209,11 @@ class _ProfileScreenState extends State<ProfileScreen>
                                 },
                                 child: Container(
                                   decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      border: Border.all(
-                                          color: Color.fromRGBO(0, 0, 0, 0.25)),
-                                      /* borderRadius: BorderRadius.circular(15) */),
+                                    color: Colors.white,
+                                    border: Border.all(
+                                        color: Color.fromRGBO(0, 0, 0,
+                                            0.25)), /* borderRadius: BorderRadius.circular(15) */
+                                  ),
                                   // height: 300,
                                   width: _width,
                                   child: Column(
@@ -5813,12 +5863,13 @@ class _ProfileScreenState extends State<ProfileScreen>
                                     },
                                     child: Container(
                                       decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          border: Border.all(
-                                              color: Color.fromRGBO(
-                                                  0, 0, 0, 0.25)),
-                                          /* borderRadius:
-                                              BorderRadius.circular(15) */),
+                                        color: Colors.white,
+                                        border: Border.all(
+                                            color:
+                                                Color.fromRGBO(0, 0, 0, 0.25)),
+                                        /* borderRadius:
+                                              BorderRadius.circular(15) */
+                                      ),
                                       // height: 300,
                                       width: _width,
                                       child: Column(
@@ -6319,8 +6370,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                   .only(
                                                                       left: 0,
                                                                       top: 15,
-                                                                      right:
-                                                                          0),
+                                                                      right: 0),
                                                               child: Center(
                                                                   child:
                                                                       CustomImageView(
@@ -6432,7 +6482,9 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                       ?.isNotEmpty ??
                                                                   false)) ...[
                                                                 Container(
-                                                                  height: _height/1.4,
+                                                                  height:
+                                                                      _height /
+                                                                          1.4,
                                                                   child: PageView
                                                                       .builder(
                                                                     onPageChanged:
@@ -7192,7 +7244,7 @@ class _ProfileScreenState extends State<ProfileScreen>
         });
   }
 
-  Widget NavagtionPassing(double _width,_height) {
+  Widget NavagtionPassing(double _width, _height) {
     if (value1 == 0) {
       return GetSavePostData?.object?.isNotEmpty ?? true
           ? ListView.builder(
@@ -7237,10 +7289,11 @@ class _ProfileScreenState extends State<ProfileScreen>
                           },
                           child: Container(
                             decoration: BoxDecoration(
-                                color: Colors.white,
-                                border: Border.all(
-                                    color: Color.fromRGBO(0, 0, 0, 0.25)),
-                                /* borderRadius: BorderRadius.circular(15) */),
+                              color: Colors.white,
+                              border: Border.all(
+                                  color: Color.fromRGBO(0, 0, 0,
+                                      0.25)), /* borderRadius: BorderRadius.circular(15) */
+                            ),
                             // height: 300,
                             width: _width,
                             child: Column(
@@ -8835,10 +8888,11 @@ class _ProfileScreenState extends State<ProfileScreen>
                           },
                           child: Container(
                             decoration: BoxDecoration(
-                                // color: Colors.red,
-                                border: Border.all(
-                                    color: Color.fromRGBO(0, 0, 0, 0.25)),
-                                /* borderRadius: BorderRadius.circular(15) */),
+                              // color: Colors.red,
+                              border: Border.all(
+                                  color: Color.fromRGBO(0, 0, 0,
+                                      0.25)), /* borderRadius: BorderRadius.circular(15) */
+                            ),
                             // height: 300,
                             width: _width,
                             child: Column(
@@ -9441,7 +9495,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                             ?.isNotEmpty ??
                                                         false)) ...[
                                                       Container(
-                                                        height: _height/1.4,
+                                                        height: _height / 1.4,
                                                         child: PageView.builder(
                                                           onPageChanged:
                                                               (page) {
@@ -9474,8 +9528,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                 width: _width,
                                                                 margin: EdgeInsets
                                                                     .only(
-                                                                        left:
-                                                                            0,
+                                                                        left: 0,
                                                                         top: 15,
                                                                         right:
                                                                             0),
