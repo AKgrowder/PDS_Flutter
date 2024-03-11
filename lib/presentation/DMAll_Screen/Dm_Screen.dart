@@ -1826,9 +1826,9 @@ class _DmScreenState extends State<DmScreen> {
                                         checkGuestUser();
                                         print(
                                             "this Data Get-${widget.ChatInboxUid}");
-                                        DMChatInboxUid =
+                                       /*  DMChatInboxUid =
                                             "${widget.ChatInboxUid}";
-
+ */
                                         // "${widget.Room_ID}";
                                         DMstompClient.subscribe(
                                             destination:
