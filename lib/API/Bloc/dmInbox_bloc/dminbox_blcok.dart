@@ -174,6 +174,27 @@ class DmInboxCubit extends Cubit<getInboxState> {
       emit(getInboxErrorState(SeenMessgaeModelData));
     }
   }
+  
+    Future<void> OffLineUpdate(BuildContext context, String inboxUid) async {
+    dynamic SeenMessgaeModelData;
+    try {
+      emit(getInboxLoadingState());
+      SeenMessgaeModelData = await Repository().OffLineUpdate(context, inboxUid);
+      if (SeenMessgaeModelData ==
+          "Something Went Wrong, Try After Some Time.") {
+        emit(getInboxErrorState("${SeenMessgaeModelData}"));
+      } else {
+        if (SeenMessgaeModelData.success == true) {
+          emit(SeenAllMessageLoadedState(SeenMessgaeModelData));
+
+          print(SeenMessgaeModelData.message);
+        }
+      }
+    } catch (e) {
+      print('LoginScreen-${e.toString()}');
+      emit(getInboxErrorState(SeenMessgaeModelData));
+    }
+  }
 
   Future<void> LiveStatus(BuildContext context, String inboxUid) async {
     dynamic SeenMessgaeModelData;

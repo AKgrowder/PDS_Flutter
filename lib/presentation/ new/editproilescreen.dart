@@ -8,6 +8,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
@@ -434,7 +435,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                       borderRadius: BorderRadius.all(
                                           Radius.circular(20))),
                                   // color: Colors.red,
-                                  child: Image.asset(
+                                  child: SvgPicture.asset(
                                     ImageConstant.splashImage,
                                     // fit: BoxFit.fill,
                                     height: 150,
@@ -533,19 +534,16 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                             ),
                                           ),
                                         )
-                                      : Padding(
-                                          padding: const EdgeInsets.all(4.0),
-                                          child: ClipOval(
-                                            child: FittedBox(
-                                              child: Image.asset(
-                                                ImageConstant.splashImage,
-                                                // fit: BoxFit.cover,
-                                                height: 150,
-                                                width: 150,
-                                              ),
-                                            ),
+                                      : Center(
+                                        child: FittedBox(
+                                          child: Image.asset(
+                                            ImageConstant.tomcruse,
+                                            // fit: BoxFit.cover,
+                                            height: 150,
+                                            width: 150,
                                           ),
                                         ),
+                                      ),
                               userProfile != 'soicalScreen'
                                   ? Positioned(
                                       bottom: 7,

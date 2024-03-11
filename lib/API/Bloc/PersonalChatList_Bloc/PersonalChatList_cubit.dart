@@ -42,17 +42,13 @@ class PersonalChatListCubit extends Cubit<PersonalChatListState> {
       emit(PersonalChatListErrorState(e));
     }
   }
-  
 
-  Future<void> UplodeImageAPI(
-    BuildContext context,
-    File imageFile
-  ) async {
+  Future<void> UplodeImageAPI(BuildContext context, File imageFile) async {
     dynamic addPostImageUploded;
     try {
       emit(PersonalChatListLoadingState());
-      addPostImageUploded = await Repository()
-          .userProfileprofileCover(imageFile,context);
+      addPostImageUploded =
+          await Repository().userProfileprofileCover(imageFile, context);
 
       if (addPostImageUploded.success == true) {
         emit(AddPostImaegState(addPostImageUploded));
@@ -169,12 +165,12 @@ class PersonalChatListCubit extends Cubit<PersonalChatListState> {
     }
   }
 
-   Future<void> UserChatDelete(
+  Future<void> UserChatDelete(
       String userChatInboxUid, BuildContext context) async {
     try {
       emit(PersonalChatListLoadingState());
-      getUsersChatByUsernameData = await Repository()
-          .DeleteUserDelete(userChatInboxUid, context);
+      getUsersChatByUsernameData =
+          await Repository().DeleteUserDelete(userChatInboxUid, context);
 
       if (getUsersChatByUsernameData.success == true) {
         emit(UserChatDeleteLoaded(getUsersChatByUsernameData));
@@ -186,7 +182,7 @@ class PersonalChatListCubit extends Cubit<PersonalChatListState> {
     }
   }
 
-    Future<void> getAllNoticationsCountAPI(BuildContext context) async {
+  Future<void> getAllNoticationsCountAPI(BuildContext context) async {
     dynamic acceptRejectInvitationModel;
     try {
       emit(PersonalChatListLoadingState());
@@ -227,13 +223,12 @@ class PersonalChatListCubit extends Cubit<PersonalChatListState> {
     }
   }
 
-
-   Future<void> ChatOnline (BuildContext context,bool onlineStatus) async {
+  Future<void> ChatOnline(BuildContext context, bool onlineStatus) async {
     dynamic acceptRejectInvitationModel;
     try {
       emit(PersonalChatListLoadingState());
       acceptRejectInvitationModel =
-          await Repository().ChatOnline(context,onlineStatus);
+          await Repository().ChatOnline(context, onlineStatus);
       if (acceptRejectInvitationModel ==
           "Something Went Wrong, Try After Some Time.") {
         emit(PersonalChatListErrorState("${acceptRejectInvitationModel}"));
@@ -247,4 +242,21 @@ class PersonalChatListCubit extends Cubit<PersonalChatListState> {
     }
   }
 
+  Future<void> forward_messages(BuildContext context,  Map<String, dynamic> params,) async {
+    dynamic forwardMessages;
+    try {
+      emit(PersonalChatListLoadingState());
+      forwardMessages =
+          await Repository().forward_messages(context, params);
+      if (forwardMessages == "Something Went Wrong, Try After Some Time.") {
+        emit(PersonalChatListErrorState("${forwardMessages}"));
+      } else {
+        if (forwardMessages.success == true) {
+          emit(ForwadMessageLoadedState(forwardMessages));
+        }
+      }
+    } catch (e) {
+      emit(PersonalChatListErrorState(forwardMessages));
+    }
+  }
 }

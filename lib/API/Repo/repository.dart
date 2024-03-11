@@ -66,6 +66,7 @@ import 'package:pds/API/Model/deletecomment/delete_comment_model.dart';
 import 'package:pds/API/Model/deviceInfo/deviceInfo_model.dart';
 import 'package:pds/API/Model/emailVerfiaction/emailVerfiaction.dart';
 import 'package:pds/API/Model/forget_password_model/forget_password_model.dart';
+import 'package:pds/API/Model/forwad_Meesage/forwad_Message.dart';
 import 'package:pds/API/Model/getCountOfSavedRoomModel/getCountOfSavedRoomModel.dart';
 import 'package:pds/API/Model/getSerchDataModel/getSerchDataModel.dart';
 import 'package:pds/API/Model/inboxScreenModel/LiveStatusModel.dart';
@@ -1073,7 +1074,7 @@ class Repository {
     print('Myaccount${response.statusCode}');
     switch (response.statusCode) {
       case 200:
-      print("LiveStatusModelDataLiveStatusModelData");
+        print("LiveStatusModelDataLiveStatusModelData");
         return LiveStatusModel.fromJson(jsonString);
       case 404:
         return Config.somethingWentWrong;
@@ -2902,7 +2903,7 @@ class Repository {
         '${Config.DMChatList}?userChatInboxUid=${userChatInboxUid}&pageNumber=${pageNumber}&numberOfRecords=20',
         context);
     var jsonString = json.decode(utf8.decode(responce.bodyBytes));
-
+    print("DMChatListApi-${jsonString}");
     switch (responce.statusCode) {
       case 200:
         return GetInboxMessagesModel.fromJson(jsonString);
@@ -3322,8 +3323,32 @@ class Repository {
     }
   }
 
+  forward_messages(
+    BuildContext context,
+    Map<String, dynamic> params,
+  ) async {
+    final responce = await apiServices.postApiCall(
+        '${Config.forwardMessages}', params, context);
+    var jsonString = json.decode(responce.body);
+    print('forward_messages$jsonString');
+    switch (responce.statusCode) {
+      case 200:
+        return ForwardMessages.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+      case 400:
+        return ForwardMessages.fromJson(jsonString);
+      // return Config.somethingWentWrong;
+      case 701:
+        return Config.somethingWentWrong;
+      default:
+        return jsonString;
+    }
+  }
+
   get_all_master_report_type(BuildContext context) async {
-    
     final responce = await apiServices.getApiCall(
         '${Config.get_all_master_report_type}', context);
     var jsonString = json.decode(responce.body);
@@ -3360,6 +3385,28 @@ class Repository {
       reportOptions.add(element);
 
     }); */
+  }
+   OffLineUpdate(BuildContext context, String inboxUid) async {
+    final response = await apiServices.getApiCallWithToken(
+        "${Config.update_live_status}?inboxChatUid=${inboxUid}", context);
+    var jsonString = json.decode(response.body);
+    print('Myaccount${response.statusCode}');
+    switch (response.statusCode) {
+      case 200:
+        return SeenAllMessageModel.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+      case 400:
+        return SeenAllMessageModel.fromJson(jsonString);
+
+      // return Config.somethingWentWrong;
+      case 701:
+        return jsonString;
+      default:
+        return jsonString;
+    }
   }
 }
 // var headers = {

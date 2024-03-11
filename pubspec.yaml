@@ -21,7 +21,7 @@ dependencies:
   emoji_picker_flutter:
   flutter_smart_dialog:
   country_pickers:  
-  stomp_dart_client:
+  stomp_dart_client: ^1.0.3
   firebase_core : 
   firebase_messaging: ^14.6.3
   device_info_plus: ^8.1.0
@@ -74,6 +74,8 @@ dependencies:
   # zego_uikit:
   flutter_styled_toast: ^2.2.1
   flutter_observer: ^2.0.0
+  swipe_to: ^1.0.6
+  flutter_staggered_animations: ^1.1.1
   # dio: ^5.3.4
   
   

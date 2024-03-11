@@ -58,6 +58,7 @@ class _NewBottomBarState extends State<NewBottomBar> {
       scrollController: scrollController,
       
     ),
+    // HomeNewScreen(),
     RoomsScreen(),
     // HistoryScreen(),
     SearchBarScreen(value2: 1),

@@ -1,9 +1,10 @@
 class ImageConstant {
   static String imgInfo = 'assets/images/img_info.svg';
-  static String splashImage = 'assets/images/splashImage.png';
+  // static String splashImage = 'assets/images/splashImage.png';
+  static String splashImage = 'assets/images/InPackagingLogo resized.svg';
 
   static String unselectedimgVector = 'assets/images/Vector (10).png';
-  static String tomcruse = 'assets/images/INPACKAGING.png';
+  static String tomcruse = 'assets/images/user.png';
   static String bag = 'assets/images/iconoir_shopping-bag-alt.png';
   static String experts =
       'assets/images/pexels-tima-miroshnichenko-5452201 2 (1).png';
@@ -268,7 +269,19 @@ class ImageConstant {
   static String messagecheck = "assets/images/0_check.png";
   static String checksend = "assets/images/1_check.png";
   static String checkseen = "assets/images/2_check.png";
-    static String greenseen  = 'assets/images/grrenicon.png';
+  static String greenseen = 'assets/images/grrenicon.png';
+  static String coppy = 'assets/images/copy.png';
+  static String replay = 'assets/images/replay.jpg';
+  static String forward = 'assets/images/forward.jpg';
+
+  ///
+  static String angry = 'assets/images/angry.png';
+  static String emoji = 'assets/images/emoji.png';
+  static String heart = 'assets/images/heart.png';
+  static String sadface = 'assets/images/sad-face.png';
+  static String surprised = 'assets/images/surprised.png';
+  static String nopostimage = 'assets/images/Frame 1171276328.png';
+  static String avatarimage = 'assets/images/avatarimage.jpg';
 
   /// end
 }
