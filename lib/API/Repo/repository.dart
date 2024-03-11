@@ -3386,6 +3386,28 @@ class Repository {
 
     }); */
   }
+   OffLineUpdate(BuildContext context, String inboxUid) async {
+    final response = await apiServices.getApiCallWithToken(
+        "${Config.update_live_status}?inboxChatUid=${inboxUid}", context);
+    var jsonString = json.decode(response.body);
+    print('Myaccount${response.statusCode}');
+    switch (response.statusCode) {
+      case 200:
+        return SeenAllMessageModel.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+      case 400:
+        return SeenAllMessageModel.fromJson(jsonString);
+
+      // return Config.somethingWentWrong;
+      case 701:
+        return jsonString;
+      default:
+        return jsonString;
+    }
+  }
 }
 // var headers = {
 //   'Authorization': 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJpc1ZlcmlmaWVkIjp0cnVlLCJtb2R1bGUiOiJFTVBMT1lFRSIsImlzQWN0aXZlIjp0cnVlLCJ1dWlkIjoiODYwMWViNTItNzk4NS00MWU3LTgwOTAtYmMyMjQ0MjkwZjkzIiwidXNlcm5hbWUiOiJBTiIsInN1YiI6IkFOIiwiaWF0IjoxNjkxMTUyODIxLCJleHAiOjE2OTIyMzI4MjF9.AjSlFxHlTU9opgsyXaqVh_sMQuv7f-fKGmIGle6879MD-OAGTNcPN5r9ZW8Go1124YE2BbSrc1Lj5GuspgilWg'

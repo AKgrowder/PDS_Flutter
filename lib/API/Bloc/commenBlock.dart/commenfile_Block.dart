@@ -1,15 +1,60 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pds/API/ApiService/ApiService.dart';
-import 'package:pds/API/Bloc/GuestAllPost_Bloc/GuestAllPost_state.dart';
 import 'package:pds/API/Repo/repository.dart';
-import 'package:pds/presentation/%20new/commenwigetReposrt.dart';
+import 'package:pds/presentation/%20new/newbottembar.dart';
+import 'commenModel.dart';
+import 'commenState.dart';
 
-class GetGuestAllPostCubit extends Cubit<GetGuestAllPostState> {
-  dynamic gestUserData;
-  dynamic PublicRModel;
+class CommenClass extends Cubit<CommenClassState> {
+  CommenClass() : super(CommenClassInitialState()) {}
+  Future<void> seetinonExpried(BuildContext context,
+      {bool showAlert = false}) async {
+    try {
+      dynamic settionExperied =
+          await Repository().logOutSettionexperied(context);
+      if (settionExperied.success == true) {
+        await setLOGOUT(context);
+      } else {
+        print("Token is Valid${settionExperied}");
+      }
+      // }
+    } catch (e) {
+      print('errorstate-$e');
+    }
+  }
 
-  GetGuestAllPostCubit() : super(GetGuestAllPostInitialState()) {}
+  Future<void> GetGuestAllPostAPI(
+    BuildContext context,
+    String pageNumber,
+    String user_id,
+  ) async {
+    dynamic HomeScreen;
+    try {
+      if (user_id.isEmpty) {
+        HomeScreen = await Repository().GetGuestAllPost(context, pageNumber);
+      } else {
+        HomeScreen = await Repository().GetUserAllPost(context, pageNumber);
+
+        Future.delayed(Duration(seconds: 0), () {
+          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(
+            builder: (context) {
+              return NewBottomBar(buttomIndex: 0);
+            },
+          ), (route) => false);
+        });
+      }
+
+      if (HomeScreen.success == true) {
+        GolbleModel.HomeScrrenPostData = HomeScreen;
+      }
+    } catch (e) {
+      print('errorstate-$e');
+      emit(CommenClassErrorState(e.toString()));
+    }
+  }
+  /* CommenClass() : super(GetGuestAllPostInitialState()) {}
   Future<void> seetinonExpried(BuildContext context,
       {bool showAlert = false}) async {
     try {
@@ -487,22 +532,21 @@ class GetGuestAllPostCubit extends Cubit<GetGuestAllPostState> {
 
   Future<void> get_all_master_report_typeApiMethod(BuildContext context) async {
     dynamic get_all_master_report_type;
-
+   
     try {
       emit(GetGuestAllPostLoadingState());
       get_all_master_report_type =
           await Repository().get_all_master_report_type(context);
-      /*     get_all_master_report_type.forEach((e) {
+  /*     get_all_master_report_type.forEach((e) {
        
       }); */
-      /* reportOptions.add(ReportOption(
+       /* reportOptions.add(ReportOption(
           properString: e.toString(),
           label: '${e.replaceAll(" ", '_').toUpperCase()}',
-        )) */
-      ;
+        )) */;
       emit(Getallmasterreporttype(get_all_master_report_type));
     } catch (e) {
       emit(GetGuestAllPostErrorState(e));
     }
-  }
+  } */
 }
