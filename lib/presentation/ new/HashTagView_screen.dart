@@ -1349,7 +1349,7 @@ class _HashTagViewScreenState extends State<HashTagViewScreen> with Observer {
       builder: (_) => AlertDialog(
         // title: const Text("Create Expert"),
         content: Container(
-          height: 80,
+          height: 100,
           child: Column(
             children: [
               Text("Are You Sure You Want To delete This Post."),
@@ -1364,25 +1364,39 @@ class _HashTagViewScreenState extends State<HashTagViewScreen> with Observer {
                       await soicalFunation(apiName: 'Deletepost', index: index);
                       Navigator.pop(context);
                     },
-                    child: Container(
-                      // color: Colors.green,
-                      child: Text(
-                        "Yas",
-                        style: TextStyle(color: Colors.blue),
+                    child:Container(
+                        height: 30,
+                        width: 80,
+                        decoration: BoxDecoration(
+                            // color: Colors.green,
+                            color: ColorConstant.primary_color,
+                            borderRadius: BorderRadius.circular(5)),
+                        child: Center(
+                          child: Text(
+                            "Yes",
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ),
                       ),
-                    ),
                   ),
                   GestureDetector(
                     onTap: () {
                       Navigator.pop(context);
                     },
                     child: Container(
-                      // color: Colors.green,
-                      child: Text(
-                        "No",
-                        style: TextStyle(color: Colors.blue),
+                        height: 30,
+                        width: 80,
+                        decoration: BoxDecoration(
+                            // color: Colors.green,
+                            color: ColorConstant.primary_color,
+                            borderRadius: BorderRadius.circular(5)),
+                        child: Center(
+                          child: Text(
+                            "No",
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ),
                       ),
-                    ),
                   ),
                 ],
               ),
