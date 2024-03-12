@@ -266,15 +266,19 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                                     if (_timer != null) {
                                       _timer?.cancel();
                                       _timer = Timer(Duration(seconds: 5), () {
-                                        BlocProvider.of<HashTagCubit>(context)
-                                            .serchDataAdd(
-                                                context, value.trim());
+                                        if (UserLogin_ID != null) {
+                                          BlocProvider.of<HashTagCubit>(context)
+                                              .serchDataAdd(
+                                                  context, value.trim());
+                                        }
                                       });
                                     } else {
                                       _timer = Timer(Duration(seconds: 5), () {
-                                        BlocProvider.of<HashTagCubit>(context)
-                                            .serchDataAdd(
-                                                context, value.trim());
+                                         if (UserLogin_ID != null) {
+                                          BlocProvider.of<HashTagCubit>(context)
+                                              .serchDataAdd(
+                                                  context, value.trim());
+                                        }
                                       });
                                     }
                                   }
@@ -1018,7 +1022,7 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
             getDataInSerch?.object?.isNotEmpty == true) {
           return Expanded(
             child: Column(
-              children: [Text('data')],
+              children: [Text('')],
             ),
           );
         } else {

@@ -487,18 +487,19 @@ class GetGuestAllPostCubit extends Cubit<GetGuestAllPostState> {
 
   Future<void> get_all_master_report_typeApiMethod(BuildContext context) async {
     dynamic get_all_master_report_type;
-   
+
     try {
       emit(GetGuestAllPostLoadingState());
       get_all_master_report_type =
           await Repository().get_all_master_report_type(context);
-  /*     get_all_master_report_type.forEach((e) {
+      /*     get_all_master_report_type.forEach((e) {
        
       }); */
-       /* reportOptions.add(ReportOption(
+      /* reportOptions.add(ReportOption(
           properString: e.toString(),
           label: '${e.replaceAll(" ", '_').toUpperCase()}',
-        )) */;
+        )) */
+      ;
       emit(Getallmasterreporttype(get_all_master_report_type));
     } catch (e) {
       emit(GetGuestAllPostErrorState(e));

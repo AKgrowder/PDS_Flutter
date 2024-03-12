@@ -97,7 +97,7 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> with Observer {
   @override
   update(Observable observable, String? notifyName, Map? map) async {
     print("msp-$map");
-  } 
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -3193,16 +3193,18 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> with Observer {
                                                         height: 18,
                                                         color: Colors.white,
                                                       )
-                                                    :uuid == null?
-                                                     Image.asset(
-                                                        ImageConstant.savePin,
-                                                        height: 18,
-                                                        color: Colors.white,
-                                                      )
-                                                    :  Image.asset(
-                                                        ImageConstant.Savefill,
-                                                        height: 20,
-                                                      )
+                                                    : uuid == null
+                                                        ? Image.asset(
+                                                            ImageConstant
+                                                                .savePin,
+                                                            height: 18,
+                                                            color: Colors.white,
+                                                          )
+                                                        : Image.asset(
+                                                            ImageConstant
+                                                                .Savefill,
+                                                            height: 20,
+                                                          )
 
                                                 // color: Colors.white,
                                                 ),
@@ -3278,58 +3280,33 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> with Observer {
                 value: 'edit',
                 child: GestureDetector(
                   onTap: () {
-                    print(OpenSaveModelData?.object?.description);
-                    if (OpenSaveModelData?.object?.postDataType == "IMAGE" &&
-                        OpenSaveModelData?.object?.postData?.length == 1) {
-                      print("sdfgsdvfsdfgsdfg");
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => CreateNewPost(
-                              PostID: OpenSaveModelData?.object?.postUid,
-                              edittextdata:
-                                  OpenSaveModelData?.object?.description,
-                              editImage:
-                                  OpenSaveModelData?.object?.postData?.first,
-                            ),
-                          )).then((value) {
-                        // Get_UserToken();
-                        userIdFun();
-                        Navigator.pop(context);
-                      });
-                    } else if (OpenSaveModelData?.object?.postDataType ==
-                        "IMAGE") {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => CreateNewPost(
-                              PostID: OpenSaveModelData?.object?.postUid,
-                              edittextdata:
-                                  OpenSaveModelData?.object?.description,
-                              mutliplePost: OpenSaveModelData?.object?.postData,
-                            ),
-                          )).then((value) {
-                        // Get_UserToken();
-                        userIdFun();
-                        Navigator.pop(context);
-                      });
-                    } else {
-                      print(
-                          "dfhsdfhsdfhsdfh-${OpenSaveModelData?.object?.postData?.length}");
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => CreateNewPost(
-                              PostID: OpenSaveModelData?.object?.postUid,
-                              edittextdata:
-                                  OpenSaveModelData?.object?.description,
-                            ),
-                          )).then((value) {
-                        // Get_UserToken();
-                        userIdFun();
-                        Navigator.pop(context);
-                      });
-                    }
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => CreateNewPost(
+                            PostID: OpenSaveModelData?.object?.postUid,
+                            edittextdata:
+                                OpenSaveModelData?.object?.description,
+                            mutliplePost: OpenSaveModelData?.object?.postData,
+                            OpenSaveModelData: OpenSaveModelData,
+                            date:
+                                OpenSaveModelData?.object?.repostOn?.createdAt,
+                            desc: OpenSaveModelData
+                                ?.object?.repostOn?.description,
+                            postData:
+                                OpenSaveModelData?.object?.repostOn?.postData,
+                            postDataTypeRepost: OpenSaveModelData
+                                ?.object?.repostOn?.postDataType,
+                            userProfile:
+                                OpenSaveModelData?.object?.userProfilePic,
+                            username: OpenSaveModelData
+                                ?.object?.repostOn?.postUserName,
+                            thumbNailURL: OpenSaveModelData
+                                ?.object?.repostOn?.thumbnailImageUrl,
+                            postDataType:
+                                OpenSaveModelData?.object?.postDataType,
+                          ),
+                        ));
                   },
                   child: Container(
                     width: 130,
