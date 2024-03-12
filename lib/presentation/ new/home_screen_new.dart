@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'dart:io';
-import 'package:pinch_zoom/pinch_zoom.dart';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chewie/chewie.dart';
 import 'package:device_info_plus/device_info_plus.dart';
@@ -69,13 +69,12 @@ import 'package:pds/presentation/splash_screen/splash_screen.dart';
 import 'package:pds/widgets/commentPdf.dart';
 import 'package:pds/widgets/pagenation.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:pinch_zoom_release_unzoom/pinch_zoom_release_unzoom.dart';
+import 'package:pinch_zoom/pinch_zoom.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:video_player/video_player.dart';
 import 'package:visibility_detector/visibility_detector.dart';
-import 'package:zoom_pinch_overlay/zoom_pinch_overlay.dart';
 
 // import 'package:flutter_langdetect/flutter_langdetect.dart' as langdetect;
 import '../../API/Model/Get_all_blog_Model/get_all_blog_model.dart';
@@ -3563,19 +3562,18 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                                             children: [
                                                                                                               Align(
                                                                                                                 alignment: Alignment.topCenter,
-                                                                                                                child: 
-                                                                                                                PinchZoom(
-                                                                                                    child: CachedNetworkImage(
-                                                                                                      imageUrl: "${AllGuestPostRoomData?.object?.content?[index].postData?[index1]}",
-                                                                                                    ),
-                                                                                                    maxScale: 4,
-                                                                                                    onZoomStart: () {
-                                                                                                      print('Start zooming');
-                                                                                                    },
-                                                                                                    onZoomEnd: () {
-                                                                                                      print('Stop zooming');
-                                                                                                    },
-                                                                                                  ),
+                                                                                                                child: PinchZoom(
+                                                                                                                  child: CachedNetworkImage(
+                                                                                                                    imageUrl: "${AllGuestPostRoomData?.object?.content?[index].postData?[index1]}",
+                                                                                                                  ),
+                                                                                                                  maxScale: 4,
+                                                                                                                  onZoomStart: () {
+                                                                                                                    print('Start zooming');
+                                                                                                                  },
+                                                                                                                  onZoomEnd: () {
+                                                                                                                    print('Stop zooming');
+                                                                                                                  },
+                                                                                                                ),
                                                                                                                 /* CustomImageView(
                                                                                                                   url: "${AllGuestPostRoomData?.object?.content?[index].postData?[index1]}",
                                                                                                                 ), */
@@ -5168,20 +5166,19 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                               child: Container(
                                                                                 width: _width,
                                                                                 margin: EdgeInsets.only(left: 0, top: 15, right: 0),
-                                                                                child: Center(child: PinchZoomReleaseUnzoomWidget(child: Image.network("${AllGuestPostRoomData?.object?.content?[index].postData?[0]}"), minScale: 0.8, maxScale: 4, resetDuration: const Duration(milliseconds: 200), boundaryMargin: const EdgeInsets.only(bottom: 0), clipBehavior: Clip.none, useOverlay: true, maxOverlayOpacity: 0.5, overlayColor: Colors.black, fingersRequiredToPinch: 2)
-                                                                                    /* ZoomOverlay(
-                                                                                modalBarrierColor: Colors.black12, // Optional
-                                                                                minScale: 0.5, // Optional
-                                                                                maxScale: 3.0, // Optional
-                                                                                animationCurve: Curves.fastOutSlowIn, // Defaults to fastOutSlowIn which mimics IOS instagram behavior
-                                                                                animationDuration: Duration(milliseconds: 300), // Defaults to 100 Milliseconds. Recommended duration is 300 milliseconds for Curves.fastOutSlowIn
-                                                                                twoTouchOnly: false, // Defaults to false
-                                                                                onScaleStart: () {}, // optional VoidCallback
-                                                                                onScaleStop: () {}, // optional VoidCallback
-                                                                                child: CachedNetworkImage(
-                                                                                  imageUrl: "${AllGuestPostRoomData?.object?.content?[index].postData?[0]}",
-                                                                                ),
-                                                                              ), */
+                                                                                child: Center(child: PinchZoom(
+                                                                                                    child: CachedNetworkImage(
+                                                                                                      imageUrl: "${AllGuestPostRoomData?.object?.content?[index].postData?[0]}",
+                                                                                                    ),
+                                                                                                    maxScale: 4,
+                                                                                                    onZoomStart: () {
+                                                                                                      print('Start zooming');
+                                                                                                    },
+                                                                                                    onZoomEnd: () {
+                                                                                                      print('Stop zooming');
+                                                                                                    },
+                                                                                                  ),
+                                                                                
                                                                                     /* CustomImageView(
                                                                                 url: "${AllGuestPostRoomData?.object?.content?[index].postData?[0]}",
                                                                               ), */
