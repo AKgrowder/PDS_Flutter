@@ -75,3 +75,45 @@ class ProfileandDocumentScreen extends StatelessWidget {
     );
   }
 }
+ class ProfilePage extends StatelessWidget {
+  final String image;
+
+  const ProfilePage({required this.image});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar:  AppBar(
+        leading: GestureDetector(
+          onTap: () {
+            Navigator.pop(context);
+          },
+          child: Container(
+            height: 30,
+            width: 30,
+            color: Color.fromRGBO(255, 255, 255, 0.3),
+            child: Center(
+              child: Image.asset(
+                ImageConstant.backArrow,
+                fit: BoxFit.fill,
+                height: 25,
+                width: 25,
+              ),
+            ),
+          ),
+        ),
+        backgroundColor: Colors.white,
+        iconTheme: IconThemeData(color: Colors.grey),
+        elevation: 0,
+        
+        systemOverlayStyle: SystemUiOverlayStyle.dark,
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Center(
+          child: Image.asset(image),
+        ),
+      ),
+    );
+  }
+}
