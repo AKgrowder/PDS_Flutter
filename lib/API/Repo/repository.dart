@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_observer/Observable.dart';
 import 'package:pds/API/Model/AddExportProfileModel/AddExportProfileModel.dart';
 import 'package:pds/API/Model/Add_PostModel/Add_PostModel.dart';
 import 'package:pds/API/Model/Add_PostModel/Add_postModel_Image.dart';
@@ -3186,6 +3187,9 @@ class Repository {
     var jsonString = json.decode(responce.body);
     print('reactionMessageAddedOnStory$jsonString');
     print('respnse ${responce.statusCode}');
+    Observable.instance.notifyObservers(
+      ['_DmScreenNewState'],
+    );
     switch (responce.statusCode) {
       case 200:
         return jsonString;
@@ -3327,6 +3331,7 @@ class Repository {
     BuildContext context,
     Map<String, dynamic> params,
   ) async {
+    print("check All pArems-${params}");
     final responce = await apiServices.postApiCall(
         '${Config.forwardMessages}', params, context);
     var jsonString = json.decode(responce.body);
@@ -3386,7 +3391,8 @@ class Repository {
 
     }); */
   }
-   OffLineUpdate(BuildContext context, String inboxUid) async {
+
+  OffLineUpdate(BuildContext context, String inboxUid) async {
     final response = await apiServices.getApiCallWithToken(
         "${Config.update_live_status}?inboxChatUid=${inboxUid}", context);
     var jsonString = json.decode(response.body);
