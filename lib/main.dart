@@ -324,6 +324,7 @@ import 'package:pds/API/Bloc/my_account_Bloc/my_account_cubit.dart';
 import 'package:pds/API/Bloc/senMSG_Bloc/senMSG_cubit.dart';
 import 'package:pds/API/Bloc/sherinvite_Block/sherinvite_cubit.dart';
 import 'package:pds/API/Bloc/viewStory_Bloc/viewStory_cubit.dart';
+import 'package:pds/core/utils/sharedPreferences.dart';
 import 'package:pds/firebase_option.dart';
 import 'package:pds/presentation/%20new/OpenSavePostImage.dart';
 import 'package:pds/presentation/%20new/profileNew.dart';
@@ -368,6 +369,15 @@ void main() async {
     print("/* onMessageOpenedApp: */ ${message.notification?.body}");
     print("/* onMessageOpenedApp: */ ${message.notification?.title}");
     print("/* onMessageOpenedApp: */ ${message.data}");
+
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    print("/* onMessageOpenedApp: */ ${message.data['uid']}");
+    print("/* onMessageOpenedApp: */ ${message.data['Subject']}");
+    prefs.setString(
+        PreferencesKey.PushNotificationUID, "${message.data['uid']}");
+    prefs.setString(
+        PreferencesKey.PushNotificationSubject, "${message.data['Subject']}");
+
     //  if (message.data["navigation"] == "/your_route") {
     // int _yourId = int.tryParse(message.data["id"]) ?? 0;
     // Navigator.push(
@@ -376,7 +386,8 @@ void main() async {
     //         builder: (context) => YourScreen(
     //               yourId: _yourId,
     //             )));
-    message.data["Subject"] == "TAG_POST" ||
+
+    /* message.data["Subject"] == "TAG_POST" ||
             message.data["Subject"] == "RE_POST"
         ? Navigator.push(
             navigatorKey.currentState!.context,
@@ -433,7 +444,7 @@ void main() async {
                                     ProfileNotification: true);
                               }))
                             //  print("open User Profile FOLLOW_PUBLIC_ACCOUNT & FOLLOW_PRIVATE_ACCOUNT_REQUEST & FOLLOW_REQUEST_ACCEPTED")
-                            : print("");
+                            : print(""); */
   });
 
   FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
