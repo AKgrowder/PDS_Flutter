@@ -491,7 +491,7 @@ class _CreateNewPostState extends State<CreateNewPost> {
               Expanded(
                   child: SingleChildScrollView(
                 physics: AlwaysScrollableScrollPhysics(),
-                scrollDirection: Axis.vertical,
+                scrollDirection: Axis.vertical, 
                 child: Column(
                   children: [
                     Padding(
