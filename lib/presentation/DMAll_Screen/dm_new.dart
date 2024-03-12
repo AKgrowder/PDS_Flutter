@@ -1,20 +1,25 @@
-import 'dart:async';
 import 'dart:convert';
-
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_observer/Observable.dart';
+import 'package:flutter_observer/Observer.dart';
 import 'package:intl/intl.dart';
 import 'package:linkfy_text/linkfy_text.dart';
 import 'package:pds/API/Bloc/dmInbox_bloc/dmMessageState.dart';
 import 'package:pds/API/Bloc/dmInbox_bloc/dminbox_blcok.dart';
+import 'package:pds/API/Model/CreateStory_Model/all_stories.dart';
 import 'package:pds/API/Model/inboxScreenModel/inboxScrrenModel.dart';
-import 'package:pds/StoryFile/src/story_page_container_view.dart';
+import 'package:pds/API/Model/story_model.dart';
+import 'package:pds/StoryFile/src/story_button.dart';
+import 'package:pds/StoryFile/src/story_page_transform.dart';
+import 'package:pds/StoryFile/src/story_route.dart';
 import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/core/utils/image_constant.dart';
 import 'package:pds/core/utils/sharedPreferences.dart';
-import 'package:pds/presentation/DMAll_Screen/reacrtionclass.dart';
+import 'package:pds/presentation/%20new/profileNew.dart';
+import 'package:pds/presentation/create_story/full_story_page.dart';
 import 'package:pds/theme/theme_helper.dart';
 import 'package:pds/widgets/custom_image_view.dart';
 import 'package:pds/widgets/pagenation.dart';
@@ -39,10 +44,11 @@ OverlayEntry? overlayEntry;
 OverlayEntry? overlayEntry1;
 TextEditingController addComment = TextEditingController();
 TextEditingController reactionController = TextEditingController();
-
 bool overlayVisible = false;
 bool isEditMessage = false;
 int isEditedindex = 0;
+GetAllStoryModel? getAllStoryModel;
+List<StoryButtonData> buttonDatas = [];
 
 final List<ReactionElement> reactions = [
   ReactionElement(
@@ -82,7 +88,7 @@ class DmScreenNew extends StatefulWidget {
   State<DmScreenNew> createState() => _DmScreenNewState();
 }
 
-class _DmScreenNewState extends State<DmScreenNew> {
+class _DmScreenNewState extends State<DmScreenNew> with Observer {
   String? UserLogin_ID;
   String? DMbaseURL;
   WebSocketChannel? channel;
@@ -98,9 +104,13 @@ class _DmScreenNewState extends State<DmScreenNew> {
 
   @override
   void initState() {
+    Observable.instance.addObserver(this);
     isEditMessage = false;
     isEditedindex = 0;
     selectedCount = 0;
+    swipeToIndex = 0;
+    isLogPress = false;
+    isMeesageReaction = false;
     BlocProvider.of<DmInboxCubit>(context).seetinonExpried(context);
     pageNumberMethod();
 
@@ -109,6 +119,12 @@ class _DmScreenNewState extends State<DmScreenNew> {
 
   myscrollFunction() {
     scrollController.addListener(() {});
+  }
+
+  @override
+  update(Observable observable, String? notifyName, Map? map) async {
+    print("this condison is working yet");
+    pageNumberMethod();
   }
 
   void _scrollToBottom() {
@@ -162,51 +178,47 @@ class _DmScreenNewState extends State<DmScreenNew> {
   }
 
   void sendMessageMethod() {
-    if (isEditMessage == false) {
-      stompClient?.send(
-          destination: '/send_message_in_user_chat/${widget.chatInboxUid}',
-          body: json.encode({
-            "message": "${addComment.text}",
-            "messageType": "TEXT",
-            "userChatInboxUid": "${widget.chatInboxUid}",
-            //  "${widget.Room_ID}",
-            "userCode": "${UserLogin_ID}",
-            "isDelivered": true,
-          }));
+    if (addComment.text.isNotEmpty) {
+      if (isEditMessage == false) {
+        stompClient?.send(
+            destination: '/send_message_in_user_chat/${widget.chatInboxUid}',
+            body: json.encode({
+              "message": "${addComment.text}",
+              "messageType": "TEXT",
+              "userChatInboxUid": "${widget.chatInboxUid}",
+              //  "${widget.Room_ID}",
+              "userCode": "${UserLogin_ID}",
+              "isDelivered": true,
+            }));
+      } else {
+        print(
+            "check else condison working -${isEditedindex} -${getInboxMessagesModel?.object?.content?[isEditedindex].userChatMessageUid}");
+        stompClient?.send(
+            destination: '/send_message_in_user_chat/${widget.chatInboxUid}',
+            body: json.encode({
+              "message": "${addComment.text}",
+              "messageType": "TEXT",
+              "userChatInboxUid": "${widget.chatInboxUid}",
+              //  "${widget.Room_ID}",
+              "userCode": "${UserLogin_ID}",
+              "isDelivered": true,
+              'uid':
+                  "${getInboxMessagesModel?.object?.content?[isEditedindex].userChatMessageUid}",
+            }));
+      }
     } else {
-      print(
-          "check else condison working -${isEditedindex} -${getInboxMessagesModel?.object?.content?[isEditedindex].userChatMessageUid}");
-      stompClient?.send(
-          destination: '/send_message_in_user_chat/${widget.chatInboxUid}',
-          body: json.encode({
-            "message": "${addComment.text}",
-            "messageType": "TEXT",
-            "userChatInboxUid": "${widget.chatInboxUid}",
-            //  "${widget.Room_ID}",
-            "userCode": "${UserLogin_ID}",
-            "isDelivered": true,
-            'uid':
-                "${getInboxMessagesModel?.object?.content?[isEditedindex].userChatMessageUid}",
-          }));
-
-      /* print("else check -${addComment.text}");
-      print(
-          "else check11 -${getInboxMessagesModel?.object?.content?[isEditedindex].message}");
-      getInboxMessagesModel?.object?.content?[isEditedindex].message =
-          addComment.text;
-      print(
-          "now check value -${getInboxMessagesModel?.object?.content?[isEditedindex].message}");
-      isEditMessage = false;
-      focus.unfocus();
-      isEditedindex = 0;
-      addComment.clear();
-      setState(() {}); */
+      SnackBar snackBar = SnackBar(
+        content: Text('Please Enter Text'),
+        backgroundColor: ColorConstant.primary_color,
+      );
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
     }
   }
 
   pageNumberMethod() async {
     await BlocProvider.of<DmInboxCubit>(context)
         .DMChatListApiMethod(widget.chatInboxUid, 1, context);
+    await BlocProvider.of<DmInboxCubit>(context).get_all_story(context);
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     UserLogin_ID = prefs.getString(PreferencesKey.loginUserID);
     DMbaseURL = prefs.getString(PreferencesKey.SocketLink) ?? "";
@@ -247,6 +259,10 @@ class _DmScreenNewState extends State<DmScreenNew> {
                 print("this State is Calling");
                 getInboxMessagesModel = state.getInboxMessagesModel;
               }
+              if (state is GetAllStoryLoadedState) {
+                print('this stater Caling');
+                getAllStoryModel = state.getAllStoryModel;
+              }
             },
             builder: (context, state) {
               return getInboxMessagesModel?.object == null
@@ -286,11 +302,21 @@ class _DmScreenNewState extends State<DmScreenNew> {
                                     ),
                                   ),
                                 ),
-                                CustomImageView(
-                                  imagePath: ImageConstant.tomcruse,
-                                  height: 30,
-                                  width: 30,
-                                ),
+                                widget.chatUserProfile.isEmpty ||
+                                        widget.chatUserProfile == null
+                                    ? CustomImageView(
+                                        imagePath: ImageConstant.tomcruse,
+                                        height: 30,
+                                        width: 30,
+                                      )
+                                    : CustomImageView(
+                                        alignment: Alignment.bottomLeft,
+                                        url: "${widget.chatUserProfile}",
+                                        height: 30,
+                                        radius: BorderRadius.circular(20),
+                                        width: 30,
+                                        fit: BoxFit.fill,
+                                      ),
                                 Container(
                                   margin: EdgeInsets.only(left: 10),
                                   child: Text(
@@ -1007,24 +1033,32 @@ class _DmScreenNewState extends State<DmScreenNew> {
                                     ),
                                     GestureDetector(
                                       onTap: () {
-                                        print(
-                                            "this iS Replay function is caliing");
-                                        print("swipeToIndex-$swipeToIndex");
-                                        stompClient?.send(
-                                            destination:
-                                                '/send_message_in_user_chat/${widget.chatInboxUid}',
-                                            body: json.encode({
-                                              "message":
-                                                  "${reactionController.text}",
-                                              "messageType": "TEXT",
-                                              "userChatInboxUid":
-                                                  "${widget.chatInboxUid}",
-                                              //  "${widget.Room_ID}",
-                                              "userCode": "${UserLogin_ID}",
-                                              "isDelivered": true,
-                                              'replyMessageUid':
-                                                  "${getInboxMessagesModel?.object?.content?[swipeToIndex ?? 0].userChatMessageUid}",
-                                            }));
+                                        if (reactionController
+                                            .text.isNotEmpty) {
+                                          stompClient?.send(
+                                              destination:
+                                                  '/send_message_in_user_chat/${widget.chatInboxUid}',
+                                              body: json.encode({
+                                                "message":
+                                                    "${reactionController.text}",
+                                                "messageType": "TEXT",
+                                                "userChatInboxUid":
+                                                    "${widget.chatInboxUid}",
+                                                //  "${widget.Room_ID}",
+                                                "userCode": "${UserLogin_ID}",
+                                                "isDelivered": true,
+                                                'replyMessageUid':
+                                                    "${getInboxMessagesModel?.object?.content?[swipeToIndex ?? 0].userChatMessageUid}",
+                                              }));
+                                        } else {
+                                          SnackBar snackBar = SnackBar(
+                                            content: Text('Please Enter Text'),
+                                            backgroundColor:
+                                                ColorConstant.primary_color,
+                                          );
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(snackBar);
+                                        }
                                       },
                                       child: Container(
                                         margin: EdgeInsets.only(right: 10),
@@ -1242,8 +1276,8 @@ class _DmScreenNewState extends State<DmScreenNew> {
                         isLogPress = true;
                         print("checl selectedCount -${selectedCount}");
                         if (selectedCount == 0) {
-                          _showReactionPopUp(context, details.globalPosition,
-                              _widgetKey, userMeesage, index);
+                          /* _showReactionPopUp(context, details.globalPosition,
+                              _widgetKey, userMeesage, index); */
                         }
 
                         if (isMounted == true) {
@@ -1251,7 +1285,6 @@ class _DmScreenNewState extends State<DmScreenNew> {
                             setState(() {});
                           }
                         }
-
                         if (getInboxMessagesModel
                                 ?.object?.content?[index].isSelected ==
                             null) {
@@ -1305,6 +1338,7 @@ class _DmScreenNewState extends State<DmScreenNew> {
                         index: index,
                         isReplay: iSReplay,
                         useruid: UserLogin_ID ?? '',
+                        chatInboxUid: widget.chatInboxUid,
                       ),
                     )),
               ),
@@ -1389,8 +1423,14 @@ class _DmScreenNewState extends State<DmScreenNew> {
     double left = widgetPosition.dx;
     double distanceToLeft = widgetPosition.dx;
     double distanceToRight = screenWidth - widgetPosition.dx;
+    double popupWidth = 140; // Default width for the popup menu
     if (distanceToRight > distanceToLeft) {
       left -= 120;
+    } else {
+      // If the widget is closer to the right edge, adjust the left position
+      // and change the popup width to fit it within the screen.
+      left += renderBox.size.width + 60; // Adjusted left position
+      popupWidth = screenWidth - left - 20; // Adjusted popup width
     }
 
     overlayEntry = OverlayEntry(
@@ -1440,8 +1480,8 @@ class _DmScreenNewState extends State<DmScreenNew> {
       print("check what is get");
       overlayEntry1 = OverlayEntry(
         builder: (BuildContext context) => Positioned(
-          left: left - 150,
-          top: widgetPosition.dy + 20, // Adjust top position as needed
+          left: usermessage == true ? left - 60 : 10,
+          top: widgetPosition.dy + 110, // Adjust top position as needed
           child: Material(
             child: Container(
               height: 100, // Increased height to accommodate buttons
@@ -1537,6 +1577,7 @@ class MessageViewWidget extends StatelessWidget {
     required this.index,
     required this.isReplay,
     required this.useruid,
+    required this.chatInboxUid,
   }) : super(key: key);
 
   final bool userMeesage;
@@ -1548,18 +1589,15 @@ class MessageViewWidget extends StatelessWidget {
   final int index;
   final dynamic isReplay;
   final String useruid;
+  final String chatInboxUid;
   @override
   Widget build(BuildContext context) {
-    
-/*     bool isReply = index > 0 &&
-        getInboxMessagesModel.object?.content != null &&
-        getInboxMessagesModel.object?.content![index].replyOnUid ==
-            getInboxMessagesModel
-                .object?.content![index - 1].userChatMessageUid; */
+    DateTime date = DateTime.parse(
+        '${getInboxMessagesModel.object?.content?[index].createdDate}');
     return Column(
       children: [
-        if (getInboxMessagesModel.object?.content?[index]
-                    .messageType == // only user can sher image
+        if (getInboxMessagesModel
+                    .object?.content?[index].messageType ==
                 'IMAGE' &&
             getInboxMessagesModel.object?.content?[index].emojiReaction ==
                 false &&
@@ -1591,12 +1629,91 @@ class MessageViewWidget extends StatelessWidget {
                 ? CrossAxisAlignment.end
                 : CrossAxisAlignment.start,
             children: [
-              CustomImageView(
-                margin: EdgeInsets.only(top: 10),
-                url: "${getInboxMessagesModel.object?.content?[index].message}",
-                height: 130,
-                radius: BorderRadius.circular(20),
-                fit: BoxFit.fill,
+              GestureDetector(
+                onTapDown: (detalis) async {
+                  if (getAllStoryModel?.object != null) {
+                    buttonDatas.clear();
+                    getAllStoryModel?.object?.forEach((element) {
+                      element.storyData?.forEach((stroyDataIndex) {
+                        if (stroyDataIndex.storyUid ==
+                            getInboxMessagesModel
+                                .object?.content?[index].storyUid) {
+                          List<StoryModel> images = [
+                            StoryModel(
+                                stroyDataIndex.storyData,
+                                stroyDataIndex.createdAt,
+                                stroyDataIndex.profilePic,
+                                stroyDataIndex.userName,
+                                stroyDataIndex.storyUid,
+                                stroyDataIndex.userUid,
+                                stroyDataIndex.storyViewCount,
+                                stroyDataIndex.videoDuration ?? 15)
+                          ];
+                          buttonDatas.insert(
+                              0,
+                              StoryButtonData(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(5.0),
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.max,
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
+                                        Text(
+                                          '',
+                                          style: const TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  images: images,
+                                  segmentDuration: const Duration(seconds: 3),
+                                  storyPages: [
+                                    FullStoryPage(
+                                      imageName: '${stroyDataIndex.storyData}',
+                                    )
+                                  ]));
+                          Navigator.of(context).push(
+                            StoryRoute(
+                              // hii working Date
+                              onTap: () async {
+                                await BlocProvider.of<DmInboxCubit>(context)
+                                    .seetinonExpried(context);
+                                Navigator.push(context,
+                                    MaterialPageRoute(builder: (context) {
+                                  return ProfileScreen(
+                                      User_ID: "${stroyDataIndex.userUid}",
+                                      isFollowing: "");
+                                }));
+                              },
+                              storyContainerSettings: StoryContainerSettings(
+                                buttonData: buttonDatas.first,
+                                tapPosition:
+                                    buttonDatas.first.buttonCenterPosition ??
+                                        detalis.localPosition,
+                                curve: buttonDatas.first.pageAnimationCurve,
+                                allButtonDatas: buttonDatas,
+                                pageTransform: StoryPage3DTransform(),
+                                storyListScrollController: ScrollController(),
+                              ),
+                              duration: buttonDatas.first.pageAnimationDuration,
+                            ),
+                          );
+                        }
+                      });
+                    });
+                  }
+                },
+                child: CustomImageView(
+                  margin: EdgeInsets.only(top: 10),
+                  url:
+                      "${getInboxMessagesModel.object?.content?[index].message}",
+                  height: 130,
+                  radius: BorderRadius.circular(20),
+                  fit: BoxFit.fill,
+                ),
               ),
               Container(
                   constraints: BoxConstraints(
@@ -1604,7 +1721,9 @@ class MessageViewWidget extends StatelessWidget {
                   margin: EdgeInsets.only(top: 5),
                   padding: EdgeInsets.all(10),
                   decoration: BoxDecoration(
-                      color: ColorConstant.chatcolor,
+                      color: userMeesage == true
+                          ? ColorConstant.otheruserchat
+                          : ColorConstant.ChatBackColor,
                       borderRadius: BorderRadius.circular(10)),
                   child: Text(
                     getInboxMessagesModel
@@ -1649,42 +1768,56 @@ class MessageViewWidget extends StatelessWidget {
           ),
         if (getInboxMessagesModel.object?.content?[index].messageType == 'TEXT')
           Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
+            crossAxisAlignment: userMeesage == true
+                ? CrossAxisAlignment.end
+                : CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
               if (isReplay != null)
                 Padding(
                   padding: const EdgeInsets.only(top: 5),
-                  child: Text(
-                      "Replied To ${isReplay.userUid == useruid ? 'Yourself' : '${isReplay.userName}'}"),
+                  child: GestureDetector(
+                    onTap: () {
+                      print("check Value-${isReplay.userUid}-${useruid}");
+                    },
+                    child: Text(
+                      "Replied To ${isReplay.userUid == useruid ? 'you' : '${isReplay.userName}'}",
+                      style: TextStyle(fontWeight: FontWeight.w600),
+                    ),
+                  ),
                 ),
               if (isReplay != null)
                 Flexible(
                   child: Container(
                     constraints: BoxConstraints(
-                        maxWidth: isSelected
-                            ? MediaQuery.of(context).size.width
-                            : MediaQuery.of(context).size.width / 2),
+                        maxWidth: MediaQuery.of(context).size.width / 2),
                     padding: EdgeInsets.all(11),
-                    margin: EdgeInsets.only(top: isSelected == true ? 3 : 5),
+                    margin: EdgeInsets.only(
+                      top: isSelected == true ? 3 : 5,
+                      left: userMeesage == true ? 0 : 20,
+                      right: userMeesage == true ? 20 : 0,
+                    ),
                     decoration: BoxDecoration(
                         color: userMeesage == true
                             ? Color(0xffFFF3F1).withOpacity(0.4)
-                            : Color(0xffECECED),
+                            : Color(0xffECECED).withOpacity(0.4),
                         borderRadius: userMeesage == true
-                            ? BorderRadius.circular(13)
+                            ? BorderRadius.only(
+                                topLeft: Radius.circular(13),
+                                bottomLeft: Radius.circular(13))
                             : BorderRadius.only(
-                                bottomLeft: Radius.circular(13),
-                                bottomRight: Radius.circular(13),
-                                topRight: Radius.circular(13))),
-                    child: Text("${isReplay.message}"),
+                                topRight: Radius.circular(13),
+                                bottomRight: Radius.circular(13))),
+                    child: Text(
+                      "${isReplay.message}",
+                      style: TextStyle(
+                          fontWeight: FontWeight.w400, color: Colors.black),
+                    ),
                   ),
                 ),
               Container(
                   constraints: BoxConstraints(
-                      maxWidth: isSelected
-                          ? MediaQuery.of(context).size.width
-                          : MediaQuery.of(context).size.width / 2),
+                      maxWidth: MediaQuery.of(context).size.width / 2),
                   padding: EdgeInsets.all(11),
                   margin: EdgeInsets.only(top: isSelected == true ? 3 : 5),
                   decoration: BoxDecoration(
@@ -1700,7 +1833,10 @@ class MessageViewWidget extends StatelessWidget {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Flexible(
+                      buildRichText(
+                          '${getInboxMessagesModel.object?.content?[index].message}',
+                          date),
+                      /* Flexible(
                         child: LinkifyText(
                           getInboxMessagesModel
                                   .object?.content?[index].message ??
@@ -1747,8 +1883,21 @@ class MessageViewWidget extends StatelessWidget {
                             }
                           },
                         ),
-                      ),
-
+                      ), */
+                      /*  Flexible(
+                        child: Align(
+                          alignment: Alignment.topRight,
+                          child: Text(
+                            customFormat(parsedDateTime),
+                            textScaleFactor: 1.0,
+                            style: TextStyle(
+                                fontWeight: FontWeight.normal,
+                                color: Colors.black,
+                                fontFamily: "outfit",
+                                fontSize: 10),
+                          ),
+                        ),
+                      ), */
                       /* Align(
                       alignment: Alignment.topLeft,
                       child: Text(
@@ -1824,4 +1973,78 @@ class ReactionElement {
   final Icon icon;
 //
   ReactionElement(this.reaction, this.icon);
+}
+
+Widget buildRichText(String input, DateTime date) {
+  List<TextSpan> textSpans = [];
+
+  RegExp linkRegex = RegExp(r'(https?://\S+)|(@\w+)|(#\w+)');
+  List<RegExpMatch> matches = linkRegex.allMatches(input).toList();
+
+  int currentIndex = 0;
+
+  for (RegExpMatch match in matches) {
+    String textBeforeMatch = input.substring(currentIndex, match.start);
+    if (textBeforeMatch.isNotEmpty) {
+      textSpans.add(TextSpan(text: textBeforeMatch));
+    }
+
+    String matchedText = match.group(0)!;
+    if (matchedText.startsWith('@') || matchedText.startsWith('#')) {
+      // Handling @mentions and #hashtags
+      textSpans.add(
+        TextSpan(
+          text: matchedText,
+          style: TextStyle(color: Colors.blue),
+        ),
+      );
+    } else if (matchedText.startsWith('http')) {
+      // Handling links
+      textSpans.add(
+        TextSpan(
+          text: matchedText,
+          style: TextStyle(color: Colors.blue),
+          recognizer: TapGestureRecognizer()
+            ..onTap = () {
+              // Handle tapping on the link here
+              print('Tapped on link: $matchedText');
+            },
+        ),
+      );
+    }
+
+    currentIndex = match.end;
+  }
+
+  String remainingText = input.substring(currentIndex);
+  if (remainingText.isNotEmpty) {
+    textSpans.add(TextSpan(text: remainingText));
+  }
+
+  // Add formatted date in small font size at the end
+  String formattedDate = customFormat(date);
+
+  // Wrap the date with padding
+  /* textSpans.add(
+    TextSpan(
+      text: '\n', // Add a newline for top padding
+    ),
+  ); */
+  textSpans.add(
+    TextSpan(
+      text: ' ${formattedDate}',
+      style:
+          TextStyle(fontSize: 10, color: Colors.grey,fontWeight: FontWeight.w700), // Small gray date text
+    ),
+  );
+
+  return RichText(
+    text: TextSpan(
+      style: TextStyle(
+        fontSize: 14.0,
+        color: Colors.black,
+      ),
+      children: textSpans,
+    ),
+  );
 }

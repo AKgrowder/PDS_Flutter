@@ -12,7 +12,7 @@ class BlockUserdailog extends StatefulWidget {
   String? blockUserID;
   String? userName;
   bool? Blockuser;
-  BlockUserdailog({Key? key, this.blockUserID, this.userName,this.Blockuser})
+  BlockUserdailog({Key? key, this.blockUserID, this.userName, this.Blockuser})
       : super(key: key);
 
   @override
@@ -57,14 +57,14 @@ class BlockUserdailogState extends State<BlockUserdailog>
           ScaffoldMessenger.of(context).showSnackBar(snackBar);
         }
         if (state is BlockUserLoadedState) {
+          BlocProvider.of<NewProfileSCubit>(context)
+              .NewProfileSAPI(context, widget.blockUserID.toString(), true);
           SnackBar snackBar = SnackBar(
             content: Text(state.blockUserModel.object.toString()),
             backgroundColor: ColorConstant.primary_color,
           );
           ScaffoldMessenger.of(context).showSnackBar(snackBar);
           Navigator.pop(context);
-          BlocProvider.of<NewProfileSCubit>(context)
-              .NewProfileSAPI(context, widget.blockUserID.toString(), true);
         }
       },
       builder: (context, state) {
@@ -104,7 +104,8 @@ class BlockUserdailogState extends State<BlockUserdailog>
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   Expanded(
-                                    child: Text("${widget.Blockuser == true ? 'Block' : 'UnBlock'} ${widget.userName}?",
+                                    child: Text(
+                                        "${widget.Blockuser == true ? 'Block' : 'UnBlock'} ${widget.userName}?",
                                         style: TextStyle(
                                           fontFamily: 'outfit',
                                           fontSize: 20,
@@ -172,7 +173,10 @@ class BlockUserdailogState extends State<BlockUserdailog>
                                         color: ColorConstant.primary_color,
                                       ),
                                       child: Center(
-                                        child: Text( widget.Blockuser == true ? 'Block' : 'UnBlock',
+                                        child: Text(
+                                            widget.Blockuser == true
+                                                ? 'Block'
+                                                : 'UnBlock',
                                             textScaleFactor: 1.0,
                                             style: TextStyle(
                                                 fontFamily: 'outfit',
