@@ -2,7 +2,7 @@
 
 import 'dart:io';
 import 'dart:math';
-
+import 'package:pinch_zoom/pinch_zoom.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:file_picker/file_picker.dart';
@@ -196,18 +196,18 @@ class _ProfileScreenState extends State<ProfileScreen>
     _scrollController.addListener(() {
       if (_scrollController.position.userScrollDirection ==
           ScrollDirection.reverse) {
-        if (!isScrollingDown||!scrolldown) {
+        if (!isScrollingDown || !scrolldown) {
           isScrollingDown = true;
-          scrolldown=true;
-          //  _isScrolleddown=false; 
+          scrolldown = true;
+          //  _isScrolleddown=false;
           hideFloting();
         }
       }
       if (_scrollController.position.userScrollDirection ==
           ScrollDirection.forward) {
-        if (isScrollingDown||!scrolldown) {
+        if (isScrollingDown || !scrolldown) {
           isScrollingDown = false;
-          scrolldown=false;
+          scrolldown = false;
           // _isScrolleddown=true;
 
           showFloting();
@@ -222,7 +222,7 @@ class _ProfileScreenState extends State<ProfileScreen>
   //         ScrollDirection.reverse) {
   //       if (!isScrollingDown) {
   //         // isScrollingDown = true;
-  //         //  _isScrolleddown=false; 
+  //         //  _isScrolleddown=false;
   //         hideFloting();
   //       }
   //     }
@@ -491,6 +491,11 @@ class _ProfileScreenState extends State<ProfileScreen>
             end = workignend?.split(' ')[0];
             endAm = workignend?.split(' ')[1];
           }
+         if (NewProfileData?.object?.isBlock == true) {
+            Blockuser = false;
+          } else {
+            Blockuser = true;
+          }
         }
         if (state is GetAppPostByUserLoadedState) {
           videoUrls.clear();
@@ -744,19 +749,22 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                             ?.userBackgroundPic ==
                                                         ''
                                                 ? Padding(
-                                                  padding: const EdgeInsets.all(8.0),
-                                                  child: CustomImageView(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            8.0),
+                                                    child: CustomImageView(
                                                       svgPath: ImageConstant
                                                           .splashImage,
                                                       /* fit: BoxFit.fill, */
                                                       radius: BorderRadius.only(
                                                           bottomRight:
-                                                              Radius.circular(20),
+                                                              Radius.circular(
+                                                                  20),
                                                           bottomLeft:
                                                               Radius.circular(
                                                                   20)),
                                                     ),
-                                                )
+                                                  )
                                                 : CustomImageView(
                                                     url:
                                                         "${NewProfileData?.object?.userBackgroundPic}",
@@ -836,11 +844,12 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                 Navigator.of(context).push(
                                                     MaterialPageRoute(
                                                         builder: (context) =>
-                                                            ProfileandDocumentScreen(
+                                                            /* ProfileandDocumentScreen(
                                                               path:
                                                                   'https://inpackaging-images.s3.ap-south-1.amazonaws.com/misc/InPackaging_Logo.png',
                                                               title: '',
-                                                            )));
+                                                            ) */
+                                                            ProfilePage(image: ImageConstant.tomcruse,),));
                                               }
                                             },
                                             child: Container(
@@ -1315,12 +1324,6 @@ class _ProfileScreenState extends State<ProfileScreen>
                                             child: GestureDetector(
                                               key: blockKey,
                                               onTap: () {
-                                                if (Blockuser == false) {
-                                                  Blockuser = true;
-                                                } else {
-                                                  Blockuser = false;
-                                                }
-                                                ;
                                                 showPopupMenuBlock(
                                                     context,
                                                     NewProfileData
@@ -5040,8 +5043,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                           decoration: BoxDecoration(
                                               color: Colors.white,
                                               border: Border.all(
-                                                  color: Color.fromRGBO(
-                                                      0, 0, 0, 0.25)),
+                                                  color: Colors.grey.shade200),
                                               borderRadius:
                                                   BorderRadius.circular(15)),
                                           // height: 300,
@@ -6401,11 +6403,22 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                       top: 15,
                                                                       right: 0),
                                                               child: Center(
-                                                                  child:
-                                                                      CustomImageView(
+                                                                  child:PinchZoom(
+                                                                                child: CachedNetworkImage(imageUrl: "${getAllPostData.object?[index].postData?[0]}",
+                                                                                    
+                                                                                  ),
+                                                                                maxScale: 4,
+                                                                                onZoomStart: () {
+                                                                                  print('Start zooming');
+                                                                                },
+                                                                                onZoomEnd: () {
+                                                                                  print('Stop zooming');
+                                                                                },
+                                                                              ),
+                                                                 /*      CustomImageView(
                                                                 url:
                                                                     "${getAllPostData.object?[index].postData?[0]}",
-                                                              )),
+                                                              ) */),
                                                             ),
                                                           )
                                                         : getAllPostData
@@ -6569,9 +6582,20 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                               children: [
                                                                                 Align(
                                                                                   alignment: Alignment.center,
-                                                                                  child: CustomImageView(
-                                                                                    url: "${getAllPostData.object?[index].postData?[index1]}",
+                                                                                  child:PinchZoom(
+                                                                                child: CachedNetworkImage(imageUrl: "${getAllPostData.object?[index].postData?[index1]}",
+                                                                                    
                                                                                   ),
+                                                                                maxScale: 4,
+                                                                                onZoomStart: () {
+                                                                                  print('Start zooming');
+                                                                                },
+                                                                                onZoomEnd: () {
+                                                                                  print('Stop zooming');
+                                                                                },
+                                                                              )/* CustomImageView(
+                                                                                    url: "${getAllPostData.object?[index].postData?[index1]}",
+                                                                                  ) */,
                                                                                 ),
                                                                                 Align(
                                                                                   alignment: Alignment.topRight,
@@ -8104,8 +8128,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                     decoration: BoxDecoration(
                                         color: Colors.white,
                                         border: Border.all(
-                                            color:
-                                                Color.fromRGBO(0, 0, 0, 0.25)),
+                                                  color: Colors.grey.shade200),
                                         borderRadius:
                                             BorderRadius.circular(15)),
                                     // height: 300,
@@ -9413,10 +9436,21 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                         top: 15,
                                                         right: 0),
                                                     child: Center(
-                                                        child: CustomImageView(
+                                                        child: /* CustomImageView(
                                                       url:
                                                           "${GetSavePostData?.object?[index].postData?[0]}",
-                                                    )),
+                                                    ) */PinchZoom(
+                                                                                child: CachedNetworkImage(imageUrl: "${GetSavePostData?.object?[index].postData?[0]}",
+                                                                                    
+                                                                                  ),
+                                                                                maxScale: 4,
+                                                                                onZoomStart: () {
+                                                                                  print('Start zooming');
+                                                                                },
+                                                                                onZoomEnd: () {
+                                                                                  print('Stop zooming');
+                                                                                },
+                                                                              ), ),
                                                   ),
                                                 )
                                               : GetSavePostData?.object?[index]
@@ -9582,10 +9616,22 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                         alignment:
                                                                             Alignment.center,
                                                                         child:
-                                                                            CustomImageView(
+                                                                        PinchZoom(
+                                                                                child: CachedNetworkImage(imageUrl:"${GetSavePostData?.object?[index].postData?[index1]}",
+                                                                                    
+                                                                                  ),
+                                                                                maxScale: 4,
+                                                                                onZoomStart: () {
+                                                                                  print('Start zooming');
+                                                                                },
+                                                                                onZoomEnd: () {
+                                                                                  print('Stop zooming');
+                                                                                },
+                                                                              ),
+                                                                           /*  CustomImageView(
                                                                           url:
                                                                               "${GetSavePostData?.object?[index].postData?[index1]}",
-                                                                        ),
+                                                                        ) */
                                                                       ),
                                                                       Align(
                                                                         alignment:
@@ -10692,18 +10738,18 @@ class _ProfileScreenState extends State<ProfileScreen>
             padding: EdgeInsets.only(top: 10),
             itemCount: addWorkExperienceModel?.object?.length,
             itemBuilder: (context, index) {
-              print(
-                  "StatDate-${addWorkExperienceModel?.object?[index].startDate}");
-              print(
-                  "endData-${addWorkExperienceModel?.object?[index].endDate}");
+              // print(
+              //     "StatDate-${addWorkExperienceModel?.object?[index].startDate}");
+              // print(
+              //     "endData-${addWorkExperienceModel?.object?[index].endDate}");
 
               formattedDateStart = DateFormat('dd-MM-yyyy').format(
                   DateFormat('yyyy-MM-dd').parse(
                       addWorkExperienceModel?.object?[index].startDate ??
                           DateTime.now().toIso8601String()));
               if (addWorkExperienceModel?.object?[index].endDate != 'Present') {
-                print(
-                    "this is the Data Get-${addWorkExperienceModel?.object?[index].endDate}");
+                // print(
+                //     "this is the Data Get-${addWorkExperienceModel?.object?[index].endDate}");
                 formattedDateEnd = DateFormat('dd-MM-yyyy').format(
                     DateFormat('yyyy-MM-dd').parse(
                         addWorkExperienceModel?.object?[index].endDate ??
@@ -11712,7 +11758,11 @@ class _ProfileScreenState extends State<ProfileScreen>
                   blockUserID: userID,
                   userName: userName,
                   Blockuser: Blockuser),
-            );
+            ).then((value) => widget.ProfileNotification == true
+                ? BlocProvider.of<NewProfileSCubit>(context)
+                    .NewProfileSAPI(context, widget.User_ID, true)
+                : BlocProvider.of<NewProfileSCubit>(context)
+                    .NewProfileSAPI(context, widget.User_ID, false));
           },
           height: 25,
           value: Blockuser == true ? 'Block' : 'UnBlock',
@@ -11733,7 +11783,11 @@ class _ProfileScreenState extends State<ProfileScreen>
                     blockUserID: userID,
                     userName: userName,
                     Blockuser: Blockuser),
-              );
+              ).then((value) => widget.ProfileNotification == true
+                  ? BlocProvider.of<NewProfileSCubit>(context)
+                      .NewProfileSAPI(context, widget.User_ID, true)
+                  : BlocProvider.of<NewProfileSCubit>(context)
+                      .NewProfileSAPI(context, widget.User_ID, false));
             },
             child: Container(
               child: Center(
