@@ -19,7 +19,7 @@
 
         
     <application
-        android:label="IP"
+        android:label="Inpackaging"
         android:name="${applicationName}"
         android:usesCleartextTraffic="true"
         android:resizeableActivity="true"
