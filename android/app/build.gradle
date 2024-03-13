@@ -27,7 +27,7 @@ apply plugin: 'kotlin-android'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
 android {
-    namespace "com.inpackaging.app"
+    namespace "com.ip.app"
     compileSdkVersion 34
     // flutter.compileSdkVersion
     // ndkVersion flutter.ndkVersion
