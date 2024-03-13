@@ -1,5 +1,6 @@
 import 'package:pds/API/Model/CreateStory_Model/all_stories.dart';
 import 'package:pds/API/Model/GetAllInboxImagesModel/GetAllInboxImagesModel.dart';
+import 'package:pds/API/Model/MarkStarred/MarkStarredModel.dart';
 import 'package:pds/API/Model/acceptRejectInvitaionModel/getAllNotificationCount.dart';
 import 'package:pds/API/Model/createDocumentModel/createDocumentModel.dart';
 import 'package:pds/API/Model/inboxScreenModel/LiveStatusModel.dart';
@@ -57,4 +58,9 @@ class LiveStatusLoadedState extends getInboxState {
 class GetAllStoryLoadedState extends getInboxState {
   final GetAllStoryModel getAllStoryModel;
   GetAllStoryLoadedState(this.getAllStoryModel);
+}
+
+class GetAllStarClass extends getInboxState {
+  final MarkStarred markStarred;
+  GetAllStarClass(this.markStarred);
 }

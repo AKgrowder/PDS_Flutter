@@ -149,12 +149,12 @@ class _DmScreenState extends State<DmScreen> {
   getDocumentSize() async {
     // 111111
     await BlocProvider.of<DmInboxCubit>(context).seetinonExpried(context);
-    await BlocProvider.of<DmInboxCubit>(context)
-        .LiveStatus(context, widget.ChatInboxUid);
-    await BlocProvider.of<DmInboxCubit>(context)
-        .SeenMessage(context, widget.ChatInboxUid);
-    await BlocProvider.of<DmInboxCubit>(context)
-        .getAllNoticationsCountAPI(context);
+      await BlocProvider.of<DmInboxCubit>(context)
+          .LiveStatus(context, widget.ChatInboxUid);
+      await BlocProvider.of<DmInboxCubit>(context)
+          .SeenMessage(context, widget.ChatInboxUid);
+      await BlocProvider.of<DmInboxCubit>(context)
+          .getAllNoticationsCountAPI(context);
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     documentuploadsize = await double.parse(
         prefs.getString(PreferencesKey.MaxInboxUploadSizeInMB) ?? "0");
@@ -362,7 +362,7 @@ class _DmScreenState extends State<DmScreen> {
               if (state is SeenAllMessageLoadedState) {
                 print(state.SeenAllMessageModelData.object);
               }
-              if (state is LiveStatusLoadedState) {
+              if (state is LiveStatusLoadedState) { 
                 print("LiveStatusModelDataLiveStatusModelData");
                 LiveStatusModelData = state.LiveStatusModelData;
                 if (LiveStatusModelData?.object?.isBlock == true) {
