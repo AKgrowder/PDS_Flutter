@@ -1,4 +1,4 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.inpackaging.app">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.ip.app">
         <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
         <uses-permission android:name="android.permission.RECORD_AUDIO" />
         <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -19,7 +19,7 @@
 
         
     <application
-        android:label="InPackaging"
+        android:label="IP"
         android:name="${applicationName}"
         android:usesCleartextTraffic="true"
         android:resizeableActivity="true"
