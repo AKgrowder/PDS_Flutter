@@ -1222,15 +1222,15 @@ class _HomeScreenNewState extends State<HomeScreenNew>
   }
 
   NewApi() async {
-    /*   timer = Timer.periodic(Duration(seconds: 15), (timer) async {
-      super.setState(() {
-        secound = timer.tick;
-      });
-      await BlocProvider.of<GetGuestAllPostCubit>(context)
-          .seetinonExpried(context);
-      await BlocProvider.of<GetGuestAllPostCubit>(context)
-          .getAllNoticationsCountAPI(context);
-    }); */
+    //   timer = Timer.periodic(Duration(seconds: 15), (timer) async {
+    //   super.setState(() {
+    //     secound = timer.tick;
+    //   });
+    //   await BlocProvider.of<GetGuestAllPostCubit>(context)
+    //       .seetinonExpried(context);
+    //   await BlocProvider.of<GetGuestAllPostCubit>(context)
+    //       .getAllNoticationsCountAPI(context);
+    // });
     await BlocProvider.of<GetGuestAllPostCubit>(context)
         .get_all_master_report_typeApiMethod(context);
     await BlocProvider.of<GetGuestAllPostCubit>(context)
