@@ -282,6 +282,8 @@ class ImageConstant {
   static String surprised = 'assets/images/surprised.png';
   static String nopostimage = 'assets/images/Frame 1171276328.png';
   static String avatarimage = 'assets/images/avatarimage.jpg';
+  static String StarSave = 'assets/images/goldan_star.png';
+  static String newStar =  'assets/images/newStar.png';
 
   /// end
 }
