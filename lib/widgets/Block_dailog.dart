@@ -144,7 +144,7 @@ class BlockUserdailogState extends State<BlockUserdailog>
                               child: Column(
                                 children: [
                                   Text(
-                                    widget.Blockuser == true ?  "They  won’t be able to message you or find your profile or posts on Inpackaging forum. You can unlock them at any time in setting." : "Are you sure you want to unblock the",
+                                    widget.Blockuser == true ?  "They  won’t be able to message you or find your profile or posts on Inpackaging forum. You can unlock them at any time in setting." : "Are you sure you want to unblock.",
                                       textScaleFactor: 1.0,
                                       textAlign: TextAlign.center,
                                       style: TextStyle(
