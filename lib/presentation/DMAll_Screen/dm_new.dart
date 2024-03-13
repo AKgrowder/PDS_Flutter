@@ -258,6 +258,13 @@ class _DmScreenNewState extends State<DmScreenNew> with Observer {
               if (state is getInboxLoadedState) {
                 print("this State is Calling");
                 getInboxMessagesModel = state.getInboxMessagesModel;
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  if (isMounted == true) {
+                    if (mounted) {
+                      _scrollToBottom();
+                    }
+                  }
+                });
               }
               if (state is GetAllStoryLoadedState) {
                 print('this stater Caling');
@@ -2033,8 +2040,10 @@ Widget buildRichText(String input, DateTime date) {
   textSpans.add(
     TextSpan(
       text: ' ${formattedDate}',
-      style:
-          TextStyle(fontSize: 10, color: Colors.grey,fontWeight: FontWeight.w700), // Small gray date text
+      style: TextStyle(
+          fontSize: 10,
+          color: Colors.grey,
+          fontWeight: FontWeight.w700), // Small gray date text
     ),
   );
 
