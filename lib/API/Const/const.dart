@@ -152,5 +152,7 @@ class Config {
   static const String onlineLiveStatus = "user/get_online_live";
   static const String forwardMessages = "user/forward_messages";
     static const String update_live_status = "user/update_live_status";
+    static const String mark_starred = "user/mark_starred";
+
 
 }
