@@ -462,6 +462,18 @@ void main() async {
     provisional: false,
   );
 
+  ErrorWidget.builder = (FlutterErrorDetails details) {
+    return Container(
+      alignment: Alignment.center,
+      child: Text(
+        "Error! \n ${details.exception}",
+        // Try After Some Time...",
+        
+        textAlign: TextAlign.center,
+      ),
+    );
+  };
+
   runApp(MyApp());
 }
 
