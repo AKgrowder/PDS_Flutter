@@ -376,6 +376,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   backgroundColor: ColorConstant.primary_color,
                 );
                 ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                Navigator.pop(context);
               }
             }
             if (state is EmailVerifactionLoadedState) {
