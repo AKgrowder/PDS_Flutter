@@ -16,42 +16,35 @@ Widget customAvatarBuilder(
   ZegoUIKitUser? user,
   Map<String, dynamic> extraInfo,
 ) {
-  return Column(
-    children: [
-      Text('${user?.name}'),
-      if (imageurlCheck != null && imageurlCheck?.isNotEmpty == true)
-        SizedBox(
-          height: 40,
-          width: 100,
-          child: CachedNetworkImage(
-            imageUrl: '${imageurlCheck}',
-            imageBuilder: (context, imageProvider) => Container(
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                image: DecorationImage(
-                  image: imageProvider,
-                  fit: BoxFit.cover,
-                ),
+  print("imageUrlcheck-$imageurlCheck");
+  return imageurlCheck != null
+      ? CachedNetworkImage(
+          imageUrl: imageurlCheck!,
+          imageBuilder: (context, imageProvider) => Container(
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              image: DecorationImage(
+                image: imageProvider,
+                fit: BoxFit.cover,
               ),
             ),
-            progressIndicatorBuilder: (context, url, downloadProgress) =>
-                CircularProgressIndicator(value: downloadProgress.progress),
-            errorWidget: (context, url, error) {
-              ZegoLoggerService.logInfo(
-                '$user avatar url is invalid',
-                tag: 'live audio',
-                subTag: 'live page',
-              );
-              return ZegoAvatar(user: user, avatarSize: size);
-            },
           ),
-        ),
-      if (imageurlCheck == null && imageurlCheck?.isEmpty == true)
-        CustomImageView(
-          imagePath: ImageConstant.tomcruse,
-          height: 30,
-          width: 30,
+          progressIndicatorBuilder: (context, url, downloadProgress) =>
+              CircularProgressIndicator(value: downloadProgress.progress),
+          errorWidget: (context, url, error) {
+            ZegoLoggerService.logInfo(
+              '$user avatar url is invalid',
+              tag: 'live audio',
+              subTag: 'live page',
+            );
+            return ZegoAvatar(user: user, avatarSize: size);
+          },
         )
-    ],
-  );
+      : CustomImageView(
+          svgPath: ImageConstant.tomcruse,
+          /* fit: BoxFit.fill, */
+          radius: BorderRadius.only(
+              bottomRight: Radius.circular(20),
+              bottomLeft: Radius.circular(20)),
+        );
 }
