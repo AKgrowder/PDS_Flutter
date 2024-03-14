@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -36,6 +38,7 @@ class _InboxScreenState extends State<InboxScreen> {
   String? UserIndexUUID = "";
   bool apiData = false;
   int Index = 0;
+  Timer? timer;
   FocusNode _focusNode = FocusNode();
   GetUsersChatByUsername? getUsersChatByUsername;
   String? userID;
@@ -66,6 +69,12 @@ class _InboxScreenState extends State<InboxScreen> {
     userID = prefs.getString(PreferencesKey.loginUserID);
     print("userid-chelc-${userID}");
     super.setState(() {});
+    timer = Timer.periodic(Duration(seconds: 5), (timer) async {
+      await BlocProvider.of<PersonalChatListCubit>(context)
+          .PersonalChatList(context);
+      await BlocProvider.of<PersonalChatListCubit>(context)
+          .getAllNoticationsCountAPI(context);
+    });
   }
 
   @override

@@ -366,6 +366,7 @@ void main() async {
 
   FirebaseMessaging.onBackgroundMessage(_messageHandler);
   FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) async {
+
     print("/* onMessageOpenedApp: */ ${message.notification?.body}");
     print("/* onMessageOpenedApp: */ ${message.notification?.title}");
     print("/* onMessageOpenedApp: */ ${message.data}");
@@ -448,6 +449,8 @@ void main() async {
   });
 
   FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
+  
+
 
   await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
     alert: true,
@@ -461,6 +464,8 @@ void main() async {
     alert: true,
     provisional: false,
   );
+  String? DeviceToken = await _firebaseMessaging.getToken();
+  print("Firebase DeviceToken==> ${DeviceToken}");
 
   runApp(MyApp());
 }

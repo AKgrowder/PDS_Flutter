@@ -219,6 +219,12 @@ class _DmScreenNewState extends State<DmScreenNew> with Observer {
     await BlocProvider.of<DmInboxCubit>(context)
         .DMChatListApiMethod(widget.chatInboxUid, 1, context);
     await BlocProvider.of<DmInboxCubit>(context).get_all_story(context);
+     await BlocProvider.of<DmInboxCubit>(context)
+        .LiveStatus(context, widget.chatInboxUid);
+    await BlocProvider.of<DmInboxCubit>(context)
+        .SeenMessage(context, widget.chatInboxUid);
+    await BlocProvider.of<DmInboxCubit>(context)
+        .getAllNoticationsCountAPI(context);
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     UserLogin_ID = prefs.getString(PreferencesKey.loginUserID);
     DMbaseURL = prefs.getString(PreferencesKey.SocketLink) ?? "";

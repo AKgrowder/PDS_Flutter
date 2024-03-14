@@ -413,12 +413,7 @@ class _SettingScreenState extends State<SettingScreen> {
                                 // Share.share(
                                 //     'https://play.google.com/store/apps/details?id=com.pds.app');
 
-                                _onShareXFileFromAssets(context,
-                                    androidLink:
-                                        'https://play.google.com/store/apps/details?id=com.pds.app'
-                                    /* iosLink:
-                                                    "https://apps.apple.com/inList =  /app/growder-b2b-platform/id6451333863" */
-                                    );
+                                _onShareXFileFromAssets(context);
                                 // Navigator.push(context,
                                 //     MaterialPageRoute(builder: (context) {
                                 //   return RoomDetailScreen();
@@ -643,17 +638,15 @@ class _SettingScreenState extends State<SettingScreen> {
     super.setState(() {});
   }
 
-  void _onShareXFileFromAssets(BuildContext context,
-      {String? androidLink}) async {
+void _onShareXFileFromAssets(BuildContext context) async {
     RenderBox? box = context.findAncestorRenderObjectOfType();
-
     var directory = await getApplicationDocumentsDirectory();
-
     if (Platform.isAndroid) {
       await Share.shareXFiles(
         [XFile("/sdcard/download/IPImage.jpg")],
         subject: "Share",
-        text: "Try This Awesome App \n\n Android :- ${androidLink}",
+        text:
+            "Try This Awesome App \n\n Android :- https://play.google.com/store/apps/details?id=com.pds.app",
         sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size,
       );
     } else {
@@ -664,7 +657,8 @@ class _SettingScreenState extends State<SettingScreen> {
               'Growder_Image/IPImage.jpg')
         ],
         subject: "Share",
-        text: "Try This Awesome App \n\n Android :- ${androidLink}",
+        text:
+            "Try This Awesome App \n\n iOS :- https://apps.apple.com/in/app/inpackaging-knowledge-forum/id6478194670",
         sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size,
       );
     }
