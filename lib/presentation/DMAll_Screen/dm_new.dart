@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_observer/Observable.dart';
 import 'package:flutter_observer/Observer.dart';
+import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:intl/intl.dart';
 import 'package:linkfy_text/linkfy_text.dart';
 import 'package:pds/API/Bloc/dmInbox_bloc/dmMessageState.dart';
@@ -127,7 +128,7 @@ class _DmScreenNewState extends State<DmScreenNew> with Observer {
     isMeesageReaction = false;
     BlocProvider.of<DmInboxCubit>(context).seetinonExpried(context);
     pageNumberMethod();
-  imageurlCheck = widget.chatUserProfile;
+    imageurlCheck = widget.chatUserProfile;
     super.initState();
   }
 
@@ -152,6 +153,51 @@ class _DmScreenNewState extends State<DmScreenNew> with Observer {
   update(Observable observable, String? notifyName, Map? map) async {
     print("this condison is working yet");
     pageNumberMethod();
+  }
+
+  void onSendCallInvitationFinished(
+    String code,
+    String message,
+    List<String> errorInvitees,
+  ) {
+    if (errorInvitees.isNotEmpty) {
+      var userIDs = '';
+      for (var index = 0; index < errorInvitees.length; index++) {
+        if (index >= 5) {
+          userIDs += '... ';
+          break;
+        }
+
+        final userID = errorInvitees.elementAt(index);
+        userIDs += '$userID ';
+      }
+      if (userIDs.isNotEmpty) {
+        userIDs = userIDs.substring(0, userIDs.length - 1);
+      }
+
+      var message = "User doesn't exist or is offline: $userIDs";
+      if (code.isNotEmpty) {
+        message += ', code: $code, message:$message';
+      }
+      /*  showToast(
+        message,
+        position: StyledToastPosition.top,
+        context: context,
+      ); */
+    } else if (code.isNotEmpty) {
+      showToast(
+        'User is offline',
+        /*     'code: $code, message:$message', */
+        position: StyledToastPosition.top,
+        context: context,
+      );
+      /* 
+      SnackBar snackBar = SnackBar(
+        content: Text('User is offline'),
+        backgroundColor: ColorConstant.primary_color,
+      );
+      ScaffoldMessenger.of(context).showSnackBar(snackBar); */
+    }
   }
 
   void _scrollToBottom() {
@@ -266,7 +312,6 @@ class _DmScreenNewState extends State<DmScreenNew> with Observer {
           setState(() {
             _scrollToBottom();
           });
-
         }
       }
     });
@@ -274,7 +319,7 @@ class _DmScreenNewState extends State<DmScreenNew> with Observer {
     print("check your is my UserLogin_ID -${UserLogin_ID}");
     print("valu check -${widget.chatUserName.toString()}");
     print("valu check1 -${widget.chatOtherUseruid}");
-              
+
     // onUserLogin('${UserLogin_ID}', 'Ankur');
   }
 
@@ -419,11 +464,30 @@ class _DmScreenNewState extends State<DmScreenNew> with Observer {
                                 ),
                                 Spacer(),
                                 sendCallButton(
+                                  isVideoCall: false,
+                                  invitees: [
+                                    ZegoUIKitUser(
+                                        id: widget.chatOtherUseruid
+                                            .split('-')
+                                            .last
+                                            .toString(),
+                                        name: widget.chatUserName.toLowerCase())
+                                  ],
+                                  onCallFinished: onSendCallInvitationFinished,
+                                ),
+                                sendCallButton(
                                   isVideoCall: true,
                                   invitees: [
-                                    ZegoUIKitUser(id:widget.chatOtherUseruid.split('-').last.toString(), name:widget.chatUserName.toLowerCase())
+                                    ZegoUIKitUser(
+                                        id: widget.chatOtherUseruid
+                                            .split('-')
+                                            .last
+                                            .toString(),
+                                        name: widget.chatUserName.toLowerCase())
                                   ],
+                                  onCallFinished: onSendCallInvitationFinished,
                                 ),
+                                
                                 /*   sendCallButton(
                                   isVideoCall: true,
                                   userChatInboxUid:
