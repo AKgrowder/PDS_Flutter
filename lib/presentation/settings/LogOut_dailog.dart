@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/core/utils/sharedPreferences.dart';
 import 'package:pds/presentation/%20new/newbottembar.dart';
+import 'package:pds/videocallCommenClass.dart/commenFile.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../API/Bloc/logOut_bloc/LogOut_state.dart';
@@ -138,6 +139,7 @@ class LogOutdailogState extends State<LogOutdailog>
                                   child: const Text('Yes',
                                       style: TextStyle(color: Colors.white)),
                                   onPressed: () async {
+                                      onUserLogout();
                                     BlocProvider.of<LogOutCubit>(context)
                                         .LogOutApi(context);
                                   },

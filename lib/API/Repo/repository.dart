@@ -954,7 +954,7 @@ class Repository {
     print("searchHashtag-$searchHashtag");
     // final response =
     //     await apiServices.getApiCall('${Config.get_all_hashtag}?numberOfRecords=10&pageNumber=${pageNumber}&searchHashtag=${searchHashtag.replaceAll("#", "%23")}', context);
-    final response = await apiServices.getApiCall(
+    final response = await apiServices.getApiCallWithToken(
         '${Config.get_all_hashtag}?numberOfRecords=30&pageNumber=${'1'}&searchHashtag=${searchHashtag.replaceAll("#", "%23")}',
         context);
     var jsonString = json.decode(utf8.decode(response.bodyBytes));
