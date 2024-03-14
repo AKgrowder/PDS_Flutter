@@ -330,12 +330,14 @@ import 'package:pds/presentation/%20new/OpenSavePostImage.dart';
 import 'package:pds/presentation/%20new/profileNew.dart';
 import 'package:pds/theme/theme_helper.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:zego_uikit_prebuilt_call/zego_uikit_prebuilt_call.dart';
 import 'API/Bloc/BlockUser_Bloc/Block_user_cubit.dart';
 import 'API/Bloc/postData_Bloc/postData_Bloc.dart';
 import 'presentation/splash_screen/splash_screen.dart';
 import 'package:flutter_langdetect/flutter_langdetect.dart' as langdetect;
-
-final navigatorKey = GlobalKey<NavigatorState>();
+import 'package:zego_uikit/zego_uikit.dart';
+import 'package:zego_uikit_prebuilt_call/zego_uikit_prebuilt_call.dart';
+import 'package:zego_uikit_signaling_plugin/zego_uikit_signaling_plugin.dart';
 
 Future<void> _messageHandler(RemoteMessage message) async {
   await Firebase.initializeApp(
@@ -360,6 +362,8 @@ void main() async {
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
   ]);
+  final navigatorKey = GlobalKey<NavigatorState>();
+  ZegoUIKitPrebuiltCallInvitationService().setNavigatorKey(navigatorKey);
 
   ///Please update theme as per your need if required.
   ThemeHelper().changeTheme('primary');
@@ -461,23 +465,28 @@ void main() async {
     alert: true,
     provisional: false,
   );
+  ZegoUIKitPrebuiltCallInvitationService().setNavigatorKey(navigatorKey);
 
-  ErrorWidget.builder = (FlutterErrorDetails details) {
-    return Container(
-      alignment: Alignment.center,
-      child: Text(
-        "Error! \n ${details.exception}",
-        // Try After Some Time...",
-        
-        textAlign: TextAlign.center,
-      ),
+  ZegoUIKit().initLog().then((value) {
+    ZegoUIKitPrebuiltCallInvitationService().useSystemCallingUI(
+      [ZegoUIKitSignalingPlugin()],
     );
-  };
 
-  runApp(MyApp());
+    runApp(MyApp(navigatorKey: navigatorKey));
+  });
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
+  final GlobalKey<NavigatorState>? navigatorKey;
+  MyApp({
+    this.navigatorKey,
+    Key? key,
+  }) : super(key: key);
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
@@ -613,7 +622,19 @@ class MyApp extends StatelessWidget {
           title: 'pds',
           debugShowCheckedModeBanner: false,
           home: SplashScreen(),
-          navigatorKey: navigatorKey,
+          navigatorKey: widget.navigatorKey,
+          builder: (context, child) {
+            return Stack(
+              children: [
+                child!,
+                ZegoUIKitPrebuiltCallMiniOverlayPage(
+                  contextQuery: () {
+                    return widget.navigatorKey!.currentState!.context;
+                  },
+                ),
+              ],
+            );
+          },
           //BottombarPage(buttomIndex: 0),
         ),
       ),
