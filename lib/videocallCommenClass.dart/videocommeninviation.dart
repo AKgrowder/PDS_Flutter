@@ -5,32 +5,53 @@ import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:zego_uikit_prebuilt_call/zego_uikit_prebuilt_call.dart';
 
+import '../core/utils/image_constant.dart';
+import '../widgets/custom_image_view.dart';
+
+String? imageurlCheck;
+
 Widget customAvatarBuilder(
   BuildContext context,
   Size size,
   ZegoUIKitUser? user,
   Map<String, dynamic> extraInfo,
 ) {
-  return CachedNetworkImage(
-    imageUrl: 'https://robohash.org/${user?.id}.png',
-    imageBuilder: (context, imageProvider) => Container(
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        image: DecorationImage(
-          image: imageProvider,
-          fit: BoxFit.cover,
+  return Column(
+    children: [
+      Text('${user?.name}'),
+      if (imageurlCheck != null && imageurlCheck?.isNotEmpty == true)
+        SizedBox(
+          height: 40,
+          width: 100,
+          child: CachedNetworkImage(
+            imageUrl: '${imageurlCheck}',
+            imageBuilder: (context, imageProvider) => Container(
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                image: DecorationImage(
+                  image: imageProvider,
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
+            progressIndicatorBuilder: (context, url, downloadProgress) =>
+                CircularProgressIndicator(value: downloadProgress.progress),
+            errorWidget: (context, url, error) {
+              ZegoLoggerService.logInfo(
+                '$user avatar url is invalid',
+                tag: 'live audio',
+                subTag: 'live page',
+              );
+              return ZegoAvatar(user: user, avatarSize: size);
+            },
+          ),
         ),
-      ),
-    ),
-    progressIndicatorBuilder: (context, url, downloadProgress) =>
-        CircularProgressIndicator(value: downloadProgress.progress),
-    errorWidget: (context, url, error) {
-      ZegoLoggerService.logInfo(
-        '$user avatar url is invalid',
-        tag: 'live audio',
-        subTag: 'live page',
-      );
-      return ZegoAvatar(user: user, avatarSize: size);
-    },
+      if (imageurlCheck == null && imageurlCheck?.isEmpty == true)
+        CustomImageView(
+          imagePath: ImageConstant.tomcruse,
+          height: 30,
+          width: 30,
+        )
+    ],
   );
 }
