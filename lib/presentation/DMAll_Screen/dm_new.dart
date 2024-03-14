@@ -22,6 +22,7 @@ import 'package:pds/presentation/%20new/profileNew.dart';
 import 'package:pds/presentation/create_story/full_story_page.dart';
 import 'package:pds/theme/theme_helper.dart';
 import 'package:pds/videocallCommenClass.dart/commenFile.dart';
+import 'package:pds/videocallCommenClass.dart/videocommeninviation.dart';
 import 'package:pds/widgets/custom_image_view.dart';
 import 'package:pds/widgets/pagenation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -126,7 +127,7 @@ class _DmScreenNewState extends State<DmScreenNew> with Observer {
     isMeesageReaction = false;
     BlocProvider.of<DmInboxCubit>(context).seetinonExpried(context);
     pageNumberMethod();
-
+  imageurlCheck = widget.chatUserProfile;
     super.initState();
   }
 
@@ -271,7 +272,7 @@ class _DmScreenNewState extends State<DmScreenNew> with Observer {
     });
     print("check your is my name -${UserName}");
     print("check your is my UserLogin_ID -${UserLogin_ID}");
-    print("valu check -${widget.chatUserName}");
+    print("valu check -${widget.chatUserName.toString()}");
     print("valu check1 -${widget.chatOtherUseruid}");
               
     // onUserLogin('${UserLogin_ID}', 'Ankur');
@@ -420,7 +421,7 @@ class _DmScreenNewState extends State<DmScreenNew> with Observer {
                                 sendCallButton(
                                   isVideoCall: true,
                                   invitees: [
-                                    ZegoUIKitUser(id:widget.chatOtherUseruid, name:widget.chatUserName)
+                                    ZegoUIKitUser(id:widget.chatOtherUseruid.split('-').last.toString(), name:widget.chatUserName.toLowerCase())
                                   ],
                                 ),
                                 /*   sendCallButton(
