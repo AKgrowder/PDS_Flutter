@@ -284,6 +284,6 @@ class ImageConstant {
   static String avatarimage = 'assets/images/avatarimage.jpg';
   static String StarSave = 'assets/images/goldan_star.png';
   static String newStar =  'assets/images/newStar.png';
-
+  static String videocall = 'assets/images/video-call.png';
   /// end
 }
