@@ -491,7 +491,7 @@ class _CreateNewPostState extends State<CreateNewPost> {
               Expanded(
                   child: SingleChildScrollView(
                 physics: AlwaysScrollableScrollPhysics(),
-                scrollDirection: Axis.vertical,
+                scrollDirection: Axis.vertical, 
                 child: Column(
                   children: [
                     Padding(
@@ -504,11 +504,11 @@ class _CreateNewPostState extends State<CreateNewPost> {
                         },
                         suggestionPosition: SuggestionPosition.values.last,
                         // maxLines: 22,
-                        maxLines: null,
-                        inputFormatters: <TextInputFormatter>[
-                          LengthLimitingTextInputFormatter(1000),
-                          // FilteringTextInputFormatter.deny(RegExp(r'[/\\]')),
-                        ],
+                        // maxLines: null,
+                        // inputFormatters: <TextInputFormatter>[
+                        //   LengthLimitingTextInputFormatter(1000),
+                        //   // FilteringTextInputFormatter.deny(RegExp(r'[/\\]')),
+                        // ],
                         // style: TextStyle(fontFamily:'' ),
                         style: TextStyle(
                           fontFamily: 'outfit',

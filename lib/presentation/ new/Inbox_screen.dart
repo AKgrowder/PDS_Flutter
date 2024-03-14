@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -42,8 +44,8 @@ class _InboxScreenState extends State<InboxScreen> {
   TextEditingController searchController = TextEditingController();
   Map<String, dynamic>? forwadList;
   int foradselcted = 0;
+  Timer? timer;
   List<Map<String, dynamic>> forwadmessage = [];
-  String? laastChat;
   @override
   void initState() {
     getDocumentSize();
@@ -67,6 +69,15 @@ class _InboxScreenState extends State<InboxScreen> {
     userID = prefs.getString(PreferencesKey.loginUserID);
     print("userid-chelc-${userID}");
     super.setState(() {});
+
+    timer = Timer.periodic(Duration(seconds: 5), (timer) async {
+      print(
+          "objectobjectobjectobjectobjectobjectobjectobjectobjectobjectobjectobject:- GET");
+      await BlocProvider.of<PersonalChatListCubit>(context)
+          .PersonalChatList(context);
+      await BlocProvider.of<PersonalChatListCubit>(context)
+          .getAllNoticationsCountAPI(context);
+    });
   }
 
   @override
@@ -132,37 +143,15 @@ class _InboxScreenState extends State<InboxScreen> {
           body: BlocConsumer<PersonalChatListCubit, PersonalChatListState>(
               listener: (context, state) async {
             if (state is ForwadMessageLoadedState) {
-              Navigator.push(context, MaterialPageRoute(builder: (context) {
-                forwadList = null;
-                forwadmessage = [];
-                PersonalChatListModelData?.object?.forEach(
-                  (element) {
-                    element.isSelcted = false;
-                  },
-                );
-                return DmScreenNew(
-                  /* isBlock: PersonalChatListModelData
-                                ?.object?[index].isBlock,
-                            isExpert: PersonalChatListModelData
-                                ?.object?[index].isExpert,
-                            UserUID:
-                                "${PersonalChatListModelData?.object?[index].userUid}",
-                            UserName:
-                                "${PersonalChatListModelData?.object?[index].userName}", */
-                  chatInboxUid: "${laastChat}",
-                  chatUserName: '',
-                  chatUserProfile: '',
-                  /*   chatUserName: "${PersonalChatListModelData?.object?[index].userName}", */
+              SnackBar snackBar = SnackBar(
+                content: Text(state.forwardMessages.object.toString()),
+                backgroundColor: ColorConstant.primary_color,
+              );
+              ScaffoldMessenger.of(context).showSnackBar(snackBar);
+              print("this state is working");
 
-                  /*     UserImage:
-                                "${PersonalChatListModelData?.object?[index].userProfilePic}",
-                            videoId:
-                                "${PersonalChatListModelData?.object?[index].videoId}",
-                            online: PersonalChatListModelData
-                                ?.object?[index].onlineStatus */
-                  // UserUID: "${PersonalChatListModelData?.object?[index].}",
-                );
-              }));
+              await BlocProvider.of<PersonalChatListCubit>(context)
+                  .PersonalChatList(context);
             }
             if (state is PersonalChatListErrorState) {
               SnackBar snackBar = SnackBar(
@@ -261,61 +250,73 @@ class _InboxScreenState extends State<InboxScreen> {
                                 color: Colors.black,
                               ),
                             ),
-                            Padding(
-                              padding: const EdgeInsets.only(top: 15),
-                              child: Container(
-                                height: 48,
-                                decoration: BoxDecoration(
-                                    color: Color(0xffFBD8D9),
-                                    border: Border.all(
-                                      color: ColorConstant.primary_color,
-                                    ),
-                                    borderRadius: BorderRadius.circular(10)),
-                                child: TextFormField(
-                                  onChanged: (value) {
-                                    if (value.isNotEmpty) {
-                                      BlocProvider.of<PersonalChatListCubit>(
-                                              context)
-                                          .get_UsersChatByUsernameMethod(
-                                        searchController.text.trim(),
-                                        '1',
-                                        context,
-                                      );
-                                    } else if (value.isEmpty) {
-                                      isDataGet = false;
-                                      super.setState(() {});
-                                    }
-                                  },
-                                  focusNode: _focusNode,
-                                  controller: searchController,
-                                  cursorColor: ColorConstant.primary_color,
-                                  decoration: InputDecoration(
-                                      suffixIcon: IconButton(
-                                          onPressed: () {
-                                            searchController.clear();
+                             forwadList == null
+                                ? Padding(
+                                    padding: const EdgeInsets.only(top: 15),
+                                    child: Container(
+                                      height: 48,
+                                      decoration: BoxDecoration(
+                                          color: Color(0xffFBD8D9),
+                                          border: Border.all(
+                                            color: ColorConstant.primary_color,
+                                          ),
+                                          borderRadius:
+                                              BorderRadius.circular(10)),
+                                      child: TextFormField(
+                                        onChanged: (value) {
+                                          if (value.isNotEmpty) {
+                                            BlocProvider.of<
+                                                        PersonalChatListCubit>(
+                                                    context)
+                                                .get_UsersChatByUsernameMethod(
+                                              searchController.text.trim(),
+                                              '1',
+                                              context,
+                                            );
+                                          } else if (value.isEmpty) {
                                             isDataGet = false;
-                                            _focusNode.unfocus();
                                             super.setState(() {});
-                                          },
-                                          icon: Icon(
-                                            Icons.close,
-                                            color: Colors.black,
-                                          )),
-                                      hintText: "Search....",
-                                      hintStyle: TextStyle(
-                                          color: ColorConstant.primary_color),
-                                      border: InputBorder.none,
-                                      prefixIcon: Icon(
-                                        Icons.search,
-                                        color: ColorConstant.primary_color,
-                                      )),
-                                ),
-                              ),
-                            ),
+                                          }
+                                        },
+                                        focusNode: _focusNode,
+                                        controller: searchController,
+                                        cursorColor:
+                                            ColorConstant.primary_color,
+                                        decoration: InputDecoration(
+                                            suffixIcon: searchController
+                                                    .text.isEmpty
+                                                ? SizedBox()
+                                                : IconButton(
+                                                    onPressed: () {
+                                                      searchController.clear();
+                                                      isDataGet = false;
+                                                      _focusNode.unfocus();
+                                                      super.setState(() {});
+                                                    },
+                                                    icon: Icon(
+                                                      Icons.close,
+                                                      color: Colors.black,
+                                                    )),
+                                            hintText: "Search....",
+                                            hintStyle: TextStyle(
+                                                color: ColorConstant
+                                                    .primary_color),
+                                            border: InputBorder.none,
+                                            prefixIcon: Icon(
+                                              Icons.search,
+                                              color:
+                                                  ColorConstant.primary_color,
+                                            )),
+                                      ),
+                                    ),
+                                  )
+                                : SizedBox(),
                             isDataGet == true
                                 ? serInboxdata(width)
                                 : intaldatashow(),
-                            if (forwadmessage.isNotEmpty)
+                            if (PersonalChatListModelData?.object?.any(
+                                    (element) => element.isSelcted ?? false) ==
+                                true)
                               Row(
                                 children: [
                                   Container(
@@ -325,29 +326,53 @@ class _InboxScreenState extends State<InboxScreen> {
                                       color: Colors.white,
                                       child: ListView.builder(
                                         scrollDirection: Axis.horizontal,
-                                        itemCount: forwadmessage.length,
-                                        itemBuilder: (context, index) => Center(
-                                            child: Text(
-                                                '${forwadmessage[index]['username']},')),
+                                        itemCount: PersonalChatListModelData
+                                            ?.object?.length,
+                                        itemBuilder: (context, index) {
+                                          if (PersonalChatListModelData
+                                                  ?.object?[index].isSelcted ==
+                                              true) {
+                                            return Center(
+                                              child: Text(
+                                                  '${PersonalChatListModelData?.object?[index].userName},'),
+                                            );
+                                          } else {
+                                            return SizedBox();
+                                          }
+                                        },
                                       )),
                                   GestureDetector(
                                     onTap: () {
                                       // print("check valueaaa -${forwadmessage}");
                                       // print("check valueaaa1 -${forwadList}");
+                                      List<String> inboxChatUuids = [];
+                                      PersonalChatListModelData?.object
+                                          ?.forEach((element) {
+                                        if (element.isSelcted == true) {
+                                          inboxChatUuids.add(
+                                              '${element.userChatInboxUid}');
+                                        }
+                                      });
+                                      print("check inbox uid-$inboxChatUuids");
                                       forwadList?.addEntries([
                                         MapEntry(
-                                            'inboxChatUuids',
-                                            List.generate(
-                                                forwadList?.length ?? 0,
-                                                (index) => forwadmessage[index]
-                                                    ['inboxChatUuids']))
+                                            'inboxChatUuids', inboxChatUuids)
                                       ]);
-                                      laastChat =
-                                          forwadmessage.last['inboxChatUuids'];
+
                                       BlocProvider.of<PersonalChatListCubit>(
                                               context)
                                           .forward_messages(
                                               context, forwadList!);
+
+                                      forwadList = null;
+                                      foradselcted = 0;
+                                      forwadmessage = [];
+                                      PersonalChatListModelData?.object
+                                          ?.forEach(
+                                        (element) {
+                                          element.isSelcted = false;
+                                        },
+                                      );
                                     },
                                     child: Container(
                                       margin: EdgeInsets.only(left: 10, top: 2),
@@ -482,13 +507,22 @@ class _InboxScreenState extends State<InboxScreen> {
                         forwadList = await Navigator.push(context,
                             MaterialPageRoute(builder: (context) {
                           return DmScreenNew(
-                            chatUserName:
-                                "${PersonalChatListModelData?.object?[index].userName}",
-                            chatInboxUid:
-                                "${PersonalChatListModelData?.object?[index].userChatInboxUid}",
-                            chatUserProfile:
-                                "${PersonalChatListModelData?.object?[index].userProfilePic}",
-                            /* isBlock: PersonalChatListModelData
+                              chatUserName:
+                                  "${PersonalChatListModelData?.object?[index].userName}",
+                              chatInboxUid:
+                                  "${PersonalChatListModelData?.object?[index].userChatInboxUid}",
+                                    chatOtherUseruid: "${PersonalChatListModelData?.object?[index].userUid}",
+                              chatUserProfile:
+                                  "${PersonalChatListModelData?.object?[index].userProfilePic}",
+                              isBlock: PersonalChatListModelData
+                                  ?.object?[index].isBlock,
+                              isExpert: PersonalChatListModelData
+                                  ?.object?[index].isExpert,
+                              videoId:
+                                  "${PersonalChatListModelData?.object?[index].videoId}",
+                              online: PersonalChatListModelData
+                                  ?.object?[index].onlineStatus
+                              /* isBlock: PersonalChatListModelData
                                 ?.object?[index].isBlock,
                             isExpert: PersonalChatListModelData
                                 ?.object?[index].isExpert,
@@ -497,14 +531,14 @@ class _InboxScreenState extends State<InboxScreen> {
                             UserName:
                                 "${PersonalChatListModelData?.object?[index].userName}", */
 
-                            /*     UserImage:
+                              /*     UserImage:
                                 "${PersonalChatListModelData?.object?[index].userProfilePic}",
                             videoId:
                                 "${PersonalChatListModelData?.object?[index].videoId}",
                             online: PersonalChatListModelData
                                 ?.object?[index].onlineStatus */
-                            // UserUID: "${PersonalChatListModelData?.object?[index].}",
-                          );
+                              // UserUID: "${PersonalChatListModelData?.object?[index].}",
+                              );
                         }));
                         CallBackFunc();
                         setState(() {});
@@ -518,42 +552,18 @@ class _InboxScreenState extends State<InboxScreen> {
                                 ?.object?[index].isSelcted = true;
 
                             foradselcted++;
-                            forwadmessage.add({
-                              'username': PersonalChatListModelData
-                                      ?.object?[index].userName ??
-                                  '',
-                              'inboxChatUuids': PersonalChatListModelData
-                                      ?.object?[index].userChatInboxUid ??
-                                  ''
-                            });
                           } else if (PersonalChatListModelData
                                   ?.object?[index].isSelcted ==
                               true) {
                             PersonalChatListModelData
                                 ?.object?[index].isSelcted = false;
                             foradselcted--;
-                            forwadmessage.remove({
-                              'username': PersonalChatListModelData
-                                      ?.object?[index].userName ??
-                                  '',
-                              'inboxChatUuids': PersonalChatListModelData
-                                      ?.object?[index].userChatInboxUid ??
-                                  ''
-                            });
                           } else if (PersonalChatListModelData
                                   ?.object?[index].isSelcted ==
                               false) {
                             PersonalChatListModelData
                                 ?.object?[index].isSelcted = true;
                             foradselcted++;
-                            forwadmessage.add({
-                              'username': PersonalChatListModelData
-                                      ?.object?[index].userName ??
-                                  '',
-                              'inboxChatUuids': PersonalChatListModelData
-                                      ?.object?[index].userChatInboxUid ??
-                                  ''
-                            });
                           }
                         } else if (foradselcted == 5) {
                           if (PersonalChatListModelData
@@ -562,14 +572,6 @@ class _InboxScreenState extends State<InboxScreen> {
                             PersonalChatListModelData
                                 ?.object?[index].isSelcted = false;
                             foradselcted--;
-                            forwadmessage.remove({
-                              'username': PersonalChatListModelData
-                                      ?.object?[index].userName ??
-                                  '',
-                              'inboxChatUuids': PersonalChatListModelData
-                                      ?.object?[index].userChatInboxUid ??
-                                  ''
-                            });
                           } else {
                             final snackBar = SnackBar(
                               content: Text('You can only select up to 5 User'),

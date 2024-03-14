@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_observer/Observable.dart';
 import 'package:pds/API/Model/AddExportProfileModel/AddExportProfileModel.dart';
 import 'package:pds/API/Model/Add_PostModel/Add_PostModel.dart';
 import 'package:pds/API/Model/Add_PostModel/Add_postModel_Image.dart';
@@ -31,6 +32,7 @@ import 'package:pds/API/Model/HashTage_Model/HashTag_model.dart';
 import 'package:pds/API/Model/IndustrytypeModel/Industrytype_Model.dart';
 import 'package:pds/API/Model/IsTokenExpired/IsTokenExpired.dart';
 import 'package:pds/API/Model/LogOutModel/LogOut_model.dart';
+import 'package:pds/API/Model/MarkStarred/MarkStarredModel.dart';
 import 'package:pds/API/Model/NewProfileScreenModel/GetAppUserPost_Model.dart';
 import 'package:pds/API/Model/NewProfileScreenModel/GetSavePost_Model.dart';
 import 'package:pds/API/Model/NewProfileScreenModel/GetUserPostCommet_Model.dart';
@@ -3186,6 +3188,9 @@ class Repository {
     var jsonString = json.decode(responce.body);
     print('reactionMessageAddedOnStory$jsonString');
     print('respnse ${responce.statusCode}');
+    Observable.instance.notifyObservers(
+      ['_DmScreenNewState'],
+    );
     switch (responce.statusCode) {
       case 200:
         return jsonString;
@@ -3327,6 +3332,7 @@ class Repository {
     BuildContext context,
     Map<String, dynamic> params,
   ) async {
+    print("check All pArems-${params}");
     final responce = await apiServices.postApiCall(
         '${Config.forwardMessages}', params, context);
     var jsonString = json.decode(responce.body);
@@ -3386,9 +3392,10 @@ class Repository {
 
     }); */
   }
-   OffLineUpdate(BuildContext context, String inboxUid) async {
+
+  OffLineUpdate(BuildContext context, String inboxUid) async {
     final response = await apiServices.getApiCallWithToken(
-        "${Config.update_live_status}?inboxChatUid=${inboxUid}", context);
+        "${Config.mark_starred}?inboxChatUid=${inboxUid}", context);
     var jsonString = json.decode(response.body);
     print('Myaccount${response.statusCode}');
     switch (response.statusCode) {
@@ -3408,19 +3415,26 @@ class Repository {
         return jsonString;
     }
   }
+
+  apiMarkStarredMethod(
+      BuildContext context, Map<String, dynamic> params) async {
+    final response = await apiServices.postApiCall(
+        "${Config.mark_starred}", params, context);
+    var jsonString = json.decode(response.body);
+    print('apiMarkStarredMethod${response.body}');
+    switch (response.statusCode) {
+      case 200:
+        return MarkStarred.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+      case 400:
+        return MarkStarred.fromJson(jsonString);
+      case 701:
+        return jsonString;
+      default:
+        return jsonString;
+    }
+  }
 }
-// var headers = {
-//   'Authorization': 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJpc1ZlcmlmaWVkIjp0cnVlLCJtb2R1bGUiOiJFTVBMT1lFRSIsImlzQWN0aXZlIjp0cnVlLCJ1dWlkIjoiODYwMWViNTItNzk4NS00MWU3LTgwOTAtYmMyMjQ0MjkwZjkzIiwidXNlcm5hbWUiOiJBTiIsInN1YiI6IkFOIiwiaWF0IjoxNjkxMTUyODIxLCJleHAiOjE2OTIyMzI4MjF9.AjSlFxHlTU9opgsyXaqVh_sMQuv7f-fKGmIGle6879MD-OAGTNcPN5r9ZW8Go1124YE2BbSrc1Lj5GuspgilWg'
-// };
-// var request = http.Request('GET', Uri.parse('http://192.168.29.100:8081/user/api/inviteUserToRoom/9fb2816c-1604-4b78-87d1-c09a9824c691/AWS@gmail.com'));
-
-// request.headers.addAll(headers);
-
-// http.StreamedResponse response = await request.send();
-
-// if (response.statusCode == 200) {
-//   print(await response.stream.bytesToString());
-// }
-// else {
-//   print(response.reasonPhrase);
-// }

@@ -324,17 +324,20 @@ import 'package:pds/API/Bloc/my_account_Bloc/my_account_cubit.dart';
 import 'package:pds/API/Bloc/senMSG_Bloc/senMSG_cubit.dart';
 import 'package:pds/API/Bloc/sherinvite_Block/sherinvite_cubit.dart';
 import 'package:pds/API/Bloc/viewStory_Bloc/viewStory_cubit.dart';
+import 'package:pds/core/utils/sharedPreferences.dart';
 import 'package:pds/firebase_option.dart';
 import 'package:pds/presentation/%20new/OpenSavePostImage.dart';
 import 'package:pds/presentation/%20new/profileNew.dart';
 import 'package:pds/theme/theme_helper.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:zego_uikit_prebuilt_call/zego_uikit_prebuilt_call.dart';
 import 'API/Bloc/BlockUser_Bloc/Block_user_cubit.dart';
 import 'API/Bloc/postData_Bloc/postData_Bloc.dart';
 import 'presentation/splash_screen/splash_screen.dart';
 import 'package:flutter_langdetect/flutter_langdetect.dart' as langdetect;
-
-final navigatorKey = GlobalKey<NavigatorState>();
+import 'package:zego_uikit/zego_uikit.dart';
+import 'package:zego_uikit_prebuilt_call/zego_uikit_prebuilt_call.dart';
+import 'package:zego_uikit_signaling_plugin/zego_uikit_signaling_plugin.dart';
 
 Future<void> _messageHandler(RemoteMessage message) async {
   await Firebase.initializeApp(
@@ -359,6 +362,8 @@ void main() async {
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
   ]);
+  final navigatorKey = GlobalKey<NavigatorState>();
+  ZegoUIKitPrebuiltCallInvitationService().setNavigatorKey(navigatorKey);
 
   ///Please update theme as per your need if required.
   ThemeHelper().changeTheme('primary');
@@ -368,6 +373,15 @@ void main() async {
     print("/* onMessageOpenedApp: */ ${message.notification?.body}");
     print("/* onMessageOpenedApp: */ ${message.notification?.title}");
     print("/* onMessageOpenedApp: */ ${message.data}");
+
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    print("/* onMessageOpenedApp: */ ${message.data['uid']}");
+    print("/* onMessageOpenedApp: */ ${message.data['Subject']}");
+    prefs.setString(
+        PreferencesKey.PushNotificationUID, "${message.data['uid']}");
+    prefs.setString(
+        PreferencesKey.PushNotificationSubject, "${message.data['Subject']}");
+
     //  if (message.data["navigation"] == "/your_route") {
     // int _yourId = int.tryParse(message.data["id"]) ?? 0;
     // Navigator.push(
@@ -376,7 +390,8 @@ void main() async {
     //         builder: (context) => YourScreen(
     //               yourId: _yourId,
     //             )));
-    message.data["Subject"] == "TAG_POST" ||
+
+    /* message.data["Subject"] == "TAG_POST" ||
             message.data["Subject"] == "RE_POST"
         ? Navigator.push(
             navigatorKey.currentState!.context,
@@ -433,7 +448,7 @@ void main() async {
                                     ProfileNotification: true);
                               }))
                             //  print("open User Profile FOLLOW_PUBLIC_ACCOUNT & FOLLOW_PRIVATE_ACCOUNT_REQUEST & FOLLOW_REQUEST_ACCEPTED")
-                            : print("");
+                            : print(""); */
   });
 
   FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
@@ -450,11 +465,28 @@ void main() async {
     alert: true,
     provisional: false,
   );
+  ZegoUIKitPrebuiltCallInvitationService().setNavigatorKey(navigatorKey);
 
-  runApp(MyApp());
+  ZegoUIKit().initLog().then((value) {
+    ZegoUIKitPrebuiltCallInvitationService().useSystemCallingUI(
+      [ZegoUIKitSignalingPlugin()],
+    );
+
+    runApp(MyApp(navigatorKey: navigatorKey));
+  });
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
+  final GlobalKey<NavigatorState>? navigatorKey;
+  MyApp({
+    this.navigatorKey,
+    Key? key,
+  }) : super(key: key);
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
@@ -590,7 +622,19 @@ class MyApp extends StatelessWidget {
           title: 'pds',
           debugShowCheckedModeBanner: false,
           home: SplashScreen(),
-          navigatorKey: navigatorKey,
+          navigatorKey: widget.navigatorKey,
+          builder: (context, child) {
+            return Stack(
+              children: [
+                child!,
+                ZegoUIKitPrebuiltCallMiniOverlayPage(
+                  contextQuery: () {
+                    return widget.navigatorKey!.currentState!.context;
+                  },
+                ),
+              ],
+            );
+          },
           //BottombarPage(buttomIndex: 0),
         ),
       ),

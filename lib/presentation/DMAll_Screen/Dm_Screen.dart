@@ -39,7 +39,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stomp_dart_client/stomp_frame.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
-
 import '../ new/newbottembar.dart';
 import '../../API/Bloc/dmInbox_bloc/dminbox_blcok.dart';
 import '../register_create_account_screen/register_create_account_screen.dart';
@@ -150,12 +149,12 @@ class _DmScreenState extends State<DmScreen> {
   getDocumentSize() async {
     // 111111
     await BlocProvider.of<DmInboxCubit>(context).seetinonExpried(context);
-    await BlocProvider.of<DmInboxCubit>(context)
-        .LiveStatus(context, widget.ChatInboxUid);
-    await BlocProvider.of<DmInboxCubit>(context)
-        .SeenMessage(context, widget.ChatInboxUid);
-    await BlocProvider.of<DmInboxCubit>(context)
-        .getAllNoticationsCountAPI(context);
+      await BlocProvider.of<DmInboxCubit>(context)
+          .LiveStatus(context, widget.ChatInboxUid);
+      await BlocProvider.of<DmInboxCubit>(context)
+          .SeenMessage(context, widget.ChatInboxUid);
+      await BlocProvider.of<DmInboxCubit>(context)
+          .getAllNoticationsCountAPI(context);
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     documentuploadsize = await double.parse(
         prefs.getString(PreferencesKey.MaxInboxUploadSizeInMB) ?? "0");
@@ -363,7 +362,7 @@ class _DmScreenState extends State<DmScreen> {
               if (state is SeenAllMessageLoadedState) {
                 print(state.SeenAllMessageModelData.object);
               }
-              if (state is LiveStatusLoadedState) {
+              if (state is LiveStatusLoadedState) { 
                 print("LiveStatusModelDataLiveStatusModelData");
                 LiveStatusModelData = state.LiveStatusModelData;
                 if (LiveStatusModelData?.object?.isBlock == true) {
@@ -1826,7 +1825,7 @@ class _DmScreenState extends State<DmScreen> {
                                         checkGuestUser();
                                         print(
                                             "this Data Get-${widget.ChatInboxUid}");
-                                       /*  DMChatInboxUid =
+                                        /*  DMChatInboxUid =
                                             "${widget.ChatInboxUid}";
  */
                                         // "${widget.Room_ID}";

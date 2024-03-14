@@ -42,6 +42,7 @@ class Object {
   bool? isExpert;
   bool? isBlock;
   bool? isSelcted; 
+  
   Object(
       {this.userChatInboxUid,
       this.userChatMessageUid,
