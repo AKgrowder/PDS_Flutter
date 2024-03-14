@@ -5,6 +5,8 @@ import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_observer/Observable.dart';
+import 'package:flutter_observer/Observer.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:linkfy_text/linkfy_text.dart';
@@ -35,8 +37,6 @@ import '../../API/Model/UserTagModel/UserTag_model.dart';
 import '../../core/utils/sharedPreferences.dart';
 import '../Create_Post_Screen/Ceratepost_Screen.dart';
 import 'home_screen_new.dart';
-import 'package:flutter_observer/Observable.dart';
-import 'package:flutter_observer/Observer.dart';
 
 // ignore: must_be_immutable
 class OpenSavePostImage extends StatefulWidget {
@@ -640,81 +640,93 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> with Observer {
                                                         }
                                                       });
                                                     }
-                                                    if (Link == true ||
-                                                        Link1 == true ||
-                                                        Link2 == true ||
-                                                        Link3 == true ||
-                                                        Link4 == true ||
-                                                        Link5 == true ||
-                                                        Link6 == true) {
-                                                      if (Link2 == true ||
-                                                          Link3 == true) {
-                                                        launchUrl(Uri.parse(
-                                                            "https://${link.value.toString()}"));
+                                                    if (uuid == null) {
+                                                      Navigator.of(context).push(
+                                                          MaterialPageRoute(
+                                                              builder: (context) =>
+                                                                  RegisterCreateAccountScreen()));
+                                                    } else {
+                                                      if (Link == true ||
+                                                          Link1 == true ||
+                                                          Link2 == true ||
+                                                          Link3 == true ||
+                                                          Link4 == true ||
+                                                          Link5 == true ||
+                                                          Link6 == true) {
+                                                        if (Link2 == true ||
+                                                            Link3 == true) {
+                                                          launchUrl(Uri.parse(
+                                                              "https://${link.value.toString()}"));
+                                                        } else {
+                                                          if (Link6 == true) {
+                                                            print(
+                                                                "yes i am in room");
+                                                            Navigator.push(
+                                                                context,
+                                                                MaterialPageRoute(
+                                                              builder:
+                                                                  (context) {
+                                                                return NewBottomBar(
+                                                                  buttomIndex:
+                                                                      1,
+                                                                );
+                                                              },
+                                                            ));
+                                                          } else {
+                                                            launchUrl(Uri.parse(
+                                                                link.value
+                                                                    .toString()));
+                                                            print(
+                                                                "link.valuelink.value -- ${link.value}");
+                                                          }
+                                                        }
                                                       } else {
-                                                        if (Link6 == true) {
-                                                          print(
-                                                              "yes i am in room");
+                                                        if (link.value!
+                                                            .startsWith('#')) {
+                                                          print("${link}");
                                                           Navigator.push(
                                                               context,
                                                               MaterialPageRoute(
-                                                            builder: (context) {
-                                                              return NewBottomBar(
-                                                                buttomIndex: 1,
-                                                              );
-                                                            },
-                                                          ));
-                                                        } else {
-                                                          launchUrl(Uri.parse(
-                                                              link.value
-                                                                  .toString()));
+                                                                builder: (context) =>
+                                                                    HashTagViewScreen(
+                                                                        title:
+                                                                            "${link.value}"),
+                                                              ));
+                                                        } else if (link.value!
+                                                            .startsWith('@')) {
+                                                          var name;
+                                                          var tagName;
+                                                          name = SelectedTest;
+                                                          tagName =
+                                                              name.replaceAll(
+                                                                  "@", "");
+                                                          await BlocProvider.of<
+                                                                      OpenSaveCubit>(
+                                                                  context)
+                                                              .UserTagAPI(
+                                                                  context,
+                                                                  tagName);
+
+                                                          Navigator.push(
+                                                              context,
+                                                              MaterialPageRoute(
+                                                                  builder:
+                                                                      (context) {
+                                                            return ProfileScreen(
+                                                                User_ID:
+                                                                    "${userTagModel?.object}",
+                                                                isFollowing:
+                                                                    "");
+                                                          }));
+
                                                           print(
-                                                              "link.valuelink.value -- ${link.value}");
+                                                              "tagName -- ${tagName}");
+                                                          print(
+                                                              "user id -- ${userTagModel?.object}");
+                                                        } else {
+                                                          // launchUrl(Uri.parse(
+                                                          //     "https://${link.value.toString()}"));
                                                         }
-                                                      }
-                                                    } else {
-                                                      if (link.value!
-                                                          .startsWith('#')) {
-                                                        print("${link}");
-                                                        Navigator.push(
-                                                            context,
-                                                            MaterialPageRoute(
-                                                              builder: (context) =>
-                                                                  HashTagViewScreen(
-                                                                      title:
-                                                                          "${link.value}"),
-                                                            ));
-                                                      } else if (link.value!
-                                                          .startsWith('@')) {
-                                                        var name;
-                                                        var tagName;
-                                                        name = SelectedTest;
-                                                        tagName =
-                                                            name.replaceAll(
-                                                                "@", "");
-                                                        await BlocProvider.of<
-                                                                    OpenSaveCubit>(
-                                                                context)
-                                                            .UserTagAPI(context,
-                                                                tagName);
-
-                                                        Navigator.push(context,
-                                                            MaterialPageRoute(
-                                                                builder:
-                                                                    (context) {
-                                                          return ProfileScreen(
-                                                              User_ID:
-                                                                  "${userTagModel?.object}",
-                                                              isFollowing: "");
-                                                        }));
-
-                                                        print(
-                                                            "tagName -- ${tagName}");
-                                                        print(
-                                                            "user id -- ${userTagModel?.object}");
-                                                      } else {
-                                                        // launchUrl(Uri.parse(
-                                                        //     "https://${link.value.toString()}"));
                                                       }
                                                     }
                                                   },
@@ -1376,93 +1388,104 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> with Observer {
                                                                   'https://pdslink.page.link/');
                                                           print(SelectedTest
                                                               .toString());
-
-                                                          if (Link == true ||
-                                                              Link1 == true ||
-                                                              Link2 == true ||
-                                                              Link3 == true ||
-                                                              Link4 == true ||
-                                                              Link5 == true ||
-                                                              Link6 == true) {
-                                                            if (Link2 == true ||
-                                                                Link3 == true) {
-                                                              launchUrl(Uri.parse(
-                                                                  "https://${link.value.toString()}"));
+                                                          if (uuid == null) {
+                                                            Navigator.of(
+                                                                    context)
+                                                                .push(MaterialPageRoute(
+                                                                    builder:
+                                                                        (context) =>
+                                                                            RegisterCreateAccountScreen()));
+                                                          } else {
+                                                            if (Link == true ||
+                                                                Link1 == true ||
+                                                                Link2 == true ||
+                                                                Link3 == true ||
+                                                                Link4 == true ||
+                                                                Link5 == true ||
+                                                                Link6 == true) {
+                                                              if (Link2 ==
+                                                                      true ||
+                                                                  Link3 ==
+                                                                      true) {
+                                                                launchUrl(Uri.parse(
+                                                                    "https://${link.value.toString()}"));
+                                                              } else {
+                                                                if (Link6 ==
+                                                                    true) {
+                                                                  print(
+                                                                      "yes i am in room");
+                                                                  Navigator.push(
+                                                                      context,
+                                                                      MaterialPageRoute(
+                                                                    builder:
+                                                                        (context) {
+                                                                      return NewBottomBar(
+                                                                        buttomIndex:
+                                                                            1,
+                                                                      );
+                                                                    },
+                                                                  ));
+                                                                } else {
+                                                                  launchUrl(Uri
+                                                                      .parse(link
+                                                                          .value
+                                                                          .toString()));
+                                                                  print(
+                                                                      "link.valuelink.value -- ${link.value}");
+                                                                }
+                                                              }
                                                             } else {
-                                                              if (Link6 ==
-                                                                  true) {
+                                                              if (link.value!
+                                                                  .startsWith(
+                                                                      '#')) {
                                                                 print(
-                                                                    "yes i am in room");
+                                                                    "${link}");
                                                                 Navigator.push(
                                                                     context,
                                                                     MaterialPageRoute(
-                                                                  builder:
-                                                                      (context) {
-                                                                    return NewBottomBar(
-                                                                      buttomIndex:
-                                                                          1,
-                                                                    );
-                                                                  },
-                                                                ));
-                                                              } else {
-                                                                launchUrl(Uri
-                                                                    .parse(link
-                                                                        .value
-                                                                        .toString()));
-                                                                print(
-                                                                    "link.valuelink.value -- ${link.value}");
-                                                              }
-                                                            }
-                                                          } else {
-                                                            if (link.value!
-                                                                .startsWith(
-                                                                    '#')) {
-                                                              print("${link}");
-                                                              Navigator.push(
-                                                                  context,
-                                                                  MaterialPageRoute(
-                                                                    builder: (context) =>
-                                                                        HashTagViewScreen(
-                                                                            title:
-                                                                                "${link.value}"),
-                                                                  ));
-                                                            } else if (link
-                                                                .value!
-                                                                .startsWith(
-                                                                    '@')) {
-                                                              var name;
-                                                              var tagName;
-                                                              name =
-                                                                  SelectedTest;
-                                                              tagName = name
-                                                                  .replaceAll(
-                                                                      "@", "");
-                                                              await BlocProvider
-                                                                      .of<OpenSaveCubit>(
-                                                                          context)
-                                                                  .UserTagAPI(
-                                                                      context,
-                                                                      tagName);
-
-                                                              Navigator.push(
-                                                                  context,
-                                                                  MaterialPageRoute(
-                                                                      builder:
-                                                                          (context) {
-                                                                return ProfileScreen(
-                                                                    User_ID:
-                                                                        "${userTagModel?.object}",
-                                                                    isFollowing:
+                                                                      builder: (context) =>
+                                                                          HashTagViewScreen(
+                                                                              title: "${link.value}"),
+                                                                    ));
+                                                              } else if (link
+                                                                  .value!
+                                                                  .startsWith(
+                                                                      '@')) {
+                                                                var name;
+                                                                var tagName;
+                                                                name =
+                                                                    SelectedTest;
+                                                                tagName = name
+                                                                    .replaceAll(
+                                                                        "@",
                                                                         "");
-                                                              }));
+                                                                await BlocProvider.of<
+                                                                            OpenSaveCubit>(
+                                                                        context)
+                                                                    .UserTagAPI(
+                                                                        context,
+                                                                        tagName);
 
-                                                              print(
-                                                                  "tagName -- ${tagName}");
-                                                              print(
-                                                                  "user id -- ${userTagModel?.object}");
-                                                            } else {
-                                                              // launchUrl(Uri.parse(
-                                                              //     "https://${link.value.toString()}"));
+                                                                Navigator.push(
+                                                                    context,
+                                                                    MaterialPageRoute(
+                                                                        builder:
+                                                                            (context) {
+                                                                  return ProfileScreen(
+                                                                      User_ID:
+                                                                          "${userTagModel?.object}",
+                                                                      isFollowing:
+                                                                          "");
+                                                                }));
+
+                                                                print(
+                                                                    "tagName -- ${tagName}");
+                                                                print(
+                                                                    "user id -- ${userTagModel?.object}");
+                                                              } else {
+                                                                // launchUrl(Uri.parse(
+                                                                //     "https://${link.value.toString()}"));
+                                                              }
                                                             }
                                                           }
                                                         },
@@ -2431,105 +2454,125 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> with Observer {
                                             //     .email
                                           ],
                                           onTap: (link) async {
-                                            var SelectedTest =
-                                                link.value.toString();
-                                            var Link = SelectedTest.startsWith(
-                                                'https');
-                                            var Link1 =
-                                                SelectedTest.startsWith('http');
-                                            var Link2 =
-                                                SelectedTest.startsWith('www');
-                                            var Link3 =
-                                                SelectedTest.startsWith('WWW');
-                                            var Link4 = SelectedTest.startsWith(
-                                                'HTTPS');
-                                            var Link5 =
-                                                SelectedTest.startsWith('HTTP');
-                                            var Link6 = SelectedTest.startsWith(
-                                                'https://pdslink.page.link/');
-                                            print(SelectedTest.toString());
-                                            if ((OpenSaveModelData?.object
-                                                        ?.description?.length ??
-                                                    0) >
-                                                maxLength) {
-                                              setState(() {
-                                                if (readmoree == true) {
-                                                  readmoree = false;
-                                                  print("--------------false ");
-                                                } else {
-                                                  readmoree = true;
-                                                  print("-------------- true");
-                                                }
-                                              });
-                                            }
+                                            if (uuid == null) {
+                                              Navigator.of(context).push(
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          RegisterCreateAccountScreen()));
+                                            } else {
+                                              var SelectedTest =
+                                                  link.value.toString();
+                                              var Link =
+                                                  SelectedTest.startsWith(
+                                                      'https');
+                                              var Link1 =
+                                                  SelectedTest.startsWith(
+                                                      'http');
+                                              var Link2 =
+                                                  SelectedTest.startsWith(
+                                                      'www');
+                                              var Link3 =
+                                                  SelectedTest.startsWith(
+                                                      'WWW');
+                                              var Link4 =
+                                                  SelectedTest.startsWith(
+                                                      'HTTPS');
+                                              var Link5 =
+                                                  SelectedTest.startsWith(
+                                                      'HTTP');
+                                              var Link6 = SelectedTest.startsWith(
+                                                  'https://pdslink.page.link/');
+                                              print(SelectedTest.toString());
+                                              if ((OpenSaveModelData
+                                                          ?.object
+                                                          ?.description
+                                                          ?.length ??
+                                                      0) >
+                                                  maxLength) {
+                                                setState(() {
+                                                  if (readmoree == true) {
+                                                    readmoree = false;
+                                                    print(
+                                                        "--------------false ");
+                                                  } else {
+                                                    readmoree = true;
+                                                    print(
+                                                        "-------------- true");
+                                                  }
+                                                });
+                                              }
 
-                                            if (Link == true ||
-                                                Link1 == true ||
-                                                Link2 == true ||
-                                                Link3 == true ||
-                                                Link4 == true ||
-                                                Link5 == true ||
-                                                Link6 == true) {
-                                              if (Link2 == true ||
-                                                  Link3 == true) {
-                                                launchUrl(Uri.parse(
-                                                    "https://${link.value.toString()}"));
+                                              if (Link == true ||
+                                                  Link1 == true ||
+                                                  Link2 == true ||
+                                                  Link3 == true ||
+                                                  Link4 == true ||
+                                                  Link5 == true ||
+                                                  Link6 == true) {
+                                                if (Link2 == true ||
+                                                    Link3 == true) {
+                                                  launchUrl(Uri.parse(
+                                                      "https://${link.value.toString()}"));
+                                                } else {
+                                                  if (Link6 == true) {
+                                                    print("yes i am in room");
+                                                    Navigator.push(context,
+                                                        MaterialPageRoute(
+                                                      builder: (context) {
+                                                        return NewBottomBar(
+                                                          buttomIndex: 1,
+                                                        );
+                                                      },
+                                                    ));
+                                                  } else {
+                                                    launchUrl(Uri.parse(
+                                                        link.value.toString()));
+                                                    print(
+                                                        "link.valuelink.value -- ${link.value}");
+                                                  }
+                                                }
                                               } else {
-                                                if (Link6 == true) {
-                                                  print("yes i am in room");
+                                                if (link.value!
+                                                    .startsWith('#')) {
+                                                  print("${link}");
+                                                  Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            HashTagViewScreen(
+                                                                title:
+                                                                    "${link.value}"),
+                                                      ));
+                                                } else if (link.value!
+                                                    .startsWith('@')) {
+                                                  var name;
+                                                  var tagName;
+                                                  name = SelectedTest;
+                                                  tagName =
+                                                      name.replaceAll("@", "");
+                                                  await BlocProvider.of<
+                                                              OpenSaveCubit>(
+                                                          context)
+                                                      .UserTagAPI(
+                                                          context, tagName);
+
                                                   Navigator.push(context,
                                                       MaterialPageRoute(
-                                                    builder: (context) {
-                                                      return NewBottomBar(
-                                                        buttomIndex: 1,
-                                                      );
-                                                    },
-                                                  ));
-                                                } else {
-                                                  launchUrl(Uri.parse(
-                                                      link.value.toString()));
+                                                          builder: (context) {
+                                                    return ProfileScreen(
+                                                        User_ID:
+                                                            "${userTagModel?.object}",
+                                                        isFollowing: "");
+                                                  }));
+
                                                   print(
-                                                      "link.valuelink.value -- ${link.value}");
+                                                      "tagName -- ${tagName}");
+                                                  print(
+                                                      "user id -- ${userTagModel?.object}");
+                                                } else {
+                                                  // launchUrl(Uri.parse(
+                                                  //     "https://${link.value.toString()}"));
                                                 }
-                                              }
-                                            } else {
-                                              if (link.value!.startsWith('#')) {
-                                                print("${link}");
-                                                Navigator.push(
-                                                    context,
-                                                    MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          HashTagViewScreen(
-                                                              title:
-                                                                  "${link.value}"),
-                                                    ));
-                                              } else if (link.value!
-                                                  .startsWith('@')) {
-                                                var name;
-                                                var tagName;
-                                                name = SelectedTest;
-                                                tagName =
-                                                    name.replaceAll("@", "");
-                                                await BlocProvider.of<
-                                                        OpenSaveCubit>(context)
-                                                    .UserTagAPI(
-                                                        context, tagName);
-
-                                                Navigator.push(context,
-                                                    MaterialPageRoute(
-                                                        builder: (context) {
-                                                  return ProfileScreen(
-                                                      User_ID:
-                                                          "${userTagModel?.object}",
-                                                      isFollowing: "");
-                                                }));
-
-                                                print("tagName -- ${tagName}");
-                                                print(
-                                                    "user id -- ${userTagModel?.object}");
-                                              } else {
-                                                // launchUrl(Uri.parse(
-                                                //     "https://${link.value.toString()}"));
                                               }
                                             }
                                           },
