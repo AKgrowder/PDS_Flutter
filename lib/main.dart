@@ -338,7 +338,6 @@ import 'package:flutter_langdetect/flutter_langdetect.dart' as langdetect;
 import 'package:zego_uikit/zego_uikit.dart';
 import 'package:zego_uikit_prebuilt_call/zego_uikit_prebuilt_call.dart';
 import 'package:zego_uikit_signaling_plugin/zego_uikit_signaling_plugin.dart';
-
 Future<void> _messageHandler(RemoteMessage message) async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
@@ -632,6 +631,7 @@ class _MyAppState extends State<MyApp> {
                     return widget.navigatorKey!.currentState!.context;
                   },
                 ),
+               
               ],
             );
           },

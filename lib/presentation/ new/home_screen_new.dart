@@ -1257,6 +1257,8 @@ class _HomeScreenNewState extends State<HomeScreenNew>
         String useruidsort = User_ID!.split('-').last.toString();
        
      onUserLogin('${useruidsort}','${User_Name}');
+     onUserLogin1('${useruidsort}','${User_Name}');
+
    }
     timer = Timer.periodic(Duration(seconds: 15), (timer) async {
       super.setState(() {
