@@ -67,6 +67,7 @@ import 'package:pds/presentation/recent_blog/recent_blog_screen.dart';
 import 'package:pds/presentation/register_create_account_screen/register_create_account_screen.dart';
 import 'package:pds/presentation/rooms/rooms_screen.dart';
 import 'package:pds/presentation/splash_screen/splash_screen.dart';
+import 'package:pds/videocallCommenClass.dart/commenFile.dart';
 import 'package:pds/widgets/commentPdf.dart';
 import 'package:pds/widgets/pagenation.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -1176,6 +1177,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                   ? print(
                       "Notification Seen  EXPERT_LEFT_ROOM & MEMBER_LEFT_ROOM & DELETE_ROOM & EXPERT_ACCEРТ_INVITE & EXPERT_REJECT_INVITE")
                   : NotificationSubject == "EXPERT_REJECT_INVITE"
+
                           /// jinal code 14032024
                           ||
                           NotificationSubject == "MEMBER_LEFT_ROOM" ||
@@ -1250,6 +1252,8 @@ class _HomeScreenNewState extends State<HomeScreenNew>
   }
 
   NewApi() async {
+
+    onUserLogin('${User_ID}','${User_Name}');
     timer = Timer.periodic(Duration(seconds: 15), (timer) async {
       super.setState(() {
         secound = timer.tick;
