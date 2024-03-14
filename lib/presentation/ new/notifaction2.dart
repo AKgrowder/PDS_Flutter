@@ -37,25 +37,25 @@ class _NewNotifactionScreenState extends State<NewNotifactionScreen>
   RequestListModel? RequestListModelData;
   InvitationModel? invitationRoomData;
   GetAllNotificationModel? AllNotificationData;
-   
 
-  bool apiDataGet = false;  
+  bool apiDataGet = false;
   bool dataGet = false;
   bool? Show_NoData_Image;
 
   void initState() {
     AllAPICall();
-    
+
     super.initState();
-    if (widget.isScreen == true) {InviationClass(
-        InvitationRoomData: invitationRoomData,
-        dataGet: dataGet,
-        Show_NoData_Image: Show_NoData_Image ?? false,
-      ) ;
-   
+
+    if (widget.isScreen == true) {
+      _tabController = TabController(
+        initialIndex: 2,
+        length: 3,
+        vsync: this,
+      );
     }
   }
- 
+
   AllAPICall() async {
     await BlocProvider.of<InvitationCubit>(context)
         .readnotificationscount(context);
@@ -65,7 +65,6 @@ class _NewNotifactionScreenState extends State<NewNotifactionScreen>
     await BlocProvider.of<InvitationCubit>(context).InvitationAPI(context);
     await BlocProvider.of<InvitationCubit>(context)
         .getAllNoticationsCountAPI(context);
-   
   }
 
   @override
@@ -174,7 +173,6 @@ class _NewNotifactionScreenState extends State<NewNotifactionScreen>
                       decoration:
                           BoxDecoration(border: Border.all(color: Colors.grey)),
                       child: TabBar(
-                       
                         controller: _tabController,
                         unselectedLabelStyle: TextStyle(
                           color: Colors.black,
@@ -312,7 +310,7 @@ class _NewNotifactionScreenState extends State<NewNotifactionScreen>
                       ),
                     ),
                     Expanded(
-                      child: TabBarView(children: [
+                      child: TabBarView(controller: _tabController, children: [
                         // Center(
                         //     child: Text(
                         //   'No Record Available',
