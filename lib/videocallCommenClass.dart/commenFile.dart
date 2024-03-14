@@ -6,7 +6,7 @@ import 'package:pds/videocallCommenClass.dart/videocommeninviation.dart';
 import 'package:zego_uikit_prebuilt_call/zego_uikit_prebuilt_call.dart';
 import 'package:zego_uikit_signaling_plugin/zego_uikit_signaling_plugin.dart';
 
-void onUserLogin(String userUid, String userName) {
+void onUserLogin(String userUid, String userName,) {
   print("all type Data checl -$userUid,$userName");
   ZegoUIKitPrebuiltCallInvitationService().init(
     appID: 1842777423,
