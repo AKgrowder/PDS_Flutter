@@ -65,6 +65,7 @@ import 'package:pds/presentation/create_story/full_story_page.dart';
 import 'package:pds/presentation/experts/experts_screen.dart';
 import 'package:pds/presentation/recent_blog/recent_blog_screen.dart';
 import 'package:pds/presentation/register_create_account_screen/register_create_account_screen.dart';
+import 'package:pds/presentation/rooms/rooms_screen.dart';
 import 'package:pds/presentation/splash_screen/splash_screen.dart';
 import 'package:pds/widgets/commentPdf.dart';
 import 'package:pds/widgets/pagenation.dart';
@@ -600,8 +601,9 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                     ),
                     GestureDetector(
                       onTap: () {
-                        final Uri url = Uri.parse(
-                            "https://play.google.com/store/apps/details?id=com.pds.app");
+                        final Uri url = Uri.parse(Platform.isIOS == true
+                            ? "https://apps.apple.com/in/app/inpackaging-knowledge-forum/id6478194670"
+                            : "https://play.google.com/store/apps/details?id=com.pds.app");
 
                         launchUrl(url, mode: LaunchMode.externalApplication);
                       },
@@ -732,8 +734,9 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                         ),
                         GestureDetector(
                           onTap: () {
-                            final Uri url = Uri.parse(
-                                "https://play.google.com/store/apps/details?id=com.pds.app");
+                            final Uri url = Uri.parse(Platform.isIOS == true
+                                ? "https://apps.apple.com/in/app/inpackaging-knowledge-forum/id6478194670"
+                                : "https://play.google.com/store/apps/details?id=com.pds.app");
 
                             launchUrl(url,
                                 mode: LaunchMode.externalApplication);
@@ -1136,6 +1139,9 @@ class _HomeScreenNewState extends State<HomeScreenNew>
     if (NotificationUID != "" || NotificationSubject != "") {
       print("objectobjecobjecobjec-3:- ${NotificationUID}");
       print("objectobjecobjecobjec-4:- ${NotificationSubject}");
+      setState(() {
+        isShowScreen = true;
+      });
       NotificationSubject == "TAG_POST" || NotificationSubject == "RE_POST"
           ? Navigator.push(
               context,
@@ -1153,16 +1159,38 @@ class _HomeScreenNewState extends State<HomeScreenNew>
           // print("opne Save Image screen RE_POST & TAG_POST");
 
           : NotificationSubject == "INVITE_ROOM"
-              ? print("Notification Seen INVITE_ROOM")
+              ?
+
+              /// jinal code  14022024
+              Navigator.of(context).pushAndRemoveUntil(
+                  MaterialPageRoute(
+                      builder: (context) => NewBottomBar(
+                            buttomIndex: 4,
+                          )),
+                  (Route<dynamic> route) => false)
+
+              // print("Notification Seen INVITE_ROOM")
               : NotificationSubject == "EXPERT_LEFT_ROOM" ||
-                      NotificationSubject == "MEMBER_LEFT_ROOM" ||
                       NotificationSubject == "DELETE_ROOM" ||
-                      NotificationSubject == "EXPERT_ACCEРТ_INVITE" ||
-                      NotificationSubject == "EXPERT_REJECT_INVITE"
+                      NotificationSubject == "EXPERT_ACCEРТ_INVITE"
                   ? print(
                       "Notification Seen  EXPERT_LEFT_ROOM & MEMBER_LEFT_ROOM & DELETE_ROOM & EXPERT_ACCEРТ_INVITE & EXPERT_REJECT_INVITE")
                   : NotificationSubject == "EXPERT_REJECT_INVITE"
-                      ? print("Seen Notification EXPERT_REJECT_INVITE")
+                          /// jinal code 14032024
+                          ||
+                          NotificationSubject == "MEMBER_LEFT_ROOM" ||
+                          NotificationSubject == "EXPERT_REJECT_INVITE"
+                      ?
+
+                      /// jinal code 14032024
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => RoomsScreen(
+                                    ProfileNotification: false,
+                                  )),
+                        ).then((value) => setColorr())
+                      // print("Seen Notification EXPERT_REJECT_INVITE")
                       : NotificationSubject == "LIKE_POST" ||
                               NotificationSubject == "COMMENT_POST" ||
                               NotificationSubject == "TAG_COMMENT_POST"
@@ -1222,15 +1250,15 @@ class _HomeScreenNewState extends State<HomeScreenNew>
   }
 
   NewApi() async {
-    //   timer = Timer.periodic(Duration(seconds: 15), (timer) async {
-    //   super.setState(() {
-    //     secound = timer.tick;
-    //   });
-    //   await BlocProvider.of<GetGuestAllPostCubit>(context)
-    //       .seetinonExpried(context);
-    //   await BlocProvider.of<GetGuestAllPostCubit>(context)
-    //       .getAllNoticationsCountAPI(context);
-    // });
+    timer = Timer.periodic(Duration(seconds: 15), (timer) async {
+      super.setState(() {
+        secound = timer.tick;
+      });
+      await BlocProvider.of<GetGuestAllPostCubit>(context)
+          .seetinonExpried(context);
+      await BlocProvider.of<GetGuestAllPostCubit>(context)
+          .getAllNoticationsCountAPI(context);
+    });
     await BlocProvider.of<GetGuestAllPostCubit>(context)
         .get_all_master_report_typeApiMethod(context);
     await BlocProvider.of<GetGuestAllPostCubit>(context)
@@ -2631,7 +2659,8 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                     ),
                                                   ),
                                                   Text(
-                                                    'Share Story',
+                                                    /// jinal code 14022024
+                                                    'Your Story',
                                                     style: TextStyle(
                                                         color: Colors.black,
                                                         fontSize: 16),
@@ -2676,7 +2705,8 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                     flex: 1,
                                                   ),
                                                   Text(
-                                                    '${userName[index]}',
+                                                    /// jinal code 14022024
+                                                    'Your Story',
                                                     style: TextStyle(
                                                         color: Colors.black,
                                                         fontSize: 16),
@@ -5166,23 +5196,24 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                               child: Container(
                                                                                 width: _width,
                                                                                 margin: EdgeInsets.only(left: 0, top: 15, right: 0),
-                                                                                child: Center(child: PinchZoom(
-                                                                                                    child: CachedNetworkImage(
-                                                                                                      imageUrl: "${AllGuestPostRoomData?.object?.content?[index].postData?[0]}",
-                                                                                                    ),
-                                                                                                    maxScale: 4,
-                                                                                                    onZoomStart: () {
-                                                                                                      print('Start zooming');
-                                                                                                    },
-                                                                                                    onZoomEnd: () {
-                                                                                                      print('Stop zooming');
-                                                                                                    },
-                                                                                                  ),
-                                                                                
-                                                                                    /* CustomImageView(
+                                                                                child: Center(
+                                                                                  child: PinchZoom(
+                                                                                    child: CachedNetworkImage(
+                                                                                      imageUrl: "${AllGuestPostRoomData?.object?.content?[index].postData?[0]}",
+                                                                                    ),
+                                                                                    maxScale: 4,
+                                                                                    onZoomStart: () {
+                                                                                      print('Start zooming');
+                                                                                    },
+                                                                                    onZoomEnd: () {
+                                                                                      print('Stop zooming');
+                                                                                    },
+                                                                                  ),
+
+                                                                                  /* CustomImageView(
                                                                                 url: "${AllGuestPostRoomData?.object?.content?[index].postData?[0]}",
                                                                               ), */
-                                                                                    ),
+                                                                                ),
                                                                               ),
                                                                             )
                                                                           : AllGuestPostRoomData?.object?.content?[index].postDataType == "VIDEO"

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -20,6 +21,7 @@ import 'package:pds/core/utils/sharedPreferences.dart';
 import 'package:pds/presentation/%20new/profileNew.dart';
 import 'package:pds/presentation/create_story/full_story_page.dart';
 import 'package:pds/theme/theme_helper.dart';
+import 'package:pds/videocallCommenClass.dart/commenFile.dart';
 import 'package:pds/widgets/custom_image_view.dart';
 import 'package:pds/widgets/pagenation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -30,6 +32,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 import 'package:swipe_to/swipe_to.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
+import 'package:zego_uikit_prebuilt_call/zego_uikit_prebuilt_call.dart';
 
 enum Reaction { like, laugh, love, none }
 
@@ -76,11 +79,20 @@ class DmScreenNew extends StatefulWidget {
   String chatInboxUid;
   String chatUserName;
   String chatUserProfile;
-
+  String chatOtherUseruid;
+  String? videoId;
+  bool? isExpert;
+  bool? isBlock;
+  bool? online;
   DmScreenNew(
       {required this.chatInboxUid,
       required this.chatUserName,
-      required this.chatUserProfile});
+      required this.chatUserProfile,
+      required this.chatOtherUseruid,
+      this.online,
+      this.videoId,
+      this.isExpert,
+      this.isBlock});
 
   @override
   State<DmScreenNew> createState() => _DmScreenNewState();
@@ -88,6 +100,7 @@ class DmScreenNew extends StatefulWidget {
 
 class _DmScreenNewState extends State<DmScreenNew> with Observer {
   String? UserLogin_ID;
+  Timer? timer;
   String? DMbaseURL;
   WebSocketChannel? channel;
   bool _isConnected = false;
@@ -103,6 +116,7 @@ class _DmScreenNewState extends State<DmScreenNew> with Observer {
 
   @override
   void initState() {
+    GetAllStory_Data();
     Observable.instance.addObserver(this);
     isEditMessage = false;
     isEditedindex = 0;
@@ -118,6 +132,19 @@ class _DmScreenNewState extends State<DmScreenNew> with Observer {
 
   myscrollFunction() {
     scrollController.addListener(() {});
+  }
+
+  GetAllStory_Data() async {
+    await BlocProvider.of<DmInboxCubit>(context).seetinonExpried(context);
+    await BlocProvider.of<DmInboxCubit>(context)
+        .DMChatListApiMethod(widget.chatInboxUid, 1, context);
+    await BlocProvider.of<DmInboxCubit>(context).get_all_story(context);
+  }
+
+  saveNotificationCount(int NotificationCount, int MessageCount) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setInt(PreferencesKey.NotificationCount, NotificationCount);
+    prefs.setInt(PreferencesKey.MessageCount, MessageCount);
   }
 
   @override
@@ -215,16 +242,16 @@ class _DmScreenNewState extends State<DmScreenNew> with Observer {
   }
 
   pageNumberMethod() async {
-    await BlocProvider.of<DmInboxCubit>(context).seetinonExpried(context);
-    await BlocProvider.of<DmInboxCubit>(context)
-        .DMChatListApiMethod(widget.chatInboxUid, 1, context);
-    await BlocProvider.of<DmInboxCubit>(context).get_all_story(context);
+    // await BlocProvider.of<DmInboxCubit>(context)
+    //     .DMChatListApiMethod(widget.chatInboxUid, 1, context);
+    // await BlocProvider.of<DmInboxCubit>(context).get_all_story(context);
     await BlocProvider.of<DmInboxCubit>(context)
         .LiveStatus(context, widget.chatInboxUid);
     await BlocProvider.of<DmInboxCubit>(context)
         .SeenMessage(context, widget.chatInboxUid);
     await BlocProvider.of<DmInboxCubit>(context)
         .getAllNoticationsCountAPI(context);
+
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     UserLogin_ID = prefs.getString(PreferencesKey.loginUserID);
     DMbaseURL = prefs.getString(PreferencesKey.SocketLink) ?? "";
@@ -240,9 +267,11 @@ class _DmScreenNewState extends State<DmScreenNew> with Observer {
         }
       }
     });
+    onUserLogin('${UserLogin_ID}', 'Ankur');
   }
 
   void dispose() {
+    timer?.cancel();
     isMounted = false;
     stompClient?.deactivate();
     super.dispose();
@@ -265,33 +294,53 @@ class _DmScreenNewState extends State<DmScreenNew> with Observer {
                 print("this State is Calling");
                 getInboxMessagesModel = state.getInboxMessagesModel;
                 WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (isMounted == true) {
-        if (mounted) {
-          setState(() {
-            _scrollToBottom();
-          });
-        }
-      }
-    });
+                  if (isMounted == true) {
+                    if (mounted) {
+                      setState(() {
+                        _scrollToBottom();
+                      });
+                    }
+                  }
+                });
               }
               if (state is GetAllStoryLoadedState) {
                 print('this stater Caling');
                 getAllStoryModel = state.getAllStoryModel;
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  if (isMounted == true) {
+                    if (mounted) {
+                      setState(() {
+                        _scrollToBottom();
+                      });
+                    }
+                  }
+                });
               }
+
               if (state is GetAllStarClass) {
+                isLogPress = false;
+                selectedCount = 0;
                 if (markStarred?['status'] == true) {
                   getInboxMessagesModel?.object?.content?.forEach((element) {
                     if (element.isSelected == true) {
                       element.isStarred = true;
+                      element.isSelected = false;
                     }
                   });
                 } else if (markStarred?['status'] == false) {
                   getInboxMessagesModel?.object?.content?.forEach((element) {
                     if (element.isSelected == true) {
                       element.isStarred = false;
+                      element.isSelected = false;
                     }
                   });
                 }
+              }
+              if (state is GetNotificationCountLoadedState) {
+                saveNotificationCount(
+                    state.GetNotificationCountData.object?.notificationCount ??
+                        0,
+                    state.GetNotificationCountData.object?.messageCount ?? 0);
               }
             },
             builder: (context, state) {
@@ -360,6 +409,47 @@ class _DmScreenNewState extends State<DmScreenNew> with Observer {
                                     ),
                                   ),
                                 ),
+                                Spacer(),
+                                sendCallButton(
+                                  isVideoCall: true,
+                                  invitees: [
+                                    ZegoUIKitUser(id: '2222', name: 'user_2222')
+                                  ],
+                                ),
+                                /*   sendCallButton(
+                                  isVideoCall: true,
+                                  userChatInboxUid:
+                                      ValueNotifier(widget.chatInboxUid),
+                                ), */
+                                /* GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                ZegoSendCallInvitationButton(
+                                                  isVideoCall: true,
+                                                  invitees: [
+                                                    ZegoUIKitUser(
+                                                        id: widget.chatInboxUid,
+                                                        name: 'ankur'),
+                                                  ],
+                                p                  resourceID: 'zego_data',
+                                                  iconSize: const Size(40, 40),
+                                                  buttonSize:
+                                                      const Size(50, 50),
+                                                  onPressed:
+                                                      (code, message, p2) {},
+                                                )));
+                                  },
+                                  child: Image.asset(
+                                    ImageConstant.videocall,
+                                    height: 25,
+                                  ),
+                                ), */
+                                SizedBox(
+                                  width: 20,
+                                )
                               ],
                             ),
                           ),
@@ -501,7 +591,7 @@ class _DmScreenNewState extends State<DmScreenNew> with Observer {
                                         "messageUuids": forStarDataSet,
                                         "status": true,
                                       };
-                                    } 
+                                    }
                                     BlocProvider.of<DmInboxCubit>(context)
                                         .Setmark_starredApi(
                                             context, markStarred!);
@@ -1115,42 +1205,46 @@ class _DmScreenNewState extends State<DmScreenNew> with Observer {
       String userUid) {
     return GestureDetector(
       onTap: () {
-        if (getInboxMessagesModel?.object?.content?[index].isSelected == null) {
-          if (selectedCount < 10) {
-            print("check selcecount-${selectedCount}");
+        if (isLogPress == true) {
+          if (getInboxMessagesModel?.object?.content?[index].isSelected ==
+              null) {
+            if (selectedCount < 10) {
+              print("check selcecount-${selectedCount}");
 
+              getInboxMessagesModel?.object?.content?[index].isSelected = true;
+              if (selectedCount == 2) {
+                overlayEntryRemoveMethod();
+              }
+              _incrementSelectedCount();
+              print("this method calling");
+            } else {
+              final snackBar = SnackBar(
+                content: Text('You can only select up to 10 messages.'),
+                backgroundColor: ColorConstant.primary_color,
+              );
+
+              ScaffoldMessenger.of(context).showSnackBar(snackBar);
+            }
+          } else if (getInboxMessagesModel
+                  ?.object?.content?[index].isSelected ==
+              true) {
+            getInboxMessagesModel?.object?.content?[index].isSelected = false;
+            _decrementSelectedCount();
+          } else {
             getInboxMessagesModel?.object?.content?[index].isSelected = true;
+            print("check selcecount-${selectedCount}");
             if (selectedCount == 2) {
+              print("this condiso working");
               overlayEntryRemoveMethod();
             }
             _incrementSelectedCount();
-            print("this method calling");
-          } else {
-            final snackBar = SnackBar(
-              content: Text('You can only select up to 10 messages.'),
-              backgroundColor: ColorConstant.primary_color,
-            );
-
-            ScaffoldMessenger.of(context).showSnackBar(snackBar);
+            print("esle check");
           }
-        } else if (getInboxMessagesModel?.object?.content?[index].isSelected ==
-            true) {
-          getInboxMessagesModel?.object?.content?[index].isSelected = false;
-          _decrementSelectedCount();
-        } else {
-          getInboxMessagesModel?.object?.content?[index].isSelected = true;
-          print("check selcecount-${selectedCount}");
-          if (selectedCount == 2) {
-            print("this condiso working");
-            overlayEntryRemoveMethod();
-          }
-          _incrementSelectedCount();
-          print("esle check");
-        }
-        _hasImageMessageTypeSelected(index);
-        if (isMounted == true) {
-          if (mounted) {
-            setState(() {});
+          _hasImageMessageTypeSelected(index);
+          if (isMounted == true) {
+            if (mounted) {
+              setState(() {});
+            }
           }
         }
       },
@@ -1185,31 +1279,47 @@ class _DmScreenNewState extends State<DmScreenNew> with Observer {
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               if (userMeesage == false)
-                Padding(
-                  padding: const EdgeInsets.only(left: 3, right: 5, bottom: 5),
-                  child: getInboxMessagesModel
-                                  ?.object?.content?[index].userProfilePic !=
-                              null ||
-                          getInboxMessagesModel?.object?.content?[index]
-                                  .userProfilePic?.isNotEmpty ==
-                              true
-                      ? CustomImageView(
-                          alignment: Alignment.bottomLeft,
-                          url:
-                              "${getInboxMessagesModel?.object?.content?[index].userProfilePic}",
-                          height: 20,
-                          radius: BorderRadius.circular(20),
-                          width: 20,
-                          fit: BoxFit.fill,
-                        )
-                      : CustomImageView(
-                          alignment: Alignment.bottomLeft,
-                          imagePath: ImageConstant.tomcruse,
-                          height: 20,
-                          radius: BorderRadius.circular(20),
-                          width: 20,
-                          fit: BoxFit.fill,
-                        ),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(context, MaterialPageRoute(
+                      builder: (context) {
+                        return ProfileScreen(
+                            User_ID: getInboxMessagesModel
+                                    ?.object?.content?[index].userUid ??
+                                "",
+                            isFollowing: "");
+                      },
+                    ));
+
+                    print("object");
+                  },
+                  child: Padding(
+                    padding:
+                        const EdgeInsets.only(left: 3, right: 5, bottom: 5),
+                    child: getInboxMessagesModel
+                                    ?.object?.content?[index].userProfilePic !=
+                                null ||
+                            getInboxMessagesModel?.object?.content?[index]
+                                    .userProfilePic?.isNotEmpty ==
+                                true
+                        ? CustomImageView(
+                            alignment: Alignment.bottomLeft,
+                            url:
+                                "${getInboxMessagesModel?.object?.content?[index].userProfilePic}",
+                            height: 20,
+                            radius: BorderRadius.circular(20),
+                            width: 20,
+                            fit: BoxFit.fill,
+                          )
+                        : CustomImageView(
+                            alignment: Alignment.bottomLeft,
+                            imagePath: ImageConstant.tomcruse,
+                            height: 20,
+                            radius: BorderRadius.circular(20),
+                            width: 20,
+                            fit: BoxFit.fill,
+                          ),
+                  ),
                 ),
               Expanded(
                 child: Align(
@@ -1339,7 +1449,19 @@ class _DmScreenNewState extends State<DmScreenNew> with Observer {
                 Padding(
                   padding: const EdgeInsets.only(left: 5, right: 5, bottom: 5),
                   child: GestureDetector(
-                      onTap: () {},
+                      onTap: () {
+                        Navigator.push(context, MaterialPageRoute(
+                          builder: (context) {
+                            return ProfileScreen(
+                                User_ID: getInboxMessagesModel
+                                        ?.object?.content?[index].userUid ??
+                                    "",
+                                isFollowing: "");
+                          },
+                        ));
+
+                        print("object");
+                      },
                       child: getInboxMessagesModel?.object?.content?[index]
                                       .userProfilePic?.isEmpty ==
                                   true ||
@@ -1429,10 +1551,8 @@ class _DmScreenNewState extends State<DmScreenNew> with Observer {
     if (distanceToRight > distanceToLeft) {
       left -= 120;
     } else {
-      // If the widget is closer to the right edge, adjust the left position
-      // and change the popup width to fit it within the screen.
-      left += renderBox.size.width + 60; // Adjusted left position
-      popupWidth = screenWidth - left - 20; // Adjusted popup width
+      left += renderBox.size.width + 60;
+      popupWidth = screenWidth - left - 20;
     }
 
     overlayEntry = OverlayEntry(
