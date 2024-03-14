@@ -254,6 +254,7 @@ class _DmScreenNewState extends State<DmScreenNew> with Observer {
 
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     UserLogin_ID = prefs.getString(PreferencesKey.loginUserID);
+    String? UserName = prefs.getString(PreferencesKey.ProfileName);
     DMbaseURL = prefs.getString(PreferencesKey.SocketLink) ?? "";
     stompClient = StompClient(
         config: StompConfig(url: DMbaseURL!, onConnect: onConnectCallback));
@@ -264,10 +265,16 @@ class _DmScreenNewState extends State<DmScreenNew> with Observer {
           setState(() {
             _scrollToBottom();
           });
+
         }
       }
     });
-    onUserLogin('${UserLogin_ID}', 'Ankur');
+    print("check your is my name -${UserName}");
+    print("check your is my UserLogin_ID -${UserLogin_ID}");
+    print("valu check -${widget.chatUserName}");
+    print("valu check1 -${widget.chatOtherUseruid}");
+              
+    // onUserLogin('${UserLogin_ID}', 'Ankur');
   }
 
   void dispose() {
@@ -413,7 +420,7 @@ class _DmScreenNewState extends State<DmScreenNew> with Observer {
                                 sendCallButton(
                                   isVideoCall: true,
                                   invitees: [
-                                    ZegoUIKitUser(id: '2222', name: 'user_2222')
+                                    ZegoUIKitUser(id:widget.chatOtherUseruid, name:widget.chatUserName)
                                   ],
                                 ),
                                 /*   sendCallButton(
