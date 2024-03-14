@@ -1,12 +1,13 @@
 import 'dart:developer';
 
 import 'package:flutter/cupertino.dart';
+import 'package:pds/presentation/%20new/editproilescreen.dart';
 import 'package:pds/videocallCommenClass.dart/videocommeninviation.dart';
 import 'package:zego_uikit_prebuilt_call/zego_uikit_prebuilt_call.dart';
 import 'package:zego_uikit_signaling_plugin/zego_uikit_signaling_plugin.dart';
 
 void onUserLogin(String userUid, String userName) {
-  print("this mehtod is calling");
+  print("all type Data checl -$userUid,$userName");
   ZegoUIKitPrebuiltCallInvitationService().init(
     appID: 1842777423,
     appSign: 'e468becf6ba255deb47581539b4cc3142dd115142203073f3cff895e50d966bc',
@@ -49,4 +50,3 @@ Widget sendCallButton({
     onPressed: (code, message, p2) {},
   );
 }
-
