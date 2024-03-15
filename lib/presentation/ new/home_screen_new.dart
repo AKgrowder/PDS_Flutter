@@ -1485,14 +1485,21 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                   Spacer(), */
                             UserStatus == 'REJECTED' ||
                                     User_Module == "EMPLOYEE" ||
+                                    User_Module == "COMAPNY" ||
+                                    User_Module == "EXPERT" ||
                                     User_Module == null ||
                                     User_Module == ''
                                 ? GestureDetector(
                                     onTapDown: (TapDownDetails details) {
-                                      _showPopupMenu(
-                                        details.globalPosition,
-                                        context,
-                                      );
+                                      User_Module == "EMPLOYEE"
+                                          ? _showPopupMenu(
+                                              details.globalPosition,
+                                              context,
+                                            )
+                                          : _showPopupMenuSwitchAccount(
+                                              details.globalPosition,
+                                              context,
+                                            );
                                     },
                                     child: Container(
                                       height: 50,
@@ -6456,6 +6463,107 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                       ),
                     );
             })));
+  }
+
+  void _showPopupMenuSwitchAccount(
+    Offset position,
+    BuildContext context,
+  ) async {
+    List<String> name = ["Inpackaging", "Growder"];
+
+    final RenderBox overlay =
+        Overlay.of(context).context.findRenderObject() as RenderBox;
+    double _width = MediaQuery.of(context).size.width;
+    double _height = MediaQuery.of(context).size.height;
+    await showMenu(
+        context: context,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(
+            Radius.circular(10),
+          ),
+        ),
+        position: RelativeRect.fromRect(
+          position & const Size(40, 40),
+          Offset.zero & overlay.size,
+        ),
+        items: List.generate(
+            name.length,
+            (index) => PopupMenuItem(
+                onTap: () {
+                  super.setState(() {
+                    indexx = index;
+                  });
+                  // index == 0 ? CreateForum() : becomeAnExport();
+                },
+                child: Container(
+                    decoration: BoxDecoration(
+                        color: indexx == index
+                            ? ColorConstant.primary_color
+                            : Colors.transparent,
+                        borderRadius: BorderRadius.circular(5)),
+                    width: 180,
+                    height: 50,
+                    child: Padding(
+                      padding: EdgeInsets.only(right: 10, left: 10),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: [
+                              CustomImageView(
+                                imagePath: ImageConstant.tomcruse,
+                                height: 30,
+                                radius: BorderRadius.circular(25),
+                                width: 30,
+                                fit: BoxFit.fill,
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                    top: 8, bottom: 8, left: 10),
+                                child: Column(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Flexible(
+                                      child: Container(
+                                        child: Text(
+                                          "${name[index]}",
+                                          overflow: TextOverflow.ellipsis,
+                                          style: TextStyle(
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.w600,
+                                            color: Colors.black,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    Flexible(
+                                      child: Container(
+                                        child: Text(
+                                          "@${name[index]}",
+                                          overflow: TextOverflow.ellipsis,
+                                          style: TextStyle(
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.w400,
+                                            color: Colors.black,
+                                          ),
+                                        ),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                          Image.asset(
+                            indexx == index
+                                ? ImageConstant.selectComapny
+                                : ImageConstant.UnselectComapny,
+                            height: 20,
+                          )
+                        ],
+                      ),
+                    )))));
   }
 
   void _showPopupMenu(

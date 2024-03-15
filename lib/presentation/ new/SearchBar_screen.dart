@@ -21,6 +21,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../API/Bloc/HashTag_Bloc/HashTag_cubit.dart';
 import '../../API/Bloc/HashTag_Bloc/HashTag_state.dart';
 import '../../API/Model/HashTage_Model/HashTag_model.dart';
+import '../../widgets/custom_image_view.dart';
 
 class SearchBarScreen extends StatefulWidget {
   dynamic value2;
@@ -35,7 +36,7 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
   dynamic dataSetup;
   TextEditingController searchController = TextEditingController();
   List text = ["For You", "Trending"];
-  List text1 = ["All", "Experts"];
+  List text1 = ["All", "Pages", "Experts"];
   bool dataget = false;
   GetAllUserListModel? getalluserlistModel;
   List imageList = [
@@ -274,7 +275,7 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                                       });
                                     } else {
                                       _timer = Timer(Duration(seconds: 5), () {
-                                         if (UserLogin_ID != null) {
+                                        if (UserLogin_ID != null) {
                                           BlocProvider.of<HashTagCubit>(context)
                                               .serchDataAdd(
                                                   context, value.trim());
@@ -1203,6 +1204,72 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
             ),
           );
         }
+      } else if (indexxx == 0) {
+        return ListView.builder(
+          itemCount: 10,
+          itemBuilder: (context, index) {
+            return Padding(
+              padding: const EdgeInsets.only(right: 15, left: 15, bottom: 15),
+              child: Container(
+                height: 70,
+                decoration: BoxDecoration(
+                    border: Border.all(color: Colors.grey),
+                    borderRadius: BorderRadius.circular(10)),
+                child: Padding(
+                  padding: const EdgeInsets.only(right: 15, left: 15),
+                  child: Row(
+                    children: [
+                      CustomImageView(
+                        imagePath: ImageConstant.tomcruse,
+                        height: 50,
+                        radius: BorderRadius.circular(25),
+                        width: 50,
+                        fit: BoxFit.fill,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(
+                            top: 13, bottom: 13, left: 10),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Flexible(
+                              child: Container(
+                                width: _width / 2.5,
+                                child: Text(
+                                  "Inpackaging",
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Flexible(
+                              child: Container(
+                                width: _width / 2.5,
+                                child: Text(
+                                  "Private Limited",
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w400,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            );
+          },
+        );
       } else {
         return Expanded(
           child: SingleChildScrollView(

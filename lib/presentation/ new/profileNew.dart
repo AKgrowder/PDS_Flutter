@@ -176,10 +176,11 @@ class _ProfileScreenState extends State<ProfileScreen>
   bool isScrollingDown = false;
 
   bool _show = true;
-
+  int indexx = 0;
   ScrollController _scrollController = ScrollController();
   bool _isScrolledUp = false;
   bool scrolldown = false;
+  bool isOpen = false;
 
   void hideFloting() {
     super.setState(() {
@@ -819,70 +820,76 @@ class _ProfileScreenState extends State<ProfileScreen>
                                             : SizedBox(),
                                         Align(
                                           alignment: Alignment.bottomCenter,
-                                          child: GestureDetector(
-                                            onTap: () {
-                                              print("frgfgdfggdfgdfhghfdgh");
-                                              if (NewProfileData
-                                                          ?.object
-                                                          ?.userProfilePic
-                                                          ?.isNotEmpty ==
-                                                      true &&
-                                                  NewProfileData?.object
-                                                          ?.userProfilePic !=
-                                                      '') {
-                                                Navigator.push(
-                                                    context,
-                                                    MaterialPageRoute(
+                                          child: Stack(
+                                            children: [
+                                              GestureDetector(
+                                                onTap: () {
+                                                  print(
+                                                      "frgfgdfggdfgdfhghfdgh");
+                                                  if (NewProfileData
+                                                              ?.object
+                                                              ?.userProfilePic
+                                                              ?.isNotEmpty ==
+                                                          true &&
+                                                      NewProfileData?.object
+                                                              ?.userProfilePic !=
+                                                          '') {
+                                                    Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              ProfileandDocumentScreen(
+                                                            path: NewProfileData
+                                                                ?.object
+                                                                ?.userProfilePic,
+                                                            title: "",
+                                                          ),
+                                                        ));
+                                                  } else {
+                                                    Navigator.of(context)
+                                                        .push(MaterialPageRoute(
                                                       builder: (context) =>
-                                                          ProfileandDocumentScreen(
-                                                        path: NewProfileData
-                                                            ?.object
-                                                            ?.userProfilePic,
-                                                        title: "",
+                                                          /* ProfileandDocumentScreen(
+                                                                  path:
+                                                                      'https://inpackaging-images.s3.ap-south-1.amazonaws.com/misc/InPackaging_Logo.png',
+                                                                  title: '',
+                                                                ) */
+                                                          ProfilePage(
+                                                        image: ImageConstant
+                                                            .tomcruse,
                                                       ),
                                                     ));
-                                              } else {
-                                                Navigator.of(context)
-                                                    .push(MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      /* ProfileandDocumentScreen(
-                                                              path:
-                                                                  'https://inpackaging-images.s3.ap-south-1.amazonaws.com/misc/InPackaging_Logo.png',
-                                                              title: '',
-                                                            ) */
-                                                      ProfilePage(
-                                                    image:
-                                                        ImageConstant.tomcruse,
-                                                  ),
-                                                ));
-                                              }
-                                            },
-                                            child: Container(
-                                              height: 150,
-                                              width: 150,
-                                              decoration: BoxDecoration(
-                                                  shape: BoxShape.circle,
-                                                  color: Colors.white),
-                                              child: Padding(
-                                                padding:
-                                                    const EdgeInsets.all(4.0),
-                                                child: NewProfileData?.object
-                                                                ?.userProfilePic ==
-                                                            null ||
-                                                        NewProfileData?.object
-                                                                ?.userProfilePic ==
-                                                            ''
-                                                    ? CircleAvatar(
-                                                        backgroundColor:
-                                                            Colors.white,
-                                                        backgroundImage:
-                                                            AssetImage(
-                                                          ImageConstant
-                                                              .tomcruse,
-                                                        ),
-                                                        radius: 25,
-                                                      )
-                                                    /* CustomImageView(
+                                                  }
+                                                },
+                                                child: Container(
+                                                  height: 150,
+                                                  width: 150,
+                                                  decoration: BoxDecoration(
+                                                      shape: BoxShape.circle,
+                                                      color: Colors.white),
+                                                  child: Padding(
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              4.0),
+                                                      child: NewProfileData
+                                                                      ?.object
+                                                                      ?.userProfilePic ==
+                                                                  null ||
+                                                              NewProfileData
+                                                                      ?.object
+                                                                      ?.userProfilePic ==
+                                                                  ''
+                                                          ? CircleAvatar(
+                                                              backgroundColor:
+                                                                  Colors.white,
+                                                              backgroundImage:
+                                                                  AssetImage(
+                                                                ImageConstant
+                                                                    .tomcruse,
+                                                              ),
+                                                              radius: 25,
+                                                            )
+                                                          /* CustomImageView(
                                                         imagePath: ImageConstant
                                                             .tomcruse,
                                                              
@@ -891,16 +898,51 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                           Radius.circular(20),
                                                         ),
                                                       ) */
-                                                    : CircleAvatar(
-                                                        backgroundColor:
-                                                            Colors.white,
-                                                        backgroundImage:
-                                                            NetworkImage(
-                                                                "${NewProfileData?.object?.userProfilePic}"),
-                                                        radius: 25,
-                                                      ),
+                                                          : CircleAvatar(
+                                                              backgroundColor:
+                                                                  Colors.white,
+                                                              backgroundImage:
+                                                                  NetworkImage(
+                                                                      "${NewProfileData?.object?.userProfilePic}"),
+                                                              radius: 25,
+                                                            )),
+                                                ),
                                               ),
-                                            ),
+                                              Positioned(
+                                                bottom: 5,
+                                                right: -0,
+                                                child: GestureDetector(
+                                                  onTapDown:
+                                                      (TapDownDetails details) {
+                                                    _showPopupMenuSwitchAccount(
+                                                      details.globalPosition,
+                                                      context,
+                                                    );
+                                                  },
+                                                  child: Container(
+                                                      height: 40,
+                                                      width: 40,
+                                                      decoration: BoxDecoration(
+                                                          shape:
+                                                              BoxShape.circle,
+                                                          color: ColorConstant
+                                                              .primaryLight_color),
+                                                      child: Center(
+                                                        child: Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                  .all(8.0),
+                                                          child: Image.asset(
+                                                            ImageConstant
+                                                                .switchAccount,
+                                                            color: ColorConstant
+                                                                .primary_color,
+                                                          ),
+                                                        ),
+                                                      )),
+                                                ),
+                                              )
+                                            ],
                                           ),
                                         ),
                                       ],
@@ -1106,7 +1148,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                             : SizedBox()
                                   ],
                                 ),
-                                  Padding(
+                                Padding(
                                   padding: const EdgeInsets.only(
                                       left: 35, right: 35),
                                   child: Container(
@@ -1300,7 +1342,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                           ?.object?.isBlock ==
                                                       true
                                                   ? GestureDetector(
-                                                     /* key: blockKey,
+                                                      /* key: blockKey,
                                               onTap: () {
                                                 showPopupMenuBlock(
                                                     context,
@@ -1311,12 +1353,13 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                     blockKey);
                                               }, */
 
-                                                    child: Container(
+                                                      child: Container(
                                                         alignment:
                                                             Alignment.center,
                                                         height: 45,
                                                         width: _width / 3,
-                                                        decoration: BoxDecoration(
+                                                        decoration:
+                                                            BoxDecoration(
                                                           color: ColorConstant
                                                               .primary_color,
                                                           borderRadius:
@@ -1329,13 +1372,14 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                               fontFamily:
                                                                   "outfit",
                                                               fontSize: 18,
-                                                              color: Colors.white,
+                                                              color:
+                                                                  Colors.white,
                                                               fontWeight:
                                                                   FontWeight
                                                                       .w500),
                                                         ),
                                                       ),
-                                                  )
+                                                    )
                                                   : GestureDetector(
                                                       onTap: () {
                                                         BlocProvider.of<
@@ -1419,7 +1463,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                           Padding(
                                             padding:
                                                 const EdgeInsets.only(left: 10),
-                                            child: GestureDetector( 
+                                            child: GestureDetector(
                                               key: blockKey,
                                               onTap: () {
                                                 showPopupMenuBlock(
@@ -11939,45 +11983,105 @@ class _ProfileScreenState extends State<ProfileScreen>
       ],
     );
   }
-}
 
-class DemoWidget extends StatelessWidget {
-  const DemoWidget({Key? key}) : super(key: key);
+  void _showPopupMenuSwitchAccount(
+    Offset position,
+    BuildContext context,
+  ) async {
+    List<String> name = ["Inpackaging", "Growder"];
 
-  @override
-  Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: 3,
-      child: Column(
-        children: [
-          SizedBox(
-            height: 50,
-            width: MediaQuery.of(context).size.width,
-            child: TabBar(
-              tabs: [
-                Tab(text: 'Tab 1'),
-                Tab(text: 'Tab 2'),
-                Tab(text: 'Tab 3'),
-              ],
-            ),
+    final RenderBox overlay =
+        Overlay.of(context).context.findRenderObject() as RenderBox;
+    double _width = MediaQuery.of(context).size.width;
+    double _height = MediaQuery.of(context).size.height;
+    await showMenu(
+        context: context,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(
+            Radius.circular(10),
           ),
-          Container(
-            height: MediaQuery.of(context).size.height,
-            width: double.infinity,
-            child: TabBarView(children: [
-              Container(
-                color: Colors.red,
-              ),
-              Container(
-                color: Colors.green,
-              ),
-              Container(
-                color: Colors.blue,
-              ),
-            ]),
-          )
-        ],
-      ),
-    );
+        ),
+        position: RelativeRect.fromRect(
+          position & const Size(40, 40),
+          Offset.zero & overlay.size,
+        ),
+        items: List.generate(
+            name.length,
+            (index) => PopupMenuItem(
+                onTap: () {
+                  super.setState(() {
+                    indexx = index;
+                  });
+                  // index == 0 ? CreateForum() : becomeAnExport();
+                },
+                child: Container(
+                    decoration: BoxDecoration(
+                        color: indexx == index
+                            ? ColorConstant.primary_color
+                            : Colors.transparent,
+                        borderRadius: BorderRadius.circular(5)),
+                    width: 180,
+                    height: 50,
+                    child: Padding(
+                      padding: EdgeInsets.only(right: 10, left: 10),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: [
+                              CustomImageView(
+                                imagePath: ImageConstant.tomcruse,
+                                height: 30,
+                                radius: BorderRadius.circular(25),
+                                width: 30,
+                                fit: BoxFit.fill,
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                    top: 8, bottom: 8, left: 10),
+                                child: Column(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Flexible(
+                                      child: Container(
+                                        child: Text(
+                                          "${name[index]}",
+                                          overflow: TextOverflow.ellipsis,
+                                          style: TextStyle(
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.w600,
+                                            color: Colors.black,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    Flexible(
+                                      child: Container(
+                                        child: Text(
+                                          "@${name[index]}",
+                                          overflow: TextOverflow.ellipsis,
+                                          style: TextStyle(
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.w400,
+                                            color: Colors.black,
+                                          ),
+                                        ),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                          Image.asset(
+                            indexx == index
+                                ? ImageConstant.selectComapny
+                                : ImageConstant.UnselectComapny,
+                            height: 20,
+                          )
+                        ],
+                      ),
+                    )))));
   }
 }
