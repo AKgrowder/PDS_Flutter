@@ -376,6 +376,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   backgroundColor: ColorConstant.primary_color,
                 );
                 ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                Navigator.pop(context);
               }
             }
             if (state is EmailVerifactionLoadedState) {
@@ -1852,11 +1853,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                   )));
                         } else {
                           Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => ProfileandDocumentScreen(
+                              builder: (context) =>ProfilePage(image: ImageConstant.tomcruse,),
+                              /*  ProfileandDocumentScreen(
                                     path:
                                         'https://inpackaging-images.s3.ap-south-1.amazonaws.com/misc/InPackaging_Logo.png',
                                     title: '',
-                                  )));
+                                  ) */));
                         }
                       }),
                 ),

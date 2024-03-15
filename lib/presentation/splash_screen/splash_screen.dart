@@ -11,6 +11,7 @@ import 'package:pds/API/Model/System_Config_model/system_config_model.dart';
 import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/core/utils/sharedPreferences.dart';
 import 'package:pds/presentation/%20new/newbottembar.dart';
+import 'package:pds/videocallCommenClass.dart/commenFile.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../core/utils/image_constant.dart';
@@ -153,13 +154,13 @@ class _SplashScreenState extends State<SplashScreen> {
 
   SetUi() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setString(PreferencesKey.appApkMinVersion, "9");
+    prefs.setString(PreferencesKey.appApkMinVersion, "10");
     prefs.setString(PreferencesKey.appApkLatestVersion, "1");
-    prefs.setString(PreferencesKey.appApkRouteVersion, "8");
+    prefs.setString(PreferencesKey.appApkRouteVersion, "9");
 
-    prefs.setString(PreferencesKey.IPAIosMainversion, "9");
+    prefs.setString(PreferencesKey.IPAIosMainversion, "10");
     prefs.setString(PreferencesKey.IPAIosLatestVersion, "1");
-    prefs.setString(PreferencesKey.IPAIosRoutVersion, "8");
+    prefs.setString(PreferencesKey.IPAIosRoutVersion, "9");
 
     // prefs.setBool(PreferencesKey.RoutURlChnage, false);
 
@@ -375,7 +376,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
     prefs.setBool(PreferencesKey.RoutURlChnage, true);
     prefs.setBool(PreferencesKey.UpdateURLinSplash, true);
-
+   
     Future.delayed(Duration(seconds: 0), () {
       Navigator.pushAndRemoveUntil(context, MaterialPageRoute(
         builder: (context) {
