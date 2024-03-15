@@ -61,6 +61,8 @@ class PreferencesKey {
   static String PushNotificationSubject = "PushNotificationSubject";
   static String vidoCallUid = "videoCallUid";
   static String popumenu = "reportpopupMenu";
+  static String videoCall = "videoCall";
+
 
 
 

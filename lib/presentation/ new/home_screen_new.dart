@@ -1255,14 +1255,17 @@ class _HomeScreenNewState extends State<HomeScreenNew>
   }
 
   NewApi() async {
+    if (User_ID != null && User_Name != null) {
+      String useruidsort = User_ID!.split('-').last.toString();
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
 
-   if(User_ID != null && User_Name !=null){
-        String useruidsort = User_ID!.split('-').last.toString();
-       
-     onUserLogin('${useruidsort}','${User_Name}');
-     onUserLogin1('${useruidsort}','${User_Name}');
-
-   }
+      bool? checkVideoCall = prefs.getBool(
+        PreferencesKey.videoCall,
+      );
+      if (checkVideoCall == null || checkVideoCall == false) {
+        onUserLogin('${useruidsort}', '${User_Name}');
+      }
+    }
     timer = Timer.periodic(Duration(seconds: 15), (timer) async {
       super.setState(() {
         secound = timer.tick;
@@ -1318,8 +1321,8 @@ class _HomeScreenNewState extends State<HomeScreenNew>
     else if (apiName == 'Follow') {
       print("dfhsdfhsdfhsdgf");
       await BlocProvider.of<GetGuestAllPostCubit>(context).followWIngMethod(
-          AllGuestPostRoomData?.object?.content?[index ].userUid, context);
-      if (AllGuestPostRoomData?.object?.content?[index ].isFollowing ==
+          AllGuestPostRoomData?.object?.content?[index].userUid, context);
+      if (AllGuestPostRoomData?.object?.content?[index].isFollowing ==
           'FOLLOW') {
         /* AllGuestPostRoomData?.object?.content?[index ?? 0].isFollowing =
             'REQUESTED'; */
@@ -1347,24 +1350,22 @@ class _HomeScreenNewState extends State<HomeScreenNew>
         }
       }
     } else if (apiName == 'like_post') {
-
       Content content = AllGuestPostRoomData!.object!.content![index];
-        bool isLiked = content.isLiked ?? false;
-        var likedCount = content.likedCount ?? 0;
+      bool isLiked = content.isLiked ?? false;
+      var likedCount = content.likedCount ?? 0;
 
-        if (isLiked) {
-          content.isLiked = false;
-          content.likedCount = likedCount - 1;
-        } else {
-          content.isLiked = true;
-          content.likedCount = likedCount + 1;
-        }
+      if (isLiked) {
+        content.isLiked = false;
+        content.likedCount = likedCount - 1;
+      } else {
+        content.isLiked = true;
+        content.likedCount = likedCount + 1;
+      }
 
-        setState(() {
-          _postCubit!.like_post(content.postUid, context);
-        });
-        //
-
+      setState(() {
+        _postCubit!.like_post(content.postUid, context);
+      });
+      //
     } else if (apiName == 'savedata') {
       await BlocProvider.of<GetGuestAllPostCubit>(context).savedData(
           AllGuestPostRoomData?.object?.content?[index ?? 0].postUid, context);
