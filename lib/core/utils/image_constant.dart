@@ -286,5 +286,9 @@ class ImageConstant {
   static String StarSave = 'assets/images/goldan_star.png';
   static String newStar =  'assets/images/newStar.png';
   static String videocall = 'assets/images/video-call.png';
+ static String deleteComapny = "assets/images/delete_img.png";
+ static String selectComapny  = "assets/images/select_account.png";
+ static String UnselectComapny  = "assets/images/unSelect_account.png";
+static String switchAccount  =  "assets/images/switch_acc.png";
   /// end
 }

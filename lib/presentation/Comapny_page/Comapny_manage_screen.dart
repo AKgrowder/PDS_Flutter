@@ -1,6 +1,12 @@
+import 'dart:io';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/presentation/Comapny_page/Create_company_Screen.dart';
+import 'package:pds/presentation/Comapny_page/Delete_Comapny_dailog.dart';
+import 'package:share_plus/share_plus.dart';
 
 import '../../core/utils/image_constant.dart';
 import '../../widgets/custom_image_view.dart';
@@ -176,7 +182,7 @@ class _ComapnyManageScreenState extends State<ComapnyManageScreen> {
                 ),
               )),
           PopupMenuItem(
-              value: 2,
+              value: 1,
               onTap: () {
                 print("yes i sm comming!!");
               },
@@ -204,7 +210,7 @@ class _ComapnyManageScreenState extends State<ComapnyManageScreen> {
               onTap: () {
                 print("yes i sm comming!!");
               },
-              value: 1,
+              value: 2,
               enabled: true,
               child: Container(
                 width: 110,
@@ -225,8 +231,50 @@ class _ComapnyManageScreenState extends State<ComapnyManageScreen> {
                   ],
                 ),
               )),
-        ]); /* .then((value){
-          return 
-        }); */
+        ]).then((value) {
+      if (value != null) {
+        if (kDebugMode) {
+          print("selected==>$value");
+        }
+        if (value == 0) {}
+        if (value == 1) {
+          _onShareXFileFromAssets(context, androidLink: ' ');
+          //add link 
+        }
+        if (value == 2) {
+          showDialog(
+            context: context,
+            builder: (_) => DeleteComapnyDailog(),
+          );
+        }
+      }
+    });
+  }
+
+  void _onShareXFileFromAssets(BuildContext context,
+      {String? androidLink}) async {
+    // RenderBox? box = context.findAncestorRenderObjectOfType();
+
+    var directory = await getApplicationDocumentsDirectory();
+
+    if (Platform.isAndroid) {
+      Share.shareXFiles(
+        [XFile("/sdcard/download/IPImage.jpg")],
+        subject: "Share",
+        text: "Try This Awesome App \n\n Android :- ${androidLink}",
+        // sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size,
+      );
+    } else {
+      Share.shareXFiles(
+        [
+          XFile(directory.path +
+              Platform.pathSeparator +
+              'Growder_Image/IPImage.jpg')
+        ],
+        subject: "Share",
+        text: "Try This Awesome App \n\n Android :- ${androidLink}",
+        // sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size,
+      );
+    }
   }
 }
