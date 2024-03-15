@@ -1094,7 +1094,7 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                                     ));
                               },
                               child: Text(
-                                "Privacy & Policy of IP Terms",
+                                "Privacy & Policy of PDS Terms",
                                 style: TextStyle(
                                   color: theme.colorScheme.primary,
                                   fontSize: responsiveFontSize,

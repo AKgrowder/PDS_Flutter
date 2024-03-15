@@ -109,7 +109,6 @@ class Content {
   bool? isSelected;
   bool? isForwarded;
   String? replyOnUid;
-  bool? isStarred;
  
   Content({
     this.userUid,
@@ -126,8 +125,6 @@ class Content {
     this.messageSeenStatus,
     this.isSelected,
     this.replyOnUid,
-    this.isStarred,
-
   });
 
   Content.fromJson(Map<String, dynamic> json) {
@@ -146,8 +143,6 @@ class Content {
     messageSeenStatus = json['messageSeenStatus'];
     isForwarded = json['isForwarded'];
    replyOnUid = json['replyOnUid'];
-   isStarred = json['isStarred'];
-
   }
 
   Map<String, dynamic> toJson() {
