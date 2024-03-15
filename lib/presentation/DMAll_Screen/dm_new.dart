@@ -208,7 +208,7 @@ class _DmScreenNewState extends State<DmScreenNew> with Observer {
     );
   }
 
-  void onConnectCallback(StompFrame connectFrame) {
+  void onConnectCallback(StompFrame connectFrame) { 
     stompClient?.subscribe(
         destination: '/topic/getInboxMessage/${widget.chatInboxUid}',
         headers: {},
@@ -464,9 +464,11 @@ class _DmScreenNewState extends State<DmScreenNew> with Observer {
                                 ),
                                 Spacer(),
                                 sendCallButton(
+
                                   isVideoCall: false,
                                   invitees: [
                                     ZegoUIKitUser(
+                                      
                                         id: widget.chatOtherUseruid
                                             .split('-')
                                             .last
@@ -474,6 +476,7 @@ class _DmScreenNewState extends State<DmScreenNew> with Observer {
                                         name: widget.chatUserName.toLowerCase())
                                   ],
                                   onCallFinished: onSendCallInvitationFinished,
+                                  url: ImageConstant.audiocall,
                                 ),
                                 sendCallButton(
                                   isVideoCall: true,
@@ -486,8 +489,10 @@ class _DmScreenNewState extends State<DmScreenNew> with Observer {
                                         name: widget.chatUserName.toLowerCase())
                                   ],
                                   onCallFinished: onSendCallInvitationFinished,
+                                  url: ImageConstant.vidoCall,
                                 ),
                                 
+                               
                                 /*   sendCallButton(
                                   isVideoCall: true,
                                   userChatInboxUid:
