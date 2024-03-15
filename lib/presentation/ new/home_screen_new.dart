@@ -1257,14 +1257,12 @@ class _HomeScreenNewState extends State<HomeScreenNew>
   NewApi() async {
     if (User_ID != null && User_Name != null) {
       String useruidsort = User_ID!.split('-').last.toString();
-      final SharedPreferences prefs = await SharedPreferences.getInstance();
+    
 
-      bool? checkVideoCall = prefs.getBool(
-        PreferencesKey.videoCall,
-      );
-      if (checkVideoCall == null || checkVideoCall == false) {
+      
+      
         onUserLogin('${useruidsort}', '${User_Name}');
-      }
+      
     }
     timer = Timer.periodic(Duration(seconds: 15), (timer) async {
       super.setState(() {

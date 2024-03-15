@@ -47,27 +47,27 @@ void onUserLogin(
       return config;
     },
   );
-  final SharedPreferences prefs = await SharedPreferences.getInstance();
-  prefs.setBool(PreferencesKey.videoCall, true);
 }
 
-Widget sendCallButton({
+sendCallButton({
   required bool isVideoCall,
   required List<ZegoUIKitUser> invitees,
   void Function(String code, String message, List<String>)? onCallFinished,
+  required String url,
 }) {
   return ZegoSendCallInvitationButton(
+
+    iconVisible: true,
     isVideoCall: isVideoCall,
     invitees: invitees,
     resourceID: 'zego_data',
-    iconSize: const Size(40, 40),
-    buttonSize: const Size(50, 50),
+    iconSize: const Size(45, 40),
+    buttonSize: const Size(40, 40),
     onPressed: onCallFinished,
+    
   );
 }
 
 void onUserLogout() async {
-  final SharedPreferences prefs = await SharedPreferences.getInstance();
-  prefs.setBool(PreferencesKey.videoCall, false);
   ZegoUIKitPrebuiltCallInvitationService().uninit();
 }
