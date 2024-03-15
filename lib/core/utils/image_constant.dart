@@ -131,6 +131,7 @@ class ImageConstant {
   static String setting_tadu = 'assets/images/lockimageee.png';
   static String setting_settingimage = 'assets/images/settingimagge.png';
   static String setting_phone = 'assets/images/imagephonegray.png';
+  static String setting_comanyManage ="assets/images/manage_comapny_icon.png";
 
   //------------------------------defult_images----------------------------------------
   static String plusn = 'assets/images/plus.png';
