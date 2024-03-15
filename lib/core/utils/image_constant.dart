@@ -131,6 +131,7 @@ class ImageConstant {
   static String setting_tadu = 'assets/images/lockimageee.png';
   static String setting_settingimage = 'assets/images/settingimagge.png';
   static String setting_phone = 'assets/images/imagephonegray.png';
+  static String setting_comanyManage ="assets/images/manage_comapny_icon.png";
 
   //------------------------------defult_images----------------------------------------
   static String plusn = 'assets/images/plus.png';
@@ -285,5 +286,9 @@ class ImageConstant {
   static String StarSave = 'assets/images/goldan_star.png';
   static String newStar =  'assets/images/newStar.png';
   static String videocall = 'assets/images/video-call.png';
+ static String deleteComapny = "assets/images/delete_img.png";
+ static String selectComapny  = "assets/images/select_account.png";
+ static String UnselectComapny  = "assets/images/unSelect_account.png";
+static String switchAccount  =  "assets/images/switch_acc.png";
   /// end
 }
