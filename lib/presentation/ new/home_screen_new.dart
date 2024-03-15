@@ -603,9 +603,11 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                     ),
                     GestureDetector(
                       onTap: () {
-                        final Uri url = Uri.parse(Platform.isIOS == true
-                            ? "https://apps.apple.com/in/app/inpackaging-knowledge-forum/id6478194670"
-                            : "https://play.google.com/store/apps/details?id=com.pds.app");
+
+                        final Uri url = Uri.parse(
+                       Platform.isIOS == true ? "https://apps.apple.com/in/app/inpackaging-knowledge-forum/id6478194670":
+                            "https://play.google.com/store/apps/details?id=com.pds.app");
+
 
                         launchUrl(url, mode: LaunchMode.externalApplication);
                       },
@@ -736,9 +738,10 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                         ),
                         GestureDetector(
                           onTap: () {
-                            final Uri url = Uri.parse(Platform.isIOS == true
-                                ? "https://apps.apple.com/in/app/inpackaging-knowledge-forum/id6478194670"
-                                : "https://play.google.com/store/apps/details?id=com.pds.app");
+                            final Uri url = Uri.parse(
+                                    Platform.isIOS == true ? "https://apps.apple.com/in/app/inpackaging-knowledge-forum/id6478194670":
+                            "https://play.google.com/store/apps/details?id=com.pds.app");
+
 
                             launchUrl(url,
                                 mode: LaunchMode.externalApplication);
@@ -1122,12 +1125,8 @@ class _HomeScreenNewState extends State<HomeScreenNew>
     }
     if (User_ID != null) {
       PushNotificationAutoOpen();
-      // onUserLogin(User_ID!,User_Name ?? '');
-      // this is the
     }
-    // if(videoCallUid !=null){
-    //   onUserLogin(videoCallUid ?? '',User_Name ?? '');
-    // }
+   
   }
 
   PushNotificationAutoOpen() async {

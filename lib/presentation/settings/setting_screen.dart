@@ -637,7 +637,8 @@ class _SettingScreenState extends State<SettingScreen> {
     super.setState(() {});
   }
 
-  void _onShareXFileFromAssets(BuildContext context) async {
+void _onShareXFileFromAssets(BuildContext context) async {
+
     RenderBox? box = context.findAncestorRenderObjectOfType();
     var directory = await getApplicationDocumentsDirectory();
     if (Platform.isAndroid) {

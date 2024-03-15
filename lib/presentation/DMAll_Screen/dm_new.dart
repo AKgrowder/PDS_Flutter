@@ -293,6 +293,10 @@ class _DmScreenNewState extends State<DmScreenNew> with Observer {
     //     .DMChatListApiMethod(widget.chatInboxUid, 1, context);
     // await BlocProvider.of<DmInboxCubit>(context).get_all_story(context);
     await BlocProvider.of<DmInboxCubit>(context)
+        .DMChatListApiMethod(widget.chatInboxUid, 1, context);
+    await BlocProvider.of<DmInboxCubit>(context).get_all_story(context);
+     await BlocProvider.of<DmInboxCubit>(context)
+
         .LiveStatus(context, widget.chatInboxUid);
     await BlocProvider.of<DmInboxCubit>(context)
         .SeenMessage(context, widget.chatInboxUid);

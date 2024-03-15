@@ -645,7 +645,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   savePhoneData() async {
     final fcmToken = await FirebaseMessaging.instance.getToken();
-    print('UUID is------> ${fcmToken}');
+    print('UUID is------1> ${fcmToken}');
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString(PreferencesKey.fcmToken, "${fcmToken}");
 
@@ -654,6 +654,7 @@ class _LoginScreenState extends State<LoginScreen> {
     var deviceTokne = prefs.getString(PreferencesKey.fcmToken);
 
     DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+
     var androidMOdel = "";
     var androidVersion = "";
     var iosModel = "";
@@ -678,6 +679,11 @@ class _LoginScreenState extends State<LoginScreen> {
           iosModel == "" ? androidVersion : Platform.operatingSystemVersion,
     };
 // DeviceInfo
+
+   print("iosModeliosModeliosModel-> ${iosModel}");
+    print("iosModeliosModeliosModel-> ${Platform.isIOS}");
+    print("iosModeliosModeliosModel-> ${Platform.operatingSystemVersion}");
+    print("iosModeliosModeliosModel-> ${details}");
 
     await BlocProvider.of<DevicesInfoCubit>(context)
         .DeviceInfo(details, context);

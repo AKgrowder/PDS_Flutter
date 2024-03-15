@@ -310,6 +310,7 @@ class UserReActivateDailogState extends State<UserReActivateDailog>
     var deviceTokne = prefs.getString(PreferencesKey.fcmToken);
 
     DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+
     var androidMOdel = "";
     var androidVersion = "";
     var iosModel = "";
@@ -334,6 +335,10 @@ class UserReActivateDailogState extends State<UserReActivateDailog>
           iosModel == "" ? androidVersion : Platform.operatingSystemVersion,
     };
 // DeviceInfo
+  print("iosModeliosModeliosModel-> ${iosModel}");
+    print("iosModeliosModeliosModel-> ${Platform.isIOS}");
+    print("iosModeliosModeliosModel-> ${Platform.operatingSystemVersion}");
+    print("iosModeliosModeliosModel-> ${details}");
 
     await BlocProvider.of<UserReActivateCubit>(context)
         .DeviceInfo(details, context);

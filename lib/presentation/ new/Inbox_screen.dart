@@ -38,6 +38,7 @@ class _InboxScreenState extends State<InboxScreen> {
   String? UserIndexUUID = "";
   bool apiData = false;
   int Index = 0;
+  Timer? timer;
   FocusNode _focusNode = FocusNode();
   GetUsersChatByUsername? getUsersChatByUsername;
   String? userID;
@@ -69,10 +70,8 @@ class _InboxScreenState extends State<InboxScreen> {
     userID = prefs.getString(PreferencesKey.loginUserID);
     print("userid-chelc-${userID}");
     super.setState(() {});
-
     timer = Timer.periodic(Duration(seconds: 5), (timer) async {
-      print(
-          "objectobjectobjectobjectobjectobjectobjectobjectobjectobjectobjectobject:- GET");
+
       await BlocProvider.of<PersonalChatListCubit>(context)
           .PersonalChatList(context);
       await BlocProvider.of<PersonalChatListCubit>(context)
