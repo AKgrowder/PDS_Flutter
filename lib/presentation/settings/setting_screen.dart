@@ -336,10 +336,12 @@ class _SettingScreenState extends State<SettingScreen> {
                       itemCount: Setting_Array.length,
                       itemBuilder: (BuildContext context, int index) {
                         if (index == 1 ||
-                            index == 4 ||
-                            index == 0 ||
-                            index == 3 /* ||
-                            index == 10 */) {
+                                index == 4 ||
+                                index == 0 ||
+                                index ==
+                                    3 /* ||
+                            index == 10 */
+                            ) {
                           return SizedBox();
                         }
                         return GestureDetector(
@@ -549,8 +551,7 @@ class _SettingScreenState extends State<SettingScreen> {
                                                 height: 30.0,
                                                 value: isSwitched!,
                                                 activeToggleColor:
-                                                    ColorConstant
-                                                        .primary_color,
+                                                    ColorConstant.primary_color,
                                                 activeColor: Colors.white,
                                                 onToggle: (val) async {
                                                   print(
@@ -566,15 +567,13 @@ class _SettingScreenState extends State<SettingScreen> {
                                                                 AccountCubit>(
                                                             context)
                                                         .accountTypeApi(
-                                                            'PRIVATE',
-                                                            context);
+                                                            'PRIVATE', context);
                                                   } else {
                                                     await BlocProvider.of<
                                                                 AccountCubit>(
                                                             context)
                                                         .accountTypeApi(
-                                                            'PUBLIC',
-                                                            context);
+                                                            'PUBLIC', context);
                                                   }
                                                 },
                                               ),
@@ -639,6 +638,7 @@ class _SettingScreenState extends State<SettingScreen> {
   }
 
 void _onShareXFileFromAssets(BuildContext context) async {
+
     RenderBox? box = context.findAncestorRenderObjectOfType();
     var directory = await getApplicationDocumentsDirectory();
     if (Platform.isAndroid) {

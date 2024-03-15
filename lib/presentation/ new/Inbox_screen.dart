@@ -45,6 +45,7 @@ class _InboxScreenState extends State<InboxScreen> {
   TextEditingController searchController = TextEditingController();
   Map<String, dynamic>? forwadList;
   int foradselcted = 0;
+  Timer? timer;
   List<Map<String, dynamic>> forwadmessage = [];
   @override
   void initState() {
@@ -70,6 +71,7 @@ class _InboxScreenState extends State<InboxScreen> {
     print("userid-chelc-${userID}");
     super.setState(() {});
     timer = Timer.periodic(Duration(seconds: 5), (timer) async {
+
       await BlocProvider.of<PersonalChatListCubit>(context)
           .PersonalChatList(context);
       await BlocProvider.of<PersonalChatListCubit>(context)
@@ -247,57 +249,67 @@ class _InboxScreenState extends State<InboxScreen> {
                                 color: Colors.black,
                               ),
                             ),
-                            Padding(
-                              padding: const EdgeInsets.only(top: 15),
-                              child: Container(
-                                height: 48,
-                                decoration: BoxDecoration(
-                                    color: Color(0xffFBD8D9),
-                                    border: Border.all(
-                                      color: ColorConstant.primary_color,
-                                    ),
-                                    borderRadius: BorderRadius.circular(10)),
-                                child: TextFormField(
-                                  onChanged: (value) {
-                                    if (value.isNotEmpty) {
-                                      BlocProvider.of<PersonalChatListCubit>(
-                                              context)
-                                          .get_UsersChatByUsernameMethod(
-                                        searchController.text.trim(),
-                                        '1',
-                                        context,
-                                      );
-                                    } else if (value.isEmpty) {
-                                      isDataGet = false;
-                                      super.setState(() {});
-                                    }
-                                  },
-                                  focusNode: _focusNode,
-                                  controller: searchController,
-                                  cursorColor: ColorConstant.primary_color,
-                                  decoration: InputDecoration(
-                                      suffixIcon:searchController.text.isEmpty?SizedBox(): IconButton(
-                                          onPressed: () {
-                                            searchController.clear();
+                             forwadList == null
+                                ? Padding(
+                                    padding: const EdgeInsets.only(top: 15),
+                                    child: Container(
+                                      height: 48,
+                                      decoration: BoxDecoration(
+                                          color: Color(0xffFBD8D9),
+                                          border: Border.all(
+                                            color: ColorConstant.primary_color,
+                                          ),
+                                          borderRadius:
+                                              BorderRadius.circular(10)),
+                                      child: TextFormField(
+                                        onChanged: (value) {
+                                          if (value.isNotEmpty) {
+                                            BlocProvider.of<
+                                                        PersonalChatListCubit>(
+                                                    context)
+                                                .get_UsersChatByUsernameMethod(
+                                              searchController.text.trim(),
+                                              '1',
+                                              context,
+                                            );
+                                          } else if (value.isEmpty) {
                                             isDataGet = false;
-                                            _focusNode.unfocus();
                                             super.setState(() {});
-                                          },
-                                          icon: Icon(
-                                            Icons.close,
-                                            color: Colors.black,
-                                          )),
-                                      hintText: "Search....",
-                                      hintStyle: TextStyle(
-                                          color: ColorConstant.primary_color),
-                                      border: InputBorder.none,
-                                      prefixIcon: Icon(
-                                        Icons.search,
-                                        color: ColorConstant.primary_color,
-                                      )),
-                                ),
-                              ),
-                            ),
+                                          }
+                                        },
+                                        focusNode: _focusNode,
+                                        controller: searchController,
+                                        cursorColor:
+                                            ColorConstant.primary_color,
+                                        decoration: InputDecoration(
+                                            suffixIcon: searchController
+                                                    .text.isEmpty
+                                                ? SizedBox()
+                                                : IconButton(
+                                                    onPressed: () {
+                                                      searchController.clear();
+                                                      isDataGet = false;
+                                                      _focusNode.unfocus();
+                                                      super.setState(() {});
+                                                    },
+                                                    icon: Icon(
+                                                      Icons.close,
+                                                      color: Colors.black,
+                                                    )),
+                                            hintText: "Search....",
+                                            hintStyle: TextStyle(
+                                                color: ColorConstant
+                                                    .primary_color),
+                                            border: InputBorder.none,
+                                            prefixIcon: Icon(
+                                              Icons.search,
+                                              color:
+                                                  ColorConstant.primary_color,
+                                            )),
+                                      ),
+                                    ),
+                                  )
+                                : SizedBox(),
                             isDataGet == true
                                 ? serInboxdata(width)
                                 : intaldatashow(),
@@ -494,13 +506,22 @@ class _InboxScreenState extends State<InboxScreen> {
                         forwadList = await Navigator.push(context,
                             MaterialPageRoute(builder: (context) {
                           return DmScreenNew(
-                            chatUserName:
-                                "${PersonalChatListModelData?.object?[index].userName}",
-                            chatInboxUid:
-                                "${PersonalChatListModelData?.object?[index].userChatInboxUid}",
-                            chatUserProfile:
-                                "${PersonalChatListModelData?.object?[index].userProfilePic}",
-                            /* isBlock: PersonalChatListModelData
+                              chatUserName:
+                                  "${PersonalChatListModelData?.object?[index].userName}",
+                              chatInboxUid:
+                                  "${PersonalChatListModelData?.object?[index].userChatInboxUid}",
+                                    chatOtherUseruid: "${PersonalChatListModelData?.object?[index].userUid}",
+                              chatUserProfile:
+                                  "${PersonalChatListModelData?.object?[index].userProfilePic}",
+                              isBlock: PersonalChatListModelData
+                                  ?.object?[index].isBlock,
+                              isExpert: PersonalChatListModelData
+                                  ?.object?[index].isExpert,
+                              videoId:
+                                  "${PersonalChatListModelData?.object?[index].videoId}",
+                              online: PersonalChatListModelData
+                                  ?.object?[index].onlineStatus
+                              /* isBlock: PersonalChatListModelData
                                 ?.object?[index].isBlock,
                             isExpert: PersonalChatListModelData
                                 ?.object?[index].isExpert,
@@ -509,14 +530,14 @@ class _InboxScreenState extends State<InboxScreen> {
                             UserName:
                                 "${PersonalChatListModelData?.object?[index].userName}", */
 
-                            /*     UserImage:
+                              /*     UserImage:
                                 "${PersonalChatListModelData?.object?[index].userProfilePic}",
                             videoId:
                                 "${PersonalChatListModelData?.object?[index].videoId}",
                             online: PersonalChatListModelData
                                 ?.object?[index].onlineStatus */
-                            // UserUID: "${PersonalChatListModelData?.object?[index].}",
-                          );
+                              // UserUID: "${PersonalChatListModelData?.object?[index].}",
+                              );
                         }));
                         CallBackFunc();
                         setState(() {});

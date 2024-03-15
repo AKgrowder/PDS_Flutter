@@ -655,9 +655,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
     DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
 
-    
-    
-
     var androidMOdel = "";
     var androidVersion = "";
     var iosModel = "";

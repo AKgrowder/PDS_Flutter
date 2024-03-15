@@ -311,9 +311,6 @@ class UserReActivateDailogState extends State<UserReActivateDailog>
 
     DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
 
-    
-    
-
     var androidMOdel = "";
     var androidVersion = "";
     var iosModel = "";

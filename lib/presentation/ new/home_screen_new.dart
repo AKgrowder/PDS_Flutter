@@ -65,7 +65,9 @@ import 'package:pds/presentation/create_story/full_story_page.dart';
 import 'package:pds/presentation/experts/experts_screen.dart';
 import 'package:pds/presentation/recent_blog/recent_blog_screen.dart';
 import 'package:pds/presentation/register_create_account_screen/register_create_account_screen.dart';
+import 'package:pds/presentation/rooms/rooms_screen.dart';
 import 'package:pds/presentation/splash_screen/splash_screen.dart';
+import 'package:pds/videocallCommenClass.dart/commenFile.dart';
 import 'package:pds/widgets/commentPdf.dart';
 import 'package:pds/widgets/pagenation.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -196,6 +198,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
   bool isExpanded = false;
   int maxLength = 60;
   List<bool> readmoree = [];
+  GetGuestAllPostCubit? _postCubit;
 
   bool isWatch = false;
   @override
@@ -600,9 +603,11 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                     ),
                     GestureDetector(
                       onTap: () {
+
                         final Uri url = Uri.parse(
                        Platform.isIOS == true ? "https://apps.apple.com/in/app/inpackaging-knowledge-forum/id6478194670":
                             "https://play.google.com/store/apps/details?id=com.pds.app");
+
 
                         launchUrl(url, mode: LaunchMode.externalApplication);
                       },
@@ -736,6 +741,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                             final Uri url = Uri.parse(
                                     Platform.isIOS == true ? "https://apps.apple.com/in/app/inpackaging-knowledge-forum/id6478194670":
                             "https://play.google.com/store/apps/details?id=com.pds.app");
+
 
                             launchUrl(url,
                                 mode: LaunchMode.externalApplication);
@@ -1084,6 +1090,8 @@ class _HomeScreenNewState extends State<HomeScreenNew>
   }
 
   Get_UserToken() async {
+    _postCubit = await BlocProvider.of<GetGuestAllPostCubit>(context);
+
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     var Token = prefs.getString(PreferencesKey.loginJwt);
     var FCMToken = prefs.getString(PreferencesKey.fcmToken);
@@ -1134,6 +1142,9 @@ class _HomeScreenNewState extends State<HomeScreenNew>
     if (NotificationUID != "" || NotificationSubject != "") {
       print("objectobjecobjecobjec-3:- ${NotificationUID}");
       print("objectobjecobjecobjec-4:- ${NotificationSubject}");
+      setState(() {
+        isShowScreen = true;
+      });
       NotificationSubject == "TAG_POST" || NotificationSubject == "RE_POST"
           ? Navigator.push(
               context,
@@ -1151,16 +1162,39 @@ class _HomeScreenNewState extends State<HomeScreenNew>
           // print("opne Save Image screen RE_POST & TAG_POST");
 
           : NotificationSubject == "INVITE_ROOM"
-              ? print("Notification Seen INVITE_ROOM")
+              ?
+
+              /// jinal code  14022024
+              Navigator.of(context).pushAndRemoveUntil(
+                  MaterialPageRoute(
+                      builder: (context) => NewBottomBar(
+                            buttomIndex: 4,
+                          )),
+                  (Route<dynamic> route) => false)
+
+              // print("Notification Seen INVITE_ROOM")
               : NotificationSubject == "EXPERT_LEFT_ROOM" ||
-                      NotificationSubject == "MEMBER_LEFT_ROOM" ||
                       NotificationSubject == "DELETE_ROOM" ||
-                      NotificationSubject == "EXPERT_ACCEРТ_INVITE" ||
-                      NotificationSubject == "EXPERT_REJECT_INVITE"
+                      NotificationSubject == "EXPERT_ACCEРТ_INVITE"
                   ? print(
                       "Notification Seen  EXPERT_LEFT_ROOM & MEMBER_LEFT_ROOM & DELETE_ROOM & EXPERT_ACCEРТ_INVITE & EXPERT_REJECT_INVITE")
                   : NotificationSubject == "EXPERT_REJECT_INVITE"
-                      ? print("Seen Notification EXPERT_REJECT_INVITE")
+
+                          /// jinal code 14032024
+                          ||
+                          NotificationSubject == "MEMBER_LEFT_ROOM" ||
+                          NotificationSubject == "EXPERT_REJECT_INVITE"
+                      ?
+
+                      /// jinal code 14032024
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => RoomsScreen(
+                                    ProfileNotification: false,
+                                  )),
+                        ).then((value) => setColorr())
+                      // print("Seen Notification EXPERT_REJECT_INVITE")
                       : NotificationSubject == "LIKE_POST" ||
                               NotificationSubject == "COMMENT_POST" ||
                               NotificationSubject == "TAG_COMMENT_POST"
@@ -1220,7 +1254,15 @@ class _HomeScreenNewState extends State<HomeScreenNew>
   }
 
   NewApi() async {
-    /*   timer = Timer.periodic(Duration(seconds: 15), (timer) async {
+
+   if(User_ID != null && User_Name !=null){
+        String useruidsort = User_ID!.split('-').last.toString();
+       
+     onUserLogin('${useruidsort}','${User_Name}');
+     onUserLogin1('${useruidsort}','${User_Name}');
+
+   }
+    timer = Timer.periodic(Duration(seconds: 15), (timer) async {
       super.setState(() {
         secound = timer.tick;
       });
@@ -1228,7 +1270,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
           .seetinonExpried(context);
       await BlocProvider.of<GetGuestAllPostCubit>(context)
           .getAllNoticationsCountAPI(context);
-    }); */
+    });
     await BlocProvider.of<GetGuestAllPostCubit>(context)
         .get_all_master_report_typeApiMethod(context);
     await BlocProvider.of<GetGuestAllPostCubit>(context)
@@ -1254,7 +1296,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
     LoginCheck();
   }
 
-  soicalFunation({String? apiName, int? index}) async {
+  soicalFunation({String? apiName, int index = 0}) async {
     print("fghdfghdfgh");
     if (uuid == null) {
       Navigator.of(context).push(MaterialPageRoute(
@@ -1275,8 +1317,8 @@ class _HomeScreenNewState extends State<HomeScreenNew>
     else if (apiName == 'Follow') {
       print("dfhsdfhsdfhsdgf");
       await BlocProvider.of<GetGuestAllPostCubit>(context).followWIngMethod(
-          AllGuestPostRoomData?.object?.content?[index ?? 0].userUid, context);
-      if (AllGuestPostRoomData?.object?.content?[index ?? 0].isFollowing ==
+          AllGuestPostRoomData?.object?.content?[index ].userUid, context);
+      if (AllGuestPostRoomData?.object?.content?[index ].isFollowing ==
           'FOLLOW') {
         /* AllGuestPostRoomData?.object?.content?[index ?? 0].isFollowing =
             'REQUESTED'; */
@@ -1304,24 +1346,24 @@ class _HomeScreenNewState extends State<HomeScreenNew>
         }
       }
     } else if (apiName == 'like_post') {
-      await BlocProvider.of<GetGuestAllPostCubit>(context).like_post(
-          AllGuestPostRoomData?.object?.content?[index ?? 0].postUid, context);
-      print(
-          "isLiked-->${AllGuestPostRoomData?.object?.content?[index ?? 0].isLiked}");
-      if (AllGuestPostRoomData?.object?.content?[index ?? 0].isLiked == true) {
-        AllGuestPostRoomData?.object?.content?[index ?? 0].isLiked = false;
-        int a =
-            AllGuestPostRoomData?.object?.content?[index ?? 0].likedCount ?? 0;
-        int b = 1;
-        AllGuestPostRoomData?.object?.content?[index ?? 0].likedCount = a - b;
-      } else {
-        AllGuestPostRoomData?.object?.content?[index ?? 0].isLiked = true;
-        AllGuestPostRoomData?.object?.content?[index ?? 0].likedCount;
-        int a =
-            AllGuestPostRoomData?.object?.content?[index ?? 0].likedCount ?? 0;
-        int b = 1;
-        AllGuestPostRoomData?.object?.content?[index ?? 0].likedCount = a + b;
-      }
+
+      Content content = AllGuestPostRoomData!.object!.content![index];
+        bool isLiked = content.isLiked ?? false;
+        var likedCount = content.likedCount ?? 0;
+
+        if (isLiked) {
+          content.isLiked = false;
+          content.likedCount = likedCount - 1;
+        } else {
+          content.isLiked = true;
+          content.likedCount = likedCount + 1;
+        }
+
+        setState(() {
+          _postCubit!.like_post(content.postUid, context);
+        });
+        //
+
     } else if (apiName == 'savedata') {
       await BlocProvider.of<GetGuestAllPostCubit>(context).savedData(
           AllGuestPostRoomData?.object?.content?[index ?? 0].postUid, context);
@@ -2629,7 +2671,8 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                     ),
                                                   ),
                                                   Text(
-                                                    'Share Story',
+                                                    /// jinal code 14022024
+                                                    'Your Story',
                                                     style: TextStyle(
                                                         color: Colors.black,
                                                         fontSize: 16),
@@ -2674,7 +2717,8 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                     flex: 1,
                                                   ),
                                                   Text(
-                                                    '${userName[index]}',
+                                                    /// jinal code 14022024
+                                                    'Your Story',
                                                     style: TextStyle(
                                                         color: Colors.black,
                                                         fontSize: 16),
@@ -5164,23 +5208,24 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                               child: Container(
                                                                                 width: _width,
                                                                                 margin: EdgeInsets.only(left: 0, top: 15, right: 0),
-                                                                                child: Center(child: PinchZoom(
-                                                                                                    child: CachedNetworkImage(
-                                                                                                      imageUrl: "${AllGuestPostRoomData?.object?.content?[index].postData?[0]}",
-                                                                                                    ),
-                                                                                                    maxScale: 4,
-                                                                                                    onZoomStart: () {
-                                                                                                      print('Start zooming');
-                                                                                                    },
-                                                                                                    onZoomEnd: () {
-                                                                                                      print('Stop zooming');
-                                                                                                    },
-                                                                                                  ),
-                                                                                
-                                                                                    /* CustomImageView(
+                                                                                child: Center(
+                                                                                  child: PinchZoom(
+                                                                                    child: CachedNetworkImage(
+                                                                                      imageUrl: "${AllGuestPostRoomData?.object?.content?[index].postData?[0]}",
+                                                                                    ),
+                                                                                    maxScale: 4,
+                                                                                    onZoomStart: () {
+                                                                                      print('Start zooming');
+                                                                                    },
+                                                                                    onZoomEnd: () {
+                                                                                      print('Stop zooming');
+                                                                                    },
+                                                                                  ),
+
+                                                                                  /* CustomImageView(
                                                                                 url: "${AllGuestPostRoomData?.object?.content?[index].postData?[0]}",
                                                                               ), */
-                                                                                    ),
+                                                                                ),
                                                                               ),
                                                                             )
                                                                           : AllGuestPostRoomData?.object?.content?[index].postDataType == "VIDEO"
