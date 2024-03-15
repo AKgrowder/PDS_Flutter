@@ -1,11 +1,10 @@
-import 'dart:async';
 import 'dart:convert';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_observer/Observable.dart';
 import 'package:flutter_observer/Observer.dart';
-import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:intl/intl.dart';
 import 'package:linkfy_text/linkfy_text.dart';
 import 'package:pds/API/Bloc/dmInbox_bloc/dmMessageState.dart';
@@ -22,8 +21,6 @@ import 'package:pds/core/utils/sharedPreferences.dart';
 import 'package:pds/presentation/%20new/profileNew.dart';
 import 'package:pds/presentation/create_story/full_story_page.dart';
 import 'package:pds/theme/theme_helper.dart';
-import 'package:pds/videocallCommenClass.dart/commenFile.dart';
-import 'package:pds/videocallCommenClass.dart/videocommeninviation.dart';
 import 'package:pds/widgets/custom_image_view.dart';
 import 'package:pds/widgets/pagenation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -34,7 +31,6 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 import 'package:swipe_to/swipe_to.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
-import 'package:zego_uikit_prebuilt_call/zego_uikit_prebuilt_call.dart';
 
 enum Reaction { like, laugh, love, none }
 
@@ -53,6 +49,7 @@ bool isEditMessage = false;
 int isEditedindex = 0;
 GetAllStoryModel? getAllStoryModel;
 List<StoryButtonData> buttonDatas = [];
+
 final List<ReactionElement> reactions = [
   ReactionElement(
     Reaction.like,
@@ -81,20 +78,11 @@ class DmScreenNew extends StatefulWidget {
   String chatInboxUid;
   String chatUserName;
   String chatUserProfile;
-  String chatOtherUseruid;
-  String? videoId;
-  bool? isExpert;
-  bool? isBlock;
-  bool? online;
+
   DmScreenNew(
       {required this.chatInboxUid,
       required this.chatUserName,
-      required this.chatUserProfile,
-      required this.chatOtherUseruid,
-      this.online,
-      this.videoId,
-      this.isExpert,
-      this.isBlock});
+      required this.chatUserProfile});
 
   @override
   State<DmScreenNew> createState() => _DmScreenNewState();
@@ -102,7 +90,6 @@ class DmScreenNew extends StatefulWidget {
 
 class _DmScreenNewState extends State<DmScreenNew> with Observer {
   String? UserLogin_ID;
-  Timer? timer;
   String? DMbaseURL;
   WebSocketChannel? channel;
   bool _isConnected = false;
@@ -114,11 +101,9 @@ class _DmScreenNewState extends State<DmScreenNew> with Observer {
   Map<String, dynamic>? mapDataAdd;
   bool isScrollingDown = false;
   final focus = FocusNode();
-  Map<String, dynamic>? markStarred;
 
   @override
   void initState() {
-    GetAllStory_Data();
     Observable.instance.addObserver(this);
     isEditMessage = false;
     isEditedindex = 0;
@@ -128,7 +113,7 @@ class _DmScreenNewState extends State<DmScreenNew> with Observer {
     isMeesageReaction = false;
     BlocProvider.of<DmInboxCubit>(context).seetinonExpried(context);
     pageNumberMethod();
-    imageurlCheck = widget.chatUserProfile;
+
     super.initState();
   }
 
@@ -136,68 +121,10 @@ class _DmScreenNewState extends State<DmScreenNew> with Observer {
     scrollController.addListener(() {});
   }
 
-  GetAllStory_Data() async {
-    await BlocProvider.of<DmInboxCubit>(context).seetinonExpried(context);
-    await BlocProvider.of<DmInboxCubit>(context)
-        .DMChatListApiMethod(widget.chatInboxUid, 1, context);
-    await BlocProvider.of<DmInboxCubit>(context).get_all_story(context);
-  }
-
-  saveNotificationCount(int NotificationCount, int MessageCount) async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setInt(PreferencesKey.NotificationCount, NotificationCount);
-    prefs.setInt(PreferencesKey.MessageCount, MessageCount);
-  }
-
   @override
   update(Observable observable, String? notifyName, Map? map) async {
     print("this condison is working yet");
     pageNumberMethod();
-  }
-
-  void onSendCallInvitationFinished(
-    String code,
-    String message,
-    List<String> errorInvitees,
-  ) {
-    if (errorInvitees.isNotEmpty) {
-      var userIDs = '';
-      for (var index = 0; index < errorInvitees.length; index++) {
-        if (index >= 5) {
-          userIDs += '... ';
-          break;
-        }
-
-        final userID = errorInvitees.elementAt(index);
-        userIDs += '$userID ';
-      }
-      if (userIDs.isNotEmpty) {
-        userIDs = userIDs.substring(0, userIDs.length - 1);
-      }
-
-      var message = "User doesn't exist or is offline: $userIDs";
-      if (code.isNotEmpty) {
-        message += ', code: $code, message:$message';
-      }
-      /*  showToast(
-        message,
-        position: StyledToastPosition.top,
-        context: context,
-      ); */
-    } else if (code.isNotEmpty) {
-      showToast(
-        'User is offline',
-        /*     'code: $code, message:$message', */
-        position: StyledToastPosition.top,
-        context: context,
-      );
-      /* 
-      SnackBar snackBar = SnackBar(
-        content: Text('User is offline'),
-        backgroundColor: ColorConstant.primary_color,
-      );
-      ScaffoldMessenger.of(context).showSnackBar(snackBar); */
-    }
   }
 
   void _scrollToBottom() {
@@ -289,23 +216,17 @@ class _DmScreenNewState extends State<DmScreenNew> with Observer {
   }
 
   pageNumberMethod() async {
-    // await BlocProvider.of<DmInboxCubit>(context)
-    //     .DMChatListApiMethod(widget.chatInboxUid, 1, context);
-    // await BlocProvider.of<DmInboxCubit>(context).get_all_story(context);
     await BlocProvider.of<DmInboxCubit>(context)
         .DMChatListApiMethod(widget.chatInboxUid, 1, context);
     await BlocProvider.of<DmInboxCubit>(context).get_all_story(context);
      await BlocProvider.of<DmInboxCubit>(context)
-
         .LiveStatus(context, widget.chatInboxUid);
     await BlocProvider.of<DmInboxCubit>(context)
         .SeenMessage(context, widget.chatInboxUid);
     await BlocProvider.of<DmInboxCubit>(context)
         .getAllNoticationsCountAPI(context);
-
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     UserLogin_ID = prefs.getString(PreferencesKey.loginUserID);
-    String? UserName = prefs.getString(PreferencesKey.ProfileName);
     DMbaseURL = prefs.getString(PreferencesKey.SocketLink) ?? "";
     stompClient = StompClient(
         config: StompConfig(url: DMbaseURL!, onConnect: onConnectCallback));
@@ -319,16 +240,9 @@ class _DmScreenNewState extends State<DmScreenNew> with Observer {
         }
       }
     });
-    print("check your is my name -${UserName}");
-    print("check your is my UserLogin_ID -${UserLogin_ID}");
-    print("valu check -${widget.chatUserName.toString()}");
-    print("valu check1 -${widget.chatOtherUseruid}");
-
-    // onUserLogin('${UserLogin_ID}', 'Ankur');
   }
 
   void dispose() {
-    timer?.cancel();
     isMounted = false;
     stompClient?.deactivate();
     super.dispose();
@@ -353,9 +267,7 @@ class _DmScreenNewState extends State<DmScreenNew> with Observer {
                 WidgetsBinding.instance.addPostFrameCallback((_) {
                   if (isMounted == true) {
                     if (mounted) {
-                      setState(() {
-                        _scrollToBottom();
-                      });
+                      _scrollToBottom();
                     }
                   }
                 });
@@ -363,41 +275,6 @@ class _DmScreenNewState extends State<DmScreenNew> with Observer {
               if (state is GetAllStoryLoadedState) {
                 print('this stater Caling');
                 getAllStoryModel = state.getAllStoryModel;
-                WidgetsBinding.instance.addPostFrameCallback((_) {
-                  if (isMounted == true) {
-                    if (mounted) {
-                      setState(() {
-                        _scrollToBottom();
-                      });
-                    }
-                  }
-                });
-              }
-
-              if (state is GetAllStarClass) {
-                isLogPress = false;
-                selectedCount = 0;
-                if (markStarred?['status'] == true) {
-                  getInboxMessagesModel?.object?.content?.forEach((element) {
-                    if (element.isSelected == true) {
-                      element.isStarred = true;
-                      element.isSelected = false;
-                    }
-                  });
-                } else if (markStarred?['status'] == false) {
-                  getInboxMessagesModel?.object?.content?.forEach((element) {
-                    if (element.isSelected == true) {
-                      element.isStarred = false;
-                      element.isSelected = false;
-                    }
-                  });
-                }
-              }
-              if (state is GetNotificationCountLoadedState) {
-                saveNotificationCount(
-                    state.GetNotificationCountData.object?.notificationCount ??
-                        0,
-                    state.GetNotificationCountData.object?.messageCount ?? 0);
               }
             },
             builder: (context, state) {
@@ -466,66 +343,6 @@ class _DmScreenNewState extends State<DmScreenNew> with Observer {
                                     ),
                                   ),
                                 ),
-                                Spacer(),
-                                sendCallButton(
-                                  isVideoCall: false,
-                                  invitees: [
-                                    ZegoUIKitUser(
-                                        id: widget.chatOtherUseruid
-                                            .split('-')
-                                            .last
-                                            .toString(),
-                                        name: widget.chatUserName.toLowerCase())
-                                  ],
-                                  onCallFinished: onSendCallInvitationFinished,
-                                ),
-                                sendCallButton(
-                                  isVideoCall: true,
-                                  invitees: [
-                                    ZegoUIKitUser(
-                                        id: widget.chatOtherUseruid
-                                            .split('-')
-                                            .last
-                                            .toString(),
-                                        name: widget.chatUserName.toLowerCase())
-                                  ],
-                                  onCallFinished: onSendCallInvitationFinished,
-                                ),
-                                
-                                /*   sendCallButton(
-                                  isVideoCall: true,
-                                  userChatInboxUid:
-                                      ValueNotifier(widget.chatInboxUid),
-                                ), */
-                                /* GestureDetector(
-                                  onTap: () {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                ZegoSendCallInvitationButton(
-                                                  isVideoCall: true,
-                                                  invitees: [
-                                                    ZegoUIKitUser(
-                                                        id: widget.chatInboxUid,
-                                                        name: 'ankur'),
-                                                  ],
-                                p                  resourceID: 'zego_data',
-                                                  iconSize: const Size(40, 40),
-                                                  buttonSize:
-                                                      const Size(50, 50),
-                                                  onPressed:
-                                                      (code, message, p2) {},
-                                                )));
-                                  },
-                                  child: Image.asset(
-                                    ImageConstant.videocall,
-                                    height: 25,
-                                  ),
-                                ), */
-                                SizedBox(
-                                  width: 20,
-                                )
                               ],
                             ),
                           ),
@@ -627,92 +444,13 @@ class _DmScreenNewState extends State<DmScreenNew> with Observer {
                                   ),
                                 ),
                                 SizedBox(
-                                  width: 10,
+                                  width: 15,
                                 ),
                                 GestureDetector(
-                                  onTap: () {
-                                    markStarred?.clear();
-                                    List<String> forStarDataSet = [];
-
-                                    List<Content>? newList =
-                                        getInboxMessagesModel?.object?.content
-                                            ?.where((element) =>
-                                                element.isSelected == true)
-                                            .toList();
-                                    newList?.forEach((element) {
-                                      forStarDataSet
-                                          .add('${element.userChatMessageUid}');
-                                    });
-                                    if (newList?.every((element) =>
-                                            element.isStarred ?? false) ==
-                                        true) {
-                                      markStarred = {
-                                        'inboxUid': '${widget.chatInboxUid}',
-                                        "messageUuids": forStarDataSet,
-                                        "status": false,
-                                      };
-                                    } else if (newList?.every((element) =>
-                                            element.isStarred ?? false) ==
-                                        false) {
-                                      markStarred = {
-                                        'inboxUid': '${widget.chatInboxUid}',
-                                        "messageUuids": forStarDataSet,
-                                        "status": true,
-                                      };
-                                    } else if (newList?.any((element) =>
-                                            element.isStarred ?? false) ==
-                                        true) {
-                                      markStarred = {
-                                        'inboxUid': '${widget.chatInboxUid}',
-                                        "messageUuids": forStarDataSet,
-                                        "status": true,
-                                      };
-                                    }
-                                    BlocProvider.of<DmInboxCubit>(context)
-                                        .Setmark_starredApi(
-                                            context, markStarred!);
-
-                                    /*  if (getInboxMessagesModel?.object?.content
-                                            ?.any((element) =>
-                                                element.isStarred ?? false) ==
-                                        false) {
-                                      print("if condison working in Star");
-                                      getInboxMessagesModel?.object?.content
-                                          ?.forEach((element) {
-                                        if (element.isSelected == true) {
-                                          forStarDataSet.add(
-                                              '${element.userChatMessageUid}');
-                                        }
-                                      });
-
-                                      markStarred = {
-                                        'inboxUid': '${widget.chatInboxUid}',
-                                        "messageUuids": forStarDataSet,
-                                        "status": true,
-                                      };
-                                    } else if (getInboxMessagesModel
-                                            ?.object?.content
-                                            ?.any((element) =>
-                                                element.isStarred ?? false) ==
-                                        true) {
-                                      print("else if condison working in Star");
-                                      getInboxMessagesModel?.object?.content
-                                          ?.forEach((element) {
-                                        if (element.isSelected == true) {
-                                          forStarDataSet.add(
-                                              '${element.userChatMessageUid}');
-                                        }
-                                      });
-                                      markStarred = {
-                                        'inboxUid': '${widget.chatInboxUid}',
-                                        "messageUuids": forStarDataSet,
-                                        "status": false,
-                                      };
-                                    } */
-                                  },
+                                  onTap: () {},
                                   child: SizedBox(
-                                    height: 25,
-                                    child: Image.asset(ImageConstant.newStar),
+                                    height: 20,
+                                    child: Icon(Icons.star),
                                   ),
                                 ),
                                 SizedBox(
@@ -905,6 +643,122 @@ class _DmScreenNewState extends State<DmScreenNew> with Observer {
                             ),
                           ),
                         )),
+                        /*  Expanded(
+                          child: SingleChildScrollView(
+                        child: Column(
+                          children: [
+                            chatPaginationWidget(
+                              onPagination: (p0) async {
+                                await BlocProvider.of<DmInboxCubit>(
+                                        context)
+                                    .DMChatListApiPagantion(
+                                        widget.chatInboxUid,
+                                        p0 + 1,
+                                        context);
+                              },
+                              offSet: (getInboxMessagesModel
+                                  ?.object?.pageable?.pageNumber),
+                              scrollController: scrollController,
+                              totalSize: getInboxMessagesModel
+                                  ?.object?.totalElements,
+                              items: ListView.builder(
+                                controller: scrollController,
+                                itemCount: getInboxMessagesModel
+                                    ?.object?.content?.length,
+                                shrinkWrap: true,
+                                padding: EdgeInsets.zero,
+                                physics: NeverScrollableScrollPhysics(),
+                                itemBuilder: (context, index) {
+                                  final isFirstMessageForDate = index ==
+                                          0 ||
+                                      _isDifferentDate(
+                                          '${getInboxMessagesModel?.object?.content?[index - 1].createdDate}',
+                                          '${getInboxMessagesModel?.object?.content?[index].createdDate}');
+                                  DateTime parsedDateTime = DateTime.parse(
+                                      '${getInboxMessagesModel?.object?.content?[index].createdDate}');
+                                  return Column(
+                                    children: [
+                                      if (isFirstMessageForDate)
+                                        Container(
+                                          child: Padding(
+                                            padding:
+                                                const EdgeInsets.all(8.0),
+                                            child: Text(
+                                              _formatDate(
+                                                  '${getInboxMessagesModel?.object?.content?[index].createdDate}'),
+                                              style: TextStyle(
+                                                  color:
+                                                      Color(0xff5C5C5C),
+                                                  fontWeight:
+                                                      FontWeight.bold),
+                                            ),
+                                          ),
+                                        ),
+                                      if (getInboxMessagesModel?.object
+                                              ?.content?[index].userUid ==
+                                          UserLogin_ID)
+                                        // user chat
+                                        TextUser(
+                                            getInboxMessagesModel
+                                                    ?.object
+                                                    ?.content?[index]
+                                                    .message ??
+                                                "",
+                                            getInboxMessagesModel
+                                                    ?.object
+                                                    ?.content?[index]
+                                                    .userProfilePic ??
+                                                "",
+                                            true,
+                                            parsedDateTime,
+                                            index,
+                                            getInboxMessagesModel
+                                                    ?.object
+                                                    ?.content?[index]
+                                                    .messageType ??
+                                                "",
+                                            getInboxMessagesModel
+                                                    ?.object
+                                                    ?.content?[index]
+                                                    .emojiReaction ??
+                                                false,
+                                            '${getInboxMessagesModel?.object?.content?[index].reactionMessage}'),
+                                      if (getInboxMessagesModel?.object
+                                              ?.content?[index].userUid !=
+                                          UserLogin_ID)
+                                        TextUser(
+                                            getInboxMessagesModel
+                                                    ?.object
+                                                    ?.content?[index]
+                                                    .message ??
+                                                "",
+                                            getInboxMessagesModel
+                                                    ?.object
+                                                    ?.content?[index]
+                                                    .userProfilePic ??
+                                                "",
+                                            false,
+                                            parsedDateTime,
+                                            index,
+                                            getInboxMessagesModel
+                                                    ?.object
+                                                    ?.content?[index]
+                                                    .messageType ??
+                                                "",
+                                            getInboxMessagesModel
+                                                    ?.object
+                                                    ?.content?[index]
+                                                    .emojiReaction ??
+                                                false,
+                                            '${getInboxMessagesModel?.object?.content?[index].reactionMessage}'), // other user chat
+                                    ],
+                                  );
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
+                      )), */
                         if (isMeesageReaction == false)
                           Row(
                             children: [
@@ -1281,46 +1135,42 @@ class _DmScreenNewState extends State<DmScreenNew> with Observer {
       String userUid) {
     return GestureDetector(
       onTap: () {
-        if (isLogPress == true) {
-          if (getInboxMessagesModel?.object?.content?[index].isSelected ==
-              null) {
-            if (selectedCount < 10) {
-              print("check selcecount-${selectedCount}");
-
-              getInboxMessagesModel?.object?.content?[index].isSelected = true;
-              if (selectedCount == 2) {
-                overlayEntryRemoveMethod();
-              }
-              _incrementSelectedCount();
-              print("this method calling");
-            } else {
-              final snackBar = SnackBar(
-                content: Text('You can only select up to 10 messages.'),
-                backgroundColor: ColorConstant.primary_color,
-              );
-
-              ScaffoldMessenger.of(context).showSnackBar(snackBar);
-            }
-          } else if (getInboxMessagesModel
-                  ?.object?.content?[index].isSelected ==
-              true) {
-            getInboxMessagesModel?.object?.content?[index].isSelected = false;
-            _decrementSelectedCount();
-          } else {
-            getInboxMessagesModel?.object?.content?[index].isSelected = true;
+        if (getInboxMessagesModel?.object?.content?[index].isSelected == null) {
+          if (selectedCount < 10) {
             print("check selcecount-${selectedCount}");
+
+            getInboxMessagesModel?.object?.content?[index].isSelected = true;
             if (selectedCount == 2) {
-              print("this condiso working");
               overlayEntryRemoveMethod();
             }
             _incrementSelectedCount();
-            print("esle check");
+            print("this method calling");
+          } else {
+            final snackBar = SnackBar(
+              content: Text('You can only select up to 10 messages.'),
+              backgroundColor: ColorConstant.primary_color,
+            );
+
+            ScaffoldMessenger.of(context).showSnackBar(snackBar);
           }
-          _hasImageMessageTypeSelected(index);
-          if (isMounted == true) {
-            if (mounted) {
-              setState(() {});
-            }
+        } else if (getInboxMessagesModel?.object?.content?[index].isSelected ==
+            true) {
+          getInboxMessagesModel?.object?.content?[index].isSelected = false;
+          _decrementSelectedCount();
+        } else {
+          getInboxMessagesModel?.object?.content?[index].isSelected = true;
+          print("check selcecount-${selectedCount}");
+          if (selectedCount == 2) {
+            print("this condiso working");
+            overlayEntryRemoveMethod();
+          }
+          _incrementSelectedCount();
+          print("esle check");
+        }
+        _hasImageMessageTypeSelected(index);
+        if (isMounted == true) {
+          if (mounted) {
+            setState(() {});
           }
         }
       },
@@ -1355,47 +1205,31 @@ class _DmScreenNewState extends State<DmScreenNew> with Observer {
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               if (userMeesage == false)
-                GestureDetector(
-                  onTap: () {
-                    Navigator.push(context, MaterialPageRoute(
-                      builder: (context) {
-                        return ProfileScreen(
-                            User_ID: getInboxMessagesModel
-                                    ?.object?.content?[index].userUid ??
-                                "",
-                            isFollowing: "");
-                      },
-                    ));
-
-                    print("object");
-                  },
-                  child: Padding(
-                    padding:
-                        const EdgeInsets.only(left: 3, right: 5, bottom: 5),
-                    child: getInboxMessagesModel
-                                    ?.object?.content?[index].userProfilePic !=
-                                null ||
-                            getInboxMessagesModel?.object?.content?[index]
-                                    .userProfilePic?.isNotEmpty ==
-                                true
-                        ? CustomImageView(
-                            alignment: Alignment.bottomLeft,
-                            url:
-                                "${getInboxMessagesModel?.object?.content?[index].userProfilePic}",
-                            height: 20,
-                            radius: BorderRadius.circular(20),
-                            width: 20,
-                            fit: BoxFit.fill,
-                          )
-                        : CustomImageView(
-                            alignment: Alignment.bottomLeft,
-                            imagePath: ImageConstant.tomcruse,
-                            height: 20,
-                            radius: BorderRadius.circular(20),
-                            width: 20,
-                            fit: BoxFit.fill,
-                          ),
-                  ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 3, right: 5, bottom: 5),
+                  child: getInboxMessagesModel
+                                  ?.object?.content?[index].userProfilePic !=
+                              null ||
+                          getInboxMessagesModel?.object?.content?[index]
+                                  .userProfilePic?.isNotEmpty ==
+                              true
+                      ? CustomImageView(
+                          alignment: Alignment.bottomLeft,
+                          url:
+                              "${getInboxMessagesModel?.object?.content?[index].userProfilePic}",
+                          height: 20,
+                          radius: BorderRadius.circular(20),
+                          width: 20,
+                          fit: BoxFit.fill,
+                        )
+                      : CustomImageView(
+                          alignment: Alignment.bottomLeft,
+                          imagePath: ImageConstant.tomcruse,
+                          height: 20,
+                          radius: BorderRadius.circular(20),
+                          width: 20,
+                          fit: BoxFit.fill,
+                        ),
                 ),
               Expanded(
                 child: Align(
@@ -1525,19 +1359,7 @@ class _DmScreenNewState extends State<DmScreenNew> with Observer {
                 Padding(
                   padding: const EdgeInsets.only(left: 5, right: 5, bottom: 5),
                   child: GestureDetector(
-                      onTap: () {
-                        Navigator.push(context, MaterialPageRoute(
-                          builder: (context) {
-                            return ProfileScreen(
-                                User_ID: getInboxMessagesModel
-                                        ?.object?.content?[index].userUid ??
-                                    "",
-                                isFollowing: "");
-                          },
-                        ));
-
-                        print("object");
-                      },
+                      onTap: () {},
                       child: getInboxMessagesModel?.object?.content?[index]
                                       .userProfilePic?.isEmpty ==
                                   true ||
@@ -1589,15 +1411,6 @@ class _DmScreenNewState extends State<DmScreenNew> with Observer {
       setState(() {
         selectedCount--;
       });
-      print("check seclted conut- ${selectedCount}");
-      if (selectedCount == 0) {
-        isLogPress = false;
-        if (isMounted == true) {
-          if (mounted) {
-            setState(() {});
-          }
-        }
-      }
     }
   }
 
@@ -1627,8 +1440,10 @@ class _DmScreenNewState extends State<DmScreenNew> with Observer {
     if (distanceToRight > distanceToLeft) {
       left -= 120;
     } else {
-      left += renderBox.size.width + 60;
-      popupWidth = screenWidth - left - 20;
+      // If the widget is closer to the right edge, adjust the left position
+      // and change the popup width to fit it within the screen.
+      left += renderBox.size.width + 60; // Adjusted left position
+      popupWidth = screenWidth - left - 20; // Adjusted popup width
     }
 
     overlayEntry = OverlayEntry(
@@ -2015,7 +1830,7 @@ class MessageViewWidget extends StatelessWidget {
                 ),
               Container(
                   constraints: BoxConstraints(
-                      maxWidth: MediaQuery.of(context).size.width * 0.70),
+                      maxWidth: MediaQuery.of(context).size.width / 2),
                   padding: EdgeInsets.all(11),
                   margin: EdgeInsets.only(top: isSelected == true ? 3 : 5),
                   decoration: BoxDecoration(
@@ -2029,83 +1844,85 @@ class MessageViewWidget extends StatelessWidget {
                               bottomRight: Radius.circular(13),
                               topRight: Radius.circular(13))),
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
+                    mainAxisSize: MainAxisSize.min,
                     children: [
-                      Row(
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Flexible(
-                            fit: FlexFit.loose,
-                            child: LinkifyText(
-                              getInboxMessagesModel
-                                      .object?.content?[index].message ??
-                                  '',
-                              linkStyle: TextStyle(
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.blue,
-                                  fontFamily: "outfit",
-                                  fontSize: 15,
-                                  decoration: TextDecoration.underline,
-                                  decorationColor: Colors.blue),
-                              textStyle: TextStyle(
-                                  fontWeight: FontWeight.w400,
-                                  color: Colors.black,
-                                  fontFamily: "outfit",
-                                  fontSize: 15),
-                              linkTypes: [
-                                LinkType.url,
-                              ],
-                              onTap: (link) {
-                                var SelectedTest = link.value.toString();
-                                var Link = SelectedTest.startsWith('https');
-                                var Link1 = SelectedTest.startsWith('http');
-                                var Link2 = SelectedTest.startsWith('www');
-                                var Link3 = SelectedTest.startsWith('WWW');
-                                var Link4 = SelectedTest.startsWith('HTTPS');
-                                var Link5 = SelectedTest.startsWith('HTTP');
-                                var Link6 = SelectedTest.startsWith(
-                                    'https://pdslink.page.link/');
-                                print(SelectedTest.toString());
-                                if (Link == true ||
-                                    Link1 == true ||
-                                    Link2 == true ||
-                                    Link3 == true ||
-                                    Link4 == true ||
-                                    Link5 == true ||
-                                    Link6 == true) {
-                                  print("qqqqqqqqhttps://${link.value}");
-
-                                  launchUrl(
-                                      Uri.parse("${link.value.toString()}"));
-                                } else {
-                                  launchUrl(Uri.parse(
-                                      "https://${link.value.toString()}"));
-                                }
-                              },
-                            ),
-                          ),
-                          if (getInboxMessagesModel
-                                  .object?.content?[index].isStarred ==
-                              true)
-                            Image.asset(
-                              ImageConstant.newStar,
-                              height: 15,
-                            )
-                        ],
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 5, left: 3),
-                        child: Text(
-                          customFormat(parsedDateTime),
-                          textScaleFactor: 1.0,
-                          style: TextStyle(
-                              fontWeight: FontWeight.normal,
-                              color: Colors.grey,
+                      buildRichText(
+                          '${getInboxMessagesModel.object?.content?[index].message}',
+                          date),
+                      /* Flexible(
+                        child: LinkifyText(
+                          getInboxMessagesModel
+                                  .object?.content?[index].message ??
+                              '',
+                          linkStyle: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              color: Colors.blue,
                               fontFamily: "outfit",
-                              fontSize: 10),
+                              fontSize: 15,
+                              decoration: TextDecoration.underline,
+                              decorationColor: Colors.blue),
+                          textStyle: TextStyle(
+                              fontWeight: FontWeight.w400,
+                              color: Colors.black,
+                              fontFamily: "outfit",
+                              fontSize: 15),
+                          linkTypes: [
+                            LinkType.url,
+                          ],
+                          onTap: (link) {
+                            var SelectedTest = link.value.toString();
+                            var Link = SelectedTest.startsWith('https');
+                            var Link1 = SelectedTest.startsWith('http');
+                            var Link2 = SelectedTest.startsWith('www');
+                            var Link3 = SelectedTest.startsWith('WWW');
+                            var Link4 = SelectedTest.startsWith('HTTPS');
+                            var Link5 = SelectedTest.startsWith('HTTP');
+                            var Link6 = SelectedTest.startsWith(
+                                'https://pdslink.page.link/');
+                            print(SelectedTest.toString());
+                            if (Link == true ||
+                                Link1 == true ||
+                                Link2 == true ||
+                                Link3 == true ||
+                                Link4 == true ||
+                                Link5 == true ||
+                                Link6 == true) {
+                              print("qqqqqqqqhttps://${link.value}");
+
+                              launchUrl(Uri.parse("${link.value.toString()}"));
+                            } else {
+                              launchUrl(Uri.parse(
+                                  "https://${link.value.toString()}"));
+                            }
+                          },
                         ),
+                      ), */
+                      /*  Flexible(
+                        child: Align(
+                          alignment: Alignment.topRight,
+                          child: Text(
+                            customFormat(parsedDateTime),
+                            textScaleFactor: 1.0,
+                            style: TextStyle(
+                                fontWeight: FontWeight.normal,
+                                color: Colors.black,
+                                fontFamily: "outfit",
+                                fontSize: 10),
+                          ),
+                        ),
+                      ), */
+                      /* Align(
+                      alignment: Alignment.topLeft,
+                      child: Text(
+                        customFormat(parsedDateTime),
+                        textScaleFactor: 1.0,
+                        style: TextStyle(
+                            fontWeight: FontWeight.normal,
+                            color: Colors.black,
+                            fontFamily: "outfit",
+                            fontSize: 10),
                       ),
+                    ), */
                     ],
                   )),
             ],
@@ -2169,4 +1986,80 @@ class ReactionElement {
   final Icon icon;
 //
   ReactionElement(this.reaction, this.icon);
+}
+
+Widget buildRichText(String input, DateTime date) {
+  List<TextSpan> textSpans = [];
+
+  RegExp linkRegex = RegExp(r'(https?://\S+)|(@\w+)|(#\w+)');
+  List<RegExpMatch> matches = linkRegex.allMatches(input).toList();
+
+  int currentIndex = 0;
+
+  for (RegExpMatch match in matches) {
+    String textBeforeMatch = input.substring(currentIndex, match.start);
+    if (textBeforeMatch.isNotEmpty) {
+      textSpans.add(TextSpan(text: textBeforeMatch));
+    }
+
+    String matchedText = match.group(0)!;
+    if (matchedText.startsWith('@') || matchedText.startsWith('#')) {
+      // Handling @mentions and #hashtags
+      textSpans.add(
+        TextSpan(
+          text: matchedText,
+          style: TextStyle(color: Colors.blue),
+        ),
+      );
+    } else if (matchedText.startsWith('http')) {
+      // Handling links
+      textSpans.add(
+        TextSpan(
+          text: matchedText,
+          style: TextStyle(color: Colors.blue),
+          recognizer: TapGestureRecognizer()
+            ..onTap = () {
+              // Handle tapping on the link here
+              print('Tapped on link: $matchedText');
+            },
+        ),
+      );
+    }
+
+    currentIndex = match.end;
+  }
+
+  String remainingText = input.substring(currentIndex);
+  if (remainingText.isNotEmpty) {
+    textSpans.add(TextSpan(text: remainingText));
+  }
+
+  // Add formatted date in small font size at the end
+  String formattedDate = customFormat(date);
+
+  // Wrap the date with padding
+  /* textSpans.add(
+    TextSpan(
+      text: '\n', // Add a newline for top padding
+    ),
+  ); */
+  textSpans.add(
+    TextSpan(
+      text: ' ${formattedDate}',
+      style: TextStyle(
+          fontSize: 10,
+          color: Colors.grey,
+          fontWeight: FontWeight.w700), // Small gray date text
+    ),
+  );
+
+  return RichText(
+    text: TextSpan(
+      style: TextStyle(
+        fontSize: 14.0,
+        color: Colors.black,
+      ),
+      children: textSpans,
+    ),
+  );
 }

@@ -330,14 +330,13 @@ import 'package:pds/presentation/%20new/OpenSavePostImage.dart';
 import 'package:pds/presentation/%20new/profileNew.dart';
 import 'package:pds/theme/theme_helper.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:zego_uikit_prebuilt_call/zego_uikit_prebuilt_call.dart';
 import 'API/Bloc/BlockUser_Bloc/Block_user_cubit.dart';
 import 'API/Bloc/postData_Bloc/postData_Bloc.dart';
 import 'presentation/splash_screen/splash_screen.dart';
 import 'package:flutter_langdetect/flutter_langdetect.dart' as langdetect;
-import 'package:zego_uikit/zego_uikit.dart';
-import 'package:zego_uikit_prebuilt_call/zego_uikit_prebuilt_call.dart';
-import 'package:zego_uikit_signaling_plugin/zego_uikit_signaling_plugin.dart';
+
+final navigatorKey = GlobalKey<NavigatorState>();
+
 Future<void> _messageHandler(RemoteMessage message) async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
@@ -361,15 +360,12 @@ void main() async {
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
   ]);
-  final navigatorKey = GlobalKey<NavigatorState>();
-  ZegoUIKitPrebuiltCallInvitationService().setNavigatorKey(navigatorKey);
 
   ///Please update theme as per your need if required.
   ThemeHelper().changeTheme('primary');
 
   FirebaseMessaging.onBackgroundMessage(_messageHandler);
   FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) async {
-
     print("/* onMessageOpenedApp: */ ${message.notification?.body}");
     print("/* onMessageOpenedApp: */ ${message.notification?.title}");
     print("/* onMessageOpenedApp: */ ${message.data}");
@@ -452,8 +448,6 @@ void main() async {
   });
 
   FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
-  
-
 
   await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
     alert: true,
@@ -468,25 +462,10 @@ void main() async {
     provisional: false,
   );
 
-  String? DeviceToken = await _firebaseMessaging.getToken();
-  print("Firebase DeviceToken==> ${DeviceToken}");
-
-
-    runApp(MyApp(navigatorKey: navigatorKey));
-  });
+  runApp(MyApp());
 }
 
-class MyApp extends StatefulWidget {
-  final GlobalKey<NavigatorState>? navigatorKey;
-  MyApp({
-    this.navigatorKey,
-    Key? key,
-  }) : super(key: key);
-  @override
-  State<MyApp> createState() => _MyAppState();
-}
-
-class _MyAppState extends State<MyApp> {
+class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
@@ -622,20 +601,7 @@ class _MyAppState extends State<MyApp> {
           title: 'pds',
           debugShowCheckedModeBanner: false,
           home: SplashScreen(),
-          navigatorKey: widget.navigatorKey,
-          builder: (context, child) {
-            return Stack(
-              children: [
-                child!,
-                ZegoUIKitPrebuiltCallMiniOverlayPage(
-                  contextQuery: () {
-                    return widget.navigatorKey!.currentState!.context;
-                  },
-                ),
-               
-              ],
-            );
-          },
+          navigatorKey: navigatorKey,
           //BottombarPage(buttomIndex: 0),
         ),
       ),

@@ -28,8 +28,7 @@ import '../create_foram/create_foram_screen.dart';
 import '../register_create_account_screen/register_create_account_screen.dart';
 
 class RoomsScreen extends StatefulWidget {
-  bool? ProfileNotification;
-  RoomsScreen({Key? key, this.ProfileNotification}) : super(key: key);
+  const RoomsScreen({Key? key}) : super(key: key);
 
   @override
   State<RoomsScreen> createState() => _RoomsScreenState();
@@ -84,12 +83,14 @@ class _RoomsScreenState extends State<RoomsScreen> {
     var User_ID = prefs.getString(PreferencesKey.loginUserID);
     if (User_ID != "" && User_ID?.isNotEmpty == true) {
       await BlocProvider.of<GetAllPrivateRoomCubit>(context)
-          .seetinonExpried(context);
+          .seetinonExpried(context); 
       await BlocProvider.of<GetAllPrivateRoomCubit>(context)
           .chckUserStaus(context);
 
-      await BlocProvider.of<GetAllPrivateRoomCubit>(context)
-          .getAllNoticationsCountAPI(context);
+      
+      await  BlocProvider.of<GetAllPrivateRoomCubit>(context)
+            .getAllNoticationsCountAPI(context);
+   
     }
 
     await BlocProvider.of<GetAllPrivateRoomCubit>(context)
@@ -283,8 +284,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                       width: _width / 1.2,
                                       decoration: BoxDecoration(
                                           border: Border.all(
-                                              color:
-                                                  ColorConstant.primary_color,
+                                              color: ColorConstant.primary_color,
                                               width: 1),
                                           borderRadius:
                                               BorderRadius.circular(5)),
@@ -1948,7 +1948,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                                             );
                                                           },
                                                           child: Container(
-                                                            width: _width / 3,
+                                                            width: _width/3,
                                                             height: 22.51,
                                                             decoration:
                                                                 ShapeDecoration(
@@ -1959,8 +1959,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                                                 side:
                                                                     BorderSide(
                                                                   width: 1,
-                                                                  color: ColorConstant
-                                                                      .primary_color,
+                                                                  color:ColorConstant.primary_color,
                                                                 ),
                                                                 borderRadius:
                                                                     BorderRadius
@@ -1975,8 +1974,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                                                   fontWeight:
                                                                       FontWeight
                                                                           .w400,
-                                                                  color: ColorConstant
-                                                                      .primary_color,
+                                                                  color:ColorConstant.primary_color,
                                                                   fontFamily:
                                                                       "outfit",
                                                                   fontSize: 13),
@@ -2264,8 +2262,8 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                                     width: _width / 2.48,
                                                     decoration: BoxDecoration(
                                                         // color: Color(0XFF9B9B9B),
-                                                        color: ColorConstant
-                                                            .primary_color,
+                                                        color:
+                                                            ColorConstant.primary_color,
                                                         borderRadius:
                                                             BorderRadius.only(
                                                                 bottomLeft: Radius
@@ -2420,11 +2418,11 @@ class _RoomsScreenState extends State<RoomsScreen> {
 
                             child: CustomImageView(
                               imagePath: checkuserdata == "PARTIALLY_REGISTERED"
-                                  ? ImageConstant.CreateForum //done
+                                  ? ImageConstant.CreateForum//done
                                   : checkuserdata == "PENDING"
-                                      ? ImageConstant.InPending //done
+                                      ? ImageConstant.InPending//done
                                       : checkuserdata == "APPROVED"
-                                          ? ImageConstant.noRoom //done
+                                          ? ImageConstant.noRoom//done
                                           : ImageConstant.Rejected,
                             ),
 

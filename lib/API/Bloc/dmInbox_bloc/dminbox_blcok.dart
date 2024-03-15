@@ -174,13 +174,12 @@ class DmInboxCubit extends Cubit<getInboxState> {
       emit(getInboxErrorState(SeenMessgaeModelData));
     }
   }
-
-  Future<void> OffLineUpdate(BuildContext context, String inboxUid) async {
+  
+    Future<void> OffLineUpdate(BuildContext context, String inboxUid) async {
     dynamic SeenMessgaeModelData;
     try {
       emit(getInboxLoadingState());
-      SeenMessgaeModelData =
-          await Repository().OffLineUpdate(context, inboxUid);
+      SeenMessgaeModelData = await Repository().OffLineUpdate(context, inboxUid);
       if (SeenMessgaeModelData ==
           "Something Went Wrong, Try After Some Time.") {
         emit(getInboxErrorState("${SeenMessgaeModelData}"));
@@ -249,23 +248,6 @@ class DmInboxCubit extends Cubit<getInboxState> {
         if (getAllStory.success == true) {
           emit(GetAllStoryLoadedState(getAllStory));
         }
-      }
-    } catch (e) {
-      print('errorstate-$e');
-      emit(getInboxErrorState(e));
-    }
-  }
-
-  Future<void> Setmark_starredApi(
-      BuildContext context, Map<String, dynamic> parems) async {
-    dynamic getAllStarreMessage;
-    try {
-      emit(getInboxLoadingState());
-      getAllStarreMessage =
-          await Repository().apiMarkStarredMethod(context, parems);
-
-      if (getAllStarreMessage.success == true) {
-        emit(GetAllStarClass(getAllStarreMessage));
       }
     } catch (e) {
       print('errorstate-$e');

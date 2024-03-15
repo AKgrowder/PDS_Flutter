@@ -311,16 +311,17 @@ class UserReActivateDailogState extends State<UserReActivateDailog>
 
     DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
 
+    AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+    IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
+
     var androidMOdel = "";
     var androidVersion = "";
     var iosModel = "";
 
     if (Platform.isAndroid) {
-      AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
       androidMOdel = androidInfo.model;
       androidVersion = androidInfo.version.release;
     } else if (Platform.isIOS) {
-      IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
       iosModel = "${iosInfo.utsname.machine}";
     }
 
@@ -335,10 +336,6 @@ class UserReActivateDailogState extends State<UserReActivateDailog>
           iosModel == "" ? androidVersion : Platform.operatingSystemVersion,
     };
 // DeviceInfo
-  print("iosModeliosModeliosModel-> ${iosModel}");
-    print("iosModeliosModeliosModel-> ${Platform.isIOS}");
-    print("iosModeliosModeliosModel-> ${Platform.operatingSystemVersion}");
-    print("iosModeliosModeliosModel-> ${details}");
 
     await BlocProvider.of<UserReActivateCubit>(context)
         .DeviceInfo(details, context);
