@@ -6354,13 +6354,15 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                           GestureDetector(
                                                                             onTap:
                                                                                 () {
-                                                                              print("Save Blogs");
+                                                                              
 
                                                                               BlocProvider.of<GetGuestAllPostCubit>(context).SaveBlog(context, "${User_ID}", "${getallBlogModel1?.object?[index1].uid}");
                                                                               if (getallBlogModel1?.object?[index1].isSaved == false) {
                                                                                 getallBlogModel1?.object?[index1].isSaved = true;
+                                                                                print("Save Blogs");
                                                                               } else {
                                                                                 getallBlogModel1?.object?[index1].isSaved = false;
+                                                                                print("UnSave Blogs");
                                                                               }
                                                                             },
                                                                             child:
