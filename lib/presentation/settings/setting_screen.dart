@@ -11,6 +11,7 @@ import 'package:pds/API/Bloc/accounttype_bloc/account_state.dart';
 import 'package:pds/API/Bloc/logOut_bloc/logOut_cubit.dart';
 import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/presentation/%20new/Blocked_userList_screen.dart';
+import 'package:pds/presentation/Comapny_page/Comapny_manage_screen.dart';
 import 'package:pds/presentation/change_password_screen/change_password_screen.dart';
 import 'package:pds/presentation/settings/LogOut_dailog.dart';
 import 'package:pds/widgets/delete_dailog.dart';
@@ -49,6 +50,7 @@ var Setting_Array = [
   "Public & Private Profile",
   "Block User",
   "Log Out",
+  "Manage Company Page"
   /* "Change Password",
   "Public & Private Profile",
   "Block User",
@@ -88,6 +90,7 @@ var SettingImage_Array = [
   ImageConstant.setting_delete,
   ImageConstant.profileLock, ImageConstant.block_user,
   ImageConstant.setting_power,
+  ImageConstant.setting_comanyManage,
   // ImageConstant.setting_power,
   // ImageConstant.setting_phone,
 ];
@@ -489,6 +492,17 @@ class _SettingScreenState extends State<SettingScreen> {
                                           create: (context) => LogOutCubit(),
                                           child: LogOutdailog(),
                                         ));
+
+                                        
+                                break;
+
+                                 case 12:
+                                Navigator.push(context,
+                                    MaterialPageRoute(builder: (context) {
+                                  return ComapnyManageScreen();
+                                }));
+
+                                        
                                 break;
                               /*   case 7:
                                     showDialog(
