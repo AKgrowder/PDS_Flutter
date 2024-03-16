@@ -290,5 +290,7 @@ class ImageConstant {
  static String selectComapny  = "assets/images/select_account.png";
  static String UnselectComapny  = "assets/images/unSelect_account.png";
 static String switchAccount  =  "assets/images/switch_acc.png";
+  static   String emptylistimage = "assets/images/emptylistimage.png";
+
   /// end
 }
