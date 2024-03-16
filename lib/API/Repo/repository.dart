@@ -114,11 +114,14 @@ import '../Model/ViewDetails_Model/RemoveMember_model.dart';
 import '../Model/WorkExperience_Model/ADDExperience_model.dart';
 import '../Model/acceptRejectInvitaionModel/acceptRejectInvitaion.dart';
 import '../Model/coment/coment_model.dart';
+import '../Model/compeny_page/compeny_page_model.dart';
 import '../Model/creat_form/creat_form_Model.dart';
 import '../Model/delete_room_model/Delete_room_model.dart';
 import '../Model/fetch_room_detail_model/fetch_room_detail_model.dart';
 import '../Model/forget_password_model/change_password_model.dart';
+import '../Model/getall_compeny_page_model/getall_compeny_page.dart';
 import '../Model/myaccountModel/myaccountModel.dart';
+import 'package:pds/API/Model/get_Starred_MessagesModel/get_Starred_Messages.dart';
 
 class Repository {
   ApiServices apiServices = ApiServices();
@@ -3431,6 +3434,73 @@ class Repository {
         return Config.servernotreachable;
       case 400:
         return MarkStarred.fromJson(jsonString);
+      case 701:
+        return jsonString;
+      default:
+        return jsonString;
+    }
+  }
+   compenypage(Map<String, dynamic> param, BuildContext context) async {
+    final response =
+        await apiServices.postApiCall(Config.company_pages, param, context);
+    var jsonString = json.decode(response.body);
+    print(jsonString);
+    switch (response.statusCode) {
+      case 200:
+        return CompenyPageModel.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+      case 400:
+        return CompenyPageModel.fromJson(jsonString);
+
+      // return Config.somethingWentWrong;
+      case 701:
+        return Config.somethingWentWrong;
+      default:
+        return jsonString;
+    }
+  }
+
+   getallcompenypage( BuildContext context) async {
+    final response =
+        await apiServices.getApiCallWithToken(Config.getallcompany_pages,context);
+    var jsonString = json.decode(response.body);
+    print(jsonString);
+    switch (response.statusCode) {
+      case 200:
+        return GetAllCompenyPageModel.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+      case 400:
+        return GetAllCompenyPageModel.fromJson(jsonString);
+
+      // return Config.somethingWentWrong;
+      case 701:
+        return Config.somethingWentWrong;
+      default:
+        return jsonString;
+    }
+  }
+
+   get_Starred_Messagesapi(BuildContext context, String pageNumber) async {
+    final response = await apiServices.getApiCallWithToken(
+        "${Config.get_Starred_Messages}?numberOfRecords=10&pageNumber=$pageNumber",
+        context);
+    var jsonString = json.decode(response.body);
+    print('get_Starred_Messagesapi${response.body}');
+    switch (response.statusCode) {
+      case 200:
+        return StaeMessageModel.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+      case 400:
+        return StaeMessageModel.fromJson(jsonString);
       case 701:
         return jsonString;
       default:
