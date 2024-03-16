@@ -859,8 +859,7 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
                 width: 70),
           ),*/
           if (widget.userId! !=
-              widget.buttonData!.images[_currentStory!.index!].userUid &&
-              !isReplied)
+              widget.buttonData!.images[_currentStory!.index!].userUid )
             Positioned(
                 bottom: 30,
                 child: Material(
@@ -912,7 +911,7 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
                                     left: 15,
                                     right: 15,
                                   ),
-                                  hintText: 'Send Meesage',
+                                  hintText: 'Send Message',
                                   hintStyle: TextStyle(color: Colors.white),
                                   border: InputBorder.none),
                             ),

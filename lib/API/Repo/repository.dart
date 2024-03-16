@@ -2589,7 +2589,7 @@ class Repository {
 
   search_historyDataAdd(BuildContext context, String typeWord) async {
     final response = await apiServices.getApiCallWithToken(
-        "${Config.search_historyDataAdd}?searchDescription=$typeWord", context);
+        "${Config.search_historyDataAdd}?searchDescription=${typeWord.contains("#") ? typeWord.replaceAll("#", "%23"):typeWord}", context);
     var jsonString = json.decode(response.body);
     print("responce jasonString-$jsonString");
     switch (response.statusCode) {
