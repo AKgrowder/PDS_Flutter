@@ -53,7 +53,6 @@ sendCallButton({
   required bool isVideoCall,
   required List<ZegoUIKitUser> invitees,
   void Function(String code, String message, List<String>)? onCallFinished,
-  required String url,
 }) {
   return ZegoSendCallInvitationButton(
 

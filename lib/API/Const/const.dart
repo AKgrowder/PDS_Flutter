@@ -153,6 +153,10 @@ class Config {
   static const String forwardMessages = "user/forward_messages";
     static const String update_live_status = "user/update_live_status";
     static const String mark_starred = "user/mark_starred";
+  static const String company_pages = "user/create_company_page";
+  static const String getallcompany_pages = "user/get_all_company_pages";
+ static const String get_Starred_Messages = "user/get_Starred_Messages";
+
 
 
 }

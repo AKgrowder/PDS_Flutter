@@ -19,7 +19,7 @@ class ComapnyManageCubit extends Cubit<ComapnyManageState> {
         if (chooseDocument.success == true) {
           emit(chooseDocumentLoadedState(chooseDocument));
         } else {
-          emit(chooseDocumentLoadedState(chooseDocument));
+          emit(ComapnyManageErrorState(chooseDocument));
         }
       }
     } catch (e) {
@@ -27,4 +27,45 @@ class ComapnyManageCubit extends Cubit<ComapnyManageState> {
       emit(ComapnyManageErrorState(chooseDocument));
     }
   }
+
+    Future<void> compenypageuplod(Map<String, dynamic> params, BuildContext context) async {
+    dynamic compenypagee;
+    try {
+      emit(ComapnyManageLoadingState());
+      compenypagee = await Repository().compenypage(params, context);
+      print("sddgfdgsfgfg-${compenypagee.message}");
+      if (compenypagee == "Something Went Wrong, Try After Some Time.") {
+        emit(ComapnyManageErrorState("${compenypagee}"));
+      } else {
+        if (compenypagee.success == true) {
+          emit(compenypagelodedstate(compenypagee));
+        }else{
+           emit(ComapnyManageErrorState(compenypagee.message));
+        }
+      }
+    } catch (e) {
+      emit(ComapnyManageErrorState(compenypagee));
+    }
+  }
+  Future<void> getallcompenypagee(BuildContext context) async {
+    dynamic getallcompenypagee;
+    try {
+      emit(ComapnyManageLoadingState());
+      getallcompenypagee = await Repository().getallcompenypage( context);
+      print("sddgfdgsfgfg-${getallcompenypagee.message}");
+      if (getallcompenypagee == "Something Went Wrong, Try After Some Time.") {
+        emit(ComapnyManageErrorState("${getallcompenypagee}"));
+      } else {
+        if (getallcompenypagee.success == true) {
+          emit(Getallcompenypagelodedstate(getallcompenypagee));
+        }else{
+           emit(ComapnyManageErrorState(getallcompenypagee.message));
+        }
+      }
+    } catch (e) {
+      emit(ComapnyManageErrorState(getallcompenypagee));
+    }
+  }
+
+  
 }
