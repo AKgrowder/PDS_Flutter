@@ -61,9 +61,7 @@ class _NewStoryViewPageState extends State<NewStoryViewPage> {
           );
         }
         if (state is ViewStoryLoadedState) {
-          if (controller != null) {
-            controller!.dispose();
-          }
+
         }
         if (state is StoryViewListLoadedState) {
           StoryViewListModelData = state.StoryViewListModelData;
@@ -111,6 +109,7 @@ class _NewStoryViewPageState extends State<NewStoryViewPage> {
                                 children: [
                                   GestureDetector(
                                     onTap: () async{
+                                      controller.dispose();
                                       await BlocProvider.of<GetGuestAllPostCubit>(
                                           context)
                                           .seetinonExpried(context);
@@ -145,6 +144,7 @@ class _NewStoryViewPageState extends State<NewStoryViewPage> {
                                   ),
                                   GestureDetector(
                                     onTap: () async{
+                                      controller.dispose();
                                       await BlocProvider.of<GetGuestAllPostCubit>(
                                           context)
                                           .seetinonExpried(context);
@@ -226,6 +226,7 @@ class _NewStoryViewPageState extends State<NewStoryViewPage> {
                                 children: [
                                   GestureDetector(
                                     onTap: () async{
+                                      controller.dispose();
                                       await BlocProvider.of<GetGuestAllPostCubit>(
                                           context)
                                           .seetinonExpried(context);
@@ -260,6 +261,7 @@ class _NewStoryViewPageState extends State<NewStoryViewPage> {
                                   ),
                                   GestureDetector(
                                     onTap: () async{
+                                      controller.dispose();
                                       await BlocProvider.of<GetGuestAllPostCubit>(
                                           context)
                                           .seetinonExpried(context);
@@ -311,7 +313,11 @@ class _NewStoryViewPageState extends State<NewStoryViewPage> {
             ));
           }),
           onStoryShow: (storyItem, index) {
-            print("Showing a story");
+            print("Showing a story $index");
+            BlocProvider.of<ViewStoryCubit>(context).ViewStory(
+                context,
+                "${widget.userId}",
+                "${widget.datas[widget.index].images[index].storyUid}");
           },
           onComplete: () {
             print("current index : ${widget.index}");

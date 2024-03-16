@@ -248,7 +248,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         SizedBox(
-                          height: _height/2,
+                          // height: _height/2,
                           // height: 348,
                           // width: double.maxFinite,
                           child: Stack(
@@ -257,35 +257,29 @@ class _LoginScreenState extends State<LoginScreen> {
                                 imagePath: ImageConstant.LoginImage,
                                 height: 348,
                                 width: 414,
-                                alignment: Alignment.center,
+                                // alignment: Alignment.center,
                               ),
-                              Padding(
-                                padding: const EdgeInsets.only(top: 30),
-                                child: Container(
-                                  alignment: Alignment.topLeft,
-                                  child: AppbarImage(
-                                      height: 23,
-                                      width: 24,
-                                      svgPath: ImageConstant.imgArrowleft,
-                                      margin: EdgeInsets.only(
-                                          left: 20,
-                                          top: 19,
-                                          bottom: 13,
-                                          right: 15),
-                                      onTap: () {
-                                        if (widget.flagCheck != null ||
-                                            widget.flagCheck == 'otp done') {
-                                          Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      RegisterCreateAccountScreen()));
-                                        } else {
-                                          Navigator.pop(context);
-                                        }
-                                      }),
-                                ),
-                              ),
+                              AppbarImage(
+                                  height: 23,
+                                  width: 24,
+                                  svgPath: ImageConstant.imgArrowleft,
+                                  margin: EdgeInsets.only(
+                                      left: 20,
+                                      top: 50,
+                                      bottom: 13,
+                                      right: 15),
+                                  onTap: () {
+                                    if (widget.flagCheck != null ||
+                                        widget.flagCheck == 'otp done') {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  RegisterCreateAccountScreen()));
+                                    } else {
+                                      Navigator.pop(context);
+                                    }
+                                  }),
                             ],
                           ),
                         ),
