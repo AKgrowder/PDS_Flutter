@@ -85,6 +85,10 @@ import '../become_an_expert_screen/become_an_expert_screen.dart';
 import 'commenwigetReposrt.dart';
 
 GetGuestAllPostModel? AllGuestPostRoomData;
+GetAllStoryModel? getAllStoryModel;
+List<StoryButtonData> buttonDatas = [];
+List<StoryButton?> storyButtons = [];
+List<String> userName = [];
 bool apiCalingdone = false;
 
 class HomeScreenNew extends StatefulWidget {
@@ -139,7 +143,6 @@ class _HomeScreenNewState extends State<HomeScreenNew>
   bool storyAdded = false;
   BuildContext? storycontext;
   List<Widget> storyPagedata = [];
-  GetAllStoryModel? getAllStoryModel;
   FetchAllExpertsModel? AllExperData;
   SystemConfigModel? systemConfigModel;
   int? secound;
@@ -358,9 +361,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
   AddCommentModel? addCommentModeldata;
   final TextEditingController addcomment = TextEditingController();
   final ScrollController scroll = ScrollController();
-  List<StoryButtonData> buttonDatas = [];
-  List<StoryButton?> storyButtons = List.filled(1, null, growable: true);
-  List<String> userName = [];
+
   bool added = false;
 
   void showPopupMenu(BuildContext context, int index, buttonKey) {
@@ -1265,7 +1266,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
       
     }
     timer = Timer.periodic(Duration(seconds: 15), (timer) async {
-      super.setState(() {
+      setState(() {
         secound = timer.tick;
       });
       await BlocProvider.of<GetGuestAllPostCubit>(context)
@@ -1915,10 +1916,15 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                         segmentDuration: const Duration(seconds: 3),
                       );
                       buttonDatas.add(buttonData1);
-
+                      int curIndex = buttonDatas.length -1;
                       storyButtons.add(StoryButton(
                           onPressed: (data) {
-                            Navigator.of(storycontext!).push(
+                            Navigator.push(context,
+                                MaterialPageRoute(builder: (context) {
+                                  return NewStoryViewPage(
+                                      data, buttonDatas, curIndex, User_ID!);
+                                })).then((value) => Get_UserToken());
+                            /*Navigator.of(storycontext!).push(
                               StoryRoute(
                                 onTap: () async {
                                   await BlocProvider.of<GetGuestAllPostCubit>(
@@ -1942,7 +1948,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                 ),
                                 duration: buttonData1.pageAnimationDuration,
                               ),
-                            );
+                            );*/
                           },
                           buttonData: buttonData1,
                           allButtonDatas: buttonDatas,
@@ -2480,12 +2486,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
 
                                                 if (imageDataPost?.object !=
                                                     null) {
-                                                  await BlocProvider.of<
-                                                              GetGuestAllPostCubit>(
-                                                          context)
-                                                      .get_all_story(
-                                                    context,
-                                                  );
+
                                                   StoryButtonData buttonData =
                                                       StoryButtonData(
                                                     timelineBackgroundColor:
@@ -2591,7 +2592,12 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                       0, buttonData);
                                                   storyButtons[0] = StoryButton(
                                                       onPressed: (data) {
-                                                        Navigator.of(
+                                                        Navigator.push(context,
+                                                            MaterialPageRoute(builder: (context) {
+                                                              return NewStoryViewPage(
+                                                                  data, buttonDatas, 0, User_ID!);
+                                                            })).then((value) => Get_UserToken());
+                                                        /*Navigator.of(
                                                                 storycontext!)
                                                             .push(
                                                               StoryRoute(
@@ -2637,18 +2643,24 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                               ),
                                                             )
                                                             .then((value) =>
-                                                                Get_UserToken());
+                                                                Get_UserToken());*/
                                                       },
                                                       buttonData: buttonData,
                                                       allButtonDatas:
                                                           buttonDatas,
                                                       storyListViewController:
                                                           ScrollController());
-                                                  userName[0] = User_Name!;
+                                                  userName[0] = "Your Story";
 
                                                   if (mounted)
-                                                    super.setState(() {
+                                                    setState(() {
                                                       storyAdded = true;
+                                                      // BlocProvider.of<
+                                                      //     GetGuestAllPostCubit>(
+                                                      //     context)
+                                                      //     .get_all_story(
+                                                      //   context,
+                                                      // );
                                                     });
                                                 }
                                               },

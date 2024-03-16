@@ -25,6 +25,7 @@ import 'package:pds/StoryFile/src/story_route.dart';
 import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/core/utils/image_constant.dart';
 import 'package:pds/core/utils/sharedPreferences.dart';
+import 'package:pds/presentation/%20new/new_story_view_page.dart';
 import 'package:pds/presentation/%20new/profileNew.dart';
 import 'package:pds/presentation/create_story/full_story_page.dart';
 import 'package:pds/presentation/gallery_All_Image.dart/gallery_All_image.dart';
@@ -448,33 +449,34 @@ class _DmScreenState extends State<DmScreen> {
                             index.storyViewCount,
                             index.videoDuration ?? 15)
                       ];
-                      buttonDatas.insert(
-                          0,
-                          StoryButtonData(
-                              child: Padding(
-                                padding: const EdgeInsets.all(5.0),
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.max,
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: [
-                                    Text(
-                                      '',
-                                      style: const TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ],
+                      StoryButtonData data = StoryButtonData(
+                          child: Padding(
+                            padding: const EdgeInsets.all(5.0),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.max,
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                Text(
+                                  '',
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
-                              ),
-                              images: images,
-                              segmentDuration: const Duration(seconds: 3),
-                              storyPages: [
-                                FullStoryPage(
-                                  imageName: '${index.storyData}',
-                                )
-                              ]));
-                      Navigator.of(context)
+                              ],
+                            ),
+                          ),
+                          images: images,
+                          segmentDuration: const Duration(seconds: 3),
+                          storyPages: [
+                            FullStoryPage(
+                              imageName: '${index.storyData}',
+                            )
+                          ]);
+                      buttonDatas.insert(
+                          0,data
+                          );
+                      /*Navigator.of(context)
                           .push(
                             StoryRoute(
                               // hii working Date
@@ -501,7 +503,12 @@ class _DmScreenState extends State<DmScreen> {
                               duration: buttonDatas.first.pageAnimationDuration,
                             ),
                           )
-                          .then((value) => pageNumberMethod());
+                          .then((value) => pageNumberMethod());*/
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) {
+                            return NewStoryViewPage(
+                                data, buttonDatas, 0, userId!);
+                          })).then((value) => pageNumberMethod());
                     }
                   });
                 });
