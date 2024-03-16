@@ -272,4 +272,22 @@ class DmInboxCubit extends Cubit<getInboxState> {
       emit(getInboxErrorState(e));
     }
   }
+
+  Future<void> starMessageApi(
+      BuildContext context,String pageNumber) async {
+    dynamic starMessage;
+    try {
+      emit(getInboxLoadingState());
+      starMessage =
+          await Repository().get_Starred_Messagesapi(context,pageNumber);
+
+      if (starMessage.success == true) {
+        emit(StarMessageGet(starMessage));
+      }
+    } catch (e) {
+      print('errorstate-$e');
+      emit(getInboxErrorState(e));
+    }
+  }
+
 }

@@ -36,6 +36,8 @@ import 'package:swipe_to/swipe_to.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:zego_uikit_prebuilt_call/zego_uikit_prebuilt_call.dart';
 
+import 'allStarMessage.dart';
+
 enum Reaction { like, laugh, love, none }
 
 bool isLogPress = false;
@@ -208,7 +210,7 @@ class _DmScreenNewState extends State<DmScreenNew> with Observer {
     );
   }
 
-  void onConnectCallback(StompFrame connectFrame) { 
+  void onConnectCallback(StompFrame connectFrame) {
     stompClient?.subscribe(
         destination: '/topic/getInboxMessage/${widget.chatInboxUid}',
         headers: {},
@@ -464,11 +466,9 @@ class _DmScreenNewState extends State<DmScreenNew> with Observer {
                                 ),
                                 Spacer(),
                                 sendCallButton(
-
                                   isVideoCall: false,
                                   invitees: [
                                     ZegoUIKitUser(
-                                      
                                         id: widget.chatOtherUseruid
                                             .split('-')
                                             .last
@@ -476,7 +476,6 @@ class _DmScreenNewState extends State<DmScreenNew> with Observer {
                                         name: widget.chatUserName.toLowerCase())
                                   ],
                                   onCallFinished: onSendCallInvitationFinished,
-                                  url: ImageConstant.audiocall,
                                 ),
                                 sendCallButton(
                                   isVideoCall: true,
@@ -489,10 +488,14 @@ class _DmScreenNewState extends State<DmScreenNew> with Observer {
                                         name: widget.chatUserName.toLowerCase())
                                   ],
                                   onCallFinished: onSendCallInvitationFinished,
-                                  url: ImageConstant.vidoCall,
                                 ),
-                                
-                               
+                                GestureDetector(
+                                    onTapDown: (TapDownDetails details) {
+                                      _showPopupMenu(
+                                          context, details.globalPosition);
+                                    },
+                                    child: Icon(Icons.more_vert)),
+
                                 /*   sendCallButton(
                                   isVideoCall: true,
                                   userChatInboxUid:
@@ -2170,4 +2173,58 @@ class ReactionElement {
   final Icon icon;
 //
   ReactionElement(this.reaction, this.icon);
+}
+
+void _showPopupMenu(BuildContext context, Offset position) async {
+  final RenderBox overlay =
+      Overlay.of(context).context.findRenderObject() as RenderBox;
+
+  final value = await showMenu(
+    context: context,
+    position: RelativeRect.fromRect(
+      Rect.fromPoints(position, position),
+      Offset.zero & overlay.size,
+    ),
+    items: <PopupMenuEntry>[
+      PopupMenuItem(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+          child: Text('Images & Attachments'),
+        ),
+        value: 'images',
+      ),
+      PopupMenuItem(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+          child: Text('Star Message'),
+        ),
+        value: 'star',
+      ),
+      PopupMenuItem(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+          child: Text('Save'),
+        ),
+        value: 'save',
+      ),
+    ],
+  );
+
+  if (value != null) {
+    switch (value) {
+      case 'images':
+        // Handle images & attachments option
+        break;
+      case 'star':
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => StatrMessage(),
+            ));
+        break;
+      case 'save':
+        // Handle save option
+        break;
+    }
+  }
 }
