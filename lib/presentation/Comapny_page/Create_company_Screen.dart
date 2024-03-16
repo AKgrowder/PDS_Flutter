@@ -3,12 +3,10 @@ import 'dart:math';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:pds/API/Bloc/Comapny_Manage_bloc/Comapny_Manage_cubit.dart';
 import 'package:pds/API/Model/createDocumentModel/createDocumentModel.dart';
-import 'package:pds/API/Model/removeFolloweModel/removeFollowerModel.dart';
 import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/core/utils/image_constant.dart';
 import 'package:pds/presentation/policy_of_company/policy_screen.dart';
@@ -104,6 +102,17 @@ class _CreateComapnyScreenState extends State<CreateComapnyScreen> {
               chooseDocumentuploded = state.chooseDocument;
             }
           }
+
+          if (state is compenypagelodedstate) {
+            print("compenypagelodedstate");
+
+            SnackBar snackBar = SnackBar(
+              content: Text(state.compenypagemodel.object.toString()),
+              backgroundColor: ColorConstant.primary_color,
+            );
+            ScaffoldMessenger.of(context).showSnackBar(snackBar);
+            Navigator.pop(context);
+          }
         },
         builder: (context, state) {
           return SingleChildScrollView(
@@ -127,6 +136,11 @@ class _CreateComapnyScreenState extends State<CreateComapnyScreen> {
                                   child: ClipOval(
                                     child: FittedBox(
                                       child: CachedNetworkImage(
+                                        placeholder: (context, url) {
+                                          return CircularProgressIndicator(
+                                            color: ColorConstant.primary_color,
+                                          );
+                                        },
                                         height: 150,
                                         width: 150,
                                         imageUrl:
@@ -481,21 +495,42 @@ class _CreateComapnyScreenState extends State<CreateComapnyScreen> {
                             ],
                           ),
                         ),
-                        Container(
-                          alignment: Alignment.center,
-                          height: 50,
-                          width: _width,
-                          decoration: BoxDecoration(
-                              color: ColorConstant.primary_color,
-                              borderRadius: BorderRadius.circular(5)),
-                          child: Text(
-                            'Submit',
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontFamily: 'outfit',
-                                fontWeight: FontWeight.w600),
+                        if (isChecked == true)
+                          GestureDetector(
+                            onTap: () {
+                              // textfiledvalidation();
+                              var params = {
+                                "companyName": comapnyNameController.text,
+                                "companyType": dropdownValue,
+                                "description": descController.text,
+                                "pageId": pageIDController.text,
+                                "profilePic":
+                                    chooseDocumentuploded?.object.toString(),
+                              };
+                              print("parems--$params");
+                              BlocProvider.of<ComapnyManageCubit>(context)
+                                  .compenypageuplod(params, context)
+                                  .then((value) =>
+                                      BlocProvider.of<ComapnyManageCubit>(
+                                              context)
+                                          .getallcompenypagee(context));
+                            },
+                            child: Container(
+                              alignment: Alignment.center,
+                              height: 50,
+                              width: _width,
+                              decoration: BoxDecoration(
+                                  color: ColorConstant.primary_color,
+                                  borderRadius: BorderRadius.circular(5)),
+                              child: Text(
+                                'Submit',
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontFamily: 'outfit',
+                                    fontWeight: FontWeight.w600),
+                              ),
+                            ),
                           ),
-                        ),
                       ],
                     ),
                   )
@@ -506,6 +541,39 @@ class _CreateComapnyScreenState extends State<CreateComapnyScreen> {
         },
       ),
     );
+  }
+
+  textfiledvalidation() {
+    if (comapnyNameController.text == null ||
+        comapnyNameController.text == "") {
+      SnackBar snackBar = SnackBar(
+        content: Text('Please Enter Compeny Name'),
+        backgroundColor: ColorConstant.primary_color,
+      );
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    }
+
+    if (dropdownValue == null || dropdownValue == "") {
+      SnackBar snackBar = SnackBar(
+        content: Text('Please Enter Compeny Type'),
+        backgroundColor: ColorConstant.primary_color,
+      );
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    }
+    if (pageIDController.text == null || pageIDController.text == "") {
+      SnackBar snackBar = SnackBar(
+        content: Text('Please Enter Page ID'),
+        backgroundColor: ColorConstant.primary_color,
+      );
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    }
+    if (descController.text == null || descController.text == "") {
+      SnackBar snackBar = SnackBar(
+        content: Text('Please Enter Description'),
+        backgroundColor: ColorConstant.primary_color,
+      );
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    }
   }
 
   Future<void> gallerypicker() async {

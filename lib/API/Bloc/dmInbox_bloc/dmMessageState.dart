@@ -3,6 +3,7 @@ import 'package:pds/API/Model/GetAllInboxImagesModel/GetAllInboxImagesModel.dart
 import 'package:pds/API/Model/MarkStarred/MarkStarredModel.dart';
 import 'package:pds/API/Model/acceptRejectInvitaionModel/getAllNotificationCount.dart';
 import 'package:pds/API/Model/createDocumentModel/createDocumentModel.dart';
+import 'package:pds/API/Model/get_Starred_MessagesModel/get_Starred_Messages.dart';
 import 'package:pds/API/Model/inboxScreenModel/LiveStatusModel.dart';
 import 'package:pds/API/Model/inboxScreenModel/SeenAllMessageModel.dart';
 import 'package:pds/API/Model/inboxScreenModel/inboxScrrenModel.dart';
@@ -63,4 +64,11 @@ class GetAllStoryLoadedState extends getInboxState {
 class GetAllStarClass extends getInboxState {
   final MarkStarred markStarred;
   GetAllStarClass(this.markStarred);
+}
+
+
+
+class StarMessageGet extends getInboxState {
+  final StaeMessageModel  starMessage;
+  StarMessageGet(this.starMessage);
 }

@@ -2,12 +2,17 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/presentation/Comapny_page/Create_company_Screen.dart';
 import 'package:pds/presentation/Comapny_page/Delete_Comapny_dailog.dart';
+import 'package:pds/presentation/Comapny_page/view_compeny_page.dart';
 import 'package:share_plus/share_plus.dart';
 
+import '../../API/Bloc/Comapny_Manage_bloc/Comapny_Manage_cubit.dart';
+import '../../API/Bloc/Comapny_Manage_bloc/Comapny_Manage_state.dart';
+import '../../API/Model/getall_compeny_page_model/getall_compeny_page.dart';
 import '../../core/utils/image_constant.dart';
 import '../../widgets/custom_image_view.dart';
 
@@ -19,6 +24,14 @@ class ComapnyManageScreen extends StatefulWidget {
 }
 
 class _ComapnyManageScreenState extends State<ComapnyManageScreen> {
+  GetAllCompenyPageModel? getallcompenypage;
+  @override
+  void initState() {
+    BlocProvider.of<ComapnyManageCubit>(context).getallcompenypagee(context);
+
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     double _width = MediaQuery.of(context).size.width;
@@ -57,79 +70,135 @@ class _ComapnyManageScreenState extends State<ComapnyManageScreen> {
           child: Icon(Icons.add),
           backgroundColor: ColorConstant.primary_color,
         ),
-        body: ListView.builder(
-          itemCount: 10,
-          itemBuilder: (context, index) {
-            return Padding(
-              padding: const EdgeInsets.only(right: 15, left: 15, bottom: 15),
-              child: Container(
-                height: 70,
-                decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey),
-                    borderRadius: BorderRadius.circular(10)),
-                child: Padding(
-                  padding: const EdgeInsets.only(right: 15, left: 15),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        children: [
-                          CustomImageView(
-                            imagePath: ImageConstant.tomcruse,
-                            height: 50,
-                            radius: BorderRadius.circular(25),
-                            width: 50,
-                            fit: BoxFit.fill,
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(
-                                top: 13, bottom: 13, left: 10),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Flexible(
-                                  child: Container(
-                                    width: _width / 2.5,
-                                    child: Text(
-                                      "Inpackaging",
-                                      overflow: TextOverflow.ellipsis,
-                                      style: TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.w600,
-                                        color: Colors.black,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                Flexible(
-                                  child: Container(
-                                    width: _width / 2.5,
-                                    child: Text(
-                                      "Private Limited",
-                                      overflow: TextOverflow.ellipsis,
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w400,
-                                        color: Colors.black,
-                                      ),
-                                    ),
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
-                        ],
+        body: BlocConsumer<ComapnyManageCubit, ComapnyManageState>(
+          listener: (context, state) {
+            if (state is Getallcompenypagelodedstate) {
+              getallcompenypage = state.getallcompenypagemodel;
+            }
+          },
+          builder: (context, state) {
+            return getallcompenypage?.object == null
+                ? Center(
+                    child: Container(
+                      margin: EdgeInsets.only(bottom: 100),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(20),
+                        child: Image.asset(ImageConstant.loader,
+                            fit: BoxFit.cover, height: 100.0, width: 100),
                       ),
-                      GestureDetector(
-                          onTapDown: (details) {
-                            showPopUp(details.globalPosition, context);
-                          },
-                          child: Icon(Icons.more_vert))
-                    ],
-                  ),
-                ),
-              ),
-            );
+                    ),
+                  )
+                : getallcompenypage?.object?.length == 0
+                    ? Center(
+                        child: Image.asset(
+                          ImageConstant.emptylistimage,
+                          height: _height / 2,
+                        ),
+                      )
+                    : ListView.builder(
+                        itemCount: getallcompenypage?.object?.length,
+                        itemBuilder: (context, index) {
+                          return Padding(
+                            padding: const EdgeInsets.only(
+                                right: 15, left: 15, bottom: 15),
+                            child: Container(
+                              height: 70,
+                              decoration: BoxDecoration(
+                                  border: Border.all(color: Colors.grey),
+                                  borderRadius: BorderRadius.circular(10)),
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.only(right: 15, left: 15),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        getallcompenypage?.object?[index]
+                                                    .profilePic ==
+                                                null
+                                            ? CustomImageView(
+                                                imagePath:
+                                                    ImageConstant.tomcruse,
+                                                height: 50,
+                                                radius:
+                                                    BorderRadius.circular(25),
+                                                width: 50,
+                                                fit: BoxFit.fill,
+                                              )
+                                            : GestureDetector(
+                                                onTap: () {
+                                                  print(
+                                                      "as per image-${getallcompenypage?.object?[index].profilePic}");
+                                                },
+                                                child: CustomImageView(
+                                                  url:
+                                                      "${getallcompenypage?.object?[index].profilePic}",
+                                                  height: 50,
+                                                  radius:
+                                                      BorderRadius.circular(25),
+                                                  width: 50,
+                                                  fit: BoxFit.fill,
+                                                ),
+                                              ),
+                                        Padding(
+                                          padding: const EdgeInsets.only(
+                                              top: 13, bottom: 13, left: 10),
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Flexible(
+                                                child: Container(
+                                                  width: _width / 2.5,
+                                                  child: Text(
+                                                    " ${getallcompenypage?.object?[index].companyName}",
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                    style: TextStyle(
+                                                      fontSize: 18,
+                                                      fontWeight:
+                                                          FontWeight.w600,
+                                                      color: Colors.black,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                              Flexible(
+                                                child: Container(
+                                                  width: _width / 2.5,
+                                                  child: Text(
+                                                    " ${getallcompenypage?.object?[index].companyType}",
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                    style: TextStyle(
+                                                      fontSize: 14,
+                                                      fontWeight:
+                                                          FontWeight.w400,
+                                                      color: Colors.black,
+                                                    ),
+                                                  ),
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    GestureDetector(
+                                        onTapDown: (details) {
+                                          showPopUp(details.globalPosition,
+                                              context, index);
+                                        },
+                                        child: Icon(Icons.more_vert))
+                                  ],
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      );
           },
         ));
   }
@@ -137,6 +206,7 @@ class _ComapnyManageScreenState extends State<ComapnyManageScreen> {
   void showPopUp(
     Offset offset,
     BuildContext context,
+    int index,
   ) async {
     double right = offset.dx;
     double top = offset.dy;
@@ -162,23 +232,42 @@ class _ComapnyManageScreenState extends State<ComapnyManageScreen> {
                 print("yes i sm comming!!");
               },
               enabled: true,
-              child: Container(
-                width: 120,
-                child: Row(
-                  children: [
-                    CustomImageView(
-                      imagePath: ImageConstant.infoimage,
-                      height: 20,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 8),
-                      child: Text(
-                        "View Details",
-                        style: TextStyle(color: Colors.black),
-                        textScaleFactor: 1.0,
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.push(context, MaterialPageRoute(
+                    builder: (context) {
+                      return ViewCompenyPage(
+                        profilePic:
+                            "${getallcompenypage?.object?[index].profilePic}",
+                        companyName:
+                            "${getallcompenypage?.object?[index].companyName}",
+                        pageid: "${getallcompenypage?.object?[index].pageId}",
+                        companyType:
+                            "${getallcompenypage?.object?[index].companyType}",
+                        description:
+                            "${getallcompenypage?.object?[index].description}",
+                      );
+                    },
+                  ));
+                },
+                child: Container(
+                  width: 120,
+                  child: Row(
+                    children: [
+                      CustomImageView(
+                        imagePath: ImageConstant.infoimage,
+                        height: 20,
                       ),
-                    ),
-                  ],
+                      Padding(
+                        padding: const EdgeInsets.only(left: 8),
+                        child: Text(
+                          "View Details",
+                          style: TextStyle(color: Colors.black),
+                          textScaleFactor: 1.0,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               )),
           PopupMenuItem(
@@ -239,7 +328,7 @@ class _ComapnyManageScreenState extends State<ComapnyManageScreen> {
         if (value == 0) {}
         if (value == 1) {
           _onShareXFileFromAssets(context, androidLink: ' ');
-          //add link 
+          //add link
         }
         if (value == 2) {
           showDialog(
