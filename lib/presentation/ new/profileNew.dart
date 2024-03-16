@@ -908,40 +908,44 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                             )),
                                                 ),
                                               ),
-                                              Positioned(
-                                                bottom: 5,
-                                                right: -0,
-                                                child: GestureDetector(
-                                                  onTapDown:
-                                                      (TapDownDetails details) {
-                                                    _showPopupMenuSwitchAccount(
-                                                      details.globalPosition,
-                                                      context,
-                                                    );
-                                                  },
-                                                  child: Container(
-                                                      height: 40,
-                                                      width: 40,
-                                                      decoration: BoxDecoration(
-                                                          shape:
-                                                              BoxShape.circle,
-                                                          color: ColorConstant
-                                                              .primaryLight_color),
-                                                      child: Center(
-                                                        child: Padding(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                  .all(8.0),
-                                                          child: Image.asset(
-                                                            ImageConstant
-                                                                .switchAccount,
+                                              if (NewProfileData
+                                                      ?.object?.module ==
+                                                  "COMPANY")
+                                                Positioned(
+                                                  bottom: 5,
+                                                  right: -0,
+                                                  child: GestureDetector(
+                                                  
+                                                    onTapDown: (TapDownDetails
+                                                        details) {
+                                                      /* _showPopupMenuSwitchAccount(
+                                                        details.globalPosition,
+                                                        context,
+                                                      ); */
+                                                    },
+                                                    child: Container(
+                                                        height: 40,
+                                                        width: 40,
+                                                        decoration: BoxDecoration(
+                                                            shape:
+                                                                BoxShape.circle,
                                                             color: ColorConstant
-                                                                .primary_color,
+                                                                .primaryLight_color),
+                                                        child: Center(
+                                                          child: Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                    .all(8.0),
+                                                            child: Image.asset(
+                                                              ImageConstant
+                                                                  .switchAccount,
+                                                              color: ColorConstant
+                                                                  .primary_color,
+                                                            ),
                                                           ),
-                                                        ),
-                                                      )),
-                                                ),
-                                              )
+                                                        )),
+                                                  ),
+                                                )
                                             ],
                                           ),
                                         ),
@@ -1120,10 +1124,11 @@ class _ProfileScreenState extends State<ProfileScreen>
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Padding(
-                                      padding: const EdgeInsets.only(left: 10),
+                                      padding: const EdgeInsets.only(left: 0,),
                                       child: Text(
                                         '@${NewProfileData?.object?.userName}',
                                         style: TextStyle(
+                                          fontSize: 18,
                                             fontFamily: "outfit",
                                             fontWeight: FontWeight.bold,
                                             color: Color(0xff444444)),
@@ -11984,104 +11989,4 @@ class _ProfileScreenState extends State<ProfileScreen>
     );
   }
 
-  void _showPopupMenuSwitchAccount(
-    Offset position,
-    BuildContext context,
-  ) async {
-    List<String> name = ["Inpackaging", "Growder"];
-
-    final RenderBox overlay =
-        Overlay.of(context).context.findRenderObject() as RenderBox;
-    double _width = MediaQuery.of(context).size.width;
-    double _height = MediaQuery.of(context).size.height;
-    await showMenu(
-        context: context,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(
-            Radius.circular(10),
-          ),
-        ),
-        position: RelativeRect.fromRect(
-          position & const Size(40, 40),
-          Offset.zero & overlay.size,
-        ),
-        items: List.generate(
-            name.length,
-            (index) => PopupMenuItem(
-                onTap: () {
-                  super.setState(() {
-                    indexx = index;
-                  });
-                  // index == 0 ? CreateForum() : becomeAnExport();
-                },
-                child: Container(
-                    decoration: BoxDecoration(
-                        color: indexx == index
-                            ? ColorConstant.primary_color
-                            : Colors.transparent,
-                        borderRadius: BorderRadius.circular(5)),
-                    width: 180,
-                    height: 50,
-                    child: Padding(
-                      padding: EdgeInsets.only(right: 10, left: 10),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Row(
-                            children: [
-                              CustomImageView(
-                                imagePath: ImageConstant.tomcruse,
-                                height: 30,
-                                radius: BorderRadius.circular(25),
-                                width: 30,
-                                fit: BoxFit.fill,
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(
-                                    top: 8, bottom: 8, left: 10),
-                                child: Column(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Flexible(
-                                      child: Container(
-                                        child: Text(
-                                          "${name[index]}",
-                                          overflow: TextOverflow.ellipsis,
-                                          style: TextStyle(
-                                            fontSize: 15,
-                                            fontWeight: FontWeight.w600,
-                                            color: Colors.black,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    Flexible(
-                                      child: Container(
-                                        child: Text(
-                                          "@${name[index]}",
-                                          overflow: TextOverflow.ellipsis,
-                                          style: TextStyle(
-                                            fontSize: 12,
-                                            fontWeight: FontWeight.w400,
-                                            color: Colors.black,
-                                          ),
-                                        ),
-                                      ),
-                                    )
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                          Image.asset(
-                            indexx == index
-                                ? ImageConstant.selectComapny
-                                : ImageConstant.UnselectComapny,
-                            height: 20,
-                          )
-                        ],
-                      ),
-                    )))));
-  }
 }
