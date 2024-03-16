@@ -252,6 +252,7 @@ class HashTagCubit extends Cubit<HashTagState> {
 
   Future<void> serchDataAdd(BuildContext context, String typeWord) async {
     dynamic serchDataAdd;
+    print("Add history keyword $typeWord");
     try {
       emit(HashTagLoadingState());
       serchDataAdd =

@@ -155,6 +155,7 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
               apiDataSetup = true;
 
               hashtagModel = state.HashTagData;
+              hashtagModel!.object!.content!.forEach((element) {print("Hashtag search history : ${element.hashtagName}");});
             }
             if (state is GetNotificationCountLoadedState) {
               print(state.GetNotificationCountData.object);
