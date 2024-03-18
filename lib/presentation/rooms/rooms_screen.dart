@@ -29,7 +29,8 @@ import '../register_create_account_screen/register_create_account_screen.dart';
 
 class RoomsScreen extends StatefulWidget {
   bool? ProfileNotification;
-  RoomsScreen({Key? key, this.ProfileNotification}) : super(key: key);
+    String? roomID;
+  RoomsScreen({Key? key, this.ProfileNotification,this.roomID}) : super(key: key);
 
   @override
   State<RoomsScreen> createState() => _RoomsScreenState();
@@ -72,9 +73,22 @@ class _RoomsScreenState extends State<RoomsScreen> {
     // BlocProvider.of<GetAllPrivateRoomCubit>(context).GetAllPrivateRoomAPI();
     // BlocProvider.of<GetAllPrivateRoomCubit>(context).chckUserStaus();
     method();
+      // if (widget.ProfileNotification == true) {
+    //   navigation();
+    // }
     // BlocProvider.of<GetAllPrivateRoomCubit>(context).chckUserStaus();
     super.initState();
   }
+
+
+  // navigation() {
+  //   Navigator.push(context, MaterialPageRoute(builder: (context) {
+  //     return ViewCommentScreen(
+  //       Room_ID: "${widget.roomID}",
+  //       Title: "",
+  //     );
+  //   }));
+  // }
 
   method() async {
     print('this methosd perint or not');
