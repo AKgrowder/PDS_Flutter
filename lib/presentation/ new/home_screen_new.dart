@@ -2964,111 +2964,114 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                 ? Padding(
                                                     padding: EdgeInsets.only(
                                                         left: 0, right: 0),
-                                                    child: GestureDetector(
-                                                      onTap: () {
-                                                        if (AllGuestPostRoomData
+                                                    child: AllGuestPostRoomData
                                                                 ?.object
                                                                 ?.content?[
                                                                     index]
-                                                                .postDataType !=
-                                                            "ATTACHMENT") {
-                                                          Navigator.push(
-                                                              context,
-                                                              MaterialPageRoute(
-                                                                builder: (context) => OpenSavePostImage(
-                                                                    PostID: AllGuestPostRoomData
+                                                                .isReports ==
+                                                            true
+                                                        ? Container(
+                                                            width: _width,
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              color: Color(
+                                                                  0xffF0F0F0),
+                                                            ),
+                                                            child: Column(
+                                                              children: [
+                                                                SizedBox(
+                                                                  height: 10,
+                                                                ),
+                                                                SizedBox(
+                                                                    height:
+                                                                        20,
+                                                                    child: Image.asset(
+                                                                        ImageConstant
+                                                                            .greenseen)),
+                                                                SizedBox(
+                                                                  height: 10,
+                                                                ),
+                                                                Text(
+                                                                  'Thanks for reporting',
+                                                                  style: TextStyle(
+                                                                      color: Colors
+                                                                          .black),
+                                                                ),
+                                                                SizedBox(
+                                                                  height: 5,
+                                                                ),
+                                                                Text(
+                                                                  'Post Reported and under review',
+                                                                  style: TextStyle(
+                                                                      color: Colors
+                                                                          .grey),
+                                                                ),
+                                                                SizedBox(
+                                                                  height: 20,
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          )
+                                                        : Container(
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              color: Colors
+                                                                  .white,
+                                                              border: Border.all(
+                                                                  color: Color
+                                                                      .fromRGBO(
+                                                                          0,
+                                                                          0,
+                                                                          0,
+                                                                          0.25)),
+                                                              /*  borderRadius:
+                                                          BorderRadius
+                                                              .circular(15) */
+                                                            ),
+                                                            // height: 300,
+                                                            width: _width,
+                                                            child: Column(
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .start,
+                                                              children: [
+                                                                SizedBox(
+                                                                  height: 10,
+                                                                ),
+                                                                //post content
+                                                                GestureDetector(
+                                                                  onTap: () {
+                                                                    if (AllGuestPostRoomData
                                                                         ?.object
                                                                         ?.content?[
-                                                                            index]
-                                                                        .postUid),
-                                                              )).then((value) {
-                                                            // Get_UserToken();
+                                                                    index]
+                                                                        .postDataType !=
+                                                                        "ATTACHMENT") {
+                                                                      Navigator.push(
+                                                                          context,
+                                                                          MaterialPageRoute(
+                                                                            builder: (context) => OpenSavePostImage(
+                                                                                PostID: AllGuestPostRoomData
+                                                                                    ?.object
+                                                                                    ?.content?[
+                                                                                index]
+                                                                                    .postUid),
+                                                                          )).then((value) {
+                                                                        // Get_UserToken();
 
-                                                            setColorr();
-                                                          });
-                                                        }
-                                                      },
-                                                      onDoubleTap: () async {
-                                                        await soicalFunation(
-                                                            apiName:
-                                                                'like_post',
-                                                            index: index);
-                                                      },
-                                                      child: AllGuestPostRoomData
-                                                                  ?.object
-                                                                  ?.content?[
-                                                                      index]
-                                                                  .isReports ==
-                                                              true
-                                                          ? Container(
-                                                              width: _width,
-                                                              decoration:
-                                                                  BoxDecoration(
-                                                                color: Color(
-                                                                    0xffF0F0F0),
-                                                              ),
-                                                              child: Column(
-                                                                children: [
-                                                                  SizedBox(
-                                                                    height: 10,
-                                                                  ),
-                                                                  SizedBox(
-                                                                      height:
-                                                                          20,
-                                                                      child: Image.asset(
-                                                                          ImageConstant
-                                                                              .greenseen)),
-                                                                  SizedBox(
-                                                                    height: 10,
-                                                                  ),
-                                                                  Text(
-                                                                    'Thanks for reporting',
-                                                                    style: TextStyle(
-                                                                        color: Colors
-                                                                            .black),
-                                                                  ),
-                                                                  SizedBox(
-                                                                    height: 5,
-                                                                  ),
-                                                                  Text(
-                                                                    'Post Reported and under review',
-                                                                    style: TextStyle(
-                                                                        color: Colors
-                                                                            .grey),
-                                                                  ),
-                                                                  SizedBox(
-                                                                    height: 20,
-                                                                  ),
-                                                                ],
-                                                              ),
-                                                            )
-                                                          : Container(
-                                                              decoration:
-                                                                  BoxDecoration(
-                                                                color: Colors
-                                                                    .white,
-                                                                border: Border.all(
-                                                                    color: Color
-                                                                        .fromRGBO(
-                                                                            0,
-                                                                            0,
-                                                                            0,
-                                                                            0.25)),
-                                                                /*  borderRadius:
-                                                            BorderRadius
-                                                                .circular(15) */
-                                                              ),
-                                                              // height: 300,
-                                                              width: _width,
-                                                              child: Column(
-                                                                crossAxisAlignment:
-                                                                    CrossAxisAlignment
-                                                                        .start,
-                                                                children: [
-                                                                  SizedBox(
-                                                                    height: 10,
-                                                                  ),
-                                                                  Container(
+                                                                        setColorr();
+                                                                      });
+                                                                    }
+                                                                  },
+                                                                  onDoubleTap: () async {
+                                                                    await soicalFunation(
+                                                                        apiName:
+                                                                        'like_post',
+                                                                        index: index);
+                                                                  },
+                                                                  child: Column(
+                                                                  children:[
+                                                                    Container(
                                                                     height: 60,
                                                                     child:
                                                                         ListTile(
@@ -3165,16 +3168,16 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                               /*  onTapDown:
                                                                   (TapDownDetails
                                                                       details) {
-                                                                delete_dilog_menu(
+                                                              delete_dilog_menu(
                                                                   details
                                                                       .globalPosition,
                                                                   context,
-                                                                );
-                                                              },
-                                                              onTap: () {
-                                                                Navigator.pop(
+                                                              );
+                                                            },
+                                                            onTap: () {
+                                                              Navigator.pop(
                                                                     context);
-                                                              }, */
+                                                            }, */
                                                                               child: Icon(
                                                                                 Icons.more_vert_rounded,
                                                                               ))
@@ -4318,361 +4321,364 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                   ),
                                                                   SizedBox(
                                                                     height: 5,
-                                                                  ),
-                                                                  Padding(
-                                                                    padding: const EdgeInsets
-                                                                            .only(
-                                                                        top: 0,
-                                                                        right:
-                                                                            16),
-                                                                    child: Row(
-                                                                      children: [
-                                                                        SizedBox(
-                                                                          width:
-                                                                              14,
-                                                                        ),
-                                                                        GestureDetector(
-                                                                          onTap:
-                                                                              () async {
-                                                                            await soicalFunation(
-                                                                                apiName: 'like_post',
-                                                                                index: index);
-                                                                          },
+                                                                  ),]),
+                                                                ),
+                                                                Padding(
+                                                                  padding: const EdgeInsets
+                                                                          .only(
+                                                                      top: 0,
+                                                                      right:
+                                                                          16),
+                                                                  child: Row(
+                                                                    children: [
+                                                                      SizedBox(
+                                                                        width:
+                                                                            14,
+                                                                      ),
+                                                                      GestureDetector(
+                                                                        onTap:
+                                                                            () async {
+                                                                          await soicalFunation(
+                                                                              apiName: 'like_post',
+                                                                              index: index);
+                                                                        },
+                                                                        child:
+                                                                            Container(
+                                                                          color:
+                                                                              Colors.transparent,
                                                                           child:
-                                                                              Container(
-                                                                            color:
-                                                                                Colors.transparent,
-                                                                            child:
-                                                                                Padding(
-                                                                              padding: const EdgeInsets.all(5.0),
-                                                                              child: AllGuestPostRoomData?.object?.content?[index].isLiked != true
-                                                                                  ? Image.asset(
-                                                                                      ImageConstant.likewithout,
-                                                                                      height: 20,
-                                                                                    )
-                                                                                  : Image.asset(
-                                                                                      ImageConstant.like,
-                                                                                      height: 20,
-                                                                                    ),
-                                                                            ),
+                                                                              Padding(
+                                                                            padding: const EdgeInsets.all(5.0),
+                                                                            child: AllGuestPostRoomData?.object?.content?[index].isLiked != true
+                                                                                ? Image.asset(
+                                                                                    ImageConstant.likewithout,
+                                                                                    height: 20,
+                                                                                  )
+                                                                                : Image.asset(
+                                                                                    ImageConstant.like,
+                                                                                    height: 20,
+                                                                                  ),
                                                                           ),
                                                                         ),
-                                                                        SizedBox(
-                                                                          width:
-                                                                              0,
-                                                                        ),
-                                                                        AllGuestPostRoomData?.object?.content?[index].likedCount ==
-                                                                                0
-                                                                            ? SizedBox()
-                                                                            : GestureDetector(
-                                                                                onTap: () {
-                                                                                  /* Navigator.push(
+                                                                      ),
+                                                                      SizedBox(
+                                                                        width:
+                                                                            0,
+                                                                      ),
+                                                                      AllGuestPostRoomData?.object?.content?[index].likedCount ==
+                                                                              0
+                                                                          ? SizedBox()
+                                                                          : GestureDetector(
+                                                                              onTap: () {
+                                                                                /* Navigator.push(
                                                     context,
                                                     MaterialPageRoute(
-                                                        builder: (context) =>
-                                                       
-                                                            ShowAllPostLike("${AllGuestPostRoomData?.object?[index].postUid}"))); */
+                                                      builder: (context) =>
 
-                                                                                  Navigator.push(context, MaterialPageRoute(
-                                                                                    builder: (context) {
-                                                                                      return ShowAllPostLike("${AllGuestPostRoomData?.object?.content?[index].postUid}");
-                                                                                    },
-                                                                                  ));
-                                                                                },
-                                                                                child: Container(
-                                                                                  color: Colors.transparent,
-                                                                                  child: Padding(
-                                                                                    padding: const EdgeInsets.all(5.0),
-                                                                                    child: Text(
-                                                                                      "${AllGuestPostRoomData?.object?.content?[index].likedCount}",
-                                                                                      style: TextStyle(fontFamily: "outfit", fontSize: 14),
-                                                                                    ),
+                                                          ShowAllPostLike("${AllGuestPostRoomData?.object?[index].postUid}"))); */
+
+                                                                                Navigator.push(context, MaterialPageRoute(
+                                                                                  builder: (context) {
+                                                                                    return ShowAllPostLike("${AllGuestPostRoomData?.object?.content?[index].postUid}");
+                                                                                  },
+                                                                                ));
+                                                                              },
+                                                                              child: Container(
+                                                                                color: Colors.transparent,
+                                                                                child: Padding(
+                                                                                  padding: const EdgeInsets.all(5.0),
+                                                                                  child: Text(
+                                                                                    "${AllGuestPostRoomData?.object?.content?[index].likedCount}",
+                                                                                    style: TextStyle(fontFamily: "outfit", fontSize: 14),
                                                                                   ),
                                                                                 ),
                                                                               ),
-                                                                        SizedBox(
-                                                                          width:
-                                                                              8,
-                                                                        ),
-                                                                        GestureDetector(
-                                                                          onTap:
-                                                                              () async {
-                                                                            if (uuid ==
-                                                                                null) {
-                                                                              Navigator.of(context).push(MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
-                                                                            } else {
-                                                                              BlocProvider.of<AddcommentCubit>(context).Addcomment(context, '${AllGuestPostRoomData?.object?.content?[index].postUid}');
-                                                                              _settingModalBottomSheet1(context, index, _width);
-                                                                            }
-                                                                          },
+                                                                            ),
+                                                                      SizedBox(
+                                                                        width:
+                                                                            8,
+                                                                      ),
+                                                                      GestureDetector(
+                                                                        onTap:
+                                                                            () async {
+                                                                          if (uuid ==
+                                                                              null) {
+                                                                            Navigator.of(context).push(MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
+                                                                          } else {
+                                                                            BlocProvider.of<AddcommentCubit>(context).Addcomment(context, '${AllGuestPostRoomData?.object?.content?[index].postUid}');
+                                                                            _settingModalBottomSheet1(context, index, _width);
+                                                                          }
+                                                                        },
+                                                                        child:
+                                                                            Container(
+                                                                          color:
+                                                                              Colors.transparent,
                                                                           child:
-                                                                              Container(
-                                                                            color:
-                                                                                Colors.transparent,
-                                                                            child:
-                                                                                Padding(
-                                                                              padding: const EdgeInsets.all(5.0),
-                                                                              child: Image.asset(
-                                                                                ImageConstant.meesage,
-                                                                                height: 15,
-                                                                              ),
+                                                                              Padding(
+                                                                            padding: const EdgeInsets.all(5.0),
+                                                                            child: Image.asset(
+                                                                              ImageConstant.meesage,
+                                                                              height: 15,
                                                                             ),
                                                                           ),
                                                                         ),
-                                                                        SizedBox(
-                                                                          width:
-                                                                              5,
-                                                                        ),
-                                                                        AllGuestPostRoomData?.object?.content?[index].commentCount ==
-                                                                                0
-                                                                            ? SizedBox()
-                                                                            : Text(
-                                                                                "${AllGuestPostRoomData?.object?.content?[index].commentCount}",
-                                                                                style: TextStyle(fontFamily: "outfit", fontSize: 14),
-                                                                              ),
-                                                                        SizedBox(
-                                                                          width:
-                                                                              8,
-                                                                        ),
-                                                                        GestureDetector(
-                                                                          onTap:
-                                                                              () {
-                                                                            rePostBottomSheet(context,
-                                                                                index);
-                                                                            // Navigator.push(
-                                                                            //     context,
-                                                                            //     MaterialPageRoute(
-                                                                            //   builder:
-                                                                            //       (context) {
-                                                                            //     return RePostScreen(
-                                                                            //       userProfile: AllGuestPostRoomData
-                                                                            //           ?.object
-                                                                            //           ?.content?[
-                                                                            //               index]
-                                                                            //           .userProfilePic,
-                                                                            //       username: AllGuestPostRoomData
-                                                                            //           ?.object
-                                                                            //           ?.content?[
-                                                                            //               index]
-                                                                            //           .postUserName,
-                                                                            //       date: AllGuestPostRoomData
-                                                                            //           ?.object
-                                                                            //           ?.content?[
-                                                                            //               index]
-                                                                            //           .createdAt,
-                                                                            //       desc: AllGuestPostRoomData
-                                                                            //           ?.object
-                                                                            //           ?.content?[
-                                                                            //               index]
-                                                                            //           .description,
-                                                                            //       postData: AllGuestPostRoomData
-                                                                            //           ?.object
-                                                                            //           ?.content?[
-                                                                            //               index]
-                                                                            //           .postData,
-                                                                            //       postDataType: AllGuestPostRoomData
-                                                                            //           ?.object
-                                                                            //           ?.content?[
-                                                                            //               index]
-                                                                            //           .postDataType,
-                                                                            //       index:
-                                                                            //           index,
-                                                                            //       AllGuestPostRoomData:
-                                                                            //           AllGuestPostRoomData,
-                                                                            //       postUid: AllGuestPostRoomData
-                                                                            //           ?.object
-                                                                            //           ?.content?[
-                                                                            //               index]
-                                                                            //           .postUid,
-                                                                            //     );
-                                                                            //   },
-                                                                            // ));
-                                                                          },
+                                                                      ),
+                                                                      SizedBox(
+                                                                        width:
+                                                                            5,
+                                                                      ),
+                                                                      AllGuestPostRoomData?.object?.content?[index].commentCount ==
+                                                                              0
+                                                                          ? SizedBox()
+                                                                          : Text(
+                                                                              "${AllGuestPostRoomData?.object?.content?[index].commentCount}",
+                                                                              style: TextStyle(fontFamily: "outfit", fontSize: 14),
+                                                                            ),
+                                                                      SizedBox(
+                                                                        width:
+                                                                            8,
+                                                                      ),
+                                                                      GestureDetector(
+                                                                        onTap:
+                                                                            () {
+                                                                          rePostBottomSheet(context,
+                                                                              index);
+                                                                          // Navigator.push(
+                                                                          //     context,
+                                                                          //     MaterialPageRoute(
+                                                                          //   builder:
+                                                                          //       (context) {
+                                                                          //     return RePostScreen(
+                                                                          //       userProfile: AllGuestPostRoomData
+                                                                          //           ?.object
+                                                                          //           ?.content?[
+                                                                          //               index]
+                                                                          //           .userProfilePic,
+                                                                          //       username: AllGuestPostRoomData
+                                                                          //           ?.object
+                                                                          //           ?.content?[
+                                                                          //               index]
+                                                                          //           .postUserName,
+                                                                          //       date: AllGuestPostRoomData
+                                                                          //           ?.object
+                                                                          //           ?.content?[
+                                                                          //               index]
+                                                                          //           .createdAt,
+                                                                          //       desc: AllGuestPostRoomData
+                                                                          //           ?.object
+                                                                          //           ?.content?[
+                                                                          //               index]
+                                                                          //           .description,
+                                                                          //       postData: AllGuestPostRoomData
+                                                                          //           ?.object
+                                                                          //           ?.content?[
+                                                                          //               index]
+                                                                          //           .postData,
+                                                                          //       postDataType: AllGuestPostRoomData
+                                                                          //           ?.object
+                                                                          //           ?.content?[
+                                                                          //               index]
+                                                                          //           .postDataType,
+                                                                          //       index:
+                                                                          //           index,
+                                                                          //       AllGuestPostRoomData:
+                                                                          //           AllGuestPostRoomData,
+                                                                          //       postUid: AllGuestPostRoomData
+                                                                          //           ?.object
+                                                                          //           ?.content?[
+                                                                          //               index]
+                                                                          //           .postUid,
+                                                                          //     );
+                                                                          //   },
+                                                                          // ));
+                                                                        },
+                                                                        child:
+                                                                            Container(
+                                                                          color:
+                                                                              Colors.transparent,
                                                                           child:
-                                                                              Container(
-                                                                            color:
-                                                                                Colors.transparent,
-                                                                            child:
-                                                                                Padding(
-                                                                              padding: const EdgeInsets.all(5.0),
-                                                                              child: Image.asset(
-                                                                                ImageConstant.vector2,
-                                                                                height: 13,
-                                                                              ),
+                                                                              Padding(
+                                                                            padding: const EdgeInsets.all(5.0),
+                                                                            child: Image.asset(
+                                                                              ImageConstant.vector2,
+                                                                              height: 13,
                                                                             ),
                                                                           ),
                                                                         ),
-                                                                        SizedBox(
-                                                                          width:
-                                                                              5,
-                                                                        ),
-                                                                        AllGuestPostRoomData?.object?.content?[index].repostCount == null ||
-                                                                                AllGuestPostRoomData?.object?.content?[index].repostCount == 0
-                                                                            ? SizedBox()
-                                                                            : Text(
-                                                                                '${AllGuestPostRoomData?.object?.content?[index].repostCount}',
-                                                                                style: TextStyle(fontFamily: "outfit", fontSize: 14),
-                                                                              ),
-                                                                        GestureDetector(
-                                                                          onTap:
-                                                                              () {
-                                                                            if (uuid ==
-                                                                                null) {
-                                                                              Navigator.of(context).push(MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
-                                                                            } else {
-                                                                              _onShareXFileFromAssets(context, androidLink: '${AllGuestPostRoomData?.object?.content?[index].postLink}'
-                                                                                  /* iosLink:
-                                                      "https://apps.apple.com/inList =  /app/growder-b2b-platform/id6451333863" */
-                                                                                  );
-                                                                            }
-                                                                          },
-                                                                          child:
-                                                                              Container(
-                                                                            height:
-                                                                                20,
-                                                                            width:
-                                                                                30,
-                                                                            color:
-                                                                                Colors.transparent,
-                                                                            child:
-                                                                                Icon(Icons.share_rounded, size: 20),
-                                                                          ),
-                                                                        ),
-                                                                        /*  SizedBox(
-                                                          width: 18,
-                                                        ),
-                                                        Image.asset(
-                                                          ImageConstant.vector2,
-                                                          height: 12,
-                                                        ),
-                                                        SizedBox(
-                                                          width: 5,
-                                                        ),
-                                                        Text(
-                                                          '1335',
-                                                          style: TextStyle(
-                                                              fontFamily: "outfit",
-                                                              fontSize: 14),
-                                                        ), */
-                                                                        Spacer(),
-                                                                        GestureDetector(
-                                                                          onTap:
-                                                                              () async {
-                                                                            await soicalFunation(
-                                                                                apiName: 'savedata',
-                                                                                index: index);
-                                                                          },
-                                                                          child:
-                                                                              Container(
-                                                                            color:
-                                                                                Colors.transparent,
-                                                                            child:
-                                                                                Padding(
-                                                                              padding: const EdgeInsets.all(5.0),
-                                                                              child: uuid == null
-                                                                                  ? Image.asset(
-                                                                                      ImageConstant.savePin,
-                                                                                      height: 17,
-                                                                                    )
-                                                                                  : Image.asset(
-                                                                                      AllGuestPostRoomData?.object?.content?[index].isSaved == false ? ImageConstant.savePin : ImageConstant.Savefill,
-                                                                                      height: 17,
-                                                                                    ),
+                                                                      ),
+                                                                      SizedBox(
+                                                                        width:
+                                                                            5,
+                                                                      ),
+                                                                      AllGuestPostRoomData?.object?.content?[index].repostCount == null ||
+                                                                              AllGuestPostRoomData?.object?.content?[index].repostCount == 0
+                                                                          ? SizedBox()
+                                                                          : Text(
+                                                                              '${AllGuestPostRoomData?.object?.content?[index].repostCount}',
+                                                                              style: TextStyle(fontFamily: "outfit", fontSize: 14),
                                                                             ),
+                                                                      GestureDetector(
+                                                                        onTap:
+                                                                            () {
+                                                                          if (uuid ==
+                                                                              null) {
+                                                                            Navigator.of(context).push(MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
+                                                                          } else {
+                                                                            _onShareXFileFromAssets(context, AllGuestPostRoomData?.object?.content?[index].thumbnailImageUrl ?? "",androidLink: '${AllGuestPostRoomData?.object?.content?[index].postLink}'
+                                                                                /* iosLink:
+                                                    "https://apps.apple.com/inList =  /app/growder-b2b-platform/id6451333863" */
+                                                                                );
+                                                                          }
+                                                                        },
+                                                                        child:
+                                                                            Container(
+                                                                          height:
+                                                                              20,
+                                                                          width:
+                                                                              30,
+                                                                          color:
+                                                                              Colors.transparent,
+                                                                          child:
+                                                                              Icon(Icons.share_rounded, size: 20),
+                                                                        ),
+                                                                      ),
+                                                                      /*  SizedBox(
+                                                        width: 18,
+                                                      ),
+                                                      Image.asset(
+                                                        ImageConstant.vector2,
+                                                        height: 12,
+                                                      ),
+                                                      SizedBox(
+                                                        width: 5,
+                                                      ),
+                                                      Text(
+                                                        '1335',
+                                                        style: TextStyle(
+                                                            fontFamily: "outfit",
+                                                            fontSize: 14),
+                                                      ), */
+                                                                      Spacer(),
+                                                                      GestureDetector(
+                                                                        onTap:
+                                                                            () async {
+                                                                          await soicalFunation(
+                                                                              apiName: 'savedata',
+                                                                              index: index);
+                                                                        },
+                                                                        child:
+                                                                            Container(
+                                                                          color:
+                                                                              Colors.transparent,
+                                                                          child:
+                                                                              Padding(
+                                                                            padding: const EdgeInsets.all(5.0),
+                                                                            child: uuid == null
+                                                                                ? Image.asset(
+                                                                                    ImageConstant.savePin,
+                                                                                    height: 17,
+                                                                                  )
+                                                                                : Image.asset(
+                                                                                    AllGuestPostRoomData?.object?.content?[index].isSaved == false ? ImageConstant.savePin : ImageConstant.Savefill,
+                                                                                    height: 17,
+                                                                                  ),
                                                                           ),
                                                                         ),
-                                                                        // GestureDetector(
-                                                                        //   onTap: () {
-                                                                        //     Share.share(
-                                                                        //         'https://play.google.com/store/apps/details?id=com.inpackaging.app');
-                                                                        //   },
-                                                                        //   child: Container(
-                                                                        //     color: Colors
-                                                                        //         .transparent,
-                                                                        //     child: Padding(
-                                                                        //       padding:
-                                                                        //           const EdgeInsets
-                                                                        //                   .all(
-                                                                        //               5.0),
-                                                                        //       child: Image
-                                                                        //           .asset(
-                                                                        //         ImageConstant
-                                                                        //             .shareBlack,
-                                                                        //         height: 17,
-                                                                        //       ),
-                                                                        //     ),
-                                                                        //   ),
-                                                                        // ),
-                                                                      ],
-                                                                    ),
+                                                                      ),
+                                                                      // GestureDetector(
+                                                                      //   onTap: () {
+                                                                      //     Share.share(
+                                                                      //         'https://play.google.com/store/apps/details?id=com.inpackaging.app');
+                                                                      //   },
+                                                                      //   child: Container(
+                                                                      //     color: Colors
+                                                                      //         .transparent,
+                                                                      //     child: Padding(
+                                                                      //       padding:
+                                                                      //           const EdgeInsets
+                                                                      //                   .all(
+                                                                      //               5.0),
+                                                                      //       child: Image
+                                                                      //           .asset(
+                                                                      //         ImageConstant
+                                                                      //             .shareBlack,
+                                                                      //         height: 17,
+                                                                      //       ),
+                                                                      //     ),
+                                                                      //   ),
+                                                                      // ),
+                                                                    ],
                                                                   ),
-                                                                  SizedBox(
-                                                                    height: 5,
-                                                                  ),
-                                                                ],
-                                                              ),
+                                                                ),
+                                                                SizedBox(
+                                                                  height: 5,
+                                                                ),
+                                                              ],
                                                             ),
-                                                    ),
+                                                          ),
                                                   )
                                                 : Padding(
                                                     padding: EdgeInsets.only(
                                                         left: 0, right: 0),
-                                                    child: GestureDetector(
-                                                      onTap: () {
-                                                        if (AllGuestPostRoomData
-                                                                ?.object
-                                                                ?.content?[
-                                                                    index]
-                                                                .postDataType !=
-                                                            "ATTACHMENT") {
-                                                          Navigator.push(
-                                                              context,
-                                                              MaterialPageRoute(
-                                                                builder: (context) => OpenSavePostImage(
-                                                                    PostID: AllGuestPostRoomData
-                                                                        ?.object
-                                                                        ?.content?[
-                                                                            index]
-                                                                        .postUid),
-                                                              )).then((value) {
-                                                            // Get_UserToken();
+                                                    child: Container(
+                                                      decoration:
+                                                          BoxDecoration(
+                                                        color: Colors.white,
+                                                        border: Border.all(
+                                                            color: Color
+                                                                .fromRGBO(
+                                                                    0,
+                                                                    0,
+                                                                    0,
+                                                                    0.25)),
+                                                        /*  borderRadius:
+                                                          BorderRadius
+                                                              .circular(15) */
+                                                      ),
+                                                      // height: 300,
+                                                      width: _width,
+                                                      child: Column(
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
+                                                        children: [
+                                                          SizedBox(
+                                                            height: 10,
+                                                          ),
+                                                          //post content
+                                                          GestureDetector(
+                                                            onTap: () {
+                                                              if (AllGuestPostRoomData
+                                                                  ?.object
+                                                                  ?.content?[
+                                                              index]
+                                                                  .postDataType !=
+                                                                  "ATTACHMENT") {
+                                                                Navigator.push(
+                                                                    context,
+                                                                    MaterialPageRoute(
+                                                                      builder: (context) => OpenSavePostImage(
+                                                                          PostID: AllGuestPostRoomData
+                                                                              ?.object
+                                                                              ?.content?[
+                                                                          index]
+                                                                              .postUid),
+                                                                    )).then((value) {
+                                                                  // Get_UserToken();
 
-                                                            setColorr();
-                                                          });
-                                                        }
-                                                      },
-                                                      onDoubleTap: () async {
-                                                        await soicalFunation(
-                                                            apiName:
-                                                                'like_post',
-                                                            index: index);
-                                                      },
-                                                      child: Container(
-                                                        decoration:
-                                                            BoxDecoration(
-                                                          color: Colors.white,
-                                                          border: Border.all(
-                                                              color: Color
-                                                                  .fromRGBO(
-                                                                      0,
-                                                                      0,
-                                                                      0,
-                                                                      0.25)),
-                                                          /*  borderRadius:
-                                                            BorderRadius
-                                                                .circular(15) */
-                                                        ),
-                                                        // height: 300,
-                                                        width: _width,
-                                                        child: Column(
-                                                          crossAxisAlignment:
-                                                              CrossAxisAlignment
-                                                                  .start,
-                                                          children: [
-                                                            SizedBox(
-                                                              height: 10,
-                                                            ),
-                                                            Container(
+                                                                  setColorr();
+                                                                });
+                                                              }
+                                                            },
+                                                            onDoubleTap: () async {
+                                                              await soicalFunation(
+                                                                  apiName:
+                                                                  'like_post',
+                                                                  index: index);
+                                                            },
+                                                            child: Column(
+                                                            children:[
+                                                              Container(
                                                               height: 60,
                                                               child: ListTile(
                                                                 leading:
@@ -4797,7 +4803,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                 fontFamily: "outfit",
                                                                 fontWeight:
                                                                     FontWeight.bold),
-                                                          ), */
+                                                        ), */
                                                                   ],
                                                                 ),
                                                                 trailing: User_ID ==
@@ -5513,343 +5519,343 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                             ),
                                                             SizedBox(
                                                               height: 5,
-                                                            ),
-                                                            Padding(
-                                                              padding:
-                                                                  const EdgeInsets
-                                                                          .only(
-                                                                      top: 0,
-                                                                      right:
-                                                                          16),
-                                                              child: Row(
-                                                                children: [
-                                                                  SizedBox(
-                                                                    width: 14,
-                                                                  ),
-                                                                  GestureDetector(
-                                                                    onTap:
-                                                                        () async {
-                                                                      await soicalFunation(
-                                                                          apiName:
-                                                                              'like_post',
-                                                                          index:
-                                                                              index);
-                                                                    },
+                                                            ),]),
+                                                          ),
+                                                          Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                        .only(
+                                                                    top: 0,
+                                                                    right:
+                                                                        16),
+                                                            child: Row(
+                                                              children: [
+                                                                SizedBox(
+                                                                  width: 14,
+                                                                ),
+                                                                GestureDetector(
+                                                                  onTap:
+                                                                      () async {
+                                                                    await soicalFunation(
+                                                                        apiName:
+                                                                            'like_post',
+                                                                        index:
+                                                                            index);
+                                                                  },
+                                                                  child:
+                                                                      Container(
+                                                                    color: Colors
+                                                                        .transparent,
                                                                     child:
-                                                                        Container(
-                                                                      color: Colors
-                                                                          .transparent,
-                                                                      child:
-                                                                          Padding(
-                                                                        padding:
-                                                                            EdgeInsets.all(5.0),
-                                                                        child: AllGuestPostRoomData?.object?.content?[index].isLiked !=
-                                                                                true
-                                                                            ? Image.asset(
-                                                                                ImageConstant.likewithout,
-                                                                                height: 18,
-                                                                              )
-                                                                            : Image.asset(
-                                                                                ImageConstant.like,
-                                                                                height: 18,
-                                                                              ),
-                                                                      ),
+                                                                        Padding(
+                                                                      padding:
+                                                                          EdgeInsets.all(5.0),
+                                                                      child: AllGuestPostRoomData?.object?.content?[index].isLiked !=
+                                                                              true
+                                                                          ? Image.asset(
+                                                                              ImageConstant.likewithout,
+                                                                              height: 18,
+                                                                            )
+                                                                          : Image.asset(
+                                                                              ImageConstant.like,
+                                                                              height: 18,
+                                                                            ),
                                                                     ),
                                                                   ),
-                                                                  /* SizedBox(
-                                                                width: 0,
-                                                              ), */
-                                                                  AllGuestPostRoomData
-                                                                              ?.object
-                                                                              ?.content?[index]
-                                                                              .likedCount ==
-                                                                          0
-                                                                      ? SizedBox()
-                                                                      : GestureDetector(
-                                                                          onTap:
-                                                                              () {
-                                                                            /* Navigator.push(  
+                                                                ),
+                                                                /* SizedBox(
+                                                              width: 0,
+                                                            ), */
+                                                                AllGuestPostRoomData
+                                                                            ?.object
+                                                                            ?.content?[index]
+                                                                            .likedCount ==
+                                                                        0
+                                                                    ? SizedBox()
+                                                                    : GestureDetector(
+                                                                        onTap:
+                                                                            () {
+                                                                          /* Navigator.push(
                                                     context,
                                                     MaterialPageRoute(
-                                                        builder: (context) =>
-         
-                                                            ShowAllPostLike("${AllGuestPostRoomData?.object?[index].postUid}"))); */
-                                                                            if (uuid ==
-                                                                                null) {
-                                                                              Navigator.of(context).push(MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
-                                                                            } else {
-                                                                              Navigator.push(context, MaterialPageRoute(
-                                                                                builder: (context) {
-                                                                                  return ShowAllPostLike("${AllGuestPostRoomData?.object?.content?[index].postUid}");
-                                                                                },
-                                                                              ));
-                                                                            }
-                                                                          },
+                                                      builder: (context) =>
+
+                                                          ShowAllPostLike("${AllGuestPostRoomData?.object?[index].postUid}"))); */
+                                                                          if (uuid ==
+                                                                              null) {
+                                                                            Navigator.of(context).push(MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
+                                                                          } else {
+                                                                            Navigator.push(context, MaterialPageRoute(
+                                                                              builder: (context) {
+                                                                                return ShowAllPostLike("${AllGuestPostRoomData?.object?.content?[index].postUid}");
+                                                                              },
+                                                                            ));
+                                                                          }
+                                                                        },
+                                                                        child:
+                                                                            Container(
+                                                                          color:
+                                                                              Colors.transparent,
                                                                           child:
-                                                                              Container(
-                                                                            color:
-                                                                                Colors.transparent,
-                                                                            child:
-                                                                                Padding(
-                                                                              padding: EdgeInsets.all(5.0),
-                                                                              child: Align(
-                                                                                alignment: Alignment.centerLeft,
-                                                                                child: Text(
-                                                                                  "${AllGuestPostRoomData?.object?.content?[index].likedCount}",
-                                                                                  style: TextStyle(fontFamily: "outfit", fontSize: 14),
-                                                                                ),
+                                                                              Padding(
+                                                                            padding: EdgeInsets.all(5.0),
+                                                                            child: Align(
+                                                                              alignment: Alignment.centerLeft,
+                                                                              child: Text(
+                                                                                "${AllGuestPostRoomData?.object?.content?[index].likedCount}",
+                                                                                style: TextStyle(fontFamily: "outfit", fontSize: 14),
                                                                               ),
                                                                             ),
                                                                           ),
                                                                         ),
-                                                                  SizedBox(
-                                                                    width: 8,
-                                                                  ),
-                                                                  GestureDetector(
-                                                                      onTap:
-                                                                          () async {
-                                                                        if (uuid ==
-                                                                            null) {
-                                                                          Navigator.of(context)
-                                                                              .push(MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
-                                                                        } else {
-                                                                          BlocProvider.of<AddcommentCubit>(context).Addcomment(
-                                                                              context,
-                                                                              '${AllGuestPostRoomData?.object?.content?[index].postUid}');
-                                                                          _settingModalBottomSheet1(
-                                                                              context,
-                                                                              index,
-                                                                              _width);
-                                                                        }
-                                                                      },
-                                                                      child: Container(
-                                                                          color: Colors.transparent,
-                                                                          child: Padding(
-                                                                              padding: EdgeInsets.all(5.0),
-                                                                              child: Image.asset(
-                                                                                ImageConstant.meesage,
-                                                                                height: 15,
-                                                                                // width: 15,
-                                                                              )))),
-                                                                  SizedBox(
-                                                                    width: 5,
-                                                                  ),
-                                                                  AllGuestPostRoomData
-                                                                              ?.object
-                                                                              ?.content?[index]
-                                                                              .commentCount ==
-                                                                          0
-                                                                      ? SizedBox()
-                                                                      : Text(
-                                                                          "${AllGuestPostRoomData?.object?.content?[index].commentCount}",
-                                                                          style: TextStyle(
-                                                                              fontFamily: "outfit",
-                                                                              fontSize: 14),
-                                                                        ),
-                                                                  SizedBox(
-                                                                    width: 5,
-                                                                  ),
-                                                                  GestureDetector(
-                                                                    onTap: () {
-                                                                      if (uuid ==
-                                                                          null) {
-                                                                        Navigator.of(context).push(MaterialPageRoute(
-                                                                            builder: (context) =>
-                                                                                RegisterCreateAccountScreen()));
-                                                                      } else {
-                                                                        rePostBottomSheet(
-                                                                            context,
-                                                                            index);
-                                                                        // Navigator.push(
-                                                                        //     context,
-                                                                        //     MaterialPageRoute(
-                                                                        //   builder:
-                                                                        //       (context) {
-                                                                        //     return RePostScreen(
-                                                                        //       userProfile: AllGuestPostRoomData
-                                                                        //           ?.object
-                                                                        //           ?.content?[index]
-                                                                        //           .userProfilePic,
-                                                                        //       username: AllGuestPostRoomData
-                                                                        //           ?.object
-                                                                        //           ?.content?[index]
-                                                                        //           .postUserName,
-                                                                        //       date: AllGuestPostRoomData
-                                                                        //           ?.object
-                                                                        //           ?.content?[index]
-                                                                        //           .createdAt,
-                                                                        //       desc: AllGuestPostRoomData
-                                                                        //           ?.object
-                                                                        //           ?.content?[index]
-                                                                        //           .description,
-                                                                        //       postData: AllGuestPostRoomData
-                                                                        //           ?.object
-                                                                        //           ?.content?[index]
-                                                                        //           .postData,
-                                                                        //       postDataType: AllGuestPostRoomData
-                                                                        //           ?.object
-                                                                        //           ?.content?[index]
-                                                                        //           .postDataType,
-                                                                        //       index:
-                                                                        //           index,
-                                                                        //       AllGuestPostRoomData:
-                                                                        //           AllGuestPostRoomData,
-                                                                        //       postUid: AllGuestPostRoomData
-                                                                        //           ?.object
-                                                                        //           ?.content?[index]
-                                                                        //           .postUid,
-                                                                        //     );
-                                                                        //   },
-                                                                        // ));
-                                                                      }
-                                                                    },
-                                                                    child:
-                                                                        Container(
-                                                                      color: Colors
-                                                                          .transparent,
-                                                                      child:
-                                                                          Padding(
-                                                                        padding:
-                                                                            const EdgeInsets.all(5.0),
-                                                                        child: Image
-                                                                            .asset(
-                                                                          ImageConstant
-                                                                              .vector2,
-                                                                          height:
-                                                                              13,
-                                                                        ),
                                                                       ),
-                                                                    ),
-                                                                  ),
-                                                                  SizedBox(
-                                                                    width: 5,
-                                                                  ),
-                                                                  AllGuestPostRoomData?.object?.content?[index].repostCount ==
-                                                                              null ||
-                                                                          AllGuestPostRoomData?.object?.content?[index].repostCount ==
-                                                                              0
-                                                                      ? SizedBox()
-                                                                      : Text(
-                                                                          uuid == null
-                                                                              ? ""
-                                                                              : '${AllGuestPostRoomData?.object?.content?[index].repostCount}',
-                                                                          style: TextStyle(
-                                                                              fontFamily: "outfit",
-                                                                              fontSize: 14),
-                                                                        ),
-                                                                  GestureDetector(
-                                                                    onTap: () {
-                                                                      if (uuid ==
-                                                                          null) {
-                                                                        Navigator.of(context).push(MaterialPageRoute(
-                                                                            builder: (context) =>
-                                                                                RegisterCreateAccountScreen()));
-                                                                      } else {
-                                                                        print(
-                                                                            "check Data Get-${AllGuestPostRoomData?.object?.content?[index].postLink}");
-                                                                        _onShareXFileFromAssets(
-                                                                          context,
-                                                                          androidLink:
-                                                                              '${AllGuestPostRoomData?.object?.content?[index].postLink}',
-                                                                          /* iosLink:
-                                                      "https://apps.apple.com/inList =  /app/growder-b2b-platform/id6451333863" */
-                                                                        );
-                                                                      }
-                                                                    },
-                                                                    child:
-                                                                        Container(
-                                                                      height:
-                                                                          20,
-                                                                      width: 30,
-                                                                      color: Colors
-                                                                          .transparent,
-                                                                      child: Icon(
-                                                                          Icons
-                                                                              .share_rounded,
-                                                                          size:
-                                                                              20),
-                                                                    ),
-                                                                  ),
-                                                                  /*  SizedBox(
-                                                          width: 18,
-                                                        ),
-                                                        Image.asset(
-                                                          ImageConstant.vector2,
-                                                          height: 12,
-                                                        ),
-                                                        SizedBox(
-                                                          width: 5,
-                                                        ),
-                                                        Text(
-                                                          '1335',
-                                                          style: TextStyle(
-                                                              fontFamily: "outfit",
-                                                              fontSize: 14),
-                                                        ), */
-                                                                  Spacer(),
-                                                                  GestureDetector(
+                                                                SizedBox(
+                                                                  width: 8,
+                                                                ),
+                                                                GestureDetector(
                                                                     onTap:
                                                                         () async {
-                                                                      await soicalFunation(
-                                                                          apiName:
-                                                                              'savedata',
-                                                                          index:
-                                                                              index);
+                                                                      if (uuid ==
+                                                                          null) {
+                                                                        Navigator.of(context)
+                                                                            .push(MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
+                                                                      } else {
+                                                                        BlocProvider.of<AddcommentCubit>(context).Addcomment(
+                                                                            context,
+                                                                            '${AllGuestPostRoomData?.object?.content?[index].postUid}');
+                                                                        _settingModalBottomSheet1(
+                                                                            context,
+                                                                            index,
+                                                                            _width);
+                                                                      }
                                                                     },
+                                                                    child: Container(
+                                                                        color: Colors.transparent,
+                                                                        child: Padding(
+                                                                            padding: EdgeInsets.all(5.0),
+                                                                            child: Image.asset(
+                                                                              ImageConstant.meesage,
+                                                                              height: 15,
+                                                                              // width: 15,
+                                                                            )))),
+                                                                SizedBox(
+                                                                  width: 5,
+                                                                ),
+                                                                AllGuestPostRoomData
+                                                                            ?.object
+                                                                            ?.content?[index]
+                                                                            .commentCount ==
+                                                                        0
+                                                                    ? SizedBox()
+                                                                    : Text(
+                                                                        "${AllGuestPostRoomData?.object?.content?[index].commentCount}",
+                                                                        style: TextStyle(
+                                                                            fontFamily: "outfit",
+                                                                            fontSize: 14),
+                                                                      ),
+                                                                SizedBox(
+                                                                  width: 5,
+                                                                ),
+                                                                GestureDetector(
+                                                                  onTap: () {
+                                                                    if (uuid ==
+                                                                        null) {
+                                                                      Navigator.of(context).push(MaterialPageRoute(
+                                                                          builder: (context) =>
+                                                                              RegisterCreateAccountScreen()));
+                                                                    } else {
+                                                                      rePostBottomSheet(
+                                                                          context,
+                                                                          index);
+                                                                      // Navigator.push(
+                                                                      //     context,
+                                                                      //     MaterialPageRoute(
+                                                                      //   builder:
+                                                                      //       (context) {
+                                                                      //     return RePostScreen(
+                                                                      //       userProfile: AllGuestPostRoomData
+                                                                      //           ?.object
+                                                                      //           ?.content?[index]
+                                                                      //           .userProfilePic,
+                                                                      //       username: AllGuestPostRoomData
+                                                                      //           ?.object
+                                                                      //           ?.content?[index]
+                                                                      //           .postUserName,
+                                                                      //       date: AllGuestPostRoomData
+                                                                      //           ?.object
+                                                                      //           ?.content?[index]
+                                                                      //           .createdAt,
+                                                                      //       desc: AllGuestPostRoomData
+                                                                      //           ?.object
+                                                                      //           ?.content?[index]
+                                                                      //           .description,
+                                                                      //       postData: AllGuestPostRoomData
+                                                                      //           ?.object
+                                                                      //           ?.content?[index]
+                                                                      //           .postData,
+                                                                      //       postDataType: AllGuestPostRoomData
+                                                                      //           ?.object
+                                                                      //           ?.content?[index]
+                                                                      //           .postDataType,
+                                                                      //       index:
+                                                                      //           index,
+                                                                      //       AllGuestPostRoomData:
+                                                                      //           AllGuestPostRoomData,
+                                                                      //       postUid: AllGuestPostRoomData
+                                                                      //           ?.object
+                                                                      //           ?.content?[index]
+                                                                      //           .postUid,
+                                                                      //     );
+                                                                      //   },
+                                                                      // ));
+                                                                    }
+                                                                  },
+                                                                  child:
+                                                                      Container(
+                                                                    color: Colors
+                                                                        .transparent,
                                                                     child:
-                                                                        Container(
-                                                                      color: Colors
-                                                                          .transparent,
-                                                                      child:
-                                                                          Padding(
-                                                                        padding:
-                                                                            const EdgeInsets.all(5.0),
-                                                                        child: uuid ==
-                                                                                null
-                                                                            ? Image.asset(
-                                                                                /* AllGuestPostRoomData?.object?.content?[index].isSaved == false
-                                                                                ? ImageConstant.savePin
-                                                                                : */
-                                                                                ImageConstant.savePin,
-                                                                                height: 17,
-                                                                              )
-                                                                            : Image.asset(
-                                                                                AllGuestPostRoomData?.object?.content?[index].isSaved == false ? ImageConstant.savePin : ImageConstant.Savefill,
-                                                                                height: 17,
-                                                                              ),
+                                                                        Padding(
+                                                                      padding:
+                                                                          const EdgeInsets.all(5.0),
+                                                                      child: Image
+                                                                          .asset(
+                                                                        ImageConstant
+                                                                            .vector2,
+                                                                        height:
+                                                                            13,
                                                                       ),
                                                                     ),
                                                                   ),
-                                                                  // GestureDetector(
-                                                                  //   onTap: () {
-                                                                  //     Share.share(
-                                                                  //         'https://play.google.com/store/apps/details?id=com.inpackaging.app');
-                                                                  //   },
-                                                                  //   child: Container(
-                                                                  //     color: Colors
-                                                                  //         .transparent,
-                                                                  //     child: Padding(
-                                                                  //       padding:
-                                                                  //           const EdgeInsets
-                                                                  //                   .all(
-                                                                  //               5.0),
-                                                                  //       child: Image
-                                                                  //           .asset(
-                                                                  //         ImageConstant
-                                                                  //             .shareBlack,
-                                                                  //         height: 17,
-                                                                  //       ),
-                                                                  //     ),
-                                                                  //   ),
-                                                                  // ),
-                                                                ],
-                                                              ),
+                                                                ),
+                                                                SizedBox(
+                                                                  width: 5,
+                                                                ),
+                                                                AllGuestPostRoomData?.object?.content?[index].repostCount ==
+                                                                            null ||
+                                                                        AllGuestPostRoomData?.object?.content?[index].repostCount ==
+                                                                            0
+                                                                    ? SizedBox()
+                                                                    : Text(
+                                                                        uuid == null
+                                                                            ? ""
+                                                                            : '${AllGuestPostRoomData?.object?.content?[index].repostCount}',
+                                                                        style: TextStyle(
+                                                                            fontFamily: "outfit",
+                                                                            fontSize: 14),
+                                                                      ),
+                                                                GestureDetector(
+                                                                  onTap: () {
+                                                                    if (uuid ==
+                                                                        null) {
+                                                                      Navigator.of(context).push(MaterialPageRoute(
+                                                                          builder: (context) =>
+                                                                              RegisterCreateAccountScreen()));
+                                                                    } else {
+                                                                      print(
+                                                                          "check Data Get-${AllGuestPostRoomData?.object?.content?[index].postLink}");
+                                                                      _onShareXFileFromAssets(
+                                                                        context,AllGuestPostRoomData?.object?.content?[index].thumbnailImageUrl ?? "",
+                                                                        androidLink:
+                                                                            '${AllGuestPostRoomData?.object?.content?[index].postLink}',
+                                                                        /* iosLink:
+                                                    "https://apps.apple.com/inList =  /app/growder-b2b-platform/id6451333863" */
+                                                                      );
+                                                                    }
+                                                                  },
+                                                                  child:
+                                                                      Container(
+                                                                    height:
+                                                                        20,
+                                                                    width: 30,
+                                                                    color: Colors
+                                                                        .transparent,
+                                                                    child: Icon(
+                                                                        Icons
+                                                                            .share_rounded,
+                                                                        size:
+                                                                            20),
+                                                                  ),
+                                                                ),
+                                                                /*  SizedBox(
+                                                        width: 18,
+                                                      ),
+                                                      Image.asset(
+                                                        ImageConstant.vector2,
+                                                        height: 12,
+                                                      ),
+                                                      SizedBox(
+                                                        width: 5,
+                                                      ),
+                                                      Text(
+                                                        '1335',
+                                                        style: TextStyle(
+                                                            fontFamily: "outfit",
+                                                            fontSize: 14),
+                                                      ), */
+                                                                Spacer(),
+                                                                GestureDetector(
+                                                                  onTap:
+                                                                      () async {
+                                                                    await soicalFunation(
+                                                                        apiName:
+                                                                            'savedata',
+                                                                        index:
+                                                                            index);
+                                                                  },
+                                                                  child:
+                                                                      Container(
+                                                                    color: Colors
+                                                                        .transparent,
+                                                                    child:
+                                                                        Padding(
+                                                                      padding:
+                                                                          const EdgeInsets.all(5.0),
+                                                                      child: uuid ==
+                                                                              null
+                                                                          ? Image.asset(
+                                                                              /* AllGuestPostRoomData?.object?.content?[index].isSaved == false
+                                                                              ? ImageConstant.savePin
+                                                                              : */
+                                                                              ImageConstant.savePin,
+                                                                              height: 17,
+                                                                            )
+                                                                          : Image.asset(
+                                                                              AllGuestPostRoomData?.object?.content?[index].isSaved == false ? ImageConstant.savePin : ImageConstant.Savefill,
+                                                                              height: 17,
+                                                                            ),
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                                // GestureDetector(
+                                                                //   onTap: () {
+                                                                //     Share.share(
+                                                                //         'https://play.google.com/store/apps/details?id=com.inpackaging.app');
+                                                                //   },
+                                                                //   child: Container(
+                                                                //     color: Colors
+                                                                //         .transparent,
+                                                                //     child: Padding(
+                                                                //       padding:
+                                                                //           const EdgeInsets
+                                                                //                   .all(
+                                                                //               5.0),
+                                                                //       child: Image
+                                                                //           .asset(
+                                                                //         ImageConstant
+                                                                //             .shareBlack,
+                                                                //         height: 17,
+                                                                //       ),
+                                                                //     ),
+                                                                //   ),
+                                                                // ),
+                                                              ],
                                                             ),
-                                                            SizedBox(
-                                                              height: 5,
-                                                            ),
-                                                          ],
-                                                        ),
+                                                          ),
+                                                          SizedBox(
+                                                            height: 5,
+                                                          ),
+                                                        ],
                                                       ),
                                                     ),
                                                   );
@@ -7396,31 +7402,76 @@ class _HomeScreenNewState extends State<HomeScreenNew>
     );
   }
 
-  void _onShareXFileFromAssets(BuildContext context,
+  void _onShareXFileFromAssets(BuildContext context,String postLink,
       {String? androidLink}) async {
     // RenderBox? box = context.findAncestorRenderObjectOfType();
 
-    var directory = await getApplicationDocumentsDirectory();
+    var directory = await getTemporaryDirectory();
 
-    if (Platform.isAndroid) {
-      Share.shareXFiles(
-        [XFile("/sdcard/download/IPImage.jpg")],
-        subject: "Share",
-        text: "Try This Awesome App \n\n Android :- ${androidLink}",
-        // sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size,
-      );
+    if (postLink.isNotEmpty) {
+      _permissionReady = await _checkPermission();
+      await _prepareSaveDir();
+
+      if (_permissionReady) {
+        print("Downloading");
+        print("${postLink}");
+        try {
+          await Dio().download(
+            postLink.toString(),
+            directory.path + "/" + "IPImage.jpg",
+          );
+
+          print("Download Completed.");
+        } catch (e) {
+          print("Download Failed.\n\n" + e.toString());
+        }
+      }
+      if (Platform.isAndroid) {
+        Share.shareXFiles(
+          [XFile("${directory.path}/IPImage.jpg")],
+          subject: "Share",
+          text: "Try This Awesome App \n\n Android :- ${androidLink}",
+          // sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size,
+        );
+      } else {
+        Share.shareXFiles(
+          [
+            XFile(directory.path +
+                Platform.pathSeparator +
+                'Growder_Image/IPImage.jpg')
+          ],
+          subject: "Share",
+          text: "Try This Awesome App \n\n Android :- ${androidLink}",
+          // sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size,
+        );
+      }
+
     } else {
-      Share.shareXFiles(
-        [
-          XFile(directory.path +
-              Platform.pathSeparator +
-              'Growder_Image/IPImage.jpg')
-        ],
-        subject: "Share",
-        text: "Try This Awesome App \n\n Android :- ${androidLink}",
-        // sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size,
-      );
+      print('No Invoice Available');
+
+      if (Platform.isAndroid) {
+        Share.shareXFiles(
+          [XFile("/sdcard/download/IPImage.jpg")],
+          subject: "Share",
+          text: "Try This Awesome App \n\n Android :- ${androidLink}",
+          // sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size,
+        );
+      } else {
+        directory = await getApplicationDocumentsDirectory();
+        Share.shareXFiles(
+          [
+            XFile(directory.path +
+                Platform.pathSeparator +
+                'Growder_Image/IPImage.jpg')
+          ],
+          subject: "Share",
+          text: "Try This Awesome App \n\n Android :- ${androidLink}",
+          // sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size,
+        );
+      }
     }
+
+
   }
 
   shareImageDownload() async {

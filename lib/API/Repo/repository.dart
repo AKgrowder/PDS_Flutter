@@ -3517,6 +3517,7 @@ class Repository {
     final response = await apiServices.getApiCallWithToken(
         "${Config.get_page_by_uid}?companyPageUid=$companyPageUid&pageId=$pageId",
         context);
+
     var jsonString = json.decode(response.body);
     print('get_page_by_uid${response.body}');
     switch (response.statusCode) {
@@ -3524,6 +3525,7 @@ class Repository {
         return Navigator.pop(
           context,
         );
+
       case 404:
         return Config.somethingWentWrong;
       case 500:
@@ -3583,8 +3585,7 @@ class Repository {
     }
   }
 
-  get_all_company_type(
-      BuildContext context) async {
+  get_all_company_type(BuildContext context) async {
     final response =
         await apiServices.getApiCall("${Config.get_all_company_type}", context);
     print(response);
