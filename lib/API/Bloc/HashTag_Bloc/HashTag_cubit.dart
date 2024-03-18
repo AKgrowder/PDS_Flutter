@@ -8,6 +8,7 @@ class HashTagCubit extends Cubit<HashTagState> {
   HashTagCubit() : super(HashTagInitialState()) {}
   dynamic getalluserlistModel;
   dynamic HashTagForYouModel;
+  dynamic serchPagesCompnayData;
   Future<void> seetinonExpried(BuildContext context,
       {bool showAlert = false}) async {
     try {
@@ -29,6 +30,7 @@ class HashTagCubit extends Cubit<HashTagState> {
       // emit(GetGuestAllPostErrorState(e.toString()));
     }
   }
+
   Future<void> HashTagForYouAPI(
       BuildContext context, String hashtagViewType, String pageNumber) async {
     try {
@@ -306,7 +308,6 @@ class HashTagCubit extends Cubit<HashTagState> {
     }
   }
 
-
   Future<void> getAllNoticationsCountAPI(BuildContext context) async {
     dynamic acceptRejectInvitationModel;
     try {
@@ -323,6 +324,42 @@ class HashTagCubit extends Cubit<HashTagState> {
       }
     } catch (e) {
       emit(HashTagErrorState(acceptRejectInvitationModel));
+    }
+  }
+
+  Future<void> serchPagesCompnay(
+      BuildContext context, String pageNumber, String searchName) async {
+    try {
+      serchPagesCompnayData = await Repository()
+          .search_pagesCompnay(context, pageNumber, searchName);
+
+      if (serchPagesCompnayData.success == true) {
+        emit(SearchPagesLoadedState(serchPagesCompnayData));
+      }
+    } catch (e) {
+      emit(HashTagErrorState(serchPagesCompnayData));
+    }
+  }
+
+  Future<void> serchPagesCompnayPagaationApi(
+      BuildContext context, String pageNumber, String searchName) async {
+    dynamic sercchPageApiDataPagnation;
+    try {
+      emit(HashTagLoadingState());
+      sercchPageApiDataPagnation = await Repository()
+          .search_pagesCompnay(context, pageNumber, searchName);
+
+      if (sercchPageApiDataPagnation.success == true) {
+        serchPagesCompnayData.object.content
+            .addAll(sercchPageApiDataPagnation.object.content);
+        serchPagesCompnayData.object.pageable.pageNumber =
+            sercchPageApiDataPagnation.object.pageable.pageNumber;
+        serchPagesCompnayData.object.totalElements =
+            sercchPageApiDataPagnation.object.totalElements;
+        emit(SearchPagesLoadedState(serchPagesCompnayData));
+      }
+    } catch (e) {
+      emit(HashTagErrorState(e.toString()));
     }
   }
 }

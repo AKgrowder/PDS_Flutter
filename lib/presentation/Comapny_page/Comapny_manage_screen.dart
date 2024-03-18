@@ -238,7 +238,7 @@ class _ComapnyManageScreenState extends State<ComapnyManageScreen> {
                     builder: (context) {
                       return ViewCompenyPage(
                         profilePic:
-                            "${getallcompenypage?.object?[index].profilePic}",
+                            getallcompenypage?.object?[index].profilePic,
                         companyName:
                             "${getallcompenypage?.object?[index].companyName}",
                         pageid: "${getallcompenypage?.object?[index].pageId}",
@@ -333,8 +333,11 @@ class _ComapnyManageScreenState extends State<ComapnyManageScreen> {
         if (value == 2) {
           showDialog(
             context: context,
-            builder: (_) => DeleteComapnyDailog(),
-          );
+            builder: (_) => DeleteComapnyDailog(
+              postUid: '${getallcompenypage?.object?[index].pageUid}',
+            ),
+          ).then((value) => BlocProvider.of<ComapnyManageCubit>(context).getallcompenypagee(context));
+          /* BlocProvider.of<ComapnyManageCubit>(context).deletecompenypagee(context,'${getallcompenypage?.object?[index].pageUid}'); */
         }
       }
     });

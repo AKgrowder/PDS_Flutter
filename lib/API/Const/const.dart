@@ -151,12 +151,15 @@ class Config {
       "user/api/get_all_master_report_type";
   static const String onlineLiveStatus = "user/get_online_live";
   static const String forwardMessages = "user/forward_messages";
-    static const String update_live_status = "user/update_live_status";
-    static const String mark_starred = "user/mark_starred";
+  static const String update_live_status = "user/update_live_status";
+  static const String mark_starred = "user/mark_starred";
   static const String company_pages = "user/create_company_page";
   static const String getallcompany_pages = "user/get_all_company_pages";
- static const String get_Starred_Messages = "user/get_Starred_Messages";
-
+  static const String get_Starred_Messages = "user/get_Starred_Messages";
+  static const String get_page_by_uid = "user/get_page_by_uid";
+  static const String delete_company_pages = "user/delete_company_pages";
+  static const String search_pages = "user/search_company_pages";
+  static const String get_all_company_type = "user/get_all_company_type";
 
 
 }

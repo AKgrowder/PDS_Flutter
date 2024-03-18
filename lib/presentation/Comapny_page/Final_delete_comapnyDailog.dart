@@ -77,6 +77,7 @@ class _DeleteComapnyDailogState extends State<FinalDeleteComapnyDailog>
                               GestureDetector(
                                 onTap: () {
                                   Navigator.pop(context);
+                                  Navigator.pop(context);
                                 },
                                 child: Container(
                                   // margin: EdgeInsets.only(right: 4),
