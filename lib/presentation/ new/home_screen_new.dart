@@ -31,6 +31,7 @@ import 'package:pds/API/Model/FetchAllExpertsModel/FetchAllExperts_Model.dart';
 import 'package:pds/API/Model/GetGuestAllPostModel/GetGuestAllPost_Model.dart';
 import 'package:pds/API/Model/System_Config_model/system_config_model.dart';
 import 'package:pds/API/Model/deletecomment/delete_comment_model.dart';
+import 'package:pds/API/Model/getall_compeny_page_model/getall_compeny_page.dart';
 import 'package:pds/API/Model/like_Post_Model/like_Post_Model.dart';
 import 'package:pds/API/Model/saveBlogModel/saveBlog_Model.dart';
 import 'package:pds/API/Model/storyModel/stroyModel.dart';
@@ -83,6 +84,7 @@ import '../../API/Model/Get_all_blog_Model/get_all_blog_model.dart';
 import '../../API/Model/UserTagModel/UserTag_model.dart';
 import '../become_an_expert_screen/become_an_expert_screen.dart';
 import 'commenwigetReposrt.dart';
+import 'switchProfilebootmSheet.dart';
 
 GetGuestAllPostModel? AllGuestPostRoomData;
 GetAllStoryModel? getAllStoryModel;
@@ -117,6 +119,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
   String? User_ID;
   String? User_Name;
   String? User_Module = "";
+
   List<String> image = [
     ImageConstant.placeholder4,
     ImageConstant.placeholder4,
@@ -165,6 +168,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
   String? appApkLatestVersion;
   bool isScrollingDown = false;
   bool _show = true;
+  GetAllCompenyPageModel? getallcompenypagemodel;
   String? appApkRouteVersion;
   String? ipaIosLatestVersion;
   String? ipaIosRoutVersion;
@@ -1163,7 +1167,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
             })
           // print("opne Save Image screen RE_POST & TAG_POST");
 
-          : NotificationSubject == "INVITE_ROOM"
+           : NotificationSubject == "INVITE_ROOM"
               ?
 
               /// jinal code  14022024
@@ -1175,29 +1179,28 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                   (Route<dynamic> route) => false)
 
               // print("Notification Seen INVITE_ROOM")
-              : NotificationSubject == "EXPERT_LEFT_ROOM" ||
-                      NotificationSubject == "DELETE_ROOM" ||
-                      NotificationSubject == "EXPERT_ACCEРТ_INVITE"
-                  ? print(
-                      "Notification Seen  EXPERT_LEFT_ROOM & MEMBER_LEFT_ROOM & DELETE_ROOM & EXPERT_ACCEРТ_INVITE & EXPERT_REJECT_INVITE")
-                  : NotificationSubject == "EXPERT_REJECT_INVITE"
-
-                          /// jinal code 14032024
-                          ||
-                          NotificationSubject == "MEMBER_LEFT_ROOM" ||
-                          NotificationSubject == "EXPERT_REJECT_INVITE"
-                      ?
+              // : NotificationSubject == "DELETE_ROOM"
+              //     ? print(
+              //         "Notification Seen  EXPERT_LEFT_ROOM & MEMBER_LEFT_ROOM & DELETE_ROOM & EXPERT_ACCEРТ_INVITE & EXPERT_REJECT_INVITE")
+              : NotificationSubject == "EXPERT_ACCEPT_INVITE"
 
                       /// jinal code 14032024
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => RoomsScreen(
-                                    ProfileNotification: false,
-                                  )),
-                        ).then((value) => setColorr())
-                      // print("Seen Notification EXPERT_REJECT_INVITE")
-                      : NotificationSubject == "LIKE_POST" ||
+                      ||
+                      NotificationSubject == "EXPERT_LEFT_ROOM" ||
+                      // NotificationSubject == "MEMBER_LEFT_ROOM" ||
+                      NotificationSubject == "EXPERT_REJECT_INVITE"
+                  ?
+
+                  /// jinal code 14032024
+                
+                   Navigator.of(context).pushAndRemoveUntil(
+                  MaterialPageRoute(
+                      builder: (context) => NewBottomBar(
+                            buttomIndex: 1,
+                          )),
+                  (Route<dynamic> route) => false)
+                  // print("Seen Notification EXPERT_REJECT_INVITE")
+                  :  NotificationSubject == "LIKE_POST" ||
                               NotificationSubject == "COMMENT_POST" ||
                               NotificationSubject == "TAG_COMMENT_POST"
                           ? Navigator.push(
@@ -1258,12 +1261,8 @@ class _HomeScreenNewState extends State<HomeScreenNew>
   NewApi() async {
     if (User_ID != null && User_Name != null) {
       String useruidsort = User_ID!.split('-').last.toString();
-    
 
-      
-      
-        onUserLogin('${useruidsort}', '${User_Name}');
-      
+      onUserLogin('${useruidsort}', '${User_Name}');
     }
     timer = Timer.periodic(Duration(seconds: 15), (timer) async {
       setState(() {
@@ -1274,6 +1273,8 @@ class _HomeScreenNewState extends State<HomeScreenNew>
       await BlocProvider.of<GetGuestAllPostCubit>(context)
           .getAllNoticationsCountAPI(context);
     });
+    await BlocProvider.of<GetGuestAllPostCubit>(context)
+        .getallcompenypagee(context);
     await BlocProvider.of<GetGuestAllPostCubit>(context)
         .get_all_master_report_typeApiMethod(context);
     await BlocProvider.of<GetGuestAllPostCubit>(context)
@@ -1566,21 +1567,48 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                       )
                                     : UserProfileImage != null &&
                                             UserProfileImage != ""
-                                        ? CustomImageView(
-                                            url: "${UserProfileImage}",
-                                            // color: Colors.transparent,
-                                            height: 50,
-                                            width: 50,
-                                            fit: BoxFit.fill,
-                                            radius: BorderRadius.circular(25),
+                                        ? GestureDetector(
+                                            onLongPress: () {
+                                              if (User_Module == 'COMPANY' &&
+                                                  getallcompenypagemodel?.object
+                                                          ?.isNotEmpty ==
+                                                      true) {
+                                                showProfileSwitchBottomSheet(
+                                                    context,
+                                                    getallcompenypagemodel!);
+                                              }
+                                            },
+                                            child: CustomImageView(
+                                              url: "${UserProfileImage}",
+                                              // color: Colors.transparent,
+                                              height: 50,
+                                              width: 50,
+                                              fit: BoxFit.fill,
+                                              radius: BorderRadius.circular(25),
+                                            ),
                                           )
-                                        : CustomImageView(
-                                            imagePath: ImageConstant.tomcruse,
-                                            // color: Colors.transparent,
-                                            height: 50,
-                                            width: 50,
-                                            fit: BoxFit.fill,
-                                            radius: BorderRadius.circular(25),
+                                        : GestureDetector(
+                                            onLongPress: () {
+                                              // this is the company user if
+                                              if (User_Module == 'COMPANY' &&
+                                                  (getallcompenypagemodel
+                                                              ?.object
+                                                              ?.length ??
+                                                          0) >=
+                                                      0) {
+                                                showProfileSwitchBottomSheet(
+                                                    context,
+                                                    getallcompenypagemodel!);
+                                              }
+                                            },
+                                            child: CustomImageView(
+                                              imagePath: ImageConstant.tomcruse,
+                                              // color: Colors.transparent,
+                                              height: 50,
+                                              width: 50,
+                                              fit: BoxFit.fill,
+                                              radius: BorderRadius.circular(25),
+                                            ),
                                           )),
                           ],
                         ),
@@ -1602,6 +1630,9 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                   );
                   ScaffoldMessenger.of(context).showSnackBar(snackBar);
                 }
+              }
+              if (state is Getallcompenypagelodedstate) {
+                getallcompenypagemodel = state.getallcompenypagemodel;
               }
 
               if (state is FetchAllExpertsLoadedState) {
@@ -1916,14 +1947,14 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                         segmentDuration: const Duration(seconds: 3),
                       );
                       buttonDatas.add(buttonData1);
-                      int curIndex = buttonDatas.length -1;
+                      int curIndex = buttonDatas.length - 1;
                       storyButtons.add(StoryButton(
                           onPressed: (data) {
                             Navigator.push(context,
                                 MaterialPageRoute(builder: (context) {
-                                  return NewStoryViewPage(
-                                      data, buttonDatas, curIndex, User_ID!);
-                                })).then((value) => Get_UserToken());
+                              return NewStoryViewPage(
+                                  data, buttonDatas, curIndex, User_ID!);
+                            })).then((value) => Get_UserToken());
                             /*Navigator.of(storycontext!).push(
                               StoryRoute(
                                 onTap: () async {
@@ -2486,7 +2517,6 @@ class _HomeScreenNewState extends State<HomeScreenNew>
 
                                                 if (imageDataPost?.object !=
                                                     null) {
-
                                                   StoryButtonData buttonData =
                                                       StoryButtonData(
                                                     timelineBackgroundColor:
@@ -2593,10 +2623,16 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                   storyButtons[0] = StoryButton(
                                                       onPressed: (data) {
                                                         Navigator.push(context,
-                                                            MaterialPageRoute(builder: (context) {
-                                                              return NewStoryViewPage(
-                                                                  data, buttonDatas, 0, User_ID!);
-                                                            })).then((value) => Get_UserToken());
+                                                            MaterialPageRoute(
+                                                                builder:
+                                                                    (context) {
+                                                          return NewStoryViewPage(
+                                                              data,
+                                                              buttonDatas,
+                                                              0,
+                                                              User_ID!);
+                                                        })).then((value) =>
+                                                            Get_UserToken());
                                                         /*Navigator.of(
                                                                 storycontext!)
                                                             .push(

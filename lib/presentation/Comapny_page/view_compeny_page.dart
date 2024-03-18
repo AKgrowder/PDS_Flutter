@@ -66,7 +66,7 @@ class _ViewCompenyPageState extends State<ViewCompenyPage> {
                   ),
                   child: Stack(
                     children: [
-                      widget.profilePic?.isEmpty == true
+                   widget.profilePic ==null 
                           ? Center(
                               child: ClipOval(
                                 child: FittedBox(
