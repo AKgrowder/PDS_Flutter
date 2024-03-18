@@ -1,4 +1,6 @@
+import 'package:pds/API/Model/DeleteUserChatModel/DeleteUserChat_Model.dart';
 import 'package:pds/API/Model/createDocumentModel/createDocumentModel.dart';
+import 'package:pds/API/Model/getAllCompanyTypeModel/getAllCompanyTypeModel.dart';
 import 'package:pds/API/Model/myaccountModel/myaccountModel.dart';
 
 import '../../Model/compeny_page/compeny_page_model.dart';
@@ -28,4 +30,16 @@ class Getallcompenypagelodedstate extends ComapnyManageState {
 class ComapnyManageErrorState extends ComapnyManageState {
   final String error;
  ComapnyManageErrorState(this.error);
+}
+
+
+class CompnayDeletPageState extends ComapnyManageState {
+  final DeleteUserChatModel deletUserChatModel;
+ CompnayDeletPageState(this.deletUserChatModel);
+}
+
+
+class GetAllCompanyTypeGet extends ComapnyManageState {
+  final GetAllCompanyType getAllcompnayType;
+ GetAllCompanyTypeGet(this.getAllcompnayType);
 }

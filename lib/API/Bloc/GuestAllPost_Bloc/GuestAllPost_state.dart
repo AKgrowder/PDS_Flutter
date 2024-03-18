@@ -10,6 +10,7 @@ import 'package:pds/API/Model/acceptRejectInvitaionModel/getAllNotificationCount
 import 'package:pds/API/Model/acceptRejectInvitaionModel/seenNotificationModel.dart';
 import 'package:pds/API/Model/createStroyModel/createStroyModel.dart';
 import 'package:pds/API/Model/getCountOfSavedRoomModel/getCountOfSavedRoomModel.dart';
+import 'package:pds/API/Model/getall_compeny_page_model/getall_compeny_page.dart';
 import 'package:pds/API/Model/like_Post_Model/like_Post_Model.dart';
 import 'package:pds/API/Model/myaccountModel/myaccountModel.dart';
 import 'package:pds/API/Model/saveBlogModel/saveBlog_Model.dart';
@@ -123,4 +124,9 @@ class WatchTimeSaveLoadedState extends GetGuestAllPostState {
 class Getallmasterreporttype extends GetGuestAllPostState {
   dynamic get_all_master_report_type;
   Getallmasterreporttype(this.get_all_master_report_type);
+}
+
+class Getallcompenypagelodedstate extends GetGuestAllPostState {
+  final GetAllCompenyPageModel getallcompenypagemodel;
+  Getallcompenypagelodedstate(this.getallcompenypagemodel);
 }
