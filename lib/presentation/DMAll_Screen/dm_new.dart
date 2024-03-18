@@ -437,31 +437,53 @@ class _DmScreenNewState extends State<DmScreenNew> with Observer {
                                     ),
                                   ),
                                 ),
-                                widget.chatUserProfile.isEmpty ||
-                                        widget.chatUserProfile == null
-                                    ? CustomImageView(
-                                        imagePath: ImageConstant.tomcruse,
-                                        height: 30,
-                                        width: 30,
-                                      )
-                                    : CustomImageView(
-                                        alignment: Alignment.bottomLeft,
-                                        url: "${widget.chatUserProfile}",
-                                        height: 30,
-                                        radius: BorderRadius.circular(20),
-                                        width: 30,
-                                        fit: BoxFit.fill,
+                                GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(context, MaterialPageRoute(
+                                      builder: (context) {
+                                        return ProfileScreen(
+                                            User_ID: widget.chatOtherUseruid,
+                                            isFollowing: "");
+                                      },
+                                    ));
+                                  },
+                                  child: widget.chatUserProfile.isEmpty ||
+                                          widget.chatUserProfile == null
+                                      ? CustomImageView(
+                                          imagePath: ImageConstant.tomcruse,
+                                          height: 30,
+                                          width: 30,
+                                        )
+                                      : CustomImageView(
+                                          alignment: Alignment.bottomLeft,
+                                          url: "${widget.chatUserProfile}",
+                                          height: 30,
+                                          radius: BorderRadius.circular(20),
+                                          width: 30,
+                                          fit: BoxFit.fill,
+                                        ),
+                                ),
+                                GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(context, MaterialPageRoute(
+                                      builder: (context) {
+                                        return ProfileScreen(
+                                            User_ID: widget.chatUserProfile,
+                                            isFollowing: "");
+                                      },
+                                    ));
+                                  },
+                                  child: Container(
+                                    margin: EdgeInsets.only(left: 10),
+                                    child: Text(
+                                      "${widget.chatUserName}",
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(
+                                        fontFamily: 'outfit',
+                                        fontSize: 15,
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.w700,
                                       ),
-                                Container(
-                                  margin: EdgeInsets.only(left: 10),
-                                  child: Text(
-                                    "${widget.chatUserName}",
-                                    overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(
-                                      fontFamily: 'outfit',
-                                      fontSize: 15,
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.w700,
                                     ),
                                   ),
                                 ),
@@ -1876,14 +1898,12 @@ class MessageViewWidget extends StatelessWidget {
                                   imageName: '${stroyDataIndex.storyData}',
                                 )
                               ]);
-                          buttonDatas.insert(
-                              0,data
-                              );
+                          buttonDatas.insert(0, data);
                           Navigator.push(context,
                               MaterialPageRoute(builder: (context) {
-                                return NewStoryViewPage(
-                                    data, buttonDatas, 0, useruid);
-                              }));
+                            return NewStoryViewPage(
+                                data, buttonDatas, 0, useruid);
+                          }));
                           /*Navigator.of(context).push(
                             StoryRoute(
                               // hii working Date

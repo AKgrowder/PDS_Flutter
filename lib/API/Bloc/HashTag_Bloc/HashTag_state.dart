@@ -77,9 +77,6 @@ class GetNotificationCountLoadedState extends HashTagState {
   final getAllNotificationCount GetNotificationCountData;
   GetNotificationCountLoadedState(this.GetNotificationCountData);
 }
-
-
-
 class SearchPagesLoadedState extends HashTagState {
   final SearchPages serchPages;
   SearchPagesLoadedState(this.serchPages);
