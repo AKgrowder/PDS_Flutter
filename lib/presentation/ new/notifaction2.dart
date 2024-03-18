@@ -526,11 +526,29 @@ class _AllNotificationClassState extends State<AllNotificationClass> {
                                             )
                                           // print("opne Save Image screen RE_POST & TAG_POST");
 
-                                          : AllNotificationData?.object?[index].subject ==
+                                           : AllNotificationData?.object?[index].subject ==
                                                   "INVITE_ROOM"
-                                              ? print(
-                                                  "Notification Seen INVITE_ROOM")
-                                              : AllNotificationData
+                                              ?   Navigator.of(context).pushAndRemoveUntil(
+                  MaterialPageRoute(
+                      builder: (context) => NewBottomBar(
+                            buttomIndex: 4,
+                          )),
+                  (Route<dynamic> route) => false)
+                                              :AllNotificationData?.object?[index].subject == "EXPERT_ACCEРТ_INVITE"
+
+                         
+                          ||
+                          AllNotificationData?.object?[index].subject == "EXPERT_LEFT_ROOM" ||
+                          AllNotificationData?.object?[index].subject == "EXPERT_REJECT_INVITE"
+                      ?
+
+                   
+                     Navigator.of(context).pushAndRemoveUntil(
+                  MaterialPageRoute(
+                      builder: (context) => NewBottomBar(
+                            buttomIndex: 1,
+                          )),
+                  (Route<dynamic> route) => false) /*  AllNotificationData
                                                               ?.object?[index]
                                                               .subject ==
                                                           "EXPERT_LEFT_ROOM" ||
@@ -557,7 +575,7 @@ class _AllNotificationClassState extends State<AllNotificationClass> {
                                                               .subject ==
                                                           "EXPERT_REJECT_INVITE"
                                                       ? print(
-                                                          "Seen Notification EXPERT_REJECT_INVITE")
+                                                          "Seen Notification EXPERT_REJECT_INVITE") */
                                                       : AllNotificationData?.object?[index].subject == "LIKE_POST" ||
                                                               AllNotificationData?.object?[index].subject ==
                                                                   "COMMENT_POST" ||

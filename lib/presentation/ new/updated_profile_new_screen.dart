@@ -514,7 +514,7 @@ class _MyHomePageState extends State<ShowProfileScreen>
                               builder: (context) => SettingScreen(
                                     accountType:
                                         NewProfileData?.object?.accountType ??
-                                            '',
+                                            '', module:  NewProfileData?.object?.module ?? '',
                                   ))).then((value) =>
                           widget.ProfileNotification == true
                               ? BlocProvider.of<NewProfileSCubit>(context)
