@@ -13,6 +13,7 @@ import 'package:pds/API/Model/WorkExperience_Model/DeleteExperience_model.dart';
 import 'package:pds/API/Model/WorkExperience_Model/WorkExperience_model.dart';
 import 'package:pds/API/Model/aboutMeModel/aboutMeModel.dart';
 import 'package:pds/API/Model/checkUserStatusModel/chekuserStausModel.dart';
+import 'package:pds/API/Model/getall_compeny_page_model/getall_compeny_page.dart';
 import 'package:pds/API/Model/like_Post_Model/like_Post_Model.dart';
 import 'package:pds/API/Model/saveAllBlogModel/saveAllBlog_Model.dart';
 import 'package:pds/API/Model/saveBlogModel/saveBlog_Model.dart';
@@ -147,4 +148,10 @@ class RePostLoadedState extends NewProfileSState {
 class DeletePostLoadedState extends NewProfileSState {
   final DeletePostModel DeletePost;
   DeletePostLoadedState(this.DeletePost);
+}
+
+
+class Getallcompenypagelodedstate extends NewProfileSState {
+  final GetAllCompenyPageModel getallcompenypagemodel;
+  Getallcompenypagelodedstate(this.getallcompenypagemodel);
 }

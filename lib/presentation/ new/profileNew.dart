@@ -24,6 +24,7 @@ import 'package:pds/API/Model/NewProfileScreenModel/GetAppUserPost_Model.dart';
 import 'package:pds/API/Model/NewProfileScreenModel/GetSavePost_Model.dart';
 import 'package:pds/API/Model/NewProfileScreenModel/GetUserPostCommet_Model.dart';
 import 'package:pds/API/Model/NewProfileScreenModel/NewProfileScreen_Model.dart';
+import 'package:pds/API/Model/getall_compeny_page_model/getall_compeny_page.dart';
 import 'package:pds/API/Model/saveAllBlogModel/saveAllBlog_Model.dart';
 import 'package:pds/core/app_export.dart';
 import 'package:pds/core/utils/color_constant.dart';
@@ -61,6 +62,7 @@ import '../Create_Post_Screen/Ceratepost_Screen.dart';
 import '../settings/setting_screen.dart';
 import 'comment_bottom_sheet.dart';
 import 'followers.dart';
+import 'switchProfilebootmSheet.dart';
 
 class ProfileScreen extends StatefulWidget {
   String User_ID;
@@ -110,6 +112,7 @@ class _ProfileScreenState extends State<ProfileScreen>
   String? workignStart;
   String? workignend;
   String? start;
+   GetAllCompenyPageModel? getallcompenypagemodel;
   String? startAm;
   String? end;
   String? endAm;
@@ -181,6 +184,23 @@ class _ProfileScreenState extends State<ProfileScreen>
   bool _isScrolledUp = false;
   bool scrolldown = false;
   bool isOpen = false;
+   void launchEmail(String emailAddress) async {
+    final Uri emailLaunchUri = Uri(
+      // scheme: 'Test',
+      path: emailAddress,
+    );
+    Uri mailto = Uri.parse("mailto:$emailLaunchUri");
+    // if (Platform.isAndroid && Platform.isIOS) {
+    await launchUrl(mailto);
+    // } else {
+    //   print("Somthing went wrong!");
+    // }
+    /* if (await canLaunch(emailLaunchUri.toString())) {
+    await launch(emailLaunchUri.toString());
+  } else {
+    throw 'Could not launch email';
+  } */
+  }
 
   void hideFloting() {
     super.setState(() {
@@ -295,6 +315,8 @@ class _ProfileScreenState extends State<ProfileScreen>
     BlocProvider.of<NewProfileSCubit>(context).get_about_me(context, userId);
 
     BlocProvider.of<NewProfileSCubit>(context).GetAllSaveBlog(context, userId);
+    BlocProvider.of<NewProfileSCubit>(context)
+        .getallcompenypagee(context);
   }
 
   @override
@@ -669,6 +691,9 @@ class _ProfileScreenState extends State<ProfileScreen>
           BlocProvider.of<NewProfileSCubit>(context)
               .GetAppPostAPI(context, "${NewProfileData?.object?.userUid}");
         }
+        if(state is Getallcompenypagelodedstate){
+            getallcompenypagemodel = state.getallcompenypagemodel;
+        }
       }, builder: (context, state) {
         return DefaultTabController(
             length: 4,
@@ -910,14 +935,15 @@ class _ProfileScreenState extends State<ProfileScreen>
                                               ),
                                               if (NewProfileData
                                                       ?.object?.module ==
-                                                  "COMPANY")
+                                                  "COMPANY" &&   getallcompenypagemodel
+                                                              ?.object
+                                                              ?.isNotEmpty == true)
                                                 Positioned(
                                                   bottom: 5,
                                                   right: -0,
                                                   child: GestureDetector(
-                                                  
-                                                    onTapDown: (TapDownDetails
-                                                        details) {
+                                                    onTap: () {
+                                                    showProfileSwitchBottomSheet(context,getallcompenypagemodel!);
                                                       /* _showPopupMenuSwitchAccount(
                                                         details.globalPosition,
                                                         context,
@@ -1124,11 +1150,13 @@ class _ProfileScreenState extends State<ProfileScreen>
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Padding(
-                                      padding: const EdgeInsets.only(left: 0,),
+                                      padding: const EdgeInsets.only(
+                                        left: 0,
+                                      ),
                                       child: Text(
                                         '@${NewProfileData?.object?.userName}',
                                         style: TextStyle(
-                                          fontSize: 18,
+                                            fontSize: 18,
                                             fontFamily: "outfit",
                                             fontWeight: FontWeight.bold,
                                             color: Color(0xff444444)),
@@ -1156,47 +1184,54 @@ class _ProfileScreenState extends State<ProfileScreen>
                                 Padding(
                                   padding: const EdgeInsets.only(
                                       left: 35, right: 35),
-                                  child: Container(
-                                    height: 45,
-                                    decoration: BoxDecoration(
-                                        border: Border.all(
-                                            color: ColorConstant.primary_color),
-                                        color: ColorConstant.primaryLight_color,
-                                        borderRadius: BorderRadius.circular(5)),
-                                    child: Padding(
-                                      padding: const EdgeInsets.only(
-                                          left: 15, right: 15),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Row(
-                                            children: [
-                                              Image.asset(
-                                                ImageConstant.setting_phone,
-                                                height: 15,
-                                                color: Colors.black,
-                                              ),
-                                              SizedBox(
-                                                width: 15,
-                                              ),
-                                              Text(
-                                                'Support',
-                                                maxLines: 1,
-                                                style: TextStyle(
-                                                    fontFamily: "outfit",
-                                                    fontSize: 18,
-                                                    fontWeight:
-                                                        FontWeight.w500),
-                                              ),
-                                            ],
-                                          ),
-                                          Icon(
-                                            Icons.arrow_forward_ios,
-                                            color: Colors.black,
-                                            size: 15,
-                                          )
-                                        ],
+                                  child: GestureDetector(
+                                   onTap: () async {
+                                      String email = Uri.encodeComponent(
+                                          "Connect@inpackaging.com");
+                                      launchEmail(email);
+                                    },
+                                    child: Container(
+                                      height: 45,
+                                      decoration: BoxDecoration(
+                                          border: Border.all(
+                                              color: ColorConstant.primary_color),
+                                          color: ColorConstant.primaryLight_color,
+                                          borderRadius: BorderRadius.circular(5)),
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(
+                                            left: 15, right: 15),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Row(
+                                              children: [
+                                                Image.asset(
+                                                  ImageConstant.setting_phone,
+                                                  height: 15,
+                                                  color: Colors.black,
+                                                ),
+                                                SizedBox(
+                                                  width: 15,
+                                                ),
+                                                Text(
+                                                  'Support',
+                                                  maxLines: 1,
+                                                  style: TextStyle(
+                                                      fontFamily: "outfit",
+                                                      fontSize: 18,
+                                                      fontWeight:
+                                                          FontWeight.w500),
+                                                ),
+                                              ],
+                                            ),
+                                            Icon(
+                                              Icons.arrow_forward_ios,
+                                              color: Colors.black,
+                                              size: 15,
+                                            )
+                                          ],
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -1281,7 +1316,10 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                 NewProfileData
                                                                         ?.object
                                                                         ?.accountType ??
-                                                                    '',
+                                                                    '', module: NewProfileData
+                                                                        ?.object
+                                                                        ?.module ?? '',
+
                                                           ))).then((value) =>
                                                   widget.ProfileNotification ==
                                                           true
@@ -11988,5 +12026,4 @@ class _ProfileScreenState extends State<ProfileScreen>
       ],
     );
   }
-
 }

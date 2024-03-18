@@ -13,7 +13,8 @@ class NewProfileSCubit extends Cubit<NewProfileSState> {
     dynamic PublicRModel;
     try {
       emit(NewProfileSLoadingState());
-      PublicRModel = await Repository().NewProfileAPI(context, UserUid, profileNotification);
+      PublicRModel = await Repository()
+          .NewProfileAPI(context, UserUid, profileNotification);
       if (PublicRModel == "Something Went Wrong, Try After Some Time.") {
         emit(NewProfileSErrorState("${PublicRModel}"));
       } else {
@@ -481,6 +482,23 @@ class NewProfileSCubit extends Cubit<NewProfileSState> {
       }
     } catch (e) {
       emit(NewProfileSErrorState(Deletepost));
+    }
+  }
+
+  Future<void>  getallcompenypagee(BuildContext context) async {
+    dynamic getallcompenypagee;
+    try {
+      emit(NewProfileSLoadingState());
+      getallcompenypagee = await Repository().getallcompenypage(context);
+      print("sddgfdgsfgfg-${getallcompenypagee.message}");
+
+      if (getallcompenypagee.success == true) {
+        emit(Getallcompenypagelodedstate(getallcompenypagee));
+      } else {
+        emit(NewProfileSErrorState(getallcompenypagee.message));
+      }
+    } catch (e) {
+      emit(NewProfileSErrorState(e.toString()));
     }
   }
 }

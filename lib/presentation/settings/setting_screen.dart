@@ -28,7 +28,9 @@ import '../policy_of_company/policies.dart';
 
 class SettingScreen extends StatefulWidget {
   String accountType;
-  SettingScreen({required this.accountType});
+  String module;
+
+  SettingScreen({required this.accountType, required this.module});
   @override
   State<SettingScreen> createState() => _SettingScreenState();
 }
@@ -347,6 +349,9 @@ class _SettingScreenState extends State<SettingScreen> {
                             ) {
                           return SizedBox();
                         }
+                        if (widget.module != 'COMPANY' && index == 12) {
+                          return SizedBox();
+                        }
                         return GestureDetector(
                           onTap: () {
                             switch (index) {
@@ -493,16 +498,14 @@ class _SettingScreenState extends State<SettingScreen> {
                                           child: LogOutdailog(),
                                         ));
 
-                                        
                                 break;
 
-                                 case 12:
+                              case 12:
                                 Navigator.push(context,
                                     MaterialPageRoute(builder: (context) {
                                   return ComapnyManageScreen();
                                 }));
 
-                                        
                                 break;
                               /*   case 7:
                                     showDialog(
