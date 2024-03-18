@@ -1261,8 +1261,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
   NewApi() async {
     if (User_ID != null && User_Name != null) {
       String useruidsort = User_ID!.split('-').last.toString();
-
-      onUserLogin('${useruidsort}', '${User_Name}');
+    onUserLogin('${useruidsort}', '${User_Name}');
     }
     timer = Timer.periodic(Duration(seconds: 15), (timer) async {
       setState(() {

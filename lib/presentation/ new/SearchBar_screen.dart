@@ -179,7 +179,6 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
             }
             if (state is SearchPagesLoadedState) {
               searchPages = state.serchPages;
-              print("this is the state is SearchPagesLoadedState ");
               dataget = true;
               isSerchCompnayPage = true;
             }
@@ -1368,12 +1367,12 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                         String hashTageValue =
                             searchController.text.replaceAll("#", "%23");
                         BlocProvider.of<HashTagCubit>(context)
-                            .serchPagesCompnay(
+                            .serchPagesCompnayPagaationApi(
                                 context, '${(p0 + 1)}', hashTageValue.trim());
                       } else {
                         if (searchController.text.isNotEmpty) {
                           print("this mehtod");
-                        BlocProvider.of<HashTagCubit>(context).serchPagesCompnay(
+                        BlocProvider.of<HashTagCubit>(context).serchPagesCompnayPagaationApi(
                           context, '${(p0 + 1)}', searchController.text.trim());
                         }
                       }
