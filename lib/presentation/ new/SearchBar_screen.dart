@@ -1372,8 +1372,9 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                       } else {
                         if (searchController.text.isNotEmpty) {
                           print("this mehtod");
-                        BlocProvider.of<HashTagCubit>(context).serchPagesCompnayPagaationApi(
-                          context, '${(p0 + 1)}', searchController.text.trim());
+                          BlocProvider.of<HashTagCubit>(context)
+                              .serchPagesCompnayPagaationApi(context,
+                                  '${(p0 + 1)}', searchController.text.trim());
                         }
                       }
                     },

@@ -88,7 +88,7 @@ class _ComapnyManageScreenState extends State<ComapnyManageScreen> {
                       ),
                     ),
                   )
-                : getallcompenypage?.object?.length == 0
+                : getallcompenypage?.object?.content?.length == 0
                     ? Center(
                         child: Image.asset(
                           ImageConstant.emptylistimage,
@@ -96,107 +96,117 @@ class _ComapnyManageScreenState extends State<ComapnyManageScreen> {
                         ),
                       )
                     : ListView.builder(
-                        itemCount: getallcompenypage?.object?.length,
+                        itemCount: getallcompenypage?.object?.content?.length,
                         itemBuilder: (context, index) {
-                          return Padding(
-                            padding: const EdgeInsets.only(
-                                right: 15, left: 15, bottom: 15),
-                            child: Container(
-                              height: 70,
-                              decoration: BoxDecoration(
-                                  border: Border.all(color: Colors.grey),
-                                  borderRadius: BorderRadius.circular(10)),
-                              child: Padding(
-                                padding:
-                                    const EdgeInsets.only(right: 15, left: 15),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Row(
-                                      children: [
-                                        getallcompenypage?.object?[index]
-                                                    .profilePic ==
-                                                null
-                                            ? CustomImageView(
-                                                imagePath:
-                                                    ImageConstant.tomcruse,
-                                                height: 50,
-                                                radius:
-                                                    BorderRadius.circular(25),
-                                                width: 50,
-                                                fit: BoxFit.fill,
-                                              )
-                                            : GestureDetector(
-                                                onTap: () {
-                                                  print(
-                                                      "as per image-${getallcompenypage?.object?[index].profilePic}");
-                                                },
-                                                child: CustomImageView(
-                                                  url:
-                                                      "${getallcompenypage?.object?[index].profilePic}",
+                          if (getallcompenypage
+                                  ?.object?.content?[index].companyPageName ==
+                              null) {
+                            return SizedBox();
+                          } else {
+                            return Padding(
+                              padding: const EdgeInsets.only(
+                                  right: 15, left: 15, bottom: 15),
+                              child: Container(
+                                height: 70,
+                                decoration: BoxDecoration(
+                                    border: Border.all(color: Colors.grey),
+                                    borderRadius: BorderRadius.circular(10)),
+                                child: Padding(
+                                  padding: const EdgeInsets.only(
+                                      right: 15, left: 15),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Row(
+                                        children: [
+                                          getallcompenypage
+                                                      ?.object
+                                                      ?.content?[index]
+                                                      .companyPageProfilePic ==
+                                                  null
+                                              ? CustomImageView(
+                                                  imagePath:
+                                                      ImageConstant.tomcruse,
                                                   height: 50,
                                                   radius:
                                                       BorderRadius.circular(25),
                                                   width: 50,
                                                   fit: BoxFit.fill,
+                                                )
+                                              : GestureDetector(
+                                                  onTap: () {
+                                                    print(
+                                                        "as per image-${getallcompenypage?.object?.content?[index].companyPageProfilePic}");
+                                                  },
+                                                  child: CustomImageView(
+                                                    url:
+                                                        "${getallcompenypage?.object?.content?[index].companyPageProfilePic}",
+                                                    height: 50,
+                                                    radius:
+                                                        BorderRadius.circular(
+                                                            25),
+                                                    width: 50,
+                                                    fit: BoxFit.fill,
+                                                  ),
                                                 ),
-                                              ),
-                                        Padding(
-                                          padding: const EdgeInsets.only(
-                                              top: 13, bottom: 13, left: 10),
-                                          child: Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Flexible(
-                                                child: Container(
-                                                  width: _width / 2.5,
-                                                  child: Text(
-                                                    " ${getallcompenypage?.object?[index].companyName}",
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
-                                                    style: TextStyle(
-                                                      fontSize: 18,
-                                                      fontWeight:
-                                                          FontWeight.w600,
-                                                      color: Colors.black,
+                                          Padding(
+                                            padding: const EdgeInsets.only(
+                                                top: 13, bottom: 13, left: 10),
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Flexible(
+                                                  child: Container(
+                                                    width: _width / 2.5,
+                                                    child: Text(
+                                                      " ${getallcompenypage?.object?.content?[index].companyPageName}",
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                      style: TextStyle(
+                                                        fontSize: 18,
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                        color: Colors.black,
+                                                      ),
                                                     ),
                                                   ),
                                                 ),
-                                              ),
-                                              Flexible(
-                                                child: Container(
-                                                  width: _width / 2.5,
-                                                  child: Text(
-                                                    " ${getallcompenypage?.object?[index].companyType}",
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
-                                                    style: TextStyle(
-                                                      fontSize: 14,
-                                                      fontWeight:
-                                                          FontWeight.w400,
-                                                      color: Colors.black,
+                                                Flexible(
+                                                  child: Container(
+                                                    width: _width / 2.5,
+                                                    child: Text(
+                                                      " ${getallcompenypage?.object?.content?[index].companyPageType}",
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                      style: TextStyle(
+                                                        fontSize: 14,
+                                                        fontWeight:
+                                                            FontWeight.w400,
+                                                        color: Colors.black,
+                                                      ),
                                                     ),
                                                   ),
-                                                ),
-                                              )
-                                            ],
+                                                )
+                                              ],
+                                            ),
                                           ),
-                                        ),
-                                      ],
-                                    ),
-                                    GestureDetector(
-                                        onTapDown: (details) {
-                                          showPopUp(details.globalPosition,
-                                              context, index);
-                                        },
-                                        child: Icon(Icons.more_vert))
-                                  ],
+                                        ],
+                                      ),
+                                      GestureDetector(
+                                          onTapDown: (details) {
+                                            showPopUp(details.globalPosition,
+                                                context, index);
+                                          },
+                                          child: Icon(Icons.more_vert))
+                                    ],
+                                  ),
                                 ),
                               ),
-                            ),
-                          );
+                            );
+                          }
                         },
                       );
           },
@@ -237,15 +247,16 @@ class _ComapnyManageScreenState extends State<ComapnyManageScreen> {
                   Navigator.push(context, MaterialPageRoute(
                     builder: (context) {
                       return ViewCompenyPage(
-                        profilePic:
-                            getallcompenypage?.object?[index].profilePic,
+                        profilePic: getallcompenypage
+                            ?.object?.content?[index].companyPageProfilePic,
                         companyName:
-                            "${getallcompenypage?.object?[index].companyName}",
-                        pageid: "${getallcompenypage?.object?[index].pageId}",
+                            "${getallcompenypage?.object?.content?[index].companyPageName}",
+                        pageid:
+                            "${getallcompenypage?.object?.content?[index].pageId}",
                         companyType:
-                            "${getallcompenypage?.object?[index].companyType}",
+                            "${getallcompenypage?.object?.content?[index].companyPageType}",
                         description:
-                            "${getallcompenypage?.object?[index].description}",
+                            "${getallcompenypage?.object?.content?[index].pageDescription}",
                       );
                     },
                   ));
@@ -334,9 +345,11 @@ class _ComapnyManageScreenState extends State<ComapnyManageScreen> {
           showDialog(
             context: context,
             builder: (_) => DeleteComapnyDailog(
-              postUid: '${getallcompenypage?.object?[index].pageUid}',
+              postUid:
+                  '${getallcompenypage?.object?.content?[index].userCompanyPageUid}',
             ),
-          ).then((value) => BlocProvider.of<ComapnyManageCubit>(context).getallcompenypagee(context));
+          ).then((value) => BlocProvider.of<ComapnyManageCubit>(context)
+              .getallcompenypagee(context));
           /* BlocProvider.of<ComapnyManageCubit>(context).deletecompenypagee(context,'${getallcompenypage?.object?[index].pageUid}'); */
         }
       }
