@@ -5,7 +5,7 @@ import 'package:pds/core/utils/sharedPreferences.dart';
 import 'package:pds/presentation/%20new/newbottembar.dart';
 import 'package:pds/videocallCommenClass.dart/commenFile.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
+import 'package:pds/presentation/splash_screen/splash_screen.dart';
 import '../../API/Bloc/logOut_bloc/LogOut_state.dart';
 import '../../API/Bloc/logOut_bloc/logOut_cubit.dart';
 
@@ -81,7 +81,8 @@ class LogOutdailogState extends State<LogOutdailog>
 
                       Navigator.pushAndRemoveUntil(context,
                           MaterialPageRoute(builder: (context) {
-                        return NewBottomBar(buttomIndex: 0);
+                        return SplashScreen(); 
+                        // NewBottomBar(buttomIndex: 0);
                       }), (route) => false);
                     }
                   }, builder: (context, state) {

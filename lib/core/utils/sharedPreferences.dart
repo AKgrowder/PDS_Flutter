@@ -13,6 +13,8 @@ class PreferencesKey {
   static const String userPrfoile = 'userPrfoile';
   static const String fcmToken = 'fcmToken';
   static const String module = 'module';
+  static const String module1 = 'module1';
+
   static const String UserProfile = 'UserProfile';
   static const String userStatus = 'userStatus';
   static const String OpenProfile = 'OpenProfile';
