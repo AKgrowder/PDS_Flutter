@@ -1,10 +1,13 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 
+import 'package:any_link_preview/any_link_preview.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -14,6 +17,7 @@ import 'package:hashtagable/widgets/hashtag_text.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+// import 'package:metadata_fetch/metadata_fetch.dart';
 import 'package:pds/API/Bloc/NewProfileScreen_Bloc/NewProfileScreen_cubit.dart';
 import 'package:pds/API/Bloc/postData_Bloc/postData_Bloc.dart';
 import 'package:pds/API/Bloc/postData_Bloc/postData_state.dart';
@@ -34,9 +38,14 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:transparent_image/transparent_image.dart';
 import 'package:video_player/video_player.dart';
+import 'package:video_thumbnail/video_thumbnail.dart';
 
 import '../../API/Model/serchForInboxModel/serchForinboxModel.dart';
 import '../../core/utils/image_constant.dart';
+import 'package:http/http.dart' as http;
+import 'package:html/parser.dart' show parse;
+import 'package:html/dom.dart' as dom;
+
 
 class CreateNewPost extends StatefulWidget {
   String? edittextdata;
@@ -136,6 +145,10 @@ class _CreateNewPostState extends State<CreateNewPost> {
   ScrollController scrollController = ScrollController();
 
   String? data;
+  String title = "";
+  String description="";
+  String imageUrl="";
+  Timer? _timer;
 /*   void _onTextChanged() {
     String text = postText.text;
 
@@ -504,11 +517,11 @@ class _CreateNewPostState extends State<CreateNewPost> {
                         },
                         suggestionPosition: SuggestionPosition.values.last,
                         // maxLines: 22,
-                        // maxLines: null,
-                        // inputFormatters: <TextInputFormatter>[
-                        //   LengthLimitingTextInputFormatter(1000),
-                        //   // FilteringTextInputFormatter.deny(RegExp(r'[/\\]')),
-                        // ],
+                        maxLines: null,
+                        inputFormatters: <TextInputFormatter>[
+                          LengthLimitingTextInputFormatter(1000),
+                          // FilteringTextInputFormatter.deny(RegExp(r'[/\\]')),
+                        ],
                         // style: TextStyle(fontFamily:'' ),
                         style: TextStyle(
                           fontFamily: 'outfit',
@@ -595,6 +608,63 @@ class _CreateNewPostState extends State<CreateNewPost> {
                         ],
                       ),
                     ),
+                    if(title.isNotEmpty)
+                      /*Container(
+                        height: 80,
+                        decoration: ShapeDecoration(
+                          shape: RoundedRectangleBorder(
+                            borderRadius:  BorderRadius.circular(8)
+                          ),
+                          color: CupertinoColors.inactiveGray,
+                        ),
+                        child: Row(
+                          children: [
+                            imageUrl.isNotEmpty?SizedBox(
+                              width: 80,
+                              child: CachedNetworkImage(
+                                imageUrl: imageUrl,
+                                fit: BoxFit.fill,
+                              ),
+                            ):SizedBox.shrink(),
+                            Expanded(child: Column(
+                              children: [
+                                Text(title,style: TextStyle(color: Colors.black,fontSize: 16,fontFamily: "outfit"),),
+                                SizedBox(height: 8,),
+                                Text(description,style: TextStyle(color: Colors.black26,fontSize: 14,fontFamily: "outfit"),),
+                              ],
+                            ))
+                          ],
+                        ),
+                      ),*/
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                        child: AnyLinkPreview(
+                          link: title,
+                          displayDirection: UIDirection.uiDirectionHorizontal,
+                          showMultimedia: true,
+                          bodyMaxLines: 5,
+                          bodyTextOverflow: TextOverflow.ellipsis,
+                          titleStyle: TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 15,
+                          ),
+                          bodyStyle: TextStyle(color: Colors.grey, fontSize: 12),
+                          errorBody: 'Show my custom error body',
+                          errorTitle: 'Show my custom error title',
+                          errorWidget: Container(
+                            color: Colors.grey[300],
+                            child: Text('Oops!'),
+                          ),
+                          errorImage: "https://flutter.dev/",
+                          cache: Duration(days: 7),
+                          backgroundColor: Colors.grey[300],
+                          borderRadius: 12,
+                          removeElevation: false,
+                          boxShadow: [BoxShadow(blurRadius: 3, color: Colors.grey)],
+                          onTap: (){}, // This disables tap event
+                        ),
+                      ),
                     if (widget.edittextdata != null)
                       Column(
                         children: [
@@ -2527,9 +2597,11 @@ class _CreateNewPostState extends State<CreateNewPost> {
   onChangeMethod(String value) {
     setState(() {
       postText.text = value;
+      title = "";
     });
 
     if (value.contains('@')) {
+      title = "";
       print("if this condison is working-${value}");
       if (value.length >= 1 && value.contains('@')) {
         print("value check --${value.endsWith(' #')}");
@@ -2548,17 +2620,46 @@ class _CreateNewPostState extends State<CreateNewPost> {
         print("check lenth else-${value.length}");
       }
     } else if (value.contains('#')) {
+      title = "";
       print("check length-${value}");
       String data1 = value.split(' #').last.replaceAll('#', '');
       BlocProvider.of<AddPostCubit>(context)
           .GetAllHashtag(context, '10', '#${data1.trim()}');
+    }  else if (AnyLinkPreview.isValidLink(value)) {
+      if (_timer != null) {
+        _timer?.cancel();
+        _timer = Timer(Duration(seconds: 2), () {
+          setState(() {
+            title =value;
+          });
+        });
+      } else {
+        _timer = Timer(Duration(seconds: 2), () {
+          setState(() {
+            title =value;
+          });
+        });
+      }
+      print("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% url : $value");
+
+      // _fetchMetadata(value);
     } else {
       setState(() {
         // postText.text = postText.text + ' ' + postTexContrlloer.join(' ,');
         istageData = false;
         isHeshTegData = false;
+        title = "";
       });
     }
+  }
+
+  bool isURL(String url) {
+    // Regular expression pattern to match URL
+    RegExp regExp = RegExp(
+      r"^(?:http|https):\/\/[\w\-]+(\.[\w\-]+)+[\w\-.,@?^=%&:/~\+#]*[\w\-@?^=%&/~\+#]$",
+      caseSensitive: false,
+    );
+    return regExp.hasMatch(url);
   }
 /* 
   onChangeMethod(String value) {
@@ -3131,6 +3232,29 @@ class _CreateNewPostState extends State<CreateNewPost> {
   }
   ////
 
+  bool isYouTubeUrl(String url) {
+    // Regular expression pattern to match YouTube URLs
+    RegExp regExp = RegExp(
+      r"^https?://(?:www\.)?youtube\.com/watch\?v=([a-zA-Z0-9_-]+)",
+      caseSensitive: false,
+    );
+    return regExp.hasMatch(url);
+  }
+
+  /*Future<void> _fetchMetadata(String url) async {
+    try {
+      var data = await MetadataFetch.extract(url);
+      print("attributes %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% : ${data!.image}");
+        setState(() {
+          title = data.title ?? '';
+          description = data.description ?? '';
+          imageUrl = data.image ?? '';
+        });
+    } catch (e) {
+      print('Fetch Error: $e');
+    }
+  }*/
+
   dataPostFucntion() {
     print("dfhghghfhgh-${pickedFile?.path}");
     print("FBSDFNFBDBFSBF--${postText.text.length}");
@@ -3148,11 +3272,7 @@ class _CreateNewPostState extends State<CreateNewPost> {
     } else {
       exp.allMatches(postText.text).forEach((match) {
         var aa = "${match.group(0)}";
-        print(
-            "aa.length aa.length aa.length aa.length aa.length aa.length aa.length aa.length aa.length aa.length ");
-        print("  ");
-        print(aa);
-        print(aa.length);
+
         if (aa.length <= 100) {
           HasetagList?.add("$match");
         } else {
@@ -3200,7 +3320,9 @@ class _CreateNewPostState extends State<CreateNewPost> {
             "description": postText.text,
             "postData": imageDataPost?.object?.data,
             "postDataType": "IMAGE",
-            "postType": soicalData[indexx].toString().toUpperCase()
+            "postType": soicalData[indexx].toString().toUpperCase(),
+            "thumbnailImageUrl": imageDataPost?.object?.data?.first,
+
           };
           BlocProvider.of<AddPostCubit>(context).InvitationAPI(context, param);
         } else if (pickedFile?.path != null && postText.text.isNotEmpty) {
@@ -3208,7 +3330,8 @@ class _CreateNewPostState extends State<CreateNewPost> {
             "description": postText.text,
             "postData": imageDataPost?.object?.data,
             "postDataType": "IMAGE",
-            "postType": soicalData[indexx].toString().toUpperCase()
+            "postType": soicalData[indexx].toString().toUpperCase(),
+            "thumbnailImageUrl": imageDataPost?.object?.data?.first,
           };
           BlocProvider.of<AddPostCubit>(context).InvitationAPI(context, param);
         } else if (postText.text.isNotEmpty &&
@@ -3217,7 +3340,7 @@ class _CreateNewPostState extends State<CreateNewPost> {
             "description": postText.text,
             "postData": imageDataPost?.object?.data,
             "postDataType": "VIDEO",
-            "postType": soicalData[indexx].toString().toUpperCase()
+            "postType": soicalData[indexx].toString().toUpperCase(),
           };
           BlocProvider.of<AddPostCubit>(context).InvitationAPI(context, param);
         } else {
@@ -3230,10 +3353,11 @@ class _CreateNewPostState extends State<CreateNewPost> {
                 "postUid": widget.PostID
               };
             } else {
-              param = {
-                "description": postText.text,
-                "postType": soicalData[indexx].toString().toUpperCase()
-              };
+              if(isYouTubeUrl(postText.text)){
+                param = {"description": postText.text, "postType": soicalData[indexx].toString().toUpperCase(),"postDataType": "YOUTUBE"};
+              }else {
+                param = {"description": postText.text, "postType": soicalData[indexx].toString().toUpperCase()};
+              }
             }
 
             BlocProvider.of<AddPostCubit>(context)
@@ -3243,6 +3367,7 @@ class _CreateNewPostState extends State<CreateNewPost> {
               "postData": imageDataPost?.object?.data,
               "postDataType": "IMAGE",
               "postType": soicalData[indexx].toString().toUpperCase(),
+              "thumbnailImageUrl": imageDataPost?.object?.data?.first,
             };
             BlocProvider.of<AddPostCubit>(context)
                 .InvitationAPI(context, param);
@@ -3251,6 +3376,7 @@ class _CreateNewPostState extends State<CreateNewPost> {
               "postData": imageDataPost?.object?.data,
               "postDataType": "IMAGE",
               "postType": soicalData[indexx].toString().toUpperCase(),
+              "thumbnailImageUrl": imageDataPost?.object?.data?.first,
             };
             BlocProvider.of<AddPostCubit>(context)
                 .InvitationAPI(context, param);
@@ -3298,6 +3424,18 @@ class _CreateNewPostState extends State<CreateNewPost> {
         ScaffoldMessenger.of(context).showSnackBar(snackBar);
       } */
     }
+  }
+
+  Future<Uint8List> fetchThumbnail(String videoUrl) async {
+    final uint8list = await VideoThumbnail.thumbnailData(
+      video: videoUrl,
+      imageFormat: ImageFormat.JPEG,
+      maxWidth: 0,
+      quality: 100,
+    );
+
+      return uint8list!;
+
   }
 
   String getTimeDifference(DateTime dateTime) {
@@ -3449,6 +3587,8 @@ class ViewerPage extends StatelessWidget {
     );
   }
 }
+
+
 
 class CustomTextEditingController extends TextEditingController {
   Color currentColor = Colors.black;
