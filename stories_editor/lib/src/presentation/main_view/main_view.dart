@@ -366,6 +366,7 @@ class _MainViewState extends State<MainView> {
                                   child: TopTools(
                                     contentKey: contentKey,
                                     context: context,
+                                    onDone: widget.onDone,
                                   )),
                             ),
 
@@ -421,76 +422,84 @@ class _MainViewState extends State<MainView> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 /// preview gallery
-                                Platform.isIOS == true ? SizedBox() :
-                                Expanded(
-                                  child: Container(
-                                    alignment: Alignment.centerLeft,
-                                    child: SizedBox(
-                                      child: _preViewContainer(
-                                        /// if [model.imagePath] is null/empty return preview image
-                                        child: controlNotifier.mediaPath.isEmpty
-                                            ? ClipRRect(
-                                                borderRadius:
-                                                    BorderRadius.circular(8),
-                                                child: GestureDetector(
-                                                  onTap: () {
-                                                    print("hey i am comming!!");
-                                                    controlNotifier.isDataGet =
-                                                        true;
-                                                    if (controlNotifier
-                                                        .mediaPath.isEmpty) {
-                                                      scrollProvider
-                                                          .pageController
-                                                          .animateToPage(0,
-                                                              duration:
-                                                                  const Duration(
-                                                                      milliseconds:
-                                                                          300),
-                                                              curve: Curves
-                                                                  .easeIn);
-                                                      scrollProvider
-                                                          .pageController
-                                                          .animateToPage(1,
-                                                              duration:
-                                                                  const Duration(
-                                                                      milliseconds:
-                                                                          300),
-                                                              curve:
-                                                                  Curves.ease);
-                                                    }
-                                                  },
-                                                  child: const CoverThumbnail(
-                                                    thumbnailQuality: 150,
-                                                  ),
-                                                ))
+                                Platform.isIOS == true
+                                    ? SizedBox()
+                                    : Expanded(
+                                        child: Container(
+                                          alignment: Alignment.centerLeft,
+                                          child: SizedBox(
+                                            child: _preViewContainer(
+                                              /// if [model.imagePath] is null/empty return preview image
+                                              child: controlNotifier
+                                                      .mediaPath.isEmpty
+                                                  ? ClipRRect(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              8),
+                                                      child: GestureDetector(
+                                                        onTap: () {
+                                                          print(
+                                                              "hey i am comming!!");
+                                                          controlNotifier
+                                                              .isDataGet = true;
+                                                          if (controlNotifier
+                                                              .mediaPath
+                                                              .isEmpty) {
+                                                            scrollProvider
+                                                                .pageController
+                                                                .animateToPage(
+                                                                    0,
+                                                                    duration: const Duration(
+                                                                        milliseconds:
+                                                                            300),
+                                                                    curve: Curves
+                                                                        .easeIn);
+                                                            scrollProvider
+                                                                .pageController
+                                                                .animateToPage(
+                                                                    1,
+                                                                    duration: const Duration(
+                                                                        milliseconds:
+                                                                            300),
+                                                                    curve: Curves
+                                                                        .ease);
+                                                          }
+                                                        },
+                                                        child:
+                                                            const CoverThumbnail(
+                                                          thumbnailQuality: 150,
+                                                        ),
+                                                      ))
 
-                                            /// return clear [imagePath] provider
-                                            : GestureDetector(
-                                                onTap: () {
-                                                  /// clear image url variable
-                                                  controlNotifier.mediaPath =
-                                                      '';
-                                                  itemProvider.draggableWidget
-                                                      .removeAt(0);
-                                                  _controller?.dispose();
-                                                },
-                                                child: Container(
-                                                  height: 45,
-                                                  width: 45,
-                                                  color: Colors.transparent,
-                                                  child: Transform.scale(
-                                                    scale: 0.7,
-                                                    child: const Icon(
-                                                      Icons.delete,
-                                                      color: Colors.white,
+                                                  /// return clear [imagePath] provider
+                                                  : GestureDetector(
+                                                      onTap: () {
+                                                        /// clear image url variable
+                                                        controlNotifier
+                                                            .mediaPath = '';
+                                                        itemProvider
+                                                            .draggableWidget
+                                                            .removeAt(0);
+                                                        _controller?.dispose();
+                                                      },
+                                                      child: Container(
+                                                        height: 45,
+                                                        width: 45,
+                                                        color:
+                                                            Colors.transparent,
+                                                        child: Transform.scale(
+                                                          scale: 0.7,
+                                                          child: const Icon(
+                                                            Icons.delete,
+                                                            color: Colors.white,
+                                                          ),
+                                                        ),
+                                                      ),
                                                     ),
-                                                  ),
-                                                ),
-                                              ),
+                                            ),
+                                          ),
+                                        ),
                                       ),
-                                    ),
-                                  ),
-                                ),
 
                                 /// center logo
                                 if (controlNotifier.middleBottomWidget != null)
@@ -512,14 +521,12 @@ class _MainViewState extends State<MainView> {
                                       child: AnimatedOnTapButton(
                                           onTap: () async {
                                             if (itemProvider
-                                                              .draggableWidget
-                                                              .isEmpty &&
-                                                          !controlNotifier
-                                                              .isTextEditing &&
-                                                          paintingProvider
-                                                              .lines.isEmpty) {
+                                                    .draggableWidget.isEmpty &&
+                                                !controlNotifier
+                                                    .isTextEditing &&
+                                                paintingProvider
+                                                    .lines.isEmpty) {
                                             } else {
-                                           
                                               String pngUri;
                                               print("check else condison");
                                               await takePicture(
@@ -567,12 +574,13 @@ class _MainViewState extends State<MainView> {
                                                     'Share',
                                                     style: TextStyle(
                                                         color: itemProvider
-                                                            .draggableWidget
-                                                            .isEmpty &&
-                                                        !controlNotifier
-                                                            .isTextEditing &&
-                                                        paintingProvider
-                                                            .lines.isEmpty
+                                                                    .draggableWidget
+                                                                    .isEmpty &&
+                                                                !controlNotifier
+                                                                    .isTextEditing &&
+                                                                paintingProvider
+                                                                    .lines
+                                                                    .isEmpty
                                                             ? Colors.grey
                                                             : Colors.white,
                                                         letterSpacing: 1.5,
