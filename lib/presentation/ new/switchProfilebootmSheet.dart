@@ -4,25 +4,26 @@ import 'package:pds/API/Repo/repository.dart';
 import 'package:pds/core/utils/image_constant.dart';
 import 'package:pds/widgets/custom_image_view.dart';
 
-int _selectedProfileIndex = 0;
-
-void showProfileSwitchBottomSheet(
-    BuildContext context, GetAllCompenyPageModel getallcompenypagemodel) {
+void showProfileSwitchBottomSheet(BuildContext context,
+    GetAllCompenyPageModel getallcompenypagemodel, String loginUid) {
   double _bottomSheetHeight = 0;
+  int? _selectedProfileIndex;
 
   // Determine the height based on the length of the list
-  if (getallcompenypagemodel.object!.length == 0 ||
-      getallcompenypagemodel.object!.length == 1 ||
-      getallcompenypagemodel.object!.length == 2 ||
-      getallcompenypagemodel.object!.length == 3 ||
-      getallcompenypagemodel.object!.length == 4) {
-    _bottomSheetHeight =
-        MediaQuery.of(context).size.height * 0.33; // 30% of screen height
-  } else if (getallcompenypagemodel.object!.length == 6 ||
-      getallcompenypagemodel.object!.length == 5) {
+  if (getallcompenypagemodel.object?.content?.length == 1 ||
+      getallcompenypagemodel.object?.content?.length == 2) {
+    _bottomSheetHeight = MediaQuery.of(context).size.height * 0.20;
+  } else if (getallcompenypagemodel.object?.content?.length == 3 ||
+      getallcompenypagemodel.object?.content?.length == 4) {
+    print("this is the if codison");
+    _bottomSheetHeight = MediaQuery.of(context).size.height * 0.33;
+  } else if (getallcompenypagemodel.object?.content?.length == 6 ||
+      getallcompenypagemodel.object?.content?.length == 5) {
+    print("else this is the if codison");
     _bottomSheetHeight =
         MediaQuery.of(context).size.height * 0.6; // 60% of screen height
   } else {
+    print("else else");
     _bottomSheetHeight = MediaQuery.of(context).size.height *
         0.7; // Default: 70% of screen height
   }
@@ -35,46 +36,60 @@ void showProfileSwitchBottomSheet(
             height: _bottomSheetHeight,
             child: ListView.builder(
               padding: EdgeInsets.only(top: 10),
-              itemCount: getallcompenypagemodel.object?.length,
+              itemCount: getallcompenypagemodel.object?.content?.length,
               itemBuilder: (BuildContext context, int index) {
                 return Padding(
                   padding: const EdgeInsets.only(bottom: 10),
                   child: ListTile(
                     onTap: () {
                       print(
-                          "check Value-${getallcompenypagemodel.object?[index].pageUid}");
+                          "check Value-${getallcompenypagemodel.object?.content?[index].userCompanyPageUid}");
                       print(
-                          "check value1-${getallcompenypagemodel.object?[index].pageId}");
+                          "check value1-${getallcompenypagemodel.object?.content?[index].pageId}");
 
                       setState(() {
                         _selectedProfileIndex = index;
                       });
-                      Repository().get_page_by_uid(
+                      if (getallcompenypagemodel
+                              .object?.content?[index].companyPageName ==
+                          null) {
+                        var json = Repository().get_page_by_uid(
                           context,
-                          '${getallcompenypagemodel.object?[index].pageUid}',
-                          '${getallcompenypagemodel.object?[index].pageId}');
+                          null,
+                          loginUid,
+                          '${getallcompenypagemodel.object?.content?[index].userCompanyPageUid}',
+                        );
+                      } else {
+                        var json = Repository().get_page_by_uid(
+                          context,
+                          '${getallcompenypagemodel.object?.content?[index].pageId}',
+                          loginUid,
+                          '${getallcompenypagemodel.object?.content?[index].userCompanyPageUid}',
+                        );
+                      }
                     },
-                    leading:
-                        getallcompenypagemodel.object?[index].profilePic == null
-                            ? CustomImageView(
-                                imagePath: ImageConstant.tomcruse,
-                                height: 50,
-                                radius: BorderRadius.circular(25),
-                                width: 50,
-                                fit: BoxFit.fill,
-                              )
-                            : GestureDetector(
-                                child: CustomImageView(
-                                  url:
-                                      "${getallcompenypagemodel.object?[index].profilePic}",
-                                  height: 50,
-                                  radius: BorderRadius.circular(25),
-                                  width: 50,
-                                  fit: BoxFit.fill,
-                                ),
-                              ),
+                    leading: getallcompenypagemodel.object?.content?[index]
+                                .companyPageProfilePic ==
+                            null
+                        ? CustomImageView(
+                            imagePath: ImageConstant.tomcruse,
+                            height: 50,
+                            radius: BorderRadius.circular(25),
+                            width: 50,
+                            fit: BoxFit.fill,
+                          )
+                        : GestureDetector(
+                            child: CustomImageView(
+                              url:
+                                  "${getallcompenypagemodel.object?.content?[index].companyPageProfilePic}",
+                              height: 50,
+                              radius: BorderRadius.circular(25),
+                              width: 50,
+                              fit: BoxFit.fill,
+                            ),
+                          ),
                     title: Text(
-                        '${getallcompenypagemodel.object?[index].companyName}'),
+                        '${getallcompenypagemodel.object?.content?[index].companyPageName == null ? '${getallcompenypagemodel.object?.content?[index].pageId}' : getallcompenypagemodel.object?.content?[index].companyPageName}'),
                     trailing: _selectedProfileIndex == index
                         ? Image.asset(
                             ImageConstant.greenseen,

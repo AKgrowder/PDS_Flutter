@@ -43,16 +43,16 @@ var Setting_Array = [
   "Saved Pins",
   "Change Password",
   "Prefrences",
-
   "Support",
   "Policies",
   "Invite Friends",
   "Rate Us",
   "Delete Account",
+  "Manage Company Page",
   "Public & Private Profile",
   "Block User",
   "Log Out",
-  "Manage Company Page"
+
   /* "Change Password",
   "Public & Private Profile",
   "Block User",
@@ -90,9 +90,10 @@ var SettingImage_Array = [
   ImageConstant.setting_star,
   // ImageConstant.Invite_Friends,
   ImageConstant.setting_delete,
+  ImageConstant.setting_comanyManage,
   ImageConstant.profileLock, ImageConstant.block_user,
   ImageConstant.setting_power,
-  ImageConstant.setting_comanyManage,
+
   // ImageConstant.setting_power,
   // ImageConstant.setting_phone,
 ];
@@ -349,7 +350,7 @@ class _SettingScreenState extends State<SettingScreen> {
                             ) {
                           return SizedBox();
                         }
-                        if (widget.module != 'COMPANY' && index == 12) {
+                        if (widget.module != 'COMPANY' && index == 9) {
                           return SizedBox();
                         }
                         return GestureDetector(
@@ -476,13 +477,14 @@ class _SettingScreenState extends State<SettingScreen> {
 
                                 break;
                               case 9:
+                                Navigator.push(context,
+                                    MaterialPageRoute(builder: (context) {
+                                  return ComapnyManageScreen();
+                                }));
                                 print("profile");
                                 break;
                               case 10:
-                                Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (context) =>
-                                        const BlockedUserScreen()));
-
+                              print("this is the 10");
                                 break;
                               // case 11:
                               //   // showDialog(
@@ -491,20 +493,20 @@ class _SettingScreenState extends State<SettingScreen> {
                               //   break;
 
                               case 11:
+                                print("this is the 10");
+                                Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) =>
+                                        const BlockedUserScreen()));
+
+                                break;
+
+                              case 12:
                                 showDialog(
                                     context: context,
                                     builder: (_) => BlocProvider<LogOutCubit>(
                                           create: (context) => LogOutCubit(),
                                           child: LogOutdailog(),
                                         ));
-
-                                break;
-
-                              case 12:
-                                Navigator.push(context,
-                                    MaterialPageRoute(builder: (context) {
-                                  return ComapnyManageScreen();
-                                }));
 
                                 break;
                               /*   case 7:
@@ -559,7 +561,7 @@ class _SettingScreenState extends State<SettingScreen> {
                                             fontWeight: FontWeight.w500),
                                       ),
                                       Spacer(),
-                                      index == 9
+                                      index == 10
                                           ? Padding(
                                               padding: const EdgeInsets.only(
                                                   right: 10),
