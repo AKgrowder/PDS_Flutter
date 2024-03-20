@@ -1473,23 +1473,51 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                       .getFollwerApi(context,
                                                           widget.User_ID);
                                                 });
-                                                /*    Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      Followers(
-                                                        // OLLOWERS
-                                                        appBarName: 'Followers',
-                                                        followersClassModel:
-                                                            followersClassModel1!,
-                                                        userId: widget.User_ID,
-                                                      ))).then((value) =>
-                                              BlocProvider.of<NewProfileSCubit>(
-                                                      context)
-                                                  .NewProfileSAPI(
-                                                      context, widget.User_ID)); */
                                               }
-                                            } else {}
+                                            } else {
+                                              if (NewProfileData?.object?.accountType == 'PUBLIC' && NewProfileData?.object?.isFollowing == 'FOLLOW') {
+                                                 Navigator.push(context,
+                                                    MaterialPageRoute(
+                                                        builder: (context) {
+                                                  return MultiBlocProvider(
+                                                    providers: [
+                                                      BlocProvider<
+                                                          FollowerBlock>(
+                                                        create: (context) =>
+                                                            FollowerBlock(),
+                                                      ),
+                                                    ],
+                                                    child: Followers(
+                                                      User_ID: widget.User_ID,
+                                                      appBarName: 'Followers',
+                                                      userId: widget.User_ID,
+                                                    ),
+                                                  );
+                                                })).then((value) {
+                                                  widget.ProfileNotification ==
+                                                          true
+                                                      ? BlocProvider.of<
+                                                                  NewProfileSCubit>(
+                                                              context)
+                                                          .NewProfileSAPI(
+                                                              context,
+                                                              widget.User_ID,
+                                                              true)
+                                                      : BlocProvider.of<
+                                                                  NewProfileSCubit>(
+                                                              context)
+                                                          .NewProfileSAPI(
+                                                              context,
+                                                              widget.User_ID,
+                                                              false);
+                                                  BlocProvider.of<
+                                                              NewProfileSCubit>(
+                                                          context)
+                                                      .getFollwerApi(context,
+                                                          widget.User_ID);
+                                                });
+                                              }
+                                            }
                                           },
                                           child: Container(
                                             color: Colors.transparent,
@@ -1571,7 +1599,40 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                             widget.User_ID,
                                                             false));
                                               }
-                                            } else {}
+                                            } else {
+                                                if (NewProfileData?.object?.accountType == 'PUBLIC' && NewProfileData?.object?.isFollowing == 'FOLLOW') {
+                                                 Navigator.push(context,
+                                                    MaterialPageRoute(
+                                                        builder: (context) {
+                                                  return MultiBlocProvider(
+                                                    providers: [
+                                                      BlocProvider<
+                                                          FollowerBlock>(
+                                                        create: (context) =>
+                                                            FollowerBlock(),
+                                                      ),
+                                                    ],
+                                                    child: Followers(
+                                                      User_ID: widget.User_ID,
+                                                      appBarName: 'Following',
+                                                      userId: widget.User_ID,
+                                                    ),
+                                                  );
+                                                })).then((value) => widget
+                                                            .ProfileNotification ==
+                                                        true
+                                                    ? BlocProvider.of<NewProfileSCubit>(context)
+                                                        .NewProfileSAPI(
+                                                            context,
+                                                            widget.User_ID,
+                                                            true)
+                                                    : BlocProvider.of<NewProfileSCubit>(context)
+                                                        .NewProfileSAPI(
+                                                            context,
+                                                            widget.User_ID,
+                                                            false));
+                                              }
+                                            }
                                           },
                                           child: Container(
                                             // color: Colors.amber,
@@ -7113,7 +7174,7 @@ class _ProfileScreenState extends State<ProfileScreen>
 
     if (Platform.isAndroid) {
       await Share.shareXFiles(
-        [XFile("/sdcard/download/IPImage.jpg")],
+        [XFile("/sdcard/download/IP__image.jpg")],
         subject: "Share",
         text: "Try This Awesome App \n\n Android :- ${androidLink}",
         sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size,
@@ -7123,10 +7184,10 @@ class _ProfileScreenState extends State<ProfileScreen>
         [
           XFile(directory.path +
               Platform.pathSeparator +
-              'Growder_Image/IPImage.jpg')
+              'Growder_Image/IP__image.jpg')
         ],
         subject: "Share",
-        text: "Try This Awesome App \n\n Android :- ${androidLink}",
+        text: "Try This Awesome App \n\n iOS :- ${androidLink}",
         sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size,
       );
     }

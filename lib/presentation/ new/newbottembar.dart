@@ -22,7 +22,7 @@ import 'SearchBar_screen.dart';
 // import 'package:growder/presentation/Profile_Screen/Profile_screen.dart';
 
 // import 'package:growder/presentation/save_screen/save_Screen.dart';
-
+ bool? isShowScreen = false; 
 class NewBottomBar extends StatefulWidget {
   final int? buttomIndex;
   bool? isGuest = false;
@@ -65,7 +65,7 @@ class _NewBottomBarState extends State<NewBottomBar> {
     // NotificationsScreen(),
 
     InboxScreen(),
-    NewNotifactionScreen(),
+    NewNotifactionScreen(isScreen:  isShowScreen),
     // SettingScreen(),
 
     // ViewDetailsScreen(),

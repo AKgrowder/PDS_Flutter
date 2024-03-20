@@ -173,12 +173,12 @@ class _LoginScreenState extends State<LoginScreen> {
 
                   if (state.loginModel.object?.verified == true) {
                     SnackBar snackBar = SnackBar(
-                    content: Text(state.loginModel.message ?? ""),
-                    backgroundColor: ColorConstant.primary_color,
-                  );
-                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                  } 
-                  
+                      content: Text(state.loginModel.message ?? ""),
+                      backgroundColor: ColorConstant.primary_color,
+                    );
+                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                  }
+
                   print('check Status--${state.loginModel.message}');
                 }
               }
@@ -248,7 +248,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         SizedBox(
-                          height: _height/2,
+                          height: _height / 2,
                           // height: 348,
                           // width: double.maxFinite,
                           child: Stack(
@@ -628,11 +628,11 @@ class _LoginScreenState extends State<LoginScreen> {
 
   saveUserProfile() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-        print("dsfsdgfsdfg${getUserDataModelData?.object?.userName}");
+    print("dsfsdgfsdfg${getUserDataModelData?.object?.userName}");
     prefs.setString(PreferencesKey.ProfileUserName,
         "${getUserDataModelData?.object?.userName}");
 
-       print("chehck value-${getUserDataModelData?.object?.userName}"); 
+    print("chehck value-${getUserDataModelData?.object?.userName}");
     prefs.setString(
         PreferencesKey.ProfileName, "${getUserDataModelData?.object?.name}");
     prefs.setString(
@@ -645,7 +645,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   savePhoneData() async {
     final fcmToken = await FirebaseMessaging.instance.getToken();
-    print('UUID is------> ${fcmToken}');
+    print('fcmToken is------> ${fcmToken}');
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString(PreferencesKey.fcmToken, "${fcmToken}");
 
@@ -654,7 +654,6 @@ class _LoginScreenState extends State<LoginScreen> {
     var deviceTokne = prefs.getString(PreferencesKey.fcmToken);
 
     DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
-
 
     var androidMOdel = "";
     var androidVersion = "";
@@ -694,7 +693,7 @@ class _LoginScreenState extends State<LoginScreen> {
     );
     Uri mailto = Uri.parse("mailto:$emailLaunchUri");
     // if (Platform.isAndroid && Platform.isIOS) {
-      await launchUrl(mailto);
+    await launchUrl(mailto);
     // } else {
     //   print("Somthing went wrong!");
     // }

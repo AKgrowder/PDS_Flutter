@@ -186,7 +186,7 @@
 			);
 			mainGroup = 97C146E51CF9000F007C117D;
 			packageReferences = (
-				AEC1807C2B73558400AD49AF /* XCRemoteSwiftPackageReference "swift-algorithms.git" */,
+				AEC1807C2B73558400AD49AF /* XCRemoteSwiftPackageReference "swift-algorithms" */,
 			);
 			productRefGroup = 97C146EF1CF9000F007C117D /* Products */;
 			projectDirPath = "";
@@ -376,7 +376,7 @@
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 0.2;
+				CURRENT_PROJECT_VERSION = 0.12;
 				DEVELOPMENT_TEAM = 3X5WHSTCXJ;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -525,7 +525,7 @@
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 0.2;
+				CURRENT_PROJECT_VERSION = 0.12;
 				DEVELOPMENT_TEAM = 3X5WHSTCXJ;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -568,7 +568,7 @@
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 0.2;
+				CURRENT_PROJECT_VERSION = 0.12;
 				DEVELOPMENT_TEAM = 3X5WHSTCXJ;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -627,7 +627,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		AEC1807C2B73558400AD49AF /* XCRemoteSwiftPackageReference "swift-algorithms.git" */ = {
+		AEC1807C2B73558400AD49AF /* XCRemoteSwiftPackageReference "swift-algorithms" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/apple/swift-algorithms.git";
 			requirement = {
@@ -640,7 +640,7 @@
 /* Begin XCSwiftPackageProductDependency section */
 		AEC1807D2B73558500AD49AF /* Algorithms */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = AEC1807C2B73558400AD49AF /* XCRemoteSwiftPackageReference "swift-algorithms.git" */;
+			package = AEC1807C2B73558400AD49AF /* XCRemoteSwiftPackageReference "swift-algorithms" */;
 			productName = Algorithms;
 		};
 /* End XCSwiftPackageProductDependency section */

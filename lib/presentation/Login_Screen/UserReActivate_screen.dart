@@ -301,7 +301,7 @@ class UserReActivateDailogState extends State<UserReActivateDailog>
 
   savePhoneData() async {
     final fcmToken = await FirebaseMessaging.instance.getToken();
-    print('UUID is------> ${fcmToken}');
+    print('fcmToken is------> ${fcmToken}');
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString(PreferencesKey.fcmToken, "${fcmToken}");
 
