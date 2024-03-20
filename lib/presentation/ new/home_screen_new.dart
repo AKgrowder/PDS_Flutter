@@ -5167,6 +5167,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                         child: Container(
                                                                                           // color: Colors.red,
                                                                                           child: Column(
+                                                                                            crossAxisAlignment:CrossAxisAlignment.start,
                                                                                             children: [
                                                                                               LinkifyText(
                                                                                                 /*    utf8.decode(AllGuestPostRoomData?.object?.content?[index].description?.runes.toList() ??
@@ -5339,7 +5340,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                                   }
                                                                                                 },
                                                                                               ),
-                                                                                              if (AllGuestPostRoomData?.object?.content?[index].description!.startsWith("http") ?? false)
+                                                                                              if (extractUrls(AllGuestPostRoomData?.object?.content?[index].description ?? "").isNotEmpty)
                                                                                                 isYouTubeUrl(AllGuestPostRoomData?.object?.content?[index].description ?? "")
                                                                                                     ? FutureBuilder(
                                                                                                         future: fetchYoutubeThumbnail(AllGuestPostRoomData?.object?.content?[index].description ?? ""),
@@ -5364,7 +5365,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                                     : Padding(
                                                                                                         padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
                                                                                                         child: AnyLinkPreview(
-                                                                                                          link: AllGuestPostRoomData?.object?.content?[index].description ?? "",
+                                                                                                          link: extractUrls(AllGuestPostRoomData?.object?.content?[index].description ?? "").first,
                                                                                                           displayDirection: UIDirection.uiDirectionHorizontal,
                                                                                                           showMultimedia: true,
                                                                                                           bodyMaxLines: 5,
@@ -7372,8 +7373,9 @@ class _HomeScreenNewState extends State<HomeScreenNew>
     try {
       // Extract video ID from YouTube URL
       // We will use this to build our own custom UI
+      List<String> urls = extractUrls(url);
       Metadata? _metadata = await AnyLinkPreview.getMetadata(
-        link: url,
+        link: urls.first,
         cache: Duration(days: 1),
         // proxyUrl: "https://cors-anywhere.herokuapp.com/", // Need for web
       );
@@ -7382,6 +7384,15 @@ class _HomeScreenNewState extends State<HomeScreenNew>
       print('Error: $e');
       return "";
     }
+  }
+
+  List<String> extractUrls(String text) {
+    RegExp regExp = RegExp(
+      r"https?:\/\/[\w\-]+(\.[\w\-]+)+[\w\-.,@?^=%&:/~\+#]*[\w\-@?^=%&/~\+#]",
+      caseSensitive: false,
+    );
+      return regExp.allMatches(text).map((match) => match.group(0)!).toList();
+
   }
 
   becomeAnExport() async {
