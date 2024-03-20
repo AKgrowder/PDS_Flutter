@@ -512,11 +512,11 @@ class _CreateComapnyScreenState extends State<CreateComapnyScreen> {
                               onTap: () {
                                 // textfiledvalidation();
                                 var params = {
-                                  "companyName": comapnyNameController.text,
-                                  "companyType": dropdownValue,
-                                  "description": descController.text,
+                                  "companyPageName": comapnyNameController.text,
+                                  "companyPageType": dropdownValue,
+                                  "pageDescription": descController.text,
                                   "pageId": pageIDController.text,
-                                  "profilePic":
+                                  "companyPageProfilePic":
                                       chooseDocumentuploded?.object.toString(),
                                 };
                                 print("parems--$params");
