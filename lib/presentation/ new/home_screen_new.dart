@@ -211,7 +211,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
   GetGuestAllPostCubit? _postCubit;
 
   List<StoryButtonData> buttonDatas = [];
-  List<StoryButton?> storyButtons = [];
+  List<StoryButton?> storyButtons = List.filled(1, null, growable: true);
 
   bool isWatch = false;
   @override
