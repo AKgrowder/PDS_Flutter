@@ -17,8 +17,13 @@ import 'package:stories_editor/src/presentation/widgets/tool_button.dart';
 class TopTools extends StatefulWidget {
   final GlobalKey contentKey;
   final BuildContext context;
-  const TopTools({Key? key, required this.contentKey, required this.context})
-      : super(key: key);
+  final Function(String)? onDone;
+  const TopTools({
+    Key? key,
+    required this.contentKey,
+    required this.context,
+    required this.onDone,
+  }) : super(key: key);
 
   @override
   _TopToolsState createState() => _TopToolsState();
@@ -79,21 +84,42 @@ class _TopToolsState extends State<TopTools> {
                       color: Colors.white,
                       size: 20,
                     ),
-                    backGroundColor: Colors.black12,
+                    backGroundColor: itemNotifier.draggableWidget.isEmpty &&
+                            !controlNotifier.isTextEditing &&
+                            paintingNotifier.lines.isEmpty
+                        ? Colors.grey[700]
+                        : Colors.black12,
                     onTap: () async {
-                      if (paintingNotifier.lines.isNotEmpty ||
-                          itemNotifier.draggableWidget.isNotEmpty) {
-                        print(
-                            "paintingNotifier.lines${controlNotifier.mediaPath}");
-                        var response = await takePicture(
-                            SelectPath: controlNotifier.mediaPath,
-                            contentKey: widget.contentKey,
-                            context: context,
-                            saveToGallery: false);
-                        if (response) {
+                      if (itemNotifier.draggableWidget.isEmpty &&
+                          !controlNotifier.isTextEditing &&
+                          paintingNotifier.lines.isEmpty) {
+                      } else {
+                        String pngUri;
+                        if (paintingNotifier.lines.isNotEmpty ||
+                            itemNotifier.draggableWidget.isNotEmpty) {
+                          print(
+                              "paintingNotifier.lines${controlNotifier.mediaPath}");
+                          takePicture(
+                                  SelectPath: controlNotifier.mediaPath,
+                                  contentKey: widget.contentKey,
+                                  context: context,
+                                  saveToGallery: true)
+                              .then((bytes) {
+                            if (bytes != null) {
+                              pngUri = bytes;
+                              print("asdfasdasdasdasdasdad-$pngUri");
+                              print(pngUri);
+
+                              print(pngUri);
+
+                              widget.onDone!(pngUri);
+                              return true;
+                            } else {
+                              return false;
+                            }
+                          });
+
                           Fluttertoast.showToast(msg: 'Successfully saved');
-                        } else {
-                          Fluttertoast.showToast(msg: 'Error');
                         }
                       }
                     }),
