@@ -505,4 +505,21 @@ class GetGuestAllPostCubit extends Cubit<GetGuestAllPostState> {
       emit(GetGuestAllPostErrorState(e));
     }
   }
+
+  Future<void> getallcompenypagee(BuildContext context) async {
+    dynamic getallcompenypagee;
+    try {
+      emit(GetGuestAllPostLoadingState());
+      getallcompenypagee = await Repository().getallcompenypage(context);
+      print("sddgfdgsfgfg-${getallcompenypagee.message}");
+
+      if (getallcompenypagee.success == true) {
+        emit(Getallcompenypagelodedstate(getallcompenypagee));
+      } else {
+        emit(GetGuestAllPostErrorState(getallcompenypagee.message));
+      }
+    } catch (e) {
+      emit(GetGuestAllPostErrorState(e.toString()));
+    }
+  }
 }

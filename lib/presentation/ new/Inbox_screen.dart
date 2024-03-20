@@ -84,7 +84,9 @@ class _InboxScreenState extends State<InboxScreen> {
   void dispose() {
     searchController.dispose();
     _focusNode.dispose();
+    timer?.cancel();
     super.dispose();
+
   }
 
   Future<bool> isMethod() async {

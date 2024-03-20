@@ -7,6 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hashtagable/widgets/hashtag_text.dart';
 import 'package:pds/API/Bloc/NewProfileScreen_Bloc/NewProfileScreen_cubit.dart';
 import 'package:pds/API/Model/Getalluset_list_Model/get_all_userlist_model.dart';
+import 'package:pds/API/Model/SearchPagesModel/SearchPagesModel.dart';
 import 'package:pds/API/Model/getSerchDataModel/getSerchDataModel.dart';
 import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/core/utils/image_constant.dart';
@@ -39,6 +40,7 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
   List text1 = ["All", "Pages", "Experts"];
   bool dataget = false;
   GetAllUserListModel? getalluserlistModel;
+  SearchPages? searchPages;
   List imageList = [
     ImageConstant.Rectangle,
     ImageConstant.Rectangle,
@@ -61,6 +63,7 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
   HashtagModel? hashtagModel; /* 
   HashTagImageModel? hashTagImageModel; */
   bool apiDataSetup = false;
+  bool isSerchCompnayPage = false;
 
   getUserData() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -155,7 +158,9 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
               apiDataSetup = true;
 
               hashtagModel = state.HashTagData;
-              hashtagModel!.object!.content!.forEach((element) {print("Hashtag search history : ${element.hashtagName}");});
+              hashtagModel!.object!.content!.forEach((element) {
+                print("Hashtag search history : ${element.hashtagName}");
+              });
             }
             if (state is GetNotificationCountLoadedState) {
               print(state.GetNotificationCountData.object);
@@ -171,6 +176,11 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                 print(
                     "i want to check dtata-${element.hashtagNamesDto?.hashtagName}");
               });
+            }
+            if (state is SearchPagesLoadedState) {
+              searchPages = state.serchPages;
+              dataget = true;
+              isSerchCompnayPage = true;
             }
             /* if (state is HashTagBannerLoadedState) {
               print("HashTagBannerLoadedState - ${hashTagImageModel?.object}");
@@ -232,6 +242,13 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                                       BlocProvider.of<HashTagCubit>(context)
                                           .getalluser(
                                               1, hashTageValue.trim(), context);
+                                    } else if (indexxx == 1) {
+                                      String hashTageValue = searchController
+                                          .text
+                                          .replaceAll("#", "%23");
+                                      BlocProvider.of<HashTagCubit>(context)
+                                          .serchPagesCompnay(context, '1',
+                                              hashTageValue.trim());
                                     } else {
                                       print("index is not 0");
                                       String hashTageValue =
@@ -247,6 +264,13 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
 
                                       BlocProvider.of<HashTagCubit>(context)
                                           .getalluser(1, value.trim(), context);
+                                    } else if (indexxx == 1) {
+                                      BlocProvider.of<HashTagCubit>(context)
+                                          .serchPagesCompnay(
+                                        context,
+                                        '1',
+                                        searchController.text.trim(),
+                                      );
                                     } else {
                                       print("else condison woking");
                                       BlocProvider.of<HashTagCubit>(context)
@@ -254,6 +278,8 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                                               filterModule: 'EXPERT');
                                     }
                                   } else {
+                                    isSerchCompnayPage = false;
+
                                     dataget = false;
                                     if (mounted) {
                                       super.setState(() {
@@ -318,12 +344,20 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                                   print("i want to  chrck-${value.trim()}");
                                   BlocProvider.of<HashTagCubit>(context)
                                       .getalluser(1, value.trim(), context);
+                                } else if (indexxx == 1) {
+                                  BlocProvider.of<HashTagCubit>(context)
+                                      .serchPagesCompnay(
+                                    context,
+                                    '1',
+                                    searchController.text.trim(),
+                                  );
                                 } else {
                                   BlocProvider.of<HashTagCubit>(context)
                                       .getalluser(1, value.trim(), context,
                                           filterModule: 'EXPERT');
                                 }
                               } else {
+                                isSerchCompnayPage = false;
                                 dataget = false;
                                 if (mounted) {
                                   super.setState(() {
@@ -377,6 +411,16 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                                       BlocProvider.of<HashTagCubit>(context)
                                           .getalluser(
                                               1, hashTageValue.trim(), context);
+                                    } else if (indexxx == 1) {
+                                      String hashTageValue = searchController
+                                          .text
+                                          .replaceAll("#", "%23");
+                                      BlocProvider.of<HashTagCubit>(context)
+                                          .serchPagesCompnay(
+                                        context,
+                                        '1',
+                                        hashTageValue.trim(),
+                                      );
                                     } else {
                                       print("index is not 0");
                                       String hashTageValue = searchController
@@ -394,6 +438,13 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                                               1,
                                               searchController.text.trim(),
                                               context);
+                                    } else if (indexxx == 1) {
+                                      BlocProvider.of<HashTagCubit>(context)
+                                          .serchPagesCompnay(
+                                        context,
+                                        '1',
+                                        searchController.text.trim(),
+                                      );
                                     } else {
                                       BlocProvider.of<HashTagCubit>(context)
                                           .getalluser(
@@ -561,7 +612,7 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                       ), */
                 isSerch == true
                     ? dataget == true
-                        ? NavagtionPassing1()
+                        ? NavagtionPassing1(isSerchCompnayPage)
                         : Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -605,6 +656,17 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                                                       1,
                                                       hashTageValue.trim(),
                                                       context);
+                                            } else if (indexxx == 1) {
+                                              String hashTageValue =
+                                                  searchController.text
+                                                      .replaceAll("#", "%23");
+                                              BlocProvider.of<HashTagCubit>(
+                                                      context)
+                                                  .serchPagesCompnay(
+                                                context,
+                                                '1',
+                                                hashTageValue.trim(),
+                                              );
                                             } else {
                                               print("index is not 0");
                                               String hashTageValue =
@@ -628,6 +690,14 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                                                       searchController.text
                                                           .trim(),
                                                       context);
+                                            } else if (indexxx == 1) {
+                                              BlocProvider.of<HashTagCubit>(
+                                                      context)
+                                                  .serchPagesCompnay(
+                                                context,
+                                                '1',
+                                                searchController.text.trim(),
+                                              );
                                             } else {
                                               BlocProvider.of<HashTagCubit>(
                                                       context)
@@ -705,6 +775,15 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                                   BlocProvider.of<HashTagCubit>(context)
                                       .getalluser(
                                           1, hashTageValue.trim(), context);
+                                } else if (indexxx == 1) {
+                                  String hashTageValue = searchController.text
+                                      .replaceAll("#", "%23");
+                                  BlocProvider.of<HashTagCubit>(context)
+                                      .serchPagesCompnay(
+                                    context,
+                                    '1',
+                                    hashTageValue.trim(),
+                                  );
                                 } else {
                                   BlocProvider.of<HashTagCubit>(context)
                                       .getalluser(
@@ -1014,7 +1093,7 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
     }
   }
 
-  Widget NavagtionPassing1() {
+  Widget NavagtionPassing1(bool isSerchCompnayPage) {
     var _height = MediaQuery.of(context).size.height;
     var _width = MediaQuery.of(context).size.width;
 
@@ -1206,6 +1285,7 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
           );
         }
       } else if (indexxx == 0) {
+        print("fdggsdfgsdfgsdgfdfgsdfgsdfg");
         return ListView.builder(
           itemCount: 10,
           itemBuilder: (context, index) {
@@ -1271,6 +1351,93 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
             );
           },
         );
+      } else if (indexxx == 1) {
+        print("check lenth index1");
+        return isSerchCompnayPage == false
+            ? SizedBox()
+            : Expanded(
+                child: SingleChildScrollView(
+                  controller: scrollController,
+                  child: PaginationWidget(
+                    scrollController: scrollController,
+                    totalSize: searchPages?.object?.totalElements,
+                    offSet: searchPages?.object?.pageable?.pageNumber,
+                    onPagination: (p0) async {
+                      if (searchController.text.contains("#")) {
+                        String hashTageValue =
+                            searchController.text.replaceAll("#", "%23");
+                        BlocProvider.of<HashTagCubit>(context)
+                            .serchPagesCompnayPagaationApi(
+                                context, '${(p0 + 1)}', hashTageValue.trim());
+                      } else {
+                        if (searchController.text.isNotEmpty) {
+                          print("this mehtod");
+                          BlocProvider.of<HashTagCubit>(context)
+                              .serchPagesCompnayPagaationApi(context,
+                                  '${(p0 + 1)}', searchController.text.trim());
+                        }
+                      }
+                    },
+                    items: ListView.builder(
+                      physics: NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      padding: EdgeInsets.only(top: 5),
+                      itemCount: searchPages?.object?.content?.length ?? 0,
+                      itemBuilder: (context, index) {
+                        return Column(
+                          children: [
+                            Container(
+                              height: 55,
+                              width: _width / 1.1,
+                              decoration: BoxDecoration(
+                                  border: Border.all(color: Colors.grey),
+                                  borderRadius: BorderRadius.circular(10)),
+                              child: Row(children: [
+                                SizedBox(
+                                  width: 8,
+                                ),
+                                searchPages?.object?.content?[index]
+                                            .profilePic ==
+                                        null
+                                    ? CircleAvatar(
+                                        backgroundColor: Colors.white,
+                                        radius: 25,
+                                        child:
+                                            Image.asset(ImageConstant.tomcruse))
+                                    : CircleAvatar(
+                                        backgroundColor: Colors.white,
+                                        backgroundImage: NetworkImage(
+                                          "${searchPages?.object?.content?[index].profilePic}",
+                                        ),
+                                        radius: 25,
+                                      ),
+                                SizedBox(
+                                  width: 8,
+                                ),
+                                Container(
+                                  // color: Colors.amber,
+                                  margin: EdgeInsets.only(right: 5),
+                                  child: Text(
+                                    "${searchPages?.object?.content?[index].companyName}",
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 15,
+                                    ),
+                                  ),
+                                ),
+                              ]),
+                            ),
+                            SizedBox(
+                              height: 10,
+                            )
+                          ],
+                        );
+                      },
+                    ),
+                  ),
+                ),
+              );
       } else {
         return Expanded(
           child: SingleChildScrollView(

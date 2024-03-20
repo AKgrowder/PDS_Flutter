@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_observer/Observable.dart';
 import 'package:pds/API/Model/AddExportProfileModel/AddExportProfileModel.dart';
 import 'package:pds/API/Model/Add_PostModel/Add_PostModel.dart';
@@ -44,6 +45,7 @@ import 'package:pds/API/Model/PersonalChatListModel/SelectChatMember_Model.dart'
 import 'package:pds/API/Model/RateUseModel/Rateuse_model.dart';
 import 'package:pds/API/Model/RePost_Model/RePost_model.dart';
 import 'package:pds/API/Model/RoomExistsModel/RoomExistsModel.dart';
+import 'package:pds/API/Model/SearchPagesModel/SearchPagesModel.dart';
 import 'package:pds/API/Model/System_Config_model/Tokenvalid_Model.dart';
 import 'package:pds/API/Model/UserReActivateModel/UserReActivate_model.dart';
 import 'package:pds/API/Model/UserTagModel/UserTag_model.dart';
@@ -69,6 +71,7 @@ import 'package:pds/API/Model/deviceInfo/deviceInfo_model.dart';
 import 'package:pds/API/Model/emailVerfiaction/emailVerfiaction.dart';
 import 'package:pds/API/Model/forget_password_model/forget_password_model.dart';
 import 'package:pds/API/Model/forwad_Meesage/forwad_Message.dart';
+import 'package:pds/API/Model/getAllCompanyTypeModel/getAllCompanyTypeModel.dart';
 import 'package:pds/API/Model/getCountOfSavedRoomModel/getCountOfSavedRoomModel.dart';
 import 'package:pds/API/Model/getSerchDataModel/getSerchDataModel.dart';
 import 'package:pds/API/Model/inboxScreenModel/LiveStatusModel.dart';
@@ -90,8 +93,11 @@ import 'package:pds/API/Model/storyModel/stroyModel.dart';
 import 'package:pds/API/Model/updateprofileModel/updateprofileModel.dart';
 import 'package:pds/core/utils/sharedPreferences.dart';
 import 'package:pds/presentation/%20new/commenwigetReposrt.dart';
+import 'package:pds/presentation/%20new/newbottembar.dart';
+import 'package:pds/presentation/splash_screen/splash_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../presentation/ new/home_screen_new.dart';
 import '../ApiService/ApiService.dart';
 import '../Const/const.dart';
 import '../Model/AddThread/CreateRoom_Model.dart';
@@ -2589,7 +2595,8 @@ class Repository {
 
   search_historyDataAdd(BuildContext context, String typeWord) async {
     final response = await apiServices.getApiCallWithToken(
-        "${Config.search_historyDataAdd}?searchDescription=${typeWord.contains("#") ? typeWord.replaceAll("#", "%23"):typeWord}", context);
+        "${Config.search_historyDataAdd}?searchDescription=${typeWord.contains("#") ? typeWord.replaceAll("#", "%23") : typeWord}",
+        context);
     var jsonString = json.decode(response.body);
     print("responce jasonString-$jsonString");
     switch (response.statusCode) {
@@ -3440,7 +3447,8 @@ class Repository {
         return jsonString;
     }
   }
-   compenypage(Map<String, dynamic> param, BuildContext context) async {
+
+  compenypage(Map<String, dynamic> param, BuildContext context) async {
     final response =
         await apiServices.postApiCall(Config.company_pages, param, context);
     var jsonString = json.decode(response.body);
@@ -3463,10 +3471,12 @@ class Repository {
     }
   }
 
-   getallcompenypage( BuildContext context) async {
-    final response =
-        await apiServices.getApiCallWithToken(Config.getallcompany_pages,context);
+  getallcompenypage(BuildContext context) async {
+    final response = await apiServices.getApiCallWithToken(
+        Config.getallcompany_pages, context);
     var jsonString = json.decode(response.body);
+
+    print("getallcompenypage-${response.body}");
     print(jsonString);
     switch (response.statusCode) {
       case 200:
@@ -3486,7 +3496,7 @@ class Repository {
     }
   }
 
-   get_Starred_Messagesapi(BuildContext context, String pageNumber) async {
+  get_Starred_Messagesapi(BuildContext context, String pageNumber) async {
     final response = await apiServices.getApiCallWithToken(
         "${Config.get_Starred_Messages}?numberOfRecords=10&pageNumber=$pageNumber",
         context);
@@ -3503,6 +3513,109 @@ class Repository {
         return StaeMessageModel.fromJson(jsonString);
       case 701:
         return jsonString;
+      default:
+        return jsonString;
+    }
+  }
+
+  get_page_by_uid(BuildContext context, String? pageId, String loginuid,
+      String compnyPageUid) async {
+    print("pageidcheck-${pageId}");
+    final response = await apiServices.getApiCallWithToken(
+        pageId != null
+            ? "${Config.get_page_by_uid}?pageId=$pageId&userId=$loginuid"
+            : "${Config.get_page_by_uid}?userId=$loginuid",
+        context);
+    final SharedPreferences pref = await SharedPreferences.getInstance();
+    var jsonString = json.decode(response.body);
+
+    print('get_page_by_uid${response.body}');
+    switch (response.statusCode) {
+      case 200:
+        apiCalingdone = false;
+        
+        return Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => NewBottomBar(
+                buttomIndex: 0,
+              ),
+            ));
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+      case 400:
+        return jsonString;
+      case 701:
+        return jsonString;
+      default:
+        return jsonString;
+    }
+  }
+
+  delete_company_pages(String pageUid, BuildContext context) async {
+    final response = await apiServices.deleteApiCallWithToken(
+        "${Config.delete_company_pages}?pageUid=${pageUid}", context);
+    print(response);
+    var jsonString = json.decode(response!.body);
+    switch (response.statusCode) {
+      case 200:
+        return DeleteUserChatModel.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+      case 400:
+        return DeleteUserChatModel.fromJson(jsonString);
+
+      // return Config.somethingWentWrong;
+      case 701:
+        return Config.somethingWentWrong;
+      default:
+        return jsonString;
+    }
+  }
+
+  search_pagesCompnay(
+      BuildContext context, String pageNumber, String searchName) async {
+    final response = await apiServices.getApiCall(
+        "${Config.search_pages}?numberOfRecords=20&pageNumber=$pageNumber&searchName=$searchName",
+        context);
+    print(response);
+    var jsonString = json.decode(response!.body);
+    switch (response.statusCode) {
+      case 200:
+        return SearchPages.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+      case 400:
+        return SearchPages.fromJson(jsonString);
+      case 701:
+        return Config.somethingWentWrong;
+      default:
+        return jsonString;
+    }
+  }
+
+  get_all_company_type(BuildContext context) async {
+    final response = await apiServices.getApiCallWithToken(
+        "${Config.get_all_company_type}", context);
+    print(response);
+    var jsonString = json.decode(response!.body);
+    switch (response.statusCode) {
+      case 200:
+        return GetAllCompanyType.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+      case 400:
+        return GetAllCompanyType.fromJson(jsonString);
+      case 701:
+        return Config.somethingWentWrong;
       default:
         return jsonString;
     }

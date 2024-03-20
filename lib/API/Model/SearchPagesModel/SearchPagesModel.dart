@@ -1,11 +1,11 @@
-class GetAllCompenyPageModel {
+class SearchPages {
   String? message;
   Object? object;
   bool? success;
 
-  GetAllCompenyPageModel({this.message, this.object, this.success});
+  SearchPages({this.message, this.object, this.success});
 
-  GetAllCompenyPageModel.fromJson(Map<String, dynamic> json) {
+  SearchPages.fromJson(Map<String, dynamic> json) {
     message = json['message'];
     object =
         json['object'] != null ? new Object.fromJson(json['object']) : null;
@@ -24,10 +24,10 @@ class GetAllCompenyPageModel {
 }
 
 class Object {
-  List<Content1>? content;
+  List<Content>? content;
   Pageable? pageable;
-  int? totalElements;
   int? totalPages;
+  int? totalElements;
   bool? last;
   int? size;
   int? number;
@@ -39,8 +39,8 @@ class Object {
   Object(
       {this.content,
       this.pageable,
-      this.totalElements,
       this.totalPages,
+      this.totalElements,
       this.last,
       this.size,
       this.number,
@@ -51,16 +51,16 @@ class Object {
 
   Object.fromJson(Map<String, dynamic> json) {
     if (json['content'] != null) {
-      content = <Content1>[];
+      content = <Content>[];
       json['content'].forEach((v) {
-        content!.add(new Content1.fromJson(v));
+        content!.add(new Content.fromJson(v));
       });
     }
     pageable = json['pageable'] != null
         ? new Pageable.fromJson(json['pageable'])
         : null;
-    totalElements = json['totalElements'];
     totalPages = json['totalPages'];
+    totalElements = json['totalElements'];
     last = json['last'];
     size = json['size'];
     number = json['number'];
@@ -78,8 +78,8 @@ class Object {
     if (this.pageable != null) {
       data['pageable'] = this.pageable!.toJson();
     }
-    data['totalElements'] = this.totalElements;
     data['totalPages'] = this.totalPages;
+    data['totalElements'] = this.totalElements;
     data['last'] = this.last;
     data['size'] = this.size;
     data['number'] = this.number;
@@ -93,39 +93,39 @@ class Object {
   }
 }
 
-class Content1 {
-  String? userCompanyPageUid;
+class Content {
+  String? companyName;
   String? pageId;
-  String? companyPageName;
-  String? companyPageProfilePic;
-  String? pageDescription;
-  String? companyPageType;
+  String? profilePic;
+  String? companyType;
+  String? description;
+  String? pageUid;
 
-  Content1(
-      {this.userCompanyPageUid,
+  Content(
+      {this.companyName,
       this.pageId,
-      this.companyPageName,
-      this.companyPageProfilePic,
-      this.pageDescription,
-      this.companyPageType});
+      this.profilePic,
+      this.companyType,
+      this.description,
+      this.pageUid});
 
-  Content1.fromJson(Map<String, dynamic> json) {
-    userCompanyPageUid = json['userCompanyPageUid'];
+  Content.fromJson(Map<String, dynamic> json) {
+    companyName = json['companyName'];
     pageId = json['pageId'];
-    companyPageName = json['companyPageName'];
-    companyPageProfilePic = json['companyPageProfilePic'];
-    pageDescription = json['pageDescription'];
-    companyPageType = json['companyPageType'];
+    profilePic = json['profilePic'];
+    companyType = json['companyType'];
+    description = json['description'];
+    pageUid = json['pageUid'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['userCompanyPageUid'] = this.userCompanyPageUid;
+    data['companyName'] = this.companyName;
     data['pageId'] = this.pageId;
-    data['companyPageName'] = this.companyPageName;
-    data['companyPageProfilePic'] = this.companyPageProfilePic;
-    data['pageDescription'] = this.pageDescription;
-    data['companyPageType'] = this.companyPageType;
+    data['profilePic'] = this.profilePic;
+    data['companyType'] = this.companyType;
+    data['description'] = this.description;
+    data['pageUid'] = this.pageUid;
     return data;
   }
 }
