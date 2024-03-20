@@ -1,6 +1,6 @@
 name: pds
 description: A new Flutter project.
-version: 1.0.0+15
+version: 1.0.0+17
 environment: 
   sdk: '>=2.12.0 <3.0.0'
 dependencies: 
@@ -78,8 +78,8 @@ dependencies:
   flutter_staggered_animations: ^1.1.1
   pinch_zoom: ^2.0.0
   zego_uikit_prebuilt_call: ^4.2.1
-
-
+  youtube_player_flutter: ^9.0.0
+  any_link_preview: ^3.0.1
   # dio: ^5.3.4
   
   
@@ -93,6 +93,7 @@ dependency_overrides:
   xml: ^6.0.1
   win32: ^3.0.0
   uuid: ^4.1.0
+  http: ^0.13.5
   
 flutter: 
   uses-material-design: true

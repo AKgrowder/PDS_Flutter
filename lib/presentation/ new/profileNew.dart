@@ -112,7 +112,7 @@ class _ProfileScreenState extends State<ProfileScreen>
   String? workignStart;
   String? workignend;
   String? start;
-   GetAllCompenyPageModel? getallcompenypagemodel;
+  GetAllCompenyPageModel? getallcompenypagemodel;
   String? startAm;
   String? end;
   String? endAm;
@@ -184,7 +184,7 @@ class _ProfileScreenState extends State<ProfileScreen>
   bool _isScrolledUp = false;
   bool scrolldown = false;
   bool isOpen = false;
-   void launchEmail(String emailAddress) async {
+  void launchEmail(String emailAddress) async {
     final Uri emailLaunchUri = Uri(
       // scheme: 'Test',
       path: emailAddress,
@@ -315,12 +315,11 @@ class _ProfileScreenState extends State<ProfileScreen>
     BlocProvider.of<NewProfileSCubit>(context).get_about_me(context, userId);
 
     BlocProvider.of<NewProfileSCubit>(context).GetAllSaveBlog(context, userId);
-    BlocProvider.of<NewProfileSCubit>(context)
-        .getallcompenypagee(context);
   }
 
   @override
   void initState() {
+    BlocProvider.of<NewProfileSCubit>(context).getallcompenypagee(context);
     Observable.instance.addObserver(this);
     _tabController = TabController(length: tabData.length, vsync: this);
     _scrollController.addListener(_scrollListener);
@@ -691,8 +690,8 @@ class _ProfileScreenState extends State<ProfileScreen>
           BlocProvider.of<NewProfileSCubit>(context)
               .GetAppPostAPI(context, "${NewProfileData?.object?.userUid}");
         }
-        if(state is Getallcompenypagelodedstate){
-            getallcompenypagemodel = state.getallcompenypagemodel;
+        if (state is Getallcompenypagelodedstate) {
+          getallcompenypagemodel = state.getallcompenypagemodel;
         }
       }, builder: (context, state) {
         return DefaultTabController(
@@ -820,6 +819,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                             builder: (context) =>
                                                                 NewBottomBar(
                                                                     buttomIndex:
+                                     
                                                                         0),
                                                           ));
                                                     } else {
@@ -832,6 +832,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                     color: Color.fromRGBO(
                                                         255, 255, 255, 0.3),
                                                     child: Center(
+                             
                                                       child: Image.asset(
                                                         ImageConstant.backArrow,
                                                         fit: BoxFit.fill,
@@ -849,6 +850,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                             children: [
                                               GestureDetector(
                                                 onTap: () {
+                          
                                                   print(
                                                       "frgfgdfggdfgdfhghfdgh");
                                                   if (NewProfileData
@@ -879,6 +881,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                       'https://inpackaging-images.s3.ap-south-1.amazonaws.com/misc/InPackaging_Logo.png',
                                                                   title: '',
                                                                 ) */
+                          
                                                           ProfilePage(
                                                         image: ImageConstant
                                                             .tomcruse,
@@ -906,6 +909,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                   ''
                                                           ? CircleAvatar(
                                                               backgroundColor:
+                          
                                                                   Colors.white,
                                                               backgroundImage:
                                                                   AssetImage(
@@ -926,6 +930,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                           : CircleAvatar(
                                                               backgroundColor:
                                                                   Colors.white,
+                          
                                                               backgroundImage:
                                                                   NetworkImage(
                                                                       "${NewProfileData?.object?.userProfilePic}"),
@@ -933,17 +938,21 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                             )),
                                                 ),
                                               ),
-                                              if (NewProfileData
-                                                      ?.object?.module ==
-                                                  "COMPANY" &&   getallcompenypagemodel
-                                                              ?.object
-                                                              ?.isNotEmpty == true)
+                                              if (
+                                                  getallcompenypagemodel
+                                                          ?.object
+                                                          ?.content
+                                                          ?.isNotEmpty ==
+                                                      true)
                                                 Positioned(
                                                   bottom: 5,
                                                   right: -0,
                                                   child: GestureDetector(
                                                     onTap: () {
-                                                    showProfileSwitchBottomSheet(context,getallcompenypagemodel!);
+                                                      showProfileSwitchBottomSheet(
+                                                          context,
+                                                          getallcompenypagemodel!,
+                                                          '${User_ID}');
                                                       /* _showPopupMenuSwitchAccount(
                                                         details.globalPosition,
                                                         context,
@@ -1181,62 +1190,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                             : SizedBox()
                                   ],
                                 ),
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                      left: 35, right: 35),
-                                  child: GestureDetector(
-                                   onTap: () async {
-                                      String email = Uri.encodeComponent(
-                                          "Connect@inpackaging.com");
-                                      launchEmail(email);
-                                    },
-                                    child: Container(
-                                      height: 45,
-                                      decoration: BoxDecoration(
-                                          border: Border.all(
-                                              color: ColorConstant.primary_color),
-                                          color: ColorConstant.primaryLight_color,
-                                          borderRadius: BorderRadius.circular(5)),
-                                      child: Padding(
-                                        padding: const EdgeInsets.only(
-                                            left: 15, right: 15),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Row(
-                                              children: [
-                                                Image.asset(
-                                                  ImageConstant.setting_phone,
-                                                  height: 15,
-                                                  color: Colors.black,
-                                                ),
-                                                SizedBox(
-                                                  width: 15,
-                                                ),
-                                                Text(
-                                                  'Support',
-                                                  maxLines: 1,
-                                                  style: TextStyle(
-                                                      fontFamily: "outfit",
-                                                      fontSize: 18,
-                                                      fontWeight:
-                                                          FontWeight.w500),
-                                                ),
-                                              ],
-                                            ),
-                                            Icon(
-                                              Icons.arrow_forward_ios,
-                                              color: Colors.black,
-                                              size: 15,
-                                            )
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-
+                              
                                 SizedBox(
                                   height: 10,
                                 ),
@@ -1316,10 +1270,11 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                 NewProfileData
                                                                         ?.object
                                                                         ?.accountType ??
-                                                                    '', module: NewProfileData
-                                                                        ?.object
-                                                                        ?.module ?? '',
-
+                                                                    '',
+                                                            module: NewProfileData
+                                                                    ?.object
+                                                                    ?.module ??
+                                                                '',
                                                           ))).then((value) =>
                                                   widget.ProfileNotification ==
                                                           true
@@ -1678,7 +1633,52 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                   .NewProfileSAPI(
                                                       context, widget.User_ID)); */
                                               }
-                                            } else {}
+                                            } else {
+                                               if (NewProfileData?.object?.accountType == 'PUBLIC' && NewProfileData?.object?.isFollowing == 'FOLLOW') {
+                                                 Navigator.push(context,
+                                                    MaterialPageRoute(
+                                                        builder: (context) {
+                                                  return MultiBlocProvider(
+                                                    providers: [
+                                                      BlocProvider<
+                                                          FollowerBlock>(
+                                                        create: (context) =>
+                                                            FollowerBlock(),
+                                                      ),
+                                                    ],
+                                                    child: Followers(
+                                                      User_ID: widget.User_ID,
+                                                      appBarName: 'Followers',
+                                                      userId: widget.User_ID,
+                                                    ),
+                                                  );
+                                                })).then((value) {
+                                                  widget.ProfileNotification ==
+                                                          true
+                                                      ? BlocProvider.of<
+                                                                  NewProfileSCubit>(
+                                                              context)
+                                                          .NewProfileSAPI(
+                                                              context,
+                                                              widget.User_ID,
+                                                              true)
+                                                      : BlocProvider.of<
+                                                                  NewProfileSCubit>(
+                                                              context)
+                                                          .NewProfileSAPI(
+                                                              context,
+                                                              widget.User_ID,
+                                                              false);
+                                                  BlocProvider.of<
+                                                              NewProfileSCubit>(
+                                                          context)
+                                                      .getFollwerApi(context,
+                                                          widget.User_ID);
+                                                });
+                                              }
+                                            }
+
+
                                           },
                                           child: Container(
                                             color: Colors.transparent,
@@ -1764,7 +1764,42 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                             widget.User_ID,
                                                             false));
                                               }
-                                            } else {}
+                                            } else {
+                                               if (NewProfileData?.object?.accountType == 'PUBLIC' && NewProfileData?.object?.isFollowing == 'FOLLOW') {
+                                                 Navigator.push(context,
+                                                    MaterialPageRoute(
+                                                        builder: (context) {
+                                                  return MultiBlocProvider(
+                                                    providers: [
+                                                      BlocProvider<
+                                                          FollowerBlock>(
+                                                        create: (context) =>
+                                                            FollowerBlock(),
+                                                      ),
+                                                    ],
+                                                    child: Followers(
+                                                      User_ID: widget.User_ID,
+                                                      appBarName: 'Following',
+                                                      userId: widget.User_ID,
+                                                    ),
+                                                  );
+                                                })).then((value) => widget
+                                                            .ProfileNotification ==
+                                                        true
+                                                    ? BlocProvider.of<NewProfileSCubit>(context)
+                                                        .NewProfileSAPI(
+                                                            context,
+                                                            widget.User_ID,
+                                                            true)
+                                                    : BlocProvider.of<NewProfileSCubit>(context)
+                                                        .NewProfileSAPI(
+                                                            context,
+                                                            widget.User_ID,
+                                                            false));
+                                              }
+                                            }
+
+                                            
                                           },
                                           child: Container(
                                             // color: Colors.amber,

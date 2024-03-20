@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_observer/Observable.dart';
 import 'package:pds/API/Model/AddExportProfileModel/AddExportProfileModel.dart';
 import 'package:pds/API/Model/Add_PostModel/Add_PostModel.dart';
@@ -92,8 +93,11 @@ import 'package:pds/API/Model/storyModel/stroyModel.dart';
 import 'package:pds/API/Model/updateprofileModel/updateprofileModel.dart';
 import 'package:pds/core/utils/sharedPreferences.dart';
 import 'package:pds/presentation/%20new/commenwigetReposrt.dart';
+import 'package:pds/presentation/%20new/newbottembar.dart';
+import 'package:pds/presentation/splash_screen/splash_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../presentation/ new/home_screen_new.dart';
 import '../ApiService/ApiService.dart';
 import '../Const/const.dart';
 import '../Model/AddThread/CreateRoom_Model.dart';
@@ -3471,6 +3475,8 @@ class Repository {
     final response = await apiServices.getApiCallWithToken(
         Config.getallcompany_pages, context);
     var jsonString = json.decode(response.body);
+
+    print("getallcompenypage-${response.body}");
     print(jsonString);
     switch (response.statusCode) {
       case 200:
@@ -3512,20 +3518,29 @@ class Repository {
     }
   }
 
-  get_page_by_uid(
-      BuildContext context, String companyPageUid, String pageId) async {
+  get_page_by_uid(BuildContext context, String? pageId, String loginuid,
+      String compnyPageUid) async {
+    print("pageidcheck-${pageId}");
     final response = await apiServices.getApiCallWithToken(
-        "${Config.get_page_by_uid}?companyPageUid=$companyPageUid&pageId=$pageId",
+        pageId != null
+            ? "${Config.get_page_by_uid}?pageId=$pageId&userId=$loginuid"
+            : "${Config.get_page_by_uid}?userId=$loginuid",
         context);
-
+    final SharedPreferences pref = await SharedPreferences.getInstance();
     var jsonString = json.decode(response.body);
+
     print('get_page_by_uid${response.body}');
     switch (response.statusCode) {
       case 200:
-        return Navigator.pop(
-          context,
-        );
-
+        apiCalingdone = false;
+        
+        return Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => NewBottomBar(
+                buttomIndex: 0,
+              ),
+            ));
       case 404:
         return Config.somethingWentWrong;
       case 500:
@@ -3586,8 +3601,8 @@ class Repository {
   }
 
   get_all_company_type(BuildContext context) async {
-    final response =
-        await apiServices.getApiCall("${Config.get_all_company_type}", context);
+    final response = await apiServices.getApiCallWithToken(
+        "${Config.get_all_company_type}", context);
     print(response);
     var jsonString = json.decode(response!.body);
     switch (response.statusCode) {
