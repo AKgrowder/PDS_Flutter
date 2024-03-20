@@ -364,7 +364,7 @@ class _ComapnyManageScreenState extends State<ComapnyManageScreen> {
 
     if (Platform.isAndroid) {
       Share.shareXFiles(
-        [XFile("/sdcard/download/IPImage.jpg")],
+        [XFile("/sdcard/download/IP__image.jpg")],
         subject: "Share",
         text: "Try This Awesome App \n\n Android :- ${androidLink}",
         // sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size,
@@ -374,7 +374,7 @@ class _ComapnyManageScreenState extends State<ComapnyManageScreen> {
         [
           XFile(directory.path +
               Platform.pathSeparator +
-              'Growder_Image/IPImage.jpg')
+              'Growder_Image/IP__image.jpg')
         ],
         subject: "Share",
         text: "Try This Awesome App \n\n Android :- ${androidLink}",

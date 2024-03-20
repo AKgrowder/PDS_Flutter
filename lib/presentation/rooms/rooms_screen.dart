@@ -29,8 +29,9 @@ import '../register_create_account_screen/register_create_account_screen.dart';
 
 class RoomsScreen extends StatefulWidget {
   bool? ProfileNotification;
-    String? roomID;
-  RoomsScreen({Key? key, this.ProfileNotification,this.roomID}) : super(key: key);
+  String? roomID;
+  RoomsScreen({Key? key, this.ProfileNotification, this.roomID})
+      : super(key: key);
 
   @override
   State<RoomsScreen> createState() => _RoomsScreenState();
@@ -73,13 +74,12 @@ class _RoomsScreenState extends State<RoomsScreen> {
     // BlocProvider.of<GetAllPrivateRoomCubit>(context).GetAllPrivateRoomAPI();
     // BlocProvider.of<GetAllPrivateRoomCubit>(context).chckUserStaus();
     method();
-      // if (widget.ProfileNotification == true) {
+    // if (widget.ProfileNotification == true) {
     //   navigation();
     // }
     // BlocProvider.of<GetAllPrivateRoomCubit>(context).chckUserStaus();
     super.initState();
   }
-
 
   // navigation() {
   //   Navigator.push(context, MaterialPageRoute(builder: (context) {
@@ -307,7 +307,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                             CrossAxisAlignment.start,
                                         children: [
                                           SizedBox(
-                                            height: 10,
+                                            height: 15,
                                           ),
                                           Row(
                                             mainAxisAlignment:
@@ -1152,6 +1152,9 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                               ),
                                             ],
                                           ),
+                                          SizedBox(
+                                            height: 15,
+                                          ),
                                           Row(
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.start,
@@ -1177,6 +1180,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                               ),
                                             ],
                                           ),
+
                                           Padding(
                                             padding: const EdgeInsets.only(
                                                 left: 8.0),
@@ -1191,7 +1195,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                             ),
                                           ),
                                           SizedBox(
-                                            height: 10,
+                                            height: 15,
                                           ),
                                           /* Padding(
                                             padding: const EdgeInsets.only(
@@ -2068,13 +2072,15 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                           // })
                                           Padding(
                                             padding:
-                                                const EdgeInsets.only(top: 2),
+                                                const EdgeInsets.only(top: 5),
                                             child: Container(
                                               height: 0.5,
                                               color: Colors.grey,
                                             ),
                                           ),
-
+                                              SizedBox(
+                                                height: 3,
+                                              ),
                                           PriveateRoomData
                                                       ?.object?[index]
                                                       .expertUserProfile
@@ -2170,6 +2176,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                                           )); */
                                                         },
                                                         child: Container(
+                                                          margin: EdgeInsets.only(right: 3),
                                                           width: 80,
                                                           height: 20,
                                                           decoration:
@@ -2253,7 +2260,9 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                           //         ),
                                           //       )
                                           //     : SizedBox(),
-
+                                        SizedBox(
+                                          height: 2,
+                                        ),
                                           Row(
                                             mainAxisAlignment:
                                                 MainAxisAlignment.spaceBetween,

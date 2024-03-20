@@ -3528,12 +3528,17 @@ class Repository {
         context);
     final SharedPreferences pref = await SharedPreferences.getInstance();
     var jsonString = json.decode(response.body);
+    if( pageId != null){
+      pref.setString(PreferencesKey.module1, 'CompyPageLogin');
+    }else{
+      pref.remove(PreferencesKey.module1,);
+    }
 
     print('get_page_by_uid${response.body}');
     switch (response.statusCode) {
       case 200:
         apiCalingdone = false;
-        
+
         return Navigator.push(
             context,
             MaterialPageRoute(
