@@ -19,6 +19,7 @@ import 'package:pds/API/Model/DeleteUserModel/DeleteUser_Model.dart';
 import 'package:pds/API/Model/Delete_Api_model/delete_api_model.dart';
 import 'package:pds/API/Model/FetchExprtiseModel/fetchExprtiseModel.dart';
 import 'package:pds/API/Model/FollwersModel/FllowersModel.dart';
+import 'package:pds/API/Model/GetAdminRolesForCompanyPageModel/GetAdminRolesForCompanyPageModel.dart';
 import 'package:pds/API/Model/GetAllInboxImagesModel/GetAllInboxImagesModel.dart';
 import 'package:pds/API/Model/GetGuestAllPostModel/GetGuestAllPost_Model.dart';
 import 'package:pds/API/Model/GetGuestAllPostModel/GetPostLike_Model.dart';
@@ -74,6 +75,7 @@ import 'package:pds/API/Model/forwad_Meesage/forwad_Message.dart';
 import 'package:pds/API/Model/getAllCompanyTypeModel/getAllCompanyTypeModel.dart';
 import 'package:pds/API/Model/getCountOfSavedRoomModel/getCountOfSavedRoomModel.dart';
 import 'package:pds/API/Model/getSerchDataModel/getSerchDataModel.dart';
+import 'package:pds/API/Model/get_assigned_users_of_company_pageModel/get_assigned_users_of_company_pageModel.dart';
 import 'package:pds/API/Model/inboxScreenModel/LiveStatusModel.dart';
 import 'package:pds/API/Model/inboxScreenModel/SeenAllMessageModel.dart';
 import 'package:pds/API/Model/inboxScreenModel/inboxScrrenModel.dart';
@@ -91,6 +93,7 @@ import 'package:pds/API/Model/sherInviteModel/sherinviteModel.dart';
 import 'package:pds/API/Model/storyDeleteModel/storyDeleteModel.dart';
 import 'package:pds/API/Model/storyModel/stroyModel.dart';
 import 'package:pds/API/Model/updateprofileModel/updateprofileModel.dart';
+import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/core/utils/sharedPreferences.dart';
 import 'package:pds/presentation/%20new/commenwigetReposrt.dart';
 import 'package:pds/presentation/%20new/newbottembar.dart';
@@ -3528,10 +3531,12 @@ class Repository {
         context);
     final SharedPreferences pref = await SharedPreferences.getInstance();
     var jsonString = json.decode(response.body);
-    if( pageId != null){
+    if (pageId != null) {
       pref.setString(PreferencesKey.module1, 'CompyPageLogin');
-    }else{
-      pref.remove(PreferencesKey.module1,);
+    } else {
+      pref.remove(
+        PreferencesKey.module1,
+      );
     }
 
     print('get_page_by_uid${response.body}');
@@ -3539,13 +3544,23 @@ class Repository {
       case 200:
         apiCalingdone = false;
 
-        return Navigator.push(
+        return Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(
+            builder: (context) => NewBottomBar(
+              buttomIndex: 0,
+            ),
+          ),
+          (route) => false, // Remove all previous routes
+        );
+
+      /* Navigator.push(
             context,
             MaterialPageRoute(
               builder: (context) => NewBottomBar(
                 buttomIndex: 0,
               ),
-            ));
+            )); */
       case 404:
         return Config.somethingWentWrong;
       case 500:
@@ -3561,9 +3576,10 @@ class Repository {
 
   delete_company_pages(String pageUid, BuildContext context) async {
     final response = await apiServices.deleteApiCallWithToken(
-        "${Config.delete_company_pages}?pageUid=${pageUid}", context);
+        "${Config.delete_company_pages}?companyPageUid=${pageUid}", context);
     print(response);
     var jsonString = json.decode(response!.body);
+    print("resonce-$jsonString");
     switch (response.statusCode) {
       case 200:
         return DeleteUserChatModel.fromJson(jsonString);
@@ -3619,6 +3635,108 @@ class Repository {
         return Config.servernotreachable;
       case 400:
         return GetAllCompanyType.fromJson(jsonString);
+      case 701:
+        return Config.somethingWentWrong;
+      default:
+        return jsonString;
+    }
+  }
+
+  get_admin_roles_for_company_page(BuildContext context) async {
+    final response = await apiServices.getApiCallWithToken(
+        "${Config.get_admin_roles_for_company_page}", context);
+    print('get_admin_roles_for_company_page-${response.body}');
+    var jsonString = json.decode(response!.body);
+    switch (response.statusCode) {
+      case 200:
+        return GetAdminRolesForCompanyPage.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+      case 400:
+        return GetAdminRolesForCompanyPage.fromJson(jsonString);
+      case 701:
+        return Config.somethingWentWrong;
+      default:
+        return jsonString;
+    }
+  }
+
+  get_assigned_users_of_company_page(
+      BuildContext context, String companyPageUid) async {
+    final response = await apiServices.getApiCallWithToken(
+        "${Config.get_assigned_users_of_company_page}?companyPageUid=$companyPageUid",
+        context);
+    print('get_assigned_users_of_company_page-${response.body}');
+    var jsonString = json.decode(response!.body);
+    switch (response.statusCode) {
+      case 200:
+        return GetAssignedUsersOfCompanyPage.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+      case 400:
+        return GetAssignedUsersOfCompanyPage.fromJson(jsonString);
+      case 701:
+        return Config.somethingWentWrong;
+      default:
+        return jsonString;
+    }
+  }
+
+  assigned_user_to_company_page(
+      BuildContext context, Map<String, dynamic> parmes) async {
+    final response = await apiServices.postApiCall(
+        "${Config.assigned_user_to_company_page}", parmes, context);
+    print(response);
+    var jsonString = json.decode(response!.body);
+    print("resonce-$jsonString");
+    switch (response.statusCode) {
+      case 200:
+        SnackBar snackBar = SnackBar(
+          content: Text(
+            jsonString['object'],
+          ),
+          backgroundColor: ColorConstant.primary_color,
+        );
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        Navigator.pop(context);
+        return Navigator.pop(context);
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+      case 400:
+        return DeleteUserChatModel.fromJson(jsonString);
+
+      case 701:
+        return Config.somethingWentWrong;
+      default:
+        return jsonString;
+    }
+  }
+
+  delete_assigned_user_from_company_page(
+      String userUid, String companyPageUid, BuildContext context) async {
+    final response = await apiServices.deleteApiCallWithToken(
+        "${Config.delete_assigned_user_from_company_page}?companyPageUid=${companyPageUid}&userUid=$userUid",
+        context);
+    print(response);
+    var jsonString = json.decode(response!.body);
+    print("resonce-$jsonString");
+    switch (response.statusCode) {
+      case 200:
+        return jsonString;
+      case 404:
+        return Config.somethingWentWrong;
+      case 500:
+        return Config.servernotreachable;
+      case 400:
+        return DeleteUserChatModel.fromJson(jsonString);
+
+      // return Config.somethingWentWrong;
       case 701:
         return Config.somethingWentWrong;
       default:
