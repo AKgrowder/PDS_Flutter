@@ -28,6 +28,8 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 import '../../API/Model/UserTagModel/UserTag_model.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 class CommentBottomSheet extends StatefulWidget {
   String userProfile;
@@ -560,6 +562,7 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                                                       // height: 50,
                                                       // color: Colors.amber,
                                                       child: Column(
+                                                        crossAxisAlignment: CrossAxisAlignment.start,
                                                         children: [
                                                           LinkifyText(
                                                             addCommentModeldata
@@ -710,14 +713,13 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                                                               }
                                                             },
                                                           ),
-                                                          SizedBox(height: 8,),
                                                           if (extractUrls(addCommentModeldata?.object?[index].comment ?? "").isNotEmpty)
                                                             isYouTubeUrl(extractUrls(addCommentModeldata?.object?[index].comment ?? "").first)
                                                                 ? FutureBuilder(
                                                                 future: fetchYoutubeThumbnail(extractUrls(addCommentModeldata?.object?[index].comment ?? "").first),
                                                                 builder: (context, snap) {
                                                                   return Container(
-                                                                    height: 250,
+                                                                    height: 200,
                                                                     decoration: BoxDecoration(image: DecorationImage(image: CachedNetworkImageProvider(snap.data.toString())), borderRadius: BorderRadius.circular(10)),
                                                                     clipBehavior: Clip.antiAlias,
                                                                     child: Center(
@@ -769,7 +771,7 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                                                       /*  Text(
                                                         "${addCommentModeldata?.object?[index].comment}",
                                                         // maxLines: 2,
-        
+
                                                         style: TextStyle(
                                                             fontFamily: 'outfit',
                                                             overflow: TextOverflow
@@ -979,7 +981,7 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                                         ),
                                         onPressed: () async {
                                           print("this is ontap");
-        
+
                                           if (isEmojiVisible) {
                                             FocusScope.of(context)
                                                 .requestFocus(FocusNode());
@@ -992,7 +994,7 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                                           if (isKeyboardVisible) {
                                             FocusScope.of(context).unfocus();
                                           }
-        
+
                                           super.setState(() {
                                             isEmojiVisible = !isEmojiVisible;
                                           });
@@ -1098,14 +1100,14 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                                           });
                                         }
                                       },
-        
+
                                       controller: addcomment,
                                       maxLength: 300,
                                       //
                                       cursorColor: ColorConstant.primary_color,
                                       decoration: InputDecoration(
                                         counterText: "",
-                                        
+
                                         border: InputBorder.none,
                                         hintText: "Add Comment",
                                         icon: Container(
@@ -1127,7 +1129,7 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                                               if (isKeyboardVisible) {
                                                 FocusScope.of(context).unfocus();
                                               }
-        
+
                                               super.setState(() {
                                                 isEmojiVisible = !isEmojiVisible;
                                               });
@@ -1156,7 +1158,7 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                                         "comment": addcomment.text,
                                         "postUid": '${widget.postUuID}',
                                       };
-        
+
                                       BlocProvider.of<AddcommentCubit>(context)
                                           .AddPostApiCalling(context, params);
                                     }
@@ -1264,12 +1266,44 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
       } else {
         print("check lenth else-${value.length}");
       }
+      if (AnyLinkPreview.isValidLink(extractUrls(value).first)) {
+        if (_timer != null) {
+          _timer?.cancel();
+          _timer = Timer(Duration(seconds: 2), () {
+            setState(() {
+              title = extractUrls(value).first;
+            });
+          });
+        } else {
+          _timer = Timer(Duration(seconds: 2), () {
+            setState(() {
+              title = extractUrls(value).first;
+            });
+          });
+        }
+      }
     } else if (value.contains('#')) {
       title = "";
       print("check length-${value}");
       String data1 = value.split(' #').last.replaceAll('#', '');
       BlocProvider.of<AddcommentCubit>(context)
           .GetAllHashtag(context, '10', '#${data1.trim()}');
+      if (AnyLinkPreview.isValidLink(extractUrls(value).first)) {
+        if (_timer != null) {
+          _timer?.cancel();
+          _timer = Timer(Duration(seconds: 2), () {
+            setState(() {
+              title = extractUrls(value).first;
+            });
+          });
+        } else {
+          _timer = Timer(Duration(seconds: 2), () {
+            setState(() {
+              title = extractUrls(value).first;
+            });
+          });
+        }
+      }
     }else if (AnyLinkPreview.isValidLink(extractUrls(value).first)) {
       if (_timer != null) {
         _timer?.cancel();
@@ -1486,9 +1520,15 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
                   Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      getYoutubePlayer(videoUrl, () {
+                      FutureBuilder(future: getYoutubePlayer(videoUrl, () {
                         Navigator.pop(ctx);
                         launchUrl(Uri.parse(videoUrl));
+                      }), builder: (context,snap){
+                        if(snap.data != null)
+                          return snap.data as Widget;
+                        else return Center(
+                          child: CircularProgressIndicator(color: Colors.white,),
+                        );
                       })
                     ],
                   ),
@@ -1519,17 +1559,98 @@ class _CommentBottomSheetState extends State<CommentBottomSheet> {
   late YoutubeMetaData _videoMetaData;
   bool _isPlayerReady = false;
 
-  getYoutubePlayer(String videoUrl, Function() fullScreen) {
-    late YoutubePlayerController _controller;
+  String extractPlaylistId(String playlistLink) {
+    Uri uri = Uri.parse(playlistLink);
 
+    String playlistId = '';
+
+    // Check if the link is a valid YouTube playlist link
+    if (uri.host == 'www.youtube.com' || uri.host == 'youtube.com') {
+      if (uri.pathSegments.contains('playlist')) {
+        int index = uri.pathSegments.indexOf('playlist');
+        if (index != -1 /*&& index + 1 < uri.pathSegments.length*/) {
+          playlistId = uri.queryParameters['list']!;
+        }
+      }
+    } else if (uri.host == 'youtu.be') {
+      // If the link is a short link
+      playlistId = uri.pathSegments.first;
+    }
+
+    return playlistId;
+  }
+
+
+  Future<List<String>> getPlaylistVideos(String playlistId) async {
+    // final url = "https://www.youtube.com/playlist?list=RDF0SflZWxv8k";
+    final url = "https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=50&playlistId=$playlistId&key=AIzaSyAT_gzTjHn9XuvQsmGdY63br7lKhD2KRdo";
+    final response = await http.get(Uri.parse(url));
+    if (response.statusCode == 200) {
+      // Parse the HTML content to extract video IDs (implementation depends on website structure)
+      List<String> videoIds = [];
+      final Map<String, dynamic> data = json.decode(response.body);
+      for (var item in data['items']) {
+        videoIds.add(item['snippet']['resourceId']['videoId']);
+      }
+      return videoIds; // List of video IDs
+    } else {
+      print ("Failed to fetch playlist videos");
+      return [];
+    }
+  }
+
+  String extractLiveId(String liveLink) {
+    Uri uri = Uri.parse(liveLink);
+
+    String liveId = '';
+
+    // Check if the link is a valid YouTube live link
+    if (uri.host == 'www.youtube.com' || uri.host == 'youtube.com') {
+      if (uri.pathSegments.contains('watch')) {
+        // If the link contains 'watch' segment
+        int index = uri.pathSegments.indexOf('watch');
+        if (index != -1 && index + 1 < uri.pathSegments.length) {
+          // Get the video ID
+          liveId = uri.queryParameters['v']!;
+        }
+      } else if (uri.pathSegments.contains('live')) {
+        // If the link contains 'live' segment
+        int index = uri.pathSegments.indexOf('live');
+        if (index != -1 && index + 1 < uri.pathSegments.length) {
+          // Get the live ID
+          liveId = uri.pathSegments[index + 1];
+        }
+      }
+    } else if (uri.host == 'youtu.be') {
+      // If the link is a short link
+      liveId = uri.pathSegments.first;
+    }
+
+    return liveId;
+  }
+
+
+  Future<Widget> getYoutubePlayer(String videoUrl, Function() fullScreen) async{
+    late YoutubePlayerController _controller;
+    String videoId = "";
+    if(videoUrl.toLowerCase().contains("playlist")){
+      String playlistId = extractPlaylistId(videoUrl);
+      var videoIds = await getPlaylistVideos(playlistId);
+      videoId = videoIds.first;
+    }else if(videoUrl.toLowerCase().contains("live")){
+      videoId = extractLiveId(videoUrl);
+    }else{
+      videoId = YoutubePlayer.convertUrlToId(videoUrl)!;
+    }
+    print("video id ========================> $videoId");
     _controller = YoutubePlayerController(
-      initialVideoId: YoutubePlayer.convertUrlToId(videoUrl)!,
-      flags: const YoutubePlayerFlags(
+      initialVideoId: videoId,
+      flags: YoutubePlayerFlags(
         mute: false,
         autoPlay: true,
         disableDragSeek: false,
         loop: false,
-        isLive: false,
+        isLive: videoUrl.toLowerCase().contains("live"),
         forceHD: false,
         enableCaption: true,
       ),

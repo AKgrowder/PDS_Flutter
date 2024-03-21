@@ -246,7 +246,8 @@ class ForgetPasswordDilogState extends State<ForgetPasswordDilog>
     );
   }
 }
-//----------------------------------------------------------------------------------------------------------------------
+
+//-------------------------------------------------OtpVarificationDilog---------------------------------------------------------------------
 class OtpVarificationDilog extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => OtpVarificationDilogState();
@@ -531,7 +532,8 @@ class OtpVarificationDilogState extends State<OtpVarificationDilog>
     return '${duration.inMinutes.remainder(60).toString().padLeft(2, '0')}:${duration.inSeconds.remainder(60).toString().padLeft(2, '0')}';
   }
 }
-//----------------------------------------------------------------------------------------------------------------------
+
+//-----------------------------------------------------ChangePasswordDilog-----------------------------------------------------------------
 class ChangePasswordDilog extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => ChangePasswordDilogState();
@@ -858,4 +860,4 @@ class ChangePasswordDilogState extends State<ChangePasswordDilog>
     );
   }
 }
-//----------------------------------------------------------------------------------------------------------------------
+
