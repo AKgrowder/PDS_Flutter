@@ -1,5 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:any_link_preview/any_link_preview.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -35,6 +37,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 import 'package:swipe_to/swipe_to.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
+import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import 'package:zego_uikit_prebuilt_call/zego_uikit_prebuilt_call.dart';
 
 import 'allStarMessage.dart';
@@ -89,15 +92,8 @@ class DmScreenNew extends StatefulWidget {
   bool? isExpert;
   bool? isBlock;
   bool? online;
-  DmScreenNew(
-      {required this.chatInboxUid,
-      required this.chatUserName,
-      required this.chatUserProfile,
-      required this.chatOtherUseruid,
-      this.online,
-      this.videoId,
-      this.isExpert,
-      this.isBlock});
+
+  DmScreenNew({required this.chatInboxUid, required this.chatUserName, required this.chatUserProfile, required this.chatOtherUseruid, this.online, this.videoId, this.isExpert, this.isBlock});
 
   @override
   State<DmScreenNew> createState() => _DmScreenNewState();
@@ -141,8 +137,7 @@ class _DmScreenNewState extends State<DmScreenNew> with Observer {
 
   GetAllStory_Data() async {
     await BlocProvider.of<DmInboxCubit>(context).seetinonExpried(context);
-    await BlocProvider.of<DmInboxCubit>(context)
-        .DMChatListApiMethod(widget.chatInboxUid, 1, context);
+    await BlocProvider.of<DmInboxCubit>(context).DMChatListApiMethod(widget.chatInboxUid, 1, context);
     await BlocProvider.of<DmInboxCubit>(context).get_all_story(context);
   }
 
@@ -194,7 +189,7 @@ class _DmScreenNewState extends State<DmScreenNew> with Observer {
         position: StyledToastPosition.top,
         context: context,
       );
-      /* 
+      /*
       SnackBar snackBar = SnackBar(
         content: Text('User is offline'),
         backgroundColor: ColorConstant.primary_color,
@@ -238,15 +233,13 @@ class _DmScreenNewState extends State<DmScreenNew> with Observer {
           };
           Content content = Content.fromJson(mapDataAdd!);
           getInboxMessagesModel?.object?.content?.add(content);
-          print(
-              "check what is Get-${getInboxMessagesModel?.object?.content?[isEditedindex].message}-${jsonString['object']['uid']}");
+          print("check what is Get-${getInboxMessagesModel?.object?.content?[isEditedindex].message}-${jsonString['object']['uid']}");
           /*  if (getInboxMessagesModel?.object?.content?[isEditedindex].message !=
               content.uid) {
             getInboxMessagesModel?.object?.content?.add(content);
           } */
 
-          scrollController
-              .jumpTo(scrollController.position.maxScrollExtent + 100);
+          scrollController.jumpTo(scrollController.position.maxScrollExtent + 100);
           if (isMounted == true) if (mounted) {
             setState(() {});
           }
@@ -267,8 +260,7 @@ class _DmScreenNewState extends State<DmScreenNew> with Observer {
               "isDelivered": true,
             }));
       } else {
-        print(
-            "check else condison working -${isEditedindex} -${getInboxMessagesModel?.object?.content?[isEditedindex].userChatMessageUid}");
+        print("check else condison working -${isEditedindex} -${getInboxMessagesModel?.object?.content?[isEditedindex].userChatMessageUid}");
         stompClient?.send(
             destination: '/send_message_in_user_chat/${widget.chatInboxUid}',
             body: json.encode({
@@ -278,8 +270,7 @@ class _DmScreenNewState extends State<DmScreenNew> with Observer {
               //  "${widget.Room_ID}",
               "userCode": "${UserLogin_ID}",
               "isDelivered": true,
-              'uid':
-                  "${getInboxMessagesModel?.object?.content?[isEditedindex].userChatMessageUid}",
+              'uid': "${getInboxMessagesModel?.object?.content?[isEditedindex].userChatMessageUid}",
             }));
       }
     } else {
@@ -295,19 +286,15 @@ class _DmScreenNewState extends State<DmScreenNew> with Observer {
     // await BlocProvider.of<DmInboxCubit>(context)
     //     .DMChatListApiMethod(widget.chatInboxUid, 1, context);
     // await BlocProvider.of<DmInboxCubit>(context).get_all_story(context);
-    await BlocProvider.of<DmInboxCubit>(context)
-        .LiveStatus(context, widget.chatInboxUid);
-    await BlocProvider.of<DmInboxCubit>(context)
-        .SeenMessage(context, widget.chatInboxUid);
-    await BlocProvider.of<DmInboxCubit>(context)
-        .getAllNoticationsCountAPI(context);
+    await BlocProvider.of<DmInboxCubit>(context).LiveStatus(context, widget.chatInboxUid);
+    await BlocProvider.of<DmInboxCubit>(context).SeenMessage(context, widget.chatInboxUid);
+    await BlocProvider.of<DmInboxCubit>(context).getAllNoticationsCountAPI(context);
 
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     UserLogin_ID = prefs.getString(PreferencesKey.loginUserID);
     String? UserName = prefs.getString(PreferencesKey.ProfileName);
     DMbaseURL = prefs.getString(PreferencesKey.SocketLink) ?? "";
-    stompClient = StompClient(
-        config: StompConfig(url: DMbaseURL!, onConnect: onConnectCallback));
+    stompClient = StompClient(config: StompConfig(url: DMbaseURL!, onConnect: onConnectCallback));
     stompClient?.activate();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (isMounted == true) {
@@ -325,6 +312,9 @@ class _DmScreenNewState extends State<DmScreenNew> with Observer {
 
     // onUserLogin('${UserLogin_ID}', 'Ankur');
   }
+
+  String title = "";
+  Timer? _timer;
 
   void dispose() {
     timer?.cancel();
@@ -393,10 +383,7 @@ class _DmScreenNewState extends State<DmScreenNew> with Observer {
                 }
               }
               if (state is GetNotificationCountLoadedState) {
-                saveNotificationCount(
-                    state.GetNotificationCountData.object?.notificationCount ??
-                        0,
-                    state.GetNotificationCountData.object?.messageCount ?? 0);
+                saveNotificationCount(state.GetNotificationCountData.object?.notificationCount ?? 0, state.GetNotificationCountData.object?.messageCount ?? 0);
               }
             },
             builder: (context, state) {
@@ -406,8 +393,7 @@ class _DmScreenNewState extends State<DmScreenNew> with Observer {
                         margin: EdgeInsets.only(bottom: 100),
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(20),
-                          child: Image.asset(ImageConstant.loader,
-                              fit: BoxFit.cover, height: 100.0, width: 100),
+                          child: Image.asset(ImageConstant.loader, fit: BoxFit.cover, height: 100.0, width: 100),
                         ),
                       ),
                     )
@@ -441,14 +427,11 @@ class _DmScreenNewState extends State<DmScreenNew> with Observer {
                                   onTap: () {
                                     Navigator.push(context, MaterialPageRoute(
                                       builder: (context) {
-                                        return ProfileScreen(
-                                            User_ID: widget.chatOtherUseruid,
-                                            isFollowing: "");
+                                        return ProfileScreen(User_ID: widget.chatOtherUseruid, isFollowing: "");
                                       },
                                     ));
                                   },
-                                  child: widget.chatUserProfile.isEmpty ||
-                                          widget.chatUserProfile == null
+                                  child: widget.chatUserProfile.isEmpty || widget.chatUserProfile == null
                                       ? CustomImageView(
                                           imagePath: ImageConstant.tomcruse,
                                           height: 30,
@@ -467,9 +450,7 @@ class _DmScreenNewState extends State<DmScreenNew> with Observer {
                                   onTap: () {
                                     Navigator.push(context, MaterialPageRoute(
                                       builder: (context) {
-                                        return ProfileScreen(
-                                            User_ID: widget.chatUserProfile,
-                                            isFollowing: "");
+                                        return ProfileScreen(User_ID: widget.chatUserProfile, isFollowing: "");
                                       },
                                     ));
                                   },
@@ -490,32 +471,17 @@ class _DmScreenNewState extends State<DmScreenNew> with Observer {
                                 Spacer(),
                                 sendCallButton(
                                   isVideoCall: false,
-                                  invitees: [
-                                    ZegoUIKitUser(
-                                        id: widget.chatOtherUseruid
-                                            .split('-')
-                                            .last
-                                            .toString(),
-                                        name: widget.chatUserName.toLowerCase())
-                                  ],
+                                  invitees: [ZegoUIKitUser(id: widget.chatOtherUseruid.split('-').last.toString(), name: widget.chatUserName.toLowerCase())],
                                   onCallFinished: onSendCallInvitationFinished,
                                 ),
                                 sendCallButton(
                                   isVideoCall: true,
-                                  invitees: [
-                                    ZegoUIKitUser(
-                                        id: widget.chatOtherUseruid
-                                            .split('-')
-                                            .last
-                                            .toString(),
-                                        name: widget.chatUserName.toLowerCase())
-                                  ],
+                                  invitees: [ZegoUIKitUser(id: widget.chatOtherUseruid.split('-').last.toString(), name: widget.chatUserName.toLowerCase())],
                                   onCallFinished: onSendCallInvitationFinished,
                                 ),
                                 GestureDetector(
                                     onTapDown: (TapDownDetails details) {
-                                      _showPopupMenu(
-                                          context, details.globalPosition);
+                                      _showPopupMenu(context, details.globalPosition);
                                     },
                                     child: Icon(Icons.more_vert)),
 
@@ -587,10 +553,7 @@ class _DmScreenNewState extends State<DmScreenNew> with Observer {
                                 ),
                                 Text(
                                   '${selectedCount}',
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 15),
+                                  style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 15),
                                 ),
                                 Spacer(),
                                 /*    Visibility(
@@ -606,18 +569,14 @@ class _DmScreenNewState extends State<DmScreenNew> with Observer {
                                     /*  await Clipboard.setData(ClipboardData(
                                       text: reactionMessage ?? '')); */
                                     List usercoppmessage = [];
-                                    getInboxMessagesModel?.object?.content
-                                        ?.forEach((element) {
+                                    getInboxMessagesModel?.object?.content?.forEach((element) {
                                       if (element.isSelected == true) {
-                                        print(
-                                            "checl element -${element.message}");
+                                        print("checl element -${element.message}");
                                         usercoppmessage.add(element.message);
                                       }
                                     });
-                                    String textToCopy =
-                                        usercoppmessage.join('\n');
-                                    await Clipboard.setData(
-                                        ClipboardData(text: textToCopy));
+                                    String textToCopy = usercoppmessage.join('\n');
+                                    await Clipboard.setData(ClipboardData(text: textToCopy));
                                   },
                                   child: Visibility(
                                     visible: isMeesageCoppy,
@@ -633,8 +592,7 @@ class _DmScreenNewState extends State<DmScreenNew> with Observer {
                                 ),
                                 GestureDetector(
                                   onTap: () {
-                                    print(
-                                        "i want to  check  selcted count-${selectedCount}");
+                                    print("i want to  check  selcted count-${selectedCount}");
                                     if (isMounted == true) {
                                       if (isMounted) {
                                         setState(() {
@@ -661,43 +619,30 @@ class _DmScreenNewState extends State<DmScreenNew> with Observer {
                                     markStarred?.clear();
                                     List<String> forStarDataSet = [];
 
-                                    List<Content>? newList =
-                                        getInboxMessagesModel?.object?.content
-                                            ?.where((element) =>
-                                                element.isSelected == true)
-                                            .toList();
+                                    List<Content>? newList = getInboxMessagesModel?.object?.content?.where((element) => element.isSelected == true).toList();
                                     newList?.forEach((element) {
-                                      forStarDataSet
-                                          .add('${element.userChatMessageUid}');
+                                      forStarDataSet.add('${element.userChatMessageUid}');
                                     });
-                                    if (newList?.every((element) =>
-                                            element.isStarred ?? false) ==
-                                        true) {
+                                    if (newList?.every((element) => element.isStarred ?? false) == true) {
                                       markStarred = {
                                         'inboxUid': '${widget.chatInboxUid}',
                                         "messageUuids": forStarDataSet,
                                         "status": false,
                                       };
-                                    } else if (newList?.every((element) =>
-                                            element.isStarred ?? false) ==
-                                        false) {
+                                    } else if (newList?.every((element) => element.isStarred ?? false) == false) {
                                       markStarred = {
                                         'inboxUid': '${widget.chatInboxUid}',
                                         "messageUuids": forStarDataSet,
                                         "status": true,
                                       };
-                                    } else if (newList?.any((element) =>
-                                            element.isStarred ?? false) ==
-                                        true) {
+                                    } else if (newList?.any((element) => element.isStarred ?? false) == true) {
                                       markStarred = {
                                         'inboxUid': '${widget.chatInboxUid}',
                                         "messageUuids": forStarDataSet,
                                         "status": true,
                                       };
                                     }
-                                    BlocProvider.of<DmInboxCubit>(context)
-                                        .Setmark_starredApi(
-                                            context, markStarred!);
+                                    BlocProvider.of<DmInboxCubit>(context).Setmark_starredApi(context, markStarred!);
 
                                     /*  if (getInboxMessagesModel?.object?.content
                                             ?.any((element) =>
@@ -748,23 +693,15 @@ class _DmScreenNewState extends State<DmScreenNew> with Observer {
                                 GestureDetector(
                                   onTap: () async {
                                     Map<String, dynamic> forwadList = {};
-                                    List<Map<String, dynamic>>
-                                        forwardMessageDtos = [];
-                                    getInboxMessagesModel?.object?.content
-                                        ?.forEach((element) {
+                                    List<Map<String, dynamic>> forwardMessageDtos = [];
+                                    getInboxMessagesModel?.object?.content?.forEach((element) {
                                       if (element.isSelected == true) {
-                                        Map<String, dynamic> message = {
-                                          'chatMessageUuid':
-                                              element.userChatMessageUid,
-                                          "isDelivered": true,
-                                          "messageType": element.messageType
-                                        };
+                                        Map<String, dynamic> message = {'chatMessageUuid': element.userChatMessageUid, "isDelivered": true, "messageType": element.messageType};
                                         forwardMessageDtos.add(message);
                                       }
                                     });
 
-                                    forwadList['forwardMessageDtos'] =
-                                        forwardMessageDtos;
+                                    forwadList['forwardMessageDtos'] = forwardMessageDtos;
                                     print("forwardListcheck-$forwadList");
                                     /*  getInboxMessagesModel?.object?.content
                                       ?.forEach((element) {
@@ -811,44 +748,28 @@ class _DmScreenNewState extends State<DmScreenNew> with Observer {
                             controller: scrollController,
                             child: chatPaginationWidget(
                               onPagination: (p0) async {
-                                await BlocProvider.of<DmInboxCubit>(context)
-                                    .DMChatListApiPagantion(
-                                        widget.chatInboxUid, p0 + 1, context);
+                                await BlocProvider.of<DmInboxCubit>(context).DMChatListApiPagantion(widget.chatInboxUid, p0 + 1, context);
                               },
-                              offSet: (getInboxMessagesModel
-                                  ?.object?.pageable?.pageNumber),
+                              offSet: (getInboxMessagesModel?.object?.pageable?.pageNumber),
                               scrollController: scrollController,
-                              totalSize:
-                                  getInboxMessagesModel?.object?.totalElements,
+                              totalSize: getInboxMessagesModel?.object?.totalElements,
                               items: ListView.builder(
-                                itemCount: getInboxMessagesModel
-                                    ?.object?.content?.length,
+                                itemCount: getInboxMessagesModel?.object?.content?.length,
                                 shrinkWrap: true,
                                 padding: EdgeInsets.zero,
                                 physics: NeverScrollableScrollPhysics(),
                                 itemBuilder: (context, index) {
                                   final GlobalKey _widgetKey = GlobalKey();
                                   bool isReply = false;
-                                  final isFirstMessageForDate = index == 0 ||
-                                      _isDifferentDate(
-                                          '${getInboxMessagesModel?.object?.content?[index - 1].createdDate}',
-                                          '${getInboxMessagesModel?.object?.content?[index].createdDate}');
-                                  DateTime parsedDateTime = DateTime.parse(
-                                      '${getInboxMessagesModel?.object?.content?[index].createdDate}');
-                                  List<Content>? lists = getInboxMessagesModel
-                                      ?.object?.content
-                                      ?.where((element) {
-                                    if (element.userChatMessageUid ==
-                                        getInboxMessagesModel?.object
-                                            ?.content?[index].replyOnUid) {
+                                  final isFirstMessageForDate = index == 0 || _isDifferentDate('${getInboxMessagesModel?.object?.content?[index - 1].createdDate}', '${getInboxMessagesModel?.object?.content?[index].createdDate}');
+                                  DateTime parsedDateTime = DateTime.parse('${getInboxMessagesModel?.object?.content?[index].createdDate}');
+                                  List<Content>? lists = getInboxMessagesModel?.object?.content?.where((element) {
+                                    if (element.userChatMessageUid == getInboxMessagesModel?.object?.content?[index].replyOnUid) {
                                       return true;
                                     }
                                     return false;
                                   }).toList();
-                                  var iSReplay =
-                                      lists != null && lists.isNotEmpty
-                                          ? lists.first
-                                          : null;
+                                  var iSReplay = lists != null && lists.isNotEmpty ? lists.first : null;
                                   print("isReplay check -$iSReplay");
                                   return Column(
                                     children: [
@@ -857,74 +778,16 @@ class _DmScreenNewState extends State<DmScreenNew> with Observer {
                                           child: Padding(
                                             padding: const EdgeInsets.all(8.0),
                                             child: Text(
-                                              _formatDate(
-                                                  '${getInboxMessagesModel?.object?.content?[index].createdDate}'),
-                                              style: TextStyle(
-                                                  color: Color(0xff5C5C5C),
-                                                  fontWeight: FontWeight.bold),
+                                              _formatDate('${getInboxMessagesModel?.object?.content?[index].createdDate}'),
+                                              style: TextStyle(color: Color(0xff5C5C5C), fontWeight: FontWeight.bold),
                                             ),
                                           ),
                                         ),
-                                      if (getInboxMessagesModel?.object
-                                              ?.content?[index].userUid ==
-                                          UserLogin_ID)
+                                      if (getInboxMessagesModel?.object?.content?[index].userUid == UserLogin_ID)
                                         // user chat
-                                        TextUser(
-                                            getInboxMessagesModel?.object
-                                                    ?.content?[index].message ??
-                                                "",
-                                            getInboxMessagesModel
-                                                    ?.object
-                                                    ?.content?[index]
-                                                    .userProfilePic ??
-                                                "",
-                                            true,
-                                            parsedDateTime,
-                                            index,
-                                            getInboxMessagesModel
-                                                    ?.object
-                                                    ?.content?[index]
-                                                    .messageType ??
-                                                "",
-                                            getInboxMessagesModel
-                                                    ?.object
-                                                    ?.content?[index]
-                                                    .emojiReaction ??
-                                                false,
-                                            '${getInboxMessagesModel?.object?.content?[index].reactionMessage}',
-                                            _widgetKey,
-                                            iSReplay,
-                                            UserLogin_ID ?? ""),
-                                      if (getInboxMessagesModel?.object
-                                              ?.content?[index].userUid !=
-                                          UserLogin_ID)
-                                        TextUser(
-                                            getInboxMessagesModel?.object
-                                                    ?.content?[index].message ??
-                                                "",
-                                            getInboxMessagesModel
-                                                    ?.object
-                                                    ?.content?[index]
-                                                    .userProfilePic ??
-                                                "",
-                                            false,
-                                            parsedDateTime,
-                                            index,
-                                            getInboxMessagesModel
-                                                    ?.object
-                                                    ?.content?[index]
-                                                    .messageType ??
-                                                "",
-                                            getInboxMessagesModel
-                                                    ?.object
-                                                    ?.content?[index]
-                                                    .emojiReaction ??
-                                                false,
-                                            '${getInboxMessagesModel?.object?.content?[index].reactionMessage}',
-                                            _widgetKey,
-                                            iSReplay,
-                                            UserLogin_ID ??
-                                                ""), // other user chat
+                                        TextUser(getInboxMessagesModel?.object?.content?[index].message ?? "", getInboxMessagesModel?.object?.content?[index].userProfilePic ?? "", true, parsedDateTime, index, getInboxMessagesModel?.object?.content?[index].messageType ?? "", getInboxMessagesModel?.object?.content?[index].emojiReaction ?? false, '${getInboxMessagesModel?.object?.content?[index].reactionMessage}', _widgetKey, iSReplay, UserLogin_ID ?? ""),
+                                      if (getInboxMessagesModel?.object?.content?[index].userUid != UserLogin_ID)
+                                        TextUser(getInboxMessagesModel?.object?.content?[index].message ?? "", getInboxMessagesModel?.object?.content?[index].userProfilePic ?? "", false, parsedDateTime, index, getInboxMessagesModel?.object?.content?[index].messageType ?? "", getInboxMessagesModel?.object?.content?[index].emojiReaction ?? false, '${getInboxMessagesModel?.object?.content?[index].reactionMessage}', _widgetKey, iSReplay, UserLogin_ID ?? ""), // other user chat
                                     ],
                                   );
                                 },
@@ -932,6 +795,39 @@ class _DmScreenNewState extends State<DmScreenNew> with Observer {
                             ),
                           ),
                         )),
+
+                        if(title.isNotEmpty)
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 16.0,vertical: 8.0),
+                            child: AnyLinkPreview(
+                              link: title,
+                              displayDirection: UIDirection.uiDirectionHorizontal,
+                              showMultimedia: true,
+                              bodyMaxLines: 5,
+                              bodyTextOverflow: TextOverflow.ellipsis,
+                              titleStyle: TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 15,
+                              ),
+                              bodyStyle: TextStyle(color: Colors.grey, fontSize: 12),
+                              errorBody: 'Show my custom error body',
+                              errorTitle: 'Show my custom error title',
+                              errorWidget: Container(
+                                color: Colors.grey[300],
+                                child: Text('Oops!'),
+                              ),
+                              errorImage: "https://flutter.dev/",
+                              cache: Duration(days: 7),
+                              backgroundColor: Colors.grey[300],
+                              borderRadius: 12,
+                              removeElevation: false,
+                              boxShadow: [BoxShadow(blurRadius: 3, color: Colors.grey)],
+                              onTap: (){
+                                launchUrl(Uri.parse(title));
+                              }, // This disables tap event
+                            ),
+                          ),
                         if (isMeesageReaction == false)
                           Row(
                             children: [
@@ -943,23 +839,38 @@ class _DmScreenNewState extends State<DmScreenNew> with Observer {
                                     controller: addComment,
                                     minLines: 1,
                                     maxLines: 5,
+                                    onChanged: (value) {
+                                      setState(() {
+                                        title = "";
+                                      });
+                                      if (AnyLinkPreview.isValidLink(extractUrls(value).first)) {
+                                        if (_timer != null) {
+                                          _timer?.cancel();
+                                          _timer = Timer(Duration(seconds: 2), () {
+                                            setState(() {
+                                              title = extractUrls(value).first;
+                                            });
+                                          });
+                                        } else {
+                                          _timer = Timer(Duration(seconds: 2), () {
+                                            setState(() {
+                                              title = extractUrls(value).first;
+                                            });
+                                          });
+                                        }
+                                      }
+                                    },
                                     decoration: InputDecoration(
                                         enabledBorder: OutlineInputBorder(
-                                          borderSide: BorderSide(
-                                              width: 3,
-                                              color: ColorConstant
-                                                  .primary_color), //<-- SEE HERE
-                                          borderRadius:
-                                              BorderRadius.circular(50.0),
+                                          borderSide: BorderSide(width: 3, color: ColorConstant.primary_color), //<-- SEE HERE
+                                          borderRadius: BorderRadius.circular(50.0),
                                         ),
                                         focusedBorder: OutlineInputBorder(
                                           borderSide: BorderSide(
                                             width: 3,
-                                            color: ColorConstant
-                                                .primary_color, // Set the same color as enabledBorder
+                                            color: ColorConstant.primary_color, // Set the same color as enabledBorder
                                           ),
-                                          borderRadius:
-                                              BorderRadius.circular(50.0),
+                                          borderRadius: BorderRadius.circular(50.0),
                                         ),
                                         hintText: 'Type Message',
                                         filled: true,
@@ -1001,9 +912,7 @@ class _DmScreenNewState extends State<DmScreenNew> with Observer {
                                   margin: EdgeInsets.only(right: 10),
                                   height: 50,
                                   // width: 50,
-                                  decoration: BoxDecoration(
-                                      color: ColorConstant.primary_color,
-                                      borderRadius: BorderRadius.circular(25)),
+                                  decoration: BoxDecoration(color: ColorConstant.primary_color, borderRadius: BorderRadius.circular(25)),
                                   child: Image.asset(
                                     "assets/images/Vector (13).png",
                                     color: Colors.white,
@@ -1028,14 +937,11 @@ class _DmScreenNewState extends State<DmScreenNew> with Observer {
                                     children: [
                                       Text(
                                         'Replying to ${widget.chatUserName}',
-                                        style: TextStyle(
-                                            color: Colors.grey,
-                                            fontWeight: FontWeight.bold),
+                                        style: TextStyle(color: Colors.grey, fontWeight: FontWeight.bold),
                                       ),
                                       Spacer(),
                                       Padding(
-                                        padding:
-                                            const EdgeInsets.only(right: 5),
+                                        padding: const EdgeInsets.only(right: 5),
                                         child: IconButton(
                                           onPressed: () {
                                             if (isMounted == true) {
@@ -1053,103 +959,44 @@ class _DmScreenNewState extends State<DmScreenNew> with Observer {
                                     ],
                                   ),
                                 ),
-                                if (getInboxMessagesModel
-                                            ?.object
-                                            ?.content?[swipeToIndex ?? 0]
-                                            .messageType ==
-                                        'IMAGE' &&
-                                    getInboxMessagesModel
-                                            ?.object
-                                            ?.content?[swipeToIndex ?? 0]
-                                            .emojiReaction ==
-                                        true)
+                                if (getInboxMessagesModel?.object?.content?[swipeToIndex ?? 0].messageType == 'IMAGE' && getInboxMessagesModel?.object?.content?[swipeToIndex ?? 0].emojiReaction == true)
                                   Padding(
-                                    padding: const EdgeInsets.only(
-                                        left: 10, bottom: 2),
+                                    padding: const EdgeInsets.only(left: 10, bottom: 2),
                                     child: Text(
                                       '${getInboxMessagesModel?.object?.content?[swipeToIndex ?? 0].reactionMessage}',
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.w400,
-                                          color: Colors.black,
-                                          fontFamily: "outfit",
-                                          fontSize: 15),
+                                      style: TextStyle(fontWeight: FontWeight.w400, color: Colors.black, fontFamily: "outfit", fontSize: 15),
                                     ),
                                   ),
-                                if (getInboxMessagesModel
-                                        ?.object
-                                        ?.content?[swipeToIndex ?? 0]
-                                        .messageType ==
-                                    'TEXT')
+                                if (getInboxMessagesModel?.object?.content?[swipeToIndex ?? 0].messageType == 'TEXT')
                                   Padding(
-                                    padding: const EdgeInsets.only(
-                                        left: 10, bottom: 2),
+                                    padding: const EdgeInsets.only(left: 10, bottom: 2),
                                     child: Text(
                                       '${getInboxMessagesModel?.object?.content?[swipeToIndex ?? 0].message}',
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.w400,
-                                          color: Colors.black,
-                                          fontFamily: "outfit",
-                                          fontSize: 15),
+                                      style: TextStyle(fontWeight: FontWeight.w400, color: Colors.black, fontFamily: "outfit", fontSize: 15),
                                     ),
                                   ),
-                                if (getInboxMessagesModel
-                                            ?.object
-                                            ?.content?[swipeToIndex ?? 0]
-                                            .messageType ==
-                                        'IMAGE' &&
-                                    getInboxMessagesModel
-                                            ?.object
-                                            ?.content?[swipeToIndex ?? 0]
-                                            .emojiReaction ==
-                                        false &&
-                                    getInboxMessagesModel
-                                            ?.object
-                                            ?.content?[swipeToIndex ?? 0]
-                                            .reactionMessage !=
-                                        null)
+                                if (getInboxMessagesModel?.object?.content?[swipeToIndex ?? 0].messageType == 'IMAGE' && getInboxMessagesModel?.object?.content?[swipeToIndex ?? 0].emojiReaction == false && getInboxMessagesModel?.object?.content?[swipeToIndex ?? 0].reactionMessage != null)
                                   Padding(
-                                    padding: const EdgeInsets.only(
-                                        left: 10, bottom: 2),
+                                    padding: const EdgeInsets.only(left: 10, bottom: 2),
                                     child: Text(
                                       '${getInboxMessagesModel?.object?.content?[swipeToIndex ?? 0].reactionMessage}',
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.w400,
-                                          color: Colors.black,
-                                          fontFamily: "outfit",
-                                          fontSize: 15),
+                                      style: TextStyle(fontWeight: FontWeight.w400, color: Colors.black, fontFamily: "outfit", fontSize: 15),
                                     ),
                                   ),
-                                if (getInboxMessagesModel
-                                            ?.object
-                                            ?.content?[swipeToIndex ?? 0]
-                                            .messageType ==
-                                        'IMAGE' &&
-                                    getInboxMessagesModel
-                                            ?.object
-                                            ?.content?[swipeToIndex ?? 0]
-                                            .emojiReaction ==
-                                        false &&
-                                    getInboxMessagesModel
-                                            ?.object
-                                            ?.content?[swipeToIndex ?? 0]
-                                            .reactionMessage ==
-                                        null)
+                                if (getInboxMessagesModel?.object?.content?[swipeToIndex ?? 0].messageType == 'IMAGE' && getInboxMessagesModel?.object?.content?[swipeToIndex ?? 0].emojiReaction == false && getInboxMessagesModel?.object?.content?[swipeToIndex ?? 0].reactionMessage == null)
                                   Container(
                                     margin: EdgeInsets.all(10),
                                     height: 70,
                                     width: 130,
-                                    decoration: BoxDecoration(
-                                        borderRadius:
-                                            BorderRadius.circular(15)),
+                                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(15)),
                                     child: CustomImageView(
-                                      url:
-                                          "${getInboxMessagesModel?.object?.content?[swipeToIndex ?? 0].reactionMessage}",
+                                      url: "${getInboxMessagesModel?.object?.content?[swipeToIndex ?? 0].reactionMessage}",
                                       height: 20,
                                       radius: BorderRadius.circular(20),
                                       width: 20,
@@ -1167,21 +1014,15 @@ class _DmScreenNewState extends State<DmScreenNew> with Observer {
                                           maxLines: 5,
                                           decoration: InputDecoration(
                                               enabledBorder: OutlineInputBorder(
-                                                borderSide: BorderSide(
-                                                    width: 3,
-                                                    color: ColorConstant
-                                                        .primary_color), //<-- SEE HERE
-                                                borderRadius:
-                                                    BorderRadius.circular(50.0),
+                                                borderSide: BorderSide(width: 3, color: ColorConstant.primary_color), //<-- SEE HERE
+                                                borderRadius: BorderRadius.circular(50.0),
                                               ),
                                               focusedBorder: OutlineInputBorder(
                                                 borderSide: BorderSide(
                                                   width: 3,
-                                                  color: ColorConstant
-                                                      .primary_color, // Set the same color as enabledBorder
+                                                  color: ColorConstant.primary_color, // Set the same color as enabledBorder
                                                 ),
-                                                borderRadius:
-                                                    BorderRadius.circular(50.0),
+                                                borderRadius: BorderRadius.circular(50.0),
                                               ),
                                               hintText: 'Type Message',
                                               filled: true,
@@ -1219,41 +1060,31 @@ class _DmScreenNewState extends State<DmScreenNew> with Observer {
                                     ),
                                     GestureDetector(
                                       onTap: () {
-                                        if (reactionController
-                                            .text.isNotEmpty) {
+                                        if (reactionController.text.isNotEmpty) {
                                           stompClient?.send(
-                                              destination:
-                                                  '/send_message_in_user_chat/${widget.chatInboxUid}',
+                                              destination: '/send_message_in_user_chat/${widget.chatInboxUid}',
                                               body: json.encode({
-                                                "message":
-                                                    "${reactionController.text}",
+                                                "message": "${reactionController.text}",
                                                 "messageType": "TEXT",
-                                                "userChatInboxUid":
-                                                    "${widget.chatInboxUid}",
+                                                "userChatInboxUid": "${widget.chatInboxUid}",
                                                 //  "${widget.Room_ID}",
                                                 "userCode": "${UserLogin_ID}",
                                                 "isDelivered": true,
-                                                'replyMessageUid':
-                                                    "${getInboxMessagesModel?.object?.content?[swipeToIndex ?? 0].userChatMessageUid}",
+                                                'replyMessageUid': "${getInboxMessagesModel?.object?.content?[swipeToIndex ?? 0].userChatMessageUid}",
                                               }));
                                         } else {
                                           SnackBar snackBar = SnackBar(
                                             content: Text('Please Enter Text'),
-                                            backgroundColor:
-                                                ColorConstant.primary_color,
+                                            backgroundColor: ColorConstant.primary_color,
                                           );
-                                          ScaffoldMessenger.of(context)
-                                              .showSnackBar(snackBar);
+                                          ScaffoldMessenger.of(context).showSnackBar(snackBar);
                                         }
                                       },
                                       child: Container(
                                         margin: EdgeInsets.only(right: 10),
                                         height: 50,
                                         // width: 50,
-                                        decoration: BoxDecoration(
-                                            color: ColorConstant.primary_color,
-                                            borderRadius:
-                                                BorderRadius.circular(25)),
+                                        decoration: BoxDecoration(color: ColorConstant.primary_color, borderRadius: BorderRadius.circular(25)),
                                         child: Image.asset(
                                           "assets/images/Vector (13).png",
                                           color: Colors.white,
@@ -1274,6 +1105,166 @@ class _DmScreenNewState extends State<DmScreenNew> with Observer {
     );
   }
 
+  List<String> extractUrls(String text) {
+    RegExp regExp = RegExp(
+      r"https?:\/\/[\w\-]+(\.[\w\-]+)+[\w\-.,@?^=%&:/~\+#]*[\w\-@?^=%&/~\+#]?",
+      caseSensitive: false,
+    );
+
+    List<String> urls = regExp.allMatches(text).map((match) => match.group(0)!).toList();
+    List<String> finalUrls = [];
+    RegExp urlRegex = RegExp(r"(http(s)?://)", caseSensitive: false);
+    urls.forEach((element) {
+      if (urlRegex.allMatches(element).toList().length > 1) {
+        String xyz = element.replaceAll("http", ",http");
+        List<String> splitted = xyz.split(RegExp(r",|;"));
+        splitted.forEach((element1) {
+          if (element1.isNotEmpty) finalUrls.add(element1);
+        });
+      } else {
+        finalUrls.add(element);
+      }
+    });
+    return finalUrls;
+  }
+
+  bool isYouTubeUrl(String url) {
+    RegExp youtubeVideoRegex = RegExp(r"^https?://(?:www\.)?youtube\.com/(?:watch\?v=)?([^#&?]+)");
+    RegExp youtubeShortsRegex = RegExp(r"^https?://(?:www\.)?youtube\.com/shorts/([^#&?]+)");
+
+    if (youtubeVideoRegex.hasMatch(url) || youtubeShortsRegex.hasMatch(url)) {
+      return true;
+    }
+
+    // Additional checks based on specific test link patterns (optional)
+    if (url.contains("youtu.be/")) {
+      // This check might need adjustments if Youtube short URLs change format
+      return true;
+    }
+
+    return false;
+  }
+
+  void playLink(String videoUrl, BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext ctx) {
+        return Center(
+          child: Container(
+              width: MediaQuery.of(context).size.width * 0.90,
+              height: MediaQuery.of(context).size.width * 0.80,
+              decoration: ShapeDecoration(color: Colors.black, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))),
+              clipBehavior: Clip.antiAlias,
+              child: Stack(
+                children: [
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      getYoutubePlayer(videoUrl, () {
+                        Navigator.pop(ctx);
+                        launchUrl(Uri.parse(videoUrl));
+                      })
+                    ],
+                  ),
+                  Align(
+                    alignment: Alignment.topRight,
+                    child: Material(
+                      color: Colors.transparent,
+                      child: IconButton(
+                        icon: Icon(
+                          Icons.close,
+                          color: Colors.white,
+                          size: 30,
+                        ),
+                        onPressed: () {
+                          Navigator.pop(ctx);
+                        },
+                      ),
+                    ),
+                  )
+                ],
+              )),
+        );
+      },
+    );
+  }
+
+  late PlayerState _playerState;
+
+  late YoutubeMetaData _videoMetaData;
+
+  bool _isPlayerReady = false;
+
+  getYoutubePlayer(String videoUrl, Function() fullScreen) {
+    late YoutubePlayerController _controller;
+
+    _controller = YoutubePlayerController(
+      initialVideoId: YoutubePlayer.convertUrlToId(videoUrl)!,
+      flags: const YoutubePlayerFlags(
+        mute: false,
+        autoPlay: true,
+        disableDragSeek: false,
+        loop: false,
+        isLive: false,
+        forceHD: false,
+        enableCaption: true,
+      ),
+    );
+    _videoMetaData = const YoutubeMetaData();
+    _playerState = PlayerState.unknown;
+
+    return YoutubePlayerBuilder(
+      onEnterFullScreen: () {
+        _controller.toggleFullScreenMode();
+        _controller.dispose();
+        fullScreen.call();
+      },
+      builder: (context, player) {
+        return player;
+      },
+      player: YoutubePlayer(
+        controller: _controller,
+        showVideoProgressIndicator: true,
+        progressIndicatorColor: Colors.red,
+        progressColors: const ProgressBarColors(
+          playedColor: Colors.red,
+          handleColor: Colors.redAccent,
+        ),
+        bottomActions: [
+          const SizedBox(width: 14.0),
+          CurrentPosition(),
+          const SizedBox(width: 8.0),
+          ProgressBar(
+            isExpanded: true,
+            colors: const ProgressBarColors(
+              playedColor: Colors.red,
+              handleColor: Colors.redAccent,
+            ),
+          ),
+          RemainingDuration(),
+          const PlaybackSpeedButton(),
+          IconButton(
+            icon: Icon(
+              _controller.value.isFullScreen ? Icons.fullscreen_exit : Icons.fullscreen,
+              color: Colors.white,
+            ),
+            onPressed: () => fullScreen.call(),
+          ),
+        ],
+        onReady: () {
+          _controller.addListener(() {
+            if (_isPlayerReady && mounted && !_controller.value.isFullScreen) {
+              setState(() {
+                _playerState = _controller.value.playerState;
+                _videoMetaData = _controller.metadata;
+              });
+            }
+          });
+        },
+      ),
+    );
+  }
+
   _hasImageMessageTypeSelected(index) {
     int counter = 0;
     getInboxMessagesModel?.object?.content?.forEach((element) {
@@ -1281,11 +1272,7 @@ class _DmScreenNewState extends State<DmScreenNew> with Observer {
         counter++;
       }
     });
-    isMeesageCoppy = getInboxMessagesModel?.object?.content
-            ?.where((element) => element.isSelected == true)
-            .toList()
-            .length ==
-        counter;
+    isMeesageCoppy = getInboxMessagesModel?.object?.content?.where((element) => element.isSelected == true).toList().length == counter;
     /* if (getInboxMessagesModel?.object?.content?[index].messageType == 'IMAGE' &&
         getInboxMessagesModel?.object?.content?[index].isSelected == true) {
       isMeesageCoppy = false;
@@ -1294,23 +1281,11 @@ class _DmScreenNewState extends State<DmScreenNew> with Observer {
     } */
   }
 
-  TextUser(
-      String message,
-      String userProfilePic,
-      bool userMeesage,
-      DateTime parsedDateTime,
-      index,
-      String meessageTyep,
-      bool emojiReaction,
-      String reactionMessageData,
-      _widgetKey,
-      iSReplay,
-      String userUid) {
+  TextUser(String message, String userProfilePic, bool userMeesage, DateTime parsedDateTime, index, String meessageTyep, bool emojiReaction, String reactionMessageData, _widgetKey, iSReplay, String userUid) {
     return GestureDetector(
       onTap: () {
         if (isLogPress == true) {
-          if (getInboxMessagesModel?.object?.content?[index].isSelected ==
-              null) {
+          if (getInboxMessagesModel?.object?.content?[index].isSelected == null) {
             if (selectedCount < 10) {
               print("check selcecount-${selectedCount}");
 
@@ -1328,9 +1303,7 @@ class _DmScreenNewState extends State<DmScreenNew> with Observer {
 
               ScaffoldMessenger.of(context).showSnackBar(snackBar);
             }
-          } else if (getInboxMessagesModel
-                  ?.object?.content?[index].isSelected ==
-              true) {
+          } else if (getInboxMessagesModel?.object?.content?[index].isSelected == true) {
             getInboxMessagesModel?.object?.content?[index].isSelected = false;
             _decrementSelectedCount();
           } else {
@@ -1352,14 +1325,8 @@ class _DmScreenNewState extends State<DmScreenNew> with Observer {
         }
       },
       child: Container(
-        color: getInboxMessagesModel?.object?.content?[index].isSelected == true
-            ? Color(0xffE0C6C7).withOpacity(0.2)
-            : Colors.transparent,
-        margin: EdgeInsets.only(
-            bottom: getInboxMessagesModel?.object?.content?[index].isSelected ==
-                    true
-                ? 4
-                : 0),
+        color: getInboxMessagesModel?.object?.content?[index].isSelected == true ? Color(0xffE0C6C7).withOpacity(0.2) : Colors.transparent,
+        margin: EdgeInsets.only(bottom: getInboxMessagesModel?.object?.content?[index].isSelected == true ? 4 : 0),
         child: SwipeTo(
           swipeSensitivity: 10,
           onRightSwipe: (details) {
@@ -1386,29 +1353,18 @@ class _DmScreenNewState extends State<DmScreenNew> with Observer {
                   onTap: () {
                     Navigator.push(context, MaterialPageRoute(
                       builder: (context) {
-                        return ProfileScreen(
-                            User_ID: getInboxMessagesModel
-                                    ?.object?.content?[index].userUid ??
-                                "",
-                            isFollowing: "");
+                        return ProfileScreen(User_ID: getInboxMessagesModel?.object?.content?[index].userUid ?? "", isFollowing: "");
                       },
                     ));
 
                     print("object");
                   },
                   child: Padding(
-                    padding:
-                        const EdgeInsets.only(left: 3, right: 5, bottom: 5),
-                    child: getInboxMessagesModel
-                                    ?.object?.content?[index].userProfilePic !=
-                                null ||
-                            getInboxMessagesModel?.object?.content?[index]
-                                    .userProfilePic?.isNotEmpty ==
-                                true
+                    padding: const EdgeInsets.only(left: 3, right: 5, bottom: 5),
+                    child: getInboxMessagesModel?.object?.content?[index].userProfilePic != null || getInboxMessagesModel?.object?.content?[index].userProfilePic?.isNotEmpty == true
                         ? CustomImageView(
                             alignment: Alignment.bottomLeft,
-                            url:
-                                "${getInboxMessagesModel?.object?.content?[index].userProfilePic}",
+                            url: "${getInboxMessagesModel?.object?.content?[index].userProfilePic}",
                             height: 20,
                             radius: BorderRadius.circular(20),
                             width: 20,
@@ -1426,19 +1382,14 @@ class _DmScreenNewState extends State<DmScreenNew> with Observer {
                 ),
               Expanded(
                 child: Align(
-                    alignment: userMeesage == true
-                        ? Alignment.bottomRight
-                        : Alignment.bottomLeft,
+                    alignment: userMeesage == true ? Alignment.bottomRight : Alignment.bottomLeft,
                     child: GestureDetector(
                       key: _widgetKey,
                       onTap: () {
                         if (isLogPress == true) {
-                          if (getInboxMessagesModel
-                                  ?.object?.content?[index].isSelected ==
-                              null) {
+                          if (getInboxMessagesModel?.object?.content?[index].isSelected == null) {
                             if (selectedCount < 10) {
-                              getInboxMessagesModel
-                                  ?.object?.content?[index].isSelected = true;
+                              getInboxMessagesModel?.object?.content?[index].isSelected = true;
                               _incrementSelectedCount();
                               print("this is the Data Get-${selectedCount}");
                               if (selectedCount == 2) {
@@ -1446,23 +1397,17 @@ class _DmScreenNewState extends State<DmScreenNew> with Observer {
                               }
                             } else {
                               final snackBar = SnackBar(
-                                content: Text(
-                                    'You can only select up to 10 messages.'),
+                                content: Text('You can only select up to 10 messages.'),
                                 backgroundColor: ColorConstant.primary_color,
                               );
 
-                              ScaffoldMessenger.of(context)
-                                  .showSnackBar(snackBar);
+                              ScaffoldMessenger.of(context).showSnackBar(snackBar);
                             }
-                          } else if (getInboxMessagesModel
-                                  ?.object?.content?[index].isSelected ==
-                              true) {
-                            getInboxMessagesModel
-                                ?.object?.content?[index].isSelected = false;
+                          } else if (getInboxMessagesModel?.object?.content?[index].isSelected == true) {
+                            getInboxMessagesModel?.object?.content?[index].isSelected = false;
                             _decrementSelectedCount();
                           } else {
-                            getInboxMessagesModel
-                                ?.object?.content?[index].isSelected = true;
+                            getInboxMessagesModel?.object?.content?[index].isSelected = true;
 
                             _incrementSelectedCount();
                             if (selectedCount == 2) {
@@ -1491,35 +1436,26 @@ class _DmScreenNewState extends State<DmScreenNew> with Observer {
                             setState(() {});
                           }
                         }
-                        if (getInboxMessagesModel
-                                ?.object?.content?[index].isSelected ==
-                            null) {
+                        if (getInboxMessagesModel?.object?.content?[index].isSelected == null) {
                           if (selectedCount < 10) {
-                            getInboxMessagesModel
-                                ?.object?.content?[index].isSelected = true;
+                            getInboxMessagesModel?.object?.content?[index].isSelected = true;
                             if (selectedCount == 2) {
                               overlayEntryRemoveMethod();
                             }
                             _incrementSelectedCount();
                           } else {
                             final snackBar = SnackBar(
-                              content: Text(
-                                  'You can only select up to 10 messages.'),
+                              content: Text('You can only select up to 10 messages.'),
                               backgroundColor: ColorConstant.primary_color,
                             );
 
-                            ScaffoldMessenger.of(context)
-                                .showSnackBar(snackBar);
+                            ScaffoldMessenger.of(context).showSnackBar(snackBar);
                           }
-                        } else if (getInboxMessagesModel
-                                ?.object?.content?[index].isSelected ==
-                            true) {
-                          getInboxMessagesModel
-                              ?.object?.content?[index].isSelected = false;
+                        } else if (getInboxMessagesModel?.object?.content?[index].isSelected == true) {
+                          getInboxMessagesModel?.object?.content?[index].isSelected = false;
                           _decrementSelectedCount();
                         } else {
-                          getInboxMessagesModel
-                              ?.object?.content?[index].isSelected = true;
+                          getInboxMessagesModel?.object?.content?[index].isSelected = true;
                           if (selectedCount == 2) {
                             overlayEntryRemoveMethod();
                           }
@@ -1535,9 +1471,7 @@ class _DmScreenNewState extends State<DmScreenNew> with Observer {
                       child: MessageViewWidget(
                         userMeesage: userMeesage,
                         parsedDateTime: parsedDateTime,
-                        isSelected: getInboxMessagesModel
-                                ?.object?.content?[index].isSelected ??
-                            false,
+                        isSelected: getInboxMessagesModel?.object?.content?[index].isSelected ?? false,
                         meessageTyep: meessageTyep,
                         emojiReaction: emojiReaction,
                         getInboxMessagesModel: getInboxMessagesModel!,
@@ -1555,22 +1489,13 @@ class _DmScreenNewState extends State<DmScreenNew> with Observer {
                       onTap: () {
                         Navigator.push(context, MaterialPageRoute(
                           builder: (context) {
-                            return ProfileScreen(
-                                User_ID: getInboxMessagesModel
-                                        ?.object?.content?[index].userUid ??
-                                    "",
-                                isFollowing: "");
+                            return ProfileScreen(User_ID: getInboxMessagesModel?.object?.content?[index].userUid ?? "", isFollowing: "");
                           },
                         ));
 
                         print("object");
                       },
-                      child: getInboxMessagesModel?.object?.content?[index]
-                                      .userProfilePic?.isEmpty ==
-                                  true ||
-                              getInboxMessagesModel?.object?.content?[index]
-                                      .userProfilePic ==
-                                  null
+                      child: getInboxMessagesModel?.object?.content?[index].userProfilePic?.isEmpty == true || getInboxMessagesModel?.object?.content?[index].userProfilePic == null
                           ? CustomImageView(
                               alignment: Alignment.bottomLeft,
                               imagePath: ImageConstant.tomcruse,
@@ -1581,8 +1506,7 @@ class _DmScreenNewState extends State<DmScreenNew> with Observer {
                             )
                           : CustomImageView(
                               alignment: Alignment.bottomLeft,
-                              url:
-                                  "${getInboxMessagesModel?.object?.content?[index].userProfilePic}",
+                              url: "${getInboxMessagesModel?.object?.content?[index].userProfilePic}",
                               height: 20,
                               radius: BorderRadius.circular(20),
                               width: 20,
@@ -1641,10 +1565,8 @@ class _DmScreenNewState extends State<DmScreenNew> with Observer {
     }
   }
 
-  void _showReactionPopUp(BuildContext context, Offset tapPosition,
-      GlobalKey widgetKey, bool usermessage, int index) {
-    final RenderBox renderBox =
-        widgetKey.currentContext!.findRenderObject() as RenderBox;
+  void _showReactionPopUp(BuildContext context, Offset tapPosition, GlobalKey widgetKey, bool usermessage, int index) {
+    final RenderBox renderBox = widgetKey.currentContext!.findRenderObject() as RenderBox;
     final Offset widgetPosition = renderBox.localToGlobal(Offset.zero);
     final screenWidth = MediaQuery.of(context).size.width;
     double left = widgetPosition.dx;
@@ -1700,8 +1622,7 @@ class _DmScreenNewState extends State<DmScreenNew> with Observer {
     );
     Overlay.of(context).insert(overlayEntry!);
 
-    if (usermessage == true &&
-        getInboxMessagesModel?.object?.content?[index].messageType == 'TEXT') {
+    if (usermessage == true && getInboxMessagesModel?.object?.content?[index].messageType == 'TEXT') {
       print("check what is get");
       overlayEntry1 = OverlayEntry(
         builder: (BuildContext context) => Positioned(
@@ -1713,17 +1634,14 @@ class _DmScreenNewState extends State<DmScreenNew> with Observer {
               width: 150,
               // color: Colors.grey.shade300,
               child: Container(
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(10)),
+                decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(10)),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     GestureDetector(
                       onTap: () {
                         FocusScope.of(context).requestFocus(focus);
-                        addComment.text =
-                            '${getInboxMessagesModel?.object?.content?[index].message}';
+                        addComment.text = '${getInboxMessagesModel?.object?.content?[index].message}';
                         isEditMessage = true;
                         isEditedindex = index;
                         overlayEntryRemoveMethod();
@@ -1732,11 +1650,7 @@ class _DmScreenNewState extends State<DmScreenNew> with Observer {
                         color: Colors.transparent,
                         width: 80,
                         child: Row(
-                          children: [
-                            Text('Edit'),
-                            Spacer(),
-                            SizedBox(height: 20, child: Icon(Icons.edit))
-                          ],
+                          children: [Text('Edit'), Spacer(), SizedBox(height: 20, child: Icon(Icons.edit))],
                         ),
                       ),
                     ),
@@ -1790,7 +1704,7 @@ class _DmScreenNewState extends State<DmScreenNew> with Observer {
   }
 }
 
-class MessageViewWidget extends StatelessWidget {
+class MessageViewWidget extends StatefulWidget {
   MessageViewWidget({
     Key? key,
     required this.userMeesage,
@@ -1815,44 +1729,38 @@ class MessageViewWidget extends StatelessWidget {
   final dynamic isReplay;
   final String useruid;
   final String chatInboxUid;
+
+  @override
+  State<MessageViewWidget> createState() => _MessageViewWidgetState();
+}
+
+class _MessageViewWidgetState extends State<MessageViewWidget> {
   @override
   Widget build(BuildContext context) {
-    DateTime date = DateTime.parse(
-        '${getInboxMessagesModel.object?.content?[index].createdDate}');
+    DateTime date = DateTime.parse('${widget.getInboxMessagesModel.object?.content?[widget.index].createdDate}');
     return Column(
       children: [
-        if (getInboxMessagesModel
-                    .object?.content?[index].messageType ==
-                'IMAGE' &&
-            getInboxMessagesModel.object?.content?[index].emojiReaction ==
-                false &&
-            getInboxMessagesModel.object?.content?[index].reactionMessage ==
-                null)
+        if (widget.getInboxMessagesModel.object?.content?[widget.index].messageType == 'IMAGE' && widget.getInboxMessagesModel.object?.content?[widget.index].emojiReaction == false && widget.getInboxMessagesModel.object?.content?[widget.index].reactionMessage == null)
           Container(
             margin: EdgeInsets.all(10),
             height: 100,
             width: 160,
             decoration: BoxDecoration(borderRadius: BorderRadius.circular(15)),
             child: CustomImageView(
-              url: "${getInboxMessagesModel.object?.content?[index].message}",
+              url: "${widget.getInboxMessagesModel.object?.content?[widget.index].message}",
               height: 20,
               radius: BorderRadius.circular(20),
               width: 20,
               fit: BoxFit.fill,
             ),
           ),
-        if (getInboxMessagesModel.object?.content?[index]
-                    .messageType == // only user can sher image
+        if (widget.getInboxMessagesModel.object?.content?[widget.index].messageType == // only user can sher image
                 'IMAGE' &&
-            getInboxMessagesModel.object?.content?[index].emojiReaction ==
-                false &&
-            getInboxMessagesModel.object?.content?[index].reactionMessage !=
-                null)
+            widget.getInboxMessagesModel.object?.content?[widget.index].emojiReaction == false &&
+            widget.getInboxMessagesModel.object?.content?[widget.index].reactionMessage != null)
           Column(
             mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: userMeesage == true
-                ? CrossAxisAlignment.end
-                : CrossAxisAlignment.start,
+            crossAxisAlignment: widget.userMeesage == true ? CrossAxisAlignment.end : CrossAxisAlignment.start,
             children: [
               GestureDetector(
                 onTapDown: (detalis) async {
@@ -1860,20 +1768,8 @@ class MessageViewWidget extends StatelessWidget {
                     buttonDatas.clear();
                     getAllStoryModel?.object?.forEach((element) {
                       element.storyData?.forEach((stroyDataIndex) {
-                        if (stroyDataIndex.storyUid ==
-                            getInboxMessagesModel
-                                .object?.content?[index].storyUid) {
-                          List<StoryModel> images = [
-                            StoryModel(
-                                stroyDataIndex.storyData,
-                                stroyDataIndex.createdAt,
-                                stroyDataIndex.profilePic,
-                                stroyDataIndex.userName,
-                                stroyDataIndex.storyUid,
-                                stroyDataIndex.userUid,
-                                stroyDataIndex.storyViewCount,
-                                stroyDataIndex.videoDuration ?? 15)
-                          ];
+                        if (stroyDataIndex.storyUid == widget.getInboxMessagesModel.object?.content?[widget.index].storyUid) {
+                          List<StoryModel> images = [StoryModel(stroyDataIndex.storyData, stroyDataIndex.createdAt, stroyDataIndex.profilePic, stroyDataIndex.userName, stroyDataIndex.storyUid, stroyDataIndex.userUid, stroyDataIndex.storyViewCount, stroyDataIndex.videoDuration ?? 15)];
                           StoryButtonData data = StoryButtonData(
                               child: Padding(
                                 padding: const EdgeInsets.all(5.0),
@@ -1899,10 +1795,8 @@ class MessageViewWidget extends StatelessWidget {
                                 )
                               ]);
                           buttonDatas.insert(0, data);
-                          Navigator.push(context,
-                              MaterialPageRoute(builder: (context) {
-                            return NewStoryViewPage(
-                                data, buttonDatas, 0, useruid);
+                          Navigator.push(context, MaterialPageRoute(builder: (context) {
+                            return NewStoryViewPage(data, buttonDatas, 0, widget.useruid);
                           }));
                           /*Navigator.of(context).push(
                             StoryRoute(
@@ -1937,128 +1831,92 @@ class MessageViewWidget extends StatelessWidget {
                 },
                 child: CustomImageView(
                   margin: EdgeInsets.only(top: 10),
-                  url:
-                      "${getInboxMessagesModel.object?.content?[index].message}",
+                  url: "${widget.getInboxMessagesModel.object?.content?[widget.index].message}",
                   height: 130,
                   radius: BorderRadius.circular(20),
                   fit: BoxFit.fill,
                 ),
               ),
               Container(
-                  constraints: BoxConstraints(
-                      maxWidth: MediaQuery.of(context).size.width / 2),
+                  constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width / 2),
                   margin: EdgeInsets.only(top: 5),
                   padding: EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                      color: userMeesage == true
-                          ? ColorConstant.otheruserchat
-                          : ColorConstant.ChatBackColor,
-                      borderRadius: BorderRadius.circular(10)),
+                  decoration: BoxDecoration(color: widget.userMeesage == true ? ColorConstant.otheruserchat : ColorConstant.ChatBackColor, borderRadius: BorderRadius.circular(10)),
                   child: Text(
-                    getInboxMessagesModel
-                            .object?.content?[index].reactionMessage ??
-                        '',
-                    style: TextStyle(
-                        color: Colors.black, fontWeight: FontWeight.bold),
+                    widget.getInboxMessagesModel.object?.content?[widget.index].reactionMessage ?? '',
+                    style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
                   )),
             ],
           ),
-        if (getInboxMessagesModel.object?.content?[index]
-                    .messageType == // only user can sher image
+        if (widget.getInboxMessagesModel.object?.content?[widget.index].messageType == // only user can sher image
                 'IMAGE' &&
-            getInboxMessagesModel.object?.content?[index].emojiReaction == true)
+            widget.getInboxMessagesModel.object?.content?[widget.index].emojiReaction == true)
           Stack(
             children: [
               Container(
                 margin: EdgeInsets.only(top: 10),
                 child: CustomImageView(
                   height: 130,
-                  url: getInboxMessagesModel.object?.content?[index].message,
+                  url: widget.getInboxMessagesModel.object?.content?[widget.index].message,
                   radius: BorderRadius.circular(20), //Ankur1
                   // height: 20,
                 ),
               ),
               Positioned.fill(
                   child: Align(
-                alignment: userMeesage == true
-                    ? Alignment.bottomLeft
-                    : Alignment.bottomRight,
+                alignment: widget.userMeesage == true ? Alignment.bottomLeft : Alignment.bottomRight,
                 child: Container(
                   // height: 110,
                   // width: 50,
                   margin: EdgeInsets.only(bottom: 4, right: 2),
                   child: Text(
-                    '${getInboxMessagesModel.object?.content?[index].reactionMessage}',
+                    '${widget.getInboxMessagesModel.object?.content?[widget.index].reactionMessage}',
                     style: TextStyle(fontSize: 20),
                   ),
                 ),
               ))
             ],
           ),
-        if (getInboxMessagesModel.object?.content?[index].messageType == 'TEXT')
+        if (widget.getInboxMessagesModel.object?.content?[widget.index].messageType == 'TEXT')
           Column(
-            crossAxisAlignment: userMeesage == true
-                ? CrossAxisAlignment.end
-                : CrossAxisAlignment.start,
+            crossAxisAlignment: widget.userMeesage == true ? CrossAxisAlignment.end : CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
-              if (isReplay != null)
+              if (widget.isReplay != null)
                 Padding(
                   padding: const EdgeInsets.only(top: 5),
                   child: GestureDetector(
                     onTap: () {
-                      print("check Value-${isReplay.userUid}-${useruid}");
+                      print("check Value-${widget.isReplay.userUid}-${widget.useruid}");
                     },
                     child: Text(
-                      "Replied To ${isReplay.userUid == useruid ? 'you' : '${isReplay.userName}'}",
+                      "Replied To ${widget.isReplay.userUid == widget.useruid ? 'you' : '${widget.isReplay.userName}'}",
                       style: TextStyle(fontWeight: FontWeight.w600),
                     ),
                   ),
                 ),
-              if (isReplay != null)
+              if (widget.isReplay != null)
                 Flexible(
                   child: Container(
-                    constraints: BoxConstraints(
-                        maxWidth: MediaQuery.of(context).size.width / 2),
+                    constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width / 2),
                     padding: EdgeInsets.all(11),
                     margin: EdgeInsets.only(
-                      top: isSelected == true ? 3 : 5,
-                      left: userMeesage == true ? 0 : 20,
-                      right: userMeesage == true ? 20 : 0,
+                      top: widget.isSelected == true ? 3 : 5,
+                      left: widget.userMeesage == true ? 0 : 20,
+                      right: widget.userMeesage == true ? 20 : 0,
                     ),
-                    decoration: BoxDecoration(
-                        color: userMeesage == true
-                            ? Color(0xffFFF3F1).withOpacity(0.4)
-                            : Color(0xffECECED).withOpacity(0.4),
-                        borderRadius: userMeesage == true
-                            ? BorderRadius.only(
-                                topLeft: Radius.circular(13),
-                                bottomLeft: Radius.circular(13))
-                            : BorderRadius.only(
-                                topRight: Radius.circular(13),
-                                bottomRight: Radius.circular(13))),
+                    decoration: BoxDecoration(color: widget.userMeesage == true ? Color(0xffFFF3F1).withOpacity(0.4) : Color(0xffECECED).withOpacity(0.4), borderRadius: widget.userMeesage == true ? BorderRadius.only(topLeft: Radius.circular(13), bottomLeft: Radius.circular(13)) : BorderRadius.only(topRight: Radius.circular(13), bottomRight: Radius.circular(13))),
                     child: Text(
-                      "${isReplay.message}",
-                      style: TextStyle(
-                          fontWeight: FontWeight.w400, color: Colors.black),
+                      "${widget.isReplay.message}",
+                      style: TextStyle(fontWeight: FontWeight.w400, color: Colors.black),
                     ),
                   ),
                 ),
               Container(
-                  constraints: BoxConstraints(
-                      maxWidth: MediaQuery.of(context).size.width * 0.70),
+                  constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.70),
                   padding: EdgeInsets.all(11),
-                  margin: EdgeInsets.only(top: isSelected == true ? 3 : 5),
-                  decoration: BoxDecoration(
-                      color: userMeesage == true
-                          ? ColorConstant.otheruserchat
-                          : ColorConstant.ChatBackColor,
-                      borderRadius: userMeesage == true
-                          ? BorderRadius.circular(13)
-                          : BorderRadius.only(
-                              bottomLeft: Radius.circular(13),
-                              bottomRight: Radius.circular(13),
-                              topRight: Radius.circular(13))),
+                  margin: EdgeInsets.only(top: widget.isSelected == true ? 3 : 5),
+                  decoration: BoxDecoration(color: widget.userMeesage == true ? ColorConstant.otheruserchat : ColorConstant.ChatBackColor, borderRadius: widget.userMeesage == true ? BorderRadius.circular(13) : BorderRadius.only(bottomLeft: Radius.circular(13), bottomRight: Radius.circular(13), topRight: Radius.circular(13))),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
@@ -2068,57 +1926,97 @@ class MessageViewWidget extends StatelessWidget {
                         children: [
                           Flexible(
                             fit: FlexFit.loose,
-                            child: LinkifyText(
-                              getInboxMessagesModel
-                                      .object?.content?[index].message ??
-                                  '',
-                              linkStyle: TextStyle(
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.blue,
-                                  fontFamily: "outfit",
-                                  fontSize: 15,
-                                  decoration: TextDecoration.underline,
-                                  decorationColor: Colors.blue),
-                              textStyle: TextStyle(
-                                  fontWeight: FontWeight.w400,
-                                  color: Colors.black,
-                                  fontFamily: "outfit",
-                                  fontSize: 15),
-                              linkTypes: [
-                                LinkType.url,
-                              ],
-                              onTap: (link) {
-                                var SelectedTest = link.value.toString();
-                                var Link = SelectedTest.startsWith('https');
-                                var Link1 = SelectedTest.startsWith('http');
-                                var Link2 = SelectedTest.startsWith('www');
-                                var Link3 = SelectedTest.startsWith('WWW');
-                                var Link4 = SelectedTest.startsWith('HTTPS');
-                                var Link5 = SelectedTest.startsWith('HTTP');
-                                var Link6 = SelectedTest.startsWith(
-                                    'https://pdslink.page.link/');
-                                print(SelectedTest.toString());
-                                if (Link == true ||
-                                    Link1 == true ||
-                                    Link2 == true ||
-                                    Link3 == true ||
-                                    Link4 == true ||
-                                    Link5 == true ||
-                                    Link6 == true) {
-                                  print("qqqqqqqqhttps://${link.value}");
+                            child: Column(
+                              children: [
+                                if (extractUrls(widget.getInboxMessagesModel.object?.content?[widget.index].message ?? "").isNotEmpty)
+                                  isYouTubeUrl(extractUrls(widget.getInboxMessagesModel.object?.content?[widget.index].message ?? "").first)
+                                      ? FutureBuilder(
+                                          future: fetchYoutubeThumbnail(extractUrls(widget.getInboxMessagesModel.object?.content?[widget.index].message ?? "").first),
+                                          builder: (context, snap) {
+                                            return Container(
+                                              height: 250,
+                                              decoration: BoxDecoration(image: DecorationImage(image: CachedNetworkImageProvider(snap.data.toString())), borderRadius: BorderRadius.circular(10)),
+                                              clipBehavior: Clip.antiAlias,
+                                              child: Center(
+                                                  child: IconButton(
+                                                icon: Icon(
+                                                  Icons.play_circle_fill_rounded,
+                                                  color: Colors.white,
+                                                  size: 60,
+                                                ),
+                                                onPressed: () {
+                                                  playLink(extractUrls(widget.getInboxMessagesModel.object?.content?[widget.index].message ?? "").first, context);
+                                                },
+                                              )),
+                                            );
+                                          })
+                                      : Padding(
+                                          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                                          child: AnyLinkPreview(
+                                            link: extractUrls(widget.getInboxMessagesModel.object?.content?[widget.index].message ?? "").first,
+                                            displayDirection: UIDirection.uiDirectionHorizontal,
+                                            showMultimedia: true,
+                                            bodyMaxLines: 5,
+                                            bodyTextOverflow: TextOverflow.ellipsis,
+                                            titleStyle: TextStyle(
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 15,
+                                            ),
+                                            bodyStyle: TextStyle(color: Colors.grey, fontSize: 12),
+                                            errorBody: 'Show my custom error body',
+                                            errorTitle: 'Show my custom error title',
+                                            errorWidget: null,
+                                            errorImage: "https://flutter.dev/",
+                                            cache: Duration(days: 7),
+                                            backgroundColor: Colors.grey[300],
+                                            borderRadius: 12,
+                                            removeElevation: false,
+                                            boxShadow: [BoxShadow(blurRadius: 3, color: Colors.grey)],
+                                            onTap: () {
+                                              launchUrl(Uri.parse(extractUrls(widget.getInboxMessagesModel.object?.content?[widget.index].message ?? "").first));
+                                            }, // This disables tap event
+                                          ),
+                                        ),
+                                SizedBox(
+                                  height: 8,
+                                ),
+                                LinkifyText(
+                                  widget.getInboxMessagesModel.object?.content?[widget.index].message ?? '',
+                                  linkStyle: TextStyle(fontWeight: FontWeight.w500, color: Colors.blue, fontFamily: "outfit", fontSize: 15, decoration: TextDecoration.underline, decorationColor: Colors.blue),
+                                  textStyle: TextStyle(fontWeight: FontWeight.w400, color: Colors.black, fontFamily: "outfit", fontSize: 15),
+                                  linkTypes: [
+                                    LinkType.url,
+                                  ],
+                                  onTap: (link) {
+                                    var SelectedTest = link.value.toString();
+                                    var Link = SelectedTest.startsWith('https');
+                                    var Link1 = SelectedTest.startsWith('http');
+                                    var Link2 = SelectedTest.startsWith('www');
+                                    var Link3 = SelectedTest.startsWith('WWW');
+                                    var Link4 = SelectedTest.startsWith('HTTPS');
+                                    var Link5 = SelectedTest.startsWith('HTTP');
+                                    var Link6 = SelectedTest.startsWith('https://pdslink.page.link/');
+                                    print(SelectedTest.toString());
+                                    if (Link == true || Link1 == true || Link2 == true || Link3 == true || Link4 == true || Link5 == true || Link6 == true) {
+                                      print("qqqqqqqqhttps://${link.value}");
 
-                                  launchUrl(
-                                      Uri.parse("${link.value.toString()}"));
-                                } else {
-                                  launchUrl(Uri.parse(
-                                      "https://${link.value.toString()}"));
-                                }
-                              },
+                                      if (isYouTubeUrl(SelectedTest)) {
+                                        playLink(SelectedTest, context);
+                                      } else
+                                        launchUrl(Uri.parse("${link.value.toString()}"));
+                                    } else {
+                                      if (isYouTubeUrl(SelectedTest)) {
+                                        playLink(SelectedTest, context);
+                                      } else
+                                        launchUrl(Uri.parse("https://${link.value.toString()}"));
+                                    }
+                                  },
+                                ),
+                              ],
                             ),
                           ),
-                          if (getInboxMessagesModel
-                                  .object?.content?[index].isStarred ==
-                              true)
+                          if (widget.getInboxMessagesModel.object?.content?[widget.index].isStarred == true)
                             Image.asset(
                               ImageConstant.newStar,
                               height: 15,
@@ -2128,13 +2026,9 @@ class MessageViewWidget extends StatelessWidget {
                       Padding(
                         padding: const EdgeInsets.only(top: 5, left: 3),
                         child: Text(
-                          customFormat(parsedDateTime),
+                          customFormat(widget.parsedDateTime),
                           textScaleFactor: 1.0,
-                          style: TextStyle(
-                              fontWeight: FontWeight.normal,
-                              color: Colors.grey,
-                              fontFamily: "outfit",
-                              fontSize: 10),
+                          style: TextStyle(fontWeight: FontWeight.normal, color: Colors.grey, fontFamily: "outfit", fontSize: 10),
                         ),
                       ),
                     ],
@@ -2142,6 +2036,183 @@ class MessageViewWidget extends StatelessWidget {
             ],
           ),
       ],
+    );
+  }
+
+  Future<String> fetchYoutubeThumbnail(String url) async {
+    try {
+      // Extract video ID from YouTube URL
+      // We will use this to build our own custom UI
+      List<String> urls = extractUrls(url);
+      Metadata? _metadata = await AnyLinkPreview.getMetadata(
+        link: urls.first,
+        cache: Duration(days: 1),
+        // proxyUrl: "https://cors-anywhere.herokuapp.com/", // Need for web
+      );
+      return _metadata?.image ?? "";
+    } catch (e) {
+      print('Error: $e');
+      return "";
+    }
+  }
+
+  List<String> extractUrls(String text) {
+    RegExp regExp = RegExp(
+      r"https?:\/\/[\w\-]+(\.[\w\-]+)+[\w\-.,@?^=%&:/~\+#]*[\w\-@?^=%&/~\+#]?",
+      caseSensitive: false,
+    );
+
+    List<String> urls = regExp.allMatches(text).map((match) => match.group(0)!).toList();
+    List<String> finalUrls = [];
+    RegExp urlRegex = RegExp(r"(http(s)?://)", caseSensitive: false);
+    urls.forEach((element) {
+      if (urlRegex.allMatches(element).toList().length > 1) {
+        String xyz = element.replaceAll("http", ",http");
+        List<String> splitted = xyz.split(RegExp(r",|;"));
+        splitted.forEach((element1) {
+          if (element1.isNotEmpty) finalUrls.add(element1);
+        });
+      } else {
+        finalUrls.add(element);
+      }
+    });
+    return finalUrls;
+  }
+
+  bool isYouTubeUrl(String url) {
+    RegExp youtubeVideoRegex = RegExp(r"^https?://(?:www\.)?youtube\.com/(?:watch\?v=)?([^#&?]+)");
+    RegExp youtubeShortsRegex = RegExp(r"^https?://(?:www\.)?youtube\.com/shorts/([^#&?]+)");
+
+    if (youtubeVideoRegex.hasMatch(url) || youtubeShortsRegex.hasMatch(url)) {
+      return true;
+    }
+
+    // Additional checks based on specific test link patterns (optional)
+    if (url.contains("youtu.be/")) {
+      // This check might need adjustments if Youtube short URLs change format
+      return true;
+    }
+
+    return false;
+  }
+
+  void playLink(String videoUrl, BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext ctx) {
+        return Center(
+          child: Container(
+              width: MediaQuery.of(context).size.width * 0.90,
+              height: MediaQuery.of(context).size.width * 0.80,
+              decoration: ShapeDecoration(color: Colors.black, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))),
+              clipBehavior: Clip.antiAlias,
+              child: Stack(
+                children: [
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      getYoutubePlayer(videoUrl, () {
+                        Navigator.pop(ctx);
+                        launchUrl(Uri.parse(videoUrl));
+                      })
+                    ],
+                  ),
+                  Align(
+                    alignment: Alignment.topRight,
+                    child: Material(
+                      color: Colors.transparent,
+                      child: IconButton(
+                        icon: Icon(
+                          Icons.close,
+                          color: Colors.white,
+                          size: 30,
+                        ),
+                        onPressed: () {
+                          Navigator.pop(ctx);
+                        },
+                      ),
+                    ),
+                  )
+                ],
+              )),
+        );
+      },
+    );
+  }
+
+  late PlayerState _playerState;
+
+  late YoutubeMetaData _videoMetaData;
+
+  bool _isPlayerReady = false;
+
+  getYoutubePlayer(String videoUrl, Function() fullScreen) {
+    late YoutubePlayerController _controller;
+
+    _controller = YoutubePlayerController(
+      initialVideoId: YoutubePlayer.convertUrlToId(videoUrl)!,
+      flags: const YoutubePlayerFlags(
+        mute: false,
+        autoPlay: true,
+        disableDragSeek: false,
+        loop: false,
+        isLive: false,
+        forceHD: false,
+        enableCaption: true,
+      ),
+    );
+    _videoMetaData = const YoutubeMetaData();
+    _playerState = PlayerState.unknown;
+
+    return YoutubePlayerBuilder(
+      onEnterFullScreen: () {
+        _controller.toggleFullScreenMode();
+        _controller.dispose();
+        fullScreen.call();
+      },
+      builder: (context, player) {
+        return player;
+      },
+      player: YoutubePlayer(
+        controller: _controller,
+        showVideoProgressIndicator: true,
+        progressIndicatorColor: Colors.red,
+        progressColors: const ProgressBarColors(
+          playedColor: Colors.red,
+          handleColor: Colors.redAccent,
+        ),
+        bottomActions: [
+          const SizedBox(width: 14.0),
+          CurrentPosition(),
+          const SizedBox(width: 8.0),
+          ProgressBar(
+            isExpanded: true,
+            colors: const ProgressBarColors(
+              playedColor: Colors.red,
+              handleColor: Colors.redAccent,
+            ),
+          ),
+          RemainingDuration(),
+          const PlaybackSpeedButton(),
+          IconButton(
+            icon: Icon(
+              _controller.value.isFullScreen ? Icons.fullscreen_exit : Icons.fullscreen,
+              color: Colors.white,
+            ),
+            onPressed: () => fullScreen.call(),
+          ),
+        ],
+        onReady: () {
+          _controller.addListener(() {
+            if (_isPlayerReady && mounted && !_controller.value.isFullScreen) {
+              setState(() {
+                _playerState = _controller.value.playerState;
+                _videoMetaData = _controller.metadata;
+              });
+            }
+          });
+        },
+      ),
     );
   }
 }
@@ -2153,9 +2224,7 @@ bool _isDifferentDate(String dateString1, String dateString2) {
 }
 
 bool _isSameDate(DateTime date1, DateTime date2) {
-  return date1.year == date2.year &&
-      date1.month == date2.month &&
-      date1.day == date2.day;
+  return date1.year == date2.year && date1.month == date2.month && date1.day == date2.day;
 }
 
 String _formatDate(String dateString) {
@@ -2198,13 +2267,13 @@ Reaction? getFakeInitialReaction(int index) {
 class ReactionElement {
   final Reaction reaction;
   final Icon icon;
+
 //
   ReactionElement(this.reaction, this.icon);
 }
 
 void _showPopupMenu(BuildContext context, Offset position) async {
-  final RenderBox overlay =
-      Overlay.of(context).context.findRenderObject() as RenderBox;
+  final RenderBox overlay = Overlay.of(context).context.findRenderObject() as RenderBox;
 
   final value = await showMenu(
     context: context,

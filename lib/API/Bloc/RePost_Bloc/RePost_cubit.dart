@@ -25,6 +25,24 @@ class RePostCubit extends Cubit<RePostState> {
     }
   }
 
+  Future<void> UserTagAPI(BuildContext context, String? name) async {
+    dynamic userTagData;
+    try {
+      emit(RePostLoadingState());
+      userTagData = await Repository().UserTag(context, name);
+      print("userTagDataaaaaaaaaaaa-->${userTagData}");
+      if (userTagData == "Something Went Wrong, Try After Some Time.") {
+        emit(RePostErrorState("${userTagData}"));
+      } else {
+        if (userTagData.success == true) {
+          emit(UserTagSaveLoadedState(userTagData));
+        }
+      }
+    } catch (e) {
+      emit(RePostErrorState(userTagData));
+    }
+  }
+
   Future<void> UplodeImageAPI(
     BuildContext context,
     String? fileName,

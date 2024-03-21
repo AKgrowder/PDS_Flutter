@@ -1,6 +1,8 @@
+import 'dart:async';
 import 'dart:io';
 import 'dart:math';
 
+import 'package:any_link_preview/any_link_preview.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:file_picker/file_picker.dart';
@@ -10,26 +12,33 @@ import 'package:flutter_mentions/flutter_mentions.dart';
 import 'package:hashtagable/widgets/hashtag_text.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:linkfy_text/linkfy_text.dart';
 import 'package:pds/API/Bloc/NewProfileScreen_Bloc/NewProfileScreen_cubit.dart';
+import 'package:pds/API/Bloc/OpenSaveImagepost_Bloc/OpenSaveImagepost_cubit.dart';
 import 'package:pds/API/Bloc/RePost_Bloc/RePost_cubit.dart';
 import 'package:pds/API/Bloc/RePost_Bloc/RePost_state.dart';
 import 'package:pds/API/Model/Add_PostModel/Add_postModel_Image.dart';
 import 'package:pds/API/Model/GetGuestAllPostModel/GetGuestAllPost_Model.dart';
 import 'package:pds/API/Model/HasTagModel/hasTagModel.dart';
 import 'package:pds/API/Model/OpenSaveImagepostModel/OpenSaveImagepost_Model.dart';
+import 'package:pds/API/Model/UserTagModel/UserTag_model.dart';
 import 'package:pds/API/Model/serchForInboxModel/serchForinboxModel.dart';
 import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/core/utils/image_constant.dart';
 import 'package:pds/core/utils/sharedPreferences.dart';
+import 'package:pds/presentation/%20new/HashTagView_screen.dart';
 import 'package:pds/presentation/%20new/newbottembar.dart';
 import 'package:pds/presentation/%20new/profileNew.dart';
 import 'package:pds/presentation/Create_Post_Screen/CreatePostShow_ImageRow/photo_gallery-master/example/lib/main.dart';
+import 'package:pds/presentation/register_create_account_screen/register_create_account_screen.dart';
 import 'package:pds/widgets/commentPdf.dart';
 import 'package:pds/widgets/custom_image_view.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:transparent_image/transparent_image.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:video_player/video_player.dart';
+import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 import '../../API/Model/HashTage_Model/HashTagView_model.dart';
 import '../../API/Model/NewProfileScreenModel/GetAppUserPost_Model.dart';
@@ -52,23 +61,9 @@ class RePostScreen extends StatefulWidget {
   String? thumbNailURL;
   GetSavePostModel? GetSavePostData;
   GetAppUserPostModel? GetAllPostData;
-  RePostScreen(
-      {Key? key,
-      this.username,
-      this.postData,
-      this.date,
-      this.desc,
-      this.userProfile,
-      this.postDataType,
-      this.index,
-      this.AllGuestPostRoomData,
-      this.postUid,
-      this.hashTagViewData,
-      this.OpenSaveModelData,
-      this.thumbNailURL,
-      this.GetSavePostData,
-      this.GetAllPostData})
-      : super(key: key);
+
+
+  RePostScreen({Key? key, this.username, this.postData, this.date, this.desc, this.userProfile, this.postDataType, this.index, this.AllGuestPostRoomData, this.postUid, this.hashTagViewData, this.OpenSaveModelData, this.thumbNailURL, this.GetSavePostData, this.GetAllPostData}) : super(key: key);
 
   @override
   State<RePostScreen> createState() => _RePostScreenState();
@@ -78,12 +73,15 @@ class _RePostScreenState extends State<RePostScreen> {
   getDocumentSize() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    documentuploadsize = await double.parse(
-        prefs.getString(PreferencesKey.MaxPostUploadSizeInMB) ?? "0");
+    documentuploadsize = await double.parse(prefs.getString(PreferencesKey.MaxPostUploadSizeInMB) ?? "0");
 
     finalFileSize = documentuploadsize;
     super.setState(() {});
   }
+  String title = "";
+
+  bool? readmoree;
+  int maxLength = 60;
 
   @override
   void initState() {
@@ -98,6 +96,15 @@ class _RePostScreenState extends State<RePostScreen> {
         });
       }
     });
+    if ((widget.desc?.length ?? 0) <= 60) {
+      readmoree = true;
+    } else if ((widget.desc?.length ??
+        0) <=
+        60) {
+      readmoree = true;
+    } else {
+      readmoree = false;
+    }
     GetUserData();
     super.initState();
   }
@@ -143,8 +150,11 @@ class _RePostScreenState extends State<RePostScreen> {
   bool istageData = false;
   bool isrepostDataSet = true;
   bool isHeshTegData = false;
+  UserTagModel? userTagModel;
+
   List<File> galleryFile = [];
   VideoPlayerController? _controllersRepost;
+
   GetUserData() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     User_ID = prefs.getString(PreferencesKey.loginUserID);
@@ -178,7 +188,7 @@ class _RePostScreenState extends State<RePostScreen> {
             added = true;
           }));
     }
-    return BlocConsumer<RePostCubit, RePostState>(listener: (context, state) {
+    return BlocConsumer<RePostCubit, RePostState>(listener: (context, state) async {
       if (state is AddPostImaegState) {
         imageDataPost = state.imageDataPost;
         if (state.imageDataPost.object?.status == 'failed') {
@@ -197,8 +207,7 @@ class _RePostScreenState extends State<RePostScreen> {
         }
         if (isVideodata == true) {
           print("this condison is working");
-          _controller = VideoPlayerController.networkUrl(
-              Uri.parse('${imageDataPost!.object!.data!.first}'));
+          _controller = VideoPlayerController.networkUrl(Uri.parse('${imageDataPost!.object!.data!.first}'));
           _controller?.initialize().then((value) => super.setState(() {}));
           super.setState(() {
             _controller?.play();
@@ -219,14 +228,13 @@ class _RePostScreenState extends State<RePostScreen> {
         //   }
         // }
       }
+      if (state is UserTagSaveLoadedState) {
+        userTagModel = await state.userTagModel;
+      }
       if (state is SearchHistoryDataAddxtends) {
         searchUserForInbox1 = state.searchUserForInbox;
         searchUserForInbox1?.object?.content?.forEach((element) {
-          Map<String, dynamic> dataSetup = {
-            'id': element.userUid,
-            'display': element.userName,
-            'photo': element.userProfilePic
-          };
+          Map<String, dynamic> dataSetup = {'id': element.userUid, 'display': element.userName, 'photo': element.userProfilePic};
 
           tageData.add(dataSetup);
           List<Map<String, dynamic>> uniqueTageData = [];
@@ -248,9 +256,7 @@ class _RePostScreenState extends State<RePostScreen> {
       }
       if (state is GetAllHashtagState) {
         getAllHashtag = state.getAllHashtag;
-        for (int i = 0;
-            i < (getAllHashtag?.object?.content?.length ?? 0);
-            i++) {
+        for (int i = 0; i < (getAllHashtag?.object?.content?.length ?? 0); i++) {
           // getAllHashtag?.object?.content?[i].split('#').last;
           Map<String, dynamic> dataSetup = {
             'id': '${i}',
@@ -317,9 +323,7 @@ class _RePostScreenState extends State<RePostScreen> {
                                   }
                                 },
                                 child: Container(
-                                  decoration: BoxDecoration(
-                                      color: primaryColor,
-                                      borderRadius: BorderRadius.circular(14)),
+                                  decoration: BoxDecoration(color: primaryColor, borderRadius: BorderRadius.circular(14)),
                                   height: 40,
                                   width: 80,
                                   child: Center(
@@ -344,13 +348,11 @@ class _RePostScreenState extends State<RePostScreen> {
                             Container(
                               child: GestureDetector(
                                 onTap: () {
-                                  Navigator.push(context,
-                                      MaterialPageRoute(builder: (context) {
+                                  Navigator.push(context, MaterialPageRoute(builder: (context) {
                                     return MultiBlocProvider(
                                         providers: [
                                           BlocProvider<NewProfileSCubit>(
-                                            create: (context) =>
-                                                NewProfileSCubit(),
+                                            create: (context) => NewProfileSCubit(),
                                           ),
                                         ],
                                         child: ProfileScreen(
@@ -365,8 +367,7 @@ class _RePostScreenState extends State<RePostScreen> {
                                         width: 50,
                                         child: CircleAvatar(
                                           backgroundColor: Colors.white,
-                                          backgroundImage: AssetImage(
-                                              ImageConstant.tomcruse),
+                                          backgroundImage: AssetImage(ImageConstant.tomcruse),
                                         ),
                                       )
                                     : SizedBox(
@@ -374,8 +375,7 @@ class _RePostScreenState extends State<RePostScreen> {
                                         width: 50,
                                         child: CircleAvatar(
                                           backgroundColor: Colors.white,
-                                          backgroundImage: NetworkImage(
-                                              UserProfileImage.toString()),
+                                          backgroundImage: NetworkImage(UserProfileImage.toString()),
                                         ),
                                       ),
                               ),
@@ -409,8 +409,7 @@ class _RePostScreenState extends State<RePostScreen> {
                                             style: TextStyle(
                                               fontFamily: "outfit",
                                               fontSize: 15,
-                                              color:
-                                                  ColorConstant.primary_color,
+                                              color: ColorConstant.primary_color,
                                             ),
                                           ),
                                         ),
@@ -435,8 +434,7 @@ class _RePostScreenState extends State<RePostScreen> {
                       ),
                       SingleChildScrollView(
                         child: Padding(
-                          padding:
-                              EdgeInsets.only(left: 16, right: 16, top: 15),
+                          padding: EdgeInsets.only(left: 16, right: 16, top: 15),
                           child: SizedBox(
                             width: _width,
                             child: Column(
@@ -447,8 +445,7 @@ class _RePostScreenState extends State<RePostScreen> {
                                     onChanged: (value) {
                                       onChangeMethod(value);
                                     },
-                                    suggestionPosition:
-                                        SuggestionPosition.values.last,
+                                    suggestionPosition: SuggestionPosition.values.last,
                                     maxLines: 10,
                                     decoration: InputDecoration(
                                       hintText: 'What’s on your head?',
@@ -469,24 +466,19 @@ class _RePostScreenState extends State<RePostScreen> {
                                                   children: <Widget>[
                                                     tageData['photo'] != null
                                                         ? CircleAvatar(
-                                                            backgroundImage:
-                                                                NetworkImage(
+                                                            backgroundImage: NetworkImage(
                                                               tageData['photo'],
                                                             ),
                                                           )
                                                         : CircleAvatar(
-                                                            backgroundImage:
-                                                                AssetImage(
-                                                                    ImageConstant
-                                                                        .tomcruse),
+                                                            backgroundImage: AssetImage(ImageConstant.tomcruse),
                                                           ),
                                                     SizedBox(
                                                       width: 20.0,
                                                     ),
                                                     Column(
                                                       children: <Widget>[
-                                                        Text(
-                                                            '@${tageData['display']}'),
+                                                        Text('@${tageData['display']}'),
                                                       ],
                                                     )
                                                   ],
@@ -512,8 +504,7 @@ class _RePostScreenState extends State<RePostScreen> {
                                                     leading: CircleAvatar(
                                                       child: Text('#'),
                                                     ),
-                                                    title: Text(
-                                                        '${tageData['display']}'),
+                                                    title: Text('${tageData['display']}'),
                                                   )
                                                   /* Column(
                                                             crossAxisAlignment:
@@ -526,8 +517,7 @@ class _RePostScreenState extends State<RePostScreen> {
                                                           ), */
                                                   );
                                             }
-                                            print(
-                                                "suggestionBuilder-$tageData");
+                                            print("suggestionBuilder-$tageData");
                                             return Container(
                                               color: Colors.amber,
                                             );
@@ -535,6 +525,38 @@ class _RePostScreenState extends State<RePostScreen> {
                                     ],
                                   ),
                                 ),
+                                if(title.isNotEmpty)
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                                    child: AnyLinkPreview(
+                                      link: title,
+                                      displayDirection: UIDirection.uiDirectionHorizontal,
+                                      showMultimedia: true,
+                                      bodyMaxLines: 5,
+                                      bodyTextOverflow: TextOverflow.ellipsis,
+                                      titleStyle: TextStyle(
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 15,
+                                      ),
+                                      bodyStyle: TextStyle(color: Colors.grey, fontSize: 12),
+                                      errorBody: 'Show my custom error body',
+                                      errorTitle: 'Show my custom error title',
+                                      errorWidget: Container(
+                                        color: Colors.grey[300],
+                                        child: Text('Oops!'),
+                                      ),
+                                      errorImage: "https://flutter.dev/",
+                                      cache: Duration(days: 7),
+                                      backgroundColor: Colors.grey[300],
+                                      borderRadius: 12,
+                                      removeElevation: false,
+                                      boxShadow: [BoxShadow(blurRadius: 3, color: Colors.grey)],
+                                      onTap: (){
+                                        launchUrl(Uri.parse(title));
+                                      }, // This disables tap event
+                                    ),
+                                  ),
                                 /*  Padding(
                                       padding: EdgeInsets.only(top: 0.0, left: 10),
                                       child: TextFormField(
@@ -585,10 +607,8 @@ class _RePostScreenState extends State<RePostScreen> {
                                                 child: Column(
                                                   children: [
                                                     AspectRatio(
-                                                      aspectRatio: _controller!
-                                                          .value.aspectRatio,
-                                                      child: VideoPlayer(
-                                                          _controller!),
+                                                      aspectRatio: _controller!.value.aspectRatio,
+                                                      child: VideoPlayer(_controller!),
                                                     ),
                                                     // GestureDetector(
                                                     //   onTap: () {
@@ -622,75 +642,40 @@ class _RePostScreenState extends State<RePostScreen> {
                                                 height: 400,
                                                 width: _width,
                                                 child: DocumentViewScreen1(
-                                                  path: imageDataPost
-                                                      ?.object?.data?.first
-                                                      .toString(),
+                                                  path: imageDataPost?.object?.data?.first.toString(),
                                                 ))
                                             : pickedImage.isNotEmpty
                                                 ? _loading
                                                     ? Center(
                                                         child: Container(
-                                                          margin:
-                                                              EdgeInsets.only(
-                                                                  bottom: 100),
+                                                          margin: EdgeInsets.only(bottom: 100),
                                                           child: ClipRRect(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        20),
-                                                            child: Image.asset(
-                                                                ImageConstant
-                                                                    .loader,
-                                                                fit: BoxFit
-                                                                    .cover,
-                                                                height: 100,
-                                                                width: 100),
+                                                            borderRadius: BorderRadius.circular(20),
+                                                            child: Image.asset(ImageConstant.loader, fit: BoxFit.cover, height: 100, width: 100),
                                                           ),
                                                         ),
                                                       )
                                                     : isTrue == true
-                                                        ? imageDataPost?.object
-                                                                    ?.data !=
-                                                                null
+                                                        ? imageDataPost?.object?.data != null
                                                             ? SizedBox(
-                                                                height:
-                                                                    _height /
-                                                                        1.5,
+                                                                height: _height / 1.5,
                                                                 width: _width,
-                                                                child: PageView
-                                                                    .builder(
-                                                                  onPageChanged:
-                                                                      (value) {
-                                                                    super.setState(
-                                                                        () {
-                                                                      _currentPages =
-                                                                          value;
+                                                                child: PageView.builder(
+                                                                  onPageChanged: (value) {
+                                                                    super.setState(() {
+                                                                      _currentPages = value;
                                                                     });
                                                                   },
-                                                                  itemCount:
-                                                                      imageDataPost
-                                                                          ?.object
-                                                                          ?.data
-                                                                          ?.length,
-                                                                  controller:
-                                                                      _pageControllers,
-                                                                  itemBuilder:
-                                                                      (context,
-                                                                          index) {
+                                                                  itemCount: imageDataPost?.object?.data?.length,
+                                                                  controller: _pageControllers,
+                                                                  itemBuilder: (context, index) {
                                                                     return SizedBox(
-                                                                        height:
-                                                                            _height /
-                                                                                2,
-                                                                        width:
-                                                                            _width,
-                                                                        child:
-                                                                            Padding(
-                                                                          padding:
-                                                                              const EdgeInsets.all(8.0),
-                                                                          child:
-                                                                              CachedNetworkImage(
-                                                                            imageUrl:
-                                                                                '${imageDataPost?.object?.data?[index]}',
+                                                                        height: _height / 2,
+                                                                        width: _width,
+                                                                        child: Padding(
+                                                                          padding: const EdgeInsets.all(8.0),
+                                                                          child: CachedNetworkImage(
+                                                                            imageUrl: '${imageDataPost?.object?.data?[index]}',
                                                                           ),
                                                                         ));
                                                                   },
@@ -703,69 +688,49 @@ class _RePostScreenState extends State<RePostScreen> {
                                                                     .ios),
                                                           ) */
                                                 : selectImage == true
-                                                    ? medium1?.mediumType ==
-                                                            MediumType.image
+                                                    ? medium1?.mediumType == MediumType.image
                                                         ? GestureDetector(
                                                             onTap: () async {
                                                               print("fgfgfhg");
                                                             },
                                                             child: FadeInImage(
                                                               fit: BoxFit.cover,
-                                                              placeholder:
-                                                                  MemoryImage(
-                                                                      kTransparentImage),
-                                                              image: PhotoProvider(
-                                                                  mediumId:
-                                                                      medium1!
-                                                                          .id),
+                                                              placeholder: MemoryImage(kTransparentImage),
+                                                              image: PhotoProvider(mediumId: medium1!.id),
                                                             ),
                                                           )
                                                         : VideoProvider(
-                                                            mediumId:
-                                                                medium1!.id,
+                                                            mediumId: medium1!.id,
                                                           )
                                                     : Container(
                                                         color: Colors.white,
                                                       ),
                                   ),
                                 ),
-                                imageDataPost?.object?.data != null &&
-                                        imageDataPost?.object?.data?.length != 1
+                                imageDataPost?.object?.data != null && imageDataPost?.object?.data?.length != 1
                                     ? Container(
                                         height: 20,
                                         child: DotsIndicator(
-                                          dotsCount: imageDataPost
-                                                  ?.object?.data?.length ??
-                                              0,
+                                          dotsCount: imageDataPost?.object?.data?.length ?? 0,
                                           position: _currentPages.toDouble(),
                                           decorator: DotsDecorator(
                                             size: const Size(10.0, 7.0),
                                             activeSize: const Size(10.0, 10.0),
-                                            spacing: const EdgeInsets.symmetric(
-                                                horizontal: 2),
-                                            activeColor:
-                                                ColorConstant.primary_color,
+                                            spacing: const EdgeInsets.symmetric(horizontal: 2),
+                                            activeColor: ColorConstant.primary_color,
                                             color: Color(0xff6A6A6A),
                                           ),
                                         ),
                                       )
                                     : SizedBox(),
                                 Padding(
-                                  padding: const EdgeInsets.only(
-                                      left: 10, right: 10, bottom: 10, top: 20),
+                                  padding: const EdgeInsets.only(left: 10, right: 10, bottom: 10, top: 20),
                                   child: Container(
-                                    decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        border: Border.all(
-                                            color:
-                                                Color.fromRGBO(0, 0, 0, 0.25)),
-                                        borderRadius:
-                                            BorderRadius.circular(15)),
+                                    decoration: BoxDecoration(color: Colors.white, border: Border.all(color: Color.fromRGBO(0, 0, 0, 0.25)), borderRadius: BorderRadius.circular(15)),
                                     // height: 300,
                                     width: _width,
                                     child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         SizedBox(
                                           height: 10,
@@ -800,35 +765,25 @@ class _RePostScreenState extends State<RePostScreen> {
                                               },
                                               child: widget.userProfile != null
                                                   ? CircleAvatar(
-                                                      backgroundColor:
-                                                          Colors.white,
-                                                      backgroundImage: NetworkImage(
-                                                          "${widget.userProfile}"),
+                                                      backgroundColor: Colors.white,
+                                                      backgroundImage: NetworkImage("${widget.userProfile}"),
                                                       radius: 25,
                                                     )
                                                   : CustomImageView(
-                                                      imagePath: ImageConstant
-                                                          .tomcruse,
+                                                      imagePath: ImageConstant.tomcruse,
                                                       height: 50,
                                                       width: 50,
                                                       fit: BoxFit.fill,
-                                                      radius:
-                                                          BorderRadius.circular(
-                                                              25),
+                                                      radius: BorderRadius.circular(25),
                                                     ),
                                             ),
                                             title: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
+                                              crossAxisAlignment: CrossAxisAlignment.start,
                                               children: [
                                                 Container(
                                                   child: Text(
                                                     "${widget.username}",
-                                                    style: TextStyle(
-                                                        fontSize: 20,
-                                                        fontFamily: "outfit",
-                                                        fontWeight:
-                                                            FontWeight.bold),
+                                                    style: TextStyle(fontSize: 20, fontFamily: "outfit", fontWeight: FontWeight.bold),
                                                   ),
                                                 ),
                                                 Text(
@@ -847,24 +802,159 @@ class _RePostScreenState extends State<RePostScreen> {
                                         ),
                                         widget.desc != null
                                             ? Padding(
-                                                padding: const EdgeInsets.only(
-                                                    left: 16),
-                                                child: HashTagText(
-                                                  text: "${widget.desc}",
-                                                  decoratedStyle: TextStyle(
-                                                      fontFamily: "outfit",
-                                                      fontSize: 14,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      color: ColorConstant
-                                                          .HasTagColor),
-                                                  basicStyle: TextStyle(
-                                                      fontFamily: "outfit",
-                                                      fontSize: 14,
-                                                      // fontWeight:
-                                                      //     FontWeight.bold,
-                                                      color: Colors.black),
-                                                  onTap: (text) {},
+                                                padding: const EdgeInsets.only(left: 16),
+                                                child: Column(
+                                                  children: [
+                                                    LinkifyText(
+                                                      readmoree == true
+                                                          ?  "${widget.desc ?? ""}${(widget.desc?.length ?? 0) > maxLength ? ' ...ReadLess' : ''}"
+
+                                                          :  "${widget.desc?.substring(0, maxLength)} ...ReadMore ",
+
+                                                      // opem save post image
+                                                      linkStyle: TextStyle(
+                                                        color: Colors.blue,
+                                                        fontFamily: 'outfit',
+                                                      ),
+                                                      textStyle: TextStyle(
+                                                        color: Colors.white,
+                                                        fontFamily: 'outfit',
+                                                      ),
+                                                      linkTypes: [
+                                                        LinkType.url,
+                                                        LinkType.userTag,
+                                                        LinkType.hashTag,
+                                                        // LinkType
+                                                        //     .email
+                                                      ],
+                                                      onTap: (link) async {
+                                                        if ((widget.desc?.length ?? 0) > maxLength) {
+                                                          setState(() {
+                                                            if (readmoree == true) {
+                                                              readmoree = false;
+                                                              print("--------------false ");
+                                                            } else {
+                                                              readmoree = true;
+                                                              print("-------------- true");
+                                                            }
+                                                          });
+                                                        }
+                                                        var SelectedTest = link.value.toString();
+                                                        var Link = SelectedTest.startsWith('https');
+                                                        var Link1 = SelectedTest.startsWith('http');
+                                                        var Link2 = SelectedTest.startsWith('www');
+                                                        var Link3 = SelectedTest.startsWith('WWW');
+                                                        var Link4 = SelectedTest.startsWith('HTTPS');
+                                                        var Link5 = SelectedTest.startsWith('HTTP');
+                                                        var Link6 = SelectedTest.startsWith('https://pdslink.page.link/');
+                                                        print(SelectedTest.toString());
+                                                        if (User_ID == null) {
+                                                          Navigator.of(context).push(MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
+                                                        } else {
+                                                          if (Link == true || Link1 == true || Link2 == true || Link3 == true || Link4 == true || Link5 == true || Link6 == true) {
+                                                            if (Link2 == true || Link3 == true) {
+                                                              if (isYouTubeUrl(SelectedTest)) {
+                                                                playLink(SelectedTest, context);
+                                                              } else
+                                                                launchUrl(Uri.parse("https://${link.value.toString()}"));
+                                                            } else {
+                                                              if (Link6 == true) {
+                                                                print("yes i am in room");
+                                                                Navigator.push(context, MaterialPageRoute(
+                                                                  builder: (context) {
+                                                                    return NewBottomBar(
+                                                                      buttomIndex: 1,
+                                                                    );
+                                                                  },
+                                                                ));
+                                                              } else {
+                                                                if (isYouTubeUrl(SelectedTest)) {
+                                                                  playLink(SelectedTest, context);
+                                                                } else
+                                                                  launchUrl(Uri.parse(link.value.toString()));
+                                                                print("link.valuelink.value -- ${link.value}");
+                                                              }
+                                                            }
+                                                          } else {
+                                                            if (link.value!.startsWith('#')) {
+                                                              print("${link}");
+                                                              Navigator.push(
+                                                                  context,
+                                                                  MaterialPageRoute(
+                                                                    builder: (context) => HashTagViewScreen(title: "${link.value}"),
+                                                                  ));
+                                                            } else if (link.value!.startsWith('@')) {
+                                                              var name;
+                                                              var tagName;
+                                                              name = SelectedTest;
+                                                              tagName = name.replaceAll("@", "");
+                                                              await BlocProvider.of<OpenSaveCubit>(context).UserTagAPI(context, tagName);
+
+                                                              Navigator.push(context, MaterialPageRoute(builder: (context) {
+                                                                return ProfileScreen(User_ID: "${userTagModel?.object}", isFollowing: "");
+                                                              }));
+
+                                                              print("tagName -- ${tagName}");
+                                                              print("user id -- ${userTagModel?.object}");
+                                                            } else {
+                                                              // launchUrl(Uri.parse(
+                                                              //     "https://${link.value.toString()}"));
+                                                            }
+                                                          }
+                                                        }
+                                                      },
+                                                    ),
+                                                    if (extractUrls(widget.desc ?? "").isNotEmpty)
+                                                      isYouTubeUrl(extractUrls(widget.desc ?? "").first)
+                                                          ? FutureBuilder(
+                                                              future: fetchYoutubeThumbnail(extractUrls(widget.desc ?? "").first),
+                                                              builder: (context, snap) {
+                                                                return Container(
+                                                                  height: 250,
+                                                                  decoration: BoxDecoration(image: DecorationImage(image: CachedNetworkImageProvider(snap.data.toString())), borderRadius: BorderRadius.circular(10)),
+                                                                  clipBehavior: Clip.antiAlias,
+                                                                  child: Center(
+                                                                      child: IconButton(
+                                                                    icon: Icon(
+                                                                      Icons.play_circle_fill_rounded,
+                                                                      color: Colors.white,
+                                                                      size: 60,
+                                                                    ),
+                                                                    onPressed: () {
+                                                                      playLink(extractUrls(widget.desc ?? "").first, context);
+                                                                    },
+                                                                  )),
+                                                                );
+                                                              })
+                                                          : Padding(
+                                                              padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                                                              child: AnyLinkPreview(
+                                                                link: extractUrls(widget.desc ?? "").first,
+                                                                displayDirection: UIDirection.uiDirectionHorizontal,
+                                                                showMultimedia: true,
+                                                                bodyMaxLines: 5,
+                                                                bodyTextOverflow: TextOverflow.ellipsis,
+                                                                titleStyle: TextStyle(
+                                                                  color: Colors.black,
+                                                                  fontWeight: FontWeight.bold,
+                                                                  fontSize: 15,
+                                                                ),
+                                                                bodyStyle: TextStyle(color: Colors.grey, fontSize: 12),
+                                                                errorBody: 'Show my custom error body',
+                                                                errorTitle: 'Show my custom error title',
+                                                                errorWidget: null,
+                                                                errorImage: "https://flutter.dev/",
+                                                                cache: Duration(days: 7),
+                                                                backgroundColor: Colors.grey[300],
+                                                                borderRadius: 12,
+                                                                removeElevation: false,
+                                                                boxShadow: [BoxShadow(blurRadius: 3, color: Colors.grey)],
+                                                                onTap: () {
+                                                                  launchUrl(Uri.parse(extractUrls(widget.desc ?? "").first));
+                                                                }, // This disables tap event
+                                                              ),
+                                                            ),
+                                                  ],
                                                 ),
                                               )
                                             : SizedBox(),
@@ -886,38 +976,22 @@ class _RePostScreenState extends State<RePostScreen> {
                                           },
                                           child: widget.postDataType == 'VIDEO'
                                               ? Padding(
-                                                  padding:
-                                                      const EdgeInsets.all(20),
-                                                  child: VideoListItem(
-                                                      videoUrl:
-                                                          widget.postData?[0]),
+                                                  padding: const EdgeInsets.all(20),
+                                                  child: VideoListItem(videoUrl: widget.postData?[0]),
                                                 )
                                               : Container(
                                                   width: _width,
-                                                  child: widget.postDataType ==
-                                                          null
+                                                  child: widget.postDataType == null
                                                       ? SizedBox()
-                                                      : widget.postData
-                                                                  ?.length ==
-                                                              1
-                                                          ? widget.postDataType ==
-                                                                  "IMAGE"
+                                                      : widget.postData?.length == 1
+                                                          ? widget.postDataType == "IMAGE"
                                                               ? Container(
                                                                   width: _width,
                                                                   height: 150,
-                                                                  margin: EdgeInsets
-                                                                      .only(
-                                                                          left:
-                                                                              16,
-                                                                          top:
-                                                                              15,
-                                                                          right:
-                                                                              16),
+                                                                  margin: EdgeInsets.only(left: 16, top: 15, right: 16),
                                                                   child: Center(
-                                                                      child:
-                                                                          CustomImageView(
-                                                                    url:
-                                                                        "${widget.postData?[0]}",
+                                                                      child: CustomImageView(
+                                                                    url: "${widget.postData?[0]}",
                                                                   )),
                                                                 )
                                                               // : widget.postDataType ==
@@ -1003,8 +1077,7 @@ class _RePostScreenState extends State<RePostScreen> {
                                                               //             ),
                                                               //           )
                                                               //         : SizedBox()
-                                                              : widget.postDataType ==
-                                                                      "ATTACHMENT"
+                                                              : widget.postDataType == "ATTACHMENT"
                                                                   ? /*  Container(
                                                                       height:
                                                                           400,
@@ -1018,19 +1091,14 @@ class _RePostScreenState extends State<RePostScreen> {
                                                                   Stack(
                                                                       children: [
                                                                         Container(
-                                                                          height:
-                                                                              400,
-                                                                          width:
-                                                                              _width,
-                                                                          color:
-                                                                              Colors.transparent,
+                                                                          height: 400,
+                                                                          width: _width,
+                                                                          color: Colors.transparent,
                                                                         ),
                                                                         GestureDetector(
-                                                                          onTap:
-                                                                              () {
+                                                                          onTap: () {
                                                                             print("objectobjectobjectobject");
-                                                                            Navigator.push(context,
-                                                                                MaterialPageRoute(
+                                                                            Navigator.push(context, MaterialPageRoute(
                                                                               builder: (context) {
                                                                                 return DocumentViewScreen1(
                                                                                   path: widget.postData?[0].toString(),
@@ -1038,10 +1106,8 @@ class _RePostScreenState extends State<RePostScreen> {
                                                                               },
                                                                             ));
                                                                           },
-                                                                          child:
-                                                                              Container(
-                                                                            child:
-                                                                                CachedNetworkImage(
+                                                                          child: Container(
+                                                                            child: CachedNetworkImage(
                                                                               imageUrl: widget.thumbNailURL ?? "",
                                                                               fit: BoxFit.cover,
                                                                             ),
@@ -1054,30 +1120,19 @@ class _RePostScreenState extends State<RePostScreen> {
                                                               children: [
                                                                 Stack(
                                                                   children: [
-                                                                    if ((widget
-                                                                            .postData
-                                                                            ?.isNotEmpty ??
-                                                                        false)) ...[
+                                                                    if ((widget.postData?.isNotEmpty ?? false)) ...[
                                                                       SizedBox(
-                                                                        height:
-                                                                            300,
-                                                                        child: PageView
-                                                                            .builder(
-                                                                          onPageChanged:
-                                                                              (page) {
+                                                                        height: 300,
+                                                                        child: PageView.builder(
+                                                                          onPageChanged: (page) {
                                                                             super.setState(() {
                                                                               currentPages[widget.index ?? 0] = page;
                                                                             });
                                                                           },
-                                                                          controller:
-                                                                              pageControllers[widget.index ?? 0],
-                                                                          itemCount: widget
-                                                                              .postData
-                                                                              ?.length,
-                                                                          itemBuilder:
-                                                                              (BuildContext context, int index1) {
-                                                                            if (widget.postDataType ==
-                                                                                "IMAGE") {
+                                                                          controller: pageControllers[widget.index ?? 0],
+                                                                          itemCount: widget.postData?.length,
+                                                                          itemBuilder: (BuildContext context, int index1) {
+                                                                            if (widget.postDataType == "IMAGE") {
                                                                               return Container(
                                                                                 width: _width,
                                                                                 margin: EdgeInsets.only(left: 16, top: 15, right: 16),
@@ -1086,8 +1141,7 @@ class _RePostScreenState extends State<RePostScreen> {
                                                                                   url: "${widget.postData?[index1]}",
                                                                                 )),
                                                                               );
-                                                                            } else if (widget.postDataType ==
-                                                                                "ATTACHMENT") {
+                                                                            } else if (widget.postDataType == "ATTACHMENT") {
                                                                               return Container(
                                                                                   height: 400,
                                                                                   width: _width,
@@ -1099,18 +1153,12 @@ class _RePostScreenState extends State<RePostScreen> {
                                                                         ),
                                                                       ),
                                                                       Positioned(
-                                                                          bottom:
-                                                                              5,
-                                                                          left:
-                                                                              0,
-                                                                          right:
-                                                                              0,
-                                                                          child:
-                                                                              Padding(
-                                                                            padding:
-                                                                                const EdgeInsets.only(top: 0),
-                                                                            child:
-                                                                                Container(
+                                                                          bottom: 5,
+                                                                          left: 0,
+                                                                          right: 0,
+                                                                          child: Padding(
+                                                                            padding: const EdgeInsets.only(top: 0),
+                                                                            child: Container(
                                                                               height: 20,
                                                                               child: DotsIndicator(
                                                                                 dotsCount: widget.postData?.length ?? 1,
@@ -1176,10 +1224,7 @@ class _RePostScreenState extends State<RePostScreen> {
                                       width: 80,
                                       decoration: BoxDecoration(
                                         // color: Color.fromARGB(255, 0, 0, 0),
-                                        border: Border.all(
-                                            color: Color.fromARGB(
-                                                255, 174, 174, 174),
-                                            width: 2),
+                                        border: Border.all(color: Color.fromARGB(255, 174, 174, 174), width: 2),
                                         borderRadius: BorderRadius.circular(20),
                                       ),
                                       child: Center(
@@ -1202,25 +1247,18 @@ class _RePostScreenState extends State<RePostScreen> {
                                         child: Container(
                                           margin: EdgeInsets.only(bottom: 100),
                                           child: ClipRRect(
-                                            borderRadius:
-                                                BorderRadius.circular(20),
-                                            child: Image.asset(
-                                                ImageConstant.loader,
-                                                fit: BoxFit.cover,
-                                                height: 100,
-                                                width: 100),
+                                            borderRadius: BorderRadius.circular(20),
+                                            child: Image.asset(ImageConstant.loader, fit: BoxFit.cover, height: 100, width: 100),
                                           ),
                                         ),
                                       )
                                     : LayoutBuilder(
                                         builder: (context, constraints) {
-                                          double gridWidth =
-                                              (constraints.maxWidth - 20) / 3;
+                                          double gridWidth = (constraints.maxWidth - 20) / 3;
                                           double gridHeight = gridWidth + 33;
                                           double ratio = gridWidth / gridHeight;
                                           return Padding(
-                                            padding: const EdgeInsets.only(
-                                                top: 5, bottom: 5),
+                                            padding: const EdgeInsets.only(top: 5, bottom: 5),
                                             child: Container(
                                               // padding: EdgeInsets.all(5),
                                               child: SizedBox(
@@ -1229,68 +1267,37 @@ class _RePostScreenState extends State<RePostScreen> {
                                                   crossAxisCount: 1,
                                                   mainAxisSpacing: 5.0,
                                                   crossAxisSpacing: 10.0,
-                                                  scrollDirection:
-                                                      Axis.horizontal,
+                                                  scrollDirection: Axis.horizontal,
                                                   children: <Widget>[
                                                     ...page!.items.map(
-                                                      (medium) =>
-                                                          GestureDetector(
+                                                      (medium) => GestureDetector(
                                                         onTap: () async {
                                                           medium1 = medium;
                                                           selectImage = true;
 
-                                                          file =
-                                                              await PhotoGallery
-                                                                  .getFile(
-                                                            mediumId:
-                                                                medium1!.id,
-                                                            mediumType:
-                                                                MediumType
-                                                                    .image,
+                                                          file = await PhotoGallery.getFile(
+                                                            mediumId: medium1!.id,
+                                                            mediumType: MediumType.image,
                                                           );
                                                           file12 = null;
                                                           pickedImage.isEmpty;
                                                           super.setState(() {});
-                                                          print(
-                                                              "medium1!.id--.${medium1?.filename}");
-                                                          BlocProvider.of<
-                                                                      RePostCubit>(
-                                                                  context)
-                                                              .UplodeImageAPI(
-                                                                  context,
-                                                                  medium1?.filename ??
-                                                                      '',
-                                                                  file?.path ??
-                                                                      '');
+                                                          print("medium1!.id--.${medium1?.filename}");
+                                                          BlocProvider.of<RePostCubit>(context).UplodeImageAPI(context, medium1?.filename ?? '', file?.path ?? '');
                                                         },
                                                         child: Container(
                                                           height: 100,
                                                           width: 100,
-                                                          decoration: BoxDecoration(
-                                                              color: Colors
-                                                                  .grey[300],
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          10)),
+                                                          decoration: BoxDecoration(color: Colors.grey[300], borderRadius: BorderRadius.circular(10)),
                                                           child: ClipRRect(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        10),
+                                                            borderRadius: BorderRadius.circular(10),
                                                             child: FadeInImage(
                                                               fit: BoxFit.cover,
-                                                              placeholder:
-                                                                  MemoryImage(
-                                                                      kTransparentImage),
-                                                              image:
-                                                                  ThumbnailProvider(
-                                                                mediumId:
-                                                                    medium.id,
-                                                                mediumType: medium
-                                                                    .mediumType,
-                                                                highQuality:
-                                                                    true,
+                                                              placeholder: MemoryImage(kTransparentImage),
+                                                              image: ThumbnailProvider(
+                                                                mediumId: medium.id,
+                                                                mediumType: medium.mediumType,
+                                                                highQuality: true,
                                                               ),
                                                             ),
                                                           ),
@@ -1378,10 +1385,7 @@ class _RePostScreenState extends State<RePostScreen> {
               pickedImage.add(File(xFilePicker[i].path));
               super.setState(() {});
               getFileSize1(pickedImage[i].path, 1, pickedImage[i], 0);
-              if ((xFilePicker[i].path.contains(".mp4")) ||
-                  (xFilePicker[i].path.contains(".mov")) ||
-                  (xFilePicker[i].path.contains(".mp3")) ||
-                  (xFilePicker[i].path.contains(".m4a"))) {
+              if ((xFilePicker[i].path.contains(".mp4")) || (xFilePicker[i].path.contains(".mov")) || (xFilePicker[i].path.contains(".mp3")) || (xFilePicker[i].path.contains(".m4a"))) {
                 showDialog(
                   context: context,
                   builder: (ctx) => AlertDialog(
@@ -1435,14 +1439,7 @@ class _RePostScreenState extends State<RePostScreen> {
   bool _isGifOrSvg(String imagePath) {
     // Check if the image file has a .gif or .svg extension
     final lowerCaseImagePath = imagePath.toLowerCase();
-    return lowerCaseImagePath.endsWith('.gif') ||
-        lowerCaseImagePath.endsWith('.svg') ||
-        lowerCaseImagePath.endsWith('.pdf') ||
-        lowerCaseImagePath.endsWith('.doc') ||
-        lowerCaseImagePath.endsWith('.mp4') ||
-        lowerCaseImagePath.endsWith('.mov') ||
-        lowerCaseImagePath.endsWith('.mp3') ||
-        lowerCaseImagePath.endsWith('.m4a');
+    return lowerCaseImagePath.endsWith('.gif') || lowerCaseImagePath.endsWith('.svg') || lowerCaseImagePath.endsWith('.pdf') || lowerCaseImagePath.endsWith('.doc') || lowerCaseImagePath.endsWith('.mp4') || lowerCaseImagePath.endsWith('.mov') || lowerCaseImagePath.endsWith('.mp3') || lowerCaseImagePath.endsWith('.m4a');
   }
 
   getFileSize1(String filepath, int decimals, File file1, int Index) async {
@@ -1476,15 +1473,13 @@ class _RePostScreenState extends State<RePostScreen> {
         break;
       case 2:
         if (value2 > documentuploadsize) {
-          print(
-              "this file size ${value2} ${suffixes[i]} Selected Max size ${documentuploadsize}MB");
+          print("this file size ${value2} ${suffixes[i]} Selected Max size ${documentuploadsize}MB");
 
           showDialog(
             context: context,
             builder: (ctx) => AlertDialog(
               title: Text("Max Size ${documentuploadsize}MB"),
-              content: Text(
-                  "This file size ${value2} ${suffixes[i]} Selected Max size ${documentuploadsize}MB"),
+              content: Text("This file size ${value2} ${suffixes[i]} Selected Max size ${documentuploadsize}MB"),
               actions: <Widget>[
                 TextButton(
                   onPressed: () {
@@ -1519,8 +1514,7 @@ class _RePostScreenState extends State<RePostScreen> {
 
   Future<void> initAsync() async {
     if (await _promptPermissionSetting()) {
-      List<Album> albums =
-          await PhotoGallery.listAlbums(mediumType: MediumType.image);
+      List<Album> albums = await PhotoGallery.listAlbums(mediumType: MediumType.image);
       if (albums.isNotEmpty) {
         page = await albums.first.listMedia();
       }
@@ -1536,15 +1530,12 @@ class _RePostScreenState extends State<RePostScreen> {
 
   Future<bool> _promptPermissionSetting() async {
     if (Platform.isIOS) {
-      if (await Permission.photos.request().isGranted ||
-          await Permission.storage.request().isGranted) {
+      if (await Permission.photos.request().isGranted || await Permission.storage.request().isGranted) {
         return true;
       }
     }
     if (Platform.isAndroid) {
-      if (await Permission.storage.request().isGranted ||
-          await Permission.photos.request().isGranted &&
-              await Permission.videos.request().isGranted) {
+      if (await Permission.storage.request().isGranted || await Permission.photos.request().isGranted && await Permission.videos.request().isGranted) {
         return true;
       }
     }
@@ -1565,14 +1556,7 @@ class _RePostScreenState extends State<RePostScreen> {
       if (result != null) {
         file = result.files.first;
 
-        if ((file.path?.contains(".mp4") ?? false) ||
-            (file.path?.contains(".mov") ?? false) ||
-            (file.path?.contains(".mp3") ?? false) ||
-            (file.path?.contains(".png") ?? false) ||
-            (file.path?.contains(".doc") ?? false) ||
-            (file.path?.contains(".jpg") ?? false) ||
-            (file.path?.contains(".m4a") ?? false) ||
-            (file.path?.contains(".gif") ?? false)) {
+        if ((file.path?.contains(".mp4") ?? false) || (file.path?.contains(".mov") ?? false) || (file.path?.contains(".mp3") ?? false) || (file.path?.contains(".png") ?? false) || (file.path?.contains(".doc") ?? false) || (file.path?.contains(".jpg") ?? false) || (file.path?.contains(".m4a") ?? false) || (file.path?.contains(".gif") ?? false)) {
           showDialog(
             context: context,
             builder: (ctx) => AlertDialog(
@@ -1607,8 +1591,7 @@ class _RePostScreenState extends State<RePostScreen> {
     // "${fileparth}";
   }
 
-  getFileSize(
-      String filepath, int decimals, PlatformFile file1, int Index) async {
+  getFileSize(String filepath, int decimals, PlatformFile file1, int Index) async {
     var file = File(filepath);
     int bytes = await file.length();
     if (bytes <= 0) return "0 B";
@@ -1652,8 +1635,7 @@ class _RePostScreenState extends State<RePostScreen> {
         }
         print('filenamecheckKB-${file1.path}');
         print("file111.name-->${file1.name}");
-        BlocProvider.of<RePostCubit>(context)
-            .UplodeImageAPI(context, file1.name, file1.path.toString());
+        BlocProvider.of<RePostCubit>(context).UplodeImageAPI(context, file1.name, file1.path.toString());
 
         super.setState(() {});
 
@@ -1663,15 +1645,13 @@ class _RePostScreenState extends State<RePostScreen> {
         print("finalFileSize-->${finalFileSize}");
 
         if (value2 > finalFileSize) {
-          print(
-              "this file size ${value2} ${suffixes[i]} Selected Max size ${finalFileSize}MB");
+          print("this file size ${value2} ${suffixes[i]} Selected Max size ${finalFileSize}MB");
 
           showDialog(
             context: context,
             builder: (ctx) => AlertDialog(
               title: Text("Max Size ${finalFileSize}MB"),
-              content: Text(
-                  "This file size ${value2} ${suffixes[i]} Selected Max size ${finalFileSize}MB"),
+              content: Text("This file size ${value2} ${suffixes[i]} Selected Max size ${finalFileSize}MB"),
               actions: <Widget>[
                 TextButton(
                   onPressed: () {
@@ -1700,8 +1680,7 @@ class _RePostScreenState extends State<RePostScreen> {
             file12 = file1;
           });
 
-          BlocProvider.of<RePostCubit>(context)
-              .UplodeImageAPI(context, file1.name, file1.path.toString());
+          BlocProvider.of<RePostCubit>(context).UplodeImageAPI(context, file1.name, file1.path.toString());
         }
 
         break;
@@ -1712,10 +1691,7 @@ class _RePostScreenState extends State<RePostScreen> {
   }
 
   Future getVideo() async {
-    final pickedFile = await _imagePicker.pickVideo(
-        source: ImageSource.gallery,
-        preferredCameraDevice: CameraDevice.front,
-        maxDuration: const Duration(minutes: 10));
+    final pickedFile = await _imagePicker.pickVideo(source: ImageSource.gallery, preferredCameraDevice: CameraDevice.front, maxDuration: const Duration(minutes: 10));
     XFile? xfilePick = pickedFile;
     super.setState(
       () {
@@ -1779,8 +1755,7 @@ class _RePostScreenState extends State<RePostScreen> {
     Offset position,
     BuildContext context,
   ) async {
-    final RenderBox overlay =
-        Overlay.of(context).context.findRenderObject() as RenderBox;
+    final RenderBox overlay = Overlay.of(context).context.findRenderObject() as RenderBox;
     double _width = MediaQuery.of(context).size.width;
     double _height = MediaQuery.of(context).size.height;
     final selectedOption = await showMenu(
@@ -1803,18 +1778,13 @@ class _RePostScreenState extends State<RePostScreen> {
                   });
                 },
                 child: Container(
-                  decoration: BoxDecoration(
-                      color: indexx == index
-                          ? ColorConstant.primary_color
-                          : Colors.transparent,
-                      borderRadius: BorderRadius.circular(5)),
+                  decoration: BoxDecoration(color: indexx == index ? ColorConstant.primary_color : Colors.transparent, borderRadius: BorderRadius.circular(5)),
                   width: 130,
                   height: 40,
                   child: Center(
                     child: Text(
                       soicalData[index],
-                      style: TextStyle(
-                          color: indexx == index ? Colors.white : Colors.black),
+                      style: TextStyle(color: indexx == index ? Colors.white : Colors.black),
                     ),
                   ),
                 ))));
@@ -1822,23 +1792,24 @@ class _RePostScreenState extends State<RePostScreen> {
       print("Selected option index: $selectedOption");
     }
   }
+  Timer? _timer;
 
   onChangeMethod(String value) {
     super.setState(() {
       postText1.text = value;
+      title = "";
     });
     if (value.contains('@')) {
+      title = "";
       print("if this condison is working-${value}");
       if (value.length >= 1 && value.contains('@')) {
         print("value check --${value.endsWith(' #')}");
         if (value.endsWith(' #')) {
           String data1 = value.split(' #').last.replaceAll('#', '');
-          BlocProvider.of<RePostCubit>(context)
-              .GetAllHashtag(context, '10', '#${data1.trim()}');
+          BlocProvider.of<RePostCubit>(context).GetAllHashtag(context, '10', '#${data1.trim()}');
         } else {
           String data = value.split(' @').last.replaceAll('@', '');
-          BlocProvider.of<RePostCubit>(context)
-              .search_user_for_inbox(context, '${data.trim()}', '1');
+          BlocProvider.of<RePostCubit>(context).search_user_for_inbox(context, '${data.trim()}', '1');
         }
       } else if (value.endsWith(' #')) {
         print("ends with value-${value}");
@@ -1846,14 +1817,30 @@ class _RePostScreenState extends State<RePostScreen> {
         print("check lenth else-${value.length}");
       }
     } else if (value.contains('#')) {
+      title = "";
       print("check length-${value}");
       String data1 = value.split(' #').last.replaceAll('#', '');
-      BlocProvider.of<RePostCubit>(context)
-          .GetAllHashtag(context, '10', '#${data1.trim()}');
-    } else {
+      BlocProvider.of<RePostCubit>(context).GetAllHashtag(context, '10', '#${data1.trim()}');
+    }else if (AnyLinkPreview.isValidLink(extractUrls(value).first)) {
+      if (_timer != null) {
+        _timer?.cancel();
+        _timer = Timer(Duration(seconds: 2), () {
+          setState(() {
+            title = extractUrls(value).first;
+          });
+        });
+      } else {
+        _timer = Timer(Duration(seconds: 2), () {
+          setState(() {
+            title = extractUrls(value).first;
+          });
+        });
+      }
+    }  else {
       super.setState(() {
         istageData = false;
         isHeshTegData = false;
+        title = "";
       });
     }
   }
@@ -1875,8 +1862,7 @@ class _RePostScreenState extends State<RePostScreen> {
     } else {
       exp.allMatches(postText1.text).forEach((match) {
         var aa = "${match.group(0)}";
-        print(
-            "aa.length aa.length aa.length aa.length aa.length aa.length aa.length aa.length aa.length aa.length ");
+        print("aa.length aa.length aa.length aa.length aa.length aa.length aa.length aa.length aa.length aa.length ");
         print("  ");
         print(aa);
         print(aa.length);
@@ -1906,99 +1892,59 @@ class _RePostScreenState extends State<RePostScreen> {
             isrepostDataSet = false;
           });
           if (postText1.text.isNotEmpty && file?.path != null) {
-            Map<String, dynamic> param = {
-              "description": postText1.text,
-              "postData": imageDataPost?.object?.data,
-              "postDataType": "IMAGE",
-              "postType": soicalData[indexx].toString().toUpperCase()
-            };
-            BlocProvider.of<RePostCubit>(context)
-                .RePostAPI(context, param, widget.postUid, "");
+            Map<String, dynamic> param = {"description": postText1.text, "postData": imageDataPost?.object?.data, "postDataType": "IMAGE", "postType": soicalData[indexx].toString().toUpperCase()};
+            BlocProvider.of<RePostCubit>(context).RePostAPI(context, param, widget.postUid, "");
           } else if (postText1.text.isNotEmpty && file12?.path != null) {
-            Map<String, dynamic> param = {
-              "description": postText1.text,
-              "postData": imageDataPost?.object?.data,
-              "postDataType": "ATTACHMENT",
-              "postType": soicalData[indexx].toString().toUpperCase()
-            };
-            BlocProvider.of<RePostCubit>(context)
-                .RePostAPI(context, param, widget.postUid, "");
+            Map<String, dynamic> param = {"description": postText1.text, "postData": imageDataPost?.object?.data, "postDataType": "ATTACHMENT", "postType": soicalData[indexx].toString().toUpperCase()};
+            BlocProvider.of<RePostCubit>(context).RePostAPI(context, param, widget.postUid, "");
           } else if (postText1.text.isNotEmpty && pickedImage.isNotEmpty) {
-            Map<String, dynamic> param = {
-              "description": postText1.text,
-              "postData": imageDataPost?.object?.data,
-              "postDataType": "IMAGE",
-              "postType": soicalData[indexx].toString().toUpperCase()
-            };
-            BlocProvider.of<RePostCubit>(context)
-                .RePostAPI(context, param, widget.postUid, "");
+            Map<String, dynamic> param = {"description": postText1.text, "postData": imageDataPost?.object?.data, "postDataType": "IMAGE", "postType": soicalData[indexx].toString().toUpperCase()};
+            BlocProvider.of<RePostCubit>(context).RePostAPI(context, param, widget.postUid, "");
           } else if (pickedFile?.path != null && postText1.text.isNotEmpty) {
-            Map<String, dynamic> param = {
-              "description": postText1.text,
-              "postData": imageDataPost?.object?.data,
-              "postDataType": "IMAGE",
-              "postType": soicalData[indexx].toString().toUpperCase()
-            };
-            BlocProvider.of<RePostCubit>(context)
-                .RePostAPI(context, param, widget.postUid, "");
-          } else if (postText1.text.isNotEmpty &&
-              _controller?.value.isPlaying == true) {
-            Map<String, dynamic> param = {
-              "description": postText1.text,
-              "postData": imageDataPost?.object?.data,
-              "postDataType": "VIDEO",
-              "postType": soicalData[indexx].toString().toUpperCase()
-            };
-            BlocProvider.of<RePostCubit>(context)
-                .RePostAPI(context, param, widget.postUid, "");
+            Map<String, dynamic> param = {"description": postText1.text, "postData": imageDataPost?.object?.data, "postDataType": "IMAGE", "postType": soicalData[indexx].toString().toUpperCase()};
+            BlocProvider.of<RePostCubit>(context).RePostAPI(context, param, widget.postUid, "");
+          } else if (postText1.text.isNotEmpty && _controller?.value.isPlaying == true) {
+            Map<String, dynamic> param = {"description": postText1.text, "postData": imageDataPost?.object?.data, "postDataType": "VIDEO", "postType": soicalData[indexx].toString().toUpperCase()};
+            BlocProvider.of<RePostCubit>(context).RePostAPI(context, param, widget.postUid, "");
           } else {
             if (postText1.text.isNotEmpty) {
-              Map<String, dynamic> param = {
-                "description": postText1.text,
-                "postType": soicalData[indexx].toString().toUpperCase()
-              };
-              BlocProvider.of<RePostCubit>(context)
-                  .RePostAPI(context, param, widget.postUid, "");
+              Map<String, dynamic> param = {"description": postText1.text, "postType": soicalData[indexx].toString().toUpperCase()};
+              BlocProvider.of<RePostCubit>(context).RePostAPI(context, param, widget.postUid, "");
             } else if (file?.path != null) {
               Map<String, dynamic> param = {
                 "postData": imageDataPost?.object?.data,
                 "postDataType": "IMAGE",
                 "postType": soicalData[indexx].toString().toUpperCase(),
               };
-              BlocProvider.of<RePostCubit>(context)
-                  .RePostAPI(context, param, widget.postUid, "");
+              BlocProvider.of<RePostCubit>(context).RePostAPI(context, param, widget.postUid, "");
             } else if (pickedFile?.path != null) {
               Map<String, dynamic> param = {
                 "postData": imageDataPost?.object?.data,
                 "postDataType": "IMAGE",
                 "postType": soicalData[indexx].toString().toUpperCase(),
               };
-              BlocProvider.of<RePostCubit>(context)
-                  .RePostAPI(context, param, widget.postUid, "");
+              BlocProvider.of<RePostCubit>(context).RePostAPI(context, param, widget.postUid, "");
             } else if (file12?.path != null) {
               Map<String, dynamic> param = {
                 "postData": imageDataPost?.object?.data,
                 "postDataType": "ATTACHMENT",
                 "postType": soicalData[indexx].toString().toUpperCase(),
               };
-              BlocProvider.of<RePostCubit>(context)
-                  .RePostAPI(context, param, widget.postUid, "");
+              BlocProvider.of<RePostCubit>(context).RePostAPI(context, param, widget.postUid, "");
             } else if (pickedImage.isNotEmpty) {
               Map<String, dynamic> param = {
                 "postData": imageDataPost?.object?.data,
                 "postDataType": "IMAGE",
                 "postType": soicalData[indexx].toString().toUpperCase(),
               };
-              BlocProvider.of<RePostCubit>(context)
-                  .RePostAPI(context, param, widget.postUid, "");
+              BlocProvider.of<RePostCubit>(context).RePostAPI(context, param, widget.postUid, "");
             } else if (_controller?.value.isPlaying == true) {
               Map<String, dynamic> param = {
                 "postData": imageDataPost?.object?.data,
                 "postDataType": "VIDEO",
                 "postType": soicalData[indexx].toString().toUpperCase(),
               };
-              BlocProvider.of<RePostCubit>(context)
-                  .RePostAPI(context, param, widget.postUid, "");
+              BlocProvider.of<RePostCubit>(context).RePostAPI(context, param, widget.postUid, "");
             } else {
               SnackBar snackBar = SnackBar(
                 content: Text('Please selcte image either fill Text'),
@@ -2018,5 +1964,181 @@ class _RePostScreenState extends State<RePostScreen> {
         ScaffoldMessenger.of(context).showSnackBar(snackBar);
       }
     }
+  }
+
+  Future<String> fetchYoutubeThumbnail(String url) async {
+    try {
+      // Extract video ID from YouTube URL
+      // We will use this to build our own custom UI
+      List<String> urls = extractUrls(url);
+      Metadata? _metadata = await AnyLinkPreview.getMetadata(
+        link: urls.first,
+        cache: Duration(days: 1),
+        // proxyUrl: "https://cors-anywhere.herokuapp.com/", // Need for web
+      );
+      return _metadata?.image ?? "";
+    } catch (e) {
+      print('Error: $e');
+      return "";
+    }
+  }
+
+  List<String> extractUrls(String text) {
+    RegExp regExp = RegExp(
+      r"https?:\/\/[\w\-]+(\.[\w\-]+)+[\w\-.,@?^=%&:/~\+#]*[\w\-@?^=%&/~\+#]?",
+      caseSensitive: false,
+    );
+
+    List<String> urls = regExp.allMatches(text).map((match) => match.group(0)!).toList();
+    List<String> finalUrls = [];
+    RegExp urlRegex = RegExp(r"(http(s)?://)", caseSensitive: false);
+    urls.forEach((element) {
+      if (urlRegex.allMatches(element).toList().length > 1) {
+        String xyz = element.replaceAll("http", ",http");
+        List<String> splitted = xyz.split(RegExp(r",|;"));
+        splitted.forEach((element1) {
+          if (element1.isNotEmpty) finalUrls.add(element1);
+        });
+      } else {
+        finalUrls.add(element);
+      }
+    });
+    return finalUrls;
+  }
+
+  bool isYouTubeUrl(String url) {
+    // Regular expression pattern to match YouTube URLs
+    RegExp youtubeVideoRegex = RegExp(r"^https?://(?:www\.)?youtube\.com/(?:watch\?v=)?([^#&?]+)");
+    RegExp youtubeShortsRegex = RegExp(r"^https?://(?:www\.)?youtube\.com/shorts/([^#&?]+)");
+
+    if (youtubeVideoRegex.hasMatch(url) || youtubeShortsRegex.hasMatch(url)) {
+      return true;
+    }
+
+    // Additional checks based on specific test link patterns (optional)
+    if (url.contains("youtu.be/")) {
+      // This check might need adjustments if Youtube short URLs change format
+      return true;
+    }
+
+    return false;
+  }
+
+  void playLink(String videoUrl, BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext ctx) {
+        return Center(
+          child: Container(
+              width: MediaQuery.of(context).size.width * 0.90,
+              height: MediaQuery.of(context).size.width * 0.80,
+              decoration: ShapeDecoration(color: Colors.black, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))),
+              clipBehavior: Clip.antiAlias,
+              child: Stack(
+                children: [
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      getYoutubePlayer(videoUrl, () {
+                        Navigator.pop(ctx);
+                        launchUrl(Uri.parse(videoUrl));
+                      })
+                    ],
+                  ),
+                  Align(
+                    alignment: Alignment.topRight,
+                    child: Material(
+                      color: Colors.transparent,
+                      child: IconButton(
+                        icon: Icon(
+                          Icons.close,
+                          color: Colors.white,
+                          size: 30,
+                        ),
+                        onPressed: () {
+                          Navigator.pop(ctx);
+                        },
+                      ),
+                    ),
+                  )
+                ],
+              )),
+        );
+      },
+    );
+  }
+
+  late PlayerState _playerState;
+  late YoutubeMetaData _videoMetaData;
+  bool _isPlayerReady = false;
+
+  getYoutubePlayer(String videoUrl, Function() fullScreen) {
+    late YoutubePlayerController _controller;
+
+    _controller = YoutubePlayerController(
+      initialVideoId: YoutubePlayer.convertUrlToId(videoUrl)!,
+      flags: const YoutubePlayerFlags(
+        mute: false,
+        autoPlay: true,
+        disableDragSeek: false,
+        loop: false,
+        isLive: false,
+        forceHD: false,
+        enableCaption: true,
+      ),
+    );
+    _videoMetaData = const YoutubeMetaData();
+    _playerState = PlayerState.unknown;
+
+    return YoutubePlayerBuilder(
+      onEnterFullScreen: () {
+        _controller.toggleFullScreenMode();
+        _controller.dispose();
+        fullScreen.call();
+      },
+      builder: (context, player) {
+        return player;
+      },
+      player: YoutubePlayer(
+        controller: _controller,
+        showVideoProgressIndicator: true,
+        progressIndicatorColor: Colors.red,
+        progressColors: const ProgressBarColors(
+          playedColor: Colors.red,
+          handleColor: Colors.redAccent,
+        ),
+        bottomActions: [
+          const SizedBox(width: 14.0),
+          CurrentPosition(),
+          const SizedBox(width: 8.0),
+          ProgressBar(
+            isExpanded: true,
+            colors: const ProgressBarColors(
+              playedColor: Colors.red,
+              handleColor: Colors.redAccent,
+            ),
+          ),
+          RemainingDuration(),
+          const PlaybackSpeedButton(),
+          IconButton(
+            icon: Icon(
+              _controller.value.isFullScreen ? Icons.fullscreen_exit : Icons.fullscreen,
+              color: Colors.white,
+            ),
+            onPressed: () => fullScreen.call(),
+          ),
+        ],
+        onReady: () {
+          _controller.addListener(() {
+            if (_isPlayerReady && mounted && !_controller.value.isFullScreen) {
+              setState(() {
+                _playerState = _controller.value.playerState;
+                _videoMetaData = _controller.metadata;
+              });
+            }
+          });
+        },
+      ),
+    );
   }
 }
