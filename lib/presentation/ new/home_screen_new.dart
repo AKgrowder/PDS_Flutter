@@ -2307,21 +2307,21 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                       UserProfileImage != ""
                                                   ? GestureDetector(
                                                       onLongPress: () {
-                                                        if (getallcompenypagemodel
-                                                                    ?.object
-                                                                    ?.content
-                                                                    ?.isNotEmpty ==
-                                                                true &&
-                                                            getallcompenypagemodel
-                                                                    ?.object
-                                                                    ?.content
-                                                                    ?.length !=
-                                                                1) {
-                                                          showProfileSwitchBottomSheet(
-                                                              context,
-                                                              getallcompenypagemodel!,
-                                                              '${User_ID}');
-                                                        }
+                                                        // if (getallcompenypagemodel
+                                                        //             ?.object
+                                                        //             ?.content
+                                                        //             ?.isNotEmpty ==
+                                                        //         true &&
+                                                        //     getallcompenypagemodel
+                                                        //             ?.object
+                                                        //             ?.content
+                                                        //             ?.length !=
+                                                        //         1) {
+                                                        //   showProfileSwitchBottomSheet(
+                                                        //       context,
+                                                        //       getallcompenypagemodel!,
+                                                        //       '${User_ID}');
+                                                        // }
                                                       },
                                                       child: CustomImageView(
                                                         url:
@@ -2337,21 +2337,21 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                   : GestureDetector(
                                                       onLongPress: () {
                                                         // this is the company user if
-                                                        if (getallcompenypagemodel
-                                                                    ?.object
-                                                                    ?.content
-                                                                    ?.isNotEmpty ==
-                                                                true &&
-                                                            getallcompenypagemodel
-                                                                    ?.object
-                                                                    ?.content
-                                                                    ?.length !=
-                                                                1) {
-                                                          showProfileSwitchBottomSheet(
-                                                              context,
-                                                              getallcompenypagemodel!,
-                                                              '${User_ID}');
-                                                        }
+                                                        // if (getallcompenypagemodel
+                                                        //             ?.object
+                                                        //             ?.content
+                                                        //             ?.isNotEmpty ==
+                                                        //         true &&
+                                                        //     getallcompenypagemodel
+                                                        //             ?.object
+                                                        //             ?.content
+                                                        //             ?.length !=
+                                                        //         1) {
+                                                        //   showProfileSwitchBottomSheet(
+                                                        //       context,
+                                                        //       getallcompenypagemodel!,
+                                                        //       '${User_ID}');
+                                                        // }
                                                       },
                                                       child: CustomImageView(
                                                         imagePath: ImageConstant

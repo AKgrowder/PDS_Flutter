@@ -940,7 +940,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                             )),
                                                 ),
                                               ),
-                                              if (getallcompenypagemodel
+                                            /*   if (getallcompenypagemodel
                                                           ?.object
                                                           ?.content
                                                           ?.isNotEmpty ==
@@ -984,7 +984,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                           ),
                                                         )),
                                                   ),
-                                                )
+                                                ) */
                                             ],
                                           ),
                                         ),
