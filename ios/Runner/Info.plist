@@ -71,6 +71,8 @@
 	<string>InPackaging Application wants to upload Image/Video for create &amp; share post,story and profile image please Allow</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>InPackaging Application wants to upload Image/Video for create &amp; share post,story and profile image please Allow</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Useing Video Call / Audio Call useing You&apos;r Microphone Please Allow.</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UIBackgroundModes</key>
