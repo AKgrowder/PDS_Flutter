@@ -2,6 +2,8 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:any_link_preview/any_link_preview.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:flutter/foundation.dart' as foundation;
 import 'package:flutter/material.dart';
@@ -10,11 +12,17 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:linkfy_text/linkfy_text.dart';
+import 'package:pds/API/Bloc/HashTag_Bloc/HashTag_cubit.dart';
 import 'package:pds/API/Model/coment/coment_model.dart';
+import 'package:pds/presentation/%20new/HashTagView_screen.dart';
+import 'package:pds/presentation/%20new/newbottembar.dart';
 import 'package:pds/presentation/%20new/profileNew.dart';
 import 'package:pds/presentation/register_create_account_screen/register_create_account_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stomp_dart_client/stomp_frame.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 import '../../API/ApiService/socket.dart';
 import '../../API/Bloc/senMSG_Bloc/senMSG_cubit.dart';
@@ -26,7 +34,8 @@ import '../../theme/theme_helper.dart';
 import '../../widgets/animatedwiget.dart';
 import '../../widgets/custom_image_view.dart';
 import '../../widgets/pagenation.dart';
-
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 class ViewCommentScreen extends StatefulWidget {
   final Room_ID;
   final Title;
@@ -79,6 +88,8 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
   bool OneTimeDelete = false;
   FocusNode _focusNode = FocusNode();
   final focusNode = FocusNode();
+  Timer? _timer;
+  String title = "";
   KeyboardVisibilityController keyboardVisibilityController =
       KeyboardVisibilityController();
 
@@ -608,11 +619,183 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                                                                           // height: 45,
                                                                                           width: _width / 1.3,
                                                                                           // color: Colors.amber,
-                                                                                          child: Text(
-                                                                                            AllChatmodelData?.object?.messageOutputList?.content?[index].message ?? "",
-                                                                                            // maxLines: 3,
-                                                                                            textScaleFactor: 1.0,
-                                                                                            style: TextStyle(fontWeight: FontWeight.bold, color: Colors.grey, fontFamily: "outfit", fontSize: 12),
+                                                                                          child: Column(
+                                                                                            children: [
+                                                                                              /*Text(
+                                                                                                AllChatmodelData?.object?.messageOutputList?.content?[index].message ?? "",
+                                                                                                // maxLines: 3,
+                                                                                                textScaleFactor: 1.0,
+                                                                                                style: TextStyle(fontWeight: FontWeight.bold, color: Colors.grey, fontFamily: "outfit", fontSize: 12),
+                                                                                              ),*/
+                                                                                              LinkifyText(
+                                                                                                "${AllChatmodelData?.object?.messageOutputList?.content?[index].message}",
+                                                                                                linkStyle: TextStyle(
+                                                                                                  color: Colors.blue,
+                                                                                                  fontFamily: 'outfit',
+                                                                                                ),
+                                                                                                textStyle: TextStyle(
+                                                                                                  color: Colors.black,
+                                                                                                  fontFamily: 'outfit',
+                                                                                                ),
+                                                                                                linkTypes: [
+                                                                                                  LinkType.url,
+                                                                                                  LinkType.userTag,
+                                                                                                  LinkType.hashTag,
+                                                                                                  // LinkType
+                                                                                                  //     .email
+                                                                                                ],
+                                                                                                onTap: (link) async {
+                                                                                                  var SelectedTest =
+                                                                                                  link.value.toString();
+                                                                                                  var Link =
+                                                                                                  SelectedTest.startsWith(
+                                                                                                      'https');
+                                                                                                  var Link1 =
+                                                                                                  SelectedTest.startsWith(
+                                                                                                      'http');
+                                                                                                  var Link2 =
+                                                                                                  SelectedTest.startsWith(
+                                                                                                      'www');
+                                                                                                  var Link3 =
+                                                                                                  SelectedTest.startsWith(
+                                                                                                      'WWW');
+                                                                                                  var Link4 =
+                                                                                                  SelectedTest.startsWith(
+                                                                                                      'HTTPS');
+                                                                                                  var Link5 =
+                                                                                                  SelectedTest.startsWith(
+                                                                                                      'HTTP');
+                                                                                                  var Link6 =
+                                                                                                  SelectedTest.startsWith(
+                                                                                                      'https://pdslink.page.link/');
+                                                                                                  print(SelectedTest
+                                                                                                      .toString());
+
+                                                                                                  if (Link == true ||
+                                                                                                      Link1 == true ||
+                                                                                                      Link2 == true ||
+                                                                                                      Link3 == true ||
+                                                                                                      Link4 == true ||
+                                                                                                      Link5 == true ||
+                                                                                                      Link6 == true) {
+                                                                                                    if (Link2 == true ||
+                                                                                                        Link3 == true) {
+                                                                                                      if (isYouTubeUrl(SelectedTest)) {
+                                                                                                        playLink(SelectedTest, context);
+                                                                                                      } else launchUrl(Uri.parse(
+                                                                                                          "https://${link.value.toString()}"));
+                                                                                                    } else {
+                                                                                                      if (Link6 == true) {
+                                                                                                        print(
+                                                                                                            "yes i am in room");
+                                                                                                        Navigator.push(
+                                                                                                            context,
+                                                                                                            MaterialPageRoute(
+                                                                                                              builder: (context) {
+                                                                                                                return NewBottomBar(
+                                                                                                                  buttomIndex: 1,
+                                                                                                                );
+                                                                                                              },
+                                                                                                            ));
+                                                                                                      } else {
+                                                                                                        if (isYouTubeUrl(SelectedTest)) {
+                                                                                                          playLink(SelectedTest, context);
+                                                                                                        } else launchUrl(Uri.parse(
+                                                                                                            link.value
+                                                                                                                .toString()));
+                                                                                                        print(
+                                                                                                            "link.valuelink.value -- ${link.value}");
+                                                                                                      }
+                                                                                                    }
+                                                                                                  } else {
+                                                                                                    if (link.value!
+                                                                                                        .startsWith('#')) {
+                                                                                                      print("${link}");
+
+                                                                                                        Navigator.push(
+                                                                                                            context,
+                                                                                                            MaterialPageRoute(
+                                                                                                              builder: (context) =>
+                                                                                                                  HashTagViewScreen(
+                                                                                                                      title:
+                                                                                                                      "${link.value}"),
+                                                                                                            ));
+
+                                                                                                    } else if (link.value!
+                                                                                                        .startsWith('@')) {
+                                                                                                      var name;
+                                                                                                      var tagName;
+                                                                                                      name = SelectedTest;
+                                                                                                      tagName =
+                                                                                                          name.replaceAll(
+                                                                                                              "@", "");
+                                                                                                      await BlocProvider.of<
+                                                                                                          HashTagCubit>(
+                                                                                                          context)
+                                                                                                          .UserTagAPI(context,
+                                                                                                          tagName);
+                                                                                                    } else {
+                                                                                                      if (isYouTubeUrl(SelectedTest)) {
+                                                                                                        playLink(SelectedTest, context);
+                                                                                                      } else launchUrl(Uri.parse(
+                                                                                                          "https://${link.value.toString()}"));
+                                                                                                    }
+                                                                                                  }
+                                                                                                },
+                                                                                              ),
+                                                                                              if (extractUrls(AllChatmodelData?.object?.messageOutputList?.content?[index].message ?? "").isNotEmpty)
+                                                                                                isYouTubeUrl(extractUrls(AllChatmodelData?.object?.messageOutputList?.content?[index].message ?? "").first)
+                                                                                                    ? FutureBuilder(
+                                                                                                    future: fetchYoutubeThumbnail(extractUrls(AllChatmodelData?.object?.messageOutputList?.content?[index].message ?? "").first),
+                                                                                                    builder: (context, snap) {
+                                                                                                      return Container(
+                                                                                                        height: 100,
+                                                                                                        decoration: BoxDecoration(image: DecorationImage(image: CachedNetworkImageProvider(snap.data.toString())), borderRadius: BorderRadius.circular(10)),
+                                                                                                        clipBehavior: Clip.antiAlias,
+                                                                                                        child: Center(
+                                                                                                            child: IconButton(
+                                                                                                              icon: Icon(
+                                                                                                                Icons.play_circle_fill_rounded,
+                                                                                                                color: Colors.white,
+                                                                                                                size: 60,
+                                                                                                              ),
+                                                                                                              onPressed: () {
+                                                                                                                playLink(extractUrls(AllChatmodelData?.object?.messageOutputList?.content?[index].message ?? "").first, context);
+                                                                                                              },
+                                                                                                            )),
+                                                                                                      );
+                                                                                                    })
+                                                                                                    : Padding(
+                                                                                                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                                                                                                  child: AnyLinkPreview(
+                                                                                                    link: extractUrls(AllChatmodelData?.object?.messageOutputList?.content?[index].message ?? "").first,
+                                                                                                    displayDirection: UIDirection.uiDirectionHorizontal,
+                                                                                                    showMultimedia: true,
+                                                                                                    bodyMaxLines: 5,
+                                                                                                    bodyTextOverflow: TextOverflow.ellipsis,
+                                                                                                    titleStyle: TextStyle(
+                                                                                                      color: Colors.black,
+                                                                                                      fontWeight: FontWeight.bold,
+                                                                                                      fontSize: 15,
+                                                                                                    ),
+                                                                                                    bodyStyle: TextStyle(color: Colors.grey, fontSize: 12),
+                                                                                                    errorBody: 'Show my custom error body',
+                                                                                                    errorTitle: 'Show my custom error title',
+                                                                                                    errorWidget: null,
+                                                                                                    errorImage: "https://flutter.dev/",
+                                                                                                    cache: Duration(days: 7),
+                                                                                                    backgroundColor: Colors.grey[300],
+                                                                                                    borderRadius: 12,
+                                                                                                    removeElevation: false,
+                                                                                                    boxShadow: [
+                                                                                                      BoxShadow(blurRadius: 3, color: Colors.grey)
+                                                                                                    ],
+                                                                                                    onTap: () {
+                                                                                                      launchUrl(Uri.parse(extractUrls(AllChatmodelData?.object?.messageOutputList?.content?[index].message ?? "").first));
+                                                                                                    }, // This disables tap event
+                                                                                                  ),
+                                                                                                ),
+                                                                                            ],
                                                                                           ),
                                                                                         ),
                                                                                       ],
@@ -907,11 +1090,184 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                                                                   width: _width / 1.3,
                                                                                   child: Align(
                                                                                     alignment: Alignment.topRight,
-                                                                                    child: Text(
-                                                                                      "${AllChatmodelData?.object?.messageOutputList?.content?[index].message ?? ""}",
-                                                                                      // maxLines: 3,
-                                                                                      textScaleFactor: 1.0,
-                                                                                      style: TextStyle(fontWeight: FontWeight.bold, color: Colors.grey, fontFamily: "outfit", fontSize: 12),
+                                                                                    child: Column(
+                                                                                      children: [
+                                                                                        /*Text(
+                                                                                          "${AllChatmodelData?.object?.messageOutputList?.content?[index].message ?? ""}",
+                                                                                          // maxLines: 3,
+                                                                                          textScaleFactor: 1.0,
+                                                                                          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.grey, fontFamily: "outfit", fontSize: 12),
+                                                                                        )*/
+                                                                                        LinkifyText(
+                                                                                          "${AllChatmodelData?.object?.messageOutputList?.content?[index].message}",
+                                                                                          linkStyle: TextStyle(
+                                                                                            color: Colors.blue,
+                                                                                            fontFamily: 'outfit',
+                                                                                          ),
+                                                                                          textStyle: TextStyle(
+                                                                                            color: Colors.black,
+                                                                                            fontFamily: 'outfit',
+                                                                                          ),
+                                                                                          linkTypes: [
+                                                                                            LinkType.url,
+                                                                                            LinkType.userTag,
+                                                                                            LinkType.hashTag,
+                                                                                            // LinkType
+                                                                                            //     .email
+                                                                                          ],
+                                                                                          onTap: (link) async {
+                                                                                            var SelectedTest =
+                                                                                            link.value.toString();
+                                                                                            var Link =
+                                                                                            SelectedTest.startsWith(
+                                                                                                'https');
+                                                                                            var Link1 =
+                                                                                            SelectedTest.startsWith(
+                                                                                                'http');
+                                                                                            var Link2 =
+                                                                                            SelectedTest.startsWith(
+                                                                                                'www');
+                                                                                            var Link3 =
+                                                                                            SelectedTest.startsWith(
+                                                                                                'WWW');
+                                                                                            var Link4 =
+                                                                                            SelectedTest.startsWith(
+                                                                                                'HTTPS');
+                                                                                            var Link5 =
+                                                                                            SelectedTest.startsWith(
+                                                                                                'HTTP');
+                                                                                            var Link6 =
+                                                                                            SelectedTest.startsWith(
+                                                                                                'https://pdslink.page.link/');
+                                                                                            print(SelectedTest
+                                                                                                .toString());
+
+                                                                                            if (Link == true ||
+                                                                                                Link1 == true ||
+                                                                                                Link2 == true ||
+                                                                                                Link3 == true ||
+                                                                                                Link4 == true ||
+                                                                                                Link5 == true ||
+                                                                                                Link6 == true) {
+                                                                                              if (Link2 == true ||
+                                                                                                  Link3 == true) {
+                                                                                                if (isYouTubeUrl(SelectedTest)) {
+                                                                                                  playLink(SelectedTest, context);
+                                                                                                } else launchUrl(Uri.parse(
+                                                                                                    "https://${link.value.toString()}"));
+                                                                                              } else {
+                                                                                                if (Link6 == true) {
+                                                                                                  print(
+                                                                                                      "yes i am in room");
+                                                                                                  Navigator.push(
+                                                                                                      context,
+                                                                                                      MaterialPageRoute(
+                                                                                                        builder: (context) {
+                                                                                                          return NewBottomBar(
+                                                                                                            buttomIndex: 1,
+                                                                                                          );
+                                                                                                        },
+                                                                                                      ));
+                                                                                                } else {
+                                                                                                  if (isYouTubeUrl(SelectedTest)) {
+                                                                                                    playLink(SelectedTest, context);
+                                                                                                  } else launchUrl(Uri.parse(
+                                                                                                      link.value
+                                                                                                          .toString()));
+                                                                                                  print(
+                                                                                                      "link.valuelink.value -- ${link.value}");
+                                                                                                }
+                                                                                              }
+                                                                                            } else {
+                                                                                              if (link.value!
+                                                                                                  .startsWith('#')) {
+                                                                                                print("${link}");
+
+                                                                                                  Navigator.push(
+                                                                                                      context,
+                                                                                                      MaterialPageRoute(
+                                                                                                        builder: (context) =>
+                                                                                                            HashTagViewScreen(
+                                                                                                                title:
+                                                                                                                "${link.value}"),
+                                                                                                      ));
+
+                                                                                              } else if (link.value!
+                                                                                                  .startsWith('@')) {
+                                                                                                var name;
+                                                                                                var tagName;
+                                                                                                name = SelectedTest;
+                                                                                                tagName =
+                                                                                                    name.replaceAll(
+                                                                                                        "@", "");
+                                                                                                await BlocProvider.of<
+                                                                                                    HashTagCubit>(
+                                                                                                    context)
+                                                                                                    .UserTagAPI(context,
+                                                                                                    tagName);
+
+                                                                                              } else {
+                                                                                                if (isYouTubeUrl(SelectedTest)) {
+                                                                                                  playLink(SelectedTest, context);
+                                                                                                } else launchUrl(Uri.parse(
+                                                                                                    "https://${link.value.toString()}"));
+                                                                                              }
+                                                                                            }
+                                                                                          },
+                                                                                        ),
+                                                                                        if (extractUrls(AllChatmodelData?.object?.messageOutputList?.content?[index].message ?? "").isNotEmpty)
+                                                                                          isYouTubeUrl(extractUrls(AllChatmodelData?.object?.messageOutputList?.content?[index].message ?? "").first)
+                                                                                              ? FutureBuilder(
+                                                                                              future: fetchYoutubeThumbnail(extractUrls(AllChatmodelData?.object?.messageOutputList?.content?[index].message ?? "").first),
+                                                                                              builder: (context, snap) {
+                                                                                                return Container(
+                                                                                                  height: 200,
+                                                                                                  decoration: BoxDecoration(image: DecorationImage(image: CachedNetworkImageProvider(snap.data.toString())), borderRadius: BorderRadius.circular(10)),
+                                                                                                  clipBehavior: Clip.antiAlias,
+                                                                                                  child: Center(
+                                                                                                      child: IconButton(
+                                                                                                        icon: Icon(
+                                                                                                          Icons.play_circle_fill_rounded,
+                                                                                                          color: Colors.white,
+                                                                                                          size: 60,
+                                                                                                        ),
+                                                                                                        onPressed: () {
+                                                                                                          playLink(extractUrls(AllChatmodelData?.object?.messageOutputList?.content?[index].message ?? "").first, context);
+                                                                                                        },
+                                                                                                      )),
+                                                                                                );
+                                                                                              })
+                                                                                              : Padding(
+                                                                                            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                                                                                            child: AnyLinkPreview(
+                                                                                              link: extractUrls(AllChatmodelData?.object?.messageOutputList?.content?[index].message ?? "").first,
+                                                                                              displayDirection: UIDirection.uiDirectionHorizontal,
+                                                                                              showMultimedia: true,
+                                                                                              bodyMaxLines: 5,
+                                                                                              bodyTextOverflow: TextOverflow.ellipsis,
+                                                                                              titleStyle: TextStyle(
+                                                                                                color: Colors.black,
+                                                                                                fontWeight: FontWeight.bold,
+                                                                                                fontSize: 15,
+                                                                                              ),
+                                                                                              bodyStyle: TextStyle(color: Colors.grey, fontSize: 12),
+                                                                                              errorBody: 'Show my custom error body',
+                                                                                              errorTitle: 'Show my custom error title',
+                                                                                              errorWidget: null,
+                                                                                              errorImage: "https://flutter.dev/",
+                                                                                              cache: Duration(days: 7),
+                                                                                              backgroundColor: Colors.grey[300],
+                                                                                              borderRadius: 12,
+                                                                                              removeElevation: false,
+                                                                                              boxShadow: [
+                                                                                                BoxShadow(blurRadius: 3, color: Colors.grey)
+                                                                                              ],
+                                                                                              onTap: () {
+                                                                                                launchUrl(Uri.parse(extractUrls(AllChatmodelData?.object?.messageOutputList?.content?[index].message ?? "").first));
+                                                                                              }, // This disables tap event
+                                                                                            ),
+                                                                                          ),
+                                                                                      ],
                                                                                     ),
                                                                                   ),
                                                                                 )
@@ -998,6 +1354,37 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                 ),
                               )
                             : SizedBox(),
+                        if(title.isNotEmpty)
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 16.0,vertical: 8.0),
+                            child: AnyLinkPreview(
+                              link: title,
+                              displayDirection: UIDirection.uiDirectionHorizontal,
+                              showMultimedia: true,
+                              bodyMaxLines: 5,
+                              bodyTextOverflow: TextOverflow.ellipsis,
+                              titleStyle: TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 15,
+                              ),
+                              bodyStyle: TextStyle(color: Colors.grey, fontSize: 12),
+                              errorBody: 'Show my custom error body',
+                              errorTitle: 'Show my custom error title',
+                              errorWidget: Container(
+                                color: Colors.grey[300],
+                                child: Text('Oops!'),
+                              ),
+                              errorImage: "https://flutter.dev/",
+                              cache: Duration(days: 7),
+                              backgroundColor: Colors.grey[300],
+                              borderRadius: 12,
+                              removeElevation: false,
+                              boxShadow: [BoxShadow(blurRadius: 3, color: Colors.grey)],
+                              onTap: (){                                    launchUrl(Uri.parse(title));
+                              }, // This disables tap event
+                            ),
+                          ),
                         Container(
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -1007,6 +1394,24 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                   maxLines: null,
                                   controller: Add_Comment,
                                   cursorColor: Colors.grey,
+                                  onChanged: (value){
+                                    if (AnyLinkPreview.isValidLink(extractUrls(value).first)) {
+                                      if (_timer != null) {
+                                        _timer?.cancel();
+                                        _timer = Timer(Duration(seconds: 2), () {
+                                          setState(() {
+                                            title = extractUrls(value).first;
+                                          });
+                                        });
+                                      } else {
+                                        _timer = Timer(Duration(seconds: 2), () {
+                                          setState(() {
+                                            title = extractUrls(value).first;
+                                          });
+                                        });
+                                      }
+                                    }
+                                  },
                                   decoration: InputDecoration(
                                       filled: true,
                                       fillColor: Color(0x82EFEFEF),
@@ -1517,6 +1922,276 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
   //     },
   //   );
   // }
+
+  Future<String> fetchYoutubeThumbnail(String url) async {
+    try {
+      // Extract video ID from YouTube URL
+      // We will use this to build our own custom UI
+      List<String> urls = extractUrls(url);
+      Metadata? _metadata = await AnyLinkPreview.getMetadata(
+        link: urls.first,
+        cache: Duration(days: 1),
+        // proxyUrl: "https://cors-anywhere.herokuapp.com/", // Need for web
+      );
+      return _metadata?.image ?? "";
+    } catch (e) {
+      print('Error: $e');
+      return "";
+    }
+  }
+
+  List<String> extractUrls(String text) {
+    RegExp regExp = RegExp(
+      r"https?:\/\/[\w\-]+(\.[\w\-]+)+[\w\-.,@?^=%&:/~\+#]*[\w\-@?^=%&/~\+#]?",
+      caseSensitive: false,
+    );
+
+    List<String> urls = regExp.allMatches(text).map((match) => match.group(0)!).toList();
+    List<String> finalUrls = [];
+    RegExp urlRegex = RegExp(r"(http(s)?://)", caseSensitive: false);
+    urls.forEach((element) {
+      if(urlRegex.allMatches(element).toList().length > 1){
+        String xyz = element.replaceAll("http", ",http");
+        List<String> splitted = xyz.split(RegExp(r",|;"));
+        splitted.forEach((element1) {
+          if(element1.isNotEmpty)
+            finalUrls.add(element1);
+        });
+      }else{
+        finalUrls.add(element);
+      }
+    });
+    return finalUrls;
+
+  }
+
+  bool isYouTubeUrl(String url) {
+    // Regular expression pattern to match YouTube URLs
+    RegExp youtubeVideoRegex = RegExp(r"^https?://(?:www\.)?youtube\.com/(?:watch\?v=)?([^#&?]+)");
+    RegExp youtubeShortsRegex = RegExp(r"^https?://(?:www\.)?youtube\.com/shorts/([^#&?]+)");
+
+    if (youtubeVideoRegex.hasMatch(url) || youtubeShortsRegex.hasMatch(url)) {
+      return true;
+    }
+
+    // Additional checks based on specific test link patterns (optional)
+    if (url.contains("youtu.be/")) {
+      // This check might need adjustments if Youtube short URLs change format
+      return true;
+    }
+
+    return false;
+  }
+
+  void playLink(String videoUrl, BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext ctx) {
+        return Center(
+          child: Container(
+              width: MediaQuery.of(context).size.width * 0.90,
+              height: MediaQuery.of(context).size.width * 0.80,
+              decoration: ShapeDecoration(
+                  color: Colors.black,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10))),
+              clipBehavior: Clip.antiAlias,
+              child: Stack(
+                children: [
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      FutureBuilder(future: getYoutubePlayer(videoUrl, () {
+                        Navigator.pop(ctx);
+                        launchUrl(Uri.parse(videoUrl));
+                      }), builder: (context,snap){
+                        if(snap.data != null)
+                          return snap.data as Widget;
+                        else return Center(
+                          child: CircularProgressIndicator(color: Colors.white,),
+                        );
+                      })
+                    ],
+                  ),
+                  Align(
+                    alignment: Alignment.topRight,
+                    child: Material(
+                      color: Colors.transparent,
+                      child: IconButton(
+                        icon: Icon(
+                          Icons.close,
+                          color: Colors.white,
+                          size: 30,
+                        ),
+                        onPressed: () {
+                          Navigator.pop(ctx);
+                        },
+                      ),
+                    ),
+                  )
+                ],
+              )),
+        );
+      },
+    );
+  }
+
+  late PlayerState _playerState;
+  late YoutubeMetaData _videoMetaData;
+  bool _isPlayerReady = false;
+
+  String extractPlaylistId(String playlistLink) {
+    Uri uri = Uri.parse(playlistLink);
+
+    String playlistId = '';
+
+    // Check if the link is a valid YouTube playlist link
+    if (uri.host == 'www.youtube.com' || uri.host == 'youtube.com') {
+      if (uri.pathSegments.contains('playlist')) {
+        int index = uri.pathSegments.indexOf('playlist');
+        if (index != -1 /*&& index + 1 < uri.pathSegments.length*/) {
+          playlistId = uri.queryParameters['list']!;
+        }
+      }
+    } else if (uri.host == 'youtu.be') {
+      // If the link is a short link
+      playlistId = uri.pathSegments.first;
+    }
+
+    return playlistId;
+  }
+
+
+  Future<List<String>> getPlaylistVideos(String playlistId) async {
+    // final url = "https://www.youtube.com/playlist?list=RDF0SflZWxv8k";
+    final url = "https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=50&playlistId=$playlistId&key=AIzaSyAT_gzTjHn9XuvQsmGdY63br7lKhD2KRdo";
+    final response = await http.get(Uri.parse(url));
+    if (response.statusCode == 200) {
+      // Parse the HTML content to extract video IDs (implementation depends on website structure)
+      List<String> videoIds = [];
+      final Map<String, dynamic> data = json.decode(response.body);
+      for (var item in data['items']) {
+        videoIds.add(item['snippet']['resourceId']['videoId']);
+      }
+      return videoIds; // List of video IDs
+    } else {
+      print ("Failed to fetch playlist videos");
+      return [];
+    }
+  }
+
+  String extractLiveId(String liveLink) {
+    Uri uri = Uri.parse(liveLink);
+
+    String liveId = '';
+
+    // Check if the link is a valid YouTube live link
+    if (uri.host == 'www.youtube.com' || uri.host == 'youtube.com') {
+      if (uri.pathSegments.contains('watch')) {
+        // If the link contains 'watch' segment
+        int index = uri.pathSegments.indexOf('watch');
+        if (index != -1 && index + 1 < uri.pathSegments.length) {
+          // Get the video ID
+          liveId = uri.queryParameters['v']!;
+        }
+      } else if (uri.pathSegments.contains('live')) {
+        // If the link contains 'live' segment
+        int index = uri.pathSegments.indexOf('live');
+        if (index != -1 && index + 1 < uri.pathSegments.length) {
+          // Get the live ID
+          liveId = uri.pathSegments[index + 1];
+        }
+      }
+    } else if (uri.host == 'youtu.be') {
+      // If the link is a short link
+      liveId = uri.pathSegments.first;
+    }
+
+    return liveId;
+  }
+
+
+  Future<Widget> getYoutubePlayer(String videoUrl, Function() fullScreen) async{
+    late YoutubePlayerController _controller;
+    String videoId = "";
+    if(videoUrl.toLowerCase().contains("playlist")){
+      String playlistId = extractPlaylistId(videoUrl);
+      var videoIds = await getPlaylistVideos(playlistId);
+      videoId = videoIds.first;
+    }else if(videoUrl.toLowerCase().contains("live")){
+      videoId = extractLiveId(videoUrl);
+    }else{
+      videoId = YoutubePlayer.convertUrlToId(videoUrl)!;
+    }
+    print("video id ========================> $videoId");
+    _controller = YoutubePlayerController(
+      initialVideoId: videoId,
+      flags: YoutubePlayerFlags(
+        mute: false,
+        autoPlay: true,
+        disableDragSeek: false,
+        loop: false,
+        isLive: videoUrl.toLowerCase().contains("live"),
+        forceHD: false,
+        enableCaption: true,
+      ),
+    );
+    _videoMetaData = const YoutubeMetaData();
+    _playerState = PlayerState.unknown;
+
+    return YoutubePlayerBuilder(
+      onEnterFullScreen: () {
+        _controller.toggleFullScreenMode();
+        _controller.dispose();
+        fullScreen.call();
+      },
+      builder: (context, player) {
+        return player;
+      },
+      player: YoutubePlayer(
+        controller: _controller,
+        showVideoProgressIndicator: true,
+        progressIndicatorColor: Colors.red,
+        progressColors: const ProgressBarColors(
+          playedColor: Colors.red,
+          handleColor: Colors.redAccent,
+        ),
+        bottomActions: [
+          const SizedBox(width: 14.0),
+          CurrentPosition(),
+          const SizedBox(width: 8.0),
+          ProgressBar(
+            isExpanded: true,
+            colors: const ProgressBarColors(
+              playedColor: Colors.red,
+              handleColor: Colors.redAccent,
+            ),
+          ),
+          RemainingDuration(),
+          const PlaybackSpeedButton(),
+          IconButton(
+            icon: Icon(
+              _controller.value.isFullScreen
+                  ? Icons.fullscreen_exit
+                  : Icons.fullscreen,
+              color: Colors.white,
+            ),
+            onPressed: () => fullScreen.call(),
+          ),
+        ],
+        onReady: () {
+          _controller.addListener(() {
+            if (_isPlayerReady && mounted && !_controller.value.isFullScreen) {
+              setState(() {
+                _playerState = _controller.value.playerState;
+                _videoMetaData = _controller.metadata;
+              });
+            }
+          });
+        },
+      ),
+    );
+  }
 
   getToken() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
