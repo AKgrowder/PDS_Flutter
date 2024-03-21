@@ -657,7 +657,7 @@ class _InboxScreenState extends State<InboxScreen> {
                                         CrossAxisAlignment.start,
                                     children: [
                                       Container(
-                                        width: _width / 1.55,
+                                        width: _width - 120,
                                         child: Row(
                                           children: [
                                             Text(

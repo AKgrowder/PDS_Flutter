@@ -16,9 +16,7 @@ class HashTagCubit extends Cubit<HashTagState> {
       dynamic settionExperied =
           await Repository().logOutSettionexperied(context);
       print("checkDatWant--$settionExperied");
-      // if (settionExperied == "Something Went Wrong, Try After Some Time.") {
-      //     emit(GetGuestAllPostErrorState("${settionExperied}"));
-      //   } else {
+
       if (settionExperied.success == true) {
         await setLOGOUT(context);
       } else {

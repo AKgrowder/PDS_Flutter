@@ -26,27 +26,27 @@ class SearchPages {
 class Object {
   List<Content>? content;
   Pageable? pageable;
-  int? totalPages;
-  int? totalElements;
   bool? last;
+  int? totalElements;
+  int? totalPages;
   int? size;
   int? number;
   Sort? sort;
-  int? numberOfElements;
   bool? first;
+  int? numberOfElements;
   bool? empty;
 
   Object(
       {this.content,
       this.pageable,
-      this.totalPages,
-      this.totalElements,
       this.last,
+      this.totalElements,
+      this.totalPages,
       this.size,
       this.number,
       this.sort,
-      this.numberOfElements,
       this.first,
+      this.numberOfElements,
       this.empty});
 
   Object.fromJson(Map<String, dynamic> json) {
@@ -59,14 +59,14 @@ class Object {
     pageable = json['pageable'] != null
         ? new Pageable.fromJson(json['pageable'])
         : null;
-    totalPages = json['totalPages'];
-    totalElements = json['totalElements'];
     last = json['last'];
+    totalElements = json['totalElements'];
+    totalPages = json['totalPages'];
     size = json['size'];
     number = json['number'];
     sort = json['sort'] != null ? new Sort.fromJson(json['sort']) : null;
-    numberOfElements = json['numberOfElements'];
     first = json['first'];
+    numberOfElements = json['numberOfElements'];
     empty = json['empty'];
   }
 
@@ -78,54 +78,54 @@ class Object {
     if (this.pageable != null) {
       data['pageable'] = this.pageable!.toJson();
     }
-    data['totalPages'] = this.totalPages;
-    data['totalElements'] = this.totalElements;
     data['last'] = this.last;
+    data['totalElements'] = this.totalElements;
+    data['totalPages'] = this.totalPages;
     data['size'] = this.size;
     data['number'] = this.number;
     if (this.sort != null) {
       data['sort'] = this.sort!.toJson();
     }
-    data['numberOfElements'] = this.numberOfElements;
     data['first'] = this.first;
+    data['numberOfElements'] = this.numberOfElements;
     data['empty'] = this.empty;
     return data;
   }
 }
 
 class Content {
-  String? companyName;
+  String? userCompanyPageUid;
   String? pageId;
-  String? profilePic;
-  String? companyType;
-  String? description;
-  String? pageUid;
+  String? companyPageName;
+  String? companyPageProfilePic;
+  String? pageDescription;
+  String? companyPageType;
 
   Content(
-      {this.companyName,
+      {this.userCompanyPageUid,
       this.pageId,
-      this.profilePic,
-      this.companyType,
-      this.description,
-      this.pageUid});
+      this.companyPageName,
+      this.companyPageProfilePic,
+      this.pageDescription,
+      this.companyPageType});
 
   Content.fromJson(Map<String, dynamic> json) {
-    companyName = json['companyName'];
+    userCompanyPageUid = json['userCompanyPageUid'];
     pageId = json['pageId'];
-    profilePic = json['profilePic'];
-    companyType = json['companyType'];
-    description = json['description'];
-    pageUid = json['pageUid'];
+    companyPageName = json['companyPageName'];
+    companyPageProfilePic = json['companyPageProfilePic'];
+    pageDescription = json['pageDescription'];
+    companyPageType = json['companyPageType'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['companyName'] = this.companyName;
+    data['userCompanyPageUid'] = this.userCompanyPageUid;
     data['pageId'] = this.pageId;
-    data['profilePic'] = this.profilePic;
-    data['companyType'] = this.companyType;
-    data['description'] = this.description;
-    data['pageUid'] = this.pageUid;
+    data['companyPageName'] = this.companyPageName;
+    data['companyPageProfilePic'] = this.companyPageProfilePic;
+    data['pageDescription'] = this.pageDescription;
+    data['companyPageType'] = this.companyPageType;
     return data;
   }
 }

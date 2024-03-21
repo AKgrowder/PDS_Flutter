@@ -6,6 +6,8 @@ import 'follwerState.dart';
 
 class FollowerBlock extends Cubit<FolllwerBlockState> {
   FollowerBlock() : super(FollwertBlockInitialState()) {}
+  dynamic getalluserlistModel;
+
   Future<void> removeFollwerApi(
     BuildContext context,
     String userUid,
@@ -91,6 +93,72 @@ class FollowerBlock extends Cubit<FolllwerBlockState> {
       }
     } catch (e) {
       emit(FollwertErrroState(getAllFollwerData));
+    }
+  }
+
+  Future<void> getalluser(
+    int? pageNumber,
+    String searchName,
+    BuildContext context, {
+    String? filterModule,
+  }) async {
+    try {
+      emit(FollwertBlockLoadingState());
+      getalluserlistModel = await Repository().getalluser(
+          pageNumber, searchName, context,
+          filterModule: filterModule);
+
+      if (getalluserlistModel.success == true) {
+        emit(GetAllUserLoadedState(getalluserlistModel));
+      }
+    } catch (e) {
+      print('errorstateshwowData-$e');
+      emit(FollwertErrroState(e.toString()));
+    }
+  }
+
+  Future<void> getAllPagaationApi(
+    int? pageNumber,
+    String searchName,
+    BuildContext context, {
+    String? filterModule,
+  }) async {
+    dynamic getalluserlistModelDataSetup;
+    try {
+      emit(FollwertBlockLoadingState());
+      getalluserlistModelDataSetup = await Repository().getalluser(
+          pageNumber, searchName, context,
+          filterModule: filterModule);
+
+      if (getalluserlistModelDataSetup.success == true) {
+        getalluserlistModel.object.content
+            .addAll(getalluserlistModelDataSetup.object.content);
+        getalluserlistModel.object.pageable.pageNumber =
+            getalluserlistModelDataSetup.object.pageable.pageNumber;
+        getalluserlistModel.object.totalElements =
+            getalluserlistModelDataSetup.object.totalElements;
+        emit(GetAllUserLoadedState(getalluserlistModel));
+      }
+    } catch (e) {
+      emit(FollwertErrroState(e.toString()));
+    }
+  }
+
+  Future<void> get_admin_roles_for_company_pageMethod(
+      BuildContext context) async {
+    try {
+      emit(FollwertBlockLoadingState());
+      dynamic getAdminRoleForCompny =
+          await Repository().get_admin_roles_for_company_page(
+        context,
+      );
+
+      if (getAdminRoleForCompny.success == true) {
+        emit(AdminRoleForCompnyUserLoadedState(getAdminRoleForCompny));
+      }
+    } catch (e) {
+      print('errorstateshwowData-$e');
+      emit(FollwertErrroState(e.toString()));
     }
   }
 }

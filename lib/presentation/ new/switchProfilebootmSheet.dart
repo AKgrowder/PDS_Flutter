@@ -121,6 +121,5 @@ int getIndexOfInitiallySelected(GetAllCompenyPageModel model) {
       return i;
     }
   }
-
   return 0;
 }
