@@ -261,19 +261,18 @@ showPopupMenu1(
     BuildContext context, int index, buttonKey, postuid, String screen) async {
   print("this screen-$screen");
   final RenderBox button =
-      buttonKey.currentContext!.findRenderObject() as RenderBox;
-  final RenderBox overlay =
-      Overlay.of(context).context.findRenderObject() as RenderBox;
-  final double top = button.localToGlobal(Offset.zero, ancestor: overlay).dy;
-  final double left = button.localToGlobal(Offset.zero, ancestor: overlay).dx;
-  final double padding = 8.0; // Adjust the padding value as needed
+        buttonKey.currentContext!.findRenderObject() as RenderBox;
+    final RenderBox overlay =
+        Overlay.of(context).context.findRenderObject() as RenderBox;
 
-  final RelativeRect position = RelativeRect.fromLTRB(
-    left, // left
-    top + button.size.height, // top
-    left + button.size.width + padding, // right
-    top + button.size.height, // bottom
-  );
+    final RelativeRect position = RelativeRect.fromRect(
+      Rect.fromPoints(
+        button.localToGlobal(Offset.zero, ancestor: overlay),
+        button.localToGlobal(button.size.bottomLeft(Offset.zero),
+            ancestor: overlay),
+      ),
+      Offset.zero & overlay.size,
+    );
   showMenu(
       context: context,
       position: position,
