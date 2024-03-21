@@ -220,7 +220,7 @@ class _MyHomePageState extends State<ShowProfileScreen>
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => NewBottomBar(buttomIndex:0),
+                            builder: (context) => NewBottomBar(buttomIndex: 0),
                           ));
                     } else {
                       Navigator.pop(context);
@@ -514,7 +514,19 @@ class _MyHomePageState extends State<ShowProfileScreen>
                               builder: (context) => SettingScreen(
                                     accountType:
                                         NewProfileData?.object?.accountType ??
-                                            '', module:  NewProfileData?.object?.module ?? '',
+
+                                            '',
+                                    module: NewProfileData?.object?.module ==
+                                                'COMPANY' &&
+                                            NewProfileData
+                                                    ?.object?.approvalStatus !=
+                                                "PENDING" &&
+                                            NewProfileData
+                                                    ?.object?.approvalStatus !=
+                                                "REJECTED"
+                                        ? true
+                                        : false,
+
                                   ))).then((value) =>
                           widget.ProfileNotification == true
                               ? BlocProvider.of<NewProfileSCubit>(context)
@@ -5812,9 +5824,6 @@ class _MyHomePageState extends State<ShowProfileScreen>
                 )
               : NestedScrollView(
                   controller: _scrollController,
-
-
-                  
                   headerSliverBuilder: (context, value) {
                     return [
                       SliverToBoxAdapter(child: _buildCarousel()),

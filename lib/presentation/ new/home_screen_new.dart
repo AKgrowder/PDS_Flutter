@@ -2307,21 +2307,21 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                       UserProfileImage != ""
                                                   ? GestureDetector(
                                                       onLongPress: () {
-                                                        if (getallcompenypagemodel
-                                                                    ?.object
-                                                                    ?.content
-                                                                    ?.isNotEmpty ==
-                                                                true &&
-                                                            getallcompenypagemodel
-                                                                    ?.object
-                                                                    ?.content
-                                                                    ?.length !=
-                                                                1) {
-                                                          showProfileSwitchBottomSheet(
-                                                              context,
-                                                              getallcompenypagemodel!,
-                                                              '${User_ID}');
-                                                        }
+                                                        // if (getallcompenypagemodel
+                                                        //             ?.object
+                                                        //             ?.content
+                                                        //             ?.isNotEmpty ==
+                                                        //         true &&
+                                                        //     getallcompenypagemodel
+                                                        //             ?.object
+                                                        //             ?.content
+                                                        //             ?.length !=
+                                                        //         1) {
+                                                        //   showProfileSwitchBottomSheet(
+                                                        //       context,
+                                                        //       getallcompenypagemodel!,
+                                                        //       '${User_ID}');
+                                                        // }
                                                       },
                                                       child: CustomImageView(
                                                         url:
@@ -2337,21 +2337,21 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                   : GestureDetector(
                                                       onLongPress: () {
                                                         // this is the company user if
-                                                        if (getallcompenypagemodel
-                                                                    ?.object
-                                                                    ?.content
-                                                                    ?.isNotEmpty ==
-                                                                true &&
-                                                            getallcompenypagemodel
-                                                                    ?.object
-                                                                    ?.content
-                                                                    ?.length !=
-                                                                1) {
-                                                          showProfileSwitchBottomSheet(
-                                                              context,
-                                                              getallcompenypagemodel!,
-                                                              '${User_ID}');
-                                                        }
+                                                        // if (getallcompenypagemodel
+                                                        //             ?.object
+                                                        //             ?.content
+                                                        //             ?.isNotEmpty ==
+                                                        //         true &&
+                                                        //     getallcompenypagemodel
+                                                        //             ?.object
+                                                        //             ?.content
+                                                        //             ?.length !=
+                                                        //         1) {
+                                                        //   showProfileSwitchBottomSheet(
+                                                        //       context,
+                                                        //       getallcompenypagemodel!,
+                                                        //       '${User_ID}');
+                                                        // }
                                                       },
                                                       child: CustomImageView(
                                                         imagePath: ImageConstant
@@ -4909,7 +4909,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                               if (AllGuestPostRoomData?.object?.content?[index].postDataType != "VIDEO") {
                                                                                 _onShareXFileFromAssets(
                                                                                   context,
-                                                                                  AllGuestPostRoomData?.object?.content?[index].thumbnailImageUrl ?? "",
+                                                                                  AllGuestPostRoomData?.object?.content?[index].thumbnailImageUrl ?? AllGuestPostRoomData?.object?.content?[index].postData?.first ?? "",
                                                                                   AllGuestPostRoomData?.object?.content?[index].postUserName ?? "",
                                                                                   AllGuestPostRoomData?.object?.content?[index].description ?? "",
                                                                                   androidLink: '${AllGuestPostRoomData?.object?.content?[index].postLink}',
