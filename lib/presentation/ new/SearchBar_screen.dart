@@ -49,7 +49,6 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
     ImageConstant.Rectangle,
   ];
   Timer? _timer;
-
   ScrollController scrollController = ScrollController();
   ScrollController scrollController1 = ScrollController();
   ScrollController scrollController2 = ScrollController();
@@ -57,6 +56,7 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
 
   int? indexxx;
   bool isSerch = false;
+  bool isExpert = false;
   var UserLogin_ID;
   GetDataInSerch? getDataInSerch;
   int? length;
@@ -172,10 +172,8 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
               dataget = true;
               print("api caling");
               getalluserlistModel = state.getAllUserRoomData;
-              getalluserlistModel?.object?.content?.forEach((element) {
-                print(
-                    "i want to check dtata-${element.hashtagNamesDto?.hashtagName}");
-              });
+
+              isExpert = true;
             }
             if (state is SearchPagesLoadedState) {
               searchPages = state.serchPages;
@@ -279,7 +277,7 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                                     }
                                   } else {
                                     isSerchCompnayPage = false;
-
+                                    isExpert = false;
                                     dataget = false;
                                     if (mounted) {
                                       super.setState(() {
@@ -358,6 +356,7 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                                 }
                               } else {
                                 isSerchCompnayPage = false;
+                                isExpert = false;
                                 dataget = false;
                                 if (mounted) {
                                   super.setState(() {
@@ -897,7 +896,7 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
         return Expanded(
           child: SingleChildScrollView(
             controller: scrollController,
-            child: PaginationWidget(
+            child: PaginationWidget1(
               scrollController: scrollController1,
               totalSize: hashtagModel?.object?.totalElements,
               offSet: hashtagModel?.object?.pageable?.pageNumber,
@@ -1397,7 +1396,7 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                                   width: 8,
                                 ),
                                 searchPages?.object?.content?[index]
-                                            .profilePic ==
+                                            .companyPageProfilePic ==
                                         null
                                     ? CircleAvatar(
                                         backgroundColor: Colors.white,
@@ -1407,7 +1406,7 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                                     : CircleAvatar(
                                         backgroundColor: Colors.white,
                                         backgroundImage: NetworkImage(
-                                          "${searchPages?.object?.content?[index].profilePic}",
+                                          "${searchPages?.object?.content?[index].companyPageProfilePic}",
                                         ),
                                         radius: 25,
                                       ),
@@ -1418,7 +1417,7 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                                   // color: Colors.amber,
                                   margin: EdgeInsets.only(right: 5),
                                   child: Text(
-                                    "${searchPages?.object?.content?[index].companyName}",
+                                    "${searchPages?.object?.content?[index].companyPageName}",
                                     overflow: TextOverflow.ellipsis,
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
@@ -1439,177 +1438,186 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                 ),
               );
       } else {
-        return Expanded(
-          child: SingleChildScrollView(
-            controller: scrollController,
-            child: PaginationWidget(
-              scrollController: scrollController,
-              totalSize: getalluserlistModel?.object?.totalElements,
-              offSet: getalluserlistModel?.object?.pageable?.pageNumber,
-              onPagination: (p0) async {
-                if (searchController.text.contains("#")) {
-                  String hashTageValue =
-                      searchController.text.replaceAll("#", "%23");
-                  BlocProvider.of<HashTagCubit>(context).getAllPagaationApi(
-                      (p0 + 1), hashTageValue.trim(), context);
-                } else {
-                  if (searchController.text.isNotEmpty) {
-                    print("this mehtod");
-                    BlocProvider.of<HashTagCubit>(context).getAllPagaationApi(
-                        (p0 + 1), searchController.text.trim(), context);
-                  }
-                }
-              },
-              items: ListView.builder(
-                physics: NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                padding: EdgeInsets.zero,
-                itemCount: getalluserlistModel?.object?.content?.length,
-                itemBuilder: (context, index) {
-                  return Column(
-                    children: [
-                      if (getalluserlistModel
-                              ?.object?.content?[index].hashtagNamesDto ==
-                          null)
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: GestureDetector(
-                            onTap: () {
-                              if (UserLogin_ID != null) {
-                                Navigator.push(context,
-                                    MaterialPageRoute(builder: (context) {
-                                  return MultiBlocProvider(
-                                      providers: [
-                                        BlocProvider<NewProfileSCubit>(
-                                          create: (context) =>
-                                              NewProfileSCubit(),
+        return isExpert == false
+            ? SizedBox()
+            : Expanded(
+                child: SingleChildScrollView(
+                  controller: scrollController,
+                  child: PaginationWidget(
+                    scrollController: scrollController,
+                    totalSize: getalluserlistModel?.object?.totalElements,
+                    offSet: getalluserlistModel?.object?.pageable?.pageNumber,
+                    onPagination: (p0) async {
+                      if (searchController.text.contains("#")) {
+                        String hashTageValue =
+                            searchController.text.replaceAll("#", "%23");
+                        BlocProvider.of<HashTagCubit>(context)
+                            .getAllPagaationApi(
+                                (p0 + 1), hashTageValue.trim(), context);
+                      } else {
+                        if (searchController.text.isNotEmpty) {
+                          print("this mehtod");
+                          BlocProvider.of<HashTagCubit>(context)
+                              .getAllPagaationApi((p0 + 1),
+                                  searchController.text.trim(), context);
+                        }
+                      }
+                    },
+                    items: ListView.builder(
+                      physics: NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      padding: EdgeInsets.zero,
+                      itemCount: getalluserlistModel?.object?.content?.length,
+                      itemBuilder: (context, index) {
+                        return Column(
+                          children: [
+                            if (getalluserlistModel
+                                    ?.object?.content?[index].hashtagNamesDto ==
+                                null)
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: GestureDetector(
+                                  onTap: () {
+                                    if (UserLogin_ID != null) {
+                                      Navigator.push(context,
+                                          MaterialPageRoute(builder: (context) {
+                                        return MultiBlocProvider(
+                                            providers: [
+                                              BlocProvider<NewProfileSCubit>(
+                                                create: (context) =>
+                                                    NewProfileSCubit(),
+                                              ),
+                                            ],
+                                            child: ProfileScreen(
+                                                User_ID:
+                                                    "${getalluserlistModel?.object?.content?[index].userUid}",
+                                                isFollowing: "REQUESTED"));
+                                      }));
+                                    } else {
+                                      NaviRegisterScreen();
+                                    }
+                                  },
+                                  child: Container(
+                                    height: 55,
+                                    width: _width / 1.1,
+                                    decoration: BoxDecoration(
+                                        border: Border.all(color: Colors.grey),
+                                        borderRadius:
+                                            BorderRadius.circular(10)),
+                                    child: Row(children: [
+                                      SizedBox(
+                                        width: 8,
+                                      ),
+                                      getalluserlistModel
+                                                  ?.object
+                                                  ?.content?[index]
+                                                  .userProfile ==
+                                              null
+                                          ? CircleAvatar(
+                                              backgroundColor: Colors.white,
+                                              radius: 25,
+                                              child: Image.asset(
+                                                  ImageConstant.tomcruse))
+                                          : CircleAvatar(
+                                              backgroundColor: Colors.white,
+                                              backgroundImage: NetworkImage(
+                                                "${getalluserlistModel?.object?.content?[index].userProfile}",
+                                              ),
+                                              radius: 25,
+                                            ),
+                                      SizedBox(
+                                        width: 8,
+                                      ),
+                                      Container(
+                                        margin: EdgeInsets.only(right: 10),
+                                        // width: _width / 1.5,
+                                        child: Text(
+                                          "${getalluserlistModel?.object?.content?[index].userName}",
+                                          overflow: TextOverflow.ellipsis,
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 15,
+                                          ),
+                                        ),
+                                      ),
+                                      Image.asset(
+                                        ImageConstant.Star,
+                                        height: 18,
+                                      )
+                                    ]),
+                                  ),
+                                ),
+                              ),
+                            if (getalluserlistModel
+                                    ?.object?.content?[index].hashtagNamesDto !=
+                                null)
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: GestureDetector(
+                                  onTap: () {
+                                    if (UserLogin_ID != null) {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                BlocProvider<HashTagCubit>(
+                                              create: (context) =>
+                                                  HashTagCubit(),
+                                              child: HashTagViewScreen(
+                                                  title:
+                                                      "${getalluserlistModel?.object?.content?[index].hashtagNamesDto?.hashtagName}"),
+                                            ),
+                                          ));
+                                    } else {
+                                      NaviRegisterScreen();
+                                    }
+                                  },
+                                  child: Container(
+                                    height: 50,
+                                    width: _width / 1.1,
+                                    decoration: BoxDecoration(
+                                        border: Border.all(color: Colors.grey),
+                                        borderRadius:
+                                            BorderRadius.circular(10)),
+                                    child: Row(
+                                      children: [
+                                        SizedBox(
+                                          width: 8,
+                                        ),
+                                        Container(
+                                          width: _width / 1.5,
+                                          child: Text(
+                                            "${getalluserlistModel?.object?.content?[index].hashtagNamesDto?.hashtagName}",
+                                            overflow: TextOverflow.ellipsis,
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 15,
+                                            ),
+                                          ),
+                                        ),
+                                        Container(
+                                          width: 10,
+                                        ),
+                                        Text(
+                                          "${getalluserlistModel?.object?.content?[index].hashtagNamesDto?.postCount} Post",
+                                          overflow: TextOverflow.ellipsis,
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 15,
+                                          ),
                                         ),
                                       ],
-                                      child: ProfileScreen(
-                                          User_ID:
-                                              "${getalluserlistModel?.object?.content?[index].userUid}",
-                                          isFollowing: "REQUESTED"));
-                                }));
-                              } else {
-                                NaviRegisterScreen();
-                              }
-                            },
-                            child: Container(
-                              height: 55,
-                              width: _width / 1.1,
-                              decoration: BoxDecoration(
-                                  border: Border.all(color: Colors.grey),
-                                  borderRadius: BorderRadius.circular(10)),
-                              child: Row(children: [
-                                SizedBox(
-                                  width: 8,
-                                ),
-                                getalluserlistModel?.object?.content?[index]
-                                            .userProfile ==
-                                        null
-                                    ? CircleAvatar(
-                                        backgroundColor: Colors.white,
-                                        radius: 25,
-                                        child:
-                                            Image.asset(ImageConstant.tomcruse))
-                                    : CircleAvatar(
-                                        backgroundColor: Colors.white,
-                                        backgroundImage: NetworkImage(
-                                          "${getalluserlistModel?.object?.content?[index].userProfile}",
-                                        ),
-                                        radius: 25,
-                                      ),
-                                SizedBox(
-                                  width: 8,
-                                ),
-                                Container(
-                                  margin: EdgeInsets.only(right: 10),
-                                  // width: _width / 1.5,
-                                  child: Text(
-                                    "${getalluserlistModel?.object?.content?[index].userName}",
-                                    overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 15,
                                     ),
                                   ),
                                 ),
-                                Image.asset(
-                                  ImageConstant.Star,
-                                  height: 18,
-                                )
-                              ]),
-                            ),
-                          ),
-                        ),
-                      if (getalluserlistModel
-                              ?.object?.content?[index].hashtagNamesDto !=
-                          null)
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: GestureDetector(
-                            onTap: () {
-                              if (UserLogin_ID != null) {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          BlocProvider<HashTagCubit>(
-                                        create: (context) => HashTagCubit(),
-                                        child: HashTagViewScreen(
-                                            title:
-                                                "${getalluserlistModel?.object?.content?[index].hashtagNamesDto?.hashtagName}"),
-                                      ),
-                                    ));
-                              } else {
-                                NaviRegisterScreen();
-                              }
-                            },
-                            child: Container(
-                              height: 50,
-                              width: _width / 1.1,
-                              decoration: BoxDecoration(
-                                  border: Border.all(color: Colors.grey),
-                                  borderRadius: BorderRadius.circular(10)),
-                              child: Row(
-                                children: [
-                                  SizedBox(
-                                    width: 8,
-                                  ),
-                                  Container(
-                                    width: _width / 1.5,
-                                    child: Text(
-                                      "${getalluserlistModel?.object?.content?[index].hashtagNamesDto?.hashtagName}",
-                                      overflow: TextOverflow.ellipsis,
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 15,
-                                      ),
-                                    ),
-                                  ),
-                                  Container(
-                                    width: 10,
-                                  ),
-                                  Text(
-                                    "${getalluserlistModel?.object?.content?[index].hashtagNamesDto?.postCount} Post",
-                                    overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 15,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        )
-                    ],
-                  );
-                },
-              ),
-            ),
-          ),
-        );
+                              )
+                          ],
+                        );
+                      },
+                    ),
+                  ),
+                ),
+              );
       }
     } else {
       return Expanded(

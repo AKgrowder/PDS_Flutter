@@ -9,10 +9,12 @@ import 'package:pds/API/Bloc/RateUs_Bloc/RateUs_cubit.dart';
 import 'package:pds/API/Bloc/accounttype_bloc/account_cubit.dart';
 import 'package:pds/API/Bloc/accounttype_bloc/account_state.dart';
 import 'package:pds/API/Bloc/logOut_bloc/logOut_cubit.dart';
+import 'package:pds/API/Model/get_assigned_users_of_company_pageModel/get_assigned_users_of_company_pageModel.dart';
 import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/presentation/%20new/Blocked_userList_screen.dart';
 import 'package:pds/presentation/Comapny_page/Comapny_manage_screen.dart';
 import 'package:pds/presentation/change_password_screen/change_password_screen.dart';
+import 'package:pds/presentation/comnpyPageAdminScreen.dart';
 import 'package:pds/presentation/settings/LogOut_dailog.dart';
 import 'package:pds/widgets/delete_dailog.dart';
 import 'package:pds/widgets/rateUS_dailog.dart';
@@ -27,10 +29,14 @@ import '../my account/my_account_screen.dart';
 import '../policy_of_company/policies.dart';
 
 class SettingScreen extends StatefulWidget {
+  String? userCompanyPageUid;
   String accountType;
-  String module;
+  bool module;
 
-  SettingScreen({required this.accountType, required this.module});
+  SettingScreen(
+      {required this.accountType,
+      required this.module,
+      this.userCompanyPageUid});
   @override
   State<SettingScreen> createState() => _SettingScreenState();
 }
@@ -48,6 +54,7 @@ var Setting_Array = [
   "Invite Friends",
   "Rate Us",
   "Delete Account",
+  "page Admin",
   "Manage Company Page",
   "Public & Private Profile",
   "Block User",
@@ -90,7 +97,7 @@ var SettingImage_Array = [
   ImageConstant.setting_star,
   // ImageConstant.Invite_Friends,
   ImageConstant.setting_delete,
-  ImageConstant.setting_comanyManage,
+  ImageConstant.tomcruse,
   ImageConstant.profileLock, ImageConstant.block_user,
   ImageConstant.setting_power,
 
@@ -116,8 +123,21 @@ class _SettingScreenState extends State<SettingScreen> {
   String? userStatus;
   String? rejcteReson;
   bool? UserProfileOpen;
+  GetAssignedUsersOfCompanyPage? getAssignedUsersOfCompanyPage;
+
+  String? User_CompnyPageModule;
+  methodCalling() async {
+    print("check what is value-${widget.userCompanyPageUid}");
+    if (widget.userCompanyPageUid != null) {
+      await BlocProvider.of<AccountCubit>(context)
+          .get_assigned_users_of_company_pageApi(
+              '${widget.userCompanyPageUid}', context);
+    }
+  }
+
   @override
   void initState() {
+    methodCalling();
     print("accountcheck--${widget.accountType}");
     if (widget.accountType == 'PUBLIC') {
       super.setState(() {
@@ -265,6 +285,11 @@ class _SettingScreenState extends State<SettingScreen> {
       ),
       body: BlocConsumer<AccountCubit, AccountState>(
         listener: (context, state) {
+          if (state is GetAssignedUsersOfCompanyPageLoadedState) {
+
+            getAssignedUsersOfCompanyPage = state.getAssignedUsersOfCompanyPage;
+            print("check Calusdasdf0-");
+          }
           if (state is AccountLoadedState) {
             SnackBar snackBar = SnackBar(
               content: Text(state.accountType.object.toString()),
@@ -350,7 +375,7 @@ class _SettingScreenState extends State<SettingScreen> {
                             ) {
                           return SizedBox();
                         }
-                        if (widget.module != 'COMPANY' && index == 9) {
+                        if (widget.module == true && index == 9) {
                           return SizedBox();
                         }
                         return GestureDetector(
@@ -477,14 +502,20 @@ class _SettingScreenState extends State<SettingScreen> {
 
                                 break;
                               case 9:
+                                   Navigator.push(context,
+                                    MaterialPageRoute(builder: (context) {
+                                  return PageAdmin(getAssignedUsersOfCompanyPage: getAssignedUsersOfCompanyPage!,
+                                  companyPageUid: widget.userCompanyPageUid,
+                                  );
+                                }));
+                                break;
+                              case 10:
+                                print("this is the 10");
                                 Navigator.push(context,
                                     MaterialPageRoute(builder: (context) {
                                   return ComapnyManageScreen();
                                 }));
                                 print("profile");
-                                break;
-                              case 10:
-                              print("this is the 10");
                                 break;
                               // case 11:
                               //   // showDialog(
@@ -493,21 +524,22 @@ class _SettingScreenState extends State<SettingScreen> {
                               //   break;
 
                               case 11:
+                                break;
+
+                              case 12:
                                 print("this is the 10");
                                 Navigator.of(context).push(MaterialPageRoute(
                                     builder: (context) =>
                                         const BlockedUserScreen()));
 
                                 break;
-
-                              case 12:
+                              case 13:
                                 showDialog(
                                     context: context,
                                     builder: (_) => BlocProvider<LogOutCubit>(
                                           create: (context) => LogOutCubit(),
                                           child: LogOutdailog(),
                                         ));
-
                                 break;
                               /*   case 7:
                                     showDialog(
@@ -561,7 +593,7 @@ class _SettingScreenState extends State<SettingScreen> {
                                             fontWeight: FontWeight.w500),
                                       ),
                                       Spacer(),
-                                      index == 10
+                                      index == 11
                                           ? Padding(
                                               padding: const EdgeInsets.only(
                                                   right: 10),
@@ -642,6 +674,8 @@ class _SettingScreenState extends State<SettingScreen> {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     userStatus = await prefs.getString(PreferencesKey.userStatus);
     UserProfileOpen = await prefs.getBool(PreferencesKey.OpenProfile);
+    User_CompnyPageModule = prefs.getString(PreferencesKey.module1);
+
     if (userStatus != 'APPROVED') {
       rejcteReson = userStatus?.split('-').last;
     }

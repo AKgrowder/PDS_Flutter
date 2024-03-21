@@ -782,10 +782,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         TextFiledCommenWiget(_width),
                         GestureDetector(
                           onTap: () async {
-                            print(
-                                "Dfsdfsdhgfsdgfg-${widget.newProfileData?.object?.module}");
-                            print("i want to check UserId-${User_ID}");
-                            userAllRqureidData();
+                            if (User_CompnyPageModule == null) {
+                              userAllRqureidData();
+                            } else {
+                              compnyPageValidation();
+                            }
                           },
                           child: Column(
                             children: [
@@ -2447,5 +2448,34 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     }
 
     return STR;
+  }
+
+  compnyPageValidation() {
+    if (userNameController.text.isEmpty) {
+      SnackBar snackBar = SnackBar(
+        content: Text('Please Enter UserId'),
+        backgroundColor: ColorConstant.primary_color,
+      );
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    }else if (userNameController.text.trim().isEmpty) {
+      SnackBar snackBar = SnackBar(
+        content: Text('Userid can\'t be just blank spaces'),
+        backgroundColor: ColorConstant.primary_color,
+      );
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    }else if(companyName.text.isEmpty){
+      SnackBar snackBar = SnackBar(
+        content: Text('Please Enter CompanyName'),
+        backgroundColor: ColorConstant.primary_color,
+      );
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    }
+    else if (companyName.text.trim().isEmpty) {
+      SnackBar snackBar = SnackBar(
+        content: Text('companyName can\'t be just blank spaces'),
+        backgroundColor: ColorConstant.primary_color,
+      );
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    }
   }
 }
