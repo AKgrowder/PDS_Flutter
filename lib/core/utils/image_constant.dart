@@ -284,13 +284,24 @@ class ImageConstant {
   static String nopostimage = 'assets/images/Frame 1171276328.png';
   static String avatarimage = 'assets/images/avatarimage.jpg';
   static String StarSave = 'assets/images/goldan_star.png';
-  static String newStar =  'assets/images/newStar.png';
+  static String newStar = 'assets/images/newStar.png';
   static String videocall = 'assets/images/video-call.png';
- static String deleteComapny = "assets/images/delete_img.png";
- static String selectComapny  = "assets/images/select_account.png";
- static String UnselectComapny  = "assets/images/unSelect_account.png";
-static String switchAccount  =  "assets/images/switch_acc.png";
-  static   String emptylistimage = "assets/images/emptylistimage.png";
+  static String deleteComapny = "assets/images/delete_img.png";
+  static String selectComapny = "assets/images/select_account.png";
+  static String UnselectComapny = "assets/images/unSelect_account.png";
+  static String switchAccount = "assets/images/switch_acc.png";
+  static String emptylistimage = "assets/images/emptylistimage.png";
+  static String packageing_products = "assets/images/package_products.png";
+  static String forum = "assets/images/Knowlage_fourm.png";
+  static String plastic_waste = "assets/images/plastic_waste.png";
+  static String pride_lab = "assets/images/pride_lab.png";
+  static String raw_material_marketplace = "assets/images/raw_material.png";
+  static String rental_packaging = "assets/images/rental_packageing.png";
+  static String ragisternowlogo = "assets/images/ragisternowlogo.png";
+  static String supplyer_image = "assets/images/supplier_image.png";
+  static String buyer_image = "assets/images/buyer_image.png";
+  static String charge_payment = "assets/images/chargepayment.png";
+  static String createaccount = "assets/images/create_account_image.png";
 
   /// end
 }
