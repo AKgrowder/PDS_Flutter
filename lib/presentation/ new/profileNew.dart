@@ -149,6 +149,8 @@ class _ProfileScreenState extends State<ProfileScreen>
   String? formattedDateStart;
   String? formattedDateEnd;
   String? User_Module;
+  String? User_CompnyPageModule;
+
   FollowersClassModel? followersClassModel1;
   FollowersClassModel? followersClassModel2;
   List<String> videoUrls = [];
@@ -349,11 +351,12 @@ class _ProfileScreenState extends State<ProfileScreen>
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     User_ID = prefs.getString(PreferencesKey.loginUserID);
     User_Module = prefs.getString(PreferencesKey.module);
+    User_CompnyPageModule = prefs.getString(PreferencesKey.module1);
+    print("this is the seaction check -${User_CompnyPageModule}");
   }
 
   @override
   update(Observable observable, String? notifyName, Map? map) async {
-    print("dfgsdfgdfgsdg-${map?['index']}");
     GetAllPostData?.object?[map?['index']].isReports = true;
     setState(() {});
   }
@@ -819,7 +822,6 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                             builder: (context) =>
                                                                 NewBottomBar(
                                                                     buttomIndex:
-                                     
                                                                         0),
                                                           ));
                                                     } else {
@@ -832,7 +834,6 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                     color: Color.fromRGBO(
                                                         255, 255, 255, 0.3),
                                                     child: Center(
-                             
                                                       child: Image.asset(
                                                         ImageConstant.backArrow,
                                                         fit: BoxFit.fill,
@@ -850,7 +851,6 @@ class _ProfileScreenState extends State<ProfileScreen>
                                             children: [
                                               GestureDetector(
                                                 onTap: () {
-                          
                                                   print(
                                                       "frgfgdfggdfgdfhghfdgh");
                                                   if (NewProfileData
@@ -881,7 +881,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                       'https://inpackaging-images.s3.ap-south-1.amazonaws.com/misc/InPackaging_Logo.png',
                                                                   title: '',
                                                                 ) */
-                          
+
                                                           ProfilePage(
                                                         image: ImageConstant
                                                             .tomcruse,
@@ -909,7 +909,6 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                   ''
                                                           ? CircleAvatar(
                                                               backgroundColor:
-                          
                                                                   Colors.white,
                                                               backgroundImage:
                                                                   AssetImage(
@@ -930,7 +929,6 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                           : CircleAvatar(
                                                               backgroundColor:
                                                                   Colors.white,
-                          
                                                               backgroundImage:
                                                                   NetworkImage(
                                                                       "${NewProfileData?.object?.userProfilePic}"),
@@ -938,12 +936,14 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                             )),
                                                 ),
                                               ),
-                                              if (
-                                                  getallcompenypagemodel
+                                              if (getallcompenypagemodel
                                                           ?.object
                                                           ?.content
                                                           ?.isNotEmpty ==
-                                                      true)
+                                                      true &&
+                                                  getallcompenypagemodel?.object
+                                                          ?.content?.length !=
+                                                      1)
                                                 Positioned(
                                                   bottom: 5,
                                                   right: -0,
@@ -1050,101 +1050,110 @@ class _ProfileScreenState extends State<ProfileScreen>
                                       )
                                     : User_ID == NewProfileData?.object?.userUid
                                         ? Padding(
-                                            padding:
-                                                const EdgeInsets.only(top: 15),
+                                            padding: EdgeInsets.only(
+                                                top: User_CompnyPageModule ==
+                                                        null
+                                                    ? 15
+                                                    : 0),
                                             child: Row(
                                               mainAxisSize: MainAxisSize.min,
                                               children: [
-                                                Flexible(
-                                                  child: Container(
-                                                    height: 30,
-                                                    decoration: BoxDecoration(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              20),
-                                                      color: NewProfileData
-                                                                  ?.object
-                                                                  ?.approvalStatus ==
-                                                              "PARTIALLY_REGISTERED"
-                                                          ? Color(0xffB6D9EC)
-                                                          : NewProfileData
-                                                                      ?.object
-                                                                      ?.approvalStatus ==
-                                                                  "PENDING"
-                                                              ? Color(
-                                                                  0xffFFDBA8)
-                                                              : NewProfileData
-                                                                          ?.object
-                                                                          ?.approvalStatus ==
-                                                                      "APPROVED"
-                                                                  ? Color(
-                                                                      0xffD5EED5)
-                                                                  : Color(
-                                                                      0xffFFE0E1),
-                                                    ),
-                                                    child: Padding(
-                                                      padding:
-                                                          const EdgeInsets.only(
-                                                              left: 15,
-                                                              right: 15),
-                                                      child: Row(
-                                                        mainAxisSize:
-                                                            MainAxisSize.min,
-                                                        children: [
-                                                          Container(
-                                                            height: 10,
-                                                            width: 10,
-                                                            decoration: BoxDecoration(
-                                                                shape: BoxShape.circle,
-                                                                color: NewProfileData?.object?.approvalStatus == "PARTIALLY_REGISTERED"
-                                                                    ? Color(0xff1A94D7)
-                                                                    : NewProfileData?.object?.approvalStatus == "PENDING"
-                                                                        ? Color(0xffC28432)
-                                                                        : NewProfileData?.object?.approvalStatus == "APPROVED"
-                                                                            ? Color(0xff019801)
-                                                                            : Color(0xffFF000B)),
-                                                          ),
-                                                          SizedBox(
-                                                            width: 10,
-                                                          ),
-                                                          Text(
-                                                            "Profile ${NewProfileData?.object?.approvalStatus}",
-                                                            style: TextStyle(
-                                                                color: NewProfileData
+                                                if (User_CompnyPageModule ==
+                                                    null)
+                                                  Flexible(
+                                                    child: Container(
+                                                      height: 30,
+                                                      decoration: BoxDecoration(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(20),
+                                                        color: NewProfileData
+                                                                    ?.object
+                                                                    ?.approvalStatus ==
+                                                                "PARTIALLY_REGISTERED"
+                                                            ? Color(0xffB6D9EC)
+                                                            : NewProfileData
+                                                                        ?.object
+                                                                        ?.approvalStatus ==
+                                                                    "PENDING"
+                                                                ? Color(
+                                                                    0xffFFDBA8)
+                                                                : NewProfileData
                                                                             ?.object
                                                                             ?.approvalStatus ==
-                                                                        "PARTIALLY_REGISTERED"
+                                                                        "APPROVED"
                                                                     ? Color(
-                                                                        0xff1A94D7)
-                                                                    : NewProfileData?.object?.approvalStatus ==
-                                                                            "PENDING"
-                                                                        ? Color(
-                                                                            0xffC28432)
-                                                                        : NewProfileData?.object?.approvalStatus ==
-                                                                                "APPROVED"
-                                                                            ? Color(
-                                                                                0xff019801)
-                                                                            : Color(
-                                                                                0xffFF000B),
-                                                                fontSize: 15,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w600),
-                                                          )
-                                                        ],
+                                                                        0xffD5EED5)
+                                                                    : Color(
+                                                                        0xffFFE0E1),
+                                                      ),
+                                                      child: Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                    .only(
+                                                                left: 15,
+                                                                right: 15),
+                                                        child: Row(
+                                                          mainAxisSize:
+                                                              MainAxisSize.min,
+                                                          children: [
+                                                            Container(
+                                                              height: 10,
+                                                              width: 10,
+                                                              decoration: BoxDecoration(
+                                                                  shape: BoxShape.circle,
+                                                                  color: NewProfileData?.object?.approvalStatus == "PARTIALLY_REGISTERED"
+                                                                      ? Color(0xff1A94D7)
+                                                                      : NewProfileData?.object?.approvalStatus == "PENDING"
+                                                                          ? Color(0xffC28432)
+                                                                          : NewProfileData?.object?.approvalStatus == "APPROVED"
+                                                                              ? Color(0xff019801)
+                                                                              : Color(0xffFF000B)),
+                                                            ),
+                                                            SizedBox(
+                                                              width: 10,
+                                                            ),
+                                                            Text(
+                                                              "Profile ${NewProfileData?.object?.approvalStatus}",
+                                                              style: TextStyle(
+                                                                  color: NewProfileData
+                                                                              ?.object
+                                                                              ?.approvalStatus ==
+                                                                          "PARTIALLY_REGISTERED"
+                                                                      ? Color(
+                                                                          0xff1A94D7)
+                                                                      : NewProfileData?.object?.approvalStatus ==
+                                                                              "PENDING"
+                                                                          ? Color(
+                                                                              0xffC28432)
+                                                                          : NewProfileData?.object?.approvalStatus ==
+                                                                                  "APPROVED"
+                                                                              ? Color(
+                                                                                  0xff019801)
+                                                                              : Color(
+                                                                                  0xffFF000B),
+                                                                  fontSize: 15,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w600),
+                                                            )
+                                                          ],
+                                                        ),
                                                       ),
                                                     ),
                                                   ),
-                                                ),
                                               ],
                                             ),
                                           )
                                         : SizedBox(),
                                 Padding(
-                                  padding: EdgeInsets.only(top: 20),
+                                  padding: EdgeInsets.only(
+                                      top: User_CompnyPageModule == null
+                                          ? 20
+                                          : 0),
                                   child: Center(
                                     child: Text(
-                                      '${NewProfileData?.object?.name}',
+                                      '${User_CompnyPageModule == null ? NewProfileData?.object?.name : NewProfileData?.object?.companyName}',
                                       style: TextStyle(
                                           fontSize: 26,
                                           fontFamily: "outfit",
@@ -1163,7 +1172,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                         left: 0,
                                       ),
                                       child: Text(
-                                        '@${NewProfileData?.object?.userName}',
+                                       User_CompnyPageModule == null? '@${NewProfileData?.object?.userName}':'${NewProfileData?.object?.companyPageType}',
                                         style: TextStyle(
                                             fontSize: 18,
                                             fontFamily: "outfit",
@@ -1190,7 +1199,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                             : SizedBox()
                                   ],
                                 ),
-                              
+
                                 SizedBox(
                                   height: 10,
                                 ),
@@ -1634,8 +1643,13 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                       context, widget.User_ID)); */
                                               }
                                             } else {
-                                               if (NewProfileData?.object?.accountType == 'PUBLIC' && NewProfileData?.object?.isFollowing == 'FOLLOW') {
-                                                 Navigator.push(context,
+                                              if (NewProfileData?.object
+                                                          ?.accountType ==
+                                                      'PUBLIC' &&
+                                                  NewProfileData?.object
+                                                          ?.isFollowing ==
+                                                      'FOLLOW') {
+                                                Navigator.push(context,
                                                     MaterialPageRoute(
                                                         builder: (context) {
                                                   return MultiBlocProvider(
@@ -1677,8 +1691,6 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                 });
                                               }
                                             }
-
-
                                           },
                                           child: Container(
                                             color: Colors.transparent,
@@ -1765,8 +1777,13 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                             false));
                                               }
                                             } else {
-                                               if (NewProfileData?.object?.accountType == 'PUBLIC' && NewProfileData?.object?.isFollowing == 'FOLLOW') {
-                                                 Navigator.push(context,
+                                              if (NewProfileData?.object
+                                                          ?.accountType ==
+                                                      'PUBLIC' &&
+                                                  NewProfileData?.object
+                                                          ?.isFollowing ==
+                                                      'FOLLOW') {
+                                                Navigator.push(context,
                                                     MaterialPageRoute(
                                                         builder: (context) {
                                                   return MultiBlocProvider(
@@ -1798,8 +1815,6 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                             false));
                                               }
                                             }
-
-                                            
                                           },
                                           child: Container(
                                             // color: Colors.amber,
@@ -7351,7 +7366,7 @@ class _ProfileScreenState extends State<ProfileScreen>
 
     if (Platform.isAndroid) {
       await Share.shareXFiles(
-        [XFile("/sdcard/download/IPImage.jpg")],
+        [XFile("/sdcard/download/IP__image.jpg")],
         subject: "Share",
         text: "Try This Awesome App \n\n Android :- ${androidLink}",
         sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size,
@@ -7361,7 +7376,7 @@ class _ProfileScreenState extends State<ProfileScreen>
         [
           XFile(directory.path +
               Platform.pathSeparator +
-              'Growder_Image/IPImage.jpg')
+              'Growder_Image/IP__image.jpg')
         ],
         subject: "Share",
         text: "Try This Awesome App \n\n Android :- ${androidLink}",

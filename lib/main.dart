@@ -368,7 +368,8 @@ void main() async {
 
   ///Please update theme as per your need if required.
   ThemeHelper().changeTheme('primary');
-
+ 
+ 
   FirebaseMessaging.onBackgroundMessage(_messageHandler);
   FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) async {
     print("/* onMessageOpenedApp: */ ${message.notification?.body}");
@@ -382,74 +383,36 @@ void main() async {
         PreferencesKey.PushNotificationUID, "${message.data['uid']}");
     prefs.setString(
         PreferencesKey.PushNotificationSubject, "${message.data['Subject']}");
+  });
 
-    //  if (message.data["navigation"] == "/your_route") {
-    // int _yourId = int.tryParse(message.data["id"]) ?? 0;
-    // Navigator.push(
-    //     navigatorKey.currentState.context,
-    //     MaterialPageRoute(
-    //         builder: (context) => YourScreen(
-    //               yourId: _yourId,
-    //             )));
+  //This method will call when the app is in kill state
+  FirebaseMessaging.instance
+      .getInitialMessage()
+      .then((RemoteMessage? message) async {
+    if (message != null) {
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      print("/* onMessageOpenedApp: */ ${message.data['uid']}");
+      print("/* onMessageOpenedApp: */ ${message.data['Subject']}");
+      prefs.setString(
+          PreferencesKey.PushNotificationUID, "${message.data['uid']}");
+      prefs.setString(
+          PreferencesKey.PushNotificationSubject, "${message.data['Subject']}");
+      //Handle push notification redirection here
+    }
+  });
 
-    /* message.data["Subject"] == "TAG_POST" ||
-            message.data["Subject"] == "RE_POST"
-        ? Navigator.push(
-            navigatorKey.currentState!.context,
-            MaterialPageRoute(
-                builder: (context) => OpenSavePostImage(
-                      PostID: message.data["uid"],
-                      index: 0,
-                    )),
-          )
-        // print("opne Save Image screen RE_POST & TAG_POST");
-
-        : message.data["Subject"] == "INVITE_ROOM"
-            ? print("Notification Seen INVITE_ROOM")
-            : message.data["Subject"] == "EXPERT_LEFT_ROOM" ||
-                    message.data["Subject"] == "MEMBER_LEFT_ROOM" ||
-                    message.data["Subject"] == "DELETE_ROOM" ||
-                    message.data["Subject"] == "EXPERT_ACCEРТ_INVITE" ||
-                    message.data["Subject"] == "EXPERT_REJECT_INVITE"
-                ? print(
-                    "Notification Seen  EXPERT_LEFT_ROOM & MEMBER_LEFT_ROOM & DELETE_ROOM & EXPERT_ACCEРТ_INVITE & EXPERT_REJECT_INVITE")
-                : message.data["Subject"] == "EXPERT_REJECT_INVITE"
-                    ? print("Seen Notification EXPERT_REJECT_INVITE")
-                    : message.data["Subject"] == "LIKE_POST" ||
-                            message.data["Subject"] == "COMMENT_POST" ||
-                            message.data["Subject"] == "TAG_COMMENT_POST"
-                        ? Navigator.push(
-                            navigatorKey.currentState!.context,
-                            MaterialPageRoute(
-                                builder: (context) => OpenSavePostImage(
-                                      PostID: message.data["uid"],
-                                      index: 0,
-                                      profileTure: message.data["Subject"] ==
-                                                  "COMMENT_POST" ||
-                                              message.data["Subject"] ==
-                                                  "TAG_COMMENT_POST"
-                                          ? true
-                                          : false,
-                                    )),
-                          )
-                        // print("opne Save Image screen LIKE_POST & COMMENT_POST & TAG_COMMENT_POST")
-                        : message.data["Subject"] == "FOLLOW_PUBLIC_ACCOUNT" ||
-                                message.data["Subject"] ==
-                                    "FOLLOW_PRIVATE_ACCOUNT_REQUEST" ||
-                                message.data["Subject"] ==
-                                    "FOLLOW_REQUEST_ACCEPTED" ||
-                                message.data["Subject"] == "PROFILE_APPROVED" ||
-                                message.data["Subject"] == "PROFILE_REJECTED" ||
-                                message.data["Subject"] == "PROFILE_VIEWED"
-                            ? Navigator.push(navigatorKey.currentState!.context,
-                                MaterialPageRoute(builder: (context) {
-                                return ProfileScreen(
-                                    User_ID: "${message.data["uid"]}",
-                                    isFollowing: "",
-                                    ProfileNotification: true);
-                              }))
-                            //  print("open User Profile FOLLOW_PUBLIC_ACCOUNT & FOLLOW_PRIVATE_ACCOUNT_REQUEST & FOLLOW_REQUEST_ACCEPTED")
-                            : print(""); */
+  //This method will call when the app is in foreground state
+  FirebaseMessaging.onMessage.listen((RemoteMessage? message) async {
+    if (message != null && message.data.isNotEmpty) {
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      print("/* onMessageOpenedApp: */ ${message.data['uid']}");
+      print("/* onMessageOpenedApp: */ ${message.data['Subject']}");
+      prefs.setString(
+          PreferencesKey.PushNotificationUID, "${message.data['uid']}");
+      prefs.setString(
+          PreferencesKey.PushNotificationSubject, "${message.data['Subject']}");
+      //Handle push notification redirection here
+    }
   });
 
   FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;

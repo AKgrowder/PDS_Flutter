@@ -1585,7 +1585,7 @@ class _HashTagViewScreenState extends State<HashTagViewScreen> with Observer {
 
     if (Platform.isAndroid) {
       Share.shareXFiles(
-        [XFile("/sdcard/download/IPImage.jpg")],
+        [XFile("/sdcard/download/IP__image.jpg")],
         subject: "Share",
         text: "Try This Awesome App \n\n Android :- ${androidLink}",
         // sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size,
@@ -1595,7 +1595,7 @@ class _HashTagViewScreenState extends State<HashTagViewScreen> with Observer {
         [
           XFile(directory.path +
               Platform.pathSeparator +
-              'Growder_Image/IPImage.jpg')
+              'Growder_Image/IP__image.jpg')
         ],
         subject: "Share",
         text: "Try This Awesome App \n\n Android :- ${androidLink}",
