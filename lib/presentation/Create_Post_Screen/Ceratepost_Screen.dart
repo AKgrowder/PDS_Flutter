@@ -2625,41 +2625,55 @@ class _CreateNewPostState extends State<CreateNewPost> {
       String data1 = value.split(' #').last.replaceAll('#', '');
       BlocProvider.of<AddPostCubit>(context)
           .GetAllHashtag(context, '10', '#${data1.trim()}');
-    }  else if (AnyLinkPreview.isValidLink(value)) {
-      if (_timer != null) {
-        _timer?.cancel();
-        _timer = Timer(Duration(seconds: 2), () {
-          setState(() {
-            title =value;
+    } else if (AnyLinkPreview.isValidLink(extractUrls(value).first)) {
+        if (_timer != null) {
+          _timer?.cancel();
+          _timer = Timer(Duration(seconds: 2), () {
+            setState(() {
+              title = extractUrls(value).first;
+            });
           });
-        });
+        } else {
+          _timer = Timer(Duration(seconds: 2), () {
+            setState(() {
+              title = extractUrls(value).first;
+            });
+          });
+        }
       } else {
-        _timer = Timer(Duration(seconds: 2), () {
-          setState(() {
-            title =value;
-          });
+        setState(() {
+          // postText.text = postText.text + ' ' + postTexContrlloer.join(' ,');
+          istageData = false;
+          isHeshTegData = false;
+          title = "";
         });
       }
-      print("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% url : $value");
 
-      // _fetchMetadata(value);
-    } else {
-      setState(() {
-        // postText.text = postText.text + ' ' + postTexContrlloer.join(' ,');
-        istageData = false;
-        isHeshTegData = false;
-        title = "";
-      });
-    }
   }
 
-  bool isURL(String url) {
-    // Regular expression pattern to match URL
+  List<String> extractUrls(String text) {
     RegExp regExp = RegExp(
-      r"^(?:http|https):\/\/[\w\-]+(\.[\w\-]+)+[\w\-.,@?^=%&:/~\+#]*[\w\-@?^=%&/~\+#]$",
+      r"https?:\/\/[\w\-]+(\.[\w\-]+)+[\w\-.,@?^=%&:/~\+#]*[\w\-@?^=%&/~\+#]?",
       caseSensitive: false,
     );
-    return regExp.hasMatch(url);
+
+    List<String> urls = regExp.allMatches(text).map((match) => match.group(0)!).toList();
+    List<String> finalUrls = [];
+    RegExp urlRegex = RegExp(r"(http(s)?://)", caseSensitive: false);
+    urls.forEach((element) {
+      if(urlRegex.allMatches(element).toList().length > 1){
+        String xyz = element.replaceAll("http", ",http");
+        List<String> splitted = xyz.split(RegExp(r",|;"));
+        splitted.forEach((element1) {
+          if(element1.isNotEmpty)
+            finalUrls.add(element1);
+        });
+      }else{
+        finalUrls.add(element);
+      }
+    });
+    return finalUrls;
+
   }
 /* 
   onChangeMethod(String value) {
@@ -3230,30 +3244,6 @@ class _CreateNewPostState extends State<CreateNewPost> {
 
     return STR;
   }
-  ////
-
-  bool isYouTubeUrl(String url) {
-    // Regular expression pattern to match YouTube URLs
-    RegExp regExp = RegExp(
-      r"^https?://(?:www\.)?youtube\.com/watch\?v=([a-zA-Z0-9_-]+)",
-      caseSensitive: false,
-    );
-    return regExp.hasMatch(url);
-  }
-
-  /*Future<void> _fetchMetadata(String url) async {
-    try {
-      var data = await MetadataFetch.extract(url);
-      print("attributes %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% : ${data!.image}");
-        setState(() {
-          title = data.title ?? '';
-          description = data.description ?? '';
-          imageUrl = data.image ?? '';
-        });
-    } catch (e) {
-      print('Fetch Error: $e');
-    }
-  }*/
 
   dataPostFucntion() {
     print("dfhghghfhgh-${pickedFile?.path}");
@@ -3353,11 +3343,7 @@ class _CreateNewPostState extends State<CreateNewPost> {
                 "postUid": widget.PostID
               };
             } else {
-              if(isYouTubeUrl(postText.text)){
-                param = {"description": postText.text, "postType": soicalData[indexx].toString().toUpperCase(),"postDataType": "YOUTUBE"};
-              }else {
                 param = {"description": postText.text, "postType": soicalData[indexx].toString().toUpperCase()};
-              }
             }
 
             BlocProvider.of<AddPostCubit>(context)

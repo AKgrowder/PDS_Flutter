@@ -55,6 +55,8 @@ class Object {
   String? accountType;
   String? documentName;
   bool? isBlock;
+  String? companyPageType;
+
   Object(
       {this.isApproved,
       this.userDocument,
@@ -83,7 +85,9 @@ class Object {
       this.documentName,
       this.postCount,
       this.accountType,
-      this.isBlock});
+      this.isBlock,
+      this.companyPageType,
+      });
 
   Object.fromJson(Map<String, dynamic> json) {
     log("gdfhgfhgdfbh-${json['accountType']}");
@@ -125,6 +129,8 @@ class Object {
     followingCount = json['followingCount'];
     postCount = json['postCount'];
     isBlock = json['isBlock'];
+    companyPageType = json['companyPageType'];
+
   }
 
   Map<String, dynamic> toJson() {
