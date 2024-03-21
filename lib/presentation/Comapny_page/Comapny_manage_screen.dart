@@ -88,7 +88,7 @@ class _ComapnyManageScreenState extends State<ComapnyManageScreen> {
                       ),
                     ),
                   )
-                : getallcompenypage?.object?.content?.length == 0
+                : getallcompenypage?.object?.content?.length == 1
                     ? Center(
                         child: Image.asset(
                           ImageConstant.emptylistimage,
