@@ -661,10 +661,10 @@ class _SettingScreenState extends State<SettingScreen> {
     var directory = await getApplicationDocumentsDirectory();
     if (Platform.isAndroid) {
       await Share.shareXFiles(
-        [XFile("/sdcard/download/IPImage.jpg")],
+        [XFile("/sdcard/download/IP__image.jpg")],
         subject: "Share",
         text:
-            "Try This Awesome App \n\n Android :- https://play.google.com/store/apps/details?id=com.pds.app",
+            "Try This Awesome App \n\n Android :- https://play.google.com/store/apps/details?id=com.ip.app",
         sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size,
       );
     } else {
@@ -672,7 +672,7 @@ class _SettingScreenState extends State<SettingScreen> {
         [
           XFile(directory.path +
               Platform.pathSeparator +
-              'Growder_Image/IPImage.jpg')
+              'Growder_Image/IP__image.jpg')
         ],
         subject: "Share",
         text:
