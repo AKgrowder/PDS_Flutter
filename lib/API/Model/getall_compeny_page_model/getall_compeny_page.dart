@@ -100,14 +100,15 @@ class Content1 {
   String? companyPageProfilePic;
   String? pageDescription;
   String? companyPageType;
-
+  bool? isSwitched;
   Content1(
       {this.userCompanyPageUid,
       this.pageId,
       this.companyPageName,
       this.companyPageProfilePic,
       this.pageDescription,
-      this.companyPageType});
+      this.companyPageType,
+      this.isSwitched});
 
   Content1.fromJson(Map<String, dynamic> json) {
     userCompanyPageUid = json['userCompanyPageUid'];
@@ -116,6 +117,7 @@ class Content1 {
     companyPageProfilePic = json['companyPageProfilePic'];
     pageDescription = json['pageDescription'];
     companyPageType = json['companyPageType'];
+    isSwitched = json['isSwitched'];
   }
 
   Map<String, dynamic> toJson() {
