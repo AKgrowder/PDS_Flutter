@@ -1925,16 +1925,16 @@ class _RePostScreenState extends State<RePostScreen> {
             isrepostDataSet = false;
           });
           if (postText1.text.isNotEmpty && file?.path != null) {
-            Map<String, dynamic> param = {"description": postText1.text, "postData": imageDataPost?.object?.data, "postDataType": "IMAGE", "postType": soicalData[indexx].toString().toUpperCase(),};
+            Map<String, dynamic> param = {"description": postText1.text, "postData": imageDataPost?.object?.data, "postDataType": "IMAGE", "postType": soicalData[indexx].toString().toUpperCase(),"thumbnailImageUrl": imageDataPost?.object?.data?.first};
             BlocProvider.of<RePostCubit>(context).RePostAPI(context, param, widget.postUid, "");
           } else if (postText1.text.isNotEmpty && file12?.path != null) {
             Map<String, dynamic> param = {"description": postText1.text, "postData": imageDataPost?.object?.data, "postDataType": "ATTACHMENT", "postType": soicalData[indexx].toString().toUpperCase()};
             BlocProvider.of<RePostCubit>(context).RePostAPI(context, param, widget.postUid, "");
           } else if (postText1.text.isNotEmpty && pickedImage.isNotEmpty) {
-            Map<String, dynamic> param = {"description": postText1.text, "postData": imageDataPost?.object?.data, "postDataType": "IMAGE", "postType": soicalData[indexx].toString().toUpperCase()};
+            Map<String, dynamic> param = {"description": postText1.text, "postData": imageDataPost?.object?.data, "postDataType": "IMAGE", "postType": soicalData[indexx].toString().toUpperCase(),"thumbnailImageUrl": imageDataPost?.object?.data?.first};
             BlocProvider.of<RePostCubit>(context).RePostAPI(context, param, widget.postUid, "");
           } else if (pickedFile?.path != null && postText1.text.isNotEmpty) {
-            Map<String, dynamic> param = {"description": postText1.text, "postData": imageDataPost?.object?.data, "postDataType": "IMAGE", "postType": soicalData[indexx].toString().toUpperCase()};
+            Map<String, dynamic> param = {"description": postText1.text, "postData": imageDataPost?.object?.data, "postDataType": "IMAGE", "postType": soicalData[indexx].toString().toUpperCase(),"thumbnailImageUrl": imageDataPost?.object?.data?.first};
             BlocProvider.of<RePostCubit>(context).RePostAPI(context, param, widget.postUid, "");
           } else if (postText1.text.isNotEmpty && _controller?.value.isPlaying == true) {
             Map<String, dynamic> param = {"description": postText1.text, "postData": imageDataPost?.object?.data, "postDataType": "VIDEO", "postType": soicalData[indexx].toString().toUpperCase()};
@@ -1948,6 +1948,7 @@ class _RePostScreenState extends State<RePostScreen> {
                 "postData": imageDataPost?.object?.data,
                 "postDataType": "IMAGE",
                 "postType": soicalData[indexx].toString().toUpperCase(),
+    "thumbnailImageUrl": imageDataPost?.object?.data?.first
               };
               BlocProvider.of<RePostCubit>(context).RePostAPI(context, param, widget.postUid, "");
             } else if (pickedFile?.path != null) {
@@ -1955,6 +1956,7 @@ class _RePostScreenState extends State<RePostScreen> {
                 "postData": imageDataPost?.object?.data,
                 "postDataType": "IMAGE",
                 "postType": soicalData[indexx].toString().toUpperCase(),
+    "thumbnailImageUrl": imageDataPost?.object?.data?.first
               };
               BlocProvider.of<RePostCubit>(context).RePostAPI(context, param, widget.postUid, "");
             } else if (file12?.path != null) {
@@ -1969,6 +1971,7 @@ class _RePostScreenState extends State<RePostScreen> {
                 "postData": imageDataPost?.object?.data,
                 "postDataType": "IMAGE",
                 "postType": soicalData[indexx].toString().toUpperCase(),
+    "thumbnailImageUrl": imageDataPost?.object?.data?.first
               };
               BlocProvider.of<RePostCubit>(context).RePostAPI(context, param, widget.postUid, "");
             } else if (_controller?.value.isPlaying == true) {
