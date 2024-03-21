@@ -514,6 +514,7 @@ class _MyHomePageState extends State<ShowProfileScreen>
                               builder: (context) => SettingScreen(
                                     accountType:
                                         NewProfileData?.object?.accountType ??
+
                                             '',
                                     module: NewProfileData?.object?.module ==
                                                 'COMPANY' &&
@@ -525,6 +526,7 @@ class _MyHomePageState extends State<ShowProfileScreen>
                                                 "REJECTED"
                                         ? true
                                         : false,
+
                                   ))).then((value) =>
                           widget.ProfileNotification == true
                               ? BlocProvider.of<NewProfileSCubit>(context)
