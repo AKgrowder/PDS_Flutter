@@ -1185,7 +1185,6 @@ class _HomeScreenNewState extends State<HomeScreenNew>
 
   Get_UserToken() async {
     _postCubit = await BlocProvider.of<GetGuestAllPostCubit>(context);
-
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     var Token = prefs.getString(PreferencesKey.loginJwt);
     var FCMToken = prefs.getString(PreferencesKey.fcmToken);
@@ -1355,7 +1354,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
       String useruidsort = User_ID!.split('-').last.toString();
       onUserLogin('${useruidsort}', '${User_Name}');
     }
-    timer = Timer.periodic(Duration(seconds: 15), (timer) async {
+  /*   timer = Timer.periodic(Duration(seconds: 15), (timer) async {
       setState(() {
         secound = timer.tick;
       });
@@ -1363,7 +1362,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
           .seetinonExpried(context);
       await BlocProvider.of<GetGuestAllPostCubit>(context)
           .getAllNoticationsCountAPI(context);
-    });
+    }); */
     await BlocProvider.of<GetGuestAllPostCubit>(context)
         .getallcompenypagee(context);
     await BlocProvider.of<GetGuestAllPostCubit>(context)
@@ -2366,7 +2365,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                       ),
                                                     )),
                                       SizedBox(
-                                        width: 10,
+                                        width: 20,
                                       ),
                                     ],
                                   ),
@@ -4708,7 +4707,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                   ),
                                                                   Padding(
                                                                     padding: const EdgeInsets
-                                                                        .only(
+                                                                            .only(
                                                                         top: 0,
                                                                         right:
                                                                             16),
@@ -5145,7 +5144,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                 // color: Colors.amber,
                                                                                 child: Text(
                                                                                   "${AllGuestPostRoomData?.object?.content?[index].postUserName}",
-                                                                                  style: TextStyle(fontSize: 20, fontFamily: "outfit", fontWeight: FontWeight.bold),
+                                                                                  style: TextStyle(fontSize: 18, fontFamily: "outfit", fontWeight: FontWeight.bold),
                                                                                 ),
                                                                               ),
                                                                             ),
@@ -5153,7 +5152,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                             Text(
                                                                               getTimeDifference(parsedDateTime),
                                                                               style: TextStyle(
-                                                                                fontSize: 12,
+                                                                                fontSize: 11,
                                                                                 fontFamily: "outfit",
                                                                               ),
                                                                             ),
@@ -5900,9 +5899,9 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                     ),
 
                                                                     Padding(
-                                                                      padding: const EdgeInsets
-                                                                          .all(
-                                                                          8.0),
+                                                                      padding:
+                                                                          const EdgeInsets.all(
+                                                                              8.0),
                                                                       child:
                                                                           Divider(
                                                                         thickness:
@@ -5917,7 +5916,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                             Padding(
                                                               padding:
                                                                   const EdgeInsets
-                                                                      .only(
+                                                                          .only(
                                                                       top: 0,
                                                                       right:
                                                                           16),
@@ -6109,9 +6108,8 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                           .transparent,
                                                                       child:
                                                                           Padding(
-                                                                        padding: const EdgeInsets
-                                                                            .all(
-                                                                            5.0),
+                                                                        padding:
+                                                                            const EdgeInsets.all(5.0),
                                                                         child: Image
                                                                             .asset(
                                                                           ImageConstant
@@ -6235,9 +6233,8 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                           .transparent,
                                                                       child:
                                                                           Padding(
-                                                                        padding: const EdgeInsets
-                                                                            .all(
-                                                                            5.0),
+                                                                        padding:
+                                                                            const EdgeInsets.all(5.0),
                                                                         child: uuid ==
                                                                                 null
                                                                             ? Image.asset(
@@ -6688,8 +6685,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                               BorderRadius.circular(10),
                                                                         ),
                                                                         Padding(
-                                                                          padding: const EdgeInsets
-                                                                              .only(
+                                                                          padding: const EdgeInsets.only(
                                                                               left: 9,
                                                                               top: 7),
                                                                           child:
@@ -7925,7 +7921,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
     );
   }
 
-  void _onShareXFileFromAssets(BuildContext context, String postLink,
+   void _onShareXFileFromAssets(BuildContext context, String postLink,
       String userName, String description,
       {String? androidLink}) async {
     // RenderBox? box = context.findAncestorRenderObjectOfType();
@@ -7942,7 +7938,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
         try {
           await Dio().download(
             postLink.toString(),
-            directory.path + "/" + "IPImage.jpg",
+            directory.path + "/" + "IP__image.jpg",
           );
 
           print("Download Completed.");
@@ -7954,7 +7950,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
         Share.shareXFiles(
           [
             XFile(postLink.startsWith("http")
-                ? "${directory.path}/IPImage.jpg"
+                ? "${directory.path}/IP__image.jpg"
                 : postLink)
           ],
           subject: "Share",
@@ -7967,7 +7963,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
           [
             XFile(directory.path +
                 Platform.pathSeparator +
-                'Growder_Image/IPImage.jpg')
+                'Growder_Image/IP__image.jpg')
           ],
           subject: "Share",
           text:
@@ -7980,7 +7976,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
 
       if (Platform.isAndroid) {
         Share.shareXFiles(
-          [XFile("/sdcard/download/IPImage.jpg")],
+          [XFile("/sdcard/download/IP__image.jpg")],
           subject: "Share",
           text:
               "$userName posted ${description.isNotEmpty ? "\n\n${description.split(" ").first}.... \n\n" : ""}on InPackaging \n\n https://www.inpackaging.com \n\n ${androidLink}",
@@ -7992,7 +7988,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
           [
             XFile(directory.path +
                 Platform.pathSeparator +
-                'Growder_Image/IPImage.jpg')
+                'Growder_Image/IP__image.jpg')
           ],
           subject: "Share",
           text:
@@ -8020,7 +8016,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
         try {
           await Dio().download(
             url.toString(),
-            _localPath + "/" + "IPImage.jpg",
+            _localPath + "/" + "IP__image.jpg",
           );
 
           print("Download Completed.");

@@ -1,4 +1,6 @@
 import 'package:pds/API/Model/FollwersModel/FllowersModel.dart';
+import 'package:pds/API/Model/GetAdminRolesForCompanyPageModel/GetAdminRolesForCompanyPageModel.dart';
+import 'package:pds/API/Model/Getalluset_list_Model/get_all_userlist_model.dart';
 import 'package:pds/API/Model/like_Post_Model/like_Post_Model.dart';
 import 'package:pds/API/Model/removeFolloweModel/removeFollowerModel.dart';
 
@@ -36,4 +38,15 @@ class FollowersClass extends FolllwerBlockState {
 class FollowersClass1 extends FolllwerBlockState {
   final FollowersClassModel followersClassModel1;
   FollowersClass1(this.followersClassModel1);
+}
+
+
+class GetAllUserLoadedState extends FolllwerBlockState {
+  final GetAllUserListModel getAllUserRoomData;
+  GetAllUserLoadedState(this.getAllUserRoomData);
+}
+
+class AdminRoleForCompnyUserLoadedState extends FolllwerBlockState {
+  final GetAdminRolesForCompanyPage getAdminRoleForCompnyUser;
+  AdminRoleForCompnyUserLoadedState(this.getAdminRoleForCompnyUser);
 }

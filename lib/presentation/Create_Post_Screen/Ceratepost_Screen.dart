@@ -210,6 +210,9 @@ class _CreateNewPostState extends State<CreateNewPost> {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     User_ID = prefs.getString(PreferencesKey.loginUserID);
     UserProfileImage = prefs.getString(PreferencesKey.UserProfile);
+    setState(() {
+      
+    });
   }
 
   void dispose() {
@@ -338,6 +341,9 @@ class _CreateNewPostState extends State<CreateNewPost> {
           padding: EdgeInsets.only(left: 0, right: 0, top: 30),
           child: Column(
             children: [
+              SizedBox(
+                height: 20,
+              ),
               Padding(
                 padding: const EdgeInsets.only(left: 15, right: 15),
                 child: Row(
@@ -2619,12 +2625,45 @@ class _CreateNewPostState extends State<CreateNewPost> {
       } else {
         print("check lenth else-${value.length}");
       }
+
+      if (AnyLinkPreview.isValidLink(extractUrls(value).first)) {
+        if (_timer != null) {
+          _timer?.cancel();
+          _timer = Timer(Duration(seconds: 2), () {
+            setState(() {
+              title = extractUrls(value).first;
+            });
+          });
+        } else {
+          _timer = Timer(Duration(seconds: 2), () {
+            setState(() {
+              title = extractUrls(value).first;
+            });
+          });
+        }
+      }
     } else if (value.contains('#')) {
       title = "";
       print("check length-${value}");
       String data1 = value.split(' #').last.replaceAll('#', '');
       BlocProvider.of<AddPostCubit>(context)
           .GetAllHashtag(context, '10', '#${data1.trim()}');
+      if (AnyLinkPreview.isValidLink(extractUrls(value).first)) {
+        if (_timer != null) {
+          _timer?.cancel();
+          _timer = Timer(Duration(seconds: 2), () {
+            setState(() {
+              title = extractUrls(value).first;
+            });
+          });
+        } else {
+          _timer = Timer(Duration(seconds: 2), () {
+            setState(() {
+              title = extractUrls(value).first;
+            });
+          });
+        }
+      }
     } else if (AnyLinkPreview.isValidLink(extractUrls(value).first)) {
         if (_timer != null) {
           _timer?.cancel();
@@ -2658,6 +2697,9 @@ class _CreateNewPostState extends State<CreateNewPost> {
     );
 
     List<String> urls = regExp.allMatches(text).map((match) => match.group(0)!).toList();
+    urls.forEach((element) {
+      print("url ===============> $element");
+    });
     List<String> finalUrls = [];
     RegExp urlRegex = RegExp(r"(http(s)?://)", caseSensitive: false);
     urls.forEach((element) {
@@ -3293,7 +3335,8 @@ class _CreateNewPostState extends State<CreateNewPost> {
             "description": postText.text,
             "postData": imageDataPost?.object?.data,
             "postDataType": "IMAGE",
-            "postType": soicalData[indexx].toString().toUpperCase()
+            "postType": soicalData[indexx].toString().toUpperCase(),
+            "thumbnailImageUrl": imageDataPost?.object?.data?.first,
           };
           BlocProvider.of<AddPostCubit>(context).InvitationAPI(context, param);
         } else if (postText.text.isNotEmpty && file12?.path != null) {

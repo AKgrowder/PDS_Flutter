@@ -108,7 +108,7 @@ class _ProfileScreenState extends State<ProfileScreen>
   String? filepath;
   double value2 = 0.0;
   bool isDataSet = true;
-
+  String? userCompanyPageUid;
   String? workignStart;
   String? workignend;
   String? start;
@@ -695,6 +695,10 @@ class _ProfileScreenState extends State<ProfileScreen>
         }
         if (state is Getallcompenypagelodedstate) {
           getallcompenypagemodel = state.getallcompenypagemodel;
+          userCompanyPageUid = getallcompenypagemodel?.object?.content
+              ?.firstWhere((element) => element.isSwitched == true)
+              .userCompanyPageUid;
+          print("userCompanyPageUiduserCompanyPageUid-${userCompanyPageUid}");
         }
       }, builder: (context, state) {
         return DefaultTabController(
@@ -1172,7 +1176,9 @@ class _ProfileScreenState extends State<ProfileScreen>
                                         left: 0,
                                       ),
                                       child: Text(
-                                       User_CompnyPageModule == null? '@${NewProfileData?.object?.userName}':'${NewProfileData?.object?.companyPageType}',
+                                        User_CompnyPageModule == null
+                                            ? '@${NewProfileData?.object?.userName}'
+                                            : '${NewProfileData?.object?.companyPageType}',
                                         style: TextStyle(
                                             fontSize: 18,
                                             fontFamily: "outfit",
@@ -1273,34 +1279,46 @@ class _ProfileScreenState extends State<ProfileScreen>
                                               Navigator.push(
                                                   context,
                                                   MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          SettingScreen(
-                                                            accountType:
-                                                                NewProfileData
-                                                                        ?.object
-                                                                        ?.accountType ??
-                                                                    '',
-                                                            module: NewProfileData
-                                                                    ?.object
-                                                                    ?.module ??
-                                                                '',
-                                                          ))).then((value) =>
-                                                  widget.ProfileNotification ==
-                                                          true
-                                                      ? BlocProvider.of<
-                                                                  NewProfileSCubit>(
-                                                              context)
-                                                          .NewProfileSAPI(
-                                                              context,
-                                                              widget.User_ID,
-                                                              true)
-                                                      : BlocProvider.of<
-                                                                  NewProfileSCubit>(
-                                                              context)
-                                                          .NewProfileSAPI(
-                                                              context,
-                                                              widget.User_ID,
-                                                              false));
+                                                      builder:
+                                                          (context) =>
+                                                              SettingScreen(
+                                                                accountType:
+                                                                    NewProfileData
+                                                                            ?.object
+                                                                            ?.accountType ??
+                                                                        '',
+                                                                module: NewProfileData?.object?.module == 'COMPANY' &&
+                                                                        NewProfileData?.object?.approvalStatus !=
+                                                                            "PENDING" &&
+                                                                        NewProfileData?.object?.approvalStatus !=
+                                                                            "REJECTED"
+                                                                    ? true
+                                                                    : false,
+                                                                userCompanyPageUid:
+                                                                    userCompanyPageUid,
+                                                              ))).then((value) {
+                                                widget.ProfileNotification ==
+                                                        true
+                                                    ? BlocProvider.of<
+                                                                NewProfileSCubit>(
+                                                            context)
+                                                        .NewProfileSAPI(
+                                                            context,
+                                                            widget.User_ID,
+                                                            true)
+                                                    : BlocProvider.of<
+                                                                NewProfileSCubit>(
+                                                            context)
+                                                        .NewProfileSAPI(
+                                                            context,
+                                                            widget.User_ID,
+                                                            false);
+                                                BlocProvider.of<
+                                                            NewProfileSCubit>(
+                                                        context)
+                                                    .getallcompenypagee(
+                                                        context);
+                                              });
                                             },
                                             child: Container(
                                               margin: EdgeInsets.only(left: 10),
@@ -1601,6 +1619,8 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                       User_ID: widget.User_ID,
                                                       appBarName: 'Followers',
                                                       userId: widget.User_ID,
+                                                      userCompanyPageUid:
+                                                          userCompanyPageUid,
                                                     ),
                                                   );
                                                 })).then((value) {

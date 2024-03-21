@@ -157,7 +157,15 @@ class Config {
   static const String getallcompany_pages = "user/api/get_company_pages";
   static const String get_Starred_Messages = "user/get_Starred_Messages";
   static const String get_page_by_uid = "user/api/switch_company_pages";
-  static const String delete_company_pages = "user/delete_company_pages";
-  static const String search_pages = "user/search_company_pages";
+  static const String delete_company_pages = "user/api/delete_company_page";
+  static const String search_pages = "user/api/search_company_pages";
   static const String get_all_company_type = "user/api/get_company_page_types";
+  static const String get_admin_roles_for_company_page = "user/api/get_admin_roles_for_company_page";
+  static const String assigned_user_to_company_page = "user/api/assigned_user_to_company_page";
+  static const String get_assigned_users_of_company_page = "user/api/get_assigned_users_of_company_page";
+  static const String delete_assigned_user_from_company_page = "user/api/delete_assigned_user_from_company_page";
+
+
+
+
 }

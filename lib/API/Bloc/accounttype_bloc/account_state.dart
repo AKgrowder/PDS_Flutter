@@ -1,4 +1,5 @@
 import 'package:pds/API/Model/accountType/accountTypeModel.dart';
+import 'package:pds/API/Model/get_assigned_users_of_company_pageModel/get_assigned_users_of_company_pageModel.dart';
 
 abstract class AccountState {}
 
@@ -15,4 +16,12 @@ class AccountErrorState extends AccountState {
   final dynamic error;
   AccountErrorState(this.error);
 }
+
+
+class GetAssignedUsersOfCompanyPageLoadedState extends AccountState {
+  final GetAssignedUsersOfCompanyPage getAssignedUsersOfCompanyPage;
+  GetAssignedUsersOfCompanyPageLoadedState(this.getAssignedUsersOfCompanyPage);
+}
+
+
 

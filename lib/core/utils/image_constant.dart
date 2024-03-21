@@ -303,5 +303,32 @@ class ImageConstant {
   static String charge_payment = "assets/images/chargepayment.png";
   static String createaccount = "assets/images/create_account_image.png";
 
+  static String cartimage = "assets/images/cartimage.png";
+  static String orderimage = "assets/images/OrderImage.png";
+  static String productimage = "assets/images/productimage.png";
+  static String userimage = "assets/images/userimage.png";
+  static String wishlistimage = "assets/images/wishlistimage.png";
+  static String iplogo = "assets/images/IP_logo.png";
+
+  
+  static String groupicon = "assets/images/Groupicon.png";
+  static String notificationicon = "assets/images/notificationicon.png";
+  static String underapproveimage = "assets/images/underapprove.png";
+  static String walletimage = "assets/images/walletimage.png";
+  static String orderhomeimage = "assets/images/orderhomeimage.png";
+  static String priceimage = "assets/images/priceimage.png";
+  static String homedecoreimage = "assets/images/homedecore.png";
+  static String mpsaveimage = "assets/images/saveimage.png";
+  static String mpunsaveimage = "assets/images/mpunsave.png";
+
+
+  static String homefourm = "assets/images/home_fourm.png";
+  static String homepackagingproduct = "assets/images/Home_packaging_product.png";
+  static String homeplasticwaste = "assets/images/home_plasticwaste.png";
+  static String homepridelab = "assets/images/Home_pridelab.png";
+  static String homerentalpacking = "assets/images/home_rentalpackaging.png";
+  static String homerowmaterial = "assets/images/home_row_material.png";
+
+
   /// end
 }
