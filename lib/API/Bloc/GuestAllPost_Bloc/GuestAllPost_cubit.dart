@@ -4,6 +4,8 @@ import 'package:pds/API/ApiService/ApiService.dart';
 import 'package:pds/API/Bloc/GuestAllPost_Bloc/GuestAllPost_state.dart';
 import 'package:pds/API/Repo/repository.dart';
 import 'package:pds/presentation/%20new/commenwigetReposrt.dart';
+import 'package:pds/core/utils/sharedPreferences.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class GetGuestAllPostCubit extends Cubit<GetGuestAllPostState> {
   dynamic gestUserData;
@@ -426,10 +428,11 @@ class GetGuestAllPostCubit extends Cubit<GetGuestAllPostState> {
       emit(GetGuestAllPostErrorState(AutoEnterRoom));
     }
   }
-
-  Future<void> getAllNoticationsCountAPI(BuildContext context) async {
+Future<void> getAllNoticationsCountAPI(BuildContext context) async {
     dynamic acceptRejectInvitationModel;
+
     try {
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
       emit(GetGuestAllPostLoadingState());
       acceptRejectInvitationModel =
           await Repository().getAllNoticationsCountAPI(context);
@@ -438,6 +441,10 @@ class GetGuestAllPostCubit extends Cubit<GetGuestAllPostState> {
         emit(GetGuestAllPostErrorState("${acceptRejectInvitationModel}"));
       } else {
         if (acceptRejectInvitationModel.success == true) {
+          prefs.setInt(PreferencesKey.NotificationCount,
+              acceptRejectInvitationModel.object?.notificationCount);
+          prefs.setInt(PreferencesKey.MessageCount,
+              acceptRejectInvitationModel.object?.messageCount);
           emit(GetNotificationCountLoadedState(acceptRejectInvitationModel));
         }
       }
@@ -522,4 +529,5 @@ class GetGuestAllPostCubit extends Cubit<GetGuestAllPostState> {
       emit(GetGuestAllPostErrorState(e.toString()));
     }
   }
+  
 }

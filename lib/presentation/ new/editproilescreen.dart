@@ -83,10 +83,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   List<String> industryUUIDinApi = [];
   bool removeProfilePic = false;
   bool removeCoverPic = false;
+  String? User_CompnyPageModule;
   dataSetUpMethod() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     User_Module = prefs.getString(PreferencesKey.module);
     User_ID = prefs.getString(PreferencesKey.loginUserID);
+    User_CompnyPageModule = prefs.getString(PreferencesKey.module1);
     int? a = prefs.getInt(PreferencesKey.mediaSize);
     documentuploadsize = double.parse("${a}");
     nameController.text = widget.newProfileData?.object?.name?.toString() ?? '';
@@ -536,15 +538,15 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                           ),
                                         )
                                       : Center(
-                                        child: FittedBox(
-                                          child: Image.asset(
-                                            ImageConstant.tomcruse,
-                                            // fit: BoxFit.cover,
-                                            height: 150,
-                                            width: 150,
+                                          child: FittedBox(
+                                            child: Image.asset(
+                                              ImageConstant.tomcruse,
+                                              // fit: BoxFit.cover,
+                                              height: 150,
+                                              width: 150,
+                                            ),
                                           ),
                                         ),
-                                      ),
                               userProfile != 'soicalScreen'
                                   ? Positioned(
                                       bottom: 7,
@@ -592,75 +594,79 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     color: Colors.black,
                   ),
                 ),
-                RichText(
-                  text: TextSpan(
-                    children: [
-                      User_Module == "EMPLOYEE" &&
-                              widget.newProfileData?.object?.approvalStatus ==
-                                  "PARTIALLY_REGISTERED"
-                          ? TextSpan(
-                              text: "APPROVED",
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w400,
-                                color: Color(0xff019801),
-                              ),
-                            )
-                          : TextSpan(
-                              text:
-                                  "${widget.newProfileData?.object?.approvalStatus}",
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w400,
-                                color: widget.newProfileData?.object
-                                            ?.approvalStatus ==
-                                        "PARTIALLY_REGISTERED"
-                                    ? Color(0xff1A94D7)
-                                    : widget.newProfileData?.object
-                                                ?.approvalStatus ==
-                                            "PENDING"
-                                        ? Color(0xffC28432)
-                                        : widget.newProfileData?.object
-                                                    ?.approvalStatus ==
-                                                "APPROVED"
-                                            ? Color(0xff019801)
-                                            : Color(0xffFF000B),
-                              ),
-                            )
-                    ],
-                    text: "Status:",
-                    style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w400,
-                        color: Colors.black),
+                if (User_CompnyPageModule == null)
+                  RichText(
+                    text: TextSpan(
+                      children: [
+                        User_Module == "EMPLOYEE" &&
+                                widget.newProfileData?.object?.approvalStatus ==
+                                    "PARTIALLY_REGISTERED"
+                            ? TextSpan(
+                                text: "APPROVED",
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w400,
+                                  color: Color(0xff019801),
+                                ),
+                              )
+                            : TextSpan(
+                                text:
+                                    "${widget.newProfileData?.object?.approvalStatus}",
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w400,
+                                  color: widget.newProfileData?.object
+                                              ?.approvalStatus ==
+                                          "PARTIALLY_REGISTERED"
+                                      ? Color(0xff1A94D7)
+                                      : widget.newProfileData?.object
+                                                  ?.approvalStatus ==
+                                              "PENDING"
+                                          ? Color(0xffC28432)
+                                          : widget.newProfileData?.object
+                                                      ?.approvalStatus ==
+                                                  "APPROVED"
+                                              ? Color(0xff019801)
+                                              : Color(0xffFF000B),
+                                ),
+                              )
+                      ],
+                      text: "Status:",
+                      style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w400,
+                          color: Colors.black),
+                    ),
                   ),
-                ),
                 Container(
                   child: Padding(
                     padding: const EdgeInsets.only(left: 36, right: 36),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        SizedBox(
-                          height: 20,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 10, bottom: 10),
-                          child: Text(
-                            "Name",
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.w500,
-                              color: Colors.black,
+                        if (User_CompnyPageModule == null)
+                          SizedBox(
+                            height: 20,
+                          ),
+                        if (User_CompnyPageModule == null)
+                          Padding(
+                            padding: const EdgeInsets.only(top: 10, bottom: 10),
+                            child: Text(
+                              "Name",
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.black,
+                              ),
                             ),
                           ),
-                        ),
-                        customTextFeild(
-                            // isReadOnly: true,
-                            controller: nameController,
-                            width: _width / 1.1,
-                            hintText: "Enter Name",
-                            color: Color(0xffFFF3F4)),
+                        if (User_CompnyPageModule == null)
+                          customTextFeild(
+                              // isReadOnly: true,
+                              controller: nameController,
+                              width: _width / 1.1,
+                              hintText: "Enter Name",
+                              color: Color(0xffFFF3F4)),
                         Padding(
                           padding: const EdgeInsets.only(top: 10, bottom: 10),
                           child: Text(
@@ -681,94 +687,98 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             width: _width / 1.1,
                             hintText: "Enter User ID",
                             color: Color(0xffFFF3F4)),
-                        Row(
-                          children: [
-                            Padding(
-                              padding:
-                                  const EdgeInsets.only(top: 10, bottom: 10),
-                              child: Text(
-                                "Email",
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.black,
+                        if (User_CompnyPageModule == null)
+                          Row(
+                            children: [
+                              Padding(
+                                padding:
+                                    const EdgeInsets.only(top: 10, bottom: 10),
+                                child: Text(
+                                  "Email",
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.black,
+                                  ),
                                 ),
                               ),
-                            ),
-                            Spacer(),
-                            widget.newProfileData?.object?.isEmailVerified ==
-                                    false
-                                ? GestureDetector(
-                                    onTap: () {
-                                      BlocProvider.of<MyAccountCubit>(context)
-                                          .emailVerifaction(context,
-                                              "${widget.newProfileData?.object?.email}");
-                                    },
-                                    child: Text(
-                                      'Not Verified',
+                              Spacer(),
+                              widget.newProfileData?.object?.isEmailVerified ==
+                                      false
+                                  ? GestureDetector(
+                                      onTap: () {
+                                        BlocProvider.of<MyAccountCubit>(context)
+                                            .emailVerifaction(context,
+                                                "${widget.newProfileData?.object?.email}");
+                                      },
+                                      child: Text(
+                                        'Not Verified',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w600,
+                                            color: Colors.black,
+                                            fontFamily: "outfit",
+                                            fontSize: 15),
+                                      ),
+                                    )
+                                  : Text(
+                                      'Verified',
                                       style: TextStyle(
                                           fontWeight: FontWeight.w600,
                                           color: Colors.black,
                                           fontFamily: "outfit",
                                           fontSize: 15),
                                     ),
-                                  )
-                                : Text(
-                                    'Verified',
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.w600,
-                                        color: Colors.black,
-                                        fontFamily: "outfit",
-                                        fontSize: 15),
-                                  ),
-                            SizedBox(
-                              width: 5,
-                            ),
-                            widget.newProfileData?.object?.isEmailVerified ==
-                                    false
-                                ? GestureDetector(
-                                    onTap: () {
-                                      BlocProvider.of<MyAccountCubit>(context)
-                                          .emailVerifaction(context,
-                                              "${widget.newProfileData?.object?.email}");
-                                    },
-                                    child: SizedBox(
-                                        height: 22,
-                                        child: Image.asset(
-                                          ImageConstant.notVerify,
-                                          color: Colors.red,
-                                        )),
-                                  )
-                                : SizedBox(
-                                    height: 22,
-                                    child: Image.asset(
-                                      ImageConstant.Verified,
-                                      color: Colors.green,
-                                    ))
-                          ],
-                        ),
-                        customTextFeild(
-                            controller: emailController,
-                            width: _width / 1.1,
-                            hintText: "Email Address",
-                            color: Color(0xffFFF3F4)),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 10, bottom: 10),
-                          child: Text(
-                            "Contact no.",
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.w500,
-                              color: Colors.black,
+                              SizedBox(
+                                width: 5,
+                              ),
+                              widget.newProfileData?.object?.isEmailVerified ==
+                                      false
+                                  ? GestureDetector(
+                                      onTap: () {
+                                        BlocProvider.of<MyAccountCubit>(context)
+                                            .emailVerifaction(context,
+                                                "${widget.newProfileData?.object?.email}");
+                                      },
+                                      child: SizedBox(
+                                          height: 22,
+                                          child: Image.asset(
+                                            ImageConstant.notVerify,
+                                            color: Colors.red,
+                                          )),
+                                    )
+                                  : SizedBox(
+                                      height: 22,
+                                      child: Image.asset(
+                                        ImageConstant.Verified,
+                                        color: Colors.green,
+                                      ))
+                            ],
+                          ),
+                        if (User_CompnyPageModule == null)
+                          customTextFeild(
+                              controller: emailController,
+                              width: _width / 1.1,
+                              hintText: "Email Address",
+                              color: Color(0xffFFF3F4)),
+                        if (User_CompnyPageModule == null)
+                          Padding(
+                            padding: const EdgeInsets.only(top: 10, bottom: 10),
+                            child: Text(
+                              "Contact no.",
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.black,
+                              ),
                             ),
                           ),
-                        ),
-                        customTextFeild(
-                          isReadOnly: true,
-                          controller: contactController,
-                          width: _width / 1.1,
-                          hintText: "Contact no.",
-                        ),
+                        if (User_CompnyPageModule == null)
+                          customTextFeild(
+                            isReadOnly: true,
+                            controller: contactController,
+                            width: _width / 1.1,
+                            hintText: "Contact no.",
+                          ),
                         TextFiledCommenWiget(_width),
                         GestureDetector(
                           onTap: () async {
@@ -777,27 +787,36 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             print("i want to check UserId-${User_ID}");
                             userAllRqureidData();
                           },
-                          child: Padding(
-                            padding: const EdgeInsets.only(top: 20, bottom: 20),
-                            child: Center(
-                              child: Container(
-                                height: 55,
-                                width: _width - 65,
-                                decoration: BoxDecoration(
-                                    color: ColorConstant.primary_color,
-                                    borderRadius: BorderRadius.circular(10)),
+                          child: Column(
+                            children: [
+                              Padding(
+                                padding: EdgeInsets.only(
+                                    top: User_CompnyPageModule == null
+                                        ? 20
+                                        : _height / 3,
+                                    bottom: 20),
                                 child: Center(
-                                  child: Text(
-                                    "Save",
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 15,
-                                      color: Colors.white,
+                                  child: Container(
+                                    height: 55,
+                                    width: _width - 65,
+                                    decoration: BoxDecoration(
+                                        color: ColorConstant.primary_color,
+                                        borderRadius:
+                                            BorderRadius.circular(10)),
+                                    child: Center(
+                                      child: Text(
+                                        "Save",
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 15,
+                                          color: Colors.white,
+                                        ),
+                                      ),
                                     ),
                                   ),
                                 ),
                               ),
-                            ),
+                            ],
                           ),
                         )
                       ],
@@ -1573,7 +1592,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             ],
           ),
         if (widget.newProfileData?.object?.module != 'EMPLOYEE' &&
-            widget.newProfileData?.object?.approvalStatus != "PENDING")
+            widget.newProfileData?.object?.approvalStatus != "PENDING" &&
+            User_CompnyPageModule == null)
           Padding(
             padding: const EdgeInsets.only(top: 10, bottom: 10),
             child: Text(
@@ -1586,7 +1606,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             ),
           ),
         if (widget.newProfileData?.object?.module != 'EMPLOYEE' &&
-            widget.newProfileData?.object?.approvalStatus != "PENDING" )
+            widget.newProfileData?.object?.approvalStatus != "PENDING" &&
+            User_CompnyPageModule == null)
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
@@ -1853,12 +1874,15 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                   )));
                         } else {
                           Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) =>ProfilePage(image: ImageConstant.tomcruse,),
-                              /*  ProfileandDocumentScreen(
+                            builder: (context) => ProfilePage(
+                              image: ImageConstant.tomcruse,
+                            ),
+                            /*  ProfileandDocumentScreen(
                                     path:
                                         'https://inpackaging-images.s3.ap-south-1.amazonaws.com/misc/InPackaging_Logo.png',
                                     title: '',
-                                  ) */));
+                                  ) */
+                          ));
                         }
                       }),
                 ),
