@@ -620,6 +620,8 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                                                                           width: _width / 1.3,
                                                                                           // color: Colors.amber,
                                                                                           child: Column(
+                                                                                            crossAxisAlignment: CrossAxisAlignment.start,
+
                                                                                             children: [
                                                                                               /*Text(
                                                                                                 AllChatmodelData?.object?.messageOutputList?.content?[index].message ?? "",
@@ -1091,6 +1093,7 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                                                                                   child: Align(
                                                                                     alignment: Alignment.topRight,
                                                                                     child: Column(
+                                                                                      crossAxisAlignment: CrossAxisAlignment.start,
                                                                                       children: [
                                                                                         /*Text(
                                                                                           "${AllChatmodelData?.object?.messageOutputList?.content?[index].message ?? ""}",
@@ -1473,6 +1476,9 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
                               ),
                               GestureDetector(
                                 onTap: () async {
+                                  setState(() {
+                                    title = "";
+                                  });
                                   if (_image != null) {
                                     if (SubmitOneTime == false) {
                                       await checkGuestUser();
