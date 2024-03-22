@@ -533,28 +533,25 @@ class _HashTagViewScreenState extends State<HashTagViewScreen> with Observer {
                                                         //     .email
                                                       ],
                                                       onTap: (link) async {
-                                                        var SelectedTest =
-                                                            link.value.toString();
-                                                        var Link =
-                                                            SelectedTest.startsWith(
+                                                        var SelectedTest = link
+                                                            .value
+                                                            .toString();
+                                                        var Link = SelectedTest
+                                                            .startsWith(
                                                                 'https');
-                                                        var Link1 =
-                                                            SelectedTest.startsWith(
-                                                                'http');
-                                                        var Link2 =
-                                                            SelectedTest.startsWith(
-                                                                'www');
-                                                        var Link3 =
-                                                            SelectedTest.startsWith(
-                                                                'WWW');
-                                                        var Link4 =
-                                                            SelectedTest.startsWith(
+                                                        var Link1 = SelectedTest
+                                                            .startsWith('http');
+                                                        var Link2 = SelectedTest
+                                                            .startsWith('www');
+                                                        var Link3 = SelectedTest
+                                                            .startsWith('WWW');
+                                                        var Link4 = SelectedTest
+                                                            .startsWith(
                                                                 'HTTPS');
-                                                        var Link5 =
-                                                            SelectedTest.startsWith(
-                                                                'HTTP');
-                                                        var Link6 =
-                                                            SelectedTest.startsWith(
+                                                        var Link5 = SelectedTest
+                                                            .startsWith('HTTP');
+                                                        var Link6 = SelectedTest
+                                                            .startsWith(
                                                                 'https://pdslink.page.link/');
                                                         print(SelectedTest
                                                             .toString());
@@ -568,10 +565,14 @@ class _HashTagViewScreenState extends State<HashTagViewScreen> with Observer {
                                                             Link6 == true) {
                                                           if (Link2 == true ||
                                                               Link3 == true) {
-                                                            if (isYouTubeUrl(SelectedTest)) {
-                                                              playLink(SelectedTest, context);
-                                                            } else launchUrl(Uri.parse(
-                                                                "https://${link.value.toString()}"));
+                                                            if (isYouTubeUrl(
+                                                                SelectedTest)) {
+                                                              playLink(
+                                                                  SelectedTest,
+                                                                  context);
+                                                            } else
+                                                              launchUrl(Uri.parse(
+                                                                  "https://${link.value.toString()}"));
                                                           } else {
                                                             if (Link6 == true) {
                                                               print(
@@ -579,25 +580,33 @@ class _HashTagViewScreenState extends State<HashTagViewScreen> with Observer {
                                                               Navigator.push(
                                                                   context,
                                                                   MaterialPageRoute(
-                                                                builder: (context) {
+                                                                builder:
+                                                                    (context) {
                                                                   return NewBottomBar(
-                                                                    buttomIndex: 1,
+                                                                    buttomIndex:
+                                                                        1,
                                                                   );
                                                                 },
                                                               ));
                                                             } else {
-                                                              if (isYouTubeUrl(SelectedTest)) {
-                                                                playLink(SelectedTest, context);
-                                                              } else launchUrl(Uri.parse(
-                                                                  link.value
-                                                                      .toString()));
+                                                              if (isYouTubeUrl(
+                                                                  SelectedTest)) {
+                                                                playLink(
+                                                                    SelectedTest,
+                                                                    context);
+                                                              } else
+                                                                launchUrl(Uri
+                                                                    .parse(link
+                                                                        .value
+                                                                        .toString()));
                                                               print(
                                                                   "link.valuelink.value -- ${link.value}");
                                                             }
                                                           }
                                                         } else {
                                                           if (link.value!
-                                                              .startsWith('#')) {
+                                                              .startsWith(
+                                                                  '#')) {
                                                             print("${link}");
                                                             if (widget.title ==
                                                                 link.value) {
@@ -612,17 +621,19 @@ class _HashTagViewScreenState extends State<HashTagViewScreen> with Observer {
                                                                   ));
                                                             }
                                                           } else if (link.value!
-                                                              .startsWith('@')) {
+                                                              .startsWith(
+                                                                  '@')) {
                                                             var name;
                                                             var tagName;
                                                             name = SelectedTest;
                                                             tagName =
                                                                 name.replaceAll(
                                                                     "@", "");
-                                                            await BlocProvider.of<
-                                                                        HashTagCubit>(
-                                                                    context)
-                                                                .UserTagAPI(context,
+                                                            await BlocProvider
+                                                                    .of<HashTagCubit>(
+                                                                        context)
+                                                                .UserTagAPI(
+                                                                    context,
                                                                     tagName);
 
                                                             print(
@@ -630,72 +641,143 @@ class _HashTagViewScreenState extends State<HashTagViewScreen> with Observer {
                                                             print(
                                                                 "user id -- ${userTagModel?.object}");
                                                           } else {
-                                                            if (isYouTubeUrl(SelectedTest)) {
-                                                              playLink(SelectedTest, context);
-                                                            } else launchUrl(Uri.parse(
-                                                                "https://${link.value.toString()}"));
+                                                            if (isYouTubeUrl(
+                                                                SelectedTest)) {
+                                                              playLink(
+                                                                  SelectedTest,
+                                                                  context);
+                                                            } else
+                                                              launchUrl(Uri.parse(
+                                                                  "https://${link.value.toString()}"));
                                                           }
                                                         }
                                                       },
                                                     ),
-                                                    if (extractUrls(hashTagViewData?.object?.posts?[index]
-                                                        .description ?? "").isNotEmpty)
-                                                      isYouTubeUrl(extractUrls(hashTagViewData?.object?.posts?[index]
-                                                          .description ?? "").first)
+                                                    if (extractUrls(hashTagViewData
+                                                                ?.object
+                                                                ?.posts?[index]
+                                                                .description ??
+                                                            "")
+                                                        .isNotEmpty)
+                                                      isYouTubeUrl(extractUrls(hashTagViewData
+                                                                      ?.object
+                                                                      ?.posts?[
+                                                                          index]
+                                                                      .description ??
+                                                                  "")
+                                                              .first)
                                                           ? FutureBuilder(
-                                                          future: fetchYoutubeThumbnail(extractUrls(hashTagViewData?.object?.posts?[index]
-                                                              .description ?? "").first),
-                                                          builder: (context, snap) {
-                                                            return Container(
-                                                              height: 200,
-                                                              decoration: BoxDecoration(image: DecorationImage(image: CachedNetworkImageProvider(snap.data.toString())), borderRadius: BorderRadius.circular(10)),
-                                                              clipBehavior: Clip.antiAlias,
-                                                              child: Center(
-                                                                  child: IconButton(
+                                                              future: fetchYoutubeThumbnail(extractUrls(hashTagViewData
+                                                                          ?.object
+                                                                          ?.posts?[
+                                                                              index]
+                                                                          .description ??
+                                                                      "")
+                                                                  .first),
+                                                              builder: (context,
+                                                                  snap) {
+                                                                return Container(
+                                                                  height: 200,
+                                                                  decoration: BoxDecoration(
+                                                                      image: DecorationImage(
+                                                                          image: CachedNetworkImageProvider(snap
+                                                                              .data
+                                                                              .toString())),
+                                                                      borderRadius:
+                                                                          BorderRadius.circular(
+                                                                              10)),
+                                                                  clipBehavior:
+                                                                      Clip.antiAlias,
+                                                                  child: Center(
+                                                                      child:
+                                                                          IconButton(
                                                                     icon: Icon(
-                                                                      Icons.play_circle_fill_rounded,
-                                                                      color: Colors.white,
+                                                                      Icons
+                                                                          .play_circle_fill_rounded,
+                                                                      color: Colors
+                                                                          .white,
                                                                       size: 60,
                                                                     ),
-                                                                    onPressed: () {
-                                                                      playLink(extractUrls(hashTagViewData?.object?.posts?[index]
-                                                                          .description ?? "").first, context);
+                                                                    onPressed:
+                                                                        () {
+                                                                      playLink(
+                                                                          extractUrls(hashTagViewData?.object?.posts?[index].description ?? "")
+                                                                              .first,
+                                                                          context);
                                                                     },
                                                                   )),
-                                                            );
-                                                          })
+                                                                );
+                                                              })
                                                           : Padding(
-                                                        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-                                                        child: AnyLinkPreview(
-                                                          link: extractUrls(hashTagViewData?.object?.posts?[index]
-                                                              .description ?? "").first,
-                                                          displayDirection: UIDirection.uiDirectionHorizontal,
-                                                          showMultimedia: true,
-                                                          bodyMaxLines: 5,
-                                                          bodyTextOverflow: TextOverflow.ellipsis,
-                                                          titleStyle: TextStyle(
-                                                            color: Colors.black,
-                                                            fontWeight: FontWeight.bold,
-                                                            fontSize: 15,
-                                                          ),
-                                                          bodyStyle: TextStyle(color: Colors.grey, fontSize: 12),
-                                                          errorBody: 'Show my custom error body',
-                                                          errorTitle: 'Show my custom error title',
-                                                          errorWidget: null,
-                                                          errorImage: "https://flutter.dev/",
-                                                          cache: Duration(days: 7),
-                                                          backgroundColor: Colors.grey[300],
-                                                          borderRadius: 12,
-                                                          removeElevation: false,
-                                                          boxShadow: [
-                                                            BoxShadow(blurRadius: 3, color: Colors.grey)
-                                                          ],
-                                                          onTap: () {
-                                                            launchUrl(Uri.parse(extractUrls(hashTagViewData?.object?.posts?[index]
-                                                                .description ?? "").first));
-                                                          }, // This disables tap event
-                                                        ),
-                                                      ),
+                                                              padding: const EdgeInsets
+                                                                      .symmetric(
+                                                                  horizontal:
+                                                                      16.0,
+                                                                  vertical:
+                                                                      8.0),
+                                                              child:
+                                                                  AnyLinkPreview(
+                                                                link: extractUrls(hashTagViewData
+                                                                            ?.object
+                                                                            ?.posts?[index]
+                                                                            .description ??
+                                                                        "")
+                                                                    .first,
+                                                                displayDirection:
+                                                                    UIDirection
+                                                                        .uiDirectionHorizontal,
+                                                                showMultimedia:
+                                                                    true,
+                                                                bodyMaxLines: 5,
+                                                                bodyTextOverflow:
+                                                                    TextOverflow
+                                                                        .ellipsis,
+                                                                titleStyle:
+                                                                    TextStyle(
+                                                                  color: Colors
+                                                                      .black,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold,
+                                                                  fontSize: 15,
+                                                                ),
+                                                                bodyStyle: TextStyle(
+                                                                    color: Colors
+                                                                        .grey,
+                                                                    fontSize:
+                                                                        12),
+                                                                errorBody:
+                                                                    'Show my custom error body',
+                                                                errorTitle:
+                                                                    'Show my custom error title',
+                                                                errorWidget:
+                                                                    null,
+                                                                errorImage:
+                                                                    "https://flutter.dev/",
+                                                                cache: Duration(
+                                                                    days: 7),
+                                                                backgroundColor:
+                                                                    Colors.grey[
+                                                                        300],
+                                                                borderRadius:
+                                                                    12,
+                                                                removeElevation:
+                                                                    false,
+                                                                boxShadow: [
+                                                                  BoxShadow(
+                                                                      blurRadius:
+                                                                          3,
+                                                                      color: Colors
+                                                                          .grey)
+                                                                ],
+                                                                onTap: () {
+                                                                  launchUrl(Uri.parse(
+                                                                      extractUrls(hashTagViewData?.object?.posts?[index].description ??
+                                                                              "")
+                                                                          .first));
+                                                                }, // This disables tap event
+                                                              ),
+                                                            ),
                                                   ],
                                                 ),
 
@@ -858,7 +940,9 @@ class _HashTagViewScreenState extends State<HashTagViewScreen> with Observer {
                                                                     ?.isNotEmpty ==
                                                                 true))
                                                               Container(
-                                                                height: _height/1.4,
+                                                                height:
+                                                                    _height /
+                                                                        1.4,
                                                                 child: PageView
                                                                     .builder(
                                                                   onPageChanged:
@@ -1125,7 +1209,7 @@ class _HashTagViewScreenState extends State<HashTagViewScreen> with Observer {
                                                               RegisterCreateAccountScreen()));
                                                 } else {
                                                   _settingModalBottomSheet1(
-                                                      context, index, _width);
+                                                      context, index, _height);
                                                 }
                                               },
                                               child: Container(
@@ -1248,19 +1332,19 @@ class _HashTagViewScreenState extends State<HashTagViewScreen> with Observer {
     ));
   }
 
-  void _settingModalBottomSheet1(context, index, _width) {
+  void _settingModalBottomSheet1(context, index, _heigth) {
     void _goToElement() {
       scroll.animateTo((1000 * 20),
           duration: const Duration(milliseconds: 300), curve: Curves.easeOut);
     }
 
-    showModalBottomSheet(
-        isScrollControlled: true,
+    showBottomSheet(
+        /*  isScrollControlled: true,
         useSafeArea: true,
         isDismissible: true,
-        showDragHandle: true,
+        showDragHandle: true, */
         enableDrag: true,
-        constraints: BoxConstraints.tight(Size.infinite),
+        constraints: BoxConstraints(maxHeight: _heigth / 2),
         context: context,
         builder: (BuildContext bc) {
           return CommentBottomSheet(
@@ -1436,39 +1520,39 @@ class _HashTagViewScreenState extends State<HashTagViewScreen> with Observer {
                       await soicalFunation(apiName: 'Deletepost', index: index);
                       Navigator.pop(context);
                     },
-                    child:Container(
-                        height: 30,
-                        width: 80,
-                        decoration: BoxDecoration(
-                            // color: Colors.green,
-                            color: ColorConstant.primary_color,
-                            borderRadius: BorderRadius.circular(5)),
-                        child: Center(
-                          child: Text(
-                            "Yes",
-                            style: TextStyle(color: Colors.white),
-                          ),
+                    child: Container(
+                      height: 30,
+                      width: 80,
+                      decoration: BoxDecoration(
+                          // color: Colors.green,
+                          color: ColorConstant.primary_color,
+                          borderRadius: BorderRadius.circular(5)),
+                      child: Center(
+                        child: Text(
+                          "Yes",
+                          style: TextStyle(color: Colors.white),
                         ),
                       ),
+                    ),
                   ),
                   GestureDetector(
                     onTap: () {
                       Navigator.pop(context);
                     },
                     child: Container(
-                        height: 30,
-                        width: 80,
-                        decoration: BoxDecoration(
-                            // color: Colors.green,
-                            color: ColorConstant.primary_color,
-                            borderRadius: BorderRadius.circular(5)),
-                        child: Center(
-                          child: Text(
-                            "No",
-                            style: TextStyle(color: Colors.white),
-                          ),
+                      height: 30,
+                      width: 80,
+                      decoration: BoxDecoration(
+                          // color: Colors.green,
+                          color: ColorConstant.primary_color,
+                          borderRadius: BorderRadius.circular(5)),
+                      child: Center(
+                        child: Text(
+                          "No",
+                          style: TextStyle(color: Colors.white),
                         ),
                       ),
+                    ),
                   ),
                 ],
               ),
@@ -1480,7 +1564,7 @@ class _HashTagViewScreenState extends State<HashTagViewScreen> with Observer {
   }
 
   void rePostBottommSheet(context, index) {
-    showModalBottomSheet(
+    showBottomSheet(
         context: context,
         builder: (BuildContext bc) {
           return Container(
@@ -1628,29 +1712,30 @@ class _HashTagViewScreenState extends State<HashTagViewScreen> with Observer {
       caseSensitive: false,
     );
 
-    List<String> urls = regExp.allMatches(text).map((match) => match.group(0)!).toList();
+    List<String> urls =
+        regExp.allMatches(text).map((match) => match.group(0)!).toList();
     List<String> finalUrls = [];
     RegExp urlRegex = RegExp(r"(http(s)?://)", caseSensitive: false);
     urls.forEach((element) {
-      if(urlRegex.allMatches(element).toList().length > 1){
+      if (urlRegex.allMatches(element).toList().length > 1) {
         String xyz = element.replaceAll("http", ",http");
         List<String> splitted = xyz.split(RegExp(r",|;"));
         splitted.forEach((element1) {
-          if(element1.isNotEmpty)
-            finalUrls.add(element1);
+          if (element1.isNotEmpty) finalUrls.add(element1);
         });
-      }else{
+      } else {
         finalUrls.add(element);
       }
     });
     return finalUrls;
-
   }
 
   bool isYouTubeUrl(String url) {
     // Regular expression pattern to match YouTube URLs
-    RegExp youtubeVideoRegex = RegExp(r"^https?://(?:www\.)?youtube\.com/(?:watch\?v=)?([^#&?]+)");
-    RegExp youtubeShortsRegex = RegExp(r"^https?://(?:www\.)?youtube\.com/shorts/([^#&?]+)");
+    RegExp youtubeVideoRegex =
+        RegExp(r"^https?://(?:www\.)?youtube\.com/(?:watch\?v=)?([^#&?]+)");
+    RegExp youtubeShortsRegex =
+        RegExp(r"^https?://(?:www\.)?youtube\.com/shorts/([^#&?]+)");
 
     if (youtubeVideoRegex.hasMatch(url) || youtubeShortsRegex.hasMatch(url)) {
       return true;
@@ -1683,16 +1768,21 @@ class _HashTagViewScreenState extends State<HashTagViewScreen> with Observer {
                   Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      FutureBuilder(future: getYoutubePlayer(videoUrl, () {
-                        Navigator.pop(ctx);
-                        launchUrl(Uri.parse(videoUrl));
-                      }), builder: (context,snap){
-                        if(snap.data != null)
-                          return snap.data as Widget;
-                        else return Center(
-                          child: CircularProgressIndicator(color: Colors.white,),
-                        );
-                      })
+                      FutureBuilder(
+                          future: getYoutubePlayer(videoUrl, () {
+                            Navigator.pop(ctx);
+                            launchUrl(Uri.parse(videoUrl));
+                          }),
+                          builder: (context, snap) {
+                            if (snap.data != null)
+                              return snap.data as Widget;
+                            else
+                              return Center(
+                                child: CircularProgressIndicator(
+                                  color: Colors.white,
+                                ),
+                              );
+                          })
                     ],
                   ),
                   Align(
@@ -1743,10 +1833,10 @@ class _HashTagViewScreenState extends State<HashTagViewScreen> with Observer {
     return playlistId;
   }
 
-
   Future<List<String>> getPlaylistVideos(String playlistId) async {
     // final url = "https://www.youtube.com/playlist?list=RDF0SflZWxv8k";
-    final url = "https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=50&playlistId=$playlistId&key=AIzaSyAT_gzTjHn9XuvQsmGdY63br7lKhD2KRdo";
+    final url =
+        "https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=50&playlistId=$playlistId&key=AIzaSyAT_gzTjHn9XuvQsmGdY63br7lKhD2KRdo";
     final response = await http.get(Uri.parse(url));
     if (response.statusCode == 200) {
       // Parse the HTML content to extract video IDs (implementation depends on website structure)
@@ -1757,7 +1847,7 @@ class _HashTagViewScreenState extends State<HashTagViewScreen> with Observer {
       }
       return videoIds; // List of video IDs
     } else {
-      print ("Failed to fetch playlist videos");
+      print("Failed to fetch playlist videos");
       return [];
     }
   }
@@ -1792,17 +1882,17 @@ class _HashTagViewScreenState extends State<HashTagViewScreen> with Observer {
     return liveId;
   }
 
-
-  Future<Widget> getYoutubePlayer(String videoUrl, Function() fullScreen) async{
+  Future<Widget> getYoutubePlayer(
+      String videoUrl, Function() fullScreen) async {
     late YoutubePlayerController _controller;
     String videoId = "";
-    if(videoUrl.toLowerCase().contains("playlist")){
+    if (videoUrl.toLowerCase().contains("playlist")) {
       String playlistId = extractPlaylistId(videoUrl);
       var videoIds = await getPlaylistVideos(playlistId);
       videoId = videoIds.first;
-    }else if(videoUrl.toLowerCase().contains("live")){
+    } else if (videoUrl.toLowerCase().contains("live")) {
       videoId = extractLiveId(videoUrl);
-    }else{
+    } else {
       videoId = YoutubePlayer.convertUrlToId(videoUrl)!;
     }
     print("video id ========================> $videoId");
