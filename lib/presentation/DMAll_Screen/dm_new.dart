@@ -109,6 +109,8 @@ class DmScreenNew extends StatefulWidget {
 class _DmScreenNewState extends State<DmScreenNew> with Observer {
   String? UserLogin_ID;
   Timer? timer;
+  bool? soicalData;
+
   String? DMbaseURL;
   WebSocketChannel? channel;
   bool _isConnected = false;
@@ -160,6 +162,8 @@ class _DmScreenNewState extends State<DmScreenNew> with Observer {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setInt(PreferencesKey.NotificationCount, NotificationCount);
     prefs.setInt(PreferencesKey.MessageCount, MessageCount);
+    soicalData =
+        prefs.getBool(PreferencesKey.videoCallaudiocallcompnypagecreation);
   }
 
   @override
@@ -502,7 +506,8 @@ class _DmScreenNewState extends State<DmScreenNew> with Observer {
                                       ),
                                     ),
                                     Spacer(),
-                                    sendCallButton(
+                                        if(soicalData == true)
+                                        sendCallButton(
                                       isVideoCall: false,
                                       invitees: [
                                         ZegoUIKitUser(
@@ -516,6 +521,7 @@ class _DmScreenNewState extends State<DmScreenNew> with Observer {
                                       onCallFinished:
                                           onSendCallInvitationFinished,
                                     ),
+                                     if(soicalData == true)
                                     sendCallButton(
                                       isVideoCall: true,
                                       invitees: [
@@ -530,12 +536,12 @@ class _DmScreenNewState extends State<DmScreenNew> with Observer {
                                       onCallFinished:
                                           onSendCallInvitationFinished,
                                     ),
-                                    GestureDetector(
+                                    /* GestureDetector(
                                         onTapDown: (TapDownDetails details) {
                                           _showPopupMenu(
                                               context, details.globalPosition);
                                         },
-                                        child: Icon(Icons.more_vert)),
+                                        child: Icon(Icons.more_vert)), */
 
                                     /*   sendCallButton(
                                   isVideoCall: true,
@@ -2651,16 +2657,21 @@ class _MessageViewWidgetState extends State<MessageViewWidget> {
                   Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                   FutureBuilder(future: getYoutubePlayer(videoUrl, () {
-                        Navigator.pop(ctx);
-                        launchUrl(Uri.parse(videoUrl));
-                      }), builder: (context,snap){
-                        if(snap.data != null)
-                          return snap.data as Widget;
-                        else return Center(
-                          child: CircularProgressIndicator(color: Colors.white,),
-                        );
-                      })
+                      FutureBuilder(
+                          future: getYoutubePlayer(videoUrl, () {
+                            Navigator.pop(ctx);
+                            launchUrl(Uri.parse(videoUrl));
+                          }),
+                          builder: (context, snap) {
+                            if (snap.data != null)
+                              return snap.data as Widget;
+                            else
+                              return Center(
+                                child: CircularProgressIndicator(
+                                  color: Colors.white,
+                                ),
+                              );
+                          })
                     ],
                   ),
                   Align(
@@ -2692,7 +2703,7 @@ class _MessageViewWidgetState extends State<MessageViewWidget> {
 
   bool _isPlayerReady = false;
 
- String extractPlaylistId(String playlistLink) {
+  String extractPlaylistId(String playlistLink) {
     Uri uri = Uri.parse(playlistLink);
 
     String playlistId = '';
@@ -2713,10 +2724,10 @@ class _MessageViewWidgetState extends State<MessageViewWidget> {
     return playlistId;
   }
 
-
   Future<List<String>> getPlaylistVideos(String playlistId) async {
     // final url = "https://www.youtube.com/playlist?list=RDF0SflZWxv8k";
-    final url = "https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=50&playlistId=$playlistId&key=AIzaSyAT_gzTjHn9XuvQsmGdY63br7lKhD2KRdo";
+    final url =
+        "https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=50&playlistId=$playlistId&key=AIzaSyAT_gzTjHn9XuvQsmGdY63br7lKhD2KRdo";
     final response = await http.get(Uri.parse(url));
     if (response.statusCode == 200) {
       // Parse the HTML content to extract video IDs (implementation depends on website structure)
@@ -2727,7 +2738,7 @@ class _MessageViewWidgetState extends State<MessageViewWidget> {
       }
       return videoIds; // List of video IDs
     } else {
-      print ("Failed to fetch playlist videos");
+      print("Failed to fetch playlist videos");
       return [];
     }
   }
@@ -2762,17 +2773,17 @@ class _MessageViewWidgetState extends State<MessageViewWidget> {
     return liveId;
   }
 
-
-  Future<Widget> getYoutubePlayer(String videoUrl, Function() fullScreen) async{
+  Future<Widget> getYoutubePlayer(
+      String videoUrl, Function() fullScreen) async {
     late YoutubePlayerController _controller;
     String videoId = "";
-    if(videoUrl.toLowerCase().contains("playlist")){
+    if (videoUrl.toLowerCase().contains("playlist")) {
       String playlistId = extractPlaylistId(videoUrl);
       var videoIds = await getPlaylistVideos(playlistId);
       videoId = videoIds.first;
-    }else if(videoUrl.toLowerCase().contains("live")){
+    } else if (videoUrl.toLowerCase().contains("live")) {
       videoId = extractLiveId(videoUrl);
-    }else{
+    } else {
       videoId = YoutubePlayer.convertUrlToId(videoUrl)!;
     }
     print("video id ========================> $videoId");

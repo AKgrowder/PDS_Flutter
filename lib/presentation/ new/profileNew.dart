@@ -179,6 +179,7 @@ class _ProfileScreenState extends State<ProfileScreen>
   GlobalKey key = GlobalKey();
   GlobalKey blockKey = GlobalKey();
   bool isScrollingDown = false;
+  bool? soicalData;
 
   bool _show = true;
   int indexx = 0;
@@ -312,6 +313,7 @@ class _ProfileScreenState extends State<ProfileScreen>
   savedataFuntion(String userId) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     User_Module = prefs.getString(PreferencesKey.module);
+     soicalData = prefs.getBool(PreferencesKey.videoCallaudiocallcompnypagecreation);
     super.setState(() {});
 
     BlocProvider.of<NewProfileSCubit>(context).get_about_me(context, userId);
@@ -940,14 +942,14 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                             )),
                                                 ),
                                               ),
-                                            /*   if (getallcompenypagemodel
+                                              if (getallcompenypagemodel
                                                           ?.object
                                                           ?.content
                                                           ?.isNotEmpty ==
                                                       true &&
                                                   getallcompenypagemodel?.object
                                                           ?.content?.length !=
-                                                      1)
+                                                      1 && soicalData == true)
                                                 Positioned(
                                                   bottom: 5,
                                                   right: -0,
@@ -984,7 +986,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                           ),
                                                         )),
                                                   ),
-                                                ) */
+                                                )
                                             ],
                                           ),
                                         ),
