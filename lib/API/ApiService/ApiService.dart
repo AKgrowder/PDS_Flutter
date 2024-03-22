@@ -30,8 +30,8 @@ class ApiServices {
       baseURL =
           // "https://0b8e-2405-201-200b-a0cf-4523-3bc3-2996-dc22.ngrok.io/";
           // "https://uatapi.inpackaging.com/";
-          // "https://api.inpackaging.com/";
-          "http://192.168.29.100:8081/";
+          "https://api.inpackaging.com/";
+          // "http://192.168.29.150:8081/";
     }
 
     print(baseURL);
@@ -68,8 +68,8 @@ class ApiServices {
       baseURL =
           // "https://0b8e-2405-201-200b-a0cf-4523-3bc3-2996-dc22.ngrok.io/";
           // "https://uatapi.inpackaging.com/";
-          // "https://api.inpackaging.com/";
-          "http://192.168.29.100:8081/";
+          "https://api.inpackaging.com/";
+          // "http://192.168.29.150:8081/";
     }
 
     print("API => ******** ${baseURL + APIurl}");

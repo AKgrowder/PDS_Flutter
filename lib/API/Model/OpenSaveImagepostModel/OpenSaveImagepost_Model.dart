@@ -40,7 +40,7 @@ class Object {
   int? commentCount;
   int? repostCount;
   RepostOn? repostOn;
-  Null? thumbnailImageUrl;
+  String? thumbnailImageUrl;
   String? postLink;
   String? translatedDescription;
   bool? isTrsnalteoption;
@@ -136,7 +136,7 @@ class RepostOn {
   int? likedCount;
   int? commentCount;
   int? repostCount;
-  Null? repostOn;
+  RepostOn? repostOn;
   String? thumbnailImageUrl;
   String? translatedDescription;
   bool? isTrsnalteoption;
@@ -179,7 +179,9 @@ class RepostOn {
     likedCount = json['likedCount'];
     commentCount = json['commentCount'];
     repostCount = json['repostCount'];
-    repostOn = json['repostOn'];
+    repostOn = json['repostOn'] != null
+        ? new RepostOn.fromJson(json['repostOn'])
+        : null;
     thumbnailImageUrl = json['thumbnailImageUrl'];
     translatedDescription = json['translatedDescription'];
     isTrsnalteoption = json['isTrsnalteoption'];
