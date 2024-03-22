@@ -140,9 +140,9 @@ class _SplashScreenState extends State<SplashScreen> {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     UserID = prefs.getString(PreferencesKey.loginUserID) ?? "";
     String? videouid = prefs.getString(PreferencesKey.vidoCallUid) ?? "";
-         print("zego video uid : $videouid");
+    print("zego video uid : $videouid");
 // if (videouid.isNotEmpty) {
-      // onUserLogin(UserID, 'sxfdgfgd');
+    // onUserLogin(UserID, 'sxfdgfgd');
     // }
   }
 
@@ -161,6 +161,7 @@ class _SplashScreenState extends State<SplashScreen> {
     prefs.setString(PreferencesKey.IPAIosMainversion, "11");
     prefs.setString(PreferencesKey.IPAIosLatestVersion, "1");
     prefs.setString(PreferencesKey.IPAIosRoutVersion, "10");
+    prefs.setBool(PreferencesKey.videoCallaudiocallcompnypagecreation, true);
 
     // prefs.setBool(PreferencesKey.RoutURlChnage, false);
 
@@ -376,7 +377,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
     prefs.setBool(PreferencesKey.RoutURlChnage, true);
     prefs.setBool(PreferencesKey.UpdateURLinSplash, true);
-   
+
     Future.delayed(Duration(seconds: 0), () {
       Navigator.pushAndRemoveUntil(context, MaterialPageRoute(
         builder: (context) {
