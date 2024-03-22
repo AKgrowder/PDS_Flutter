@@ -36,6 +36,8 @@ class PreferencesKey {
   static const String appApkMinVersion = 'appMinVersion';
   static const String IPAIosLatestVersion = 'IPAIosLatestVersion';
   static const String IPAIosRoutVersion = 'IPARoutVersion';
+  static const String videoCallaudiocallcompnypagecreation = 'videoCall&audiocall&compnypagecreation';
+
   static const String IPAIosMainversion = 'IPAMainversion';
   static const String RoutURl = 'RoutURl';
   static const String RoutURlChnage = 'RoutURlChnage';
