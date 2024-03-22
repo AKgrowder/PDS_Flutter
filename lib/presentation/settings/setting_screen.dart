@@ -43,7 +43,29 @@ class SettingScreen extends StatefulWidget {
 
 var status;
 var directory = getApplicationDocumentsDirectory();
-var Setting_Array = [
+
+// var SettingImage_Array2 = [
+//   ImageConstant.pin,
+//   ImageConstant.pin,
+//   ImageConstant.pin,
+//   ImageConstant.pin,
+//   ImageConstant.pin,
+// ];
+var businessName;
+var accountUrl;
+var IsGuestUserEnabled;
+var GetTimeSplash;
+late String _localPath;
+
+class _SettingScreenState extends State<SettingScreen> {
+  bool? isSwitched;
+  String? userStatus;
+  String? rejcteReson;
+  bool? UserProfileOpen;
+  GetAssignedUsersOfCompanyPage? getAssignedUsersOfCompanyPage;
+
+  String? User_CompnyPageModule;
+  var Setting_Array = [
   // "My Details",
   "Saved Threads",
   "Saved Pins",
@@ -97,35 +119,14 @@ var SettingImage_Array = [
   ImageConstant.setting_star,
   // ImageConstant.Invite_Friends,
   ImageConstant.setting_delete,
-  ImageConstant.tomcruse,
-  ImageConstant.profileLock, ImageConstant.block_user,
+  ImageConstant.profileLock,
+  ImageConstant.block_user,
   ImageConstant.setting_power,
 
   // ImageConstant.setting_power,
   // ImageConstant.setting_phone,
 ];
 
-// var SettingImage_Array2 = [
-//   ImageConstant.pin,
-//   ImageConstant.pin,
-//   ImageConstant.pin,
-//   ImageConstant.pin,
-//   ImageConstant.pin,
-// ];
-var businessName;
-var accountUrl;
-var IsGuestUserEnabled;
-var GetTimeSplash;
-late String _localPath;
-
-class _SettingScreenState extends State<SettingScreen> {
-  bool? isSwitched;
-  String? userStatus;
-  String? rejcteReson;
-  bool? UserProfileOpen;
-  GetAssignedUsersOfCompanyPage? getAssignedUsersOfCompanyPage;
-
-  String? User_CompnyPageModule;
   methodCalling() async {
     print("check what is value-${widget.userCompanyPageUid}");
     if (widget.userCompanyPageUid != null) {
@@ -286,7 +287,6 @@ class _SettingScreenState extends State<SettingScreen> {
       body: BlocConsumer<AccountCubit, AccountState>(
         listener: (context, state) {
           if (state is GetAssignedUsersOfCompanyPageLoadedState) {
-
             getAssignedUsersOfCompanyPage = state.getAssignedUsersOfCompanyPage;
             print("check Calusdasdf0-");
           }
@@ -376,6 +376,12 @@ class _SettingScreenState extends State<SettingScreen> {
                           return SizedBox();
                         }
                         if (widget.module == true && index == 9) {
+                          return SizedBox();
+                        }
+                        if (getAssignedUsersOfCompanyPage?.object?.isEmpty ==
+                                true &&
+                            index == 10 ) {
+                              
                           return SizedBox();
                         }
                         return GestureDetector(
@@ -502,10 +508,12 @@ class _SettingScreenState extends State<SettingScreen> {
 
                                 break;
                               case 9:
-                                   Navigator.push(context,
+                                Navigator.push(context,
                                     MaterialPageRoute(builder: (context) {
-                                  return PageAdmin(getAssignedUsersOfCompanyPage: getAssignedUsersOfCompanyPage!,
-                                  companyPageUid: widget.userCompanyPageUid,
+                                  return PageAdmin(
+                                    getAssignedUsersOfCompanyPage:
+                                        getAssignedUsersOfCompanyPage!,
+                                    companyPageUid: widget.userCompanyPageUid,
                                   );
                                 }));
                                 break;
@@ -574,14 +582,20 @@ class _SettingScreenState extends State<SettingScreen> {
                                         child: Container(
                                           height: 25,
                                           width: 25,
-                                          child: index == 2
+                                        /*   child: index == 2
                                               ? Image.asset(
                                                   "${SettingImage_Array[index]}",
                                                   color: Color(0xFF3F3F3F),
                                                 )
-                                              : Image.asset(
-                                                  "${SettingImage_Array[index]}",
-                                                ),
+                                              : /* getAssignedUsersOfCompanyPage
+                                                              ?.object
+                                                              ?.isEmpty ==
+                                                          true &&
+                                                      index == 10
+                                                  ? SizedBox()
+                                                  :  */Image.asset(
+                                                      "${SettingImage_Array[index]}",
+                                                    ), */
                                         ),
                                       ),
                                       Text(
