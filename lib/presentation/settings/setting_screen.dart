@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_switch/flutter_switch.dart';
@@ -9,12 +8,10 @@ import 'package:pds/API/Bloc/RateUs_Bloc/RateUs_cubit.dart';
 import 'package:pds/API/Bloc/accounttype_bloc/account_cubit.dart';
 import 'package:pds/API/Bloc/accounttype_bloc/account_state.dart';
 import 'package:pds/API/Bloc/logOut_bloc/logOut_cubit.dart';
-import 'package:pds/API/Model/get_assigned_users_of_company_pageModel/get_assigned_users_of_company_pageModel.dart';
 import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/presentation/%20new/Blocked_userList_screen.dart';
 import 'package:pds/presentation/Comapny_page/Comapny_manage_screen.dart';
 import 'package:pds/presentation/change_password_screen/change_password_screen.dart';
-import 'package:pds/presentation/comnpyPageAdminScreen.dart';
 import 'package:pds/presentation/settings/LogOut_dailog.dart';
 import 'package:pds/widgets/delete_dailog.dart';
 import 'package:pds/widgets/rateUS_dailog.dart';
@@ -43,45 +40,22 @@ class SettingScreen extends StatefulWidget {
 
 var status;
 var directory = getApplicationDocumentsDirectory();
-
-// var SettingImage_Array2 = [
-//   ImageConstant.pin,
-//   ImageConstant.pin,
-//   ImageConstant.pin,
-//   ImageConstant.pin,
-//   ImageConstant.pin,
-// ];
-var businessName;
-var accountUrl;
-var IsGuestUserEnabled;
-var GetTimeSplash;
-late String _localPath;
-
-class _SettingScreenState extends State<SettingScreen> {
-  bool? isSwitched;
-  String? userStatus;
-  String? rejcteReson;
-  bool? UserProfileOpen;
-  GetAssignedUsersOfCompanyPage? getAssignedUsersOfCompanyPage;
-
-  String? User_CompnyPageModule;
-  var Setting_Array = [
+var Setting_Array = [
   // "My Details",
   "Saved Threads",
   "Saved Pins",
   "Change Password",
   "Prefrences",
+
   "Support",
   "Policies",
   "Invite Friends",
   "Rate Us",
   "Delete Account",
-  "page Admin",
-  "Manage Company Page",
   "Public & Private Profile",
   "Block User",
   "Log Out",
-
+  "Manage Company Page"
   /* "Change Password",
   "Public & Private Profile",
   "Block User",
@@ -119,26 +93,33 @@ var SettingImage_Array = [
   ImageConstant.setting_star,
   // ImageConstant.Invite_Friends,
   ImageConstant.setting_delete,
-  ImageConstant.profileLock,
-  ImageConstant.block_user,
+  ImageConstant.profileLock, ImageConstant.block_user,
   ImageConstant.setting_power,
-
+  ImageConstant.setting_comanyManage,
   // ImageConstant.setting_power,
   // ImageConstant.setting_phone,
 ];
 
-  methodCalling() async {
-    print("check what is value-${widget.userCompanyPageUid}");
-    if (widget.userCompanyPageUid != null) {
-      await BlocProvider.of<AccountCubit>(context)
-          .get_assigned_users_of_company_pageApi(
-              '${widget.userCompanyPageUid}', context);
-    }
-  }
+// var SettingImage_Array2 = [
+//   ImageConstant.pin,
+//   ImageConstant.pin,
+//   ImageConstant.pin,
+//   ImageConstant.pin,
+//   ImageConstant.pin,
+// ];
+var businessName;
+var accountUrl;
+var IsGuestUserEnabled;
+var GetTimeSplash;
+late String _localPath;
 
+class _SettingScreenState extends State<SettingScreen> {
+  bool? isSwitched;
+  String? userStatus;
+  String? rejcteReson;
+  bool? UserProfileOpen;
   @override
   void initState() {
-    methodCalling();
     print("accountcheck--${widget.accountType}");
     if (widget.accountType == 'PUBLIC') {
       super.setState(() {
@@ -286,10 +267,6 @@ var SettingImage_Array = [
       ),
       body: BlocConsumer<AccountCubit, AccountState>(
         listener: (context, state) {
-          if (state is GetAssignedUsersOfCompanyPageLoadedState) {
-            getAssignedUsersOfCompanyPage = state.getAssignedUsersOfCompanyPage;
-            print("check Calusdasdf0-");
-          }
           if (state is AccountLoadedState) {
             SnackBar snackBar = SnackBar(
               content: Text(state.accountType.object.toString()),
@@ -375,13 +352,7 @@ var SettingImage_Array = [
                             ) {
                           return SizedBox();
                         }
-                        if (widget.module == true && index == 9) {
-                          return SizedBox();
-                        }
-                        if (getAssignedUsersOfCompanyPage?.object?.isEmpty ==
-                                true &&
-                            index == 10 ) {
-                              
+                        if (widget.module != 'COMPANY' && index == 12) {
                           return SizedBox();
                         }
                         return GestureDetector(
@@ -508,22 +479,13 @@ var SettingImage_Array = [
 
                                 break;
                               case 9:
-                                Navigator.push(context,
-                                    MaterialPageRoute(builder: (context) {
-                                  return PageAdmin(
-                                    getAssignedUsersOfCompanyPage:
-                                        getAssignedUsersOfCompanyPage!,
-                                    companyPageUid: widget.userCompanyPageUid,
-                                  );
-                                }));
+                                print("profile");
                                 break;
                               case 10:
-                                print("this is the 10");
-                                Navigator.push(context,
-                                    MaterialPageRoute(builder: (context) {
-                                  return ComapnyManageScreen();
-                                }));
-                                print("profile");
+                                Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) =>
+                                        const BlockedUserScreen()));
+
                                 break;
                               // case 11:
                               //   // showDialog(
@@ -532,22 +494,21 @@ var SettingImage_Array = [
                               //   break;
 
                               case 11:
-                                break;
-
-                              case 12:
-                                print("this is the 10");
-                                Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (context) =>
-                                        const BlockedUserScreen()));
-
-                                break;
-                              case 13:
                                 showDialog(
                                     context: context,
                                     builder: (_) => BlocProvider<LogOutCubit>(
                                           create: (context) => LogOutCubit(),
                                           child: LogOutdailog(),
                                         ));
+
+                                break;
+
+                              case 12:
+                                Navigator.push(context,
+                                    MaterialPageRoute(builder: (context) {
+                                  return ComapnyManageScreen();
+                                }));
+
                                 break;
                               /*   case 7:
                                     showDialog(
@@ -582,20 +543,14 @@ var SettingImage_Array = [
                                         child: Container(
                                           height: 25,
                                           width: 25,
-                                        /*   child: index == 2
+                                          child: index == 2
                                               ? Image.asset(
                                                   "${SettingImage_Array[index]}",
                                                   color: Color(0xFF3F3F3F),
                                                 )
-                                              : /* getAssignedUsersOfCompanyPage
-                                                              ?.object
-                                                              ?.isEmpty ==
-                                                          true &&
-                                                      index == 10
-                                                  ? SizedBox()
-                                                  :  */Image.asset(
-                                                      "${SettingImage_Array[index]}",
-                                                    ), */
+                                              : Image.asset(
+                                                  "${SettingImage_Array[index]}",
+                                                ),
                                         ),
                                       ),
                                       Text(
@@ -607,7 +562,7 @@ var SettingImage_Array = [
                                             fontWeight: FontWeight.w500),
                                       ),
                                       Spacer(),
-                                      index == 11
+                                      index == 9
                                           ? Padding(
                                               padding: const EdgeInsets.only(
                                                   right: 10),
@@ -688,8 +643,6 @@ var SettingImage_Array = [
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     userStatus = await prefs.getString(PreferencesKey.userStatus);
     UserProfileOpen = await prefs.getBool(PreferencesKey.OpenProfile);
-    User_CompnyPageModule = prefs.getString(PreferencesKey.module1);
-
     if (userStatus != 'APPROVED') {
       rejcteReson = userStatus?.split('-').last;
     }
@@ -709,10 +662,10 @@ var SettingImage_Array = [
     var directory = await getApplicationDocumentsDirectory();
     if (Platform.isAndroid) {
       await Share.shareXFiles(
-        [XFile("/sdcard/download/IP__image.jpg")],
+        [XFile("/sdcard/download/IPImage.jpg")],
         subject: "Share",
         text:
-            "Try This Awesome App \n\n Android :- https://play.google.com/store/apps/details?id=com.ip.app",
+            "Try This Awesome App \n\n Android :- https://play.google.com/store/apps/details?id=com.pds.app",
         sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size,
       );
     } else {
@@ -720,7 +673,7 @@ var SettingImage_Array = [
         [
           XFile(directory.path +
               Platform.pathSeparator +
-              'Growder_Image/IP__image.jpg')
+              'Growder_Image/IPImage.jpg')
         ],
         subject: "Share",
         text:
