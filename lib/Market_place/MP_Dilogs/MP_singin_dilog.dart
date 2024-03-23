@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/core/utils/image_constant.dart';
+import 'package:pds/widgets/custom_image_view.dart';
 
 class CategoryChooseDilog extends StatefulWidget {
   @override
@@ -126,7 +127,7 @@ class CategoryChooseDilogState extends State<CategoryChooseDilog>
                                   ),
                                   borderRadius: BorderRadius.circular(8)),
                               // color: Colors.amber,
-                              child: Image.asset(
+                              child: CustomImageView(svgPath:
                                 _images[index]['image'],
                                 fit: BoxFit.fitHeight,
                               ),

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:pds/Market_place/MP_Dilogs/MP_singin_dilog.dart';
-import 'package:pds/Market_place/MP_Dilogs/MP_singup_flow_dilogs.dart';
 import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/core/utils/image_constant.dart';
+import 'package:pds/widgets/custom_image_view.dart';
 
 class MpHomeScreen extends StatefulWidget {
   const MpHomeScreen({Key? key}) : super(key: key);
@@ -86,16 +86,16 @@ class _MpHomeScreenState extends State<MpHomeScreen> {
                         child: Container(
                           height: 30,
                           width: 30,
-                          child: Image.asset(
-                            ImageConstant.groupicon,
+                          child: CustomImageView(
+                            svgPath: ImageConstant.groupicon,
                           ),
                         ),
                       ),
                       Container(
                         height: 30,
                         width: 30,
-                        child: Image.asset(
-                          ImageConstant.notificationicon,
+                        child: CustomImageView(
+                          svgPath: ImageConstant.notificationicon,
                         ),
                       ),
                       Container(
@@ -369,8 +369,8 @@ class _MpHomeScreenState extends State<MpHomeScreen> {
                                                           left: 10.0),
                                                   child: Container(
                                                     height: 40,
-                                                    child: Image.asset(
-                                                        ImageConstant
+                                                    child: CustomImageView(
+                                                        svgPath: ImageConstant
                                                             .orderhomeimage),
                                                   ),
                                                 ),
@@ -427,8 +427,8 @@ class _MpHomeScreenState extends State<MpHomeScreen> {
                                                           left: 10.0),
                                                   child: Container(
                                                     height: 40,
-                                                    child: Image.asset(
-                                                        ImageConstant
+                                                    child: CustomImageView(
+                                                        svgPath: ImageConstant
                                                             .priceimage),
                                                   ),
                                                 ),
@@ -516,12 +516,14 @@ class _MpHomeScreenState extends State<MpHomeScreen> {
                         },
                         child: isSaved
                             ? Container(
-                                height: 50,
-                                child: Image.asset(ImageConstant.mpsaveimage),
+                                height: 40,
+                                child: CustomImageView(
+                                    svgPath: ImageConstant.mpsaveimage),
                               )
                             : Container(
-                                height: 50,
-                                child: Image.asset(ImageConstant.mpunsaveimage),
+                                height: 40,
+                                child: CustomImageView(
+                                    svgPath: ImageConstant.mpunsaveimage),
                               ),
                       ),
                       Column(
@@ -554,7 +556,43 @@ class _MpHomeScreenState extends State<MpHomeScreen> {
                           ),
                         ],
                       ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Container(
+                            child: Text(
+                              "₹990",
+                              maxLines: 2,
+                              style: TextStyle(
+                                fontSize: 15,
+                                fontFamily: 'outfit',
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ),
+                          Container(
+                            // color: Colors.amber,
+
+                            child: Text(
+                              "₹2400",
+                              maxLines: 2,
+                              style: TextStyle(
+                                fontSize: 13,
+                                decoration: TextDecoration.lineThrough,
+                                fontFamily: 'outfit',
+                                fontWeight: FontWeight.w200,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                       Container(
+                        height: 40,
+                        child: CustomImageView( svgPath:
+                          ImageConstant.mpcartimage),
+                      ),
+                      /*   Container(
                         height: 40,
                         width: 75,
                         child: Card(
@@ -569,7 +607,7 @@ class _MpHomeScreenState extends State<MpHomeScreen> {
                             ),
                           ),
                         ),
-                      ),
+                      ), */
                     ]),
               ),
               Divider(
