@@ -154,14 +154,18 @@ class _SplashScreenState extends State<SplashScreen> {
 
   SetUi() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setString(PreferencesKey.appApkMinVersion, "11");
+    prefs.setString(PreferencesKey.appApkMinVersion, "13");
     prefs.setString(PreferencesKey.appApkLatestVersion, "1");
-    prefs.setString(PreferencesKey.appApkRouteVersion, "10");
+    prefs.setString(PreferencesKey.appApkRouteVersion, "12");
 
-    prefs.setString(PreferencesKey.IPAIosMainversion, "11");
+    prefs.setString(PreferencesKey.IPAIosMainversion, "13");
     prefs.setString(PreferencesKey.IPAIosLatestVersion, "1");
-    prefs.setString(PreferencesKey.IPAIosRoutVersion, "10");
+ prefs.setString(PreferencesKey.IPAIosRoutVersion, "12");
+
     prefs.setBool(PreferencesKey.videoCallaudiocallcompnypagecreation, true);
+
+   
+
 
     // prefs.setBool(PreferencesKey.RoutURlChnage, false);
 

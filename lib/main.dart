@@ -330,15 +330,15 @@ import 'package:pds/presentation/%20new/OpenSavePostImage.dart';
 import 'package:pds/presentation/%20new/profileNew.dart';
 import 'package:pds/theme/theme_helper.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:zego_uikit_prebuilt_call/zego_uikit_prebuilt_call.dart';
+// import 'package:zego_uikit_prebuilt_call/zego_uikit_prebuilt_call.dart';
 import 'API/Bloc/BlockUser_Bloc/Block_user_cubit.dart';
 import 'API/Bloc/Comapny_Manage_bloc/Comapny_Manage_cubit.dart';
 import 'API/Bloc/postData_Bloc/postData_Bloc.dart';
 import 'presentation/splash_screen/splash_screen.dart';
 import 'package:flutter_langdetect/flutter_langdetect.dart' as langdetect;
-import 'package:zego_uikit/zego_uikit.dart';
-import 'package:zego_uikit_prebuilt_call/zego_uikit_prebuilt_call.dart';
-import 'package:zego_uikit_signaling_plugin/zego_uikit_signaling_plugin.dart';
+// import 'package:zego_uikit/zego_uikit.dart';
+// import 'package:zego_uikit_prebuilt_call/zego_uikit_prebuilt_call.dart';
+// import 'package:zego_uikit_signaling_plugin/zego_uikit_signaling_plugin.dart';
 
 Future<void> _messageHandler(RemoteMessage message) async {
   await Firebase.initializeApp(
@@ -364,7 +364,7 @@ void main() async {
     DeviceOrientation.portraitUp,
   ]);
   final navigatorKey = GlobalKey<NavigatorState>();
-  ZegoUIKitPrebuiltCallInvitationService().setNavigatorKey(navigatorKey);
+  // ZegoUIKitPrebuiltCallInvitationService().setNavigatorKey(navigatorKey);
 
   ///Please update theme as per your need if required.
   ThemeHelper().changeTheme('primary');
@@ -429,15 +429,15 @@ void main() async {
     alert: true,
     provisional: false,
   );
-  ZegoUIKitPrebuiltCallInvitationService().setNavigatorKey(navigatorKey);
+  // ZegoUIKitPrebuiltCallInvitationService().setNavigatorKey(navigatorKey);
 
-  ZegoUIKit().initLog().then((value) {
-    ZegoUIKitPrebuiltCallInvitationService().useSystemCallingUI(
-      [ZegoUIKitSignalingPlugin()],
-    );
+  // ZegoUIKit().initLog().then((value) {
+  //   ZegoUIKitPrebuiltCallInvitationService().useSystemCallingUI(
+  //     [ZegoUIKitSignalingPlugin()],
+  //   );
 
     runApp(MyApp(navigatorKey: navigatorKey));
-  });
+  // });
 }
 
 class MyApp extends StatefulWidget {
@@ -589,19 +589,19 @@ class _MyAppState extends State<MyApp> {
           title: 'pds',
           debugShowCheckedModeBanner: false,
           home: SplashScreen(),
-          navigatorKey: widget.navigatorKey,
-          builder: (context, child) {
-            return Stack(
-              children: [
-                child!,
-                ZegoUIKitPrebuiltCallMiniOverlayPage(
-                  contextQuery: () {
-                    return widget.navigatorKey!.currentState!.context;
-                  },
-                ),
-              ],
-            );
-          },
+          // navigatorKey: widget.navigatorKey,
+          // builder: (context, child) {
+          //   return Stack(
+          //     children: [
+          //       child!,
+          //       ZegoUIKitPrebuiltCallMiniOverlayPage(
+          //         contextQuery: () {
+          //           return widget.navigatorKey!.currentState!.context;
+          //         },
+          //       ),
+          //     ],
+          //   );
+          // },
           //BottombarPage(buttomIndex: 0),
         ),
       ),
