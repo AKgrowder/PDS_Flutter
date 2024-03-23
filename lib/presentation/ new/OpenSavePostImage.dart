@@ -111,131 +111,132 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> with Observer {
         statusBarBrightness:
             Brightness.dark // Dark == white status bar -- for IOS.
         ));
-    return BlocConsumer<OpenSaveCubit, OpenSaveState>(
-        listener: (context, state) async {
-      if (state is OpenSaveErrorState) {
-        SnackBar snackBar = SnackBar(
-          content: Text(state.error),
-          backgroundColor: ColorConstant.primary_color,
-        );
-        ScaffoldMessenger.of(context).showSnackBar(snackBar);
-      }
-
-      // if (state is OpenSaveLoadingState) {
-
-      //   Center(
-      //     child: Container(
-      //       margin: EdgeInsets.only(bottom: 100),
-      //       child: ClipRRect(
-      //         borderRadius: BorderRadius.circular(20),
-      //         child: Image.asset(ImageConstant.loader,
-      //             fit: BoxFit.cover, height: 100.0, width: 100),
-      //       ),
-      //     ),
-      //   );
-      // }
-      if (state is DeletePostLoadedState) {
-        SnackBar snackBar = SnackBar(
-          content: Text(state.DeletePost.object.toString()),
-          backgroundColor: ColorConstant.primary_color,
-        );
-        ScaffoldMessenger.of(context).showSnackBar(snackBar);
-      }
-
-      if (state is OpenSaveLoadedState) {
-        OpenSaveModelData = state.OpenSaveData;
-
-        if ((OpenSaveModelData?.object?.description?.length ?? 0) <= 60) {
-          readmoree = true;
-        } else if ((OpenSaveModelData?.object?.repostOn?.description?.length ??
-                0) <=
-            60) {
-          readmoree = true;
-        } else {
-          readmoree = false;
-        }
-        print(OpenSaveModelData?.object?.postUserName);
-        navigationFunction();
-        parsedDateTimeBlogs =
-            DateTime.parse('${OpenSaveModelData?.object?.createdAt ?? ""}');
-        // parsedDateTimeRepost =
-        //     DateTime.parse('${OpenSaveModelData?.object?.repostOn?.createdAt}');
-
-        // if (OpenSaveModelData?.object?.description!= null) {
-        //   readmoree.add((OpenSaveModelData?.object?.description?.length ?? 0) <= maxLength);
-        // } else {
-        //   readmoree.add(false);
-        // }
-        if (OpenSaveModelData?.object?.repostOn != null) {
-          repostTime = DateTime.parse(
-              '${OpenSaveModelData?.object?.repostOn!.createdAt ?? ""}');
-        }
-        print("home imges -- ${widget.index}");
-        if (!added) {
-          OpenSaveModelData?.object?.postData?.forEach((element) {
-            pageControllers.add(PageController());
-            currentPages.add(0);
-          });
-
-          OpenSaveModelData?.object?.repostOn?.postData?.forEach((element) {
-            pageControllersRepost.add(PageController());
-            currentPagesRepost.add(0);
-          });
-          WidgetsBinding.instance
-              .addPostFrameCallback((timeStamp) => super.setState(() {
-                    added = true;
-                  }));
-        }
-      }
-
-      if (state is PostLikeLoadedState) {
-        BlocProvider.of<OpenSaveCubit>(context).openSaveImagePostAPI(
-          context,
-          "${widget.PostID}",
-        );
-      }
-      if (state is RePostLoadedState) {
-        SnackBar snackBar = SnackBar(
-          content: Text(state.RePost.object.toString()),
-          backgroundColor: ColorConstant.primary_color,
-        );
-        ScaffoldMessenger.of(context).showSnackBar(snackBar);
-        Navigator.pushAndRemoveUntil(context, MaterialPageRoute(
-          builder: (context) {
-            return NewBottomBar(
-              buttomIndex: 0,
-            );
-          },
-        ), (Route<dynamic> route) => false);
-      }
-      if (state is PostLikeLoadedState) {
-        print("${state.likePost.object}");
-        if (state.likePost.object != 'Post Liked Successfully' &&
-            state.likePost.object != 'Post Unliked Successfully') {
+    return Scaffold(
+      backgroundColor: Colors.black,
+      body: BlocConsumer<OpenSaveCubit, OpenSaveState>(
+          listener: (context, state) async {
+        if (state is OpenSaveErrorState) {
           SnackBar snackBar = SnackBar(
-            content: Text(state.likePost.object ?? ""),
+            content: Text(state.error),
             backgroundColor: ColorConstant.primary_color,
           );
           ScaffoldMessenger.of(context).showSnackBar(snackBar);
         }
-      }
-      if (state is UserTagSaveLoadedState) {
-        userTagModel = await state.userTagModel;
-      }
-    }, builder: (context, state) {
-      if (state is OpenSaveLoadingState) {
-        return Center(
-            child: Container(
-                margin: EdgeInsets.only(bottom: 100),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(20),
-                  child: Image.asset(ImageConstant.loader,
-                      fit: BoxFit.cover, height: 100.0, width: 100),
-                )));
-      }
-      return Scaffold(
-        backgroundColor: Colors.black,
-        body: Stack(
+
+        // if (state is OpenSaveLoadingState) {
+
+        //   Center(
+        //     child: Container(
+        //       margin: EdgeInsets.only(bottom: 100),
+        //       child: ClipRRect(
+        //         borderRadius: BorderRadius.circular(20),
+        //         child: Image.asset(ImageConstant.loader,
+        //             fit: BoxFit.cover, height: 100.0, width: 100),
+        //       ),
+        //     ),
+        //   );
+        // }
+        if (state is DeletePostLoadedState) {
+          SnackBar snackBar = SnackBar(
+            content: Text(state.DeletePost.object.toString()),
+            backgroundColor: ColorConstant.primary_color,
+          );
+          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        }
+
+        if (state is OpenSaveLoadedState) {
+          OpenSaveModelData = state.OpenSaveData;
+
+          if ((OpenSaveModelData?.object?.description?.length ?? 0) <= 60) {
+            readmoree = true;
+          } else if ((OpenSaveModelData
+                      ?.object?.repostOn?.description?.length ??
+                  0) <=
+              60) {
+            readmoree = true;
+          } else {
+            readmoree = false;
+          }
+          print(OpenSaveModelData?.object?.postUserName);
+          navigationFunction(_height);
+          parsedDateTimeBlogs =
+              DateTime.parse('${OpenSaveModelData?.object?.createdAt ?? ""}');
+          // parsedDateTimeRepost =
+          //     DateTime.parse('${OpenSaveModelData?.object?.repostOn?.createdAt}');
+
+          // if (OpenSaveModelData?.object?.description!= null) {
+          //   readmoree.add((OpenSaveModelData?.object?.description?.length ?? 0) <= maxLength);
+          // } else {
+          //   readmoree.add(false);
+          // }
+          if (OpenSaveModelData?.object?.repostOn != null) {
+            repostTime = DateTime.parse(
+                '${OpenSaveModelData?.object?.repostOn!.createdAt ?? ""}');
+          }
+          print("home imges -- ${widget.index}");
+          if (!added) {
+            OpenSaveModelData?.object?.postData?.forEach((element) {
+              pageControllers.add(PageController());
+              currentPages.add(0);
+            });
+
+            OpenSaveModelData?.object?.repostOn?.postData?.forEach((element) {
+              pageControllersRepost.add(PageController());
+              currentPagesRepost.add(0);
+            });
+            WidgetsBinding.instance
+                .addPostFrameCallback((timeStamp) => super.setState(() {
+                      added = true;
+                    }));
+          }
+        }
+
+        if (state is PostLikeLoadedState) {
+          BlocProvider.of<OpenSaveCubit>(context).openSaveImagePostAPI(
+            context,
+            "${widget.PostID}",
+          );
+        }
+        if (state is RePostLoadedState) {
+          SnackBar snackBar = SnackBar(
+            content: Text(state.RePost.object.toString()),
+            backgroundColor: ColorConstant.primary_color,
+          );
+          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(
+            builder: (context) {
+              return NewBottomBar(
+                buttomIndex: 0,
+              );
+            },
+          ), (Route<dynamic> route) => false);
+        }
+        if (state is PostLikeLoadedState) {
+          print("${state.likePost.object}");
+          if (state.likePost.object != 'Post Liked Successfully' &&
+              state.likePost.object != 'Post Unliked Successfully') {
+            SnackBar snackBar = SnackBar(
+              content: Text(state.likePost.object ?? ""),
+              backgroundColor: ColorConstant.primary_color,
+            );
+            ScaffoldMessenger.of(context).showSnackBar(snackBar);
+          }
+        }
+        if (state is UserTagSaveLoadedState) {
+          userTagModel = await state.userTagModel;
+        }
+      }, builder: (context, state) {
+        if (state is OpenSaveLoadingState) {
+          return Center(
+              child: Container(
+                  margin: EdgeInsets.only(bottom: 100),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(20),
+                    child: Image.asset(ImageConstant.loader,
+                        fit: BoxFit.cover, height: 100.0, width: 100),
+                  )));
+        }
+        return Stack(
           children: [
             Padding(
               padding: EdgeInsets.only(top: 40),
@@ -915,7 +916,7 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> with Observer {
                                                       : Padding(
                                                           padding:
                                                               const EdgeInsets
-                                                                  .symmetric(
+                                                                      .symmetric(
                                                                   horizontal:
                                                                       16.0,
                                                                   vertical:
@@ -1041,7 +1042,7 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> with Observer {
                                                             ? Padding(
                                                                 padding:
                                                                     const EdgeInsets
-                                                                        .only(
+                                                                            .only(
                                                                         right:
                                                                             20,
                                                                         top:
@@ -1220,7 +1221,7 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> with Observer {
                                                                     child:
                                                                         Padding(
                                                                       padding: const EdgeInsets
-                                                                          .only(
+                                                                              .only(
                                                                           top:
                                                                               0),
                                                                       child:
@@ -1690,7 +1691,7 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> with Observer {
                                                                     })
                                                                 : Padding(
                                                                     padding: const EdgeInsets
-                                                                        .symmetric(
+                                                                            .symmetric(
                                                                         horizontal:
                                                                             16.0,
                                                                         vertical:
@@ -1885,7 +1886,7 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> with Observer {
                                                             ? Padding(
                                                                 padding:
                                                                     const EdgeInsets
-                                                                        .only(
+                                                                            .only(
                                                                         right:
                                                                             20,
                                                                         top:
@@ -2068,7 +2069,7 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> with Observer {
                                                                     child:
                                                                         Padding(
                                                                       padding: const EdgeInsets
-                                                                          .only(
+                                                                              .only(
                                                                           top:
                                                                               0),
                                                                       child:
@@ -2230,7 +2231,7 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> with Observer {
                                                         '${OpenSaveModelData?.object?.postUid}');
 
                                                 _settingModalBottomSheet1(
-                                                    context, 0, _width);
+                                                    context, 0, _height);
                                               }
 
                                               /*     await Navigator.push(
@@ -2723,65 +2724,65 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> with Observer {
                                             //     .email
                                           ],
                                           onTap: (link) async {
-
-                                              var SelectedTest =
-                                                  link.value.toString();
-                                              var Link =
-                                                  SelectedTest.startsWith(
-                                                      'https');
-                                              var Link1 =
-                                                  SelectedTest.startsWith(
-                                                      'http');
-                                              var Link2 =
-                                                  SelectedTest.startsWith(
-                                                      'www');
-                                              var Link3 =
-                                                  SelectedTest.startsWith(
-                                                      'WWW');
-                                              var Link4 =
-                                                  SelectedTest.startsWith(
-                                                      'HTTPS');
-                                              var Link5 =
-                                                  SelectedTest.startsWith(
-                                                      'HTTP');
-                                              var Link6 = SelectedTest.startsWith(
-                                                  'https://pdslink.page.link/');
-                                              print(SelectedTest.toString());
-                                              if ((OpenSaveModelData
-                                                          ?.object
-                                                          ?.description
-                                                          ?.length ??
-                                                      0) >
-                                                  maxLength) {
-                                                setState(() {
-                                                  if (readmoree == true) {
-                                                    readmoree = false;
-                                                    print(
-                                                        "--------------false ");
-                                                  } else {
-                                                    readmoree = true;
-                                                    print(
-                                                        "-------------- true");
-                                                  }
-                                                });
-                                              }
-                                              /*if (uuid == null) {
+                                            var SelectedTest =
+                                                link.value.toString();
+                                            var Link = SelectedTest.startsWith(
+                                                'https');
+                                            var Link1 =
+                                                SelectedTest.startsWith('http');
+                                            var Link2 =
+                                                SelectedTest.startsWith('www');
+                                            var Link3 =
+                                                SelectedTest.startsWith('WWW');
+                                            var Link4 = SelectedTest.startsWith(
+                                                'HTTPS');
+                                            var Link5 =
+                                                SelectedTest.startsWith('HTTP');
+                                            var Link6 = SelectedTest.startsWith(
+                                                'https://pdslink.page.link/');
+                                            print(SelectedTest.toString());
+                                            if ((OpenSaveModelData?.object
+                                                        ?.description?.length ??
+                                                    0) >
+                                                maxLength) {
+                                              setState(() {
+                                                if (readmoree == true) {
+                                                  readmoree = false;
+                                                  print("--------------false ");
+                                                } else {
+                                                  readmoree = true;
+                                                  print("-------------- true");
+                                                }
+                                              });
+                                            }
+                                            /*if (uuid == null) {
                                                 Navigator.of(context).push(
                                                     MaterialPageRoute(
                                                         builder: (context) =>
                                                             RegisterCreateAccountScreen()));
                                               }else*/
-                                              {
-                                              if (Link == true || Link1 == true || Link2 == true || Link3 == true || Link4 == true || Link5 == true || Link6 == true) {
-                                                if (Link2 == true || Link3 == true) {
-                                                  if (isYouTubeUrl(SelectedTest)) {
-                                                    playLink(SelectedTest, context);
+                                            {
+                                              if (Link == true ||
+                                                  Link1 == true ||
+                                                  Link2 == true ||
+                                                  Link3 == true ||
+                                                  Link4 == true ||
+                                                  Link5 == true ||
+                                                  Link6 == true) {
+                                                if (Link2 == true ||
+                                                    Link3 == true) {
+                                                  if (isYouTubeUrl(
+                                                      SelectedTest)) {
+                                                    playLink(
+                                                        SelectedTest, context);
                                                   } else
-                                                    launchUrl(Uri.parse("https://${link.value.toString()}"));
+                                                    launchUrl(Uri.parse(
+                                                        "https://${link.value.toString()}"));
                                                 } else {
                                                   if (Link6 == true) {
                                                     print("yes i am in room");
-                                                    Navigator.push(context, MaterialPageRoute(
+                                                    Navigator.push(context,
+                                                        MaterialPageRoute(
                                                       builder: (context) {
                                                         return NewBottomBar(
                                                           buttomIndex: 1,
@@ -2789,34 +2790,56 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> with Observer {
                                                       },
                                                     ));
                                                   } else {
-                                                    if (isYouTubeUrl(SelectedTest)) {
-                                                      playLink(SelectedTest, context);
+                                                    if (isYouTubeUrl(
+                                                        SelectedTest)) {
+                                                      playLink(SelectedTest,
+                                                          context);
                                                     } else
-                                                      launchUrl(Uri.parse(link.value.toString()));
-                                                    print("link.valuelink.value -- ${link.value}");
+                                                      launchUrl(Uri.parse(link
+                                                          .value
+                                                          .toString()));
+                                                    print(
+                                                        "link.valuelink.value -- ${link.value}");
                                                   }
                                                 }
                                               } else {
-                                                if (link.value!.startsWith('#')) {
+                                                if (link.value!
+                                                    .startsWith('#')) {
                                                   print("${link}");
                                                   Navigator.push(
                                                       context,
                                                       MaterialPageRoute(
-                                                        builder: (context) => HashTagViewScreen(title: "${link.value}"),
+                                                        builder: (context) =>
+                                                            HashTagViewScreen(
+                                                                title:
+                                                                    "${link.value}"),
                                                       ));
-                                                } else if (link.value!.startsWith('@')) {
+                                                } else if (link.value!
+                                                    .startsWith('@')) {
                                                   var name;
                                                   var tagName;
                                                   name = SelectedTest;
-                                                  tagName = name.replaceAll("@", "");
-                                                  await BlocProvider.of<OpenSaveCubit>(context).UserTagAPI(context, tagName);
+                                                  tagName =
+                                                      name.replaceAll("@", "");
+                                                  await BlocProvider.of<
+                                                              OpenSaveCubit>(
+                                                          context)
+                                                      .UserTagAPI(
+                                                          context, tagName);
 
-                                                  Navigator.push(context, MaterialPageRoute(builder: (context) {
-                                                    return ProfileScreen(User_ID: "${userTagModel?.object}", isFollowing: "");
+                                                  Navigator.push(context,
+                                                      MaterialPageRoute(
+                                                          builder: (context) {
+                                                    return ProfileScreen(
+                                                        User_ID:
+                                                            "${userTagModel?.object}",
+                                                        isFollowing: "");
                                                   }));
 
-                                                  print("tagName -- ${tagName}");
-                                                  print("user id -- ${userTagModel?.object}");
+                                                  print(
+                                                      "tagName -- ${tagName}");
+                                                  print(
+                                                      "user id -- ${userTagModel?.object}");
                                                 } else {
                                                   // launchUrl(Uri.parse(
                                                   //     "https://${link.value.toString()}"));
@@ -2981,7 +3004,7 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> with Observer {
                                                   })
                                               : Padding(
                                                   padding: const EdgeInsets
-                                                      .symmetric(
+                                                          .symmetric(
                                                       horizontal: 16.0,
                                                       vertical: 8.0),
                                                   child: AnyLinkPreview(
@@ -3282,10 +3305,8 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> with Observer {
                                                                       right: 0,
                                                                       child:
                                                                           Padding(
-                                                                        padding: const EdgeInsets
-                                                                            .only(
-                                                                            top:
-                                                                                0),
+                                                                        padding:
+                                                                            const EdgeInsets.only(top: 0),
                                                                         child:
                                                                             Container(
                                                                           height:
@@ -3432,7 +3453,7 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> with Observer {
                                                       '${OpenSaveModelData?.object?.postUid}');
 
                                               _settingModalBottomSheet1(
-                                                  context, 0, _width);
+                                                  context, 0, _height);
                                             }
 
                                             /*     await Navigator.push(
@@ -3640,9 +3661,9 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> with Observer {
             //   color: Colors.white,
             // ),
           ],
-        ),
-      );
-    });
+        );
+      }),
+    );
   }
 
   // OpenSaveImagepostModel? opensavepostModeldata;
@@ -3880,25 +3901,26 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> with Observer {
     }
   }
 
-  navigationFunction() {
+  navigationFunction(_heigth) {
     if (widget.profileTure == true) {
       Future.delayed(
         Duration(seconds: 2),
       ).then((value) {
         BlocProvider.of<AddcommentCubit>(context)
             .Addcomment(context, '${OpenSaveModelData?.object?.postUid}');
-        _settingModalBottomSheet1(context, 0, double.infinity);
+        _settingModalBottomSheet1(context, 0, _heigth / 2);
       });
     }
   }
 
-  void _settingModalBottomSheet1(context, index, _width) {
+  void _settingModalBottomSheet1(context, index, _heigth) {
     void _goToElement() {
       scroll.animateTo((1000 * 20),
           duration: const Duration(milliseconds: 300), curve: Curves.easeOut);
     }
 
-    showModalBottomSheet(
+    showBottomSheet(
+        constraints: BoxConstraints(maxHeight: _heigth / 2),
         context: context,
         backgroundColor: Colors.white,
         shape: RoundedRectangleBorder(
@@ -3967,7 +3989,7 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> with Observer {
   void rePostBottomSheet(
     context,
   ) {
-    showModalBottomSheet(
+    showBottomSheet(
         context: context,
         builder: (BuildContext bc) {
           return Container(
@@ -4160,16 +4182,21 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> with Observer {
                   Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      FutureBuilder(future: getYoutubePlayer(videoUrl, () {
-                        Navigator.pop(ctx);
-                        launchUrl(Uri.parse(videoUrl));
-                      }), builder: (context,snap){
-                        if(snap.data != null)
-                          return snap.data as Widget;
-                        else return Center(
-                          child: CircularProgressIndicator(color: Colors.white,),
-                        );
-                      })
+                      FutureBuilder(
+                          future: getYoutubePlayer(videoUrl, () {
+                            Navigator.pop(ctx);
+                            launchUrl(Uri.parse(videoUrl));
+                          }),
+                          builder: (context, snap) {
+                            if (snap.data != null)
+                              return snap.data as Widget;
+                            else
+                              return Center(
+                                child: CircularProgressIndicator(
+                                  color: Colors.white,
+                                ),
+                              );
+                          })
                     ],
                   ),
                   Align(
@@ -4220,10 +4247,10 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> with Observer {
     return playlistId;
   }
 
-
   Future<List<String>> getPlaylistVideos(String playlistId) async {
     // final url = "https://www.youtube.com/playlist?list=RDF0SflZWxv8k";
-    final url = "https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=50&playlistId=$playlistId&key=AIzaSyAT_gzTjHn9XuvQsmGdY63br7lKhD2KRdo";
+    final url =
+        "https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=50&playlistId=$playlistId&key=AIzaSyAT_gzTjHn9XuvQsmGdY63br7lKhD2KRdo";
     final response = await http.get(Uri.parse(url));
     if (response.statusCode == 200) {
       // Parse the HTML content to extract video IDs (implementation depends on website structure)
@@ -4234,7 +4261,7 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> with Observer {
       }
       return videoIds; // List of video IDs
     } else {
-      print ("Failed to fetch playlist videos");
+      print("Failed to fetch playlist videos");
       return [];
     }
   }
@@ -4269,17 +4296,17 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> with Observer {
     return liveId;
   }
 
-
-  Future<Widget> getYoutubePlayer(String videoUrl, Function() fullScreen) async{
+  Future<Widget> getYoutubePlayer(
+      String videoUrl, Function() fullScreen) async {
     late YoutubePlayerController _controller;
     String videoId = "";
-    if(videoUrl.toLowerCase().contains("playlist")){
+    if (videoUrl.toLowerCase().contains("playlist")) {
       String playlistId = extractPlaylistId(videoUrl);
       var videoIds = await getPlaylistVideos(playlistId);
       videoId = videoIds.first;
-    }else if(videoUrl.toLowerCase().contains("live")){
+    } else if (videoUrl.toLowerCase().contains("live")) {
       videoId = extractLiveId(videoUrl);
-    }else{
+    } else {
       videoId = YoutubePlayer.convertUrlToId(videoUrl)!;
     }
     print("video id ========================> $videoId");

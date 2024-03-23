@@ -49,72 +49,75 @@ class _RecentBlogScrenState extends State<RecentBlogScren> {
     super.initState();
   }
 
+  final scaffoldKey = GlobalKey<ScaffoldState>();
+
   @override
   Widget build(BuildContext context) {
     double _width = MediaQuery.of(context).size.width;
     double _height = MediaQuery.of(context).size.height;
     return Scaffold(
+        key: scaffoldKey,
         body: Stack(
-      children: [
-        SingleChildScrollView(
-          child: Container(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Stack(
+          children: [
+            SingleChildScrollView(
+              child: Container(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    CustomImageView(
-                      url: "${widget.imageURL}",
-                      height: _height / 2.8,
-                      width: _width,
-                      fit: BoxFit.contain,
+                    Stack(
+                      children: [
+                        CustomImageView(
+                          url: "${widget.imageURL}",
+                          height: _height / 2.8,
+                          width: _width,
+                          fit: BoxFit.contain,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 15, top: 55),
+                          child: GestureDetector(
+                              onTap: () {
+                                Navigator.pop(context);
+                              },
+                              child: CustomImageView(
+                                imagePath: ImageConstant.RightArrowWithBorder,
+                                height: 35,
+                                width: 35,
+                              )),
+                        ),
+                      ],
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(left: 15, top: 55),
-                      child: GestureDetector(
-                          onTap: () {
-                            Navigator.pop(context);
-                          },
-                          child: CustomImageView(
-                            imagePath: ImageConstant.RightArrowWithBorder,
-                            height: 35,
-                            width: 35,
-                          )),
+                      padding: EdgeInsets.only(left: 16),
+                      child: Text(
+                        "${widget.title}",
+                        style: TextStyle(
+                            fontFamily: 'outfit',
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(
+                        left: 16,
+                      ),
+                      child: Text(
+                        "${widget.description1}", // maxLines: ,
+                        style: TextStyle(
+                            fontFamily: 'outfit',
+                            fontSize: 15,
+                            fontWeight: FontWeight.w400),
+                      ),
                     ),
                   ],
                 ),
-                Padding(
-                  padding: EdgeInsets.only(left: 16),
-                  child: Text(
-                    "${widget.title}",
-                    style: TextStyle(
-                        fontFamily: 'outfit',
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold),
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(
-                    left: 16,
-                  ),
-                  child: Text(
-                    "${widget.description1}", // maxLines: ,
-                    style: TextStyle(
-                        fontFamily: 'outfit',
-                        fontSize: 15,
-                        fontWeight: FontWeight.w400),
-                  ),
-                ),
-              ],
+              ),
             ),
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.all(20),
-          child: Align(
-            alignment: Alignment.bottomCenter,
-            child: Container(
-              /*  decoration: BoxDecoration(
+            Padding(
+              padding: const EdgeInsets.all(20),
+              child: Align(
+                alignment: Alignment.bottomCenter,
+                child: Container(
+                  /*  decoration: BoxDecoration(
                                     color: Colors.green,
                                     borderRadius: BorderRadius.all(Radius.circular(25)),
                                     boxShadow: [
@@ -124,529 +127,418 @@ class _RecentBlogScrenState extends State<RecentBlogScren> {
                                           spreadRadius: 1,
                                           blurRadius: 10)
                                     ]), */
-              height: 60,
-              width: _width / 1.4,
-              child: Padding(
-                padding: EdgeInsets.only(left: 16, right: 16),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Container(
-                      height: 50,
-                      width: 70,
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.all(Radius.circular(10)),
-                          boxShadow: [
-                            BoxShadow(
-                                // color: ColorConstant.primary_color,
-                                color: Colors.grey.shade600,
-                                spreadRadius: 1,
-                                blurRadius: 10)
-                          ]),
-                      child: widget.ProfileScreenMove == true
-                          ? Column(
-                              children: [
-                                GestureDetector(
+                  height: 60,
+                  width: _width / 1.4,
+                  child: Padding(
+                    padding: EdgeInsets.only(left: 16, right: 16),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Container(
+                          height: 50,
+                          width: 70,
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10)),
+                              boxShadow: [
+                                BoxShadow(
+                                    // color: ColorConstant.primary_color,
+                                    color: Colors.grey.shade600,
+                                    spreadRadius: 1,
+                                    blurRadius: 10)
+                              ]),
+                          child: widget.ProfileScreenMove == true
+                              ? Column(
+                                  children: [
+                                    GestureDetector(
+                                      onTap: () {
+                                        BlocProvider.of<GetGuestAllPostCubit>(
+                                                context)
+                                            .LikeBlog(context, "${User_ID}",
+                                                "${widget.saveAllBlogModelData?.object?[widget.index ?? 0].uid}");
+                                        if (widget
+                                                .saveAllBlogModelData
+                                                ?.object?[widget.index ?? 0]
+                                                .isLiked ==
+                                            false) {
+                                          widget
+                                              .saveAllBlogModelData
+                                              ?.object?[widget.index ?? 0]
+                                              .isLiked = true;
+                                          widget
+                                              .saveAllBlogModelData
+                                              ?.object?[widget.index ?? 0]
+                                              .likeCount = (widget
+                                                      .saveAllBlogModelData
+                                                      ?.object?[
+                                                          widget.index ?? 0]
+                                                      .likeCount ??
+                                                  0) +
+                                              1;
+                                        } else {
+                                          widget
+                                              .saveAllBlogModelData
+                                              ?.object?[widget.index ?? 0]
+                                              .isLiked = false;
+                                          widget
+                                              .saveAllBlogModelData
+                                              ?.object?[widget.index ?? 0]
+                                              .likeCount = (widget
+                                                      .saveAllBlogModelData
+                                                      ?.object?[
+                                                          widget.index ?? 0]
+                                                      .likeCount ??
+                                                  0) -
+                                              1;
+                                        }
+                                        super.setState(() {});
+                                      },
+                                      child: widget
+                                                  .saveAllBlogModelData
+                                                  ?.object?[widget.index ?? 0]
+                                                  .isLiked ==
+                                              false
+                                          ? Icon(Icons.favorite_border)
+                                          : Icon(
+                                              Icons.favorite,
+                                              color: Colors.red,
+                                            ),
+                                    ),
+                                    widget
+                                                .saveAllBlogModelData
+                                                ?.object?[widget.index ?? 0]
+                                                .likeCount ==
+                                            0
+                                        ? SizedBox()
+                                        : GestureDetector(
+                                            onTap: () {
+                                              print("User_id -- ${User_ID}");
+                                              print(
+                                                  "blog UUid -- ${widget.saveAllBlogModelData?.object?[widget.index ?? 0].uid}");
+                                              Navigator.push(context,
+                                                  MaterialPageRoute(
+                                                builder: (context) {
+                                                  return BlogLikeListScreen(
+                                                    BlogUid:
+                                                        "${widget.saveAllBlogModelData?.object?[widget.index ?? 0].uid}",
+                                                    user_id: User_ID,
+                                                  );
+                                                },
+                                              ));
+                                            },
+                                            child: Container(
+                                              color: Colors.transparent,
+                                              child: Text(
+                                                "${widget.saveAllBlogModelData?.object?[widget.index ?? 0].likeCount == null ? 0 : widget.saveAllBlogModelData?.object?[widget.index ?? 0].likeCount}",
+                                                style: TextStyle(
+                                                    fontFamily: "outfit",
+                                                    fontSize: 14,
+                                                    color: Colors.black),
+                                              ),
+                                            ),
+                                          ),
+                                  ],
+                                )
+                              : Column(
+                                  children: [
+                                    GestureDetector(
+                                      onTap: () {
+                                        BlocProvider.of<GetGuestAllPostCubit>(
+                                                context)
+                                            .LikeBlog(context, "${User_ID}",
+                                                "${widget.getallBlogModel1?.object?[widget.index ?? 0].uid}");
+                                        if (widget
+                                                .getallBlogModel1
+                                                ?.object?[widget.index ?? 0]
+                                                .isLiked ==
+                                            false) {
+                                          widget
+                                              .getallBlogModel1
+                                              ?.object?[widget.index ?? 0]
+                                              .isLiked = true;
+                                          widget
+                                              .getallBlogModel1
+                                              ?.object?[widget.index ?? 0]
+                                              .likeCount = (widget
+                                                      .getallBlogModel1
+                                                      ?.object?[
+                                                          widget.index ?? 0]
+                                                      .likeCount ??
+                                                  0) +
+                                              1;
+                                        } else {
+                                          widget
+                                              .getallBlogModel1
+                                              ?.object?[widget.index ?? 0]
+                                              .isLiked = false;
+                                          widget
+                                              .getallBlogModel1
+                                              ?.object?[widget.index ?? 0]
+                                              .likeCount = (widget
+                                                      .getallBlogModel1
+                                                      ?.object?[
+                                                          widget.index ?? 0]
+                                                      .likeCount ??
+                                                  0) -
+                                              1;
+                                        }
+                                        super.setState(() {});
+                                      },
+                                      child: widget
+                                                  .getallBlogModel1
+                                                  ?.object?[widget.index ?? 0]
+                                                  .isLiked ==
+                                              false
+                                          ? Icon(Icons.favorite_border)
+                                          : Icon(
+                                              Icons.favorite,
+                                              color:
+                                                  ColorConstant.primary_color,
+                                            ),
+                                    ),
+                                    widget
+                                                .getallBlogModel1
+                                                ?.object?[widget.index ?? 0]
+                                                .likeCount ==
+                                            0
+                                        ? SizedBox()
+                                        : GestureDetector(
+                                            onTap: () {
+                                              print("User_id -- ${User_ID}");
+                                              print(
+                                                  "blog UUid -- ${widget.getallBlogModel1?.object?[widget.index ?? 0].uid}");
+                                              Navigator.push(context,
+                                                  MaterialPageRoute(
+                                                builder: (context) {
+                                                  return BlogLikeListScreen(
+                                                    BlogUid:
+                                                        "${widget.getallBlogModel1?.object?[widget.index ?? 0].uid}",
+                                                    user_id: User_ID,
+                                                  );
+                                                },
+                                              ));
+                                            },
+                                            child: Container(
+                                              color: Colors.transparent,
+                                              child: Text(
+                                                "${widget.getallBlogModel1?.object?[widget.index ?? 0].likeCount == null ? 0 : widget.getallBlogModel1?.object?[widget.index ?? 0].likeCount}",
+                                                style: TextStyle(
+                                                    fontFamily: "outfit",
+                                                    fontSize: 14,
+                                                    color: Colors.black),
+                                              ),
+                                            ),
+                                          ),
+                                  ],
+                                ),
+                        ),
+                        Container(
+                          height: 50,
+                          width: 70,
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10)),
+                              boxShadow: [
+                                BoxShadow(
+                                    // color: ColorConstant.primary_color,
+                                    color: Colors.grey.shade600,
+                                    spreadRadius: 1,
+                                    blurRadius: 10)
+                              ]),
+                          child: widget.ProfileScreenMove == true
+                              ? Column(
+                                  children: [
+                                    GestureDetector(
+                                      onTap: () async {
+                                        print(
+                                            "opne comment sheet inList =   blogs");
+                                        BlocProvider.of<BlogcommentCubit>(
+                                                context)
+                                            .BlogcommentAPI(
+                                                context,
+                                                widget
+                                                        .saveAllBlogModelData
+                                                        ?.object?[
+                                                            widget.index ?? 0]
+                                                        .uid ??
+                                                    "");
+                                        _settingModalBottomSheetBlog(
+                                            context, widget.index, _height);
+                                      },
+                                      child: Container(
+                                        color: Colors.transparent,
+                                        child: Center(
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(5.0),
+                                            child: Image.asset(
+                                              ImageConstant.meesage,
+                                              height: 18,
+                                              width: 18,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    Text(
+                                        "${widget.saveAllBlogModelData?.object?[widget.index ?? 0].commentCount == null ? 0 : widget.saveAllBlogModelData?.object?[widget.index ?? 0].commentCount}"),
+                                  ],
+                                )
+                              : Column(
+                                  children: [
+                                    GestureDetector(
+                                      onTap: () async {
+                                        print(
+                                            "opne comment sheet inList =   blogs");
+                                        BlocProvider.of<BlogcommentCubit>(
+                                                context)
+                                            .BlogcommentAPI(
+                                                context,
+                                                widget
+                                                        .getallBlogModel1
+                                                        ?.object?[
+                                                            widget.index ?? 0]
+                                                        .uid ??
+                                                    "");
+                                        _settingModalBottomSheetBlog(
+                                            context, widget.index, _height);
+                                      },
+                                      child: Container(
+                                        color: Colors.transparent,
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(5.0),
+                                          child: Image.asset(
+                                            ImageConstant.meesage,
+                                            height: 15,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    Text(
+                                        "${widget.getallBlogModel1?.object?[widget.index ?? 0].commentCount == null ? 0 : widget.getallBlogModel1?.object?[widget.index ?? 0].commentCount}"),
+                                  ],
+                                ),
+                        ),
+                        Container(
+                          height: 50,
+                          width: 70,
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10)),
+                              boxShadow: [
+                                BoxShadow(
+                                    // color: ColorConstant.primary_color,
+                                    color: Colors.grey.shade600,
+                                    spreadRadius: 1,
+                                    blurRadius: 10)
+                              ]),
+                          child: widget.ProfileScreenMove == true
+                              ? GestureDetector(
                                   onTap: () {
+                                    print("Save Blogs");
+
                                     BlocProvider.of<GetGuestAllPostCubit>(
                                             context)
-                                        .LikeBlog(context, "${User_ID}",
+                                        .SaveBlog(context, "${User_ID}",
                                             "${widget.saveAllBlogModelData?.object?[widget.index ?? 0].uid}");
                                     if (widget
                                             .saveAllBlogModelData
                                             ?.object?[widget.index ?? 0]
-                                            .isLiked ==
+                                            .isSaved ==
                                         false) {
                                       widget
                                           .saveAllBlogModelData
                                           ?.object?[widget.index ?? 0]
-                                          .isLiked = true;
-                                      widget
-                                          .saveAllBlogModelData
-                                          ?.object?[widget.index ?? 0]
-                                          .likeCount = (widget
-                                                  .saveAllBlogModelData
-                                                  ?.object?[widget.index ?? 0]
-                                                  .likeCount ??
-                                              0) +
-                                          1;
+                                          .isSaved = true;
                                     } else {
                                       widget
                                           .saveAllBlogModelData
                                           ?.object?[widget.index ?? 0]
-                                          .isLiked = false;
-                                      widget
-                                          .saveAllBlogModelData
-                                          ?.object?[widget.index ?? 0]
-                                          .likeCount = (widget
-                                                  .saveAllBlogModelData
-                                                  ?.object?[widget.index ?? 0]
-                                                  .likeCount ??
-                                              0) -
-                                          1;
+                                          .isSaved = false;
                                     }
                                     super.setState(() {});
                                   },
-                                  child: widget
-                                              .saveAllBlogModelData
-                                              ?.object?[widget.index ?? 0]
-                                              .isLiked ==
-                                          false
-                                      ? Icon(Icons.favorite_border)
-                                      : Icon(
-                                          Icons.favorite,
-                                          color: Colors.red,
-                                        ),
-                                ),
-                                widget
-                                            .saveAllBlogModelData
-                                            ?.object?[widget.index ?? 0]
-                                            .likeCount ==
-                                        0
-                                    ? SizedBox()
-                                    : GestureDetector(
-                                        onTap: () {
-                                          print("User_id -- ${User_ID}");
-                                          print(
-                                              "blog UUid -- ${widget.saveAllBlogModelData?.object?[widget.index ?? 0].uid}");
-                                          Navigator.push(context,
-                                              MaterialPageRoute(
-                                            builder: (context) {
-                                              return BlogLikeListScreen(
-                                                BlogUid:
-                                                    "${widget.saveAllBlogModelData?.object?[widget.index ?? 0].uid}",
-                                                user_id: User_ID,
-                                              );
-                                            },
-                                          ));
-                                        },
-                                        child: Container(
-                                          color: Colors.transparent,
-                                          child: Text(
-                                            "${widget.saveAllBlogModelData?.object?[widget.index ?? 0].likeCount == null ? 0 : widget.saveAllBlogModelData?.object?[widget.index ?? 0].likeCount}",
-                                            style: TextStyle(
-                                                fontFamily: "outfit",
-                                                fontSize: 14,
-                                                color: Colors.black),
-                                          ),
-                                        ),
-                                      ),
-                              ],
-                            )
-                          : Column(
-                              children: [
-                                GestureDetector(
+                                  child: Center(
+                                    child: Image.asset(
+                                      widget
+                                                  .saveAllBlogModelData
+                                                  ?.object?[widget.index ?? 0]
+                                                  .isSaved ==
+                                              false
+                                          ? ImageConstant.savePin
+                                          : ImageConstant.Savefill,
+                                      height: 20,
+                                      width: 20,
+                                    ),
+                                  ),
+                                )
+                              : GestureDetector(
                                   onTap: () {
+                                    print("Save Blogs");
+
                                     BlocProvider.of<GetGuestAllPostCubit>(
                                             context)
-                                        .LikeBlog(context, "${User_ID}",
+                                        .SaveBlog(context, "${User_ID}",
                                             "${widget.getallBlogModel1?.object?[widget.index ?? 0].uid}");
                                     if (widget
                                             .getallBlogModel1
                                             ?.object?[widget.index ?? 0]
-                                            .isLiked ==
+                                            .isSaved ==
                                         false) {
                                       widget
                                           .getallBlogModel1
                                           ?.object?[widget.index ?? 0]
-                                          .isLiked = true;
-                                      widget
-                                          .getallBlogModel1
-                                          ?.object?[widget.index ?? 0]
-                                          .likeCount = (widget
-                                                  .getallBlogModel1
-                                                  ?.object?[widget.index ?? 0]
-                                                  .likeCount ??
-                                              0) +
-                                          1;
+                                          .isSaved = true;
                                     } else {
                                       widget
                                           .getallBlogModel1
                                           ?.object?[widget.index ?? 0]
-                                          .isLiked = false;
-                                      widget
-                                          .getallBlogModel1
-                                          ?.object?[widget.index ?? 0]
-                                          .likeCount = (widget
-                                                  .getallBlogModel1
-                                                  ?.object?[widget.index ?? 0]
-                                                  .likeCount ??
-                                              0) -
-                                          1;
+                                          .isSaved = false;
                                     }
                                     super.setState(() {});
                                   },
-                                  child: widget
-                                              .getallBlogModel1
-                                              ?.object?[widget.index ?? 0]
-                                              .isLiked ==
-                                          false
-                                      ? Icon(Icons.favorite_border)
-                                      : Icon(
-                                          Icons.favorite,
-                                          color: ColorConstant.primary_color,
-                                        ),
-                                ),
-                                widget
-                                            .getallBlogModel1
-                                            ?.object?[widget.index ?? 0]
-                                            .likeCount ==
-                                        0
-                                    ? SizedBox()
-                                    : GestureDetector(
-                                        onTap: () {
-                                          print("User_id -- ${User_ID}");
-                                          print(
-                                              "blog UUid -- ${widget.getallBlogModel1?.object?[widget.index ?? 0].uid}");
-                                          Navigator.push(context,
-                                              MaterialPageRoute(
-                                            builder: (context) {
-                                              return BlogLikeListScreen(
-                                                BlogUid:
-                                                    "${widget.getallBlogModel1?.object?[widget.index ?? 0].uid}",
-                                                user_id: User_ID,
-                                              );
-                                            },
-                                          ));
-                                        },
-                                        child: Container(
-                                          color: Colors.transparent,
-                                          child: Text(
-                                            "${widget.getallBlogModel1?.object?[widget.index ?? 0].likeCount == null ? 0 : widget.getallBlogModel1?.object?[widget.index ?? 0].likeCount}",
-                                            style: TextStyle(
-                                                fontFamily: "outfit",
-                                                fontSize: 14,
-                                                color: Colors.black),
-                                          ),
-                                        ),
-                                      ),
-                              ],
-                            ),
-                    ),
-                    Container(
-                      height: 50,
-                      width: 70,
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.all(Radius.circular(10)),
-                          boxShadow: [
-                            BoxShadow(
-                                // color: ColorConstant.primary_color,
-                                color: Colors.grey.shade600,
-                                spreadRadius: 1,
-                                blurRadius: 10)
-                          ]),
-                      child: widget.ProfileScreenMove == true
-                          ? Column(
-                            children: [
-                              GestureDetector(
-                                  onTap: () async {
-                                    print("opne comment sheet inList =   blogs");
-                                    BlocProvider.of<BlogcommentCubit>(context)
-                                        .BlogcommentAPI(
-                                            context,
-                                            widget
-                                                    .saveAllBlogModelData
-                                                    ?.object?[widget.index ?? 0]
-                                                    .uid ??
-                                                "");
-
-                                    _settingModalBottomSheetBlog(
-                                        context, widget.index, _width);
-                                  },
-                                  child: Container(
-                                    color: Colors.transparent,
-                                    child: Center(
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(5.0),
-                                        child: Image.asset(
-                                          ImageConstant.meesage,
-                                          height: 18,
-                                          width: 18,
-                                        ),
-                                      ),
+                                  child: Center(
+                                    child: Image.asset(
+                                      widget
+                                                  .getallBlogModel1
+                                                  ?.object?[widget.index ?? 0]
+                                                  .isSaved ==
+                                              false
+                                          ? ImageConstant.savePin
+                                          : ImageConstant.Savefill,
+                                      height: 20,
+                                      width: 20,
                                     ),
                                   ),
                                 ),
-                                 Text(
-                                    "${widget.saveAllBlogModelData?.object?[widget.index ?? 0].commentCount == null ? 0 : widget.saveAllBlogModelData?.object?[widget.index ?? 0].commentCount}"),
-                            
-                            ],
-                          )
-                          : Column(
-                              children: [
-                                GestureDetector(
-                                  onTap: () async {
-                                    print(
-                                        "opne comment sheet inList =   blogs");
-                                    BlocProvider.of<BlogcommentCubit>(context)
-                                        .BlogcommentAPI(
-                                            context,
-                                            widget
-                                                    .getallBlogModel1
-                                                    ?.object?[widget.index ?? 0]
-                                                    .uid ??
-                                                "");
-
-                                    _settingModalBottomSheetBlog(
-                                        context, widget.index, _width);
-                                  },
-                                  child: Container(
-                                    color: Colors.transparent,
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(5.0),
-                                      child: Image.asset(
-                                        ImageConstant.meesage,
-                                        height: 15,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                Text(
-                                    "${widget.getallBlogModel1?.object?[widget.index ?? 0].commentCount == null ? 0 : widget.getallBlogModel1?.object?[widget.index ?? 0].commentCount}"),
-                              ],
-                            ),
+                        )
+                      ],
                     ),
-                    Container(
-                      height: 50,
-                      width: 70,
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.all(Radius.circular(10)),
-                          boxShadow: [
-                            BoxShadow(
-                                // color: ColorConstant.primary_color,
-                                color: Colors.grey.shade600,
-                                spreadRadius: 1,
-                                blurRadius: 10)
-                          ]),
-                      child: widget.ProfileScreenMove == true
-                          ? GestureDetector(
-                              onTap: () {
-                                print("Save Blogs");
-
-                                BlocProvider.of<GetGuestAllPostCubit>(context)
-                                    .SaveBlog(context, "${User_ID}",
-                                        "${widget.saveAllBlogModelData?.object?[widget.index ?? 0].uid}");
-                                if (widget.saveAllBlogModelData
-                                        ?.object?[widget.index ?? 0].isSaved ==
-                                    false) {
-                                  widget
-                                      .saveAllBlogModelData
-                                      ?.object?[widget.index ?? 0]
-                                      .isSaved = true;
-                                } else {
-                                  widget
-                                      .saveAllBlogModelData
-                                      ?.object?[widget.index ?? 0]
-                                      .isSaved = false;
-                                }
-                                super.setState(() {});
-                              },
-                              child: Center(
-                                child: Image.asset(
-                                  widget
-                                              .saveAllBlogModelData
-                                              ?.object?[widget.index ?? 0]
-                                              .isSaved ==
-                                          false
-                                      ? ImageConstant.savePin
-                                      : ImageConstant.Savefill,
-                                  height: 20,
-                                  width: 20,
-                                ),
-                              ),
-                            )
-                          : GestureDetector(
-                              onTap: () {
-                                print("Save Blogs");
-
-                                BlocProvider.of<GetGuestAllPostCubit>(context)
-                                    .SaveBlog(context, "${User_ID}",
-                                        "${widget.getallBlogModel1?.object?[widget.index ?? 0].uid}");
-                                if (widget.getallBlogModel1
-                                        ?.object?[widget.index ?? 0].isSaved ==
-                                    false) {
-                                  widget
-                                      .getallBlogModel1
-                                      ?.object?[widget.index ?? 0]
-                                      .isSaved = true;
-                                } else {
-                                  widget
-                                      .getallBlogModel1
-                                      ?.object?[widget.index ?? 0]
-                                      .isSaved = false;
-                                }
-                                super.setState(() {});
-                              },
-                              child: Center(
-                                child: Image.asset(
-                                  widget
-                                              .getallBlogModel1
-                                              ?.object?[widget.index ?? 0]
-                                              .isSaved ==
-                                          false
-                                      ? ImageConstant.savePin
-                                      : ImageConstant.Savefill,
-                                  height: 20,
-                                  width: 20,
-                                ),
-                              ),
-                            ),
-                    )
-                  ],
+                  ),
                 ),
               ),
-            ),
-          ),
-        )
-      ],
-    ));
+            )
+          ],
+        ));
   }
 
-  similerblogs() {
-    var _height = MediaQuery.of(context).size.height;
-    var _width = MediaQuery.of(context).size.width;
-    return Container(
-      height: _height / 3.5,
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        physics: BouncingScrollPhysics(),
-        itemCount: 5,
-        shrinkWrap: true,
-        itemBuilder: (context, index) {
-          return Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                border: Border.all(
-                  color: Colors.grey.shade300,
-                ),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Stack(
-                    children: [
-                      Container(
-                        height: 120,
-                        width: _width / 2.35,
-                        child: CustomImageView(
-                          imagePath: ImageConstant.blogimage,
-                          fit: BoxFit.fill,
-                          radius: BorderRadius.circular(10),
-                        ),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Text(
-                        "Baluran Wild The",
-                        style: TextStyle(
-                            fontWeight: FontWeight.w400,
-                            color: Colors.black,
-                            fontFamily: "outfit",
-                            fontSize: 20),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Text(
-                        "Savvanah",
-                        style: TextStyle(
-                            fontWeight: FontWeight.w400,
-                            color: Colors.black,
-                            fontFamily: "outfit",
-                            fontSize: 20),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Text("27th june 2020  10:47 PM",
-                          style: TextStyle(
-                              fontFamily: 'outfit',
-                              fontSize: 10,
-                              fontWeight: FontWeight.w100)),
-                      SizedBox(
-                        width: 5,
-                      ),
-                      CircleAvatar(
-                        backgroundColor: Colors.black,
-                        maxRadius: 2,
-                      ),
-                      SizedBox(
-                        width: 2,
-                      ),
-                      Text("12.3K Views",
-                          style: TextStyle(
-                              fontFamily: 'outfit',
-                              fontSize: 10,
-                              fontWeight: FontWeight.w100)),
-                    ],
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Row(
-                    children: [
-                      SizedBox(
-                        width: 5,
-                      ),
-                      Image.asset(
-                        ImageConstant.like_image,
-                        height: 20,
-                      ),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      Image.asset(
-                        ImageConstant.arrowleftimage,
-                        height: 30,
-                        color: Colors.black,
-                      ),
-                      SizedBox(width: _width / 4.8),
-                      Image.asset(
-                        ImageConstant.setting_save,
-                        height: 20,
-                        color: Colors.black,
-                      ),
-                    ],
-                  )
-                ],
-              ),
-            ),
-          );
-        },
-      ),
-    );
-  }
-
-  void _settingModalBottomSheetBlog(context, index, _width) {
-    showModalBottomSheet(
-            isScrollControlled: true,
-            useSafeArea: true,
-            isDismissible: true,
-            showDragHandle: true,
-            enableDrag: true,
-            constraints: BoxConstraints.tight(Size.infinite),
-            context: context,
-            builder: (BuildContext bc) {
-              return BlogCommentBottomSheet(
-                blogUid: widget.ProfileScreenMove == true
-                    ? (widget
-                        .saveAllBlogModelData?.object?[widget.index ?? 0].uid)
-                    : widget.getallBlogModel1?.object?[widget.index ?? 0].uid,
-                isFoollinng: "",
-                // AllGuestPostRoomData?.object?.content?[index].isFollowing,
-              );
-            })
-        .then((value) => BlocProvider.of<GetGuestAllPostCubit>(context)
-            .GetallBlog(context, User_ID ?? ""));
-    ;
+ 
+  void _settingModalBottomSheetBlog(context, index, _heigth) {
+    scaffoldKey.currentState!.showBottomSheet((
+      BuildContext context,
+    ) {
+      return Container(
+        constraints: BoxConstraints(maxHeight: _heigth / 2),
+        child: BlogCommentBottomSheet(
+          blogUid: widget.ProfileScreenMove == true
+              ? (widget.saveAllBlogModelData?.object?[widget.index ?? 0].uid)
+              : widget.getallBlogModel1?.object?[widget.index ?? 0].uid,
+          isFoollinng: "",
+          // AllGuestPostRoomData?.object?.content?[index].isFollowing,
+        ),
+      );
+    });
   }
 }

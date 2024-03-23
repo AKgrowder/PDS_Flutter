@@ -1828,7 +1828,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   void _settingModalBottomSheet(context) {
     print(
         "this is the Data Get-${widget.newProfileData?.object?.userProfilePic}");
-    showModalBottomSheet(
+    showBottomSheet(
         context: context,
         builder: (BuildContext bc) {
           return Container(
@@ -1941,7 +1941,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   void _settingModalBottomSheet1(context) {
     print(
         "this is the Data check-${widget.newProfileData?.object?.userBackgroundPic}");
-    showModalBottomSheet(
+    showBottomSheet(
         context: context,
         builder: (BuildContext bc) {
           return Container(
@@ -2457,20 +2457,19 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         backgroundColor: ColorConstant.primary_color,
       );
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
-    }else if (userNameController.text.trim().isEmpty) {
+    } else if (userNameController.text.trim().isEmpty) {
       SnackBar snackBar = SnackBar(
         content: Text('Userid can\'t be just blank spaces'),
         backgroundColor: ColorConstant.primary_color,
       );
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
-    }else if(companyName.text.isEmpty){
+    } else if (companyName.text.isEmpty) {
       SnackBar snackBar = SnackBar(
         content: Text('Please Enter CompanyName'),
         backgroundColor: ColorConstant.primary_color,
       );
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
-    }
-    else if (companyName.text.trim().isEmpty) {
+    } else if (companyName.text.trim().isEmpty) {
       SnackBar snackBar = SnackBar(
         content: Text('companyName can\'t be just blank spaces'),
         backgroundColor: ColorConstant.primary_color,

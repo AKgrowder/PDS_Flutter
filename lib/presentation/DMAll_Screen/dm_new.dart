@@ -109,6 +109,8 @@ class DmScreenNew extends StatefulWidget {
 class _DmScreenNewState extends State<DmScreenNew> with Observer {
   String? UserLogin_ID;
   Timer? timer;
+  bool? soicalData;
+
   String? DMbaseURL;
   WebSocketChannel? channel;
   bool _isConnected = false;
@@ -160,6 +162,8 @@ class _DmScreenNewState extends State<DmScreenNew> with Observer {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setInt(PreferencesKey.NotificationCount, NotificationCount);
     prefs.setInt(PreferencesKey.MessageCount, MessageCount);
+    soicalData =
+        prefs.getBool(PreferencesKey.videoCallaudiocallcompnypagecreation);
   }
 
   @override
@@ -502,7 +506,8 @@ class _DmScreenNewState extends State<DmScreenNew> with Observer {
                                       ),
                                     ),
                                     Spacer(),
-                                    /*    sendCallButton(
+                                        if(soicalData == true)
+                                        sendCallButton(
                                       isVideoCall: false,
                                       invitees: [
                                         ZegoUIKitUser(
@@ -516,6 +521,7 @@ class _DmScreenNewState extends State<DmScreenNew> with Observer {
                                       onCallFinished:
                                           onSendCallInvitationFinished,
                                     ),
+                                     if(soicalData == true)
                                     sendCallButton(
                                       isVideoCall: true,
                                       invitees: [
@@ -529,7 +535,7 @@ class _DmScreenNewState extends State<DmScreenNew> with Observer {
                                       ],
                                       onCallFinished:
                                           onSendCallInvitationFinished,
-                                    ), */
+                                    ),
                                     /* GestureDetector(
                                         onTapDown: (TapDownDetails details) {
                                           _showPopupMenu(

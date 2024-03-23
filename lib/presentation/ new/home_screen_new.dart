@@ -110,6 +110,7 @@ class HomeScreenNew extends StatefulWidget {
 
 class _HomeScreenNewState extends State<HomeScreenNew>
     with WidgetsBindingObserver, Observer {
+  final scaffoldKey = GlobalKey<ScaffoldState>();
   late String _localPath;
   late bool _permissionReady;
   int? version;
@@ -216,7 +217,18 @@ class _HomeScreenNewState extends State<HomeScreenNew>
   bool isWatch = false;
   @override
   update(Observable observable, String? notifyName, Map? map) async {
-    AllGuestPostRoomData?.object?.content?[map?['index']].isReports = true;
+    try {
+      if (map?['bool'] != null) {
+        print("wroodsfsdfsdf0");
+        _show = true;
+      } else {
+        print("esle uopdasdsd");
+        AllGuestPostRoomData?.object?.content?[map?['index']].isReports = true;
+      }
+    } catch (e) {
+      _show = true;
+    }
+
     WidgetsBinding.instance.removeObserver(this);
     setState(() {});
   }
@@ -377,7 +389,9 @@ class _HomeScreenNewState extends State<HomeScreenNew>
 
   Future<List<String>> getPlaylistVideos(String playlistId) async {
     // final url = "https://www.youtube.com/playlist?list=RDF0SflZWxv8k";
-    final url = "https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=50&playlistId=$playlistId&key=AIzaSyAT_gzTjHn9XuvQsmGdY63br7lKhD2KRdo";
+    final url =
+        "https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=50&playlistId=$playlistId&key=AIzaSyAT_gzTjHn9XuvQsmGdY63br7lKhD2KRdo";
+
     final response = await http.get(Uri.parse(url));
     if (response.statusCode == 200) {
       // Parse the HTML content to extract video IDs (implementation depends on website structure)
@@ -388,7 +402,9 @@ class _HomeScreenNewState extends State<HomeScreenNew>
       }
       return videoIds; // List of video IDs
     } else {
-      print ("Failed to fetch playlist videos");
+
+      print("Failed to fetch playlist videos");
+
       return [];
     }
   }
@@ -424,17 +440,19 @@ class _HomeScreenNewState extends State<HomeScreenNew>
     return liveId;
   }
 
-
-  Future<Widget> getYoutubePlayer(String videoUrl, Function() fullScreen) async{
+  Future<Widget> getYoutubePlayer(
+      String videoUrl, Function() fullScreen) async {
     late YoutubePlayerController _controller;
     String videoId = "";
-    if(videoUrl.toLowerCase().contains("playlist")){
+    if (videoUrl.toLowerCase().contains("playlist")) {
       String playlistId = extractPlaylistId(videoUrl);
       var videoIds = await getPlaylistVideos(playlistId);
       videoId = videoIds.first;
-    }else if(videoUrl.toLowerCase().contains("live")){
+    } else if (videoUrl.toLowerCase().contains("live")) {
       videoId = extractLiveId(videoUrl);
-    }else{
+    } else {
+
+
       videoId = YoutubePlayer.convertUrlToId(videoUrl)!;
     }
     print("video id ========================> $videoId");
@@ -1432,11 +1450,11 @@ class _HomeScreenNewState extends State<HomeScreenNew>
   }
 
   NewApi() async {
-  /*   if (User_ID != null && User_Name != null) {
+   /*  if (User_ID != null && User_Name != null) {
       String useruidsort = User_ID!.split('-').last.toString();
       onUserLogin('${useruidsort}', '${User_Name}');
     } */
-    timer = Timer.periodic(Duration(seconds: 15), (timer) async {
+      timer = Timer.periodic(Duration(seconds: 15), (timer) async {
       setState(() {
         secound = timer.tick;
       });
@@ -1597,6 +1615,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
           return true;
         },
         child: Scaffold(
+             
             resizeToAvoidBottomInset: false,
             floatingActionButton: _show
                 ? FloatingActionButton(
@@ -2389,7 +2408,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                       UserProfileImage != ""
                                                   ? GestureDetector(
                                                       onLongPress: () {
-                                                        /* if (getallcompenypagemodel
+                                                        if (getallcompenypagemodel
                                                                     ?.object
                                                                     ?.content
                                                                     ?.isNotEmpty ==
@@ -2403,7 +2422,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                               context,
                                                               getallcompenypagemodel!,
                                                               '${User_ID}');
-                                                        } */
+                                                        }
                                                       },
                                                       child: CustomImageView(
                                                         url:
@@ -2419,21 +2438,21 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                   : GestureDetector(
                                                       onLongPress: () {
                                                         // this is the company user if
-                                                        // if (getallcompenypagemodel
-                                                        //             ?.object
-                                                        //             ?.content
-                                                        //             ?.isNotEmpty ==
-                                                        //         true &&
-                                                        //     getallcompenypagemodel
-                                                        //             ?.object
-                                                        //             ?.content
-                                                        //             ?.length !=
-                                                        //         1) {
-                                                        //   showProfileSwitchBottomSheet(
-                                                        //       context,
-                                                        //       getallcompenypagemodel!,
-                                                        //       '${User_ID}');
-                                                        // }
+                                                        if (getallcompenypagemodel
+                                                                    ?.object
+                                                                    ?.content
+                                                                    ?.isNotEmpty ==
+                                                                true &&
+                                                            getallcompenypagemodel
+                                                                    ?.object
+                                                                    ?.content
+                                                                    ?.length !=
+                                                                1) {
+                                                          showProfileSwitchBottomSheet(
+                                                              context,
+                                                              getallcompenypagemodel!,
+                                                              '${User_ID}');
+                                                        }
                                                       },
                                                       child: CustomImageView(
                                                         imagePath: ImageConstant
@@ -3737,57 +3756,61 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                                             /*if (User_ID == null) {
                                                                                                               Navigator.of(context).push(MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
                                                                                                             } else {*/
-                                                                                                              if (Link == true || Link1 == true || Link2 == true || Link3 == true || Link4 == true || Link5 == true || Link6 == true) {
-                                                                                                                if (Link2 == true || Link3 == true) {
+
+                                                                                                            if (Link == true || Link1 == true || Link2 == true || Link3 == true || Link4 == true || Link5 == true || Link6 == true) {
+                                                                                                              if (Link2 == true || Link3 == true) {
+                                                                                                                if (isYouTubeUrl(SelectedTest)) {
+                                                                                                                  playLink(SelectedTest, context);
+                                                                                                                } else
+                                                                                                                  launchUrl(Uri.parse("https://${link.value.toString()}"));
+                                                                                                                print("qqqqqqqqhttps://${link.value}");
+                                                                                                              } else {
+                                                                                                                if (Link6 == true) {
+                                                                                                                  print("yes i am inList =   room");
+                                                                                                                  Navigator.push(context, MaterialPageRoute(
+                                                                                                                    builder: (context) {
+                                                                                                                      return NewBottomBar(
+                                                                                                                        buttomIndex: 1,
+                                                                                                                      );
+                                                                                                                    },
+                                                                                                                  ));
+                                                                                                                } else {
+
                                                                                                                   if (isYouTubeUrl(SelectedTest)) {
                                                                                                                     playLink(SelectedTest, context);
                                                                                                                   } else
-                                                                                                                    launchUrl(Uri.parse("https://${link.value.toString()}"));
-                                                                                                                  print("qqqqqqqqhttps://${link.value}");
-                                                                                                                } else {
-                                                                                                                  if (Link6 == true) {
-                                                                                                                    print("yes i am inList =   room");
-                                                                                                                    Navigator.push(context, MaterialPageRoute(
-                                                                                                                      builder: (context) {
-                                                                                                                        return NewBottomBar(
-                                                                                                                          buttomIndex: 1,
-                                                                                                                        );
-                                                                                                                      },
-                                                                                                                    ));
-                                                                                                                  } else {
-                                                                                                                    if (isYouTubeUrl(SelectedTest)) {
-                                                                                                                      playLink(SelectedTest, context);
-                                                                                                                    } else
-                                                                                                                      launchUrl(Uri.parse(link.value.toString()));
-                                                                                                                    print("link.valuelink.value -- ${link.value}");
-                                                                                                                  }
-                                                                                                                }
-                                                                                                              } else {
-                                                                                                                if (link.value!.startsWith('#')) {
-                                                                                                                  await BlocProvider.of<GetGuestAllPostCubit>(context).seetinonExpried(context);
-                                                                                                                  Navigator.push(
-                                                                                                                      context,
-                                                                                                                      MaterialPageRoute(
-                                                                                                                        builder: (context) => HashTagViewScreen(title: "${link.value}"),
-                                                                                                                      ));
-                                                                                                                } else if (link.value!.startsWith('@')) {
-                                                                                                                  await BlocProvider.of<GetGuestAllPostCubit>(context).seetinonExpried(context);
-                                                                                                                  var name;
-                                                                                                                  var tagName;
-                                                                                                                  name = SelectedTest;
-                                                                                                                  tagName = name.replaceAll("@", "");
-                                                                                                                  await BlocProvider.of<GetGuestAllPostCubit>(context).UserTagAPI(context, tagName);
-
-                                                                                                                  // Navigator.push(context, MaterialPageRoute(builder: (context) {
-                                                                                                                  //   return ProfileScreen(User_ID: "${userTagModel?.object}", isFollowing: "");
-                                                                                                                  // })).then((value) => Get_UserToken());
-
-                                                                                                                  print("tagName -- ${tagName}");
-                                                                                                                  print("user id -- ${userTagModel?.object}");
-                                                                                                                } else {
-                                                                                                                  // launchUrl(Uri.parse("https://${link.value.toString()}"));
+                                                                                                                    launchUrl(Uri.parse(link.value.toString()));
+                                                                                                                  print("link.valuelink.value -- ${link.value}");
                                                                                                                 }
                                                                                                               }
+                                                                                                            } else {
+                                                                                                              if (link.value!.startsWith('#')) {
+                                                                                                                await BlocProvider.of<GetGuestAllPostCubit>(context).seetinonExpried(context);
+                                                                                                                Navigator.push(
+                                                                                                                    context,
+                                                                                                                    MaterialPageRoute(
+                                                                                                                      builder: (context) => HashTagViewScreen(title: "${link.value}"),
+                                                                                                                    ));
+                                                                                                              } else if (link.value!.startsWith('@')) {
+                                                                                                                await BlocProvider.of<GetGuestAllPostCubit>(context).seetinonExpried(context);
+                                                                                                                var name;
+                                                                                                                var tagName;
+                                                                                                                name = SelectedTest;
+                                                                                                                tagName = name.replaceAll("@", "");
+                                                                                                                await BlocProvider.of<GetGuestAllPostCubit>(context).UserTagAPI(context, tagName);
+
+                                                                                                                // Navigator.push(context, MaterialPageRoute(builder: (context) {
+                                                                                                                //   return ProfileScreen(User_ID: "${userTagModel?.object}", isFollowing: "");
+                                                                                                                // })).then((value) => Get_UserToken());
+
+                                                                                                                print("tagName -- ${tagName}");
+                                                                                                                print("user id -- ${userTagModel?.object}");
+                                                                                                              } else {
+                                                                                                                // launchUrl(Uri.parse("https://${link.value.toString()}"));
+                                                                                                              }
+
+                                                                                                            }
+
                                                                                                             // }
                                                                                                           }
                                                                                                         },
@@ -4397,56 +4420,60 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                                       /*if (User_ID == null) {
                                                                                                         Navigator.of(context).push(MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
                                                                                                       } else {*/
-                                                                                                        if (Link == true || Link1 == true || Link2 == true || Link3 == true || Link4 == true || Link5 == true || Link6 == true) {
-                                                                                                          if (Link2 == true || Link3 == true) {
+
+                                                                                                      if (Link == true || Link1 == true || Link2 == true || Link3 == true || Link4 == true || Link5 == true || Link6 == true) {
+                                                                                                        if (Link2 == true || Link3 == true) {
+                                                                                                          if (isYouTubeUrl(SelectedTest)) {
+                                                                                                            playLink(SelectedTest, context);
+                                                                                                          } else
+                                                                                                            launchUrl(Uri.parse("https://${link.value.toString()}"));
+                                                                                                          print("qqqqqqqqhttps://${link.value}");
+                                                                                                        } else {
+                                                                                                          if (Link6 == true) {
+                                                                                                            print("yes i am inList =   room");
+                                                                                                            Navigator.push(context, MaterialPageRoute(
+                                                                                                              builder: (context) {
+                                                                                                                return NewBottomBar(
+                                                                                                                  buttomIndex: 1,
+                                                                                                                );
+                                                                                                              },
+                                                                                                            ));
+                                                                                                          } else {
+
                                                                                                             if (isYouTubeUrl(SelectedTest)) {
                                                                                                               playLink(SelectedTest, context);
                                                                                                             } else
-                                                                                                              launchUrl(Uri.parse("https://${link.value.toString()}"));
-                                                                                                            print("qqqqqqqqhttps://${link.value}");
-                                                                                                          } else {
-                                                                                                            if (Link6 == true) {
-                                                                                                              print("yes i am inList =   room");
-                                                                                                              Navigator.push(context, MaterialPageRoute(
-                                                                                                                builder: (context) {
-                                                                                                                  return NewBottomBar(
-                                                                                                                    buttomIndex: 1,
-                                                                                                                  );
-                                                                                                                },
-                                                                                                              ));
-                                                                                                            } else {
-                                                                                                              if (isYouTubeUrl(SelectedTest)) {
-                                                                                                                playLink(SelectedTest, context);
-                                                                                                              } else
-                                                                                                                launchUrl(Uri.parse(link.value.toString()));
-                                                                                                              print("link.valuelink.value -- ${link.value}");
-                                                                                                            }
-                                                                                                          }
-                                                                                                        } else {
-                                                                                                          if (link.value!.startsWith('#')) {
-                                                                                                            await BlocProvider.of<GetGuestAllPostCubit>(context).seetinonExpried(context);
-                                                                                                            print("aaaaaaaaaa == ${link}");
-                                                                                                            Navigator.push(
-                                                                                                                context,
-                                                                                                                MaterialPageRoute(
-                                                                                                                  builder: (context) => HashTagViewScreen(title: "${link.value}"),
-                                                                                                                ));
-                                                                                                          } else if (link.value!.startsWith('@')) {
-                                                                                                            await BlocProvider.of<GetGuestAllPostCubit>(context).seetinonExpried(context);
-                                                                                                            var name;
-                                                                                                            var tagName;
-                                                                                                            name = SelectedTest;
-                                                                                                            tagName = name.replaceAll("@", "");
-                                                                                                            await BlocProvider.of<GetGuestAllPostCubit>(context).UserTagAPI(context, tagName);
-
-                                                                                                            // Navigator.push(context, MaterialPageRoute(builder: (context) {
-                                                                                                            //   return ProfileScreen(User_ID: "${userTagModel?.object}", isFollowing: "");
-                                                                                                            // })).then((value) => Get_UserToken());
-
-                                                                                                            print("tagName -- ${tagName}");
-                                                                                                            print("user id -- ${userTagModel?.object}");
+                                                                                                              launchUrl(Uri.parse(link.value.toString()));
+                                                                                                            print("link.valuelink.value -- ${link.value}");
                                                                                                           }
                                                                                                         }
+
+                                                                                                      } else {
+                                                                                                        if (link.value!.startsWith('#')) {
+                                                                                                          await BlocProvider.of<GetGuestAllPostCubit>(context).seetinonExpried(context);
+                                                                                                          print("aaaaaaaaaa == ${link}");
+                                                                                                          Navigator.push(
+                                                                                                              context,
+                                                                                                              MaterialPageRoute(
+                                                                                                                builder: (context) => HashTagViewScreen(title: "${link.value}"),
+                                                                                                              ));
+                                                                                                        } else if (link.value!.startsWith('@')) {
+                                                                                                          await BlocProvider.of<GetGuestAllPostCubit>(context).seetinonExpried(context);
+                                                                                                          var name;
+                                                                                                          var tagName;
+                                                                                                          name = SelectedTest;
+                                                                                                          tagName = name.replaceAll("@", "");
+                                                                                                          await BlocProvider.of<GetGuestAllPostCubit>(context).UserTagAPI(context, tagName);
+
+                                                                                                          // Navigator.push(context, MaterialPageRoute(builder: (context) {
+                                                                                                          //   return ProfileScreen(User_ID: "${userTagModel?.object}", isFollowing: "");
+                                                                                                          // })).then((value) => Get_UserToken());
+
+                                                                                                          print("tagName -- ${tagName}");
+                                                                                                          print("user id -- ${userTagModel?.object}");
+                                                                                                        }
+                                                                                                      }
+
                                                                                                       // }
                                                                                                     }
                                                                                                   },
@@ -4864,13 +4891,25 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                         ),
                                                                         GestureDetector(
                                                                           onTap:
+                                                                              
+                                                                              
+                                                                              
+                                                                              
+                                                                              
+                                                                              
+                                                                              
+                                                                              
+                                                                              
                                                                               () async {
                                                                             if (uuid ==
                                                                                 null) {
                                                                               Navigator.of(context).push(MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
                                                                             } else {
+                                                                              setState(() {
+                                                                                _show = false;
+                                                                              });
                                                                               BlocProvider.of<AddcommentCubit>(context).Addcomment(context, '${AllGuestPostRoomData?.object?.content?[index].postUid}');
-                                                                              _settingModalBottomSheet1(context, index, _width);
+                                                                              _settingModalBottomSheet1(context, index, _height);
                                                                             }
                                                                           },
                                                                           child:
@@ -4905,6 +4944,9 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                         GestureDetector(
                                                                           onTap:
                                                                               () {
+                                                                            setState(() {
+                                                                              _show = false;
+                                                                            });
                                                                             rePostBottomSheet(context,
                                                                                 index);
                                                                             // Navigator.push(
@@ -4991,7 +5033,9 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                               if (AllGuestPostRoomData?.object?.content?[index].postDataType != "VIDEO") {
                                                                                 _onShareXFileFromAssets(
                                                                                   context,
-                                                                                  AllGuestPostRoomData?.object?.content?[index].repostOn?.thumbnailImageUrl ?? "",
+
+                                                                                  AllGuestPostRoomData?.object?.content?[index].thumbnailImageUrl ?? (AllGuestPostRoomData!.object!.content![index].postData!.isNotEmpty ? AllGuestPostRoomData!.object!.content![index].postData!.first : AllGuestPostRoomData?.object?.content?[index].repostOn?.thumbnailImageUrl ?? (AllGuestPostRoomData!.object!.content![index].repostOn!.postData!.isNotEmpty ? AllGuestPostRoomData!.object!.content![index].repostOn!.postData!.first : "")),
+
                                                                                   AllGuestPostRoomData?.object?.content?[index].postUserName ?? "",
                                                                                   AllGuestPostRoomData?.object?.content?[index].description ?? "",
                                                                                   androidLink: '${AllGuestPostRoomData?.object?.content?[index].postLink}',
@@ -5507,55 +5551,59 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                                     /*if (User_ID == null) {
                                                                                                       Navigator.of(context).push(MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
                                                                                                     } else {*/
-                                                                                                      if (Link == true || Link1 == true || Link2 == true || Link3 == true || Link4 == true || Link5 == true || Link6 == true) {
-                                                                                                        if (Link2 == true || Link3 == true) {
+
+                                                                                                    if (Link == true || Link1 == true || Link2 == true || Link3 == true || Link4 == true || Link5 == true || Link6 == true) {
+                                                                                                      if (Link2 == true || Link3 == true) {
+                                                                                                        if (isYouTubeUrl(SelectedTest)) {
+                                                                                                          playLink(SelectedTest, context);
+                                                                                                        } else
+                                                                                                          launchUrl(Uri.parse("https://${link.value.toString()}"));
+                                                                                                        print("qqqqqqqqhttps://${link.value}");
+                                                                                                      } else {
+                                                                                                        if (Link6 == true) {
+                                                                                                          print("yes i am inList =   room");
+                                                                                                          Navigator.push(context, MaterialPageRoute(
+                                                                                                            builder: (context) {
+                                                                                                              return NewBottomBar(
+                                                                                                                buttomIndex: 1,
+                                                                                                              );
+                                                                                                            },
+                                                                                                          ));
+                                                                                                        } else {
+
                                                                                                           if (isYouTubeUrl(SelectedTest)) {
                                                                                                             playLink(SelectedTest, context);
                                                                                                           } else
-                                                                                                            launchUrl(Uri.parse("https://${link.value.toString()}"));
-                                                                                                          print("qqqqqqqqhttps://${link.value}");
-                                                                                                        } else {
-                                                                                                          if (Link6 == true) {
-                                                                                                            print("yes i am inList =   room");
-                                                                                                            Navigator.push(context, MaterialPageRoute(
-                                                                                                              builder: (context) {
-                                                                                                                return NewBottomBar(
-                                                                                                                  buttomIndex: 1,
-                                                                                                                );
-                                                                                                              },
-                                                                                                            ));
-                                                                                                          } else {
-                                                                                                            if (isYouTubeUrl(SelectedTest)) {
-                                                                                                              playLink(SelectedTest, context);
-                                                                                                            } else
-                                                                                                              launchUrl(Uri.parse(link.value.toString()));
-                                                                                                            print("link.valuelink.value -- ${link.value}");
-                                                                                                          }
-                                                                                                        }
-                                                                                                      } else if (link.value != null) {
-                                                                                                        if (link.value!.startsWith('#')) {
-                                                                                                          await BlocProvider.of<GetGuestAllPostCubit>(context).seetinonExpried(context);
-                                                                                                          Navigator.push(
-                                                                                                              context,
-                                                                                                              MaterialPageRoute(
-                                                                                                                builder: (context) => HashTagViewScreen(title: "${link.value}"),
-                                                                                                              ));
-                                                                                                        } else if (link.value!.startsWith('@')) {
-                                                                                                          await BlocProvider.of<GetGuestAllPostCubit>(context).seetinonExpried(context);
-                                                                                                          var name;
-                                                                                                          var tagName;
-                                                                                                          name = SelectedTest;
-                                                                                                          tagName = name.replaceAll("@", "");
-                                                                                                          await BlocProvider.of<GetGuestAllPostCubit>(context).UserTagAPI(context, tagName);
-
-                                                                                                          // Navigator.push(context, MaterialPageRoute(builder: (context) {
-                                                                                                          //   return ProfileScreen(User_ID: "${userTagModel?.object}", isFollowing: "");
-                                                                                                          // })).then((value) => Get_UserToken());
-
-                                                                                                          print("tagName -- ${tagName}");
-                                                                                                          print("user id -- ${userTagModel?.object}");
+                                                                                                            launchUrl(Uri.parse(link.value.toString()));
+                                                                                                          print("link.valuelink.value -- ${link.value}");
                                                                                                         }
                                                                                                       }
+                                                                                                    } else if (link.value != null) {
+                                                                                                      if (link.value!.startsWith('#')) {
+                                                                                                        await BlocProvider.of<GetGuestAllPostCubit>(context).seetinonExpried(context);
+                                                                                                        Navigator.push(
+                                                                                                            context,
+                                                                                                            MaterialPageRoute(
+                                                                                                              builder: (context) => HashTagViewScreen(title: "${link.value}"),
+                                                                                                            ));
+                                                                                                      } else if (link.value!.startsWith('@')) {
+                                                                                                        await BlocProvider.of<GetGuestAllPostCubit>(context).seetinonExpried(context);
+                                                                                                        var name;
+                                                                                                        var tagName;
+                                                                                                        name = SelectedTest;
+                                                                                                        tagName = name.replaceAll("@", "");
+                                                                                                        await BlocProvider.of<GetGuestAllPostCubit>(context).UserTagAPI(context, tagName);
+
+                                                                                                        // Navigator.push(context, MaterialPageRoute(builder: (context) {
+                                                                                                        //   return ProfileScreen(User_ID: "${userTagModel?.object}", isFollowing: "");
+                                                                                                        // })).then((value) => Get_UserToken());
+
+                                                                                                        print("tagName -- ${tagName}");
+                                                                                                        print("user id -- ${userTagModel?.object}");
+                                                                                                      }
+
+                                                                                                    }
+
                                                                                                     // }
                                                                                                   }
                                                                                                 },
@@ -6094,13 +6142,19 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                           Navigator.of(context)
                                                                               .push(MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
                                                                         } else {
+                                                                          setState(
+                                                                              () {
+                                                                            _show =
+                                                                                false;
+                                                                          });
                                                                           BlocProvider.of<AddcommentCubit>(context).Addcomment(
                                                                               context,
                                                                               '${AllGuestPostRoomData?.object?.content?[index].postUid}');
                                                                           _settingModalBottomSheet1(
-                                                                              context,
-                                                                              index,
-                                                                              _width);
+                                                                            context,
+                                                                            index,
+                                                                            _height,
+                                                                          );
                                                                         }
                                                                       },
                                                                       child: Container(
@@ -6138,6 +6192,11 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                             builder: (context) =>
                                                                                 RegisterCreateAccountScreen()));
                                                                       } else {
+                                                                        setState(
+                                                                            () {
+                                                                          _show =
+                                                                              false;
+                                                                        });
                                                                         rePostBottomSheet(
                                                                             context,
                                                                             index);
@@ -6234,7 +6293,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                           _onShareXFileFromAssets(
                                                                             context,
                                                                             AllGuestPostRoomData?.object?.content?[index].thumbnailImageUrl ??
-                                                                                "",
+                                                                                (AllGuestPostRoomData!.object!.content![index].postData!.isNotEmpty ? AllGuestPostRoomData!.object!.content![index].postData!.first : AllGuestPostRoomData?.object?.content?[index].repostOn?.thumbnailImageUrl ?? (AllGuestPostRoomData!.object!.content![index].repostOn!.postData!.isNotEmpty ? AllGuestPostRoomData!.object!.content![index].repostOn!.postData!.first : "")),
                                                                             AllGuestPostRoomData?.object?.content?[index].postUserName ??
                                                                                 "",
                                                                             AllGuestPostRoomData?.object?.content?[index].description ??
@@ -6896,9 +6955,12 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                             GestureDetector(
                                                                               onTap: () async {
                                                                                 print("opne comment sheet inList =   blogs");
+                                                                                setState(() {
+                                                                                  _show = false;
+                                                                                });
                                                                                 BlocProvider.of<BlogcommentCubit>(context).BlogcommentAPI(context, getallBlogModel1?.object?[index1].uid ?? "");
 
-                                                                                _settingModalBottomSheetBlog(context, index1, _width);
+                                                                                _settingModalBottomSheetBlog(context, index1, _height);
                                                                               },
                                                                               child: Container(
                                                                                 color: Colors.transparent,
@@ -6992,7 +7054,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                     )
                                   : SizedBox(),
                             ],
-                          )
+                          ),
                         ],
                       ),
                     )
@@ -7690,113 +7752,75 @@ class _HomeScreenNewState extends State<HomeScreenNew>
     }
   }
 
-  void _settingModalBottomSheet1(context, index, _width) {
-    /* void _goToElement() {
-      scroll.animateTo((1000 * 20),
-          duration: const Duration(milliseconds: 300), curve: Curves.easeOut);
-    } */
-
-    showModalBottomSheet(
-        context: context,
-        backgroundColor: Colors.white,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(15.0), topRight: Radius.circular(15.0)),
-        ),
-        builder: (context) {
-          return StatefulBuilder(
-              builder: (BuildContext context, StateSetter setState) {
-            return CommentBottomSheet(
-                isFoollinng:
-                    AllGuestPostRoomData?.object?.content?[index].isFollowing,
-                useruid:
-                    AllGuestPostRoomData?.object?.content?[index].userUid ?? "",
-                userProfile: AllGuestPostRoomData
-                        ?.object?.content?[index].userProfilePic ??
-                    "",
-                UserName: AllGuestPostRoomData
-                        ?.object?.content?[index].postUserName ??
-                    "",
-                desc:
-                    AllGuestPostRoomData?.object?.content?[index].description ??
-                        "",
-                postUuID:
-                    AllGuestPostRoomData?.object?.content?[index].postUid ??
-                        "");
-          }); /* Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.max,
-            children: <Widget>[
-              ListTile(
-                leading: Icon(Icons.email),
-                title: Text('Send email'),
-                onTap: () {
-                  print('Send email');
-                },
-              ),
-              ListTile(
-                leading: Icon(Icons.phone),
-                title: Text('Call phone'),
-                onTap: () {
-                  print('Call phone');
-                },
-              ),
-            ],
-          ); */
-        }
-        /*   isScrollControlled: true,
-        useSafeArea: true,
-        isDismissible: true,
-        showDragHandle: true,
-        enableDrag: true,
-        constraints: BoxConstraints.tight(Size.infinite),
-        context: context,
-        builder: (BuildContext bc) {
-          print(
-              "userUiduserUid == >>>>>>> ${AllGuestPostRoomData?.object?.content?[index].userUid}");
-          return StatefulBuilder(
-              builder: (BuildContext context, StateSetter setState) {
-            return CommentBottomSheet(
-                isFoollinng:
-                    AllGuestPostRoomData?.object?.content?[index].isFollowing,
-                useruid:
-                    AllGuestPostRoomData?.object?.content?[index].userUid ?? "",
-                userProfile: AllGuestPostRoomData
-                        ?.object?.content?[index].userProfilePic ??
-                    "",
-                UserName: AllGuestPostRoomData
-                        ?.object?.content?[index].postUserName ??
-                    "",
-                desc:
-                    AllGuestPostRoomData?.object?.content?[index].description ??
-                        "",
-                postUuID:
-                    AllGuestPostRoomData?.object?.content?[index].postUid ??
-                        "");
-          });
-        } */
-        ).then((value) {});
-    ;
-  }
-
-  void _settingModalBottomSheetBlog(context, index, _width) {
-    showModalBottomSheet(
-            isScrollControlled: true,
+  void _settingModalBottomSheet1(context, index, _heigth) {
+    showBottomSheet(
+            /*  isScrollControlled: true,
             useSafeArea: true,
             isDismissible: true,
-            showDragHandle: true,
+            showDragHandle: true, */
             enableDrag: true,
-            constraints: BoxConstraints.tight(Size.infinite),
+            constraints: BoxConstraints(maxHeight: _heigth / 2),
             context: context,
             builder: (BuildContext bc) {
-              return BlogCommentBottomSheet(
-                blogUid: getallBlogModel1?.object?[index].uid,
-                isFoollinng:
-                    AllGuestPostRoomData?.object?.content?[index].isFollowing,
+              return GestureDetector(
+                onVerticalDragDown: (details) {
+                  setState(() {
+                    _show = true;
+                  });
+                  Navigator.pop(context);
+                },
+                child: CommentBottomSheet(
+                    isFoollinng: AllGuestPostRoomData
+                        ?.object?.content?[index].isFollowing,
+                    useruid:
+                        AllGuestPostRoomData?.object?.content?[index].userUid ??
+                            "",
+                    userProfile: AllGuestPostRoomData
+                            ?.object?.content?[index].userProfilePic ??
+                        "",
+                    UserName: AllGuestPostRoomData
+                            ?.object?.content?[index].postUserName ??
+                        "",
+                    desc: AllGuestPostRoomData
+                            ?.object?.content?[index].description ??
+                        "",
+                    postUuID:
+                        AllGuestPostRoomData?.object?.content?[index].postUid ??
+                            ""),
               );
             })
-        .then((value) => BlocProvider.of<GetGuestAllPostCubit>(context)
-            .GetallBlog(context, User_ID ?? ""));
+        /* .then((value) => BlocProvider.of<GetGuestAllPostCubit>(context)
+            .GetallBlog(context, User_ID ?? "")) */
+        ;
+  }
+
+  void _settingModalBottomSheetBlog(context, index, _heigth) {
+    showBottomSheet(
+            /*  isScrollControlled: true,
+            useSafeArea: true,
+            isDismissible: true,
+            showDragHandle: true, */
+            enableDrag: true,
+            constraints: BoxConstraints(maxHeight: _heigth / 2),
+            context: context,
+            builder: (BuildContext bc) {
+              return GestureDetector(
+                onVerticalDragDown: (details) {
+                  setState(() {
+                    _show = true;
+                  });
+                  Navigator.pop(context);
+                },
+                child: BlogCommentBottomSheet(
+                  blogUid: getallBlogModel1?.object?[index].uid,
+                  isFoollinng:
+                      AllGuestPostRoomData?.object?.content?[index].isFollowing,
+                ),
+              );
+            })
+        /* .then((value) => BlocProvider.of<GetGuestAllPostCubit>(context)
+            .GetallBlog(context, User_ID ?? "")) */
+        ;
   }
 
   void onClickedEmoji() async {
@@ -7838,16 +7862,23 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                   Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      FutureBuilder(future: getYoutubePlayer(videoUrl, () {
-                        Navigator.pop(ctx);
-                        launchUrl(Uri.parse(videoUrl));
-                      }), builder: (context,snap){
-                        if(snap.data != null)
-                          return snap.data as Widget;
-                        else return Center(
-                          child: CircularProgressIndicator(color: Colors.white,),
-                        );
-                      })
+
+                      FutureBuilder(
+                          future: getYoutubePlayer(videoUrl, () {
+                            Navigator.pop(ctx);
+                            launchUrl(Uri.parse(videoUrl));
+                          }),
+                          builder: (context, snap) {
+                            if (snap.data != null)
+                              return snap.data as Widget;
+                            else
+                              return Center(
+                                child: CircularProgressIndicator(
+                                  color: Colors.white,
+                                ),
+                              );
+                          })
+
                     ],
                   ),
                   Align(
@@ -7888,99 +7919,108 @@ class _HomeScreenNewState extends State<HomeScreenNew>
   }
 
   void rePostBottomSheet(context, index) {
-    showModalBottomSheet(
+    showBottomSheet(
+        enableDrag: true,
         context: context,
         builder: (BuildContext bc) {
-          return Container(
-            height: 200,
-            child: new Wrap(
-              children: [
-                Container(
-                  height: 20,
-                  width: 50,
-                  color: Colors.transparent,
-                ),
-                Center(
-                    child: Container(
-                  height: 5,
-                  width: 150,
-                  decoration: BoxDecoration(
-                      color: Colors.grey,
-                      borderRadius: BorderRadius.circular(25)),
-                )),
-                SizedBox(
-                  height: 35,
-                ),
-                Center(
-                  child: new ListTile(
-                      leading: new Image.asset(
-                        ImageConstant.vector2,
-                        height: 20,
+          return GestureDetector(
+            onVerticalDragDown: (details) {
+              setState(() {
+                _show = true;
+              });
+              Navigator.pop(context);
+            },
+            child: Container(
+              height: 200,
+              child: new Wrap(
+                children: [
+                  Container(
+                    height: 20,
+                    width: 50,
+                    color: Colors.transparent,
+                  ),
+                  Center(
+                      child: Container(
+                    height: 5,
+                    width: 150,
+                    decoration: BoxDecoration(
+                        color: Colors.grey,
+                        borderRadius: BorderRadius.circular(25)),
+                  )),
+                  SizedBox(
+                    height: 35,
+                  ),
+                  Center(
+                    child: new ListTile(
+                        leading: new Image.asset(
+                          ImageConstant.vector2,
+                          height: 20,
+                        ),
+                        title: new Text('RePost'),
+                        subtitle: Text(
+                          "Share this post with your followers",
+                          style: TextStyle(fontSize: 10, color: Colors.grey),
+                        ),
+                        onTap: () async {
+                          Map<String, dynamic> param = {"postType": "PUBLIC"};
+                          BlocProvider.of<GetGuestAllPostCubit>(context)
+                              .RePostAPI(
+                                  context,
+                                  param,
+                                  AllGuestPostRoomData
+                                      ?.object?.content?[index].postUid,
+                                  "Repost");
+                          Navigator.pop(context);
+                        }),
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Center(
+                    child: new ListTile(
+                      leading: new Icon(
+                        Icons.edit_outlined,
+                        color: Colors.black,
                       ),
-                      title: new Text('RePost'),
+                      title: new Text('Quote'),
                       subtitle: Text(
-                        "Share this post with your followers",
+                        "Add a comment, photo or GIF before you share this post",
                         style: TextStyle(fontSize: 10, color: Colors.grey),
                       ),
                       onTap: () async {
-                        Map<String, dynamic> param = {"postType": "PUBLIC"};
-                        BlocProvider.of<GetGuestAllPostCubit>(context)
-                            .RePostAPI(
-                                context,
-                                param,
-                                AllGuestPostRoomData
-                                    ?.object?.content?[index].postUid,
-                                "Repost");
-                        Navigator.pop(context);
-                      }),
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                Center(
-                  child: new ListTile(
-                    leading: new Icon(
-                      Icons.edit_outlined,
-                      color: Colors.black,
+                        Navigator.push(context, MaterialPageRoute(
+                          builder: (context) {
+                            return RePostScreen(
+                              userProfile: AllGuestPostRoomData
+                                  ?.object?.content?[index].userProfilePic,
+                              username: AllGuestPostRoomData
+                                  ?.object?.content?[index].postUserName,
+                              date: AllGuestPostRoomData
+                                  ?.object?.content?[index].createdAt,
+                              desc: AllGuestPostRoomData
+                                  ?.object?.content?[index].description,
+                              postData: AllGuestPostRoomData
+                                  ?.object?.content?[index].postData,
+                              postDataType: AllGuestPostRoomData
+                                  ?.object?.content?[index].postDataType,
+                              index: index,
+                              AllGuestPostRoomData: AllGuestPostRoomData,
+                              postUid: AllGuestPostRoomData
+                                  ?.object?.content?[index].postUid,
+                              thumbNailURL: AllGuestPostRoomData
+                                  ?.object?.content?[index].thumbnailImageUrl,
+                            );
+                          },
+                        ));
+                        // Navigator.pop(context);
+                      },
                     ),
-                    title: new Text('Quote'),
-                    subtitle: Text(
-                      "Add a comment, photo or GIF before you share this post",
-                      style: TextStyle(fontSize: 10, color: Colors.grey),
-                    ),
-                    onTap: () async {
-                      Navigator.push(context, MaterialPageRoute(
-                        builder: (context) {
-                          return RePostScreen(
-                            userProfile: AllGuestPostRoomData
-                                ?.object?.content?[index].userProfilePic,
-                            username: AllGuestPostRoomData
-                                ?.object?.content?[index].postUserName,
-                            date: AllGuestPostRoomData
-                                ?.object?.content?[index].createdAt,
-                            desc: AllGuestPostRoomData
-                                ?.object?.content?[index].description,
-                            postData: AllGuestPostRoomData
-                                ?.object?.content?[index].postData,
-                            postDataType: AllGuestPostRoomData
-                                ?.object?.content?[index].postDataType,
-                            index: index,
-                            AllGuestPostRoomData: AllGuestPostRoomData,
-                            postUid: AllGuestPostRoomData
-                                ?.object?.content?[index].postUid,
-                            thumbNailURL: AllGuestPostRoomData
-                                ?.object?.content?[index].thumbnailImageUrl,
-                          );
-                        },
-                      ));
-                      // Navigator.pop(context);
-                    },
                   ),
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-              ],
+                  SizedBox(
+                    height: 20,
+                  ),
+                ],
+              ),
             ),
           );
         });
@@ -8009,7 +8049,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
     );
   }
 
-   void _onShareXFileFromAssets(BuildContext context, String postLink,
+  void _onShareXFileFromAssets(BuildContext context, String postLink,
       String userName, String description,
       {String? androidLink}) async {
     // RenderBox? box = context.findAncestorRenderObjectOfType();

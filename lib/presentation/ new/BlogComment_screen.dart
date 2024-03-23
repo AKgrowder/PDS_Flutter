@@ -7,6 +7,7 @@ import 'package:flutter/foundation.dart' as foundation;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_mentions/flutter_mentions.dart';
+import 'package:flutter_observer/Observable.dart';
 import 'package:linkfy_text/linkfy_text.dart';
 import 'package:pds/API/Bloc/add_comment_bloc/add_comment_state.dart';
 import 'package:pds/API/Model/BlogComment_Model/BlogCommentDelete_model.dart';
@@ -63,7 +64,6 @@ class _BlogCommentBottomSheetState extends State<BlogCommentBottomSheet> {
   Timer? _timer;
   String title = "";
 
-
   void _goToElement() {
     /* scroll.animateTo((1000.0 * 100),
         duration: const Duration(milliseconds: 20), curve: Curves.easeOut); */
@@ -117,7 +117,12 @@ class _BlogCommentBottomSheetState extends State<BlogCommentBottomSheet> {
             IconButton(
               icon: Icon(Icons.close, color: Colors.black),
               onPressed: () {
-                Navigator.pop(context);
+                Map<String, dynamic> data = {'bool': true};
+                Observable.instance
+                    .notifyObservers(['_HomeScreenNewState'], map: data);
+                Navigator.pop(
+                  context,
+                );
               },
             ),
           ],
@@ -338,7 +343,7 @@ class _BlogCommentBottomSheetState extends State<BlogCommentBottomSheet> {
                                                       MainAxisAlignment.center,
                                                   children: [
                                                     Container(
-                                                      width: _width/1.5,
+                                                      width: _width / 1.5,
                                                       // color: Colors.amber,
                                                       child: Row(
                                                         children: [
@@ -419,42 +424,49 @@ class _BlogCommentBottomSheetState extends State<BlogCommentBottomSheet> {
                                                         // height: 50,
                                                         // color: Colors.amber,
                                                         child: Column(
-                                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
                                                           children: [
                                                             LinkifyText(
                                                               "${blogCommentModel?.object?[index].comment}",
-                                                              linkStyle: TextStyle(
-                                                                color: Colors.blue,
+                                                              linkStyle:
+                                                                  TextStyle(
+                                                                color:
+                                                                    Colors.blue,
                                                                 fontFamily:
                                                                     'outfit',
                                                               ),
-                                                              textStyle: TextStyle(
-                                                                color: Colors.black,
+                                                              textStyle:
+                                                                  TextStyle(
+                                                                color: Colors
+                                                                    .black,
                                                                 fontFamily:
                                                                     'outfit',
                                                               ),
                                                               linkTypes: [
                                                                 LinkType.url,
-                                                                LinkType.userTag,
-                                                                LinkType.hashTag,
+                                                                LinkType
+                                                                    .userTag,
+                                                                LinkType
+                                                                    .hashTag,
                                                                 // LinkType
                                                                 //     .email
                                                               ],
-                                                              onTap: (link) async {
+                                                              onTap:
+                                                                  (link) async {
                                                                 /// do stuff with `link` like
                                                                 /// if(link.type == Link.url) launchUrl(link.value);
 
                                                                 var SelectedTest =
                                                                     link.value
                                                                         .toString();
-                                                                var Link =
-                                                                    SelectedTest
-                                                                        .startsWith(
-                                                                            'https');
-                                                                var Link1 =
-                                                                    SelectedTest
-                                                                        .startsWith(
-                                                                            'http');
+                                                                var Link = SelectedTest
+                                                                    .startsWith(
+                                                                        'https');
+                                                                var Link1 = SelectedTest
+                                                                    .startsWith(
+                                                                        'http');
                                                                 var Link2 =
                                                                     SelectedTest
                                                                         .startsWith(
@@ -463,14 +475,12 @@ class _BlogCommentBottomSheetState extends State<BlogCommentBottomSheet> {
                                                                     SelectedTest
                                                                         .startsWith(
                                                                             'WWW');
-                                                                var Link4 =
-                                                                    SelectedTest
-                                                                        .startsWith(
-                                                                            'HTTPS');
-                                                                var Link5 =
-                                                                    SelectedTest
-                                                                        .startsWith(
-                                                                            'HTTP');
+                                                                var Link4 = SelectedTest
+                                                                    .startsWith(
+                                                                        'HTTPS');
+                                                                var Link5 = SelectedTest
+                                                                    .startsWith(
+                                                                        'HTTP');
                                                                 var Link6 = SelectedTest
                                                                     .startsWith(
                                                                         'https://pdslink.page.link/');
@@ -478,21 +488,33 @@ class _BlogCommentBottomSheetState extends State<BlogCommentBottomSheet> {
                                                                 print(SelectedTest
                                                                     .toString());
 
-                                                                if (Link == true ||
-                                                                    Link1 == true ||
-                                                                    Link2 == true ||
-                                                                    Link3 == true ||
-                                                                    Link4 == true ||
-                                                                    Link5 == true ||
-                                                                    Link6 == true) {
+                                                                if (Link ==
+                                                                        true ||
+                                                                    Link1 ==
+                                                                        true ||
+                                                                    Link2 ==
+                                                                        true ||
+                                                                    Link3 ==
+                                                                        true ||
+                                                                    Link4 ==
+                                                                        true ||
+                                                                    Link5 ==
+                                                                        true ||
+                                                                    Link6 ==
+                                                                        true) {
                                                                   if (Link2 ==
                                                                           true ||
                                                                       Link3 ==
                                                                           true) {
-                                                                    if (isYouTubeUrl(SelectedTest)) {
-                                                                      playLink(SelectedTest, context);
-                                                                    } else launchUrl(Uri.parse(
-                                                                        "https://${link.value.toString()}"));
+                                                                    if (isYouTubeUrl(
+                                                                        SelectedTest)) {
+                                                                      playLink(
+                                                                          SelectedTest,
+                                                                          context);
+                                                                    } else
+                                                                      launchUrl(
+                                                                          Uri.parse(
+                                                                              "https://${link.value.toString()}"));
                                                                   } else {
                                                                     if (Link6 ==
                                                                         true) {
@@ -510,18 +532,22 @@ class _BlogCommentBottomSheetState extends State<BlogCommentBottomSheet> {
                                                                         },
                                                                       ));
                                                                     } else {
-                                                                      if (isYouTubeUrl(SelectedTest)) {
-                                                                        playLink(SelectedTest, context);
-                                                                      } else launchUrl(Uri
-                                                                          .parse(link
-                                                                              .value
-                                                                              .toString()));
+                                                                      if (isYouTubeUrl(
+                                                                          SelectedTest)) {
+                                                                        playLink(
+                                                                            SelectedTest,
+                                                                            context);
+                                                                      } else
+                                                                        launchUrl(Uri.parse(link
+                                                                            .value
+                                                                            .toString()));
                                                                       print(
                                                                           "link.valuelink.value -- ${link.value}");
                                                                     }
                                                                   }
                                                                 } else {
-                                                                  if (link.value!
+                                                                  if (link
+                                                                      .value!
                                                                       .startsWith(
                                                                           '#')) {
                                                                     print(
@@ -530,8 +556,7 @@ class _BlogCommentBottomSheetState extends State<BlogCommentBottomSheet> {
                                                                         context,
                                                                         MaterialPageRoute(
                                                                           builder: (context) =>
-                                                                              HashTagViewScreen(
-                                                                                  title: "${link.value}"),
+                                                                              HashTagViewScreen(title: "${link.value}"),
                                                                         ));
                                                                   } else if (link
                                                                       .value!
@@ -545,8 +570,7 @@ class _BlogCommentBottomSheetState extends State<BlogCommentBottomSheet> {
                                                                         .replaceAll(
                                                                             "@",
                                                                             "");
-                                                                    await BlocProvider.of<
-                                                                                BlogcommentCubit>(
+                                                                    await BlocProvider.of<BlogcommentCubit>(
                                                                             context)
                                                                         .UserTagAPI(
                                                                             context,
@@ -554,9 +578,8 @@ class _BlogCommentBottomSheetState extends State<BlogCommentBottomSheet> {
 
                                                                     Navigator.push(
                                                                         context,
-                                                                        MaterialPageRoute(
-                                                                            builder:
-                                                                                (context) {
+                                                                        MaterialPageRoute(builder:
+                                                                            (context) {
                                                                       return ProfileScreen(
                                                                           User_ID:
                                                                               "${userTagModel?.object}",
@@ -569,66 +592,121 @@ class _BlogCommentBottomSheetState extends State<BlogCommentBottomSheet> {
                                                                     print(
                                                                         "user id -- ${userTagModel?.object}");
                                                                   } else {
-                                                                    if (isYouTubeUrl(SelectedTest)) {
-                                                                      playLink(SelectedTest, context);
-                                                                    } else launchUrl(Uri.parse(
-                                                                        "https://${link.value.toString()}"));
+                                                                    if (isYouTubeUrl(
+                                                                        SelectedTest)) {
+                                                                      playLink(
+                                                                          SelectedTest,
+                                                                          context);
+                                                                    } else
+                                                                      launchUrl(
+                                                                          Uri.parse(
+                                                                              "https://${link.value.toString()}"));
                                                                   }
                                                                 }
                                                               },
                                                             ),
-                                                            if (extractUrls(blogCommentModel?.object?[index].comment ?? "").isNotEmpty)
-                                                              isYouTubeUrl(extractUrls(blogCommentModel?.object?[index].comment ?? "").first)
+                                                            if (extractUrls(blogCommentModel
+                                                                        ?.object?[
+                                                                            index]
+                                                                        .comment ??
+                                                                    "")
+                                                                .isNotEmpty)
+                                                              isYouTubeUrl(extractUrls(
+                                                                          blogCommentModel?.object?[index].comment ??
+                                                                              "")
+                                                                      .first)
                                                                   ? FutureBuilder(
-                                                                  future: fetchYoutubeThumbnail(extractUrls(blogCommentModel?.object?[index].comment ?? "").first),
-                                                                  builder: (context, snap) {
-                                                                    return Container(
-                                                                      height: 200,
-                                                                      decoration: BoxDecoration(image: DecorationImage(image: CachedNetworkImageProvider(snap.data.toString())), borderRadius: BorderRadius.circular(10)),
-                                                                      clipBehavior: Clip.antiAlias,
-                                                                      child: Center(
-                                                                          child: IconButton(
-                                                                            icon: Icon(
+                                                                      future: fetchYoutubeThumbnail(extractUrls(blogCommentModel?.object?[index].comment ??
+                                                                              "")
+                                                                          .first),
+                                                                      builder:
+                                                                          (context,
+                                                                              snap) {
+                                                                        return Container(
+                                                                          height:
+                                                                              200,
+                                                                          decoration: BoxDecoration(
+                                                                              image: DecorationImage(image: CachedNetworkImageProvider(snap.data.toString())),
+                                                                              borderRadius: BorderRadius.circular(10)),
+                                                                          clipBehavior:
+                                                                              Clip.antiAlias,
+                                                                          child: Center(
+                                                                              child: IconButton(
+                                                                            icon:
+                                                                                Icon(
                                                                               Icons.play_circle_fill_rounded,
                                                                               color: Colors.white,
                                                                               size: 60,
                                                                             ),
-                                                                            onPressed: () {
+                                                                            onPressed:
+                                                                                () {
                                                                               playLink(extractUrls(blogCommentModel?.object?[index].comment ?? "").first, context);
                                                                             },
                                                                           )),
-                                                                    );
-                                                                  })
+                                                                        );
+                                                                      })
                                                                   : Padding(
-                                                                padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-                                                                child: AnyLinkPreview(
-                                                                  link: extractUrls(blogCommentModel?.object?[index].comment ?? "").first,
-                                                                  displayDirection: UIDirection.uiDirectionHorizontal,
-                                                                  showMultimedia: true,
-                                                                  bodyMaxLines: 5,
-                                                                  bodyTextOverflow: TextOverflow.ellipsis,
-                                                                  titleStyle: TextStyle(
-                                                                    color: Colors.black,
-                                                                    fontWeight: FontWeight.bold,
-                                                                    fontSize: 15,
-                                                                  ),
-                                                                  bodyStyle: TextStyle(color: Colors.grey, fontSize: 12),
-                                                                  errorBody: 'Show my custom error body',
-                                                                  errorTitle: 'Show my custom error title',
-                                                                  errorWidget: null,
-                                                                  errorImage: "https://flutter.dev/",
-                                                                  cache: Duration(days: 7),
-                                                                  backgroundColor: Colors.grey[300],
-                                                                  borderRadius: 12,
-                                                                  removeElevation: false,
-                                                                  boxShadow: [
-                                                                    BoxShadow(blurRadius: 3, color: Colors.grey)
-                                                                  ],
-                                                                  onTap: () {
-                                                                    launchUrl(Uri.parse(extractUrls(blogCommentModel?.object?[index].comment ?? "").first));
-                                                                  }, // This disables tap event
-                                                                ),
-                                                              ),
+                                                                      padding: const EdgeInsets
+                                                                              .symmetric(
+                                                                          horizontal:
+                                                                              16.0,
+                                                                          vertical:
+                                                                              8.0),
+                                                                      child:
+                                                                          AnyLinkPreview(
+                                                                        link: extractUrls(blogCommentModel?.object?[index].comment ??
+                                                                                "")
+                                                                            .first,
+                                                                        displayDirection:
+                                                                            UIDirection.uiDirectionHorizontal,
+                                                                        showMultimedia:
+                                                                            true,
+                                                                        bodyMaxLines:
+                                                                            5,
+                                                                        bodyTextOverflow:
+                                                                            TextOverflow.ellipsis,
+                                                                        titleStyle:
+                                                                            TextStyle(
+                                                                          color:
+                                                                              Colors.black,
+                                                                          fontWeight:
+                                                                              FontWeight.bold,
+                                                                          fontSize:
+                                                                              15,
+                                                                        ),
+                                                                        bodyStyle: TextStyle(
+                                                                            color:
+                                                                                Colors.grey,
+                                                                            fontSize: 12),
+                                                                        errorBody:
+                                                                            'Show my custom error body',
+                                                                        errorTitle:
+                                                                            'Show my custom error title',
+                                                                        errorWidget:
+                                                                            null,
+                                                                        errorImage:
+                                                                            "https://flutter.dev/",
+                                                                        cache: Duration(
+                                                                            days:
+                                                                                7),
+                                                                        backgroundColor:
+                                                                            Colors.grey[300],
+                                                                        borderRadius:
+                                                                            12,
+                                                                        removeElevation:
+                                                                            false,
+                                                                        boxShadow: [
+                                                                          BoxShadow(
+                                                                              blurRadius: 3,
+                                                                              color: Colors.grey)
+                                                                        ],
+                                                                        onTap:
+                                                                            () {
+                                                                          launchUrl(
+                                                                              Uri.parse(extractUrls(blogCommentModel?.object?[index].comment ?? "").first));
+                                                                        }, // This disables tap event
+                                                                      ),
+                                                                    ),
                                                           ],
                                                         )
                                                         /* Text(
@@ -667,12 +745,14 @@ class _BlogCommentBottomSheetState extends State<BlogCommentBottomSheet> {
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            if(title.isNotEmpty)
+                            if (title.isNotEmpty)
                               Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 16.0,vertical: 8.0),
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 16.0, vertical: 8.0),
                                 child: AnyLinkPreview(
                                   link: title,
-                                  displayDirection: UIDirection.uiDirectionHorizontal,
+                                  displayDirection:
+                                      UIDirection.uiDirectionHorizontal,
                                   showMultimedia: true,
                                   bodyMaxLines: 5,
                                   bodyTextOverflow: TextOverflow.ellipsis,
@@ -681,7 +761,8 @@ class _BlogCommentBottomSheetState extends State<BlogCommentBottomSheet> {
                                     fontWeight: FontWeight.bold,
                                     fontSize: 15,
                                   ),
-                                  bodyStyle: TextStyle(color: Colors.grey, fontSize: 12),
+                                  bodyStyle: TextStyle(
+                                      color: Colors.grey, fontSize: 12),
                                   errorBody: 'Show my custom error body',
                                   errorTitle: 'Show my custom error title',
                                   errorWidget: Container(
@@ -693,8 +774,10 @@ class _BlogCommentBottomSheetState extends State<BlogCommentBottomSheet> {
                                   backgroundColor: Colors.grey[300],
                                   borderRadius: 12,
                                   removeElevation: false,
-                                  boxShadow: [BoxShadow(blurRadius: 3, color: Colors.grey)],
-                                  onTap: (){
+                                  boxShadow: [
+                                    BoxShadow(blurRadius: 3, color: Colors.grey)
+                                  ],
+                                  onTap: () {
                                     launchUrl(Uri.parse(title));
                                   }, // This disables tap event
                                 ),
@@ -941,7 +1024,6 @@ class _BlogCommentBottomSheetState extends State<BlogCommentBottomSheet> {
                                 )
                               ],
                             ),
-
                             Offstage(
                               offstage: !isEmojiVisible,
                               child: SizedBox(
@@ -1072,7 +1154,7 @@ class _BlogCommentBottomSheetState extends State<BlogCommentBottomSheet> {
           });
         }
       }
-    }else if (AnyLinkPreview.isValidLink(extractUrls(value).first)) {
+    } else if (AnyLinkPreview.isValidLink(extractUrls(value).first)) {
       if (_timer != null) {
         _timer?.cancel();
         _timer = Timer(Duration(seconds: 2), () {
@@ -1087,7 +1169,7 @@ class _BlogCommentBottomSheetState extends State<BlogCommentBottomSheet> {
           });
         });
       }
-    }  else {
+    } else {
       super.setState(() {
         istageData = false;
         isHeshTegData = false;
@@ -1253,29 +1335,30 @@ class _BlogCommentBottomSheetState extends State<BlogCommentBottomSheet> {
       caseSensitive: false,
     );
 
-    List<String> urls = regExp.allMatches(text).map((match) => match.group(0)!).toList();
+    List<String> urls =
+        regExp.allMatches(text).map((match) => match.group(0)!).toList();
     List<String> finalUrls = [];
     RegExp urlRegex = RegExp(r"(http(s)?://)", caseSensitive: false);
     urls.forEach((element) {
-      if(urlRegex.allMatches(element).toList().length > 1){
+      if (urlRegex.allMatches(element).toList().length > 1) {
         String xyz = element.replaceAll("http", ",http");
         List<String> splitted = xyz.split(RegExp(r",|;"));
         splitted.forEach((element1) {
-          if(element1.isNotEmpty)
-            finalUrls.add(element1);
+          if (element1.isNotEmpty) finalUrls.add(element1);
         });
-      }else{
+      } else {
         finalUrls.add(element);
       }
     });
     return finalUrls;
-
   }
 
   bool isYouTubeUrl(String url) {
     // Regular expression pattern to match YouTube URLs
-    RegExp youtubeVideoRegex = RegExp(r"^https?://(?:www\.)?youtube\.com/(?:watch\?v=)?([^#&?]+)");
-    RegExp youtubeShortsRegex = RegExp(r"^https?://(?:www\.)?youtube\.com/shorts/([^#&?]+)");
+    RegExp youtubeVideoRegex =
+        RegExp(r"^https?://(?:www\.)?youtube\.com/(?:watch\?v=)?([^#&?]+)");
+    RegExp youtubeShortsRegex =
+        RegExp(r"^https?://(?:www\.)?youtube\.com/shorts/([^#&?]+)");
 
     if (youtubeVideoRegex.hasMatch(url) || youtubeShortsRegex.hasMatch(url)) {
       return true;
@@ -1308,16 +1391,21 @@ class _BlogCommentBottomSheetState extends State<BlogCommentBottomSheet> {
                   Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      FutureBuilder(future: getYoutubePlayer(videoUrl, () {
-                        Navigator.pop(ctx);
-                        launchUrl(Uri.parse(videoUrl));
-                      }), builder: (context,snap){
-                        if(snap.data != null)
-                        return snap.data as Widget;
-                        else return Center(
-                          child: CircularProgressIndicator(color: Colors.white,),
-                        );
-                      })
+                      FutureBuilder(
+                          future: getYoutubePlayer(videoUrl, () {
+                            Navigator.pop(ctx);
+                            launchUrl(Uri.parse(videoUrl));
+                          }),
+                          builder: (context, snap) {
+                            if (snap.data != null)
+                              return snap.data as Widget;
+                            else
+                              return Center(
+                                child: CircularProgressIndicator(
+                                  color: Colors.white,
+                                ),
+                              );
+                          })
                     ],
                   ),
                   Align(
@@ -1368,10 +1456,10 @@ class _BlogCommentBottomSheetState extends State<BlogCommentBottomSheet> {
     return playlistId;
   }
 
-
   Future<List<String>> getPlaylistVideos(String playlistId) async {
     // final url = "https://www.youtube.com/playlist?list=RDF0SflZWxv8k";
-    final url = "https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=50&playlistId=$playlistId&key=AIzaSyAT_gzTjHn9XuvQsmGdY63br7lKhD2KRdo";
+    final url =
+        "https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=50&playlistId=$playlistId&key=AIzaSyAT_gzTjHn9XuvQsmGdY63br7lKhD2KRdo";
     final response = await http.get(Uri.parse(url));
     if (response.statusCode == 200) {
       // Parse the HTML content to extract video IDs (implementation depends on website structure)
@@ -1382,7 +1470,7 @@ class _BlogCommentBottomSheetState extends State<BlogCommentBottomSheet> {
       }
       return videoIds; // List of video IDs
     } else {
-      print ("Failed to fetch playlist videos");
+      print("Failed to fetch playlist videos");
       return [];
     }
   }
@@ -1417,17 +1505,17 @@ class _BlogCommentBottomSheetState extends State<BlogCommentBottomSheet> {
     return liveId;
   }
 
-
-  Future<Widget> getYoutubePlayer(String videoUrl, Function() fullScreen) async{
+  Future<Widget> getYoutubePlayer(
+      String videoUrl, Function() fullScreen) async {
     late YoutubePlayerController _controller;
     String videoId = "";
-    if(videoUrl.toLowerCase().contains("playlist")){
+    if (videoUrl.toLowerCase().contains("playlist")) {
       String playlistId = extractPlaylistId(videoUrl);
       var videoIds = await getPlaylistVideos(playlistId);
       videoId = videoIds.first;
-    }else if(videoUrl.toLowerCase().contains("live")){
+    } else if (videoUrl.toLowerCase().contains("live")) {
       videoId = extractLiveId(videoUrl);
-    }else{
+    } else {
       videoId = YoutubePlayer.convertUrlToId(videoUrl)!;
     }
     print("video id ========================> $videoId");
