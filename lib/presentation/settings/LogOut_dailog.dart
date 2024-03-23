@@ -140,7 +140,7 @@ class LogOutdailogState extends State<LogOutdailog>
                                   child: const Text('Yes',
                                       style: TextStyle(color: Colors.white)),
                                   onPressed: () async {
-                                      onUserLogout();
+                                      // onUserLogout();
                                     BlocProvider.of<LogOutCubit>(context)
                                         .LogOutApi(context);
                                   },

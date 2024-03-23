@@ -36,7 +36,7 @@ import 'package:web_socket_channel/web_socket_channel.dart';
 import 'package:swipe_to/swipe_to.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
-import 'package:zego_uikit_prebuilt_call/zego_uikit_prebuilt_call.dart';
+// import 'package:zego_uikit_prebuilt_call/zego_uikit_prebuilt_call.dart';
 import 'package:http/http.dart' as http;
 import 'allStarMessage.dart';
 
@@ -134,7 +134,7 @@ class _DmScreenNewState extends State<DmScreenNew> with Observer {
     isMeesageReaction = false;
     BlocProvider.of<DmInboxCubit>(context).seetinonExpried(context);
     pageNumberMethod();
-    imageurlCheck = widget.chatUserProfile;
+    // imageurlCheck = widget.chatUserProfile;
     Future.delayed(Duration(seconds: 1), () {
       if (mounted) {
         setState(() {

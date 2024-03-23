@@ -321,7 +321,7 @@ class _ProfileScreenState extends State<ProfileScreen>
 
   @override
   void initState() {
-    BlocProvider.of<NewProfileSCubit>(context).getallcompenypagee(context);
+    // BlocProvider.of<NewProfileSCubit>(context).getallcompenypagee(context);
     Observable.instance.addObserver(this);
     _tabController = TabController(length: tabData.length, vsync: this);
     _scrollController.addListener(_scrollListener);
