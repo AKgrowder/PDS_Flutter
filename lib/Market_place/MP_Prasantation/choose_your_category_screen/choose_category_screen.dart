@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pds/core/utils/image_constant.dart';
+import 'package:pds/widgets/custom_image_view.dart';
 
 import '../../../../core/utils/color_constant.dart';
 
@@ -82,7 +83,7 @@ class _ChooseCategoryScreenState extends State<ChooseCategoryScreen> {
                       children: [
                         Padding(
                           padding: const EdgeInsets.only(left: 20.0),
-                          child: Image.asset(
+                          child: CustomImageView( svgPath:
                             ImageConstant.supplyer_image,
                             height: 40,
                           ),
@@ -123,7 +124,7 @@ class _ChooseCategoryScreenState extends State<ChooseCategoryScreen> {
                       children: [
                         Padding(
                           padding: const EdgeInsets.only(left: 20.0),
-                          child: Image.asset(
+                          child: CustomImageView(svgPath:
                             ImageConstant.buyer_image,
                             height: 40,
                           ),
@@ -178,7 +179,7 @@ class _ChooseCategoryScreenState extends State<ChooseCategoryScreen> {
                       children: [
                         Padding(
                           padding: const EdgeInsets.only(left: 20.0),
-                          child: Image.asset(
+                          child: CustomImageView(svgPath:
                             ImageConstant.supplyer_image,
                             height: 40,
                           ),
@@ -219,7 +220,7 @@ class _ChooseCategoryScreenState extends State<ChooseCategoryScreen> {
                       children: [
                         Padding(
                           padding: const EdgeInsets.only(left: 20.0),
-                          child: Image.asset(
+                          child: CustomImageView(svgPath:
                             ImageConstant.buyer_image,
                             height: 40,
                           ),

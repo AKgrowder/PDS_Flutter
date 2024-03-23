@@ -8,10 +8,12 @@ import 'package:pds/API/Bloc/RateUs_Bloc/RateUs_cubit.dart';
 import 'package:pds/API/Bloc/accounttype_bloc/account_cubit.dart';
 import 'package:pds/API/Bloc/accounttype_bloc/account_state.dart';
 import 'package:pds/API/Bloc/logOut_bloc/logOut_cubit.dart';
+import 'package:pds/API/Model/get_assigned_users_of_company_pageModel/get_assigned_users_of_company_pageModel.dart';
 import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/presentation/%20new/Blocked_userList_screen.dart';
 import 'package:pds/presentation/Comapny_page/Comapny_manage_screen.dart';
 import 'package:pds/presentation/change_password_screen/change_password_screen.dart';
+import 'package:pds/presentation/comnpyPageAdminScreen.dart';
 import 'package:pds/presentation/settings/LogOut_dailog.dart';
 import 'package:pds/widgets/delete_dailog.dart';
 import 'package:pds/widgets/rateUS_dailog.dart';
@@ -46,16 +48,17 @@ var Setting_Array = [
   "Saved Pins",
   "Change Password",
   "Prefrences",
-
   "Support",
   "Policies",
   "Invite Friends",
   "Rate Us",
   "Delete Account",
+  "page Admin",
+  "Manage Company Page",
   "Public & Private Profile",
   "Block User",
   "Log Out",
-  "Manage Company Page"
+
   /* "Change Password",
   "Public & Private Profile",
   "Block User",
@@ -93,9 +96,11 @@ var SettingImage_Array = [
   ImageConstant.setting_star,
   // ImageConstant.Invite_Friends,
   ImageConstant.setting_delete,
-  ImageConstant.profileLock, ImageConstant.block_user,
-  ImageConstant.setting_power,
   ImageConstant.setting_comanyManage,
+  ImageConstant.setting_comanyManage,
+  ImageConstant.profileLock,
+  ImageConstant.block_user,
+  ImageConstant.setting_power,
   // ImageConstant.setting_power,
   // ImageConstant.setting_phone,
 ];
@@ -117,10 +122,12 @@ class _SettingScreenState extends State<SettingScreen> {
   bool? isSwitched;
   String? userStatus;
   String? rejcteReson;
+  String? User_CompnyPageModule;
+  GetAssignedUsersOfCompanyPage? getAssignedUsersOfCompanyPage;
   bool? UserProfileOpen;
   @override
   void initState() {
-    print("accountcheck--${widget.accountType}");
+    print("accountcheck--${widget.module}");
     if (widget.accountType == 'PUBLIC') {
       super.setState(() {
         isSwitched = false;
@@ -267,6 +274,10 @@ class _SettingScreenState extends State<SettingScreen> {
       ),
       body: BlocConsumer<AccountCubit, AccountState>(
         listener: (context, state) {
+          if (state is GetAssignedUsersOfCompanyPageLoadedState) {
+            getAssignedUsersOfCompanyPage = state.getAssignedUsersOfCompanyPage;
+            print("sdfgsdfgsdfgsdgfg");
+          }
           if (state is AccountLoadedState) {
             SnackBar snackBar = SnackBar(
               content: Text(state.accountType.object.toString()),
@@ -343,6 +354,9 @@ class _SettingScreenState extends State<SettingScreen> {
                       physics: BouncingScrollPhysics(),
                       itemCount: Setting_Array.length,
                       itemBuilder: (BuildContext context, int index) {
+                        print("check module -${widget.module}");
+                        print(
+                            "check Alll value -${User_CompnyPageModule}--${getAssignedUsersOfCompanyPage?.object}");
                         if (index == 1 ||
                                 index == 4 ||
                                 index == 0 ||
@@ -352,12 +366,101 @@ class _SettingScreenState extends State<SettingScreen> {
                             ) {
                           return SizedBox();
                         }
-                        if (widget.module != 'COMPANY' && index == 12) {
+                        if (widget.module == false && index == 10) {
+                          return SizedBox();
+                        }
+                        if (User_CompnyPageModule == null &&
+                            getAssignedUsersOfCompanyPage?.object?.isEmpty ==
+                                true &&
+                            index == 9) {
                           return SizedBox();
                         }
                         return GestureDetector(
                           onTap: () {
-                            switch (index) {
+                            if (Setting_Array[index] == 'Change Password') {
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (context) {
+                                return ChangePasswordScreen(
+                                  isProfile: true,
+                                );
+                              }));
+                            } else if (Setting_Array[index] == 'Policies') {
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (context) {
+                                return PoliciesScreen();
+                              }));
+                            } else if (Setting_Array[index] ==
+                                'Invite Friends') {
+                              // Share.share(
+                              //     'https://play.google.com/store/apps/details?id=com.pds.app');
+
+                              _onShareXFileFromAssets(context);
+                              // Navigator.push(context,
+                              //     MaterialPageRoute(builder: (context) {
+                              //   return RoomDetailScreen();
+                              // }));
+                            } else if (Setting_Array[index] == 'Rate Us') {
+                              showDialog(
+                                  context: context,
+                                  builder: (_) => BlocProvider<RateUsCubit>(
+                                        create: (context) {
+                                          return RateUsCubit();
+                                        },
+                                        child: rateUSdialog(),
+                                      ));
+                            } else if (Setting_Array[index] ==
+                                'Delete Account') {
+                              showDialog(
+                                  context: context,
+                                  builder: (_) => BlocProvider<DeleteUserCubit>(
+                                        create: (context) {
+                                          return DeleteUserCubit();
+                                        },
+                                        child: DeleteUserdailog(),
+                                      ));
+                            } else if (Setting_Array[index] ==
+                                'Manage Company Page') {
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (context) {
+                                return ComapnyManageScreen();
+                              }));
+                            } else if (Setting_Array[index] ==
+                                "Public & Private Profile") {
+                            } else if (Setting_Array[index] == "Block User") {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) =>
+                                      const BlockedUserScreen()));
+                            } else if (Setting_Array[index] == "Log Out") {
+                              showDialog(
+                                  context: context,
+                                  builder: (_) => BlocProvider<LogOutCubit>(
+                                        create: (context) => LogOutCubit(),
+                                        child: LogOutdailog(),
+                                      ));
+                            } else if (Setting_Array[index] == "page Admin") {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => PageAdmin(
+                                      getAssignedUsersOfCompanyPage:
+                                          getAssignedUsersOfCompanyPage!,
+                                      companyPageUid: widget.userCompanyPageUid,
+                                    ),
+                                  ));
+                            }
+                            /* Setting_Array.forEach((element) {
+                              if (element == 'Change Password') {
+                                Navigator.push(context,
+                                    MaterialPageRoute(builder: (context) {
+                                  return ChangePasswordScreen(
+                                    isProfile: true,
+                                  );
+                                }));
+                              }else if(element == 'Policies'){
+
+                              }
+                            }); */
+                            /*  switch (index) {
                               /*  case 0:
                                     Navigator.push(context,
                                         MaterialPageRoute(builder: (context) {
@@ -517,7 +620,7 @@ class _SettingScreenState extends State<SettingScreen> {
                                     ); 
                                     break;  */
                               default:
-                            }
+                            } */
                           },
                           child: Padding(
                             padding: const EdgeInsets.only(
@@ -543,14 +646,15 @@ class _SettingScreenState extends State<SettingScreen> {
                                         child: Container(
                                           height: 25,
                                           width: 25,
-                                          child: index == 2
+                                          child: /* index == 2
                                               ? Image.asset(
                                                   "${SettingImage_Array[index]}",
                                                   color: Color(0xFF3F3F3F),
                                                 )
-                                              : Image.asset(
-                                                  "${SettingImage_Array[index]}",
-                                                ),
+                                              : */
+                                              Image.asset(
+                                            "${SettingImage_Array[index]}",
+                                          ),
                                         ),
                                       ),
                                       Text(
@@ -562,7 +666,7 @@ class _SettingScreenState extends State<SettingScreen> {
                                             fontWeight: FontWeight.w500),
                                       ),
                                       Spacer(),
-                                      index == 9
+                                      index == 11
                                           ? Padding(
                                               padding: const EdgeInsets.only(
                                                   right: 10),
@@ -643,6 +747,7 @@ class _SettingScreenState extends State<SettingScreen> {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     userStatus = await prefs.getString(PreferencesKey.userStatus);
     UserProfileOpen = await prefs.getBool(PreferencesKey.OpenProfile);
+    User_CompnyPageModule = prefs.getString(PreferencesKey.module1);
     if (userStatus != 'APPROVED') {
       rejcteReson = userStatus?.split('-').last;
     }
@@ -653,7 +758,12 @@ class _SettingScreenState extends State<SettingScreen> {
     }
     userStatus =
         userStatus != 'APPROVED' ? userStatus?.split('-').first : userStatus;
-
+    print("cjecldsd-${User_CompnyPageModule}");
+    if (User_CompnyPageModule != null) {
+      await BlocProvider.of<AccountCubit>(context)
+          .get_assigned_users_of_company_pageApi(
+              '${widget.userCompanyPageUid}', context);
+    }
     super.setState(() {});
   }
 

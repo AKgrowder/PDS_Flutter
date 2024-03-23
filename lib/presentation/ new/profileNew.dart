@@ -179,6 +179,7 @@ class _ProfileScreenState extends State<ProfileScreen>
   GlobalKey key = GlobalKey();
   GlobalKey blockKey = GlobalKey();
   bool isScrollingDown = false;
+  bool? soicalData;
 
   bool _show = true;
   int indexx = 0;
@@ -186,6 +187,7 @@ class _ProfileScreenState extends State<ProfileScreen>
   bool _isScrolledUp = false;
   bool scrolldown = false;
   bool isOpen = false;
+  bool isDataGetValue = false;
   void launchEmail(String emailAddress) async {
     final Uri emailLaunchUri = Uri(
       // scheme: 'Test',
@@ -312,6 +314,8 @@ class _ProfileScreenState extends State<ProfileScreen>
   savedataFuntion(String userId) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     User_Module = prefs.getString(PreferencesKey.module);
+    soicalData =
+        prefs.getBool(PreferencesKey.videoCallaudiocallcompnypagecreation);
     super.setState(() {});
 
     BlocProvider.of<NewProfileSCubit>(context).get_about_me(context, userId);
@@ -387,916 +391,1217 @@ class _ProfileScreenState extends State<ProfileScreen>
     var _height = MediaQuery.of(context).size.height;
     var _width = MediaQuery.of(context).size.width;
 
-    return NotificationListener<ScrollNotification>(
-      onNotification: (scrollNotification) {
-        if (scrollNotification is ScrollEndNotification) {
-          /* setState(() {
-            _isScrolledUp = false;
-          }); */
-        }
-        return false;
-      },
-      child: BlocConsumer<NewProfileSCubit, NewProfileSState>(
-          listener: (context, state) async {
-        if (state is NewProfileSErrorState) {
-          SnackBar snackBar = SnackBar(
-            content: Text(state.error),
-            backgroundColor: ColorConstant.primary_color,
-          );
-          ScaffoldMessenger.of(context).showSnackBar(snackBar);
-        }
-
-        if (state is AboutMeLoadedState1) {
-          print("this data i will get-->${state.aboutMe.object}");
-          if (state.aboutMe.object?.isNotEmpty == true) {
-            AbboutMeShow = false;
+    return Scaffold(
+      body: NotificationListener<ScrollNotification>(
+        onNotification: (scrollNotification) {
+          if (scrollNotification is ScrollEndNotification) {
+            /* setState(() {
+              _isScrolledUp = false;
+            }); */
           }
-          aboutMe.text = state.aboutMe.object.toString();
-        }
-        if (state is saveAllBlogModelLoadedState1) {
-          saveAllBlogModelData = state.saveAllBlogModelData;
-          SaveBlogCount = saveAllBlogModelData?.object?.length ?? 0;
-        }
-        if (state is NewProfileSLoadingState) {
-          Center(
-            child: Container(
-              margin: EdgeInsets.only(bottom: 100),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(20),
-                child: Image.asset(ImageConstant.loader,
-                    fit: BoxFit.cover, height: 100.0, width: 100),
-              ),
-            ),
-          );
-        }
-        if (state is FollowersClass) {
-          /*  SnackBar snackBar = SnackBar(
-            content: Text(state.followersClassModel.object![0].followerUid.toString()),
-            backgroundColor: ColorConstant.primary_color,
-          );
-          ScaffoldMessenger.of(context).showSnackBar(snackBar); */
-          followersClassModel1 = state.followersClassModel;
-        }
-        if (state is FollowersClass1) {
-          followersClassModel2 = state.followersClassModel1;
-        }
-        if (state is DMChatListLoadedState) {
-          Navigator.push(context, MaterialPageRoute(builder: (context) {
-            return DmScreen(
-              isBlock: NewProfileData?.object?.isBlock,
-              UserUID: "${NewProfileData?.object?.userUid}",
-              UserName: "${NewProfileData?.object?.userName}",
-              ChatInboxUid: state.DMChatList.object ?? "",
-              UserImage: "${NewProfileData?.object?.userProfilePic}",
-            );
-          }));
-        }
-        if (state is NewProfileSLoadedState) {
-          industryTypesArray = "";
-          ExpertiseData = "";
-          NewProfileData = state.PublicRoomData;
-          print("i check accountTyp--${NewProfileData?.object?.accountType}");
-          isDataGet = true;
-          print(NewProfileData?.object?.module);
-          BlocProvider.of<NewProfileSCubit>(context)
-              .GetAppPostAPI(context, "${NewProfileData?.object?.userUid}");
-
-          BlocProvider.of<NewProfileSCubit>(context)
-              .GetSavePostAPI(context, "${NewProfileData?.object?.userUid}");
-
-          BlocProvider.of<NewProfileSCubit>(context).GetPostCommetAPI(
-              context, "${NewProfileData?.object?.userUid}", "desc");
-          savedataFuntion(NewProfileData?.object?.userUid ?? '');
-
-          NewProfileData?.object?.industryTypes?.forEach((element) {
-            // industryTypesArray.add("${element.industryTypeName}");
-
-            if (industryTypesArray == "") {
-              industryTypesArray =
-                  "${industryTypesArray}${element.industryTypeName}";
-            } else {
-              industryTypesArray =
-                  "${industryTypesArray}, ${element.industryTypeName}";
-            }
-          });
-
-          NewProfileData?.object?.expertise?.forEach((element) {
-            if (ExpertiseData == "") {
-              ExpertiseData = "${element.expertiseName}";
-            } else {
-              ExpertiseData = "${element.expertiseName}";
-            }
-          });
-
-          // ExpertiseData
-
-          CompanyName.text = "${NewProfileData?.object?.companyName}";
-          jobprofileController.text = "${NewProfileData?.object?.jobProfile}";
-          IndustryType.text = industryTypesArray;
-
-          if (NewProfileData?.object?.userDocument != null) {
-            dopcument = NewProfileData?.object?.documentName;
-          } else {
-            dopcument = 'Upload Image';
-          }
-
-          priceContrller.text = "${NewProfileData?.object?.fees}";
-          Expertise.text = ExpertiseData;
-          if (state.PublicRoomData.object?.workingHours != null) {
-            workignStart = state.PublicRoomData.object?.workingHours
-                .toString()
-                .split(" to ")
-                .first;
-
-            start = workignStart?.split(' ')[0];
-            startAm = workignStart?.split(' ')[1];
-            workignend = state.PublicRoomData.object?.workingHours
-                .toString()
-                .split(" to ")
-                .last;
-            end = workignend?.split(' ')[0];
-            endAm = workignend?.split(' ')[1];
-          }
-          if (NewProfileData?.object?.isBlock == true) {
-            Blockuser = false;
-          } else {
-            Blockuser = true;
-          }
-        }
-        if (state is GetAppPostByUserLoadedState) {
-          videoUrls.clear();
-          print(state.GetAllPost);
-          GetAllPostData = state.GetAllPost;
-          UserProfilePostCount = GetAllPostData?.object?.length ?? 0;
-
-          if (UserProfilePostCount.isOdd) {
-            UserProfilePostCount = UserProfilePostCount + 1;
-            var PostCount = UserProfilePostCount / 2;
-            var aa = "${PostCount}";
-            print(
-                "PostCountPostCountPostCountPostCountPostCountPostCountPostCountPostCountPostCount : 1 :- ${PostCount}  :::::- ${UserProfilePostCount}");
-            print("sadasdsadasdsadasdsadasdsadasdsadasd : ------> ${aa}");
-
-            int? y = int.parse(aa.split('.')[0]);
-            print("sadasdsadasdsadasdsadasdsadasdsadasd : ------> ${y}");
-            FinalPostCount = y;
-            UserProfilePostCount = UserProfilePostCount - 1;
-            print(
-                "sadasdsadasdsadasdsadasdsadasdsadasd : ------> ${FinalPostCount}");
-          } else {
-            print(UserProfilePostCount);
-            var PostCount = UserProfilePostCount / 2;
-            print(
-                "PostCountPostCountPostCountPostCountPostCountPostCountPostCountPostCountPostCount : 2 :- ${PostCount}  :::::- ${UserProfilePostCount}");
-            var aa = "${PostCount}";
-            print("sadasdsadasdsadasdsadasdsadasdsadasd : ------> ${aa}");
-
-            int? y = int.parse(aa.split('.')[0]);
-            print("sadasdsadasdsadasdsadasdsadasdsadasd : ------> ${y}");
-
-            FinalPostCount = y;
-            print(
-                "sadasdsadasdsadasdsadasdsadasdsadasd : ------> ${FinalPostCount}");
-          }
-
-          GetAllPostData?.object?.forEach((element) {
-            if (element.postDataType == 'VIDEO') {
-              if (element.postData?.isNotEmpty == true) {
-                videoUrls.add(element.postData?.first ?? '');
-              }
-            } else if (element.repostOn?.postDataType == 'VIDEO') {
-              videoUrls.add(element.repostOn?.postData?.first ?? '');
-            } else {
-              videoUrls.add('');
-            }
-          });
-        }
-        if (state is GetUserPostCommetLoadedState) {
-          print(
-              "Get Comment Get Comment Get Comment Get Comment Get Comment Get Comment Get Comment ");
-          print(state.GetUserPostCommet);
-          GetUserPostCommetData = state.GetUserPostCommet;
-          CommentsPostCount = GetUserPostCommetData?.object?.length ?? 0;
-        }
-        if (state is GetSavePostLoadedState) {
-          GetSavePostData = state.GetSavePost;
-          SavePostCount = GetSavePostData?.object?.length ?? 0;
-          if (SavePostCount.isOdd) {
-            SavePostCount = SavePostCount + 1;
-            var PostCount = SavePostCount / 2;
-            var aa = "${PostCount}";
-            int? y = int.parse(aa.split('.')[0]);
-            FinalSavePostCount = y;
-            SavePostCount = SavePostCount - 1;
-          } else {
-            var PostCount = SavePostCount / 2;
-            var aa = "${PostCount}";
-            int? y = int.parse(aa.split('.')[0]);
-            FinalSavePostCount = y;
-          }
-        }
-        if (state is AboutMeLoadedState) {
-          isAbourtMe = true;
-          isUpDate = false;
-          print("dfgsfgdsfg-${isAbourtMe}");
-          SnackBar snackBar = SnackBar(
-            content: Text('Saved Successfully'),
-            backgroundColor: ColorConstant.primary_color,
-          );
-          ScaffoldMessenger.of(context).showSnackBar(snackBar);
-        }
-        if (state is PostLikeLoadedState) {
-          widget.ProfileNotification == true
-              ? BlocProvider.of<NewProfileSCubit>(context)
-                  .NewProfileSAPI(context, widget.User_ID, true)
-              : BlocProvider.of<NewProfileSCubit>(context)
-                  .NewProfileSAPI(context, widget.User_ID, false);
-          if (state.likePost.object != 'Post Liked Successfully' &&
-              state.likePost.object != 'Post Unliked Successfully') {
+          return false;
+        },
+        child: BlocConsumer<NewProfileSCubit, NewProfileSState>(
+            listener: (context, state) async {
+          if (state is NewProfileSErrorState) {
             SnackBar snackBar = SnackBar(
-              content: Text(state.likePost.object.toString()),
+              content: Text(state.error),
               backgroundColor: ColorConstant.primary_color,
             );
             ScaffoldMessenger.of(context).showSnackBar(snackBar);
           }
-        }
-        if (state is GetWorkExpereinceLoadedState) {
-          addWorkExperienceModel = state.addWorkExperienceModel;
-        }
-        if (state is UserTagLoadedState) {
-          userTagModel = state.userTagModel;
-          Navigator.push(context, MaterialPageRoute(builder: (context) {
-            return ProfileScreen(
-                User_ID: "${state.userTagModel.object}", isFollowing: "");
-          }));
 
-          // print("tagName -- ${tagName}");
-          print("user id -- ${state.userTagModel..object}");
-        }
-        if (state is SearchHistoryDataAddxtends) {
-          searchUserForInbox1 = state.searchUserForInbox;
-
-          /*  isTagData = true;
-            isHeshTegData = false; */
-          searchUserForInbox1?.object?.content?.forEach((element) {
-            Map<String, dynamic> dataSetup = {
-              'id': element.userUid,
-              'display': element.userName,
-              'photo': element.userProfilePic,
-            };
-
-            tageData.add(dataSetup);
-            List<Map<String, dynamic>> uniqueTageData = [];
-            Set<String> encounteredIds = Set<String>();
-            for (Map<String, dynamic> data in tageData) {
-              if (!encounteredIds.contains(data['id'])) {
-                // If the ID hasn't been encountered, add to the result list
-                uniqueTageData.add(data);
-
-                // Mark the ID as encountered
-                encounteredIds.add(data['id']);
-              }
-              tageData = uniqueTageData;
+          if (state is AboutMeLoadedState1) {
+            print("this data i will get-->${state.aboutMe.object}");
+            if (state.aboutMe.object?.isNotEmpty == true) {
+              AbboutMeShow = false;
             }
-            if (tageData.isNotEmpty == true) {
-              istageData = true;
-            }
-          });
-        }
-
-        if (state is GetAllHashtagState) {
-          getAllHashtag = state.getAllHashtag;
-
-          for (int i = 0;
-              i < (getAllHashtag?.object?.content?.length ?? 0);
-              i++) {
-            // getAllHashtag?.object?.content?[i].split('#').last;
-            Map<String, dynamic> dataSetup = {
-              'id': '${i}',
-              'display':
-                  '${getAllHashtag?.object?.content?[i].split('#').last}',
-              'style': TextStyle(color: Colors.blue)
-            };
-            heshTageData.add(dataSetup);
-            if (heshTageData.isNotEmpty == true) {
-              isHeshTegData = true;
-            }
-            print("check heshTageData -$heshTageData");
+            aboutMe.text = state.aboutMe.object.toString();
           }
-        }
-        if (state is DeletePostLoadedState) {
-          SnackBar snackBar = SnackBar(
-            content: Text(state.DeletePost.object.toString()),
-            backgroundColor: ColorConstant.primary_color,
-          );
-          ScaffoldMessenger.of(context).showSnackBar(snackBar);
-          BlocProvider.of<NewProfileSCubit>(context)
-              .GetAppPostAPI(context, "${NewProfileData?.object?.userUid}");
-        }
-        if (state is Getallcompenypagelodedstate) {
-          getallcompenypagemodel = state.getallcompenypagemodel;
-          userCompanyPageUid = getallcompenypagemodel?.object?.content
-              ?.firstWhere((element) => element.isSwitched == true)
-              .userCompanyPageUid;
-          print("userCompanyPageUiduserCompanyPageUid-${userCompanyPageUid}");
-        }
-      }, builder: (context, state) {
-        return DefaultTabController(
-            length: 4,
-            child: Scaffold(
-                body: isDataGet == false
-                    ? Center(
-                        child: Container(
-                          margin: EdgeInsets.only(bottom: 100),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(20),
-                            child: Image.asset(ImageConstant.loader,
-                                fit: BoxFit.cover, height: 100.0, width: 100),
-                          ),
+          if (state is saveAllBlogModelLoadedState1) {
+            saveAllBlogModelData = state.saveAllBlogModelData;
+            SaveBlogCount = saveAllBlogModelData?.object?.length ?? 0;
+          }
+          if (state is NewProfileSLoadingState) {
+            Center(
+              child: Container(
+                margin: EdgeInsets.only(bottom: 100),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(20),
+                  child: Image.asset(ImageConstant.loader,
+                      fit: BoxFit.cover, height: 100.0, width: 100),
+                ),
+              ),
+            );
+          }
+          if (state is FollowersClass) {
+            /*  SnackBar snackBar = SnackBar(
+              content: Text(state.followersClassModel.object![0].followerUid.toString()),
+              backgroundColor: ColorConstant.primary_color,
+            );
+            ScaffoldMessenger.of(context).showSnackBar(snackBar); */
+            followersClassModel1 = state.followersClassModel;
+          }
+          if (state is FollowersClass1) {
+            followersClassModel2 = state.followersClassModel1;
+          }
+          if (state is DMChatListLoadedState) {
+            Navigator.push(context, MaterialPageRoute(builder: (context) {
+              return DmScreen(
+                isBlock: NewProfileData?.object?.isBlock,
+                UserUID: "${NewProfileData?.object?.userUid}",
+                UserName: "${NewProfileData?.object?.userName}",
+                ChatInboxUid: state.DMChatList.object ?? "",
+                UserImage: "${NewProfileData?.object?.userProfilePic}",
+              );
+            }));
+          }
+          if (state is NewProfileSLoadedState) {
+            industryTypesArray = "";
+            ExpertiseData = "";
+            NewProfileData = state.PublicRoomData;
+            print("i check accountTyp--${NewProfileData?.object?.accountType}");
+            isDataGet = true;
+            print(NewProfileData?.object?.module);
+            BlocProvider.of<NewProfileSCubit>(context)
+                .GetAppPostAPI(context, "${NewProfileData?.object?.userUid}");
+
+            BlocProvider.of<NewProfileSCubit>(context)
+                .GetSavePostAPI(context, "${NewProfileData?.object?.userUid}");
+
+            BlocProvider.of<NewProfileSCubit>(context).GetPostCommetAPI(
+                context, "${NewProfileData?.object?.userUid}", "desc");
+            savedataFuntion(NewProfileData?.object?.userUid ?? '');
+
+            NewProfileData?.object?.industryTypes?.forEach((element) {
+              // industryTypesArray.add("${element.industryTypeName}");
+
+              if (industryTypesArray == "") {
+                industryTypesArray =
+                    "${industryTypesArray}${element.industryTypeName}";
+              } else {
+                industryTypesArray =
+                    "${industryTypesArray}, ${element.industryTypeName}";
+              }
+            });
+
+            NewProfileData?.object?.expertise?.forEach((element) {
+              if (ExpertiseData == "") {
+                ExpertiseData = "${element.expertiseName}";
+              } else {
+                ExpertiseData = "${element.expertiseName}";
+              }
+            });
+
+            // ExpertiseData
+
+            CompanyName.text = "${NewProfileData?.object?.companyName}";
+            jobprofileController.text = "${NewProfileData?.object?.jobProfile}";
+            IndustryType.text = industryTypesArray;
+
+            if (NewProfileData?.object?.userDocument != null) {
+              dopcument = NewProfileData?.object?.documentName;
+            } else {
+              dopcument = 'Upload Image';
+            }
+
+            priceContrller.text = "${NewProfileData?.object?.fees}";
+            Expertise.text = ExpertiseData;
+            if (state.PublicRoomData.object?.workingHours != null) {
+              workignStart = state.PublicRoomData.object?.workingHours
+                  .toString()
+                  .split(" to ")
+                  .first;
+
+              start = workignStart?.split(' ')[0];
+              startAm = workignStart?.split(' ')[1];
+              workignend = state.PublicRoomData.object?.workingHours
+                  .toString()
+                  .split(" to ")
+                  .last;
+              end = workignend?.split(' ')[0];
+              endAm = workignend?.split(' ')[1];
+            }
+            if (NewProfileData?.object?.isBlock == true) {
+              Blockuser = false;
+            } else {
+              Blockuser = true;
+            }
+          }
+          if (state is GetAppPostByUserLoadedState) {
+            videoUrls.clear();
+            print(state.GetAllPost);
+            GetAllPostData = state.GetAllPost;
+            UserProfilePostCount = GetAllPostData?.object?.length ?? 0;
+
+            if (UserProfilePostCount.isOdd) {
+              UserProfilePostCount = UserProfilePostCount + 1;
+              var PostCount = UserProfilePostCount / 2;
+              var aa = "${PostCount}";
+              print(
+                  "PostCountPostCountPostCountPostCountPostCountPostCountPostCountPostCountPostCount : 1 :- ${PostCount}  :::::- ${UserProfilePostCount}");
+              print("sadasdsadasdsadasdsadasdsadasdsadasd : ------> ${aa}");
+
+              int? y = int.parse(aa.split('.')[0]);
+              print("sadasdsadasdsadasdsadasdsadasdsadasd : ------> ${y}");
+              FinalPostCount = y;
+              UserProfilePostCount = UserProfilePostCount - 1;
+              print(
+                  "sadasdsadasdsadasdsadasdsadasdsadasd : ------> ${FinalPostCount}");
+            } else {
+              print(UserProfilePostCount);
+              var PostCount = UserProfilePostCount / 2;
+              print(
+                  "PostCountPostCountPostCountPostCountPostCountPostCountPostCountPostCountPostCount : 2 :- ${PostCount}  :::::- ${UserProfilePostCount}");
+              var aa = "${PostCount}";
+              print("sadasdsadasdsadasdsadasdsadasdsadasd : ------> ${aa}");
+
+              int? y = int.parse(aa.split('.')[0]);
+              print("sadasdsadasdsadasdsadasdsadasdsadasd : ------> ${y}");
+
+              FinalPostCount = y;
+              print(
+                  "sadasdsadasdsadasdsadasdsadasdsadasd : ------> ${FinalPostCount}");
+            }
+
+            GetAllPostData?.object?.forEach((element) {
+              if (element.postDataType == 'VIDEO') {
+                if (element.postData?.isNotEmpty == true) {
+                  videoUrls.add(element.postData?.first ?? '');
+                }
+              } else if (element.repostOn?.postDataType == 'VIDEO') {
+                videoUrls.add(element.repostOn?.postData?.first ?? '');
+              } else {
+                videoUrls.add('');
+              }
+            });
+          }
+          if (state is GetUserPostCommetLoadedState) {
+            print(
+                "Get Comment Get Comment Get Comment Get Comment Get Comment Get Comment Get Comment ");
+            print(state.GetUserPostCommet);
+            GetUserPostCommetData = state.GetUserPostCommet;
+            CommentsPostCount = GetUserPostCommetData?.object?.length ?? 0;
+            isDataGetValue = true;
+          }
+          if (state is GetSavePostLoadedState) {
+            GetSavePostData = state.GetSavePost;
+            SavePostCount = GetSavePostData?.object?.length ?? 0;
+            if (SavePostCount.isOdd) {
+              SavePostCount = SavePostCount + 1;
+              var PostCount = SavePostCount / 2;
+              var aa = "${PostCount}";
+              int? y = int.parse(aa.split('.')[0]);
+              FinalSavePostCount = y;
+              SavePostCount = SavePostCount - 1;
+            } else {
+              var PostCount = SavePostCount / 2;
+              var aa = "${PostCount}";
+              int? y = int.parse(aa.split('.')[0]);
+              FinalSavePostCount = y;
+            }
+          }
+          if (state is AboutMeLoadedState) {
+            isAbourtMe = true;
+            isUpDate = false;
+            print("dfgsfgdsfg-${isAbourtMe}");
+            SnackBar snackBar = SnackBar(
+              content: Text('Saved Successfully'),
+              backgroundColor: ColorConstant.primary_color,
+            );
+            ScaffoldMessenger.of(context).showSnackBar(snackBar);
+          }
+          if (state is PostLikeLoadedState) {
+            widget.ProfileNotification == true
+                ? BlocProvider.of<NewProfileSCubit>(context)
+                    .NewProfileSAPI(context, widget.User_ID, true)
+                : BlocProvider.of<NewProfileSCubit>(context)
+                    .NewProfileSAPI(context, widget.User_ID, false);
+            if (state.likePost.object != 'Post Liked Successfully' &&
+                state.likePost.object != 'Post Unliked Successfully') {
+              SnackBar snackBar = SnackBar(
+                content: Text(state.likePost.object.toString()),
+                backgroundColor: ColorConstant.primary_color,
+              );
+              ScaffoldMessenger.of(context).showSnackBar(snackBar);
+            }
+          }
+          if (state is GetWorkExpereinceLoadedState) {
+            addWorkExperienceModel = state.addWorkExperienceModel;
+          }
+          if (state is UserTagLoadedState) {
+            userTagModel = state.userTagModel;
+            Navigator.push(context, MaterialPageRoute(builder: (context) {
+              return ProfileScreen(
+                  User_ID: "${state.userTagModel.object}", isFollowing: "");
+            }));
+
+            // print("tagName -- ${tagName}");
+            print("user id -- ${state.userTagModel..object}");
+          }
+          if (state is SearchHistoryDataAddxtends) {
+            searchUserForInbox1 = state.searchUserForInbox;
+
+            /*  isTagData = true;
+              isHeshTegData = false; */
+            searchUserForInbox1?.object?.content?.forEach((element) {
+              Map<String, dynamic> dataSetup = {
+                'id': element.userUid,
+                'display': element.userName,
+                'photo': element.userProfilePic,
+              };
+
+              tageData.add(dataSetup);
+              List<Map<String, dynamic>> uniqueTageData = [];
+              Set<String> encounteredIds = Set<String>();
+              for (Map<String, dynamic> data in tageData) {
+                if (!encounteredIds.contains(data['id'])) {
+                  // If the ID hasn't been encountered, add to the result list
+                  uniqueTageData.add(data);
+
+                  // Mark the ID as encountered
+                  encounteredIds.add(data['id']);
+                }
+                tageData = uniqueTageData;
+              }
+              if (tageData.isNotEmpty == true) {
+                istageData = true;
+              }
+            });
+          }
+
+          if (state is GetAllHashtagState) {
+            getAllHashtag = state.getAllHashtag;
+
+            for (int i = 0;
+                i < (getAllHashtag?.object?.content?.length ?? 0);
+                i++) {
+              // getAllHashtag?.object?.content?[i].split('#').last;
+              Map<String, dynamic> dataSetup = {
+                'id': '${i}',
+                'display':
+                    '${getAllHashtag?.object?.content?[i].split('#').last}',
+                'style': TextStyle(color: Colors.blue)
+              };
+              heshTageData.add(dataSetup);
+              if (heshTageData.isNotEmpty == true) {
+                isHeshTegData = true;
+              }
+              print("check heshTageData -$heshTageData");
+            }
+          }
+          if (state is DeletePostLoadedState) {
+            SnackBar snackBar = SnackBar(
+              content: Text(state.DeletePost.object.toString()),
+              backgroundColor: ColorConstant.primary_color,
+            );
+            ScaffoldMessenger.of(context).showSnackBar(snackBar);
+            BlocProvider.of<NewProfileSCubit>(context)
+                .GetAppPostAPI(context, "${NewProfileData?.object?.userUid}");
+          }
+          if (state is Getallcompenypagelodedstate) {
+            getallcompenypagemodel = state.getallcompenypagemodel;
+            userCompanyPageUid = getallcompenypagemodel?.object?.content
+                ?.firstWhere((element) => element.isSwitched == true)
+                .userCompanyPageUid;
+            print("userCompanyPageUiduserCompanyPageUid-${userCompanyPageUid}");
+          }
+        }, builder: (context, state) {
+          return DefaultTabController(
+              length: 4,
+              child: isDataGet == false
+                  ? Center(
+                      child: Container(
+                        margin: EdgeInsets.only(bottom: 100),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(20),
+                          child: Image.asset(ImageConstant.loader,
+                              fit: BoxFit.cover, height: 100.0, width: 100),
                         ),
-                      )
-                    : CustomScrollView(
-                        controller: _scrollController,
-                        slivers: <Widget>[
-                          SliverAppBar(
-                            toolbarHeight: _height / 10,
-                            backgroundColor: Colors.transparent,
-                            leading: SizedBox(),
-                            expandedHeight: _height / 3,
-                            floating: false,
-                            pinned: false,
-                            snap: false,
-                            stretch: true,
-                            elevation: 0,
-                            flexibleSpace: LayoutBuilder(
-                              builder: (BuildContext context,
-                                  BoxConstraints constraints) {
-                                return FlexibleSpaceBar(
-                                  centerTitle: true,
-                                  expandedTitleScale: 1,
-                                  title: Container(
-                                    height: _height / 2.5,
-                                    // width: _width,
-                                    child: Stack(
-                                      children: [
-                                        GestureDetector(
-                                          onTap: () {
-                                            if (NewProfileData
-                                                        ?.object
-                                                        ?.userBackgroundPic
-                                                        ?.isNotEmpty ==
-                                                    true &&
-                                                NewProfileData?.object
-                                                        ?.userBackgroundPic !=
-                                                    '') {
-                                              Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
+                      ),
+                    )
+                  : CustomScrollView(
+                      controller: _scrollController,
+                      slivers: <Widget>[
+                        SliverAppBar(
+                          toolbarHeight: _height / 10,
+                          backgroundColor: Colors.transparent,
+                          leading: SizedBox(),
+                          expandedHeight: _height / 3,
+                          floating: false,
+                          pinned: false,
+                          snap: false,
+                          stretch: true,
+                          elevation: 0,
+                          flexibleSpace: LayoutBuilder(
+                            builder: (BuildContext context,
+                                BoxConstraints constraints) {
+                              return FlexibleSpaceBar(
+                                centerTitle: true,
+                                expandedTitleScale: 1,
+                                title: Container(
+                                  height: _height / 2.5,
+                                  // width: _width,
+                                  child: Stack(
+                                    children: [
+                                      GestureDetector(
+                                        onTap: () {
+                                          if (NewProfileData
+                                                      ?.object
+                                                      ?.userBackgroundPic
+                                                      ?.isNotEmpty ==
+                                                  true &&
+                                              NewProfileData?.object
+                                                      ?.userBackgroundPic !=
+                                                  '') {
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      ProfileandDocumentScreen(
+                                                    path: NewProfileData?.object
+                                                        ?.userBackgroundPic,
+                                                    title: "",
+                                                  ),
+                                                ));
+                                          } else {
+                                            Navigator.of(context).push(
+                                                MaterialPageRoute(
                                                     builder: (context) =>
                                                         ProfileandDocumentScreen(
-                                                      path: NewProfileData
-                                                          ?.object
-                                                          ?.userBackgroundPic,
-                                                      title: "",
-                                                    ),
-                                                  ));
-                                            } else {
-                                              Navigator.of(context).push(
-                                                  MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          ProfileandDocumentScreen(
-                                                            path:
-                                                                'https://inpackaging-images.s3.ap-south-1.amazonaws.com/misc/InPackaging_Logo.png',
-                                                            title: '',
-                                                          )));
-                                            }
-                                          },
-                                          child: Container(
-                                            color: Colors.white,
-                                            height: _height / 3.4,
-                                            width: _width,
-                                            child: NewProfileData?.object
-                                                            ?.userBackgroundPic ==
-                                                        null ||
-                                                    NewProfileData?.object
-                                                            ?.userBackgroundPic ==
-                                                        ''
-                                                ? Padding(
-                                                    padding:
-                                                        const EdgeInsets.all(
-                                                            8.0),
-                                                    child: CustomImageView(
-                                                      svgPath: ImageConstant
-                                                          .splashImage,
-                                                      /* fit: BoxFit.fill, */
-                                                      radius: BorderRadius.only(
-                                                          bottomRight:
-                                                              Radius.circular(
-                                                                  20),
-                                                          bottomLeft:
-                                                              Radius.circular(
-                                                                  20)),
-                                                    ),
-                                                  )
-                                                : CustomImageView(
-                                                    url:
-                                                        "${NewProfileData?.object?.userBackgroundPic}",
-                                                    fit: BoxFit.cover,
+                                                          path:
+                                                              'https://inpackaging-images.s3.ap-south-1.amazonaws.com/misc/InPackaging_Logo.png',
+                                                          title: '',
+                                                        )));
+                                          }
+                                        },
+                                        child: Container(
+                                          color: Colors.white,
+                                          height: _height / 3.4,
+                                          width: _width,
+                                          child: NewProfileData?.object
+                                                          ?.userBackgroundPic ==
+                                                      null ||
+                                                  NewProfileData?.object
+                                                          ?.userBackgroundPic ==
+                                                      ''
+                                              ? Padding(
+                                                  padding:
+                                                      const EdgeInsets.all(8.0),
+                                                  child: CustomImageView(
+                                                    svgPath: ImageConstant
+                                                        .splashImage,
+                                                    /* fit: BoxFit.fill, */
                                                     radius: BorderRadius.only(
                                                         bottomRight:
                                                             Radius.circular(20),
                                                         bottomLeft:
-                                                            Radius.circular(20))
-                                                    // BorderRadius.circular(25),
-                                                    ),
-                                          ),
+                                                            Radius.circular(
+                                                                20)),
+                                                  ),
+                                                )
+                                              : CustomImageView(
+                                                  url:
+                                                      "${NewProfileData?.object?.userBackgroundPic}",
+                                                  fit: BoxFit.cover,
+                                                  radius: BorderRadius.only(
+                                                      bottomRight:
+                                                          Radius.circular(20),
+                                                      bottomLeft:
+                                                          Radius.circular(20))
+                                                  // BorderRadius.circular(25),
+                                                  ),
                                         ),
-                                        _isScrolledUp == false
-                                            ? Padding(
-                                                padding: EdgeInsets.only(
-                                                    top: 55, left: 16),
+                                      ),
+                                      _isScrolledUp == false
+                                          ? Padding(
+                                              padding: EdgeInsets.only(
+                                                  top: 55, left: 16),
+                                              child: GestureDetector(
+                                                onTap: () {
+                                                  if (widget
+                                                          .Screen?.isNotEmpty ==
+                                                      true) {
+                                                    Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              NewBottomBar(
+                                                                  buttomIndex:
+                                                                      0),
+                                                        ));
+                                                  } else {
+                                                    Navigator.pop(context);
+                                                  }
+                                                },
+                                                child: Container(
+                                                  height: 30,
+                                                  width: 30,
+                                                  color: Color.fromRGBO(
+                                                      255, 255, 255, 0.3),
+                                                  child: Center(
+                                                    child: Image.asset(
+                                                      ImageConstant.backArrow,
+                                                      fit: BoxFit.fill,
+                                                      height: 25,
+                                                      width: 25,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            )
+                                          : SizedBox(),
+                                      Align(
+                                        alignment: Alignment.bottomCenter,
+                                        child: Stack(
+                                          children: [
+                                            GestureDetector(
+                                              onTap: () {
+                                                print("frgfgdfggdfgdfhghfdgh");
+                                                if (NewProfileData
+                                                            ?.object
+                                                            ?.userProfilePic
+                                                            ?.isNotEmpty ==
+                                                        true &&
+                                                    NewProfileData?.object
+                                                            ?.userProfilePic !=
+                                                        '') {
+                                                  Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            ProfileandDocumentScreen(
+                                                          path: NewProfileData
+                                                              ?.object
+                                                              ?.userProfilePic,
+                                                          title: "",
+                                                        ),
+                                                      ));
+                                                } else {
+                                                  Navigator.of(context)
+                                                      .push(MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        /* ProfileandDocumentScreen(
+                                                                    path:
+                                                                        'https://inpackaging-images.s3.ap-south-1.amazonaws.com/misc/InPackaging_Logo.png',
+                                                                    title: '',
+                                                                  ) */
+
+                                                        ProfilePage(
+                                                      image: ImageConstant
+                                                          .tomcruse,
+                                                    ),
+                                                  ));
+                                                }
+                                              },
+                                              child: Container(
+                                                height: 150,
+                                                width: 150,
+                                                decoration: BoxDecoration(
+                                                    shape: BoxShape.circle,
+                                                    color: Colors.white),
+                                                child: Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            4.0),
+                                                    child: NewProfileData
+                                                                    ?.object
+                                                                    ?.userProfilePic ==
+                                                                null ||
+                                                            NewProfileData
+                                                                    ?.object
+                                                                    ?.userProfilePic ==
+                                                                ''
+                                                        ? CircleAvatar(
+                                                            backgroundColor:
+                                                                Colors.white,
+                                                            backgroundImage:
+                                                                AssetImage(
+                                                              ImageConstant
+                                                                  .tomcruse,
+                                                            ),
+                                                            radius: 25,
+                                                          )
+                                                        /* CustomImageView(
+                                                          imagePath: ImageConstant
+                                                              .tomcruse,
+                                                               
+                                                          radius:
+                                                              BorderRadius.all(
+                                                            Radius.circular(20),
+                                                          ),
+                                                        ) */
+                                                        : CircleAvatar(
+                                                            backgroundColor:
+                                                                Colors.white,
+                                                            backgroundImage:
+                                                                NetworkImage(
+                                                                    "${NewProfileData?.object?.userProfilePic}"),
+                                                            radius: 25,
+                                                          )),
+                                              ),
+                                            ),
+                                            if (getallcompenypagemodel?.object
+                                                        ?.content?.isNotEmpty ==
+                                                    true &&
+                                                getallcompenypagemodel?.object
+                                                        ?.content?.length !=
+                                                    1 &&
+                                                soicalData == true)
+                                              Positioned(
+                                                bottom: 5,
+                                                right: -0,
                                                 child: GestureDetector(
                                                   onTap: () {
-                                                    if (widget.Screen
-                                                            ?.isNotEmpty ==
-                                                        true) {
-                                                      Navigator.push(
+                                                    showProfileSwitchBottomSheet(
+                                                        context,
+                                                        getallcompenypagemodel!,
+                                                        '${User_ID}');
+                                                    /* _showPopupMenuSwitchAccount(
+                                                          details.globalPosition,
                                                           context,
-                                                          MaterialPageRoute(
-                                                            builder: (context) =>
-                                                                NewBottomBar(
-                                                                    buttomIndex:
-                                                                        0),
-                                                          ));
-                                                    } else {
-                                                      Navigator.pop(context);
-                                                    }
+                                                        ); */
                                                   },
                                                   child: Container(
+                                                      height: 40,
+                                                      width: 40,
+                                                      decoration: BoxDecoration(
+                                                          shape:
+                                                              BoxShape.circle,
+                                                          color: ColorConstant
+                                                              .primaryLight_color),
+                                                      child: Center(
+                                                        child: Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                  .all(8.0),
+                                                          child: Image.asset(
+                                                            ImageConstant
+                                                                .switchAccount,
+                                                            color: ColorConstant
+                                                                .primary_color,
+                                                          ),
+                                                        ),
+                                                      )),
+                                                ),
+                                              )
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                        SliverToBoxAdapter(
+                          child: Column(
+                            children: [
+                              User_Module == "EMPLOYEE" &&
+                                      NewProfileData?.object?.approvalStatus ==
+                                          "PARTIALLY_REGISTERED"
+                                  ? Padding(
+                                      padding: const EdgeInsets.only(top: 15),
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Flexible(
+                                            child: Container(
+                                              height: 30,
+                                              decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(20),
+                                                color: Color(0xffD5EED5),
+                                              ),
+                                              child: Padding(
+                                                padding: const EdgeInsets.only(
+                                                    left: 15, right: 15),
+                                                child: Row(
+                                                  mainAxisSize:
+                                                      MainAxisSize.min,
+                                                  children: [
+                                                    Container(
+                                                        height: 10,
+                                                        width: 10,
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          shape:
+                                                              BoxShape.circle,
+                                                          color:
+                                                              Color(0xff019801),
+                                                        )),
+                                                    SizedBox(
+                                                      width: 10,
+                                                    ),
+                                                    Text(
+                                                      "Profile APPROVED",
+                                                      style: TextStyle(
+                                                          fontSize: 15,
+                                                          fontWeight:
+                                                              FontWeight.w600),
+                                                    )
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    )
+                                  : User_ID == NewProfileData?.object?.userUid
+                                      ? Padding(
+                                          padding: EdgeInsets.only(
+                                              top: User_CompnyPageModule == null
+                                                  ? 15
+                                                  : 0),
+                                          child: Row(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              if (User_CompnyPageModule == null)
+                                                Flexible(
+                                                  child: Container(
                                                     height: 30,
-                                                    width: 30,
-                                                    color: Color.fromRGBO(
-                                                        255, 255, 255, 0.3),
-                                                    child: Center(
-                                                      child: Image.asset(
-                                                        ImageConstant.backArrow,
-                                                        fit: BoxFit.fill,
-                                                        height: 25,
-                                                        width: 25,
+                                                    decoration: BoxDecoration(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              20),
+                                                      color: NewProfileData
+                                                                  ?.object
+                                                                  ?.approvalStatus ==
+                                                              "PARTIALLY_REGISTERED"
+                                                          ? Color(0xffB6D9EC)
+                                                          : NewProfileData
+                                                                      ?.object
+                                                                      ?.approvalStatus ==
+                                                                  "PENDING"
+                                                              ? Color(
+                                                                  0xffFFDBA8)
+                                                              : NewProfileData
+                                                                          ?.object
+                                                                          ?.approvalStatus ==
+                                                                      "APPROVED"
+                                                                  ? Color(
+                                                                      0xffD5EED5)
+                                                                  : Color(
+                                                                      0xffFFE0E1),
+                                                    ),
+                                                    child: Padding(
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                              left: 15,
+                                                              right: 15),
+                                                      child: Row(
+                                                        mainAxisSize:
+                                                            MainAxisSize.min,
+                                                        children: [
+                                                          Container(
+                                                            height: 10,
+                                                            width: 10,
+                                                            decoration: BoxDecoration(
+                                                                shape: BoxShape.circle,
+                                                                color: NewProfileData?.object?.approvalStatus == "PARTIALLY_REGISTERED"
+                                                                    ? Color(0xff1A94D7)
+                                                                    : NewProfileData?.object?.approvalStatus == "PENDING"
+                                                                        ? Color(0xffC28432)
+                                                                        : NewProfileData?.object?.approvalStatus == "APPROVED"
+                                                                            ? Color(0xff019801)
+                                                                            : Color(0xffFF000B)),
+                                                          ),
+                                                          SizedBox(
+                                                            width: 10,
+                                                          ),
+                                                          Text(
+                                                            "Profile ${NewProfileData?.object?.approvalStatus}",
+                                                            style: TextStyle(
+                                                                color: NewProfileData
+                                                                            ?.object
+                                                                            ?.approvalStatus ==
+                                                                        "PARTIALLY_REGISTERED"
+                                                                    ? Color(
+                                                                        0xff1A94D7)
+                                                                    : NewProfileData?.object?.approvalStatus ==
+                                                                            "PENDING"
+                                                                        ? Color(
+                                                                            0xffC28432)
+                                                                        : NewProfileData?.object?.approvalStatus ==
+                                                                                "APPROVED"
+                                                                            ? Color(
+                                                                                0xff019801)
+                                                                            : Color(
+                                                                                0xffFF000B),
+                                                                fontSize: 15,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w600),
+                                                          )
+                                                        ],
                                                       ),
+                                                    ),
+                                                  ),
+                                                ),
+                                            ],
+                                          ),
+                                        )
+                                      : SizedBox(),
+                              Padding(
+                                padding: EdgeInsets.only(
+                                    top:
+                                        User_CompnyPageModule == null ? 20 : 0),
+                                child: Center(
+                                  child: Text(
+                                    '${User_CompnyPageModule == null ? NewProfileData?.object?.name : NewProfileData?.object?.companyName}',
+                                    style: TextStyle(
+                                        fontSize: 26,
+                                        fontFamily: "outfit",
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                      left: 0,
+                                    ),
+                                    child: Text(
+                                      User_CompnyPageModule == null
+                                          ? '@${NewProfileData?.object?.userName}'
+                                          : '${NewProfileData?.object?.companyPageType}',
+                                      style: TextStyle(
+                                          fontSize: 18,
+                                          fontFamily: "outfit",
+                                          fontWeight: FontWeight.bold,
+                                          color: Color(0xff444444)),
+                                    ),
+                                  ),
+                                  NewProfileData?.object?.approvalStatus ==
+                                              'PENDING' ||
+                                          NewProfileData
+                                                  ?.object?.approvalStatus ==
+                                              'REJECTED'
+                                      ? SizedBox()
+                                      : NewProfileData?.object?.module ==
+                                              "EXPERT"
+                                          ? Padding(
+                                              padding: const EdgeInsets.only(
+                                                  bottom: 4, left: 3),
+                                              child: Image.asset(
+                                                ImageConstant.Star,
+                                                height: 18,
+                                              ),
+                                            )
+                                          : SizedBox()
+                                ],
+                              ),
+
+                              SizedBox(
+                                height: 10,
+                              ),
+                              User_ID == widget.User_ID
+                                  ? Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        GestureDetector(
+                                          onTap: () {
+                                            /* Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          ShowProfileScreen(),
+                                                    )); */
+                                            Navigator.push(context,
+                                                MaterialPageRoute(
+                                                    builder: (context) {
+                                              return MultiBlocProvider(
+                                                  providers: [
+                                                    BlocProvider<
+                                                        MyAccountCubit>(
+                                                      create: (context) =>
+                                                          MyAccountCubit(),
+                                                    ),
+                                                  ],
+                                                  child: EditProfileScreen(
+                                                    newProfileData:
+                                                        NewProfileData,
+                                                  ));
+                                            })).then((value) => widget
+                                                        .ProfileNotification ==
+                                                    true
+                                                ? BlocProvider.of<NewProfileSCubit>(context)
+                                                    .NewProfileSAPI(context,
+                                                        widget.User_ID, true)
+                                                : BlocProvider.of<NewProfileSCubit>(context)
+                                                    .NewProfileSAPI(context,
+                                                        widget.User_ID, false));
+                                          },
+                                          child: Container(
+                                            alignment: Alignment.center,
+                                            height: 45,
+                                            width: _width / 2.6,
+                                            decoration: BoxDecoration(
+                                                color: Colors.white,
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
+                                                border: Border.all(
+                                                  color: ColorConstant
+                                                      .primary_color,
+                                                )),
+                                            child: Text(
+                                              'View Profile',
+                                              maxLines: 1,
+                                              style: TextStyle(
+                                                  fontFamily: "outfit",
+                                                  fontSize: 18,
+                                                  color: ColorConstant
+                                                      .primary_color,
+                                                  fontWeight: FontWeight.w500),
+                                            ),
+                                          ),
+                                        ),
+                                        GestureDetector(
+                                          onTap: () {
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        SettingScreen(
+                                                          accountType:
+                                                              NewProfileData
+                                                                      ?.object
+                                                                      ?.accountType ??
+                                                                  '',
+                                                          module: NewProfileData?.object?.module == 'COMPANY' &&
+                                                                  NewProfileData
+                                                                          ?.object
+                                                                          ?.approvalStatus !=
+                                                                      "PENDING" &&
+                                                                  NewProfileData
+                                                                          ?.object
+                                                                          ?.approvalStatus !=
+                                                                      "REJECTED"
+                                                              ? true
+                                                              : false,
+                                                          userCompanyPageUid:
+                                                              userCompanyPageUid,
+                                                        ))).then((value) {
+                                              widget.ProfileNotification == true
+                                                  ? BlocProvider.of<
+                                                              NewProfileSCubit>(
+                                                          context)
+                                                      .NewProfileSAPI(context,
+                                                          widget.User_ID, true)
+                                                  : BlocProvider.of<
+                                                              NewProfileSCubit>(
+                                                          context)
+                                                      .NewProfileSAPI(
+                                                          context,
+                                                          widget.User_ID,
+                                                          false);
+                                              BlocProvider.of<NewProfileSCubit>(
+                                                      context)
+                                                  .getallcompenypagee(context);
+                                            });
+                                          },
+                                          child: Container(
+                                            margin: EdgeInsets.only(left: 10),
+                                            height: 45,
+                                            width: 50,
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                              color:
+                                                  ColorConstant.primary_color,
+                                            ),
+                                            child: Icon(
+                                              Icons.settings,
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    )
+                                  : Row(
+                                      children: [
+                                        Spacer(),
+                                        widget.isFollowing == true
+                                            ? Container(
+                                                alignment: Alignment.center,
+                                                height: 45,
+                                                width: _width / 3,
+                                                decoration: BoxDecoration(
+                                                  color: ColorConstant
+                                                      .primary_color,
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
+                                                ),
+                                                child: Text(
+                                                  'Following',
+                                                  style: TextStyle(
+                                                      fontFamily: "outfit",
+                                                      fontSize: 18,
+                                                      color: Colors.white,
+                                                      fontWeight:
+                                                          FontWeight.w500),
+                                                ),
+                                              )
+                                            : NewProfileData?.object?.isBlock ==
+                                                    true
+                                                ? GestureDetector(
+                                                    /* key: blockKey,
+                                                onTap: () {
+                                                  showPopupMenuBlock(
+                                                      context,
+                                                      NewProfileData
+                                                          ?.object?.userUid,
+                                                      NewProfileData
+                                                          ?.object?.name,
+                                                      blockKey);
+                                                }, */
+
+                                                    child: Container(
+                                                      alignment:
+                                                          Alignment.center,
+                                                      height: 45,
+                                                      width: _width / 3,
+                                                      decoration: BoxDecoration(
+                                                        color: ColorConstant
+                                                            .primary_color,
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(10),
+                                                      ),
+                                                      child: Text(
+                                                        'Unblock',
+                                                        style: TextStyle(
+                                                            fontFamily:
+                                                                "outfit",
+                                                            fontSize: 18,
+                                                            color: Colors.white,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .w500),
+                                                      ),
+                                                    ),
+                                                  )
+                                                : GestureDetector(
+                                                    onTap: () {
+                                                      BlocProvider.of<
+                                                                  NewProfileSCubit>(
+                                                              context)
+                                                          .followWIngMethod(
+                                                              NewProfileData
+                                                                  ?.object
+                                                                  ?.userUid
+                                                                  .toString(),
+                                                              context);
+                                                      // print(${name[0].toUpperCase()}${name.substring(1).toLowerCase()});
+                                                    },
+                                                    child: Container(
+                                                      alignment:
+                                                          Alignment.center,
+                                                      height: 45,
+                                                      width: _width / 3,
+                                                      decoration: BoxDecoration(
+                                                        color: ColorConstant
+                                                            .primary_color,
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(10),
+                                                      ),
+                                                      child: Text(
+                                                        '${NewProfileData?.object?.isFollowing?.toString()[0].toUpperCase()}${NewProfileData?.object?.isFollowing?.toString().substring(1).toLowerCase()}',
+                                                        style: TextStyle(
+                                                            fontFamily:
+                                                                "outfit",
+                                                            fontSize: 18,
+                                                            color: Colors.white,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .w500),
+                                                      ),
+                                                    ),
+                                                  ),
+                                        NewProfileData?.object?.isFollowing ==
+                                                    "FOLLOWING" ||
+                                                NewProfileData
+                                                        ?.object?.accountType ==
+                                                    "PUBLIC"
+                                            ? Padding(
+                                                padding: const EdgeInsets.only(
+                                                    left: 10),
+                                                child: GestureDetector(
+                                                  onTap: () {
+                                                    BlocProvider.of<
+                                                                NewProfileSCubit>(
+                                                            context)
+                                                        .DMChatListm(
+                                                            "${NewProfileData?.object?.userUid}",
+                                                            context);
+                                                  },
+                                                  child: Container(
+                                                    height: 40,
+                                                    width: 40,
+                                                    decoration: BoxDecoration(
+                                                      color: ColorConstant
+                                                          .primary_color,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              10),
+                                                    ),
+                                                    child: Center(
+                                                      child: CustomImageView(
+                                                          height: 20,
+                                                          width: 20,
+                                                          imagePath:
+                                                              ImageConstant
+                                                                  .chat),
                                                     ),
                                                   ),
                                                 ),
                                               )
                                             : SizedBox(),
-                                        Align(
-                                          alignment: Alignment.bottomCenter,
-                                          child: Stack(
-                                            children: [
-                                              GestureDetector(
-                                                onTap: () {
-                                                  print(
-                                                      "frgfgdfggdfgdfhghfdgh");
-                                                  if (NewProfileData
-                                                              ?.object
-                                                              ?.userProfilePic
-                                                              ?.isNotEmpty ==
-                                                          true &&
-                                                      NewProfileData?.object
-                                                              ?.userProfilePic !=
-                                                          '') {
-                                                    Navigator.push(
-                                                        context,
-                                                        MaterialPageRoute(
-                                                          builder: (context) =>
-                                                              ProfileandDocumentScreen(
-                                                            path: NewProfileData
-                                                                ?.object
-                                                                ?.userProfilePic,
-                                                            title: "",
-                                                          ),
-                                                        ));
-                                                  } else {
-                                                    Navigator.of(context)
-                                                        .push(MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          /* ProfileandDocumentScreen(
-                                                                  path:
-                                                                      'https://inpackaging-images.s3.ap-south-1.amazonaws.com/misc/InPackaging_Logo.png',
-                                                                  title: '',
-                                                                ) */
-
-                                                          ProfilePage(
-                                                        image: ImageConstant
-                                                            .tomcruse,
-                                                      ),
-                                                    ));
-                                                  }
-                                                },
-                                                child: Container(
-                                                  height: 150,
-                                                  width: 150,
-                                                  decoration: BoxDecoration(
-                                                      shape: BoxShape.circle,
-                                                      color: Colors.white),
-                                                  child: Padding(
-                                                      padding:
-                                                          const EdgeInsets.all(
-                                                              4.0),
-                                                      child: NewProfileData
-                                                                      ?.object
-                                                                      ?.userProfilePic ==
-                                                                  null ||
-                                                              NewProfileData
-                                                                      ?.object
-                                                                      ?.userProfilePic ==
-                                                                  ''
-                                                          ? CircleAvatar(
-                                                              backgroundColor:
-                                                                  Colors.white,
-                                                              backgroundImage:
-                                                                  AssetImage(
-                                                                ImageConstant
-                                                                    .tomcruse,
-                                                              ),
-                                                              radius: 25,
-                                                            )
-                                                          /* CustomImageView(
-                                                        imagePath: ImageConstant
-                                                            .tomcruse,
-                                                             
-                                                        radius:
-                                                            BorderRadius.all(
-                                                          Radius.circular(20),
-                                                        ),
-                                                      ) */
-                                                          : CircleAvatar(
-                                                              backgroundColor:
-                                                                  Colors.white,
-                                                              backgroundImage:
-                                                                  NetworkImage(
-                                                                      "${NewProfileData?.object?.userProfilePic}"),
-                                                              radius: 25,
-                                                            )),
-                                                ),
+                                        Padding(
+                                          padding:
+                                              const EdgeInsets.only(left: 10),
+                                          child: GestureDetector(
+                                            key: blockKey,
+                                            onTap: () {
+                                              showPopupMenuBlock(
+                                                  context,
+                                                  NewProfileData
+                                                      ?.object?.userUid,
+                                                  NewProfileData?.object?.name,
+                                                  blockKey);
+                                            },
+                                            child: Container(
+                                              /*  */ height: 40,
+                                              width: 40,
+                                              decoration: BoxDecoration(
+                                                color:
+                                                    ColorConstant.primary_color,
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
                                               ),
-                                            /*   if (getallcompenypagemodel
-                                                          ?.object
-                                                          ?.content
-                                                          ?.isNotEmpty ==
-                                                      true &&
-                                                  getallcompenypagemodel?.object
-                                                          ?.content?.length !=
-                                                      1)
-                                                Positioned(
-                                                  bottom: 5,
-                                                  right: -0,
-                                                  child: GestureDetector(
-                                                    onTap: () {
-                                                      showProfileSwitchBottomSheet(
-                                                          context,
-                                                          getallcompenypagemodel!,
-                                                          '${User_ID}');
-                                                      /* _showPopupMenuSwitchAccount(
-                                                        details.globalPosition,
-                                                        context,
-                                                      ); */
-                                                    },
-                                                    child: Container(
-                                                        height: 40,
-                                                        width: 40,
-                                                        decoration: BoxDecoration(
-                                                            shape:
-                                                                BoxShape.circle,
-                                                            color: ColorConstant
-                                                                .primaryLight_color),
-                                                        child: Center(
-                                                          child: Padding(
-                                                            padding:
-                                                                const EdgeInsets
-                                                                    .all(8.0),
-                                                            child: Image.asset(
-                                                              ImageConstant
-                                                                  .switchAccount,
-                                                              color: ColorConstant
-                                                                  .primary_color,
-                                                            ),
-                                                          ),
-                                                        )),
-                                                  ),
-                                                ) */
+                                              child: Center(
+                                                child: Icon(
+                                                  Icons.more_vert_rounded,
+                                                  color: Colors.white,
+                                                ), /* CustomImageView(
+                                                            height: 20,
+                                                            width: 20,
+                                                            imagePath:
+                                                                ImageConstant.chat) */
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        Spacer(),
+                                      ],
+                                    ),
+
+                              SizedBox(
+                                height: 12,
+                              ),
+
+                              Center(
+                                child: Container(
+                                  key: key,
+                                  margin: EdgeInsets.only(left: 15, right: 15),
+                                  height: 80,
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10),
+                                      border: Border.all(
+                                        color: Color(0xffD2D2D2),
+                                      )),
+                                  child: Row(
+                                    children: [
+                                      GestureDetector(
+                                        onTap: () {
+                                          super.setState(() {
+                                            updateType();
+                                            arrNotiyTypeList[1].isSelected =
+                                                true;
+                                          });
+                                        },
+                                        child: Container(
+                                          width: _width / 3.3,
+                                          color: Colors.transparent,
+                                          child: Column(
+                                            children: [
+                                              SizedBox(
+                                                height: 10,
+                                              ),
+                                              Text(
+                                                NewProfileData
+                                                            ?.object?.isBlock ==
+                                                        true
+                                                    ? "0"
+                                                    : '${NewProfileData?.object?.postCount}',
+                                                style: TextStyle(
+                                                    fontFamily: "outfit",
+                                                    fontSize: 25,
+                                                    color: Color(0xff000000),
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                              Text(
+                                                'Post',
+                                                style: TextStyle(
+                                                    fontFamily: "outfit",
+                                                    fontSize: 16,
+                                                    color: Color(0xff444444),
+                                                    fontWeight:
+                                                        FontWeight.w500),
+                                              )
                                             ],
                                           ),
                                         ),
-                                      ],
-                                    ),
-                                  ),
-                                );
-                              },
-                            ),
-                          ),
-                          SliverToBoxAdapter(
-                            child: Column(
-                              children: [
-                                User_Module == "EMPLOYEE" &&
-                                        NewProfileData
-                                                ?.object?.approvalStatus ==
-                                            "PARTIALLY_REGISTERED"
-                                    ? Padding(
-                                        padding: const EdgeInsets.only(top: 15),
-                                        child: Row(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            Flexible(
-                                              child: Container(
-                                                height: 30,
-                                                decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.circular(20),
-                                                  color: Color(0xffD5EED5),
-                                                ),
-                                                child: Padding(
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                          left: 15, right: 15),
-                                                  child: Row(
-                                                    mainAxisSize:
-                                                        MainAxisSize.min,
-                                                    children: [
-                                                      Container(
-                                                          height: 10,
-                                                          width: 10,
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            shape:
-                                                                BoxShape.circle,
-                                                            color: Color(
-                                                                0xff019801),
-                                                          )),
-                                                      SizedBox(
-                                                        width: 10,
-                                                      ),
-                                                      Text(
-                                                        "Profile APPROVED",
-                                                        style: TextStyle(
-                                                            fontSize: 15,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .w600),
-                                                      )
-                                                    ],
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ],
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                            top: 20, bottom: 20),
+                                        child: VerticalDivider(
+                                          thickness: 1.5,
+                                          color: Color(0xffC2C2C2),
                                         ),
-                                      )
-                                    : User_ID == NewProfileData?.object?.userUid
-                                        ? Padding(
-                                            padding: EdgeInsets.only(
-                                                top: User_CompnyPageModule ==
-                                                        null
-                                                    ? 15
-                                                    : 0),
-                                            child: Row(
-                                              mainAxisSize: MainAxisSize.min,
-                                              children: [
-                                                if (User_CompnyPageModule ==
-                                                    null)
-                                                  Flexible(
-                                                    child: Container(
-                                                      height: 30,
-                                                      decoration: BoxDecoration(
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(20),
-                                                        color: NewProfileData
-                                                                    ?.object
-                                                                    ?.approvalStatus ==
-                                                                "PARTIALLY_REGISTERED"
-                                                            ? Color(0xffB6D9EC)
-                                                            : NewProfileData
-                                                                        ?.object
-                                                                        ?.approvalStatus ==
-                                                                    "PENDING"
-                                                                ? Color(
-                                                                    0xffFFDBA8)
-                                                                : NewProfileData
-                                                                            ?.object
-                                                                            ?.approvalStatus ==
-                                                                        "APPROVED"
-                                                                    ? Color(
-                                                                        0xffD5EED5)
-                                                                    : Color(
-                                                                        0xffFFE0E1),
-                                                      ),
-                                                      child: Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                    .only(
-                                                                left: 15,
-                                                                right: 15),
-                                                        child: Row(
-                                                          mainAxisSize:
-                                                              MainAxisSize.min,
-                                                          children: [
-                                                            Container(
-                                                              height: 10,
-                                                              width: 10,
-                                                              decoration: BoxDecoration(
-                                                                  shape: BoxShape.circle,
-                                                                  color: NewProfileData?.object?.approvalStatus == "PARTIALLY_REGISTERED"
-                                                                      ? Color(0xff1A94D7)
-                                                                      : NewProfileData?.object?.approvalStatus == "PENDING"
-                                                                          ? Color(0xffC28432)
-                                                                          : NewProfileData?.object?.approvalStatus == "APPROVED"
-                                                                              ? Color(0xff019801)
-                                                                              : Color(0xffFF000B)),
-                                                            ),
-                                                            SizedBox(
-                                                              width: 10,
-                                                            ),
-                                                            Text(
-                                                              "Profile ${NewProfileData?.object?.approvalStatus}",
-                                                              style: TextStyle(
-                                                                  color: NewProfileData
-                                                                              ?.object
-                                                                              ?.approvalStatus ==
-                                                                          "PARTIALLY_REGISTERED"
-                                                                      ? Color(
-                                                                          0xff1A94D7)
-                                                                      : NewProfileData?.object?.approvalStatus ==
-                                                                              "PENDING"
-                                                                          ? Color(
-                                                                              0xffC28432)
-                                                                          : NewProfileData?.object?.approvalStatus ==
-                                                                                  "APPROVED"
-                                                                              ? Color(
-                                                                                  0xff019801)
-                                                                              : Color(
-                                                                                  0xffFF000B),
-                                                                  fontSize: 15,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w600),
-                                                            )
-                                                          ],
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ),
-                                              ],
-                                            ),
-                                          )
-                                        : SizedBox(),
-                                Padding(
-                                  padding: EdgeInsets.only(
-                                      top: User_CompnyPageModule == null
-                                          ? 20
-                                          : 0),
-                                  child: Center(
-                                    child: Text(
-                                      '${User_CompnyPageModule == null ? NewProfileData?.object?.name : NewProfileData?.object?.companyName}',
-                                      style: TextStyle(
-                                          fontSize: 26,
-                                          fontFamily: "outfit",
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: 10,
-                                ),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.only(
-                                        left: 0,
                                       ),
-                                      child: Text(
-                                        User_CompnyPageModule == null
-                                            ? '@${NewProfileData?.object?.userName}'
-                                            : '${NewProfileData?.object?.companyPageType}',
-                                        style: TextStyle(
-                                            fontSize: 18,
-                                            fontFamily: "outfit",
-                                            fontWeight: FontWeight.bold,
-                                            color: Color(0xff444444)),
-                                      ),
-                                    ),
-                                    NewProfileData?.object?.approvalStatus ==
-                                                'PENDING' ||
-                                            NewProfileData
-                                                    ?.object?.approvalStatus ==
-                                                'REJECTED'
-                                        ? SizedBox()
-                                        : NewProfileData?.object?.module ==
-                                                "EXPERT"
-                                            ? Padding(
-                                                padding: const EdgeInsets.only(
-                                                    bottom: 4, left: 3),
-                                                child: Image.asset(
-                                                  ImageConstant.Star,
-                                                  height: 18,
-                                                ),
-                                              )
-                                            : SizedBox()
-                                  ],
-                                ),
-
-                                SizedBox(
-                                  height: 10,
-                                ),
-                                User_ID == widget.User_ID
-                                    ? Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          GestureDetector(
-                                            onTap: () {
-                                              /* Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        ShowProfileScreen(),
-                                                  )); */
+                                      GestureDetector(
+                                        onTap: () {
+                                          if (NewProfileData
+                                                      ?.object?.isFollowing ==
+                                                  'FOLLOWING' ||
+                                              User_ID ==
+                                                  NewProfileData
+                                                      ?.object?.userUid) {
+                                            if (followersClassModel1
+                                                    ?.object?.isNotEmpty ==
+                                                true) {
+                                              //this is i want this
                                               Navigator.push(context,
                                                   MaterialPageRoute(
                                                       builder: (context) {
                                                 return MultiBlocProvider(
-                                                    providers: [
-                                                      BlocProvider<
-                                                          MyAccountCubit>(
-                                                        create: (context) =>
-                                                            MyAccountCubit(),
-                                                      ),
-                                                    ],
-                                                    child: EditProfileScreen(
-                                                      newProfileData:
-                                                          NewProfileData,
-                                                    ));
-                                              })).then((value) => widget
-                                                          .ProfileNotification ==
-                                                      true
-                                                  ? BlocProvider.of<NewProfileSCubit>(context)
-                                                      .NewProfileSAPI(context,
-                                                          widget.User_ID, true)
-                                                  : BlocProvider.of<NewProfileSCubit>(context)
-                                                      .NewProfileSAPI(
-                                                          context,
-                                                          widget.User_ID,
-                                                          false));
-                                            },
-                                            child: Container(
-                                              alignment: Alignment.center,
-                                              height: 45,
-                                              width: _width / 2.6,
-                                              decoration: BoxDecoration(
-                                                  color: Colors.white,
-                                                  borderRadius:
-                                                      BorderRadius.circular(10),
-                                                  border: Border.all(
-                                                    color: ColorConstant
-                                                        .primary_color,
-                                                  )),
-                                              child: Text(
-                                                'View Profile',
-                                                maxLines: 1,
-                                                style: TextStyle(
-                                                    fontFamily: "outfit",
-                                                    fontSize: 18,
-                                                    color: ColorConstant
-                                                        .primary_color,
-                                                    fontWeight:
-                                                        FontWeight.w500),
-                                              ),
-                                            ),
-                                          ),
-                                          GestureDetector(
-                                            onTap: () {
-                                              Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                      builder:
-                                                          (context) =>
-                                                              SettingScreen(
-                                                                accountType:
-                                                                    NewProfileData
-                                                                            ?.object
-                                                                            ?.accountType ??
-                                                                        '',
-                                                                module: NewProfileData?.object?.module == 'COMPANY' &&
-                                                                        NewProfileData?.object?.approvalStatus !=
-                                                                            "PENDING" &&
-                                                                        NewProfileData?.object?.approvalStatus !=
-                                                                            "REJECTED"
-                                                                    ? true
-                                                                    : false,
-                                                                userCompanyPageUid:
-                                                                    userCompanyPageUid,
-                                                              ))).then((value) {
+                                                  providers: [
+                                                    BlocProvider<FollowerBlock>(
+                                                      create: (context) =>
+                                                          FollowerBlock(),
+                                                    ),
+                                                  ],
+                                                  child: Followers(
+                                                    User_ID: widget.User_ID,
+                                                    appBarName: 'Followers',
+                                                    userId: widget.User_ID,
+                                                    userCompanyPageUid:
+                                                        userCompanyPageUid,
+                                                  ),
+                                                );
+                                              })).then((value) {
                                                 widget.ProfileNotification ==
                                                         true
                                                     ? BlocProvider.of<
@@ -1316,684 +1621,294 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                 BlocProvider.of<
                                                             NewProfileSCubit>(
                                                         context)
-                                                    .getallcompenypagee(
-                                                        context);
+                                                    .getFollwerApi(context,
+                                                        widget.User_ID);
                                               });
-                                            },
-                                            child: Container(
-                                              margin: EdgeInsets.only(left: 10),
-                                              height: 45,
-                                              width: 50,
-                                              decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(10),
-                                                color:
-                                                    ColorConstant.primary_color,
-                                              ),
-                                              child: Icon(
-                                                Icons.settings,
-                                                color: Colors.white,
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      )
-                                    : Row(
-                                        children: [
-                                          Spacer(),
-                                          widget.isFollowing == true
-                                              ? Container(
-                                                  alignment: Alignment.center,
-                                                  height: 45,
-                                                  width: _width / 3,
-                                                  decoration: BoxDecoration(
-                                                    color: ColorConstant
-                                                        .primary_color,
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            10),
-                                                  ),
-                                                  child: Text(
-                                                    'Following',
-                                                    style: TextStyle(
-                                                        fontFamily: "outfit",
-                                                        fontSize: 18,
-                                                        color: Colors.white,
-                                                        fontWeight:
-                                                            FontWeight.w500),
-                                                  ),
-                                                )
-                                              : NewProfileData
-                                                          ?.object?.isBlock ==
-                                                      true
-                                                  ? GestureDetector(
-                                                      /* key: blockKey,
-                                              onTap: () {
-                                                showPopupMenuBlock(
-                                                    context,
-                                                    NewProfileData
-                                                        ?.object?.userUid,
-                                                    NewProfileData
-                                                        ?.object?.name,
-                                                    blockKey);
-                                              }, */
-
-                                                      child: Container(
-                                                        alignment:
-                                                            Alignment.center,
-                                                        height: 45,
-                                                        width: _width / 3,
-                                                        decoration:
-                                                            BoxDecoration(
-                                                          color: ColorConstant
-                                                              .primary_color,
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(10),
-                                                        ),
-                                                        child: Text(
-                                                          'Unblock',
-                                                          style: TextStyle(
-                                                              fontFamily:
-                                                                  "outfit",
-                                                              fontSize: 18,
-                                                              color:
-                                                                  Colors.white,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w500),
-                                                        ),
-                                                      ),
-                                                    )
-                                                  : GestureDetector(
-                                                      onTap: () {
-                                                        BlocProvider.of<
-                                                                    NewProfileSCubit>(
-                                                                context)
-                                                            .followWIngMethod(
-                                                                NewProfileData
-                                                                    ?.object
-                                                                    ?.userUid
-                                                                    .toString(),
-                                                                context);
-                                                        // print(${name[0].toUpperCase()}${name.substring(1).toLowerCase()});
-                                                      },
-                                                      child: Container(
-                                                        alignment:
-                                                            Alignment.center,
-                                                        height: 45,
-                                                        width: _width / 3,
-                                                        decoration:
-                                                            BoxDecoration(
-                                                          color: ColorConstant
-                                                              .primary_color,
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(10),
-                                                        ),
-                                                        child: Text(
-                                                          '${NewProfileData?.object?.isFollowing?.toString()[0].toUpperCase()}${NewProfileData?.object?.isFollowing?.toString().substring(1).toLowerCase()}',
-                                                          style: TextStyle(
-                                                              fontFamily:
-                                                                  "outfit",
-                                                              fontSize: 18,
-                                                              color:
-                                                                  Colors.white,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w500),
-                                                        ),
-                                                      ),
-                                                    ),
-                                          NewProfileData?.object?.isFollowing ==
-                                                      "FOLLOWING" ||
-                                                  NewProfileData?.object
-                                                          ?.accountType ==
-                                                      "PUBLIC"
-                                              ? Padding(
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                          left: 10),
-                                                  child: GestureDetector(
-                                                    onTap: () {
-                                                      BlocProvider.of<
-                                                                  NewProfileSCubit>(
-                                                              context)
-                                                          .DMChatListm(
-                                                              "${NewProfileData?.object?.userUid}",
-                                                              context);
-                                                    },
-                                                    child: Container(
-                                                      height: 40,
-                                                      width: 40,
-                                                      decoration: BoxDecoration(
-                                                        color: ColorConstant
-                                                            .primary_color,
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(10),
-                                                      ),
-                                                      child: Center(
-                                                        child: CustomImageView(
-                                                            height: 20,
-                                                            width: 20,
-                                                            imagePath:
-                                                                ImageConstant
-                                                                    .chat),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                )
-                                              : SizedBox(),
-                                          Padding(
-                                            padding:
-                                                const EdgeInsets.only(left: 10),
-                                            child: GestureDetector(
-                                              key: blockKey,
-                                              onTap: () {
-                                                showPopupMenuBlock(
-                                                    context,
-                                                    NewProfileData
-                                                        ?.object?.userUid,
-                                                    NewProfileData
-                                                        ?.object?.name,
-                                                    blockKey);
-                                              },
-                                              child: Container(
-                                                /*  */ height: 40,
-                                                width: 40,
-                                                decoration: BoxDecoration(
-                                                  color: ColorConstant
-                                                      .primary_color,
-                                                  borderRadius:
-                                                      BorderRadius.circular(10),
-                                                ),
-                                                child: Center(
-                                                  child: Icon(
-                                                    Icons.more_vert_rounded,
-                                                    color: Colors.white,
-                                                  ), /* CustomImageView(
-                                                          height: 20,
-                                                          width: 20,
-                                                          imagePath:
-                                                              ImageConstant.chat) */
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                          Spacer(),
-                                        ],
-                                      ),
-
-                                SizedBox(
-                                  height: 12,
-                                ),
-
-                                Center(
-                                  child: Container(
-                                    key: key,
-                                    margin:
-                                        EdgeInsets.only(left: 15, right: 15),
-                                    height: 80,
-                                    decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(10),
-                                        border: Border.all(
-                                          color: Color(0xffD2D2D2),
-                                        )),
-                                    child: Row(
-                                      children: [
-                                        GestureDetector(
-                                          onTap: () {
-                                            super.setState(() {
-                                              updateType();
-                                              arrNotiyTypeList[1].isSelected =
-                                                  true;
-                                            });
-                                          },
-                                          child: Container(
-                                            width: _width / 3.3,
-                                            color: Colors.transparent,
-                                            child: Column(
-                                              children: [
-                                                SizedBox(
-                                                  height: 10,
-                                                ),
-                                                Text(
-                                                  NewProfileData?.object
-                                                              ?.isBlock ==
-                                                          true
-                                                      ? "0"
-                                                      : '${NewProfileData?.object?.postCount}',
-                                                  style: TextStyle(
-                                                      fontFamily: "outfit",
-                                                      fontSize: 25,
-                                                      color: Color(0xff000000),
-                                                      fontWeight:
-                                                          FontWeight.bold),
-                                                ),
-                                                Text(
-                                                  'Post',
-                                                  style: TextStyle(
-                                                      fontFamily: "outfit",
-                                                      fontSize: 16,
-                                                      color: Color(0xff444444),
-                                                      fontWeight:
-                                                          FontWeight.w500),
-                                                )
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.only(
-                                              top: 20, bottom: 20),
-                                          child: VerticalDivider(
-                                            thickness: 1.5,
-                                            color: Color(0xffC2C2C2),
-                                          ),
-                                        ),
-                                        GestureDetector(
-                                          onTap: () {
-                                            if (NewProfileData
-                                                        ?.object?.isFollowing ==
-                                                    'FOLLOWING' ||
-                                                User_ID ==
-                                                    NewProfileData
-                                                        ?.object?.userUid) {
-                                              if (followersClassModel1
-                                                      ?.object?.isNotEmpty ==
-                                                  true) {
-                                                //this is i want this
-                                                Navigator.push(context,
-                                                    MaterialPageRoute(
-                                                        builder: (context) {
-                                                  return MultiBlocProvider(
-                                                    providers: [
-                                                      BlocProvider<
-                                                          FollowerBlock>(
-                                                        create: (context) =>
-                                                            FollowerBlock(),
-                                                      ),
-                                                    ],
-                                                    child: Followers(
-                                                      User_ID: widget.User_ID,
-                                                      appBarName: 'Followers',
-                                                      userId: widget.User_ID,
-                                                      userCompanyPageUid:
-                                                          userCompanyPageUid,
-                                                    ),
-                                                  );
-                                                })).then((value) {
-                                                  widget.ProfileNotification ==
-                                                          true
-                                                      ? BlocProvider.of<
-                                                                  NewProfileSCubit>(
-                                                              context)
-                                                          .NewProfileSAPI(
-                                                              context,
-                                                              widget.User_ID,
-                                                              true)
-                                                      : BlocProvider.of<
-                                                                  NewProfileSCubit>(
-                                                              context)
-                                                          .NewProfileSAPI(
-                                                              context,
-                                                              widget.User_ID,
-                                                              false);
-                                                  BlocProvider.of<
-                                                              NewProfileSCubit>(
-                                                          context)
-                                                      .getFollwerApi(context,
-                                                          widget.User_ID);
-                                                });
-                                                /*    Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      Followers(
-                                                        // OLLOWERS
-                                                        appBarName: 'Followers',
-                                                        followersClassModel:
-                                                            followersClassModel1!,
-                                                        userId: widget.User_ID,
-                                                      ))).then((value) =>
-                                              BlocProvider.of<NewProfileSCubit>(
-                                                      context)
-                                                  .NewProfileSAPI(
-                                                      context, widget.User_ID)); */
-                                              }
-                                            } else {
-                                              if (NewProfileData?.object
-                                                          ?.accountType ==
-                                                      'PUBLIC' &&
-                                                  NewProfileData?.object
-                                                          ?.isFollowing ==
-                                                      'FOLLOW') {
-                                                Navigator.push(context,
-                                                    MaterialPageRoute(
-                                                        builder: (context) {
-                                                  return MultiBlocProvider(
-                                                    providers: [
-                                                      BlocProvider<
-                                                          FollowerBlock>(
-                                                        create: (context) =>
-                                                            FollowerBlock(),
-                                                      ),
-                                                    ],
-                                                    child: Followers(
-                                                      User_ID: widget.User_ID,
-                                                      appBarName: 'Followers',
-                                                      userId: widget.User_ID,
-                                                    ),
-                                                  );
-                                                })).then((value) {
-                                                  widget.ProfileNotification ==
-                                                          true
-                                                      ? BlocProvider.of<
-                                                                  NewProfileSCubit>(
-                                                              context)
-                                                          .NewProfileSAPI(
-                                                              context,
-                                                              widget.User_ID,
-                                                              true)
-                                                      : BlocProvider.of<
-                                                                  NewProfileSCubit>(
-                                                              context)
-                                                          .NewProfileSAPI(
-                                                              context,
-                                                              widget.User_ID,
-                                                              false);
-                                                  BlocProvider.of<
-                                                              NewProfileSCubit>(
-                                                          context)
-                                                      .getFollwerApi(context,
-                                                          widget.User_ID);
-                                                });
-                                              }
+                                              /*    Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        Followers(
+                                                          // OLLOWERS
+                                                          appBarName: 'Followers',
+                                                          followersClassModel:
+                                                              followersClassModel1!,
+                                                          userId: widget.User_ID,
+                                                        ))).then((value) =>
+                                                BlocProvider.of<NewProfileSCubit>(
+                                                        context)
+                                                    .NewProfileSAPI(
+                                                        context, widget.User_ID)); */
                                             }
-                                          },
-                                          child: Container(
-                                            color: Colors.transparent,
-                                            width: _width / 3.6,
-                                            child: Column(
-                                              children: [
-                                                SizedBox(
-                                                  height: 11,
-                                                ),
-                                                Text(
-                                                  NewProfileData?.object
-                                                              ?.isBlock ==
-                                                          true
-                                                      ? "0"
-                                                      : '${NewProfileData?.object?.followersCount}',
-                                                  style: TextStyle(
-                                                      fontFamily: "outfit",
-                                                      fontSize: 25,
-                                                      color: Color(0xff000000),
-                                                      fontWeight:
-                                                          FontWeight.bold),
-                                                ),
-                                                Text(
-                                                  'Followers',
-                                                  style: TextStyle(
-                                                      fontFamily: "outfit",
-                                                      fontSize: 16,
-                                                      color: Color(0xff444444),
-                                                      fontWeight:
-                                                          FontWeight.w500),
-                                                )
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.only(
-                                              top: 20, bottom: 20),
-                                          child: VerticalDivider(
-                                            thickness: 1.5,
-                                            color: Color(0xffC2C2C2),
-                                          ),
-                                        ),
-                                        GestureDetector(
-                                          onTap: () {
+                                          } else {
                                             if (NewProfileData
+                                                        ?.object?.accountType ==
+                                                    'PUBLIC' &&
+                                                NewProfileData
                                                         ?.object?.isFollowing ==
-                                                    'FOLLOWING' ||
-                                                User_ID ==
-                                                    NewProfileData
-                                                        ?.object?.userUid) {
-                                              if (followersClassModel2
-                                                      ?.object?.isNotEmpty ==
-                                                  true) {
-                                                Navigator.push(context,
-                                                    MaterialPageRoute(
-                                                        builder: (context) {
-                                                  return MultiBlocProvider(
-                                                    providers: [
-                                                      BlocProvider<
-                                                          FollowerBlock>(
-                                                        create: (context) =>
-                                                            FollowerBlock(),
-                                                      ),
-                                                    ],
-                                                    child: Followers(
-                                                      User_ID: widget.User_ID,
-                                                      appBarName: 'Following',
-                                                      userId: widget.User_ID,
-                                                    ),
-                                                  );
-                                                })).then((value) => widget
-                                                            .ProfileNotification ==
-                                                        true
-                                                    ? BlocProvider.of<NewProfileSCubit>(context)
-                                                        .NewProfileSAPI(
-                                                            context,
-                                                            widget.User_ID,
-                                                            true)
-                                                    : BlocProvider.of<NewProfileSCubit>(context)
-                                                        .NewProfileSAPI(
-                                                            context,
-                                                            widget.User_ID,
-                                                            false));
-                                              }
-                                            } else {
-                                              if (NewProfileData?.object
-                                                          ?.accountType ==
-                                                      'PUBLIC' &&
-                                                  NewProfileData?.object
-                                                          ?.isFollowing ==
-                                                      'FOLLOW') {
-                                                Navigator.push(context,
-                                                    MaterialPageRoute(
-                                                        builder: (context) {
-                                                  return MultiBlocProvider(
-                                                    providers: [
-                                                      BlocProvider<
-                                                          FollowerBlock>(
-                                                        create: (context) =>
-                                                            FollowerBlock(),
-                                                      ),
-                                                    ],
-                                                    child: Followers(
-                                                      User_ID: widget.User_ID,
-                                                      appBarName: 'Following',
-                                                      userId: widget.User_ID,
-                                                    ),
-                                                  );
-                                                })).then((value) => widget
-                                                            .ProfileNotification ==
-                                                        true
-                                                    ? BlocProvider.of<NewProfileSCubit>(context)
-                                                        .NewProfileSAPI(
-                                                            context,
-                                                            widget.User_ID,
-                                                            true)
-                                                    : BlocProvider.of<NewProfileSCubit>(context)
-                                                        .NewProfileSAPI(
-                                                            context,
-                                                            widget.User_ID,
-                                                            false));
-                                              }
-                                            }
-                                          },
-                                          child: Container(
-                                            // color: Colors.amber,
-                                            width: _width / 4.4,
-                                            child: Column(
-                                              children: [
-                                                SizedBox(
-                                                  height: 11,
-                                                ),
-                                                Text(
-                                                  NewProfileData?.object
-                                                              ?.isBlock ==
-                                                          true
-                                                      ? "0"
-                                                      : '${NewProfileData?.object?.followingCount}',
-                                                  style: TextStyle(
-                                                      fontFamily: "outfit",
-                                                      fontSize: 25,
-                                                      color: Color(0xff000000),
-                                                      fontWeight:
-                                                          FontWeight.bold),
-                                                ),
-                                                Text(
-                                                  'Following',
-                                                  style: TextStyle(
-                                                      fontFamily: "outfit",
-                                                      fontSize: 16,
-                                                      color: Color(0xff444444),
-                                                      fontWeight:
-                                                          FontWeight.w500),
-                                                )
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                // SizedBox(
-                                //   height: 50,
-                                // child: TabBar(
-                                //     indicatorColor: Colors.black,
-                                //     unselectedLabelColor: Color(0xff444444),
-                                //     labelColor: Color(0xff000000),
-                                //     controller: _tabController,
-                                //     tabs: List.generate(
-                                //         tabData.length,
-                                //         (index) => Tab(
-                                //                 child: Text(
-                                //               tabData[index].toString(),
-                                //               style: TextStyle(
-                                //                 fontWeight: FontWeight.bold,
-                                //                 fontFamily: "outfit",
-                                //                 fontSize: 14,
-                                //               ),
-                                //             )))),
-                                // ),
-                                SizedBox(
-                                  height: 30,
-                                ),
-                                /* NewProfileData?.object?.isFollowing == 'FOLLOWING' ||
-                          User_ID == NewProfileData?.object?.userUid || NewProfileData?.object?.accountType == 'PUBLIC' */
-
-                                /*  if (User_ID == NewProfileData?.object?.userUid ||
-                              (NewProfileData?.object?.isFollowing ==
-                                      'FOLLOWING' &&
-                                  (NewProfileData?.object?.accountType ==
-                                          'PRIVATE' ||
-                                      NewProfileData?.object?.accountType ==
-                                          'PUBLIC'))) */
-
-                                /* if (User_ID == NewProfileData?.object?.userUid ||
-                              (NewProfileData?.object?.accountType == 'PUBLIC') ||
-                              (NewProfileData?.object?.isFollowing ==
-                                      'FOLLOWING' &&
-                                  NewProfileData?.object?.accountType ==
-                                      'PRIVATE')) */
-                                NewProfileData?.object?.isBlock == true
-                                    ? SizedBox()
-                                    : Container(
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceEvenly,
-                                          children: [
-                                            Expanded(
-                                              child: GestureDetector(
-                                                child: Column(
-                                                  children: [
-                                                    Container(
-                                                      height: 40,
-                                                      // color: arrNotiyTypeList[0].isSelected
-                                                      //     ? ColorConstant.primary_color
-                                                      //     : Theme.of(context).brightness == Brightness.light
-                                                      //         ? Colors.white
-                                                      //         : Colors.black,
-                                                      child: Center(
-                                                        child: Column(
-                                                          children: [
-                                                            Row(
-                                                              children: [
-                                                                const Spacer(),
-                                                                Text("Details",
-                                                                    textScaleFactor:
-                                                                        1.0,
-                                                                    style: TextStyle(
-                                                                        // color: arrNotiyTypeList[3].isSelected
-                                                                        //     ? Colors.white
-                                                                        //     : Colors.black,
-                                                                        fontSize: 18,
-                                                                        fontFamily: 'Outfit',
-                                                                        fontWeight: FontWeight.bold)),
-                                                                Spacer(),
-                                                              ],
-                                                            ),
-                                                            arrNotiyTypeList[0]
-                                                                    .isSelected
-                                                                ? Divider(
-                                                                    endIndent:
-                                                                        20,
-                                                                    indent: 20,
-                                                                    color: Colors
-                                                                        .black,
-                                                                  )
-                                                                : SizedBox(),
-                                                          ],
-                                                        ),
-                                                      ),
+                                                    'FOLLOW') {
+                                              Navigator.push(context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) {
+                                                return MultiBlocProvider(
+                                                  providers: [
+                                                    BlocProvider<FollowerBlock>(
+                                                      create: (context) =>
+                                                          FollowerBlock(),
                                                     ),
                                                   ],
-                                                ),
-                                                onTap: () {
-                                                  super.setState(() {
-                                                    updateType();
-                                                    arrNotiyTypeList[0]
-                                                        .isSelected = true;
-                                                    selectedIndex = 0;
-                                                    print("abcd");
-                                                  });
-                                                },
+                                                  child: Followers(
+                                                    User_ID: widget.User_ID,
+                                                    appBarName: 'Followers',
+                                                    userId: widget.User_ID,
+                                                  ),
+                                                );
+                                              })).then((value) {
+                                                widget.ProfileNotification ==
+                                                        true
+                                                    ? BlocProvider.of<
+                                                                NewProfileSCubit>(
+                                                            context)
+                                                        .NewProfileSAPI(
+                                                            context,
+                                                            widget.User_ID,
+                                                            true)
+                                                    : BlocProvider.of<
+                                                                NewProfileSCubit>(
+                                                            context)
+                                                        .NewProfileSAPI(
+                                                            context,
+                                                            widget.User_ID,
+                                                            false);
+                                                BlocProvider.of<
+                                                            NewProfileSCubit>(
+                                                        context)
+                                                    .getFollwerApi(context,
+                                                        widget.User_ID);
+                                              });
+                                            }
+                                          }
+                                        },
+                                        child: Container(
+                                          color: Colors.transparent,
+                                          width: _width / 3.6,
+                                          child: Column(
+                                            children: [
+                                              SizedBox(
+                                                height: 11,
                                               ),
-                                            ),
-                                            Expanded(
-                                              child: GestureDetector(
-                                                child: Column(
-                                                  children: [
-                                                    Container(
-                                                      height: 40,
-                                                      // color: arrNotiyTypeList[1].isSelected
-                                                      //     ? ColorConstant.primary_color
-                                                      //     : Theme.of(context).brightness == Brightness.light
-                                                      //         ? Colors.white
-                                                      //         : Colors.black,
+                                              Text(
+                                                NewProfileData
+                                                            ?.object?.isBlock ==
+                                                        true
+                                                    ? "0"
+                                                    : '${NewProfileData?.object?.followersCount}',
+                                                style: TextStyle(
+                                                    fontFamily: "outfit",
+                                                    fontSize: 25,
+                                                    color: Color(0xff000000),
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                              Text(
+                                                'Followers',
+                                                style: TextStyle(
+                                                    fontFamily: "outfit",
+                                                    fontSize: 16,
+                                                    color: Color(0xff444444),
+                                                    fontWeight:
+                                                        FontWeight.w500),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                            top: 20, bottom: 20),
+                                        child: VerticalDivider(
+                                          thickness: 1.5,
+                                          color: Color(0xffC2C2C2),
+                                        ),
+                                      ),
+                                      GestureDetector(
+                                        onTap: () {
+                                          if (NewProfileData
+                                                      ?.object?.isFollowing ==
+                                                  'FOLLOWING' ||
+                                              User_ID ==
+                                                  NewProfileData
+                                                      ?.object?.userUid) {
+                                            if (followersClassModel2
+                                                    ?.object?.isNotEmpty ==
+                                                true) {
+                                              Navigator.push(context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) {
+                                                return MultiBlocProvider(
+                                                  providers: [
+                                                    BlocProvider<FollowerBlock>(
+                                                      create: (context) =>
+                                                          FollowerBlock(),
+                                                    ),
+                                                  ],
+                                                  child: Followers(
+                                                    User_ID: widget.User_ID,
+                                                    appBarName: 'Following',
+                                                    userId: widget.User_ID,
+                                                  ),
+                                                );
+                                              })).then((value) => widget
+                                                          .ProfileNotification ==
+                                                      true
+                                                  ? BlocProvider.of<NewProfileSCubit>(context)
+                                                      .NewProfileSAPI(context,
+                                                          widget.User_ID, true)
+                                                  : BlocProvider.of<NewProfileSCubit>(context)
+                                                      .NewProfileSAPI(
+                                                          context,
+                                                          widget.User_ID,
+                                                          false));
+                                            }
+                                          } else {
+                                            if (NewProfileData
+                                                        ?.object?.accountType ==
+                                                    'PUBLIC' &&
+                                                NewProfileData
+                                                        ?.object?.isFollowing ==
+                                                    'FOLLOW') {
+                                              Navigator.push(context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) {
+                                                return MultiBlocProvider(
+                                                  providers: [
+                                                    BlocProvider<FollowerBlock>(
+                                                      create: (context) =>
+                                                          FollowerBlock(),
+                                                    ),
+                                                  ],
+                                                  child: Followers(
+                                                    User_ID: widget.User_ID,
+                                                    appBarName: 'Following',
+                                                    userId: widget.User_ID,
+                                                  ),
+                                                );
+                                              })).then((value) => widget
+                                                          .ProfileNotification ==
+                                                      true
+                                                  ? BlocProvider.of<NewProfileSCubit>(context)
+                                                      .NewProfileSAPI(context,
+                                                          widget.User_ID, true)
+                                                  : BlocProvider.of<NewProfileSCubit>(context)
+                                                      .NewProfileSAPI(
+                                                          context,
+                                                          widget.User_ID,
+                                                          false));
+                                            }
+                                          }
+                                        },
+                                        child: Container(
+                                          // color: Colors.amber,
+                                          width: _width / 4.4,
+                                          child: Column(
+                                            children: [
+                                              SizedBox(
+                                                height: 11,
+                                              ),
+                                              Text(
+                                                NewProfileData
+                                                            ?.object?.isBlock ==
+                                                        true
+                                                    ? "0"
+                                                    : '${NewProfileData?.object?.followingCount}',
+                                                style: TextStyle(
+                                                    fontFamily: "outfit",
+                                                    fontSize: 25,
+                                                    color: Color(0xff000000),
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                              Text(
+                                                'Following',
+                                                style: TextStyle(
+                                                    fontFamily: "outfit",
+                                                    fontSize: 16,
+                                                    color: Color(0xff444444),
+                                                    fontWeight:
+                                                        FontWeight.w500),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              // SizedBox(
+                              //   height: 50,
+                              // child: TabBar(
+                              //     indicatorColor: Colors.black,
+                              //     unselectedLabelColor: Color(0xff444444),
+                              //     labelColor: Color(0xff000000),
+                              //     controller: _tabController,
+                              //     tabs: List.generate(
+                              //         tabData.length,
+                              //         (index) => Tab(
+                              //                 child: Text(
+                              //               tabData[index].toString(),
+                              //               style: TextStyle(
+                              //                 fontWeight: FontWeight.bold,
+                              //                 fontFamily: "outfit",
+                              //                 fontSize: 14,
+                              //               ),
+                              //             )))),
+                              // ),
+                              SizedBox(
+                                height: 30,
+                              ),
+                              /* NewProfileData?.object?.isFollowing == 'FOLLOWING' ||
+                            User_ID == NewProfileData?.object?.userUid || NewProfileData?.object?.accountType == 'PUBLIC' */
+
+                              /*  if (User_ID == NewProfileData?.object?.userUid ||
+                                (NewProfileData?.object?.isFollowing ==
+                                        'FOLLOWING' &&
+                                    (NewProfileData?.object?.accountType ==
+                                            'PRIVATE' ||
+                                        NewProfileData?.object?.accountType ==
+                                            'PUBLIC'))) */
+
+                              /* if (User_ID == NewProfileData?.object?.userUid ||
+                                (NewProfileData?.object?.accountType == 'PUBLIC') ||
+                                (NewProfileData?.object?.isFollowing ==
+                                        'FOLLOWING' &&
+                                    NewProfileData?.object?.accountType ==
+                                        'PRIVATE')) */
+                              NewProfileData?.object?.isBlock == true
+                                  ? SizedBox()
+                                  : Container(
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceEvenly,
+                                        children: [
+                                          Expanded(
+                                            child: GestureDetector(
+                                              child: Column(
+                                                children: [
+                                                  Container(
+                                                    height: 40,
+                                                    // color: arrNotiyTypeList[0].isSelected
+                                                    //     ? ColorConstant.primary_color
+                                                    //     : Theme.of(context).brightness == Brightness.light
+                                                    //         ? Colors.white
+                                                    //         : Colors.black,
+                                                    child: Center(
                                                       child: Column(
                                                         children: [
                                                           Row(
                                                             children: [
                                                               const Spacer(),
-                                                              Text("Post",
+                                                              Text("Details",
                                                                   textScaleFactor:
                                                                       1.0,
                                                                   style: TextStyle(
@@ -2006,44 +1921,158 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                               Spacer(),
                                                             ],
                                                           ),
-                                                          arrNotiyTypeList[1]
+                                                          arrNotiyTypeList[0]
                                                                   .isSelected
                                                               ? Divider(
-                                                                  endIndent: 30,
-                                                                  indent: 30,
+                                                                  endIndent: 20,
+                                                                  indent: 20,
                                                                   color: Colors
                                                                       .black,
                                                                 )
                                                               : SizedBox(),
                                                         ],
                                                       ),
-                                                    )
-                                                  ],
-                                                ),
-                                                onTap: () {
-                                                  super.setState(() {
-                                                    updateType();
-                                                    arrNotiyTypeList[1]
-                                                        .isSelected = true;
-                                                    selectedIndex = 1;
-                                                    print("abcd");
-                                                  });
-                                                },
+                                                    ),
+                                                  ),
+                                                ],
                                               ),
+                                              onTap: () {
+                                                super.setState(() {
+                                                  updateType();
+                                                  arrNotiyTypeList[0]
+                                                      .isSelected = true;
+                                                  selectedIndex = 0;
+                                                  print("abcd");
+                                                });
+                                              },
                                             ),
-                                            Container(
-                                              height: 1,
-                                              color: Colors.black12,
+                                          ),
+                                          Expanded(
+                                            child: GestureDetector(
+                                              child: Column(
+                                                children: [
+                                                  Container(
+                                                    height: 40,
+                                                    // color: arrNotiyTypeList[1].isSelected
+                                                    //     ? ColorConstant.primary_color
+                                                    //     : Theme.of(context).brightness == Brightness.light
+                                                    //         ? Colors.white
+                                                    //         : Colors.black,
+                                                    child: Column(
+                                                      children: [
+                                                        Row(
+                                                          children: [
+                                                            const Spacer(),
+                                                            Text("Post",
+                                                                textScaleFactor:
+                                                                    1.0,
+                                                                style: TextStyle(
+                                                                    // color: arrNotiyTypeList[3].isSelected
+                                                                    //     ? Colors.white
+                                                                    //     : Colors.black,
+                                                                    fontSize: 18,
+                                                                    fontFamily: 'Outfit',
+                                                                    fontWeight: FontWeight.bold)),
+                                                            Spacer(),
+                                                          ],
+                                                        ),
+                                                        arrNotiyTypeList[1]
+                                                                .isSelected
+                                                            ? Divider(
+                                                                endIndent: 30,
+                                                                indent: 30,
+                                                                color: Colors
+                                                                    .black,
+                                                              )
+                                                            : SizedBox(),
+                                                      ],
+                                                    ),
+                                                  )
+                                                ],
+                                              ),
+                                              onTap: () {
+                                                super.setState(() {
+                                                  updateType();
+                                                  arrNotiyTypeList[1]
+                                                      .isSelected = true;
+                                                  selectedIndex = 1;
+                                                  print("abcd");
+                                                });
+                                              },
                                             ),
-                                            Expanded(
-                                              child: GestureDetector(
-                                                child: Column(
-                                                  children: [
-                                                    Container(
+                                          ),
+                                          Container(
+                                            height: 1,
+                                            color: Colors.black12,
+                                          ),
+                                          Expanded(
+                                            child: GestureDetector(
+                                              child: Column(
+                                                children: [
+                                                  Container(
+                                                      height: 40,
+                                                      alignment:
+                                                          Alignment.center,
+                                                      // color: arrNotiyTypeList[2].isSelected
+                                                      //     ? ColorConstant.primary_color
+                                                      //     : Theme.of(context).brightness == Brightness.light
+                                                      //         ? Colors.white
+                                                      //         : Colors.black,
+                                                      child: Center(
+                                                        child: Column(
+                                                          children: [
+                                                            Row(
+                                                              children: [
+                                                                const Spacer(),
+                                                                Text("Comments",
+                                                                    textScaleFactor:
+                                                                        1.0,
+                                                                    style: TextStyle(
+                                                                        // color: arrNotiyTypeList[3].isSelected
+                                                                        //     ? Colors.white
+                                                                        //     : Colors.black,
+                                                                        fontSize: 16,
+                                                                        fontFamily: 'Outfit',
+                                                                        fontWeight: FontWeight.bold)),
+                                                                Spacer(),
+                                                              ],
+                                                            ),
+                                                            arrNotiyTypeList[2]
+                                                                    .isSelected
+                                                                ? Divider(
+                                                                    endIndent:
+                                                                        5,
+                                                                    indent: 5,
+                                                                    color: Colors
+                                                                        .black,
+                                                                  )
+                                                                : SizedBox(),
+                                                          ],
+                                                        ),
+                                                      )),
+                                                ],
+                                              ),
+                                              onTap: () {
+                                                super.setState(() {
+                                                  updateType();
+                                                  arrNotiyTypeList[2]
+                                                      .isSelected = true;
+                                                  selectedIndex = 2;
+                                                });
+                                                print("abcd");
+                                              },
+                                            ),
+                                          ),
+                                          User_ID ==
+                                                  NewProfileData
+                                                      ?.object?.userUid
+                                              ? Expanded(
+                                                  child: GestureDetector(
+                                                    child: Container(
                                                         height: 40,
                                                         alignment:
                                                             Alignment.center,
-                                                        // color: arrNotiyTypeList[2].isSelected
+                                                        // color: arrNotiyTypeList[3].isSelected
                                                         //     ? ColorConstant.primary_color
                                                         //     : Theme.of(context).brightness == Brightness.light
                                                         //         ? Colors.white
@@ -2054,27 +2083,27 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                               Row(
                                                                 children: [
                                                                   const Spacer(),
-                                                                  Text(
-                                                                      "Comments",
+                                                                  Text("Saved",
                                                                       textScaleFactor:
                                                                           1.0,
                                                                       style: TextStyle(
                                                                           // color: arrNotiyTypeList[3].isSelected
                                                                           //     ? Colors.white
                                                                           //     : Colors.black,
-                                                                          fontSize: 16,
+                                                                          fontSize: 18,
                                                                           fontFamily: 'Outfit',
                                                                           fontWeight: FontWeight.bold)),
                                                                   Spacer(),
                                                                 ],
                                                               ),
                                                               arrNotiyTypeList[
-                                                                          2]
+                                                                          3]
                                                                       .isSelected
                                                                   ? Divider(
                                                                       endIndent:
-                                                                          5,
-                                                                      indent: 5,
+                                                                          25,
+                                                                      indent:
+                                                                          25,
                                                                       color: Colors
                                                                           .black,
                                                                     )
@@ -2082,628 +2111,760 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                             ],
                                                           ),
                                                         )),
-                                                  ],
-                                                ),
-                                                onTap: () {
-                                                  super.setState(() {
-                                                    updateType();
-                                                    arrNotiyTypeList[2]
-                                                        .isSelected = true;
-                                                    selectedIndex = 2;
-                                                  });
-                                                  print("abcd");
-                                                },
-                                              ),
-                                            ),
-                                            User_ID ==
-                                                    NewProfileData
-                                                        ?.object?.userUid
-                                                ? Expanded(
-                                                    child: GestureDetector(
-                                                      child: Container(
-                                                          height: 40,
-                                                          alignment:
-                                                              Alignment.center,
-                                                          // color: arrNotiyTypeList[3].isSelected
-                                                          //     ? ColorConstant.primary_color
-                                                          //     : Theme.of(context).brightness == Brightness.light
-                                                          //         ? Colors.white
-                                                          //         : Colors.black,
-                                                          child: Center(
-                                                            child: Column(
-                                                              children: [
-                                                                Row(
-                                                                  children: [
-                                                                    const Spacer(),
-                                                                    Text(
-                                                                        "Saved",
-                                                                        textScaleFactor:
-                                                                            1.0,
-                                                                        style: TextStyle(
-                                                                            // color: arrNotiyTypeList[3].isSelected
-                                                                            //     ? Colors.white
-                                                                            //     : Colors.black,
-                                                                            fontSize: 18,
-                                                                            fontFamily: 'Outfit',
-                                                                            fontWeight: FontWeight.bold)),
-                                                                    Spacer(),
-                                                                  ],
-                                                                ),
-                                                                arrNotiyTypeList[
-                                                                            3]
-                                                                        .isSelected
-                                                                    ? Divider(
-                                                                        endIndent:
-                                                                            25,
-                                                                        indent:
-                                                                            25,
-                                                                        color: Colors
-                                                                            .black,
-                                                                      )
-                                                                    : SizedBox(),
-                                                              ],
-                                                            ),
-                                                          )),
-                                                      onTap: () {
-                                                        super.setState(() {
-                                                          updateType();
-                                                          arrNotiyTypeList[3]
-                                                                  .isSelected =
-                                                              true;
-                                                          selectedIndex = 3;
-                                                        });
-                                                        print("abcd");
-                                                      },
-                                                    ),
-                                                  )
-                                                : SizedBox.shrink(),
-                                          ],
-                                        ),
+                                                    onTap: () {
+                                                      super.setState(() {
+                                                        updateType();
+                                                        arrNotiyTypeList[3]
+                                                            .isSelected = true;
+                                                        selectedIndex = 3;
+                                                      });
+                                                      print("abcd");
+                                                    },
+                                                  ),
+                                                )
+                                              : SizedBox.shrink(),
+                                        ],
                                       ),
-                                /* if (User_ID == NewProfileData?.object?.userUid ||
-                              (NewProfileData?.object?.accountType == 'PUBLIC') ||
-                              (NewProfileData?.object?.isFollowing ==
-                                      'FOLLOWING' &&
-                                  NewProfileData?.object?.accountType ==
-                                      'PRIVATE')) */
+                                    ),
+                              /* if (User_ID == NewProfileData?.object?.userUid ||
+                                (NewProfileData?.object?.accountType == 'PUBLIC') ||
+                                (NewProfileData?.object?.isFollowing ==
+                                        'FOLLOWING' &&
+                                    NewProfileData?.object?.accountType ==
+                                        'PRIVATE')) */
 
-                                /* Container(
-                          // color: Colors.red,
-                          /*  height: _height, */
-                          height: arrNotiyTypeList[0].isSelected == true
-                              ? NewProfileData?.object?.module == "EMPLOYEE"
-                                  ? _height / 3
-                                  : NewProfileData?.object?.module == "EXPERT"
-                                      ? _height / 0.65 // 630 old height
-                                      : NewProfileData?.object?.module ==
-                                              "COMPANY"
-                                          ? _height /
-                                              0.7 // 650 old height + 400
-                                          : 0
-                              : arrNotiyTypeList[1].isSelected == true
-                                  ? FinalPostCount * 190
-                                  : arrNotiyTypeList[2].isSelected == true
-                                      ? CommentsPostCount * 310 + 100
-                                      : arrNotiyTypeList[3].isSelected == true
-                                          ? value1 == 0
-                                              ? FinalSavePostCount == 0
-                                                  ? 40
-                                                  : FinalSavePostCount * 230
-                                              : SaveBlogCount * 155 + 100
-                                          : 10,
-                          child: */
-                                SingleChildScrollView(
-                                  controller: scrollController,
-                                  physics: NeverScrollableScrollPhysics(),
-                                  child: GestureDetector(
-                                    onHorizontalDragUpdate: (details) {
-                                      if (details.delta.dx > 0) {
-                                        super.setState(() {
-                                          swipLeft = false;
-                                          swipeRigth = true;
-                                        });
+                              /* Container(
+                            // color: Colors.red,
+                            /*  height: _height, */
+                            height: arrNotiyTypeList[0].isSelected == true
+                                ? NewProfileData?.object?.module == "EMPLOYEE"
+                                    ? _height / 3
+                                    : NewProfileData?.object?.module == "EXPERT"
+                                        ? _height / 0.65 // 630 old height
+                                        : NewProfileData?.object?.module ==
+                                                "COMPANY"
+                                            ? _height /
+                                                0.7 // 650 old height + 400
+                                            : 0
+                                : arrNotiyTypeList[1].isSelected == true
+                                    ? FinalPostCount * 190
+                                    : arrNotiyTypeList[2].isSelected == true
+                                        ? CommentsPostCount * 310 + 100
+                                        : arrNotiyTypeList[3].isSelected == true
+                                            ? value1 == 0
+                                                ? FinalSavePostCount == 0
+                                                    ? 40
+                                                    : FinalSavePostCount * 230
+                                                : SaveBlogCount * 155 + 100
+                                            : 10,
+                            child: */
+                              SingleChildScrollView(
+                                controller: scrollController,
+                                physics: NeverScrollableScrollPhysics(),
+                                child: GestureDetector(
+                                  onHorizontalDragUpdate: (details) {
+                                    if (details.delta.dx > 0) {
+                                      super.setState(() {
+                                        swipLeft = false;
+                                        swipeRigth = true;
+                                      });
+                                      print("Swiped right");
+                                    } else if (details.delta.dx < 0) {
+                                      super.setState(() {
+                                        swipLeft = true;
+                                        swipeRigth = false;
+                                      });
+                                      print("Swiped left");
+                                    }
+                                  },
+                                  onHorizontalDragEnd: (details) {
+                                    Scrollable.ensureVisible(
+                                        key.currentContext!,
+                                        duration: Duration(microseconds: 400));
+
+                                    if (User_ID !=
+                                        NewProfileData?.object?.userUid) {
+                                      if (swipLeft == false &&
+                                          swipeRigth == true) {
+                                        if (selectedIndex != 0) {
+                                          selectedIndex--;
+                                          super.setState(() {
+                                            updateType();
+                                            arrNotiyTypeList[selectedIndex]
+                                                .isSelected = true;
+                                          });
+                                        }
                                         print("Swiped right");
-                                      } else if (details.delta.dx < 0) {
-                                        super.setState(() {
-                                          swipLeft = true;
-                                          swipeRigth = false;
-                                        });
+                                      } else if (swipLeft == true &&
+                                          swipeRigth == false) {
+                                        if (selectedIndex != 2) {
+                                          selectedIndex++;
+                                          super.setState(() {
+                                            updateType();
+                                            arrNotiyTypeList[selectedIndex]
+                                                .isSelected = true;
+                                          });
+                                        }
                                         print("Swiped left");
                                       }
-                                    },
-                                    onHorizontalDragEnd: (details) {
-                                      Scrollable.ensureVisible(
-                                          key.currentContext!,
-                                          duration:
-                                              Duration(microseconds: 400));
-
-                                      if (User_ID !=
-                                          NewProfileData?.object?.userUid) {
-                                        if (swipLeft == false &&
-                                            swipeRigth == true) {
-                                          if (selectedIndex != 0) {
-                                            selectedIndex--;
-                                            super.setState(() {
-                                              updateType();
-                                              arrNotiyTypeList[selectedIndex]
-                                                  .isSelected = true;
-                                            });
-                                          }
-                                          print("Swiped right");
-                                        } else if (swipLeft == true &&
-                                            swipeRigth == false) {
-                                          if (selectedIndex != 2) {
-                                            selectedIndex++;
-                                            super.setState(() {
-                                              updateType();
-                                              arrNotiyTypeList[selectedIndex]
-                                                  .isSelected = true;
-                                            });
-                                          }
-                                          print("Swiped left");
+                                    } else {
+                                      if (swipLeft == false &&
+                                          swipeRigth == true) {
+                                        if (selectedIndex != 0) {
+                                          selectedIndex--;
+                                          super.setState(() {
+                                            updateType();
+                                            arrNotiyTypeList[selectedIndex]
+                                                .isSelected = true;
+                                          });
                                         }
-                                      } else {
-                                        if (swipLeft == false &&
-                                            swipeRigth == true) {
-                                          if (selectedIndex != 0) {
-                                            selectedIndex--;
-                                            super.setState(() {
-                                              updateType();
-                                              arrNotiyTypeList[selectedIndex]
-                                                  .isSelected = true;
-                                            });
-                                          }
-                                          print("Swiped right");
-                                        } else if (swipLeft == true &&
-                                            swipeRigth == false) {
-                                          if (selectedIndex != 3) {
-                                            selectedIndex++;
-                                            super.setState(() {
-                                              updateType();
-                                              arrNotiyTypeList[selectedIndex]
-                                                  .isSelected = true;
-                                            });
-                                          }
-                                          print("Swiped left");
+                                        print("Swiped right");
+                                      } else if (swipLeft == true &&
+                                          swipeRigth == false) {
+                                        if (selectedIndex != 3) {
+                                          selectedIndex++;
+                                          super.setState(() {
+                                            updateType();
+                                            arrNotiyTypeList[selectedIndex]
+                                                .isSelected = true;
+                                          });
                                         }
+                                        print("Swiped left");
                                       }
+                                    }
 
-                                      scrollController.animateTo(0.0,
-                                          duration: Duration(milliseconds: 300),
-                                          curve: Curves.easeOut);
-                                    },
-                                    child: Container(
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        children: <Widget>[
-                                          /// Content of Tab 1
-                                          arrNotiyTypeList[0].isSelected
-                                              ? NewProfileData
-                                                          ?.object?.isBlock ==
-                                                      true
-                                                  ? Column(
+                                    scrollController.animateTo(0.0,
+                                        duration: Duration(milliseconds: 300),
+                                        curve: Curves.easeOut);
+                                  },
+                                  child: Container(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: <Widget>[
+                                        /// Content of Tab 1
+                                        arrNotiyTypeList[0].isSelected
+                                            ? NewProfileData?.object?.isBlock ==
+                                                    true
+                                                ? Column(
+                                                    children: [
+                                                      SizedBox(
+                                                        height: 60,
+                                                      ),
+                                                      Center(
+                                                        child: Image.asset(
+                                                          ImageConstant
+                                                              .nopostimage,
+                                                          height: _height / 5,
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  )
+                                                : Padding(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            left: 16,
+                                                            right: 16,
+                                                            top: 14),
+                                                    child: Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
                                                       children: [
-                                                        SizedBox(
-                                                          height: 60,
-                                                        ),
-                                                        Center(
-                                                          child: Image.asset(
-                                                            ImageConstant
-                                                                .nopostimage,
-                                                            height: _height / 5,
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    )
-                                                  : Padding(
-                                                      padding:
-                                                          const EdgeInsets.only(
-                                                              left: 16,
-                                                              right: 16,
-                                                              top: 14),
-                                                      child: Column(
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
-                                                        children: [
-                                                          /* if (User_ID ==
-                                                      NewProfileData
-                                                          ?.object?.userUid) */
-                                                          Card(
-                                                              color:
-                                                                  Colors.white,
-                                                              borderOnForeground:
-                                                                  true,
-                                                              elevation: 10,
-                                                              shape:
-                                                                  RoundedRectangleBorder(
-                                                                borderRadius:
-                                                                    BorderRadius
-                                                                        .circular(
-                                                                            15.0),
-                                                              ),
-                                                              child: Column(
-                                                                children: [
-                                                                  Padding(
-                                                                    padding: const EdgeInsets
-                                                                            .only(
-                                                                        top: 10,
-                                                                        right:
-                                                                            20,
-                                                                        left:
-                                                                            20),
-                                                                    child: Row(
-                                                                      mainAxisAlignment:
-                                                                          MainAxisAlignment
-                                                                              .spaceBetween,
-                                                                      children: [
-                                                                        Text(
-                                                                          'About Me',
-                                                                          style:
-                                                                              TextStyle(
-                                                                            color:
-                                                                                Colors.black,
-                                                                            fontSize:
-                                                                                18,
-                                                                            fontWeight:
-                                                                                FontWeight.w600,
-                                                                          ),
+                                                        /* if (User_ID ==
+                                                        NewProfileData
+                                                            ?.object?.userUid) */
+                                                        Card(
+                                                            color: Colors.white,
+                                                            borderOnForeground:
+                                                                true,
+                                                            elevation: 10,
+                                                            shape:
+                                                                RoundedRectangleBorder(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          15.0),
+                                                            ),
+                                                            child: Column(
+                                                              children: [
+                                                                Padding(
+                                                                  padding: const EdgeInsets
+                                                                          .only(
+                                                                      top: 10,
+                                                                      right: 20,
+                                                                      left: 20),
+                                                                  child: Row(
+                                                                    mainAxisAlignment:
+                                                                        MainAxisAlignment
+                                                                            .spaceBetween,
+                                                                    children: [
+                                                                      Text(
+                                                                        'About Me',
+                                                                        style:
+                                                                            TextStyle(
+                                                                          color:
+                                                                              Colors.black,
+                                                                          fontSize:
+                                                                              18,
+                                                                          fontWeight:
+                                                                              FontWeight.w600,
                                                                         ),
-                                                                        User_ID !=
-                                                                                NewProfileData?.object?.userUid
-                                                                            ? SizedBox.shrink()
-                                                                            : GestureDetector(
-                                                                                onTap: () {
-                                                                                  super.setState(() {
-                                                                                    isUpDate = true;
-                                                                                    isAbourtMe = false;
-                                                                                    AbboutMeShow = false;
-                                                                                  });
-                                                                                },
-                                                                                child: isUpDate == true
-                                                                                    ? GestureDetector(
-                                                                                        onTap: () {
-                                                                                          if (aboutMe.text.isNotEmpty) {
-                                                                                            BlocProvider.of<NewProfileSCubit>(context).abboutMeApi(context, aboutMe.text);
-                                                                                          } else {
-                                                                                            SnackBar snackBar = SnackBar(
-                                                                                              content: Text('Please Enter About Me'),
-                                                                                              backgroundColor: ColorConstant.primary_color,
-                                                                                            );
-                                                                                            ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                                                                                          }
-                                                                                        },
-                                                                                        child: Container(
-                                                                                          alignment: Alignment.center,
-                                                                                          height: 24,
-                                                                                          width: 50,
-                                                                                          decoration: BoxDecoration(
-                                                                                            borderRadius: BorderRadius.circular(5),
-                                                                                            color: ColorConstant.primary_color,
-                                                                                          ),
-                                                                                          child: Text(
-                                                                                            'SAVE',
-                                                                                            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-                                                                                          ),
-                                                                                        ),
-                                                                                      )
-                                                                                    : Icon(
-                                                                                        Icons.edit,
-                                                                                        color: Colors.black,
-                                                                                      ),
-                                                                              )
-                                                                      ],
-                                                                    ),
-                                                                  ),
-                                                                  isUpDate ==
-                                                                          false
-                                                                      ? Padding(
-                                                                          padding: const EdgeInsets.only(
-                                                                              top: 12,
-                                                                              left: 10,
-                                                                              right: 10,
-                                                                              bottom: 15),
-                                                                          child:
-                                                                              Container(
-                                                                            margin:
-                                                                                EdgeInsets.only(left: 10),
-                                                                            alignment:
-                                                                                Alignment.topLeft,
-                                                                            child:
-                                                                                LinkifyText(
-                                                                              "${aboutMe.text}",
-                                                                              linkStyle: TextStyle(
-                                                                                color: Colors.blue,
-                                                                                fontFamily: 'outfit',
-                                                                              ),
-                                                                              textStyle: TextStyle(
-                                                                                color: Colors.black,
-                                                                                fontFamily: 'outfit',
-                                                                              ),
-                                                                              linkTypes: [
-                                                                                LinkType.url,
-                                                                                LinkType.userTag,
-                                                                                LinkType.hashTag,
-                                                                                // LinkType
-                                                                                //     .email
-                                                                              ],
-                                                                              onTap: (link) async {
-                                                                                /// do stuff with `link` like
-                                                                                /// if(link.type == Link.url) launchUrl(link.value);
-
-                                                                                var SelectedTest = link.value.toString();
-                                                                                var Link = SelectedTest.startsWith('https');
-                                                                                var Link1 = SelectedTest.startsWith('http');
-                                                                                var Link2 = SelectedTest.startsWith('www');
-                                                                                var Link3 = SelectedTest.startsWith('WWW');
-                                                                                var Link4 = SelectedTest.startsWith('HTTPS');
-                                                                                var Link5 = SelectedTest.startsWith('HTTP');
-                                                                                var Link6 = SelectedTest.startsWith('https://pdslink.page.link/');
-                                                                                print(SelectedTest.toString());
-
-                                                                                if (User_ID == null) {
-                                                                                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
-                                                                                } else {
-                                                                                  if (Link == true || Link1 == true || Link2 == true || Link3 == true || Link4 == true || Link5 == true || Link6 == true) {
-                                                                                    if (Link2 == true || Link3 == true) {
-                                                                                      launchUrl(Uri.parse("https://${link.value.toString()}"));
-                                                                                      print("qqqqqqqqhttps://${link.value}");
-                                                                                    } else {
-                                                                                      if (Link6 == true) {
-                                                                                        print("yes i am inList =   room");
-                                                                                        Navigator.push(context, MaterialPageRoute(
-                                                                                          builder: (context) {
-                                                                                            return NewBottomBar(
-                                                                                              buttomIndex: 1,
-                                                                                            );
-                                                                                          },
-                                                                                        ));
-                                                                                      } else {
-                                                                                        launchUrl(Uri.parse(link.value.toString()));
-                                                                                        print("link.valuelink.value -- ${link.value}");
-                                                                                      }
-                                                                                    }
-                                                                                  } else {
-                                                                                    if (link.value!.startsWith('#')) {
-                                                                                      Navigator.push(
-                                                                                          context,
-                                                                                          MaterialPageRoute(
-                                                                                            builder: (context) => HashTagViewScreen(title: "${link.value}"),
-                                                                                          ));
-                                                                                    } else if (link.value!.startsWith('@')) {
-                                                                                      var name;
-                                                                                      var tagName;
-                                                                                      name = SelectedTest;
-                                                                                      tagName = name.replaceAll("@", "");
-                                                                                      await BlocProvider.of<NewProfileSCubit>(context).UserTagAPI(context, tagName);
-                                                                                    } else {
-                                                                                      launchUrl(Uri.parse("https://${link.value.toString()}"));
-                                                                                    }
-                                                                                  }
-                                                                                }
+                                                                      ),
+                                                                      User_ID !=
+                                                                              NewProfileData?.object?.userUid
+                                                                          ? SizedBox.shrink()
+                                                                          : GestureDetector(
+                                                                              onTap: () {
+                                                                                super.setState(() {
+                                                                                  isUpDate = true;
+                                                                                  isAbourtMe = false;
+                                                                                  AbboutMeShow = false;
+                                                                                });
                                                                               },
-                                                                            ),
-                                                                          ),
-                                                                        )
-                                                                      : Padding(
-                                                                          padding:
-                                                                              const EdgeInsets.only(left: 0),
-                                                                          child:
-                                                                              Column(
-                                                                            crossAxisAlignment:
-                                                                                CrossAxisAlignment.start,
-                                                                            children: [
-                                                                              SizedBox(
-                                                                                height: 15,
-                                                                              ),
-
-                                                                              SizedBox(
-                                                                                height: 5,
-                                                                              ),
-                                                                              AbboutMeShow == true
-                                                                                  ? Padding(
-                                                                                      padding: const EdgeInsets.only(left: 20, right: 20),
+                                                                              child: isUpDate == true
+                                                                                  ? GestureDetector(
+                                                                                      onTap: () {
+                                                                                        if (aboutMe.text.isNotEmpty) {
+                                                                                          BlocProvider.of<NewProfileSCubit>(context).abboutMeApi(context, aboutMe.text);
+                                                                                        } else {
+                                                                                          SnackBar snackBar = SnackBar(
+                                                                                            content: Text('Please Enter About Me'),
+                                                                                            backgroundColor: ColorConstant.primary_color,
+                                                                                          );
+                                                                                          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                                                                        }
+                                                                                      },
                                                                                       child: Container(
                                                                                         alignment: Alignment.center,
-                                                                                        height: 50,
-                                                                                        // width:
-                                                                                        //     _width /
-                                                                                        //         1.5,
+                                                                                        height: 24,
+                                                                                        width: 50,
                                                                                         decoration: BoxDecoration(
-                                                                                            // color: Colors.amber
-                                                                                            borderRadius: BorderRadius.circular(10),
-                                                                                            border: Border.all(color: Color(0xffEFEFEF))),
+                                                                                          borderRadius: BorderRadius.circular(5),
+                                                                                          color: ColorConstant.primary_color,
+                                                                                        ),
                                                                                         child: Text(
-                                                                                          'Enter About Me',
-                                                                                          style: TextStyle(fontSize: 14, fontWeight: FontWeight.w300, color: Colors.black),
+                                                                                          'SAVE',
+                                                                                          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
                                                                                         ),
                                                                                       ),
                                                                                     )
-                                                                                  : Padding(
-                                                                                      padding: EdgeInsets.only(
-                                                                                        left: 16,
-                                                                                        right: 16,
-                                                                                        top: 0,
-                                                                                      ),
-                                                                                      child: Stack(
-                                                                                        children: [
-                                                                                          Column(
-                                                                                            children: [
-                                                                                              SizedBox(
-                                                                                                height: 100,
-                                                                                                child: FlutterMentions(
-                                                                                                  readOnly: isAbourtMe,
-                                                                                                  defaultText: aboutMe.text,
-                                                                                                  onChanged: (value) {
-                                                                                                    onChangeMethod(value);
-                                                                                                  },
-                                                                                                  suggestionPosition: SuggestionPosition.values.first,
-                                                                                                  maxLines: 5,
-                                                                                                  decoration: InputDecoration(
-                                                                                                    hintText: 'Enter About Me',
-                                                                                                    border: InputBorder.none,
-                                                                                                    focusedBorder: InputBorder.none,
-                                                                                                  ),
-                                                                                                  mentions: [
-                                                                                                    Mention(
-                                                                                                        trigger: "@",
-                                                                                                        data: tageData,
-                                                                                                        matchAll: true,
-                                                                                                        style: TextStyle(color: Colors.blue),
-                                                                                                        suggestionBuilder: (tageData) {
-                                                                                                          if (istageData) {
-                                                                                                            return Container(
-                                                                                                              padding: EdgeInsets.all(10.0),
-                                                                                                              child: Row(
-                                                                                                                children: <Widget>[
-                                                                                                                  tageData['photo'] != null
-                                                                                                                      ? CircleAvatar(
-                                                                                                                          backgroundImage: NetworkImage(
-                                                                                                                            tageData['photo'],
-                                                                                                                          ),
-                                                                                                                        )
-                                                                                                                      : CircleAvatar(
-                                                                                                                          backgroundImage: AssetImage(ImageConstant.tomcruse),
-                                                                                                                        ),
-                                                                                                                  SizedBox(
-                                                                                                                    width: 20.0,
-                                                                                                                  ),
-                                                                                                                  Column(
-                                                                                                                    children: <Widget>[
-                                                                                                                      Text('@${tageData['display']}'),
-                                                                                                                    ],
-                                                                                                                  )
-                                                                                                                ],
-                                                                                                              ),
-                                                                                                            );
-                                                                                                          }
-
-                                                                                                          return Container(
-                                                                                                            color: Colors.amber,
-                                                                                                          );
-                                                                                                        }),
-                                                                                                    Mention(
-                                                                                                        trigger: "#",
-                                                                                                        style: TextStyle(color: Colors.blue),
-                                                                                                        disableMarkup: true,
-                                                                                                        data: heshTageData,
-                                                                                                        // matchAll: true,
-                                                                                                        suggestionBuilder: (tageData) {
-                                                                                                          if (isHeshTegData) {
-                                                                                                            return Container(
-                                                                                                                padding: EdgeInsets.all(10.0),
-                                                                                                                child: ListTile(
-                                                                                                                  leading: CircleAvatar(
-                                                                                                                    child: Text('#'),
-                                                                                                                  ),
-                                                                                                                  title: Text('${tageData['display']}'),
-                                                                                                                )
-                                                                                                                /* Column(
-                                                                                                                                  crossAxisAlignment:
-                                                                                                                                      CrossAxisAlignment
-                                                                                                                                                  .start,
-                                                                                                                                  children: <Widget>[
-                                                                                                                                    Text(
-                                                                                                                                        '${tageData['display']}'),
-                                                                                                                                  ],
-                                                                                                                                ), */
-                                                                                                                );
-                                                                                                          }
-
-                                                                                                          return Container(
-                                                                                                            color: Colors.amber,
-                                                                                                          );
-                                                                                                        }),
-                                                                                                  ],
-                                                                                                ),
-                                                                                              ),
-                                                                                            ],
-                                                                                          ),
-                                                                                        ],
-                                                                                      ),
+                                                                                  : Icon(
+                                                                                      Icons.edit,
+                                                                                      color: Colors.black,
                                                                                     ),
-
-                                                                              // Padding(
-                                                                              //         padding: const EdgeInsets
-                                                                              //                 .only(
-                                                                              //             left:
-                                                                              //                 20,
-                                                                              //             right:
-                                                                              //                 20),
-                                                                              //         child:
-                                                                              //             TextFormField(
-                                                                              //           inputFormatters: [
-                                                                              //             LengthLimitingTextInputFormatter(
-                                                                              //                 500),
-                                                                              //           ],
-                                                                              //           readOnly:
-                                                                              //               isAbourtMe,
-                                                                              //           controller:
-                                                                              //               aboutMe,
-                                                                              //           maxLines:
-                                                                              //               5,
-                                                                              //           decoration:
-                                                                              //               InputDecoration(
-                                                                              //             border:
-                                                                              //                 OutlineInputBorder(),
-                                                                              //           ),
-                                                                              //         ),
-                                                                              //       ),
-                                                                              //wiil DataGet
-                                                                              /*   : */
-                                                                              SizedBox(
-                                                                                height: 12,
-                                                                              ),
+                                                                            )
+                                                                    ],
+                                                                  ),
+                                                                ),
+                                                                isUpDate ==
+                                                                        false
+                                                                    ? Padding(
+                                                                        padding: const EdgeInsets.only(
+                                                                            top:
+                                                                                12,
+                                                                            left:
+                                                                                10,
+                                                                            right:
+                                                                                10,
+                                                                            bottom:
+                                                                                15),
+                                                                        child:
+                                                                            Container(
+                                                                          margin:
+                                                                              EdgeInsets.only(left: 10),
+                                                                          alignment:
+                                                                              Alignment.topLeft,
+                                                                          child:
+                                                                              LinkifyText(
+                                                                            "${aboutMe.text}",
+                                                                            linkStyle:
+                                                                                TextStyle(
+                                                                              color: Colors.blue,
+                                                                              fontFamily: 'outfit',
+                                                                            ),
+                                                                            textStyle:
+                                                                                TextStyle(
+                                                                              color: Colors.black,
+                                                                              fontFamily: 'outfit',
+                                                                            ),
+                                                                            linkTypes: [
+                                                                              LinkType.url,
+                                                                              LinkType.userTag,
+                                                                              LinkType.hashTag,
+                                                                              // LinkType
+                                                                              //     .email
                                                                             ],
+                                                                            onTap:
+                                                                                (link) async {
+                                                                              /// do stuff with `link` like
+                                                                              /// if(link.type == Link.url) launchUrl(link.value);
+
+                                                                              var SelectedTest = link.value.toString();
+                                                                              var Link = SelectedTest.startsWith('https');
+                                                                              var Link1 = SelectedTest.startsWith('http');
+                                                                              var Link2 = SelectedTest.startsWith('www');
+                                                                              var Link3 = SelectedTest.startsWith('WWW');
+                                                                              var Link4 = SelectedTest.startsWith('HTTPS');
+                                                                              var Link5 = SelectedTest.startsWith('HTTP');
+                                                                              var Link6 = SelectedTest.startsWith('https://pdslink.page.link/');
+                                                                              print(SelectedTest.toString());
+
+                                                                              if (User_ID == null) {
+                                                                                Navigator.of(context).push(MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
+                                                                              } else {
+                                                                                if (Link == true || Link1 == true || Link2 == true || Link3 == true || Link4 == true || Link5 == true || Link6 == true) {
+                                                                                  if (Link2 == true || Link3 == true) {
+                                                                                    launchUrl(Uri.parse("https://${link.value.toString()}"));
+                                                                                    print("qqqqqqqqhttps://${link.value}");
+                                                                                  } else {
+                                                                                    if (Link6 == true) {
+                                                                                      print("yes i am inList =   room");
+                                                                                      Navigator.push(context, MaterialPageRoute(
+                                                                                        builder: (context) {
+                                                                                          return NewBottomBar(
+                                                                                            buttomIndex: 1,
+                                                                                          );
+                                                                                        },
+                                                                                      ));
+                                                                                    } else {
+                                                                                      launchUrl(Uri.parse(link.value.toString()));
+                                                                                      print("link.valuelink.value -- ${link.value}");
+                                                                                    }
+                                                                                  }
+                                                                                } else {
+                                                                                  if (link.value!.startsWith('#')) {
+                                                                                    Navigator.push(
+                                                                                        context,
+                                                                                        MaterialPageRoute(
+                                                                                          builder: (context) => HashTagViewScreen(title: "${link.value}"),
+                                                                                        ));
+                                                                                  } else if (link.value!.startsWith('@')) {
+                                                                                    var name;
+                                                                                    var tagName;
+                                                                                    name = SelectedTest;
+                                                                                    tagName = name.replaceAll("@", "");
+                                                                                    await BlocProvider.of<NewProfileSCubit>(context).UserTagAPI(context, tagName);
+                                                                                  } else {
+                                                                                    launchUrl(Uri.parse("https://${link.value.toString()}"));
+                                                                                  }
+                                                                                }
+                                                                              }
+                                                                            },
                                                                           ),
                                                                         ),
-                                                                ],
-                                                              )),
-                                                          /* if ((NewProfileData?.object
-                                                                    ?.aboutMe !=
-                                                                null &&
-                                                            User_ID !=
-                                                                NewProfileData
-                                                                    ?.object
-                                                                    ?.userUid) &&
-                                                        (NewProfileData?.object
-                                                                    ?.accountType ==
-                                                                'PUBLIC' &&
-                                                            NewProfileData?.object
-                                                                    ?.aboutMe !=
-                                                                null) ||
-                                                    (NewProfileData?.object
-                                                                ?.isFollowing ==
-                                                            'FOLLOWING' &&
-                                                        NewProfileData?.object
-                                                                ?.accountType ==
-                                                            'PRIVATE' &&
-                                                        NewProfileData?.object
-                                                                ?.aboutMe !=
-                                                            null))
-                                                  GestureDetector(
-                                                    onTap: () {
-                                                      print(
-                                                          "thid is -${NewProfileData?.object?.aboutMe}");
-                                                    },
-                                                    child: Card(
-                                                        color: Colors.white,
-                                                        borderOnForeground: true,
-                                                        elevation: 10,
-                                                        shape:
-                                                            RoundedRectangleBorder(
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(15.0),
-                                                        ),
-                                                        /*  child: expertUser(_height, _width) */
-                                                        child: Column(
-                                                          children: [
-                                                            ListTile(
-                                                                /*     leading:
+                                                                      )
+                                                                    : Padding(
+                                                                        padding:
+                                                                            const EdgeInsets.only(left: 0),
+                                                                        child:
+                                                                            Column(
+                                                                          crossAxisAlignment:
+                                                                              CrossAxisAlignment.start,
+                                                                          children: [
+                                                                            SizedBox(
+                                                                              height: 15,
+                                                                            ),
+
+                                                                            SizedBox(
+                                                                              height: 5,
+                                                                            ),
+                                                                            AbboutMeShow == true
+                                                                                ? Padding(
+                                                                                    padding: const EdgeInsets.only(left: 20, right: 20),
+                                                                                    child: Container(
+                                                                                      alignment: Alignment.center,
+                                                                                      height: 50,
+                                                                                      // width:
+                                                                                      //     _width /
+                                                                                      //         1.5,
+                                                                                      decoration: BoxDecoration(
+                                                                                          // color: Colors.amber
+                                                                                          borderRadius: BorderRadius.circular(10),
+                                                                                          border: Border.all(color: Color(0xffEFEFEF))),
+                                                                                      child: Text(
+                                                                                        'Enter About Me',
+                                                                                        style: TextStyle(fontSize: 14, fontWeight: FontWeight.w300, color: Colors.black),
+                                                                                      ),
+                                                                                    ),
+                                                                                  )
+                                                                                : Padding(
+                                                                                    padding: EdgeInsets.only(
+                                                                                      left: 16,
+                                                                                      right: 16,
+                                                                                      top: 0,
+                                                                                    ),
+                                                                                    child: Stack(
+                                                                                      children: [
+                                                                                        Column(
+                                                                                          children: [
+                                                                                            SizedBox(
+                                                                                              height: 100,
+                                                                                              child: FlutterMentions(
+                                                                                                readOnly: isAbourtMe,
+                                                                                                defaultText: aboutMe.text,
+                                                                                                onChanged: (value) {
+                                                                                                  onChangeMethod(value);
+                                                                                                },
+                                                                                                suggestionPosition: SuggestionPosition.values.first,
+                                                                                                maxLines: 5,
+                                                                                                decoration: InputDecoration(
+                                                                                                  hintText: 'Enter About Me',
+                                                                                                  border: InputBorder.none,
+                                                                                                  focusedBorder: InputBorder.none,
+                                                                                                ),
+                                                                                                mentions: [
+                                                                                                  Mention(
+                                                                                                      trigger: "@",
+                                                                                                      data: tageData,
+                                                                                                      matchAll: true,
+                                                                                                      style: TextStyle(color: Colors.blue),
+                                                                                                      suggestionBuilder: (tageData) {
+                                                                                                        if (istageData) {
+                                                                                                          return Container(
+                                                                                                            padding: EdgeInsets.all(10.0),
+                                                                                                            child: Row(
+                                                                                                              children: <Widget>[
+                                                                                                                tageData['photo'] != null
+                                                                                                                    ? CircleAvatar(
+                                                                                                                        backgroundImage: NetworkImage(
+                                                                                                                          tageData['photo'],
+                                                                                                                        ),
+                                                                                                                      )
+                                                                                                                    : CircleAvatar(
+                                                                                                                        backgroundImage: AssetImage(ImageConstant.tomcruse),
+                                                                                                                      ),
+                                                                                                                SizedBox(
+                                                                                                                  width: 20.0,
+                                                                                                                ),
+                                                                                                                Column(
+                                                                                                                  children: <Widget>[
+                                                                                                                    Text('@${tageData['display']}'),
+                                                                                                                  ],
+                                                                                                                )
+                                                                                                              ],
+                                                                                                            ),
+                                                                                                          );
+                                                                                                        }
+
+                                                                                                        return Container(
+                                                                                                          color: Colors.amber,
+                                                                                                        );
+                                                                                                      }),
+                                                                                                  Mention(
+                                                                                                      trigger: "#",
+                                                                                                      style: TextStyle(color: Colors.blue),
+                                                                                                      disableMarkup: true,
+                                                                                                      data: heshTageData,
+                                                                                                      // matchAll: true,
+                                                                                                      suggestionBuilder: (tageData) {
+                                                                                                        if (isHeshTegData) {
+                                                                                                          return Container(
+                                                                                                              padding: EdgeInsets.all(10.0),
+                                                                                                              child: ListTile(
+                                                                                                                leading: CircleAvatar(
+                                                                                                                  child: Text('#'),
+                                                                                                                ),
+                                                                                                                title: Text('${tageData['display']}'),
+                                                                                                              )
+                                                                                                              /* Column(
+                                                                                                                                    crossAxisAlignment:
+                                                                                                                                        CrossAxisAlignment
+                                                                                                                                                    .start,
+                                                                                                                                    children: <Widget>[
+                                                                                                                                      Text(
+                                                                                                                                          '${tageData['display']}'),
+                                                                                                                                    ],
+                                                                                                                                  ), */
+                                                                                                              );
+                                                                                                        }
+
+                                                                                                        return Container(
+                                                                                                          color: Colors.amber,
+                                                                                                        );
+                                                                                                      }),
+                                                                                                ],
+                                                                                              ),
+                                                                                            ),
+                                                                                          ],
+                                                                                        ),
+                                                                                      ],
+                                                                                    ),
+                                                                                  ),
+
+                                                                            // Padding(
+                                                                            //         padding: const EdgeInsets
+                                                                            //                 .only(
+                                                                            //             left:
+                                                                            //                 20,
+                                                                            //             right:
+                                                                            //                 20),
+                                                                            //         child:
+                                                                            //             TextFormField(
+                                                                            //           inputFormatters: [
+                                                                            //             LengthLimitingTextInputFormatter(
+                                                                            //                 500),
+                                                                            //           ],
+                                                                            //           readOnly:
+                                                                            //               isAbourtMe,
+                                                                            //           controller:
+                                                                            //               aboutMe,
+                                                                            //           maxLines:
+                                                                            //               5,
+                                                                            //           decoration:
+                                                                            //               InputDecoration(
+                                                                            //             border:
+                                                                            //                 OutlineInputBorder(),
+                                                                            //           ),
+                                                                            //         ),
+                                                                            //       ),
+                                                                            //wiil DataGet
+                                                                            /*   : */
+                                                                            SizedBox(
+                                                                              height: 12,
+                                                                            ),
+                                                                          ],
+                                                                        ),
+                                                                      ),
+                                                              ],
+                                                            )),
+                                                        /* if ((NewProfileData?.object
+                                                                      ?.aboutMe !=
+                                                                  null &&
+                                                              User_ID !=
+                                                                  NewProfileData
+                                                                      ?.object
+                                                                      ?.userUid) &&
+                                                          (NewProfileData?.object
+                                                                      ?.accountType ==
+                                                                  'PUBLIC' &&
+                                                              NewProfileData?.object
+                                                                      ?.aboutMe !=
+                                                                  null) ||
+                                                      (NewProfileData?.object
+                                                                  ?.isFollowing ==
+                                                              'FOLLOWING' &&
+                                                          NewProfileData?.object
+                                                                  ?.accountType ==
+                                                              'PRIVATE' &&
+                                                          NewProfileData?.object
+                                                                  ?.aboutMe !=
+                                                              null))
+                                                    GestureDetector(
+                                                      onTap: () {
+                                                        print(
+                                                            "thid is -${NewProfileData?.object?.aboutMe}");
+                                                      },
+                                                      child: Card(
+                                                          color: Colors.white,
+                                                          borderOnForeground: true,
+                                                          elevation: 10,
+                                                          shape:
+                                                              RoundedRectangleBorder(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(15.0),
+                                                          ),
+                                                          /*  child: expertUser(_height, _width) */
+                                                          child: Column(
+                                                            children: [
+                                                              ListTile(
+                                                                  /*     leading:
+                                                                            Container(
+                                                                          width: 35,
+                                                                          height: 35,
+                                                                          decoration:
+                                                                              ShapeDecoration(
+                                                                            color:ColorConstant.primary_color,
+                                                                            shape:
+                                                                                OvalBorder(),
+                                                                          ),
+                                                                        ), */
+                                                                  title: Text(
+                                                                    'About Me',
+                                                                    style:
+                                                                        TextStyle(
+                                                                      color: Colors
+                                                                          .black,
+                                                                      fontSize: 18,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w600,
+                                                                    ),
+                                                                  ),
+                                                                  subtitle: /* Text(
+                                                                        '${NewProfileData?.object?.aboutMe}',
+                                                                        style: TextStyle(
+                                                                            color: Colors
+                                                                                .black,
+                                                                            fontSize: 14,
+                                                                            fontFamily:
+                                                                                "outfit"),
+                                                                      ), */
+      
+                                                                      LinkifyText(
+                                                                    "${NewProfileData?.object?.aboutMe}",
+                                                                    linkStyle:
+                                                                        TextStyle(
+                                                                      color: Colors
+                                                                          .blue,
+                                                                      fontFamily:
+                                                                          'outfit',
+                                                                    ),
+                                                                    textStyle:
+                                                                        TextStyle(
+                                                                      color: Colors
+                                                                          .black,
+                                                                      fontFamily:
+                                                                          'outfit',
+                                                                    ),
+                                                                    linkTypes: [
+                                                                      LinkType.url,
+                                                                      LinkType
+                                                                          .userTag,
+                                                                      LinkType
+                                                                          .hashTag,
+                                                                      // LinkType
+                                                                      //     .email
+                                                                    ],
+                                                                    onTap:
+                                                                        (link) async {
+                                                                      /// do stuff with `link` like
+                                                                      /// if(link.type == Link.url) launchUrl(link.value);
+      
+                                                                      var SelectedTest =
+                                                                          link.value
+                                                                              .toString();
+                                                                      var Link = SelectedTest
+                                                                          .startsWith(
+                                                                              'https');
+                                                                      var Link1 = SelectedTest
+                                                                          .startsWith(
+                                                                              'http');
+                                                                      var Link2 = SelectedTest
+                                                                          .startsWith(
+                                                                              'www');
+                                                                      var Link3 = SelectedTest
+                                                                          .startsWith(
+                                                                              'WWW');
+                                                                      var Link4 = SelectedTest
+                                                                          .startsWith(
+                                                                              'HTTPS');
+                                                                      var Link5 = SelectedTest
+                                                                          .startsWith(
+                                                                              'HTTP');
+                                                                      var Link6 = SelectedTest
+                                                                          .startsWith(
+                                                                              'https://pdslink.page.link/');
+                                                                      print(SelectedTest
+                                                                          .toString());
+      
+                                                                      if (User_ID ==
+                                                                          null) {
+                                                                        Navigator.of(
+                                                                                context)
+                                                                            .push(MaterialPageRoute(
+                                                                                builder: (context) =>
+                                                                                    RegisterCreateAccountScreen()));
+                                                                      } else {
+                                                                        if (Link ==
+                                                                                true ||
+                                                                            Link1 ==
+                                                                                true ||
+                                                                            Link2 ==
+                                                                                true ||
+                                                                            Link3 ==
+                                                                                true ||
+                                                                            Link4 ==
+                                                                                true ||
+                                                                            Link5 ==
+                                                                                true ||
+                                                                            Link6 ==
+                                                                                true) {
+                                                                          if (Link2 ==
+                                                                                  true ||
+                                                                              Link3 ==
+                                                                                  true) {
+                                                                            launchUrl(
+                                                                                Uri.parse("https://${link.value.toString()}"));
+                                                                            print(
+                                                                                "qqqqqqqqhttps://${link.value}");
+                                                                          } else {
+                                                                            if (Link6 ==
+                                                                                true) {
+                                                                              print(
+                                                                                  "yes i am inList =   room");
+                                                                              Navigator.push(
+                                                                                  context,
+                                                                                  MaterialPageRoute(
+                                                                                builder:
+                                                                                    (context) {
+                                                                                  return NewBottomBar(
+                                                                                    buttomIndex: 1,
+                                                                                  );
+                                                                                },
+                                                                              ));
+                                                                            } else {
+                                                                              launchUrl(Uri.parse(link
+                                                                                  .value
+                                                                                  .toString()));
+                                                                              print(
+                                                                                  "link.valuelink.value -- ${link.value}");
+                                                                            }
+                                                                          }
+                                                                        } else {
+                                                                          if (link
+                                                                              .value!
+                                                                              .startsWith(
+                                                                                  '#')) {
+                                                                            Navigator.push(
+                                                                                context,
+                                                                                MaterialPageRoute(
+                                                                                  builder: (context) => HashTagViewScreen(title: "${link.value}"),
+                                                                                ));
+                                                                          } else if (link
+                                                                              .value!
+                                                                              .startsWith(
+                                                                                  '@')) {
+                                                                            var name;
+                                                                            var tagName;
+                                                                            name =
+                                                                                SelectedTest;
+                                                                            tagName = name.replaceAll(
+                                                                                "@",
+                                                                                "");
+                                                                            await BlocProvider.of<NewProfileSCubit>(context).UserTagAPI(
+                                                                                context,
+                                                                                tagName);
+                                                                          } else {
+                                                                            launchUrl(
+                                                                                Uri.parse("https://${link.value.toString()}"));
+                                                                          }
+                                                                        }
+                                                                      }
+                                                                    },
+                                                                  )),
+                                                            ],
+                                                          )),
+                                                    ), */
+
+                                                        /* Card(
+                                                          color: Colors.white,
+                                                          borderOnForeground: true,
+                                                          elevation: 10,
+                                                          shape:
+                                                              RoundedRectangleBorder(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(15.0),
+                                                          ),
+                                                          /*  child: expertUser(_height, _width) */
+                                                          child: Column(
+                                                            children: [
+                                                              ListTile(
+                                                                  /*     leading:
                                                                           Container(
                                                                         width: 35,
                                                                         height: 35,
@@ -2714,19 +2875,19 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                               OvalBorder(),
                                                                         ),
                                                                       ), */
-                                                                title: Text(
-                                                                  'About Me',
-                                                                  style:
-                                                                      TextStyle(
-                                                                    color: Colors
-                                                                        .black,
-                                                                    fontSize: 18,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w600,
+                                                                  title: Text(
+                                                                    'About Me',
+                                                                    style:
+                                                                        TextStyle(
+                                                                      color: Colors
+                                                                          .black,
+                                                                      fontSize: 18,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w600,
+                                                                    ),
                                                                   ),
-                                                                ),
-                                                                subtitle: /* Text(
+                                                                  subtitle: /* Text(
                                                                       '${NewProfileData?.object?.aboutMe}',
                                                                       style: TextStyle(
                                                                           color: Colors
@@ -2735,621 +2896,221 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                           fontFamily:
                                                                               "outfit"),
                                                                     ), */
-    
-                                                                    LinkifyText(
-                                                                  "${NewProfileData?.object?.aboutMe}",
-                                                                  linkStyle:
-                                                                      TextStyle(
-                                                                    color: Colors
-                                                                        .blue,
-                                                                    fontFamily:
-                                                                        'outfit',
-                                                                  ),
-                                                                  textStyle:
-                                                                      TextStyle(
-                                                                    color: Colors
-                                                                        .black,
-                                                                    fontFamily:
-                                                                        'outfit',
-                                                                  ),
-                                                                  linkTypes: [
-                                                                    LinkType.url,
-                                                                    LinkType
-                                                                        .userTag,
-                                                                    LinkType
-                                                                        .hashTag,
-                                                                    // LinkType
-                                                                    //     .email
-                                                                  ],
-                                                                  onTap:
-                                                                      (link) async {
-                                                                    /// do stuff with `link` like
-                                                                    /// if(link.type == Link.url) launchUrl(link.value);
-    
-                                                                    var SelectedTest =
-                                                                        link.value
-                                                                            .toString();
-                                                                    var Link = SelectedTest
-                                                                        .startsWith(
-                                                                            'https');
-                                                                    var Link1 = SelectedTest
-                                                                        .startsWith(
-                                                                            'http');
-                                                                    var Link2 = SelectedTest
-                                                                        .startsWith(
-                                                                            'www');
-                                                                    var Link3 = SelectedTest
-                                                                        .startsWith(
-                                                                            'WWW');
-                                                                    var Link4 = SelectedTest
-                                                                        .startsWith(
-                                                                            'HTTPS');
-                                                                    var Link5 = SelectedTest
-                                                                        .startsWith(
-                                                                            'HTTP');
-                                                                    var Link6 = SelectedTest
-                                                                        .startsWith(
-                                                                            'https://pdslink.page.link/');
-                                                                    print(SelectedTest
-                                                                        .toString());
-    
-                                                                    if (User_ID ==
-                                                                        null) {
-                                                                      Navigator.of(
-                                                                              context)
-                                                                          .push(MaterialPageRoute(
-                                                                              builder: (context) =>
-                                                                                  RegisterCreateAccountScreen()));
-                                                                    } else {
-                                                                      if (Link ==
-                                                                              true ||
-                                                                          Link1 ==
-                                                                              true ||
-                                                                          Link2 ==
-                                                                              true ||
-                                                                          Link3 ==
-                                                                              true ||
-                                                                          Link4 ==
-                                                                              true ||
-                                                                          Link5 ==
-                                                                              true ||
-                                                                          Link6 ==
-                                                                              true) {
-                                                                        if (Link2 ==
-                                                                                true ||
-                                                                            Link3 ==
-                                                                                true) {
-                                                                          launchUrl(
-                                                                              Uri.parse("https://${link.value.toString()}"));
-                                                                          print(
-                                                                              "qqqqqqqqhttps://${link.value}");
-                                                                        } else {
-                                                                          if (Link6 ==
-                                                                              true) {
-                                                                            print(
-                                                                                "yes i am inList =   room");
-                                                                            Navigator.push(
-                                                                                context,
-                                                                                MaterialPageRoute(
-                                                                              builder:
-                                                                                  (context) {
-                                                                                return NewBottomBar(
-                                                                                  buttomIndex: 1,
-                                                                                );
-                                                                              },
-                                                                            ));
-                                                                          } else {
-                                                                            launchUrl(Uri.parse(link
-                                                                                .value
-                                                                                .toString()));
-                                                                            print(
-                                                                                "link.valuelink.value -- ${link.value}");
-                                                                          }
-                                                                        }
-                                                                      } else {
-                                                                        if (link
-                                                                            .value!
-                                                                            .startsWith(
-                                                                                '#')) {
-                                                                          Navigator.push(
-                                                                              context,
-                                                                              MaterialPageRoute(
-                                                                                builder: (context) => HashTagViewScreen(title: "${link.value}"),
-                                                                              ));
-                                                                        } else if (link
-                                                                            .value!
-                                                                            .startsWith(
-                                                                                '@')) {
-                                                                          var name;
-                                                                          var tagName;
-                                                                          name =
-                                                                              SelectedTest;
-                                                                          tagName = name.replaceAll(
-                                                                              "@",
-                                                                              "");
-                                                                          await BlocProvider.of<NewProfileSCubit>(context).UserTagAPI(
-                                                                              context,
-                                                                              tagName);
-                                                                        } else {
-                                                                          launchUrl(
-                                                                              Uri.parse("https://${link.value.toString()}"));
-                                                                        }
-                                                                      }
-                                                                    }
-                                                                  },
-                                                                )),
-                                                          ],
-                                                        )),
-                                                  ), */
-
-                                                          /* Card(
-                                                        color: Colors.white,
-                                                        borderOnForeground: true,
-                                                        elevation: 10,
-                                                        shape:
-                                                            RoundedRectangleBorder(
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(15.0),
-                                                        ),
-                                                        /*  child: expertUser(_height, _width) */
-                                                        child: Column(
-                                                          children: [
-                                                            ListTile(
-                                                                /*     leading:
-                                                                        Container(
-                                                                      width: 35,
-                                                                      height: 35,
-                                                                      decoration:
-                                                                          ShapeDecoration(
-                                                                        color:ColorConstant.primary_color,
-                                                                        shape:
-                                                                            OvalBorder(),
-                                                                      ),
-                                                                    ), */
-                                                                title: Text(
-                                                                  'About Me',
-                                                                  style:
-                                                                      TextStyle(
-                                                                    color: Colors
-                                                                        .black,
-                                                                    fontSize: 18,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w600,
-                                                                  ),
-                                                                ),
-                                                                subtitle: /* Text(
-                                                                    '${NewProfileData?.object?.aboutMe}',
-                                                                    style: TextStyle(
-                                                                        color: Colors
-                                                                            .black,
-                                                                        fontSize: 14,
-                                                                        fontFamily:
-                                                                            "outfit"),
-                                                                  ), */
-    
-                                                                    LinkifyText(
-                                                                  "${NewProfileData?.object?.aboutMe}",
-                                                                  linkStyle:
-                                                                      TextStyle(
-                                                                    color: Colors
-                                                                        .blue,
-                                                                    fontFamily:
-                                                                        'outfit',
-                                                                  ),
-                                                                  textStyle:
-                                                                      TextStyle(
-                                                                    color: Colors
-                                                                        .black,
-                                                                    fontFamily:
-                                                                        'outfit',
-                                                                  ),
-                                                                  linkTypes: [
-                                                                    LinkType.url,
-                                                                    LinkType
-                                                                        .userTag,
-                                                                    LinkType
-                                                                        .hashTag,
-                                                                    // LinkType
-                                                                    //     .email
-                                                                  ],
-                                                                  onTap:
-                                                                      (link) async {
-                                                                    /// do stuff with `link` like
-                                                                    /// if(link.type == Link.url) launchUrl(link.value);
-    
-                                                                    var SelectedTest =
-                                                                        link.value
-                                                                            .toString();
-                                                                    var Link = SelectedTest
-                                                                        .startsWith(
-                                                                            'https');
-                                                                    var Link1 = SelectedTest
-                                                                        .startsWith(
-                                                                            'http');
-                                                                    var Link2 = SelectedTest
-                                                                        .startsWith(
-                                                                            'www');
-                                                                    var Link3 = SelectedTest
-                                                                        .startsWith(
-                                                                            'WWW');
-                                                                    var Link4 = SelectedTest
-                                                                        .startsWith(
-                                                                            'HTTPS');
-                                                                    var Link5 = SelectedTest
-                                                                        .startsWith(
-                                                                            'HTTP');
-                                                                    var Link6 = SelectedTest
-                                                                        .startsWith(
-                                                                            'https://pdslink.page.link/');
-                                                                    print(SelectedTest
-                                                                        .toString());
-    
-                                                                    if (User_ID ==
-                                                                        null) {
-                                                                      Navigator.of(
-                                                                              context)
-                                                                          .push(MaterialPageRoute(
-                                                                              builder: (context) =>
-                                                                                  RegisterCreateAccountScreen()));
-                                                                    } else {
-                                                                      if (Link ==
-                                                                              true ||
-                                                                          Link1 ==
-                                                                              true ||
-                                                                          Link2 ==
-                                                                              true ||
-                                                                          Link3 ==
-                                                                              true ||
-                                                                          Link4 ==
-                                                                              true ||
-                                                                          Link5 ==
-                                                                              true ||
-                                                                          Link6 ==
-                                                                              true) {
-                                                                        if (Link2 ==
-                                                                                true ||
-                                                                            Link3 ==
-                                                                                true) {
-                                                                          launchUrl(
-                                                                              Uri.parse("https://${link.value.toString()}"));
-                                                                          print(
-                                                                              "qqqqqqqqhttps://${link.value}");
-                                                                        } else {
-                                                                          if (Link6 ==
-                                                                              true) {
-                                                                            print(
-                                                                                "yes i am inList =   room");
-                                                                            Navigator.push(
-                                                                                context,
-                                                                                MaterialPageRoute(
-                                                                              builder:
-                                                                                  (context) {
-                                                                                return NewBottomBar(
-                                                                                  buttomIndex: 1,
-                                                                                );
-                                                                              },
-                                                                            ));
-                                                                          } else {
-                                                                            launchUrl(Uri.parse(link
-                                                                                .value
-                                                                                .toString()));
-                                                                            print(
-                                                                                "link.valuelink.value -- ${link.value}");
-                                                                          }
-                                                                        }
-                                                                      } else {
-                                                                        if (link
-                                                                            .value!
-                                                                            .startsWith(
-                                                                                '#')) {
-                                                                          Navigator.push(
-                                                                              context,
-                                                                              MaterialPageRoute(
-                                                                                builder: (context) => HashTagViewScreen(title: "${link.value}"),
-                                                                              ));
-                                                                        } else if (link
-                                                                            .value!
-                                                                            .startsWith(
-                                                                                '@')) {
-                                                                          var name;
-                                                                          var tagName;
-                                                                          name =
-                                                                              SelectedTest;
-                                                                          tagName = name.replaceAll(
-                                                                              "@",
-                                                                              "");
-                                                                          await BlocProvider.of<NewProfileSCubit>(context).UserTagAPI(
-                                                                              context,
-                                                                              tagName);
-                                                                        } else {
-                                                                          launchUrl(
-                                                                              Uri.parse("https://${link.value.toString()}"));
-                                                                        }
-                                                                      }
-                                                                    }
-                                                                  },
-                                                                )),
-                                                          ],
-                                                        )),
-     */
-                                                          /* User_ID !=
-                                                          NewProfileData
-                                                              ?.object?.userUid
-                                                      ? NewProfileData?.object
-                                                                  ?.aboutMe ==
-                                                              null
-                                                          ? SizedBox()
-                                                          : Card(
-                                                              color: Colors.white,
-                                                              borderOnForeground:
-                                                                  true,
-                                                              elevation: 10,
-                                                              shape:
-                                                                  RoundedRectangleBorder(
-                                                                borderRadius:
-                                                                    BorderRadius
-                                                                        .circular(
-                                                                            15.0),
-                                                              ),
-                                                              /*  child: expertUser(_height, _width) */
-                                                              child: Column(
-                                                                children: [
-                                                                  ListTile(
-                                                                      /*     leading:
-                                                                        Container(
-                                                                      width: 35,
-                                                                      height: 35,
-                                                                      decoration:
-                                                                          ShapeDecoration(
-                                                                        color:ColorConstant.primary_color,
-                                                                        shape:
-                                                                            OvalBorder(),
-                                                                      ),
-                                                                    ), */
-                                                                      title: Text(
-                                                                        'About Me',
-                                                                        style:
-                                                                            TextStyle(
-                                                                          color: Colors
-                                                                              .black,
-                                                                          fontSize:
-                                                                              18,
-                                                                          fontWeight:
-                                                                              FontWeight.w600,
-                                                                        ),
-                                                                      ),
-                                                                      subtitle: /* Text(
-                                                                    '${NewProfileData?.object?.aboutMe}',
-                                                                    style: TextStyle(
-                                                                        color: Colors
-                                                                            .black,
-                                                                        fontSize: 14,
-                                                                        fontFamily:
-                                                                            "outfit"),
-                                                                  ), */
-    
-                                                                          LinkifyText(
-                                                                        "${NewProfileData?.object?.aboutMe}",
-                                                                        linkStyle:
-                                                                            TextStyle(
-                                                                          color: Colors
-                                                                              .blue,
-                                                                          fontFamily:
-                                                                              'outfit',
-                                                                        ),
-                                                                        textStyle:
-                                                                            TextStyle(
-                                                                          color: Colors
-                                                                              .black,
-                                                                          fontFamily:
-                                                                              'outfit',
-                                                                        ),
-                                                                        linkTypes: [
-                                                                          LinkType
-                                                                              .url,
-                                                                          LinkType
-                                                                              .userTag,
-                                                                          LinkType
-                                                                              .hashTag,
-                                                                          // LinkType
-                                                                          //     .email
-                                                                        ],
-                                                                        onTap:
-                                                                            (link) async {
-                                                                          /// do stuff with `link` like
-                                                                          /// if(link.type == Link.url) launchUrl(link.value);
-    
-                                                                          var SelectedTest = link
-                                                                              .value
+      
+                                                                      LinkifyText(
+                                                                    "${NewProfileData?.object?.aboutMe}",
+                                                                    linkStyle:
+                                                                        TextStyle(
+                                                                      color: Colors
+                                                                          .blue,
+                                                                      fontFamily:
+                                                                          'outfit',
+                                                                    ),
+                                                                    textStyle:
+                                                                        TextStyle(
+                                                                      color: Colors
+                                                                          .black,
+                                                                      fontFamily:
+                                                                          'outfit',
+                                                                    ),
+                                                                    linkTypes: [
+                                                                      LinkType.url,
+                                                                      LinkType
+                                                                          .userTag,
+                                                                      LinkType
+                                                                          .hashTag,
+                                                                      // LinkType
+                                                                      //     .email
+                                                                    ],
+                                                                    onTap:
+                                                                        (link) async {
+                                                                      /// do stuff with `link` like
+                                                                      /// if(link.type == Link.url) launchUrl(link.value);
+      
+                                                                      var SelectedTest =
+                                                                          link.value
                                                                               .toString();
-                                                                          var Link =
-                                                                              SelectedTest.startsWith('https');
-                                                                          var Link1 =
-                                                                              SelectedTest.startsWith('http');
-                                                                          var Link2 =
-                                                                              SelectedTest.startsWith('www');
-                                                                          var Link3 =
-                                                                              SelectedTest.startsWith('WWW');
-                                                                          var Link4 =
-                                                                              SelectedTest.startsWith('HTTPS');
-                                                                          var Link5 =
-                                                                              SelectedTest.startsWith('HTTP');
-                                                                          var Link6 =
-                                                                              SelectedTest.startsWith('https://pdslink.page.link/');
-                                                                          print(SelectedTest
-                                                                              .toString());
-    
-                                                                          if (User_ID ==
-                                                                              null) {
-                                                                            Navigator.of(context)
-                                                                                .push(MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
+                                                                      var Link = SelectedTest
+                                                                          .startsWith(
+                                                                              'https');
+                                                                      var Link1 = SelectedTest
+                                                                          .startsWith(
+                                                                              'http');
+                                                                      var Link2 = SelectedTest
+                                                                          .startsWith(
+                                                                              'www');
+                                                                      var Link3 = SelectedTest
+                                                                          .startsWith(
+                                                                              'WWW');
+                                                                      var Link4 = SelectedTest
+                                                                          .startsWith(
+                                                                              'HTTPS');
+                                                                      var Link5 = SelectedTest
+                                                                          .startsWith(
+                                                                              'HTTP');
+                                                                      var Link6 = SelectedTest
+                                                                          .startsWith(
+                                                                              'https://pdslink.page.link/');
+                                                                      print(SelectedTest
+                                                                          .toString());
+      
+                                                                      if (User_ID ==
+                                                                          null) {
+                                                                        Navigator.of(
+                                                                                context)
+                                                                            .push(MaterialPageRoute(
+                                                                                builder: (context) =>
+                                                                                    RegisterCreateAccountScreen()));
+                                                                      } else {
+                                                                        if (Link ==
+                                                                                true ||
+                                                                            Link1 ==
+                                                                                true ||
+                                                                            Link2 ==
+                                                                                true ||
+                                                                            Link3 ==
+                                                                                true ||
+                                                                            Link4 ==
+                                                                                true ||
+                                                                            Link5 ==
+                                                                                true ||
+                                                                            Link6 ==
+                                                                                true) {
+                                                                          if (Link2 ==
+                                                                                  true ||
+                                                                              Link3 ==
+                                                                                  true) {
+                                                                            launchUrl(
+                                                                                Uri.parse("https://${link.value.toString()}"));
+                                                                            print(
+                                                                                "qqqqqqqqhttps://${link.value}");
                                                                           } else {
-                                                                            if (Link == true ||
-                                                                                Link1 == true ||
-                                                                                Link2 == true ||
-                                                                                Link3 == true ||
-                                                                                Link4 == true ||
-                                                                                Link5 == true ||
-                                                                                Link6 == true) {
-                                                                              if (Link2 == true ||
-                                                                                  Link3 == true) {
-                                                                                launchUrl(Uri.parse("https://${link.value.toString()}"));
-                                                                                print("qqqqqqqqhttps://${link.value}");
-                                                                              } else {
-                                                                                if (Link6 == true) {
-                                                                                  print("yes i am inList =   room");
-                                                                                  Navigator.push(context, MaterialPageRoute(
-                                                                                    builder: (context) {
-                                                                                      return NewBottomBar(
-                                                                                        buttomIndex: 1,
-                                                                                      );
-                                                                                    },
-                                                                                  ));
-                                                                                } else {
-                                                                                  launchUrl(Uri.parse(link.value.toString()));
-                                                                                  print("link.valuelink.value -- ${link.value}");
-                                                                                }
-                                                                              }
+                                                                            if (Link6 ==
+                                                                                true) {
+                                                                              print(
+                                                                                  "yes i am inList =   room");
+                                                                              Navigator.push(
+                                                                                  context,
+                                                                                  MaterialPageRoute(
+                                                                                builder:
+                                                                                    (context) {
+                                                                                  return NewBottomBar(
+                                                                                    buttomIndex: 1,
+                                                                                  );
+                                                                                },
+                                                                              ));
                                                                             } else {
-                                                                              if (link.value!.startsWith('#')) {
-                                                                                Navigator.push(
-                                                                                    context,
-                                                                                    MaterialPageRoute(
-                                                                                      builder: (context) => HashTagViewScreen(title: "${link.value}"),
-                                                                                    ));
-                                                                              } else if (link.value!.startsWith('@')) {
-                                                                                var name;
-                                                                                var tagName;
-                                                                                name = SelectedTest;
-                                                                                tagName = name.replaceAll("@", "");
-                                                                                await BlocProvider.of<NewProfileSCubit>(context).UserTagAPI(context, tagName);
-                                                                              } else {
-                                                                                launchUrl(Uri.parse("https://${link.value.toString()}"));
-                                                                              }
+                                                                              launchUrl(Uri.parse(link
+                                                                                  .value
+                                                                                  .toString()));
+                                                                              print(
+                                                                                  "link.valuelink.value -- ${link.value}");
                                                                             }
                                                                           }
-                                                                        },
-                                                                      )),
-                                                                ],
-                                                              ))
-                                                      : Card(
-                                                          color: Colors.white,
-                                                          borderOnForeground:
-                                                              true,
-                                                          elevation: 10,
-                                                          shape:
-                                                              RoundedRectangleBorder(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        15.0),
-                                                          ),
-                                                          child: Column(
-                                                            children: [
-                                                              Padding(
-                                                                padding:
-                                                                    const EdgeInsets
-                                                                            .only(
-                                                                        top: 10,
-                                                                        right: 20,
-                                                                        left: 20),
-                                                                child: Row(
-                                                                  mainAxisAlignment:
-                                                                      MainAxisAlignment
-                                                                          .spaceBetween,
-                                                                  children: [
-                                                                    Text(
-                                                                      'About Me',
-                                                                      style:
-                                                                          TextStyle(
-                                                                        color: Colors
-                                                                            .black,
-                                                                        fontSize:
-                                                                            18,
-                                                                        fontWeight:
-                                                                            FontWeight
-                                                                                .w600,
-                                                                      ),
-                                                                    ),
-                                                                    User_ID !=
-                                                                            NewProfileData
-                                                                                ?.object
-                                                                                ?.userUid
-                                                                        ? SizedBox
-                                                                            .shrink()
-                                                                        : GestureDetector(
-                                                                            onTap:
-                                                                                () {
-                                                                              super.setState(() {
-                                                                                isUpDate = true;
-                                                                                isAbourtMe = false;
-                                                                                AbboutMeShow = false;
-                                                                              });
-                                                                            },
-                                                                            child: isUpDate == true
-                                                                                ? GestureDetector(
-                                                                                    onTap: () {
-                                                                                      if (aboutMe.text.isNotEmpty) {
-                                                                                        BlocProvider.of<NewProfileSCubit>(context).abboutMeApi(context, aboutMe.text);
-                                                                                      } else {
-                                                                                        SnackBar snackBar = SnackBar(
-                                                                                          content: Text('Please Enter About Me'),
-                                                                                          backgroundColor: ColorConstant.primary_color,
-                                                                                        );
-                                                                                        ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                                                                                      }
-                                                                                    },
-                                                                                    child: Container(
-                                                                                      alignment: Alignment.center,
-                                                                                      height: 24,
-                                                                                      width: 50,
-                                                                                      decoration: BoxDecoration(
-                                                                                        borderRadius: BorderRadius.circular(5),
-                                                                                        color: ColorConstant.primary_color,
-                                                                                      ),
-                                                                                      child: Text(
-                                                                                        'SAVE',
-                                                                                        style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-                                                                                      ),
-                                                                                    ),
-                                                                                  )
-                                                                                : Icon(
-                                                                                    Icons.edit,
-                                                                                    color: Colors.black,
-                                                                                  ),
-                                                                          )
-                                                                  ],
+                                                                        } else {
+                                                                          if (link
+                                                                              .value!
+                                                                              .startsWith(
+                                                                                  '#')) {
+                                                                            Navigator.push(
+                                                                                context,
+                                                                                MaterialPageRoute(
+                                                                                  builder: (context) => HashTagViewScreen(title: "${link.value}"),
+                                                                                ));
+                                                                          } else if (link
+                                                                              .value!
+                                                                              .startsWith(
+                                                                                  '@')) {
+                                                                            var name;
+                                                                            var tagName;
+                                                                            name =
+                                                                                SelectedTest;
+                                                                            tagName = name.replaceAll(
+                                                                                "@",
+                                                                                "");
+                                                                            await BlocProvider.of<NewProfileSCubit>(context).UserTagAPI(
+                                                                                context,
+                                                                                tagName);
+                                                                          } else {
+                                                                            launchUrl(
+                                                                                Uri.parse("https://${link.value.toString()}"));
+                                                                          }
+                                                                        }
+                                                                      }
+                                                                    },
+                                                                  )),
+                                                            ],
+                                                          )),
+       */
+                                                        /* User_ID !=
+                                                            NewProfileData
+                                                                ?.object?.userUid
+                                                        ? NewProfileData?.object
+                                                                    ?.aboutMe ==
+                                                                null
+                                                            ? SizedBox()
+                                                            : Card(
+                                                                color: Colors.white,
+                                                                borderOnForeground:
+                                                                    true,
+                                                                elevation: 10,
+                                                                shape:
+                                                                    RoundedRectangleBorder(
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              15.0),
                                                                 ),
-                                                              ),
-                                                              isUpDate == false
-                                                                  ? Padding(
-                                                                      padding: const EdgeInsets
-                                                                              .only(
-                                                                          top: 12,
-                                                                          left:
-                                                                              10,
-                                                                          right:
-                                                                              10,
-                                                                          bottom:
-                                                                              15),
-                                                                      child:
+                                                                /*  child: expertUser(_height, _width) */
+                                                                child: Column(
+                                                                  children: [
+                                                                    ListTile(
+                                                                        /*     leading:
                                                                           Container(
-                                                                        child:
+                                                                        width: 35,
+                                                                        height: 35,
+                                                                        decoration:
+                                                                            ShapeDecoration(
+                                                                          color:ColorConstant.primary_color,
+                                                                          shape:
+                                                                              OvalBorder(),
+                                                                        ),
+                                                                      ), */
+                                                                        title: Text(
+                                                                          'About Me',
+                                                                          style:
+                                                                              TextStyle(
+                                                                            color: Colors
+                                                                                .black,
+                                                                            fontSize:
+                                                                                18,
+                                                                            fontWeight:
+                                                                                FontWeight.w600,
+                                                                          ),
+                                                                        ),
+                                                                        subtitle: /* Text(
+                                                                      '${NewProfileData?.object?.aboutMe}',
+                                                                      style: TextStyle(
+                                                                          color: Colors
+                                                                              .black,
+                                                                          fontSize: 14,
+                                                                          fontFamily:
+                                                                              "outfit"),
+                                                                    ), */
+      
                                                                             LinkifyText(
-                                                                          "${aboutMe.text}",
+                                                                          "${NewProfileData?.object?.aboutMe}",
                                                                           linkStyle:
                                                                               TextStyle(
-                                                                            color:
-                                                                                Colors.blue,
+                                                                            color: Colors
+                                                                                .blue,
                                                                             fontFamily:
                                                                                 'outfit',
                                                                           ),
                                                                           textStyle:
                                                                               TextStyle(
-                                                                            color:
-                                                                                Colors.black,
+                                                                            color: Colors
+                                                                                .black,
                                                                             fontFamily:
                                                                                 'outfit',
                                                                           ),
@@ -3367,7 +3128,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                               (link) async {
                                                                             /// do stuff with `link` like
                                                                             /// if(link.type == Link.url) launchUrl(link.value);
-    
+      
                                                                             var SelectedTest = link
                                                                                 .value
                                                                                 .toString();
@@ -3385,12 +3146,13 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                                 SelectedTest.startsWith('HTTP');
                                                                             var Link6 =
                                                                                 SelectedTest.startsWith('https://pdslink.page.link/');
-                                                                            print(
-                                                                                SelectedTest.toString());
-    
+                                                                            print(SelectedTest
+                                                                                .toString());
+      
                                                                             if (User_ID ==
                                                                                 null) {
-                                                                              Navigator.of(context).push(MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
+                                                                              Navigator.of(context)
+                                                                                  .push(MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
                                                                             } else {
                                                                               if (Link == true ||
                                                                                   Link1 == true ||
@@ -3399,7 +3161,8 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                                   Link4 == true ||
                                                                                   Link5 == true ||
                                                                                   Link6 == true) {
-                                                                                if (Link2 == true || Link3 == true) {
+                                                                                if (Link2 == true ||
+                                                                                    Link3 == true) {
                                                                                   launchUrl(Uri.parse("https://${link.value.toString()}"));
                                                                                   print("qqqqqqqqhttps://${link.value}");
                                                                                 } else {
@@ -3436,929 +3199,1145 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                               }
                                                                             }
                                                                           },
+                                                                        )),
+                                                                  ],
+                                                                ))
+                                                        : Card(
+                                                            color: Colors.white,
+                                                            borderOnForeground:
+                                                                true,
+                                                            elevation: 10,
+                                                            shape:
+                                                                RoundedRectangleBorder(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          15.0),
+                                                            ),
+                                                            child: Column(
+                                                              children: [
+                                                                Padding(
+                                                                  padding:
+                                                                      const EdgeInsets
+                                                                              .only(
+                                                                          top: 10,
+                                                                          right: 20,
+                                                                          left: 20),
+                                                                  child: Row(
+                                                                    mainAxisAlignment:
+                                                                        MainAxisAlignment
+                                                                            .spaceBetween,
+                                                                    children: [
+                                                                      Text(
+                                                                        'About Me',
+                                                                        style:
+                                                                            TextStyle(
+                                                                          color: Colors
+                                                                              .black,
+                                                                          fontSize:
+                                                                              18,
+                                                                          fontWeight:
+                                                                              FontWeight
+                                                                                  .w600,
                                                                         ),
                                                                       ),
-                                                                    )
-                                                                  : Padding(
-                                                                      padding: const EdgeInsets
-                                                                              .only(
-                                                                          left:
-                                                                              0),
+                                                                      User_ID !=
+                                                                              NewProfileData
+                                                                                  ?.object
+                                                                                  ?.userUid
+                                                                          ? SizedBox
+                                                                              .shrink()
+                                                                          : GestureDetector(
+                                                                              onTap:
+                                                                                  () {
+                                                                                super.setState(() {
+                                                                                  isUpDate = true;
+                                                                                  isAbourtMe = false;
+                                                                                  AbboutMeShow = false;
+                                                                                });
+                                                                              },
+                                                                              child: isUpDate == true
+                                                                                  ? GestureDetector(
+                                                                                      onTap: () {
+                                                                                        if (aboutMe.text.isNotEmpty) {
+                                                                                          BlocProvider.of<NewProfileSCubit>(context).abboutMeApi(context, aboutMe.text);
+                                                                                        } else {
+                                                                                          SnackBar snackBar = SnackBar(
+                                                                                            content: Text('Please Enter About Me'),
+                                                                                            backgroundColor: ColorConstant.primary_color,
+                                                                                          );
+                                                                                          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                                                                        }
+                                                                                      },
+                                                                                      child: Container(
+                                                                                        alignment: Alignment.center,
+                                                                                        height: 24,
+                                                                                        width: 50,
+                                                                                        decoration: BoxDecoration(
+                                                                                          borderRadius: BorderRadius.circular(5),
+                                                                                          color: ColorConstant.primary_color,
+                                                                                        ),
+                                                                                        child: Text(
+                                                                                          'SAVE',
+                                                                                          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                                                                                        ),
+                                                                                      ),
+                                                                                    )
+                                                                                  : Icon(
+                                                                                      Icons.edit,
+                                                                                      color: Colors.black,
+                                                                                    ),
+                                                                            )
+                                                                    ],
+                                                                  ),
+                                                                ),
+                                                                isUpDate == false
+                                                                    ? Padding(
+                                                                        padding: const EdgeInsets
+                                                                                .only(
+                                                                            top: 12,
+                                                                            left:
+                                                                                10,
+                                                                            right:
+                                                                                10,
+                                                                            bottom:
+                                                                                15),
+                                                                        child:
+                                                                            Container(
+                                                                          child:
+                                                                              LinkifyText(
+                                                                            "${aboutMe.text}",
+                                                                            linkStyle:
+                                                                                TextStyle(
+                                                                              color:
+                                                                                  Colors.blue,
+                                                                              fontFamily:
+                                                                                  'outfit',
+                                                                            ),
+                                                                            textStyle:
+                                                                                TextStyle(
+                                                                              color:
+                                                                                  Colors.black,
+                                                                              fontFamily:
+                                                                                  'outfit',
+                                                                            ),
+                                                                            linkTypes: [
+                                                                              LinkType
+                                                                                  .url,
+                                                                              LinkType
+                                                                                  .userTag,
+                                                                              LinkType
+                                                                                  .hashTag,
+                                                                              // LinkType
+                                                                              //     .email
+                                                                            ],
+                                                                            onTap:
+                                                                                (link) async {
+                                                                              /// do stuff with `link` like
+                                                                              /// if(link.type == Link.url) launchUrl(link.value);
+      
+                                                                              var SelectedTest = link
+                                                                                  .value
+                                                                                  .toString();
+                                                                              var Link =
+                                                                                  SelectedTest.startsWith('https');
+                                                                              var Link1 =
+                                                                                  SelectedTest.startsWith('http');
+                                                                              var Link2 =
+                                                                                  SelectedTest.startsWith('www');
+                                                                              var Link3 =
+                                                                                  SelectedTest.startsWith('WWW');
+                                                                              var Link4 =
+                                                                                  SelectedTest.startsWith('HTTPS');
+                                                                              var Link5 =
+                                                                                  SelectedTest.startsWith('HTTP');
+                                                                              var Link6 =
+                                                                                  SelectedTest.startsWith('https://pdslink.page.link/');
+                                                                              print(
+                                                                                  SelectedTest.toString());
+      
+                                                                              if (User_ID ==
+                                                                                  null) {
+                                                                                Navigator.of(context).push(MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
+                                                                              } else {
+                                                                                if (Link == true ||
+                                                                                    Link1 == true ||
+                                                                                    Link2 == true ||
+                                                                                    Link3 == true ||
+                                                                                    Link4 == true ||
+                                                                                    Link5 == true ||
+                                                                                    Link6 == true) {
+                                                                                  if (Link2 == true || Link3 == true) {
+                                                                                    launchUrl(Uri.parse("https://${link.value.toString()}"));
+                                                                                    print("qqqqqqqqhttps://${link.value}");
+                                                                                  } else {
+                                                                                    if (Link6 == true) {
+                                                                                      print("yes i am inList =   room");
+                                                                                      Navigator.push(context, MaterialPageRoute(
+                                                                                        builder: (context) {
+                                                                                          return NewBottomBar(
+                                                                                            buttomIndex: 1,
+                                                                                          );
+                                                                                        },
+                                                                                      ));
+                                                                                    } else {
+                                                                                      launchUrl(Uri.parse(link.value.toString()));
+                                                                                      print("link.valuelink.value -- ${link.value}");
+                                                                                    }
+                                                                                  }
+                                                                                } else {
+                                                                                  if (link.value!.startsWith('#')) {
+                                                                                    Navigator.push(
+                                                                                        context,
+                                                                                        MaterialPageRoute(
+                                                                                          builder: (context) => HashTagViewScreen(title: "${link.value}"),
+                                                                                        ));
+                                                                                  } else if (link.value!.startsWith('@')) {
+                                                                                    var name;
+                                                                                    var tagName;
+                                                                                    name = SelectedTest;
+                                                                                    tagName = name.replaceAll("@", "");
+                                                                                    await BlocProvider.of<NewProfileSCubit>(context).UserTagAPI(context, tagName);
+                                                                                  } else {
+                                                                                    launchUrl(Uri.parse("https://${link.value.toString()}"));
+                                                                                  }
+                                                                                }
+                                                                              }
+                                                                            },
+                                                                          ),
+                                                                        ),
+                                                                      )
+                                                                    : Padding(
+                                                                        padding: const EdgeInsets
+                                                                                .only(
+                                                                            left:
+                                                                                0),
+                                                                        child:
+                                                                            Column(
+                                                                          crossAxisAlignment:
+                                                                              CrossAxisAlignment
+                                                                                  .start,
+                                                                          children: [
+                                                                            SizedBox(
+                                                                              height:
+                                                                                  15,
+                                                                            ),
+      
+                                                                            SizedBox(
+                                                                              height:
+                                                                                  5,
+                                                                            ),
+                                                                            AbboutMeShow ==
+                                                                                    true
+                                                                                ? Padding(
+                                                                                    padding: const EdgeInsets.only(left: 20, right: 20),
+                                                                                    child: Container(
+                                                                                      alignment: Alignment.center,
+                                                                                      height: 50,
+                                                                                      // width:
+                                                                                      //     _width /
+                                                                                      //         1.5,
+                                                                                      decoration: BoxDecoration(
+                                                                                          // color: Colors.amber
+                                                                                          borderRadius: BorderRadius.circular(10),
+                                                                                          border: Border.all(color: Color(0xffEFEFEF))),
+                                                                                      child: Text(
+                                                                                        'Enter About Me',
+                                                                                        style: TextStyle(fontSize: 14, fontWeight: FontWeight.w300, color: Colors.black),
+                                                                                      ),
+                                                                                    ),
+                                                                                  )
+                                                                                : Padding(
+                                                                                    padding: EdgeInsets.only(
+                                                                                      left: 16,
+                                                                                      right: 16,
+                                                                                      top: 0,
+                                                                                    ),
+                                                                                    child: Stack(
+                                                                                      children: [
+                                                                                        Column(
+                                                                                          children: [
+                                                                                            SizedBox(
+                                                                                              height: 100,
+                                                                                              child: FlutterMentions(
+                                                                                                readOnly: isAbourtMe,
+                                                                                                defaultText: aboutMe.text,
+                                                                                                onChanged: (value) {
+                                                                                                  onChangeMethod(value);
+                                                                                                },
+                                                                                                suggestionPosition: SuggestionPosition.values.first,
+                                                                                                maxLines: 5,
+                                                                                                decoration: InputDecoration(
+                                                                                                  hintText: 'Enter About Me',
+                                                                                                  border: InputBorder.none,
+                                                                                                  focusedBorder: InputBorder.none,
+                                                                                                ),
+                                                                                                mentions: [
+                                                                                                  Mention(
+                                                                                                      trigger: "@",
+                                                                                                      data: tageData,
+                                                                                                      matchAll: true,
+                                                                                                      style: TextStyle(color: Colors.blue),
+                                                                                                      suggestionBuilder: (tageData) {
+                                                                                                        if (istageData) {
+                                                                                                          return Container(
+                                                                                                            padding: EdgeInsets.all(10.0),
+                                                                                                            child: Row(
+                                                                                                              children: <Widget>[
+                                                                                                                tageData['photo'] != null
+                                                                                                                    ? CircleAvatar(
+                                                                                                                        backgroundImage: NetworkImage(
+                                                                                                                          tageData['photo'],
+                                                                                                                        ),
+                                                                                                                      )
+                                                                                                                    : CircleAvatar(
+                                                                                                                        backgroundImage: AssetImage(ImageConstant.tomcruse),
+                                                                                                                      ),
+                                                                                                                SizedBox(
+                                                                                                                  width: 20.0,
+                                                                                                                ),
+                                                                                                                Column(
+                                                                                                                  children: <Widget>[
+                                                                                                                    Text('@${tageData['display']}'),
+                                                                                                                  ],
+                                                                                                                )
+                                                                                                              ],
+                                                                                                            ),
+                                                                                                          );
+                                                                                                        }
+      
+                                                                                                        return Container(
+                                                                                                          color: Colors.amber,
+                                                                                                        );
+                                                                                                      }),
+                                                                                                  Mention(
+                                                                                                      trigger: "#",
+                                                                                                      style: TextStyle(color: Colors.blue),
+                                                                                                      disableMarkup: true,
+                                                                                                      data: heshTageData,
+                                                                                                      // matchAll: true,
+                                                                                                      suggestionBuilder: (tageData) {
+                                                                                                        if (isHeshTegData) {
+                                                                                                          return Container(
+                                                                                                              padding: EdgeInsets.all(10.0),
+                                                                                                              child: ListTile(
+                                                                                                                leading: CircleAvatar(
+                                                                                                                  child: Text('#'),
+                                                                                                                ),
+                                                                                                                title: Text('${tageData['display']}'),
+                                                                                                              )
+                                                                                                              /* Column(
+                                                                                                                                    crossAxisAlignment:
+                                                                                                                                        CrossAxisAlignment
+                                                                                                                                                    .start,
+                                                                                                                                    children: <Widget>[
+                                                                                                                                      Text(
+                                                                                                                                          '${tageData['display']}'),
+                                                                                                                                    ],
+                                                                                                                                  ), */
+                                                                                                              );
+                                                                                                        }
+      
+                                                                                                        return Container(
+                                                                                                          color: Colors.amber,
+                                                                                                        );
+                                                                                                      }),
+                                                                                                ],
+                                                                                              ),
+                                                                                            ),
+                                                                                          ],
+                                                                                        ),
+                                                                                      ],
+                                                                                    ),
+                                                                                  ),
+      
+                                                                            // Padding(
+                                                                            //         padding: const EdgeInsets
+                                                                            //                 .only(
+                                                                            //             left:
+                                                                            //                 20,
+                                                                            //             right:
+                                                                            //                 20),
+                                                                            //         child:
+                                                                            //             TextFormField(
+                                                                            //           inputFormatters: [
+                                                                            //             LengthLimitingTextInputFormatter(
+                                                                            //                 500),
+                                                                            //           ],
+                                                                            //           readOnly:
+                                                                            //               isAbourtMe,
+                                                                            //           controller:
+                                                                            //               aboutMe,
+                                                                            //           maxLines:
+                                                                            //               5,
+                                                                            //           decoration:
+                                                                            //               InputDecoration(
+                                                                            //             border:
+                                                                            //                 OutlineInputBorder(),
+                                                                            //           ),
+                                                                            //         ),
+                                                                            //       ),
+                                                                            //wiil DataGet
+                                                                            /*   : */
+                                                                            SizedBox(
+                                                                              height:
+                                                                                  12,
+                                                                            ),
+                                                                          ],
+                                                                        ),
+                                                                      ),
+                                                              ],
+                                                            )), */
+                                                        NewProfileData?.object
+                                                                    ?.module ==
+                                                                "EXPERT"
+                                                            ? Card(
+                                                                color: Colors
+                                                                    .white,
+                                                                borderOnForeground:
+                                                                    true,
+                                                                elevation: 10,
+                                                                shape:
+                                                                    RoundedRectangleBorder(
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              15.0),
+                                                                ),
+                                                                /*  child: expertUser(_height, _width) */
+                                                                child:
+                                                                    expertUser(
+                                                                        _height,
+                                                                        _width),
+                                                              )
+                                                            : SizedBox(),
+                                                        NewProfileData?.object
+                                                                    ?.module ==
+                                                                "COMPANY"
+                                                            ? Card(
+                                                                color: Colors
+                                                                    .white,
+                                                                borderOnForeground:
+                                                                    true,
+                                                                elevation: 10,
+                                                                shape:
+                                                                    RoundedRectangleBorder(
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              15.0),
+                                                                ),
+                                                                /*  child: expertUser(_height, _width) */
+                                                                child:
+                                                                    compnayUser(
+                                                                        _height,
+                                                                        _width),
+                                                              )
+                                                            : SizedBox(),
+                                                        NewProfileData?.object
+                                                                        ?.module ==
+                                                                    "COMPANY" &&
+                                                                NewProfileData
+                                                                        ?.object
+                                                                        ?.approvalStatus !=
+                                                                    'PENDING'
+                                                            ? Card(
+                                                                color: Colors
+                                                                    .white,
+                                                                borderOnForeground:
+                                                                    true,
+                                                                elevation: 10,
+                                                                shape:
+                                                                    RoundedRectangleBorder(
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              15.0),
+                                                                ),
+                                                                /*  child: expertUser(_height, _width) */
+                                                                child:
+                                                                    experience(
+                                                                        _height,
+                                                                        _width),
+                                                              ) /*  Padding(
+                                                          padding:
+                                                              const EdgeInsets.only(
+                                                                  top: 50),
+                                                          child: Container(
+                                                            height: _height / 2.2,
+                                                            decoration: BoxDecoration(
+                                                                boxShadow: [
+                                                                  BoxShadow(
+                                                                      color:
+                                                                          Colors.grey,
+                                                                      blurRadius: 20),
+                                                                ],
+                                                                color: Colors.white,
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(10)),
+                                                            child: experience(),
+                                                          ),
+                                                        ) */
+                                                            : SizedBox(),
+                                                        NewProfileData?.object
+                                                                        ?.module ==
+                                                                    "EXPERT" &&
+                                                                NewProfileData
+                                                                        ?.object
+                                                                        ?.approvalStatus !=
+                                                                    'PENDING'
+                                                            ? Card(
+                                                                color: Colors
+                                                                    .white,
+                                                                borderOnForeground:
+                                                                    true,
+                                                                elevation: 10,
+                                                                shape:
+                                                                    RoundedRectangleBorder(
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              15.0),
+                                                                ),
+                                                                /*  child: expertUser(_height, _width) */
+                                                                child:
+                                                                    experience(
+                                                                        _height,
+                                                                        _width),
+                                                              )
+                                                            : SizedBox()
+                                                      ],
+                                                    ),
+                                                  )
+                                            : SizedBox(),
+
+                                        /// Content of Tab 2
+                                        arrNotiyTypeList[1].isSelected
+                                            ? creratePostUser(
+                                                GetAllPostData, _width, _height)
+                                            /* Container(
+                                              height: FinalPostCount * 185,
+                                              // color: Colors.yellow,
+                                              child: Padding(
+                                                padding: EdgeInsets.only(
+                                                    left: 16, right: 16, top: 14),
+                                                child: GridView.builder(
+                                                  physics:
+                                                      NeverScrollableScrollPhysics(),
+                                                  padding: EdgeInsets.zero,
+                                                  gridDelegate:
+                                                      SliverGridDelegateWithFixedCrossAxisCount(
+                                                    crossAxisCount:
+                                                        2, // Number of columns
+                                                    mainAxisSpacing:
+                                                        0.0, // Vertical spacing between items
+                                                    crossAxisSpacing:
+                                                        20, // Horizontal spacing between items
+                                                  ),
+                                                  itemCount: GetAllPostData
+                                                      ?.object?.length,
+                                                  itemBuilder: (context, index) {
+                                                    return Padding(
+                                                      padding: EdgeInsets.only(
+                                                          bottom: 10, top: 10),
+                                                      child: ClipRRect(
+                                                        borderRadius:
+                                                            BorderRadius.circular(
+                                                                20.0),
+                                                        child: GestureDetector(
+                                                          onTap: () {
+                                                            // OpenSaveImagepostModel
+                                                            print(
+                                                                "Open SavePost Click in one post");
+      
+                                                            Navigator.push(
+                                                              context,
+                                                              MaterialPageRoute(
+                                                                  builder: (context) =>
+                                                                      OpenSavePostImage(
+                                                                        PostID: GetAllPostData
+                                                                            ?.object?[
+                                                                                index]
+                                                                            .postUid,
+                                                                      )),
+                                                            );
+                                                          },
+                                                          //Ankur will code
+                                                          child:
+      
+                                                              ///   TEST IMAGE
+      
+                                                              GetAllPostData
+                                                                          ?.object?[
+                                                                              index]
+                                                                          .postDataType ==
+                                                                      "IMAGE"
+                                                                  ? Container(
+                                                                      decoration:
+                                                                          BoxDecoration(
+                                                                        border:
+                                                                            Border
+                                                                                .all(
+                                                                          color: Color
+                                                                              .fromARGB(
+                                                                                  255,
+                                                                                  0,
+                                                                                  0,
+                                                                                  0),
+                                                                        ),
+                                                                        // borderRadius:
+                                                                        //     BorderRadius
+                                                                        //         .circular(
+                                                                        //             15),
+                                                                      ), // Remove margin
                                                                       child:
-                                                                          Column(
-                                                                        crossAxisAlignment:
-                                                                            CrossAxisAlignment
-                                                                                .start,
-                                                                        children: [
-                                                                          SizedBox(
-                                                                            height:
-                                                                                15,
-                                                                          ),
-    
-                                                                          SizedBox(
-                                                                            height:
-                                                                                5,
-                                                                          ),
-                                                                          AbboutMeShow ==
-                                                                                  true
-                                                                              ? Padding(
-                                                                                  padding: const EdgeInsets.only(left: 20, right: 20),
-                                                                                  child: Container(
-                                                                                    alignment: Alignment.center,
-                                                                                    height: 50,
-                                                                                    // width:
-                                                                                    //     _width /
-                                                                                    //         1.5,
-                                                                                    decoration: BoxDecoration(
-                                                                                        // color: Colors.amber
-                                                                                        borderRadius: BorderRadius.circular(10),
-                                                                                        border: Border.all(color: Color(0xffEFEFEF))),
-                                                                                    child: Text(
-                                                                                      'Enter About Me',
-                                                                                      style: TextStyle(fontSize: 14, fontWeight: FontWeight.w300, color: Colors.black),
+                                                                          CustomImageView(
+                                                                        fit: BoxFit
+                                                                            .cover,
+                                                                        url:
+                                                                            "${GetAllPostData?.object?[index].postData?.first}",
+                                                                      ))
+                                                                  : GetAllPostData
+                                                                              ?.object?[
+                                                                                  index]
+                                                                              .postDataType ==
+                                                                          "VIDEO"
+                                                                      ? Stack(
+                                                                          children: [
+                                                                            Container(
+                                                                              decoration: BoxDecoration(
+                                                                                  color: Colors.transparent,
+                                                                                  border: Border.all(
+                                                                                    color: const Color.fromARGB(255, 0, 0, 0),
+                                                                                  ),
+                                                                                  borderRadius: BorderRadius.circular(20)),
+                                                                            ),
+                                                                            ThumbnailClass(
+                                                                              videourl:
+                                                                                  GetAllPostData?.object?[index].postData?.first ?? '',
+                                                                            )
+                                                                          ],
+                                                                        )
+                                                                      : GetAllPostData
+                                                                                  ?.object?[
+                                                                                      index]
+                                                                                  .postDataType ==
+                                                                              "ATTACHMENT"
+                                                                          ? /*  Container(
+                                                                              margin: EdgeInsets
+                                                                                  .all(
+                                                                                      0.0),
+                                                                              decoration: BoxDecoration(
+                                                                                  borderRadius: BorderRadius.circular(
+                                                                                      20)), // Remove margin
+                                
+                                                                              child:
+                                                                                  DocumentViewScreen1(
+                                                                                path: GetAllPostData
+                                                                                    ?.object?[index]
+                                                                                    .postData
+                                                                                    ?.first,
+                                                                              )) */
+                                                                          Stack(
+                                                                              children: [
+                                                                                Container(
+                                                                                  height: 400,
+                                                                                  width: _width,
+                                                                                  decoration: BoxDecoration(
+                                                                                    color: Colors.transparent,
+                                                                                    border: Border.all(color: Colors.grey),
+                                                                                    borderRadius: BorderRadius.circular(20),
+                                                                                  ),
+                                                                                ),
+                                                                                Padding(
+                                                                                  padding: const EdgeInsets.all(8.0),
+                                                                                  child: GestureDetector(
+                                                                                    onTap: () {
+                                                                                      print("objectobjectobjectobject");
+                                                                                      Navigator.push(context, MaterialPageRoute(
+                                                                                        builder: (context) {
+                                                                                          return DocumentViewScreen1(
+                                                                                            path: GetAllPostData?.object?[index].postData?.first,
+                                                                                          );
+                                                                                        },
+                                                                                      ));
+                                                                                    },
+                                                                                    child: Container(
+                                                                                      decoration: BoxDecoration(
+                                                                                        borderRadius: BorderRadius.circular(20),
+                                                                                      ),
+                                                                                      child: CachedNetworkImage(
+                                                                                        imageUrl: GetAllPostData?.object?[index].thumbnailImageUrl ?? "",
+                                                                                        fit: BoxFit.cover,
+                                                                                      ),
                                                                                     ),
                                                                                   ),
                                                                                 )
-                                                                              : Padding(
-                                                                                  padding: EdgeInsets.only(
-                                                                                    left: 16,
-                                                                                    right: 16,
-                                                                                    top: 0,
-                                                                                  ),
-                                                                                  child: Stack(
-                                                                                    children: [
-                                                                                      Column(
-                                                                                        children: [
-                                                                                          SizedBox(
-                                                                                            height: 100,
-                                                                                            child: FlutterMentions(
-                                                                                              readOnly: isAbourtMe,
-                                                                                              defaultText: aboutMe.text,
-                                                                                              onChanged: (value) {
-                                                                                                onChangeMethod(value);
-                                                                                              },
-                                                                                              suggestionPosition: SuggestionPosition.values.first,
-                                                                                              maxLines: 5,
-                                                                                              decoration: InputDecoration(
-                                                                                                hintText: 'Enter About Me',
-                                                                                                border: InputBorder.none,
-                                                                                                focusedBorder: InputBorder.none,
-                                                                                              ),
-                                                                                              mentions: [
-                                                                                                Mention(
-                                                                                                    trigger: "@",
-                                                                                                    data: tageData,
-                                                                                                    matchAll: true,
-                                                                                                    style: TextStyle(color: Colors.blue),
-                                                                                                    suggestionBuilder: (tageData) {
-                                                                                                      if (istageData) {
-                                                                                                        return Container(
-                                                                                                          padding: EdgeInsets.all(10.0),
-                                                                                                          child: Row(
-                                                                                                            children: <Widget>[
-                                                                                                              tageData['photo'] != null
-                                                                                                                  ? CircleAvatar(
-                                                                                                                      backgroundImage: NetworkImage(
-                                                                                                                        tageData['photo'],
-                                                                                                                      ),
-                                                                                                                    )
-                                                                                                                  : CircleAvatar(
-                                                                                                                      backgroundImage: AssetImage(ImageConstant.tomcruse),
-                                                                                                                    ),
-                                                                                                              SizedBox(
-                                                                                                                width: 20.0,
-                                                                                                              ),
-                                                                                                              Column(
-                                                                                                                children: <Widget>[
-                                                                                                                  Text('@${tageData['display']}'),
-                                                                                                                ],
-                                                                                                              )
-                                                                                                            ],
-                                                                                                          ),
-                                                                                                        );
-                                                                                                      }
-    
-                                                                                                      return Container(
-                                                                                                        color: Colors.amber,
-                                                                                                      );
-                                                                                                    }),
-                                                                                                Mention(
-                                                                                                    trigger: "#",
-                                                                                                    style: TextStyle(color: Colors.blue),
-                                                                                                    disableMarkup: true,
-                                                                                                    data: heshTageData,
-                                                                                                    // matchAll: true,
-                                                                                                    suggestionBuilder: (tageData) {
-                                                                                                      if (isHeshTegData) {
-                                                                                                        return Container(
-                                                                                                            padding: EdgeInsets.all(10.0),
-                                                                                                            child: ListTile(
-                                                                                                              leading: CircleAvatar(
-                                                                                                                child: Text('#'),
-                                                                                                              ),
-                                                                                                              title: Text('${tageData['display']}'),
-                                                                                                            )
-                                                                                                            /* Column(
-                                                                                                                                  crossAxisAlignment:
-                                                                                                                                      CrossAxisAlignment
-                                                                                                                                                  .start,
-                                                                                                                                  children: <Widget>[
-                                                                                                                                    Text(
-                                                                                                                                        '${tageData['display']}'),
-                                                                                                                                  ],
-                                                                                                                                ), */
-                                                                                                            );
-                                                                                                      }
-    
-                                                                                                      return Container(
-                                                                                                        color: Colors.amber,
-                                                                                                      );
-                                                                                                    }),
-                                                                                              ],
-                                                                                            ),
-                                                                                          ),
-                                                                                        ],
-                                                                                      ),
-                                                                                    ],
-                                                                                  ),
-                                                                                ),
-    
-                                                                          // Padding(
-                                                                          //         padding: const EdgeInsets
-                                                                          //                 .only(
-                                                                          //             left:
-                                                                          //                 20,
-                                                                          //             right:
-                                                                          //                 20),
-                                                                          //         child:
-                                                                          //             TextFormField(
-                                                                          //           inputFormatters: [
-                                                                          //             LengthLimitingTextInputFormatter(
-                                                                          //                 500),
-                                                                          //           ],
-                                                                          //           readOnly:
-                                                                          //               isAbourtMe,
-                                                                          //           controller:
-                                                                          //               aboutMe,
-                                                                          //           maxLines:
-                                                                          //               5,
-                                                                          //           decoration:
-                                                                          //               InputDecoration(
-                                                                          //             border:
-                                                                          //                 OutlineInputBorder(),
-                                                                          //           ),
-                                                                          //         ),
-                                                                          //       ),
-                                                                          //wiil DataGet
-                                                                          /*   : */
-                                                                          SizedBox(
-                                                                            height:
-                                                                                12,
-                                                                          ),
-                                                                        ],
-                                                                      ),
-                                                                    ),
-                                                            ],
-                                                          )), */
-                                                          NewProfileData?.object
-                                                                      ?.module ==
-                                                                  "EXPERT"
-                                                              ? Card(
-                                                                  color: Colors
-                                                                      .white,
-                                                                  borderOnForeground:
-                                                                      true,
-                                                                  elevation: 10,
-                                                                  shape:
-                                                                      RoundedRectangleBorder(
-                                                                    borderRadius:
-                                                                        BorderRadius.circular(
-                                                                            15.0),
-                                                                  ),
-                                                                  /*  child: expertUser(_height, _width) */
-                                                                  child: expertUser(
-                                                                      _height,
-                                                                      _width),
-                                                                )
-                                                              : SizedBox(),
-                                                          NewProfileData?.object
-                                                                      ?.module ==
-                                                                  "COMPANY"
-                                                              ? Card(
-                                                                  color: Colors
-                                                                      .white,
-                                                                  borderOnForeground:
-                                                                      true,
-                                                                  elevation: 10,
-                                                                  shape:
-                                                                      RoundedRectangleBorder(
-                                                                    borderRadius:
-                                                                        BorderRadius.circular(
-                                                                            15.0),
-                                                                  ),
-                                                                  /*  child: expertUser(_height, _width) */
-                                                                  child: compnayUser(
-                                                                      _height,
-                                                                      _width),
-                                                                )
-                                                              : SizedBox(),
-                                                          NewProfileData?.object
-                                                                          ?.module ==
-                                                                      "COMPANY" &&
-                                                                  NewProfileData
-                                                                          ?.object
-                                                                          ?.approvalStatus !=
-                                                                      'PENDING'
-                                                              ? Card(
-                                                                  color: Colors
-                                                                      .white,
-                                                                  borderOnForeground:
-                                                                      true,
-                                                                  elevation: 10,
-                                                                  shape:
-                                                                      RoundedRectangleBorder(
-                                                                    borderRadius:
-                                                                        BorderRadius.circular(
-                                                                            15.0),
-                                                                  ),
-                                                                  /*  child: expertUser(_height, _width) */
-                                                                  child: experience(
-                                                                      _height,
-                                                                      _width),
-                                                                ) /*  Padding(
-                                                        padding:
-                                                            const EdgeInsets.only(
-                                                                top: 50),
-                                                        child: Container(
-                                                          height: _height / 2.2,
-                                                          decoration: BoxDecoration(
-                                                              boxShadow: [
-                                                                BoxShadow(
-                                                                    color:
-                                                                        Colors.grey,
-                                                                    blurRadius: 20),
-                                                              ],
-                                                              color: Colors.white,
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(10)),
-                                                          child: experience(),
+                                                                              ],
+                                                                            )
+                                                                          : GetAllPostData?.object?[index].postDataType ==
+                                                                                  null
+                                                                              ? Container(
+                                                                                  margin: EdgeInsets.all(0.0),
+                                                                                  decoration: BoxDecoration(border: Border.all(color: Color.fromARGB(255, 0, 0, 0)), borderRadius: BorderRadius.circular(20)),
+                                                                                  child: Padding(
+                                                                                    padding: const EdgeInsets.only(top: 15, left: 8, right: 10),
+                                                                                    child: Text(
+                                                                                      '${GetAllPostData?.object?[index].description}',
+                                                                                      style: TextStyle(color: Colors.black, fontSize: 16),
+                                                                                    ),
+                                                                                  ))
+                                                                              : SizedBox(),
                                                         ),
-                                                      ) */
-                                                              : SizedBox(),
-                                                          NewProfileData?.object
-                                                                          ?.module ==
-                                                                      "EXPERT" &&
-                                                                  NewProfileData
-                                                                          ?.object
-                                                                          ?.approvalStatus !=
-                                                                      'PENDING'
-                                                              ? Card(
-                                                                  color: Colors
-                                                                      .white,
-                                                                  borderOnForeground:
-                                                                      true,
-                                                                  elevation: 10,
-                                                                  shape:
-                                                                      RoundedRectangleBorder(
-                                                                    borderRadius:
-                                                                        BorderRadius.circular(
-                                                                            15.0),
-                                                                  ),
-                                                                  /*  child: expertUser(_height, _width) */
-                                                                  child: experience(
-                                                                      _height,
-                                                                      _width),
-                                                                )
-                                                              : SizedBox()
-                                                        ],
                                                       ),
-                                                    )
-                                              : SizedBox(),
-
-                                          /// Content of Tab 2
-                                          arrNotiyTypeList[1].isSelected
-                                              ? creratePostUser(GetAllPostData,
-                                                  _width, _height)
-                                              /* Container(
-                                            height: FinalPostCount * 185,
-                                            // color: Colors.yellow,
-                                            child: Padding(
-                                              padding: EdgeInsets.only(
-                                                  left: 16, right: 16, top: 14),
-                                              child: GridView.builder(
-                                                physics:
-                                                    NeverScrollableScrollPhysics(),
-                                                padding: EdgeInsets.zero,
-                                                gridDelegate:
-                                                    SliverGridDelegateWithFixedCrossAxisCount(
-                                                  crossAxisCount:
-                                                      2, // Number of columns
-                                                  mainAxisSpacing:
-                                                      0.0, // Vertical spacing between items
-                                                  crossAxisSpacing:
-                                                      20, // Horizontal spacing between items
+                                                    );
+                                                  },
                                                 ),
-                                                itemCount: GetAllPostData
-                                                    ?.object?.length,
-                                                itemBuilder: (context, index) {
-                                                  return Padding(
-                                                    padding: EdgeInsets.only(
-                                                        bottom: 10, top: 10),
-                                                    child: ClipRRect(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              20.0),
-                                                      child: GestureDetector(
-                                                        onTap: () {
-                                                          // OpenSaveImagepostModel
-                                                          print(
-                                                              "Open SavePost Click in one post");
-    
-                                                          Navigator.push(
-                                                            context,
-                                                            MaterialPageRoute(
-                                                                builder: (context) =>
-                                                                    OpenSavePostImage(
-                                                                      PostID: GetAllPostData
-                                                                          ?.object?[
-                                                                              index]
-                                                                          .postUid,
-                                                                    )),
-                                                          );
-                                                        },
-                                                        //Ankur will code
-                                                        child:
-    
-                                                            ///   TEST IMAGE
-    
-                                                            GetAllPostData
-                                                                        ?.object?[
-                                                                            index]
-                                                                        .postDataType ==
-                                                                    "IMAGE"
-                                                                ? Container(
-                                                                    decoration:
-                                                                        BoxDecoration(
-                                                                      border:
-                                                                          Border
-                                                                              .all(
-                                                                        color: Color
-                                                                            .fromARGB(
-                                                                                255,
-                                                                                0,
-                                                                                0,
-                                                                                0),
-                                                                      ),
-                                                                      // borderRadius:
-                                                                      //     BorderRadius
-                                                                      //         .circular(
-                                                                      //             15),
-                                                                    ), // Remove margin
-                                                                    child:
-                                                                        CustomImageView(
-                                                                      fit: BoxFit
-                                                                          .cover,
-                                                                      url:
-                                                                          "${GetAllPostData?.object?[index].postData?.first}",
-                                                                    ))
-                                                                : GetAllPostData
-                                                                            ?.object?[
-                                                                                index]
-                                                                            .postDataType ==
-                                                                        "VIDEO"
-                                                                    ? Stack(
-                                                                        children: [
-                                                                          Container(
-                                                                            decoration: BoxDecoration(
-                                                                                color: Colors.transparent,
-                                                                                border: Border.all(
-                                                                                  color: const Color.fromARGB(255, 0, 0, 0),
-                                                                                ),
-                                                                                borderRadius: BorderRadius.circular(20)),
-                                                                          ),
-                                                                          ThumbnailClass(
-                                                                            videourl:
-                                                                                GetAllPostData?.object?[index].postData?.first ?? '',
-                                                                          )
-                                                                        ],
-                                                                      )
-                                                                    : GetAllPostData
-                                                                                ?.object?[
-                                                                                    index]
-                                                                                .postDataType ==
-                                                                            "ATTACHMENT"
-                                                                        ? /*  Container(
-                                                                            margin: EdgeInsets
-                                                                                .all(
-                                                                                    0.0),
-                                                                            decoration: BoxDecoration(
-                                                                                borderRadius: BorderRadius.circular(
-                                                                                    20)), // Remove margin
-                              
+                                              ),
+                                            ) */
+                                            : SizedBox(),
+
+                                        /// Content of Tab 3
+                                        arrNotiyTypeList[2].isSelected
+                                            ? User_ID ==
+                                                        NewProfileData
+                                                            ?.object?.userUid ||
+                                                    (NewProfileData?.object
+                                                            ?.accountType ==
+                                                        'PUBLIC') ||
+                                                    (NewProfileData?.object
+                                                                ?.isFollowing ==
+                                                            'FOLLOWING' &&
+                                                        NewProfileData?.object
+                                                                ?.accountType ==
+                                                            'PRIVATE')
+                                                ? GetUserPostCommetData?.object
+                                                            ?.isNotEmpty ??
+                                                        true
+                                                    ? Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                    .only(
+                                                                left: 16,
+                                                                right: 16,
+                                                                top: 0),
+                                                        child: Column(
+                                                          children: [
+                                                            Row(
+                                                              children: [
+                                                                Container(
+                                                                  width: 150,
+                                                                  height: 25,
+                                                                  decoration:
+                                                                      ShapeDecoration(
+                                                                    color: Color(
+                                                                        0xFFFBD8D9),
+                                                                    shape:
+                                                                        RoundedRectangleBorder(
+                                                                      borderRadius:
+                                                                          BorderRadius.circular(
+                                                                              100),
+                                                                    ),
+                                                                  ),
+                                                                  child:
+                                                                      DropdownButtonHideUnderline(
+                                                                    child: DropdownButton<
+                                                                        String>(
+                                                                      // Step 3.
+                                                                      value:
+                                                                          selctedValue,
+                                                                      // Step 4.
+                                                                      items: <String>[
+                                                                        'Newest to oldest',
+                                                                        'oldest to Newest'
+                                                                      ].map<
+                                                                          DropdownMenuItem<
+                                                                              String>>((String
+                                                                          value) {
+                                                                        return DropdownMenuItem<
+                                                                            String>(
+                                                                          value:
+                                                                              value,
+                                                                          child:
+                                                                              Padding(
+                                                                            padding:
+                                                                                EdgeInsets.only(left: 10),
                                                                             child:
-                                                                                DocumentViewScreen1(
-                                                                              path: GetAllPostData
-                                                                                  ?.object?[index]
-                                                                                  .postData
-                                                                                  ?.first,
-                                                                            )) */
-                                                                        Stack(
-                                                                            children: [
-                                                                              Container(
-                                                                                height: 400,
-                                                                                width: _width,
-                                                                                decoration: BoxDecoration(
-                                                                                  color: Colors.transparent,
-                                                                                  border: Border.all(color: Colors.grey),
-                                                                                  borderRadius: BorderRadius.circular(20),
+                                                                                Text(
+                                                                              value,
+                                                                              style: TextStyle(
+                                                                                color: Color(0xFFF58E92),
+                                                                                fontSize: 14,
+                                                                                fontFamily: 'outfit',
+                                                                                fontWeight: FontWeight.w400,
+                                                                                height: 0,
+                                                                              ),
+                                                                            ),
+                                                                          ),
+                                                                        );
+                                                                      }).toList(),
+                                                                      // Step 5.
+                                                                      onChanged:
+                                                                          (String?
+                                                                              newValue) {
+                                                                        super.setState(
+                                                                            () {
+                                                                          if (newValue ==
+                                                                              "Newest to oldest") {
+                                                                            BlocProvider.of<NewProfileSCubit>(context).GetPostCommetAPI(
+                                                                                context,
+                                                                                "${NewProfileData?.object?.userUid}",
+                                                                                "asc"); //asc
+                                                                          } else if (newValue ==
+                                                                              "oldest to Newest") {
+                                                                            BlocProvider.of<NewProfileSCubit>(context).GetPostCommetAPI(
+                                                                                context,
+                                                                                "${NewProfileData?.object?.userUid}",
+                                                                                "desc");
+                                                                          }
+                                                                          selctedValue =
+                                                                              newValue!;
+                                                                        });
+                                                                      },
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                            isDataGetValue ==
+                                                                    false
+                                                                ? SizedBox()
+                                                                : ListView
+                                                                    .builder(
+                                                                    shrinkWrap:
+                                                                        true,
+                                                                    physics:
+                                                                        NeverScrollableScrollPhysics(),
+                                                                    itemCount: GetUserPostCommetData
+                                                                        ?.object
+                                                                        ?.length,
+                                                                    itemBuilder:
+                                                                        (context,
+                                                                            index) {
+                                                                      DateTime
+                                                                          parsedDateTime =
+                                                                          DateTime.parse(
+                                                                              '${GetUserPostCommetData?.object?[index].createdAt ?? ""}');
+                                                                      return Padding(
+                                                                        padding:
+                                                                            const EdgeInsets.only(bottom: 10),
+                                                                        child: GestureDetector(
+                                                                            onTap: () {
+                                                                              Navigator.push(
+                                                                                context,
+                                                                                MaterialPageRoute(
+                                                                                    builder: (context) => OpenSavePostImage(
+                                                                                          PostID: GetUserPostCommetData?.object?[index].postUid,
+                                                                                          profileTure: true,
+                                                                                        )),
+                                                                              );
+                                                                            },
+                                                                            child: Container(
+                                                                              decoration: ShapeDecoration(
+                                                                                // color: Colors.green,
+                                                                                shape: RoundedRectangleBorder(
+                                                                                  side: BorderSide(width: 1, color: Color(0xFFD3D3D3)),
+                                                                                  borderRadius: BorderRadius.circular(10),
                                                                                 ),
                                                                               ),
-                                                                              Padding(
-                                                                                padding: const EdgeInsets.all(8.0),
-                                                                                child: GestureDetector(
-                                                                                  onTap: () {
-                                                                                    print("objectobjectobjectobject");
-                                                                                    Navigator.push(context, MaterialPageRoute(
-                                                                                      builder: (context) {
-                                                                                        return DocumentViewScreen1(
-                                                                                          path: GetAllPostData?.object?[index].postData?.first,
-                                                                                        );
-                                                                                      },
-                                                                                    ));
-                                                                                  },
-                                                                                  child: Container(
-                                                                                    decoration: BoxDecoration(
-                                                                                      borderRadius: BorderRadius.circular(20),
-                                                                                    ),
-                                                                                    child: CachedNetworkImage(
-                                                                                      imageUrl: GetAllPostData?.object?[index].thumbnailImageUrl ?? "",
-                                                                                      fit: BoxFit.cover,
+                                                                              child: Row(
+                                                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                children: [
+                                                                                  Container(
+                                                                                    width: 50,
+                                                                                    // height: 50,
+                                                                                    margin: EdgeInsets.only(left: 5, top: 10),
+                                                                                    child: GetUserPostCommetData?.object?[index].userProfilePic != null && GetUserPostCommetData?.object?[index].userProfilePic != ""
+                                                                                        ? CircleAvatar(
+                                                                                            backgroundColor: Colors.white,
+                                                                                            backgroundImage: NetworkImage("${GetUserPostCommetData?.object?[index].userProfilePic}"),
+                                                                                            radius: 25,
+                                                                                          )
+                                                                                        : CustomImageView(
+                                                                                            imagePath: ImageConstant.tomcruse,
+                                                                                            height: 50,
+                                                                                            width: 50,
+                                                                                            fit: BoxFit.fill,
+                                                                                            radius: BorderRadius.circular(25),
+                                                                                          ),
+                                                                                    // decoration:
+                                                                                    //     ShapeDecoration(
+                                                                                    //   image:
+                                                                                    //       DecorationImage(
+                                                                                    //     image: AssetImage(
+                                                                                    //         ImageConstant
+                                                                                    //             .placeholder2),1
+                                                                                    //     fit: BoxFit.fill,
+                                                                                    //   ),
+                                                                                    //   shape: OvalBorder(),
+                                                                                    // ),
+                                                                                  ),
+                                                                                  Padding(
+                                                                                    padding: const EdgeInsets.only(left: 10),
+                                                                                    child: Column(
+                                                                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                      children: [
+                                                                                        SizedBox(
+                                                                                          height: 10,
+                                                                                        ),
+                                                                                        Text(
+                                                                                          '${GetUserPostCommetData?.object?[index].postUserName}',
+                                                                                          style: TextStyle(
+                                                                                            color: Colors.black,
+                                                                                            fontSize: 16,
+                                                                                            fontFamily: 'outfit',
+                                                                                            fontWeight: FontWeight.w600,
+                                                                                          ),
+                                                                                        ),
+                                                                                        GetUserPostCommetData?.object?[index].description != null
+                                                                                            ? Container(
+                                                                                                // color: Colors.amber,
+                                                                                                width: _width / 1.45,
+                                                                                                child: Text(
+                                                                                                  '${GetUserPostCommetData?.object?[index].description}',
+                                                                                                  style: TextStyle(
+                                                                                                    overflow: TextOverflow.visible,
+                                                                                                    color: Colors.black,
+                                                                                                    fontSize: 14,
+                                                                                                    fontFamily: 'outfit',
+                                                                                                    fontWeight: FontWeight.w400,
+                                                                                                  ),
+                                                                                                ),
+                                                                                              )
+                                                                                            : SizedBox(),
+                                                                                        Text(
+                                                                                          getTimeDifference(parsedDateTime),
+                                                                                          style: TextStyle(
+                                                                                            fontSize: 12,
+                                                                                            fontFamily: "outfit",
+                                                                                          ),
+                                                                                        ),
+                                                                                        Padding(
+                                                                                          padding: const EdgeInsets.only(bottom: 10),
+                                                                                          child: Column(
+                                                                                              children: List.generate(GetUserPostCommetData?.object?[index].comments?.length == null ? 0 : ((GetUserPostCommetData?.object?[index].comments?.length ?? 0) > 2 ? 2 : GetUserPostCommetData?.object?[index].comments?.length) ?? 0, (index2) {
+                                                                                            DateTime parsedDateTime2 = DateTime.parse('${GetUserPostCommetData?.object?[index].comments?[index2].createdAt}');
+                                                                                            return Row(
+                                                                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                              children: [
+                                                                                                Container(
+                                                                                                  width: 45,
+                                                                                                  height: 45,
+                                                                                                  margin: EdgeInsets.only(top: 15),
+                                                                                                  child: GetUserPostCommetData?.object?[index].comments?[index2].profilePic != null && GetUserPostCommetData?.object?[index].comments?[index2].profilePic != ""
+                                                                                                      ? CircleAvatar(
+                                                                                                          backgroundColor: Colors.white,
+                                                                                                          backgroundImage: NetworkImage("${GetUserPostCommetData?.object?[index].comments?[index2].profilePic}"),
+                                                                                                          radius: 25,
+                                                                                                        )
+                                                                                                      : CustomImageView(
+                                                                                                          imagePath: ImageConstant.tomcruse,
+                                                                                                          height: 50,
+                                                                                                          width: 50,
+                                                                                                          fit: BoxFit.fill,
+                                                                                                          radius: BorderRadius.circular(25),
+                                                                                                        ),
+                                                                                                ),
+                                                                                                Padding(
+                                                                                                  padding: const EdgeInsets.only(left: 8, top: 5, right: 3),
+                                                                                                  child: Column(
+                                                                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                                    children: [
+                                                                                                      SizedBox(
+                                                                                                        height: 10,
+                                                                                                      ),
+                                                                                                      Text(
+                                                                                                        '${GetUserPostCommetData?.object?[index].comments?[index2].userName}',
+                                                                                                        style: TextStyle(
+                                                                                                          color: Colors.black,
+                                                                                                          fontSize: 16,
+                                                                                                          fontFamily: "outfit",
+                                                                                                          fontWeight: FontWeight.w600,
+                                                                                                        ),
+                                                                                                      ),
+                                                                                                      Container(
+                                                                                                        // color: Colors.red,
+                                                                                                        width: _width / 2,
+                                                                                                        child: Text(
+                                                                                                          '${GetUserPostCommetData?.object?[index].comments?[index2].comment}',
+                                                                                                          // maxLines: 1,
+                                                                                                          style: TextStyle(
+                                                                                                            // overflow: TextOverflow.ellipsis,
+                                                                                                            color: Colors.black,
+                                                                                                            fontSize: 16,
+                                                                                                            fontFamily: "outfit",
+                                                                                                            fontWeight: FontWeight.w600,
+                                                                                                          ),
+                                                                                                        ),
+                                                                                                      ),
+                                                                                                      Text(
+                                                                                                        getTimeDifference(parsedDateTime2),
+                                                                                                        style: TextStyle(
+                                                                                                          fontSize: 12,
+                                                                                                          fontFamily: "outfit",
+                                                                                                        ),
+                                                                                                      ),
+                                                                                                    ],
+                                                                                                  ),
+                                                                                                )
+                                                                                              ],
+                                                                                            );
+                                                                                          })),
+                                                                                        ),
+                                                                                      ],
                                                                                     ),
                                                                                   ),
-                                                                                ),
-                                                                              )
-                                                                            ],
-                                                                          )
-                                                                        : GetAllPostData?.object?[index].postDataType ==
-                                                                                null
-                                                                            ? Container(
-                                                                                margin: EdgeInsets.all(0.0),
-                                                                                decoration: BoxDecoration(border: Border.all(color: Color.fromARGB(255, 0, 0, 0)), borderRadius: BorderRadius.circular(20)),
-                                                                                child: Padding(
-                                                                                  padding: const EdgeInsets.only(top: 15, left: 8, right: 10),
-                                                                                  child: Text(
-                                                                                    '${GetAllPostData?.object?[index].description}',
-                                                                                    style: TextStyle(color: Colors.black, fontSize: 16),
-                                                                                  ),
-                                                                                ))
-                                                                            : SizedBox(),
-                                                      ),
-                                                    ),
-                                                  );
-                                                },
-                                              ),
-                                            ),
-                                          ) */
-                                              : SizedBox(),
+                                                                                ],
+                                                                              ),
+                                                                            )),
+                                                                      );
+                                                                    },
+                                                                  )
+                                                          ],
+                                                        ),
+                                                      )
+                                                    : Center(
+                                                        child: Text(
+                                                        "No Comments available",
+                                                        style: TextStyle(
+                                                            color: Colors.black,
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                            fontFamily:
+                                                                'outfit',
+                                                            fontSize: 20),
+                                                      ))
+                                                : Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .center,
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    children: [
+                                                      SizedBox(height: 50),
+                                                      Center(
+                                                          child: Image.asset(
+                                                        ImageConstant
+                                                            .nopostimage,
+                                                        height: 150,
+                                                      )),
+                                                      SizedBox(height: 50),
+                                                    ],
+                                                  )
+                                            : SizedBox(),
 
-                                          /// Content of Tab 3
-                                          arrNotiyTypeList[2].isSelected
-                                              ? User_ID ==
-                                                          NewProfileData?.object
-                                                              ?.userUid ||
-                                                      (NewProfileData?.object
-                                                              ?.accountType ==
-                                                          'PUBLIC') ||
-                                                      (NewProfileData?.object
-                                                                  ?.isFollowing ==
-                                                              'FOLLOWING' &&
-                                                          NewProfileData?.object
-                                                                  ?.accountType ==
-                                                              'PRIVATE')
-                                                  ? GetUserPostCommetData
-                                                              ?.object
-                                                              ?.isNotEmpty ??
-                                                          true
-                                                      ? Padding(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                      .only(
-                                                                  left: 16,
-                                                                  right: 16,
-                                                                  top: 0),
-                                                          child: Column(
-                                                            children: [
-                                                              Row(
-                                                                children: [
-                                                                  Container(
-                                                                    width: 150,
+                                        /// Content of Tab 4
+
+                                        arrNotiyTypeList[3].isSelected
+                                            ? Container(
+                                                // height: value1 == 0
+                                                //     ? FinalSavePostCount == 0
+                                                //         ? 40
+                                                //         : FinalSavePostCount * 230
+                                                //     : SaveBlogCount * 155 + 100,
+                                                // color: Colors.green,
+                                                child: Padding(
+                                                  padding:
+                                                      EdgeInsets.only(top: 0),
+                                                  child: Column(
+                                                    children: [
+                                                      Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .center,
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .center,
+                                                          children: List.generate(
+                                                              SaveList.length,
+                                                              (index) => GestureDetector(
+                                                                  onTap: () {
+                                                                    dataSetup =
+                                                                        null;
+                                                                    value1 =
+                                                                        index;
+
+                                                                    SharedPreferencesFunction(
+                                                                        value1 ??
+                                                                            0);
+                                                                    super.setState(
+                                                                        () {});
+                                                                  },
+                                                                  child: Container(
+                                                                    alignment:
+                                                                        Alignment
+                                                                            .center,
+                                                                    margin: EdgeInsets
+                                                                        .only(
+                                                                            left:
+                                                                                15),
+                                                                    width: 100,
                                                                     height: 25,
                                                                     decoration:
                                                                         ShapeDecoration(
-                                                                      color: Color(
-                                                                          0xFFFBD8D9),
+                                                                      color: value1 ==
+                                                                              index
+                                                                          ? ColorConstant
+                                                                              .primary_color
+                                                                          : dataSetup == index
+                                                                              ? ColorConstant.primary_color
+                                                                              : Color(0xFFFBD8D9),
                                                                       shape:
                                                                           RoundedRectangleBorder(
                                                                         borderRadius:
                                                                             BorderRadius.circular(100),
                                                                       ),
                                                                     ),
-                                                                    child:
-                                                                        DropdownButtonHideUnderline(
-                                                                      child: DropdownButton<
-                                                                          String>(
-                                                                        // Step 3.
-                                                                        value:
-                                                                            selctedValue,
-                                                                        // Step 4.
-                                                                        items: <String>[
-                                                                          'Newest to oldest',
-                                                                          'oldest to Newest'
-                                                                        ].map<
-                                                                            DropdownMenuItem<
-                                                                                String>>((String
-                                                                            value) {
-                                                                          return DropdownMenuItem<
-                                                                              String>(
-                                                                            value:
-                                                                                value,
-                                                                            child:
-                                                                                Padding(
-                                                                              padding: EdgeInsets.only(left: 10),
-                                                                              child: Text(
-                                                                                value,
-                                                                                style: TextStyle(
-                                                                                  color: Color(0xFFF58E92),
-                                                                                  fontSize: 14,
-                                                                                  fontFamily: 'outfit',
-                                                                                  fontWeight: FontWeight.w400,
-                                                                                  height: 0,
-                                                                                ),
-                                                                              ),
-                                                                            ),
-                                                                          );
-                                                                        }).toList(),
-                                                                        // Step 5.
-                                                                        onChanged:
-                                                                            (String?
-                                                                                newValue) {
-                                                                          super.setState(
-                                                                              () {
-                                                                            if (newValue ==
-                                                                                "Newest to oldest") {
-                                                                              BlocProvider.of<NewProfileSCubit>(context).GetPostCommetAPI(context, "${NewProfileData?.object?.userUid}", "asc"); //asc
-                                                                            } else if (newValue ==
-                                                                                "oldest to Newest") {
-                                                                              BlocProvider.of<NewProfileSCubit>(context).GetPostCommetAPI(context, "${NewProfileData?.object?.userUid}", "desc");
-                                                                            }
-                                                                            selctedValue =
-                                                                                newValue!;
-                                                                          });
-                                                                        },
-                                                                      ),
-                                                                    ),
-                                                                  ),
-                                                                ],
-                                                              ),
-                                                              ListView.builder(
-                                                                shrinkWrap:
-                                                                    true,
-                                                                physics:
-                                                                    NeverScrollableScrollPhysics(),
-                                                                itemCount:
-                                                                    GetUserPostCommetData
-                                                                        ?.object
-                                                                        ?.length,
-                                                                itemBuilder:
-                                                                    (context,
-                                                                        index) {
-                                                                  DateTime
-                                                                      parsedDateTime =
-                                                                      DateTime.parse(
-                                                                          '${GetUserPostCommetData?.object?[index].createdAt ?? ""}');
-                                                                  return Padding(
-                                                                    padding: const EdgeInsets
-                                                                            .only(
-                                                                        bottom:
-                                                                            10),
-                                                                    child: GestureDetector(
-                                                                        onTap: () {
-                                                                          Navigator
-                                                                              .push(
-                                                                            context,
-                                                                            MaterialPageRoute(
-                                                                                builder: (context) => OpenSavePostImage(
-                                                                                      PostID: GetUserPostCommetData?.object?[index].postUid,
-                                                                                      profileTure: true,
-                                                                                    )),
-                                                                          );
-                                                                        },
-                                                                        child: Container(
-                                                                          decoration:
-                                                                              ShapeDecoration(
-                                                                            // color: Colors.green,
-                                                                            shape:
-                                                                                RoundedRectangleBorder(
-                                                                              side: BorderSide(width: 1, color: Color(0xFFD3D3D3)),
-                                                                              borderRadius: BorderRadius.circular(10),
-                                                                            ),
-                                                                          ),
-                                                                          child:
-                                                                              Row(
-                                                                            crossAxisAlignment:
-                                                                                CrossAxisAlignment.start,
-                                                                            children: [
-                                                                              Container(
-                                                                                width: 50,
-                                                                                // height: 50,
-                                                                                margin: EdgeInsets.only(left: 5, top: 10),
-                                                                                child: GetUserPostCommetData?.object?[index].userProfilePic != null && GetUserPostCommetData?.object?[index].userProfilePic != ""
-                                                                                    ? CircleAvatar(
-                                                                                        backgroundColor: Colors.white,
-                                                                                        backgroundImage: NetworkImage("${GetUserPostCommetData?.object?[index].userProfilePic}"),
-                                                                                        radius: 25,
-                                                                                      )
-                                                                                    : CustomImageView(
-                                                                                        imagePath: ImageConstant.tomcruse,
-                                                                                        height: 50,
-                                                                                        width: 50,
-                                                                                        fit: BoxFit.fill,
-                                                                                        radius: BorderRadius.circular(25),
-                                                                                      ),
-                                                                                // decoration:
-                                                                                //     ShapeDecoration(
-                                                                                //   image:
-                                                                                //       DecorationImage(
-                                                                                //     image: AssetImage(
-                                                                                //         ImageConstant
-                                                                                //             .placeholder2),1
-                                                                                //     fit: BoxFit.fill,
-                                                                                //   ),
-                                                                                //   shape: OvalBorder(),
-                                                                                // ),
-                                                                              ),
-                                                                              Padding(
-                                                                                padding: const EdgeInsets.only(left: 10),
-                                                                                child: Column(
-                                                                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                                                                  children: [
-                                                                                    SizedBox(
-                                                                                      height: 10,
-                                                                                    ),
-                                                                                    Text(
-                                                                                      '${GetUserPostCommetData?.object?[index].postUserName}',
-                                                                                      style: TextStyle(
-                                                                                        color: Colors.black,
-                                                                                        fontSize: 16,
-                                                                                        fontFamily: 'outfit',
-                                                                                        fontWeight: FontWeight.w600,
-                                                                                      ),
-                                                                                    ),
-                                                                                    GetUserPostCommetData?.object?[index].description != null
-                                                                                        ? Container(
-                                                                                            // color: Colors.amber,
-                                                                                            width: _width / 1.45,
-                                                                                            child: Text(
-                                                                                              '${GetUserPostCommetData?.object?[index].description}',
-                                                                                              style: TextStyle(
-                                                                                                overflow: TextOverflow.visible,
-                                                                                                color: Colors.black,
-                                                                                                fontSize: 14,
-                                                                                                fontFamily: 'outfit',
-                                                                                                fontWeight: FontWeight.w400,
-                                                                                              ),
-                                                                                            ),
-                                                                                          )
-                                                                                        : SizedBox(),
-                                                                                    Text(
-                                                                                      getTimeDifference(parsedDateTime),
-                                                                                      style: TextStyle(
-                                                                                        fontSize: 12,
-                                                                                        fontFamily: "outfit",
-                                                                                      ),
-                                                                                    ),
-                                                                                    Padding(
-                                                                                      padding: const EdgeInsets.only(bottom: 10),
-                                                                                      child: Column(
-                                                                                          children: List.generate(GetUserPostCommetData?.object?[index].comments?.length == null ? 0 : ((GetUserPostCommetData?.object?[index].comments?.length ?? 0) > 2 ? 2 : GetUserPostCommetData?.object?[index].comments?.length) ?? 0, (index2) {
-                                                                                        DateTime parsedDateTime2 = DateTime.parse('${GetUserPostCommetData?.object?[index].comments?[index2].createdAt}');
-                                                                                        return Row(
-                                                                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                                                                          children: [
-                                                                                            Container(
-                                                                                              width: 45,
-                                                                                              height: 45,
-                                                                                              margin: EdgeInsets.only(top: 15),
-                                                                                              child: GetUserPostCommetData?.object?[index].comments?[index2].profilePic != null && GetUserPostCommetData?.object?[index].comments?[index2].profilePic != ""
-                                                                                                  ? CircleAvatar(
-                                                                                                      backgroundColor: Colors.white,
-                                                                                                      backgroundImage: NetworkImage("${GetUserPostCommetData?.object?[index].comments?[index2].profilePic}"),
-                                                                                                      radius: 25,
-                                                                                                    )
-                                                                                                  : CustomImageView(
-                                                                                                      imagePath: ImageConstant.tomcruse,
-                                                                                                      height: 50,
-                                                                                                      width: 50,
-                                                                                                      fit: BoxFit.fill,
-                                                                                                      radius: BorderRadius.circular(25),
-                                                                                                    ),
-                                                                                            ),
-                                                                                            Padding(
-                                                                                              padding: const EdgeInsets.only(left: 8, top: 5, right: 3),
-                                                                                              child: Column(
-                                                                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                                                                children: [
-                                                                                                  SizedBox(
-                                                                                                    height: 10,
-                                                                                                  ),
-                                                                                                  Text(
-                                                                                                    '${GetUserPostCommetData?.object?[index].comments?[index2].userName}',
-                                                                                                    style: TextStyle(
-                                                                                                      color: Colors.black,
-                                                                                                      fontSize: 16,
-                                                                                                      fontFamily: "outfit",
-                                                                                                      fontWeight: FontWeight.w600,
-                                                                                                    ),
-                                                                                                  ),
-                                                                                                  Container(
-                                                                                                    // color: Colors.red,
-                                                                                                    width: _width / 2,
-                                                                                                    child: Text(
-                                                                                                      '${GetUserPostCommetData?.object?[index].comments?[index2].comment}',
-                                                                                                      // maxLines: 1,
-                                                                                                      style: TextStyle(
-                                                                                                        // overflow: TextOverflow.ellipsis,
-                                                                                                        color: Colors.black,
-                                                                                                        fontSize: 16,
-                                                                                                        fontFamily: "outfit",
-                                                                                                        fontWeight: FontWeight.w600,
-                                                                                                      ),
-                                                                                                    ),
-                                                                                                  ),
-                                                                                                  Text(
-                                                                                                    getTimeDifference(parsedDateTime2),
-                                                                                                    style: TextStyle(
-                                                                                                      fontSize: 12,
-                                                                                                      fontFamily: "outfit",
-                                                                                                    ),
-                                                                                                  ),
-                                                                                                ],
-                                                                                              ),
-                                                                                            )
-                                                                                          ],
-                                                                                        );
-                                                                                      })),
-                                                                                    ),
-                                                                                  ],
-                                                                                ),
-                                                                              ),
-                                                                            ],
-                                                                          ),
-                                                                        )),
-                                                                  );
-                                                                },
-                                                              )
-                                                            ],
-                                                          ),
-                                                        )
-                                                      : Center(
-                                                          child: Text(
-                                                          "No Comments available",
-                                                          style: TextStyle(
-                                                              color:
-                                                                  Colors.black,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold,
-                                                              fontFamily:
-                                                                  'outfit',
-                                                              fontSize: 20),
-                                                        ))
-                                                  : Column(
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .center,
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .center,
-                                                      children: [
-                                                        SizedBox(height: 50),
-                                                        Center(
-                                                            child: Image.asset(
-                                                          ImageConstant
-                                                              .nopostimage,
-                                                          height: 150,
-                                                        )),
-                                                        SizedBox(height: 50),
-                                                      ],
-                                                    )
-                                              : SizedBox(),
-
-                                          /// Content of Tab 4
-
-                                          arrNotiyTypeList[3].isSelected
-                                              ? Container(
-                                                  // height: value1 == 0
-                                                  //     ? FinalSavePostCount == 0
-                                                  //         ? 40
-                                                  //         : FinalSavePostCount * 230
-                                                  //     : SaveBlogCount * 155 + 100,
-                                                  // color: Colors.green,
-                                                  child: Padding(
-                                                    padding:
-                                                        EdgeInsets.only(top: 0),
-                                                    child: Column(
-                                                      children: [
-                                                        Row(
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .center,
-                                                            crossAxisAlignment:
-                                                                CrossAxisAlignment
-                                                                    .center,
-                                                            children: List.generate(
-                                                                SaveList.length,
-                                                                (index) => GestureDetector(
-                                                                    onTap: () {
-                                                                      dataSetup =
-                                                                          null;
-                                                                      value1 =
-                                                                          index;
-
-                                                                      SharedPreferencesFunction(
-                                                                          value1 ??
-                                                                              0);
-                                                                      super.setState(
-                                                                          () {});
-                                                                    },
-                                                                    child: Container(
-                                                                      alignment:
-                                                                          Alignment
-                                                                              .center,
-                                                                      margin: EdgeInsets.only(
-                                                                          left:
-                                                                              15),
-                                                                      width:
-                                                                          100,
-                                                                      height:
-                                                                          25,
-                                                                      decoration:
-                                                                          ShapeDecoration(
+                                                                    child: Text(
+                                                                      SaveList[
+                                                                          index],
+                                                                      style:
+                                                                          TextStyle(
                                                                         color: value1 ==
                                                                                 index
-                                                                            ? ColorConstant.primary_color
+                                                                            ? Colors.white
                                                                             : dataSetup == index
-                                                                                ? ColorConstant.primary_color
-                                                                                : Color(0xFFFBD8D9),
-                                                                        shape:
-                                                                            RoundedRectangleBorder(
-                                                                          borderRadius:
-                                                                              BorderRadius.circular(100),
-                                                                        ),
+                                                                                ? Colors.white
+                                                                                : Color(0xFFF58E92),
+                                                                        fontSize:
+                                                                            14,
+                                                                        fontFamily:
+                                                                            "outfit",
+                                                                        fontWeight:
+                                                                            FontWeight.w400,
                                                                       ),
-                                                                      child:
-                                                                          Text(
-                                                                        SaveList[
-                                                                            index],
-                                                                        style:
-                                                                            TextStyle(
-                                                                          color: value1 == index
-                                                                              ? Colors.white
-                                                                              : dataSetup == index
-                                                                                  ? Colors.white
-                                                                                  : Color(0xFFF58E92),
-                                                                          fontSize:
-                                                                              14,
-                                                                          fontFamily:
-                                                                              "outfit",
-                                                                          fontWeight:
-                                                                              FontWeight.w400,
-                                                                        ),
-                                                                      ),
-                                                                    )))),
-                                                        NavagtionPassing(
-                                                            _width, _height)
-                                                      ],
-                                                    ),
+                                                                    ),
+                                                                  )))),
+                                                      NavagtionPassing(
+                                                          _width, _height)
+                                                    ],
                                                   ),
-                                                )
-                                              : SizedBox()
-                                        ],
-                                      ),
+                                                ),
+                                              )
+                                            : SizedBox()
+                                      ],
                                     ),
                                   ),
                                 ),
-                                // ),
-                                SizedBox(
-                                  height: 20,
-                                )
-                              ],
-                            ),
-                          )
-                        ],
-                      )));
-      }),
+                              ),
+                              // ),
+                              SizedBox(
+                                height: 20,
+                              )
+                            ],
+                          ),
+                        )
+                      ],
+                    ));
+        }),
+      ),
     );
   }
 
@@ -5996,7 +5975,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                         '${getAllPostData.object?[index].postUid}');
 
                                                 _settingModalBottomSheet1(
-                                                    context, index, _width);
+                                                    context, index, _height);
                                               },
                                               child: Container(
                                                 color: Colors.transparent,
@@ -7055,7 +7034,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                       _settingModalBottomSheet1(
                                                           context,
                                                           index,
-                                                          _width);
+                                                          _height);
                                                     },
                                                     child: Container(
                                                         color:
@@ -7207,19 +7186,20 @@ class _ProfileScreenState extends State<ProfileScreen>
           );
   }
 
-  void _settingModalBottomSheet1(context, index, _width) {
+  void _settingModalBottomSheet1(context, index, _heigth) {
     /* void _goToElement() {
       scroll.animateTo((1000 * 20),
           duration: const Duration(milliseconds: 300), curve: Curves.easeOut);
     } */
 
-    showModalBottomSheet(
-        isScrollControlled: true,
+    showBottomSheet(
+        /*  isScrollControlled: true,
         useSafeArea: true,
         isDismissible: true,
-        showDragHandle: true,
+        showDragHandle: true, */
+
         enableDrag: true,
-        constraints: BoxConstraints.tight(Size.infinite),
+        constraints: BoxConstraints(maxHeight: _heigth / 2),
         context: context,
         builder: (BuildContext bc) {
           print(
@@ -7235,7 +7215,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                 desc: GetAllPostData?.object?[index].description ?? "",
                 postUuID: GetAllPostData?.object?[index].postUid ?? "");
           });
-        }).then((value) {});
+        });
     ;
   }
 
@@ -7277,7 +7257,7 @@ class _ProfileScreenState extends State<ProfileScreen>
   }
 
   void rePostBottomSheet(context, index) {
-    showModalBottomSheet(
+    showBottomSheet(
         context: context,
         builder: (BuildContext bc) {
           return Container(
@@ -7435,19 +7415,19 @@ class _ProfileScreenState extends State<ProfileScreen>
     }
   }
 
-  void _settingModalBottomSheetSave(context, index, _width) {
+  void _settingModalBottomSheetSave(context, index, _heigth) {
     /* void _goToElement() {
       scroll.animateTo((1000 * 20),
           duration: const Duration(milliseconds: 300), curve: Curves.easeOut);
     } */
 
-    showModalBottomSheet(
-        isScrollControlled: true,
+    showBottomSheet(
+        /*    isScrollControlled: true,
         useSafeArea: true,
         isDismissible: true,
-        showDragHandle: true,
+        showDragHandle: true, */
+        constraints: BoxConstraints(maxHeight: _heigth / 2),
         enableDrag: true,
-        constraints: BoxConstraints.tight(Size.infinite),
         context: context,
         builder: (BuildContext bc) {
           print(
@@ -7463,12 +7443,12 @@ class _ProfileScreenState extends State<ProfileScreen>
                 desc: GetSavePostData?.object?[index].description ?? "",
                 postUuID: GetSavePostData?.object?[index].postUid ?? "");
           });
-        }).then((value) {});
+        });
     ;
   }
 
   void rePostBottomSheetSave(context, index) {
-    showModalBottomSheet(
+    showBottomSheet(
         context: context,
         builder: (BuildContext bc) {
           return Container(
@@ -9093,7 +9073,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                   '${GetSavePostData?.object?[index].postUid}');
 
                                           _settingModalBottomSheetSave(
-                                              context, index, _width);
+                                              context, index, _height);
                                         },
                                         child: Container(
                                           color: Colors.transparent,
@@ -10104,7 +10084,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                     '${GetSavePostData?.object?[index].postUid}');
 
                                             _settingModalBottomSheetSave(
-                                                context, index, _width);
+                                                context, index, _height);
                                           },
                                           child: Container(
                                               color: Colors.transparent,

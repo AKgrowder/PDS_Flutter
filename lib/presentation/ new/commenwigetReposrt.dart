@@ -20,13 +20,13 @@ _showBottomSheet(
   bool showOtherTextField = false;
   String? selcted;
   String? selcted1;
-  
+
   otherTextData.clear();
   reportOptions.forEach((option) {
     option.selected = false;
   });
-  showModalBottomSheet(
-    isScrollControlled: true,
+  showBottomSheet(
+    // isScrollControlled: true,
     context: context,
     builder: (BuildContext ctx) {
       return StatefulBuilder(
@@ -261,18 +261,18 @@ showPopupMenu1(
     BuildContext context, int index, buttonKey, postuid, String screen) async {
   print("this screen-$screen");
   final RenderBox button =
-        buttonKey.currentContext!.findRenderObject() as RenderBox;
-    final RenderBox overlay =
-        Overlay.of(context).context.findRenderObject() as RenderBox;
+      buttonKey.currentContext!.findRenderObject() as RenderBox;
+  final RenderBox overlay =
+      Overlay.of(context).context.findRenderObject() as RenderBox;
 
-    final RelativeRect position = RelativeRect.fromRect(
-      Rect.fromPoints(
-        button.localToGlobal(Offset.zero, ancestor: overlay),
-        button.localToGlobal(button.size.bottomLeft(Offset.zero),
-            ancestor: overlay),
-      ),
-      Offset.zero & overlay.size,
-    );
+  final RelativeRect position = RelativeRect.fromRect(
+    Rect.fromPoints(
+      button.localToGlobal(Offset.zero, ancestor: overlay),
+      button.localToGlobal(button.size.bottomLeft(Offset.zero),
+          ancestor: overlay),
+    ),
+    Offset.zero & overlay.size,
+  );
   showMenu(
       context: context,
       position: position,

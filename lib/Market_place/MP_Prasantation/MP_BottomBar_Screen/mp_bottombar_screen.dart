@@ -4,11 +4,16 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:pds/Market_place/MP_Prasantation/Charge_Payment_Screen/charge_payment_screen.dart';
+import 'package:pds/Market_place/MP_Prasantation/MP_Create_Account_Screen/mp_create_account_screen.dart';
+import 'package:pds/Market_place/MP_Prasantation/Mp_Ragister_screen/MP_ragister_now.dart';
+import 'package:pds/Market_place/MP_Prasantation/Product_Details_Screen/product_details_screen.dart';
+import 'package:pds/Market_place/MP_Prasantation/choose_your_category_screen/choose_category_screen.dart';
 import 'package:pds/Market_place/MP_Prasantation/home/MP_home_screen.dart';
 import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/core/utils/image_constant.dart';
 import 'package:pds/core/utils/sharedPreferences.dart';
 import 'package:pds/presentation/register_create_account_screen/register_create_account_screen.dart';
+import 'package:pds/widgets/custom_image_view.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 // import 'package:growder/presentation/Buy_Screen/Buy_screen.dart';
@@ -46,11 +51,11 @@ class _MpBottomBarScreenState extends State<MpBottomBarScreen> {
 
   List widgetOptions = [
     MpHomeScreen(),
+    MPProductdetailsScreen(),
     PaymentAndChargeScreen(),
-    PaymentAndChargeScreen(),
-    PaymentAndChargeScreen(),
-    PaymentAndChargeScreen(),
-    PaymentAndChargeScreen(),
+    CaPershonalDetailScreen(),
+    ChooseCategoryScreen(),
+    MPRagisterNowScreen(),
   ];
   late StreamSubscription _connectionChangeStream;
   bool isOffline = false;
@@ -150,7 +155,7 @@ class _MpBottomBarScreenState extends State<MpBottomBarScreen> {
                             child: selectedIndex != 1
                                 ? Padding(
                                     padding: const EdgeInsets.all(12.0),
-                                    child: Image.asset(
+                                    child:CustomImageView(svgPath: 
                                       ImageConstant.productimage,
                                       // height: 30,
                                       // width: 25,
@@ -161,7 +166,7 @@ class _MpBottomBarScreenState extends State<MpBottomBarScreen> {
                                     // width: 25,
                                     child: Padding(
                                       padding: const EdgeInsets.all(12.0),
-                                      child: Image.asset(
+                                      child: CustomImageView(svgPath:
                                         ImageConstant.productimage,
                                         color: ColorConstant.primary_color,
                                       ),
@@ -199,7 +204,7 @@ class _MpBottomBarScreenState extends State<MpBottomBarScreen> {
                             child: selectedIndex != 2
                                 ? Padding(
                                     padding: const EdgeInsets.all(13.0),
-                                    child: Image.asset(
+                                    child: CustomImageView(svgPath:
                                       ImageConstant.cartimage,
                                       color: Colors.grey.shade800,
                                       // height: 24,
@@ -211,7 +216,7 @@ class _MpBottomBarScreenState extends State<MpBottomBarScreen> {
                                     width: 30,
                                     child: Padding(
                                       padding: const EdgeInsets.all(13.0),
-                                      child: Image.asset(
+                                      child: CustomImageView(svgPath:
                                         ImageConstant.cartimage,
                                         color: ColorConstant.primary_color,
                                         // height: 24,
@@ -249,14 +254,14 @@ class _MpBottomBarScreenState extends State<MpBottomBarScreen> {
                             child: selectedIndex != 3
                                 ? Padding(
                                     padding: const EdgeInsets.all(13.0),
-                                    child: Image.asset(
+                                    child: CustomImageView(svgPath:
                                       ImageConstant.wishlistimage,
                                     ),
                                   )
                                 : Container(
                                     child: Padding(
                                       padding: const EdgeInsets.all(13.0),
-                                      child: Image.asset(
+                                      child: CustomImageView(svgPath:
                                         ImageConstant.wishlistimage,
                                         color: ColorConstant.primary_color,
                                       ),
@@ -292,7 +297,7 @@ class _MpBottomBarScreenState extends State<MpBottomBarScreen> {
                             child: selectedIndex != 4
                                 ? Padding(
                                     padding: const EdgeInsets.all(13.0),
-                                    child: Image.asset(
+                                    child: CustomImageView(svgPath: 
                                       ImageConstant.orderimage,
                                       height: 30,
                                       width: 26,
@@ -303,7 +308,7 @@ class _MpBottomBarScreenState extends State<MpBottomBarScreen> {
                                     width: 30,
                                     child: Padding(
                                       padding: const EdgeInsets.all(13.0),
-                                      child: Image.asset(
+                                      child: CustomImageView(svgPath:
                                         ImageConstant.orderimage,
                                         color: ColorConstant.primary_color,
                                       ),
@@ -339,7 +344,7 @@ class _MpBottomBarScreenState extends State<MpBottomBarScreen> {
                             child: selectedIndex != 5
                                 ? Padding(
                                     padding: const EdgeInsets.all(14.0),
-                                    child: Image.asset(
+                                    child:CustomImageView(svgPath:
                                       ImageConstant.userimage,
                                       height: 30,
                                       width: 26,
@@ -350,7 +355,7 @@ class _MpBottomBarScreenState extends State<MpBottomBarScreen> {
                                     width: 30,
                                     child: Padding(
                                       padding: const EdgeInsets.all(14.0),
-                                      child: Image.asset(
+                                      child: CustomImageView(svgPath:
                                         ImageConstant.userimage,
                                         color: ColorConstant.primary_color,
                                       ),
