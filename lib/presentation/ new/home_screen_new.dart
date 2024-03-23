@@ -386,10 +386,12 @@ class _HomeScreenNewState extends State<HomeScreenNew>
     return playlistId;
   }
 
+
   Future<List<String>> getPlaylistVideos(String playlistId) async {
     // final url = "https://www.youtube.com/playlist?list=RDF0SflZWxv8k";
     final url =
         "https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=50&playlistId=$playlistId&key=AIzaSyAT_gzTjHn9XuvQsmGdY63br7lKhD2KRdo";
+
     final response = await http.get(Uri.parse(url));
     if (response.statusCode == 200) {
       // Parse the HTML content to extract video IDs (implementation depends on website structure)
@@ -400,7 +402,9 @@ class _HomeScreenNewState extends State<HomeScreenNew>
       }
       return videoIds; // List of video IDs
     } else {
+
       print("Failed to fetch playlist videos");
+
       return [];
     }
   }
@@ -409,6 +413,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
     Uri uri = Uri.parse(liveLink);
 
     String liveId = '';
+
 
     // Check if the link is a valid YouTube live link
     if (uri.host == 'www.youtube.com' || uri.host == 'youtube.com') {
@@ -446,6 +451,8 @@ class _HomeScreenNewState extends State<HomeScreenNew>
     } else if (videoUrl.toLowerCase().contains("live")) {
       videoId = extractLiveId(videoUrl);
     } else {
+
+
       videoId = YoutubePlayer.convertUrlToId(videoUrl)!;
     }
     print("video id ========================> $videoId");
@@ -3749,6 +3756,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                                             /*if (User_ID == null) {
                                                                                                               Navigator.of(context).push(MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
                                                                                                             } else {*/
+
                                                                                                             if (Link == true || Link1 == true || Link2 == true || Link3 == true || Link4 == true || Link5 == true || Link6 == true) {
                                                                                                               if (Link2 == true || Link3 == true) {
                                                                                                                 if (isYouTubeUrl(SelectedTest)) {
@@ -3767,6 +3775,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                                                     },
                                                                                                                   ));
                                                                                                                 } else {
+
                                                                                                                   if (isYouTubeUrl(SelectedTest)) {
                                                                                                                     playLink(SelectedTest, context);
                                                                                                                   } else
@@ -3799,7 +3808,9 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                                               } else {
                                                                                                                 // launchUrl(Uri.parse("https://${link.value.toString()}"));
                                                                                                               }
+
                                                                                                             }
+
                                                                                                             // }
                                                                                                           }
                                                                                                         },
@@ -4409,6 +4420,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                                       /*if (User_ID == null) {
                                                                                                         Navigator.of(context).push(MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
                                                                                                       } else {*/
+
                                                                                                       if (Link == true || Link1 == true || Link2 == true || Link3 == true || Link4 == true || Link5 == true || Link6 == true) {
                                                                                                         if (Link2 == true || Link3 == true) {
                                                                                                           if (isYouTubeUrl(SelectedTest)) {
@@ -4427,6 +4439,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                                               },
                                                                                                             ));
                                                                                                           } else {
+
                                                                                                             if (isYouTubeUrl(SelectedTest)) {
                                                                                                               playLink(SelectedTest, context);
                                                                                                             } else
@@ -4434,6 +4447,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                                             print("link.valuelink.value -- ${link.value}");
                                                                                                           }
                                                                                                         }
+
                                                                                                       } else {
                                                                                                         if (link.value!.startsWith('#')) {
                                                                                                           await BlocProvider.of<GetGuestAllPostCubit>(context).seetinonExpried(context);
@@ -4459,6 +4473,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                                           print("user id -- ${userTagModel?.object}");
                                                                                                         }
                                                                                                       }
+
                                                                                                       // }
                                                                                                     }
                                                                                                   },
@@ -5018,7 +5033,9 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                               if (AllGuestPostRoomData?.object?.content?[index].postDataType != "VIDEO") {
                                                                                 _onShareXFileFromAssets(
                                                                                   context,
+
                                                                                   AllGuestPostRoomData?.object?.content?[index].thumbnailImageUrl ?? (AllGuestPostRoomData!.object!.content![index].postData!.isNotEmpty ? AllGuestPostRoomData!.object!.content![index].postData!.first : AllGuestPostRoomData?.object?.content?[index].repostOn?.thumbnailImageUrl ?? (AllGuestPostRoomData!.object!.content![index].repostOn!.postData!.isNotEmpty ? AllGuestPostRoomData!.object!.content![index].repostOn!.postData!.first : "")),
+
                                                                                   AllGuestPostRoomData?.object?.content?[index].postUserName ?? "",
                                                                                   AllGuestPostRoomData?.object?.content?[index].description ?? "",
                                                                                   androidLink: '${AllGuestPostRoomData?.object?.content?[index].postLink}',
@@ -5534,6 +5551,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                                     /*if (User_ID == null) {
                                                                                                       Navigator.of(context).push(MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
                                                                                                     } else {*/
+
                                                                                                     if (Link == true || Link1 == true || Link2 == true || Link3 == true || Link4 == true || Link5 == true || Link6 == true) {
                                                                                                       if (Link2 == true || Link3 == true) {
                                                                                                         if (isYouTubeUrl(SelectedTest)) {
@@ -5552,6 +5570,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                                             },
                                                                                                           ));
                                                                                                         } else {
+
                                                                                                           if (isYouTubeUrl(SelectedTest)) {
                                                                                                             playLink(SelectedTest, context);
                                                                                                           } else
@@ -5582,7 +5601,9 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                                         print("tagName -- ${tagName}");
                                                                                                         print("user id -- ${userTagModel?.object}");
                                                                                                       }
+
                                                                                                     }
+
                                                                                                     // }
                                                                                                   }
                                                                                                 },
@@ -7841,6 +7862,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                   Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
+
                       FutureBuilder(
                           future: getYoutubePlayer(videoUrl, () {
                             Navigator.pop(ctx);
@@ -7856,6 +7878,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                 ),
                               );
                           })
+
                     ],
                   ),
                   Align(
