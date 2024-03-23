@@ -2146,7 +2146,7 @@ class Repository {
     final response = await apiServices.getApiCallWithToken(
         "${Config.GetPostCommetAPI}?userUid=${userUid}&orderBy=${orderBy}",
         context);
-    print('AddPost$response');
+    print('AddPost${response.body}');
     // var jsonString = json.decode(response.body);
     var jsonString = json.decode(utf8.decode(response.bodyBytes));
     switch (response.statusCode) {

@@ -516,16 +516,10 @@ class _MyHomePageState extends State<ShowProfileScreen>
                                         NewProfileData?.object?.accountType ??
 
                                             '',
-                                    module: NewProfileData?.object?.module ==
-                                                'COMPANY' &&
-                                            NewProfileData
-                                                    ?.object?.approvalStatus !=
-                                                "PENDING" &&
-                                            NewProfileData
-                                                    ?.object?.approvalStatus !=
-                                                "REJECTED"
-                                        ? true
-                                        : false,
+                                      module: NewProfileData?.object?.module == 'COMPANY' &&
+                                                                        NewProfileData?.object?.approvalStatus =='APPROVED'?
+                                                                       true:false,
+                            
 
                                   ))).then((value) =>
                           widget.ProfileNotification == true
