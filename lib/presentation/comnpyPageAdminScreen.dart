@@ -44,7 +44,11 @@ class _PageAdminState extends State<PageAdmin> {
                 color: Colors.black),
           ),
         ),
-        body: ListView.builder(
+        body: widget.getAssignedUsersOfCompanyPage.object?.isEmpty == true?
+          Center(
+            child: Text('No Assgin Any Admin'),
+          )
+        :ListView.builder(
           itemCount: widget.getAssignedUsersOfCompanyPage.object?.length,
           padding: EdgeInsets.only(top: 10),
           itemBuilder: (context, index) {

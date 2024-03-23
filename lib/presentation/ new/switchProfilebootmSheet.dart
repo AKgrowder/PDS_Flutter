@@ -23,7 +23,7 @@ void showProfileSwitchBottomSheet(BuildContext context,
 
   _selectedProfileIndex ??= getIndexOfInitiallySelected(getallcompenypagemodel);
 
-  showModalBottomSheet(
+  showBottomSheet(
     context: context,
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.only(
