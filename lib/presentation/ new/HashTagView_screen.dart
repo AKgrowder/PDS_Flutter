@@ -38,6 +38,11 @@ import '../register_create_account_screen/register_create_account_screen.dart';
 import 'RePost_Screen.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:device_info_plus/device_info_plus.dart';
+import 'package:dio/dio.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:video_thumbnail/video_thumbnail.dart';
+
 
 class HashTagViewScreen extends StatefulWidget {
   String? title;
@@ -58,6 +63,12 @@ class _HashTagViewScreenState extends State<HashTagViewScreen> with Observer {
   List<int> _currentPages = [];
   int imageCount = 1;
   UserTagModel? userTagModel;
+
+  bool _permissionReady = false;
+
+  int? version;
+
+  String _localPath="";
   @override
   void initState() {
     Observable.instance.addObserver(this);
@@ -1176,20 +1187,46 @@ class _HashTagViewScreenState extends State<HashTagViewScreen> with Observer {
                                               ),
                                             ),
                                             GestureDetector(
-                                              onTap: () {
+                                              onTap: () async{
                                                 if (uuid == null) {
                                                   Navigator.of(context).push(
                                                       MaterialPageRoute(
                                                           builder: (context) =>
                                                               RegisterCreateAccountScreen()));
                                                 } else {
-                                                  _onShareXFileFromAssets(
+                                                  if (hashTagViewData!.object!.posts![index].postDataType != "VIDEO") {
+                                                    String thumb = "";
+                                                    if (hashTagViewData!.object!.posts![index].thumbnailImageUrl != null) {
+                                                      thumb = hashTagViewData!.object!.posts![index].thumbnailImageUrl!;
+                                                    } else {
+                                                      if (hashTagViewData!.object!.posts![index].postData != null && hashTagViewData!.object!.posts![index].postData!.isNotEmpty) {
+                                                        thumb = hashTagViewData!.object!.posts![index].postData!.first;
+                                                      } else {
+                                                        thumb = "";
+                                                      }
+                                                    }
+                                                    _onShareXFileFromAssets(
                                                       context,
-                                                      androidLink:
-                                                          '${hashTagViewData?.object?.posts?[index].postLink}'
-                                                      /* iosLink:
-                                                      "https://apps.apple.com/inList =  /app/growder-b2b-platform/id6451333863" */
-                                                      );
+                                                      thumb,
+                                                      hashTagViewData!.object!.posts![index].postUserName ?? "",
+                                                      hashTagViewData!.object!.posts![index].description ?? "",
+                                                      androidLink: '${hashTagViewData!.object!.posts![index].postLink}',
+                                                    );
+                                                  } else {
+                                                    final fileName = await VideoThumbnail.thumbnailFile(
+                                                        video: hashTagViewData!.object!.posts![index].postData?.first ?? "",
+                                                        thumbnailPath: (await getTemporaryDirectory()).path,
+                                                imageFormat: ImageFormat.WEBP,
+                                                quality: 100,
+                                                );
+                                                _onShareXFileFromAssets(
+                                                context,
+                                                fileName!,
+                                                hashTagViewData!.object!.posts![index].postUserName ?? "",
+                                                hashTagViewData!.object!.posts![index].description ?? "",
+                                                androidLink: '${hashTagViewData!.object!.posts![index].postLink}',
+                                                );
+                                              }
                                                 }
                                               },
                                               child: Container(
@@ -1578,30 +1615,113 @@ class _HashTagViewScreenState extends State<HashTagViewScreen> with Observer {
         });
   }
 
-  void _onShareXFileFromAssets(BuildContext context,
-      {String? androidLink}) async {
+  void _onShareXFileFromAssets(BuildContext context, String postLink, String userName, String description, {String? androidLink}) async {
     // RenderBox? box = context.findAncestorRenderObjectOfType();
 
-    var directory = await getApplicationDocumentsDirectory();
+    var directory = await getTemporaryDirectory();
 
-    if (Platform.isAndroid) {
-      Share.shareXFiles(
-        [XFile("/sdcard/download/IP__image.jpg")],
-        subject: "Share",
-        text: "Try This Awesome App \n\n Android :- ${androidLink}",
-        // sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size,
-      );
+    if (postLink.isNotEmpty) {
+      _permissionReady = await _checkPermission();
+      await _prepareSaveDir();
+
+      if (_permissionReady) {
+        print("Downloading");
+        print("${postLink}");
+        try {
+          await Dio().download(
+            postLink.toString(),
+            directory.path + "/" + "IP__image.jpg",
+          );
+
+          print("Download Completed.");
+        } catch (e) {
+          print("Download Failed.\n\n" + e.toString());
+        }
+      }
+      if (Platform.isAndroid) {
+        Share.shareXFiles(
+          [XFile(postLink.startsWith("http") ? "${directory.path}/IP__image.jpg" : postLink)],
+          subject: "Share",
+          text: "$userName posted ${description.isNotEmpty ? "\n\n${description.split(" ").first}.... \n\n" : ""}on InPackaging \n\n https://www.inpackaging.com \n\n ${androidLink}",
+          // sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size,
+        );
+      } else {
+        Share.shareXFiles(
+          [XFile(directory.path + Platform.pathSeparator + 'Growder_Image/IP__image.jpg')],
+          subject: "Share",
+          text: "$userName posted ${description.isNotEmpty ? "\n\n${description.split(" ").first}.... \n\n" : ""}on InPackaging \n\n https://www.inpackaging.com \n\n ${androidLink}",
+          // sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size,
+        );
+      }
     } else {
-      Share.shareXFiles(
-        [
-          XFile(directory.path +
-              Platform.pathSeparator +
-              'Growder_Image/IP__image.jpg')
-        ],
-        subject: "Share",
-        text: "Try This Awesome App \n\n Android :- ${androidLink}",
-        // sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size,
-      );
+      print('No Invoice Available');
+
+      if (Platform.isAndroid) {
+        Share.shareXFiles(
+          [XFile("/sdcard/download/IP__image.jpg")],
+          subject: "Share",
+          text: "$userName posted ${description.isNotEmpty ? "\n\n${description.split(" ").first}.... \n\n" : ""}on InPackaging \n\n https://www.inpackaging.com \n\n ${androidLink}",
+          // sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size,
+        );
+      } else {
+        directory = await getApplicationDocumentsDirectory();
+        Share.shareXFiles(
+          [XFile(directory.path + Platform.pathSeparator + 'Growder_Image/IP__image.jpg')],
+          subject: "Share",
+          text: "$userName posted ${description.isNotEmpty ? "\n\n${description.split(" ").first}.... \n\n" : ""}on InPackaging \n https://www.inpackaging.com \n ${androidLink}",
+          // sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size,
+        );
+      }
+    }
+  }
+
+  Future<bool> _checkPermission() async {
+    if (Platform.isAndroid) {
+      DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+      AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+      print("objectobjectobjectobjectobjectobjectobjectobject ${androidInfo.version.release}");
+      version = int.parse(androidInfo.version.release);
+      // final SharedPreferences prefs = await SharedPreferences.getInstance();
+      // version =
+      //     await int.parse(prefs.getString(UserdefaultsData.version).toString());
+      print('dddwssadasdasdasdasdasd ${version}');
+    }
+    if (Platform.isAndroid) {
+      final status = (version ?? 0) < 13 ? await Permission.storage.status : PermissionStatus.granted;
+      if (status != PermissionStatus.granted) {
+        print('gegegegegegegegegegegegegege');
+        print('gegegegegegegegegegegegegege $status');
+        final result = (version ?? 0) < 13 ? await Permission.storage.request() : PermissionStatus.granted;
+        if (result == PermissionStatus.granted) {
+          return true;
+        }
+      } else {
+        return true;
+      }
+    } else {
+      return true;
+    }
+    return false;
+  }
+
+  Future<void> _prepareSaveDir() async {
+    _localPath = (await _findLocalPath())!;
+
+    print(_localPath);
+    final savedDir = Directory(_localPath);
+    bool hasExisted = await savedDir.exists();
+    if (!hasExisted) {
+      savedDir.create();
+      print('first vvvvvvvvvvvvvvvvvvv');
+    }
+  }
+
+  Future<String?> _findLocalPath() async {
+    if (Platform.isAndroid) {
+      return "/sdcard/download/";
+    } else {
+      var directory = await getApplicationDocumentsDirectory();
+      return directory.path + Platform.pathSeparator + 'IP_Image';
     }
   }
 

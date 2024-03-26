@@ -4989,9 +4989,24 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                               Navigator.of(context).push(MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
                                                                             } else {
                                                                               if (AllGuestPostRoomData?.object?.content?[index].postDataType != "VIDEO") {
+                                                                                String thumb="";
+                                                                                if (AllGuestPostRoomData!.object!.content![index].thumbnailImageUrl != null) {
+                                                                                  thumb = AllGuestPostRoomData!.object!.content![index].thumbnailImageUrl!;
+                                                                                } else {
+                                                                                  if (AllGuestPostRoomData!.object!.content![index].postData != null && AllGuestPostRoomData!.object!.content![index].postData!.isNotEmpty) {
+                                                                                    thumb = AllGuestPostRoomData!.object!.content![index].postData!.first;
+                                                                                  } else {
+                                                                                    if (AllGuestPostRoomData!.object!.content![index].repostOn != null && AllGuestPostRoomData!.object!.content![index].repostOn!.thumbnailImageUrl != null) {
+                                                                                      thumb = AllGuestPostRoomData!.object!.content![index].repostOn!.thumbnailImageUrl!;
+                                                                                    } else {
+                                                                                      thumb = AllGuestPostRoomData!.object!.content![index].repostOn != null && AllGuestPostRoomData!.object!.content![index].repostOn!.postData != null && AllGuestPostRoomData!.object!.content![index].repostOn!.postData!.isNotEmpty ?
+                                                                                      AllGuestPostRoomData!.object!.content![index].repostOn!.postData!.first : "";
+                                                                                    }
+                                                                                  }
+                                                                                }
                                                                                 _onShareXFileFromAssets(
                                                                                   context,
-                                                                                  AllGuestPostRoomData?.object?.content?[index].thumbnailImageUrl ?? (AllGuestPostRoomData!.object!.content![index].postData!.isNotEmpty ? AllGuestPostRoomData!.object!.content![index].postData!.first : AllGuestPostRoomData?.object?.content?[index].repostOn?.thumbnailImageUrl ??(AllGuestPostRoomData!.object!.content![index].repostOn!.postData!.isNotEmpty ? AllGuestPostRoomData!.object!.content![index].repostOn!.postData!.first : "")),
+                                                                                  thumb,
                                                                                   AllGuestPostRoomData?.object?.content?[index].postUserName ?? "",
                                                                                   AllGuestPostRoomData?.object?.content?[index].description ?? "",
                                                                                   androidLink: '${AllGuestPostRoomData?.object?.content?[index].postLink}',
@@ -6231,10 +6246,24 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                             "check Data Get-${AllGuestPostRoomData?.object?.content?[index].postLink}");
                                                                         if (AllGuestPostRoomData?.object?.content?[index].postDataType !=
                                                                             "VIDEO") {
+                                                                          String thumb="";
+                                                                          if (AllGuestPostRoomData!.object!.content![index].thumbnailImageUrl != null) {
+                                                                            thumb = AllGuestPostRoomData!.object!.content![index].thumbnailImageUrl!;
+                                                                          } else {
+                                                                            if (AllGuestPostRoomData!.object!.content![index].postData != null && AllGuestPostRoomData!.object!.content![index].postData!.isNotEmpty) {
+                                                                              thumb = AllGuestPostRoomData!.object!.content![index].postData!.first;
+                                                                            } else {
+                                                                              if (AllGuestPostRoomData!.object!.content![index].repostOn != null && AllGuestPostRoomData!.object!.content![index].repostOn!.thumbnailImageUrl != null) {
+                                                                                thumb = AllGuestPostRoomData!.object!.content![index].repostOn!.thumbnailImageUrl!;
+                                                                              } else {
+                                                                                thumb = AllGuestPostRoomData!.object!.content![index].repostOn != null && AllGuestPostRoomData!.object!.content![index].repostOn!.postData != null && AllGuestPostRoomData!.object!.content![index].repostOn!.postData!.isNotEmpty ?
+                                                                                AllGuestPostRoomData!.object!.content![index].repostOn!.postData!.first : "";
+                                                                              }
+                                                                            }
+                                                                          }
                                                                           _onShareXFileFromAssets(
                                                                             context,
-                                                                            AllGuestPostRoomData?.object?.content?[index].thumbnailImageUrl ?? (AllGuestPostRoomData!.object!.content![index].postData!.isNotEmpty ? AllGuestPostRoomData!.object!.content![index].postData!.first : AllGuestPostRoomData?.object?.content?[index].repostOn?.thumbnailImageUrl ??(AllGuestPostRoomData!.object!.content![index].repostOn!.postData!.isNotEmpty ? AllGuestPostRoomData!.object!.content![index].repostOn!.postData!.first : "")),
-
+thumb,
                                                                             AllGuestPostRoomData?.object?.content?[index].postUserName ??
                                                                                 "",
                                                                             AllGuestPostRoomData?.object?.content?[index].description ??

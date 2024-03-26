@@ -63,6 +63,15 @@ import '../settings/setting_screen.dart';
 import 'comment_bottom_sheet.dart';
 import 'followers.dart';
 import 'switchProfilebootmSheet.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+
+import 'package:video_thumbnail/video_thumbnail.dart';
+import 'package:youtube_player_flutter/youtube_player_flutter.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:device_info_plus/device_info_plus.dart';
+import 'package:dio/dio.dart';
+import 'package:any_link_preview/any_link_preview.dart';
 
 class ProfileScreen extends StatefulWidget {
   String User_ID;
@@ -186,6 +195,11 @@ class _ProfileScreenState extends State<ProfileScreen>
   bool _isScrolledUp = false;
   bool scrolldown = false;
   bool isOpen = false;
+  late bool _permissionReady;
+
+  int? version;
+
+  String _localPath = "";
   void launchEmail(String emailAddress) async {
     final Uri emailLaunchUri = Uri(
       // scheme: 'Test',
@@ -4842,178 +4856,234 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                             child: Container(
                                                               // color: Colors.amber,
                                                               child:
-                                                                  LinkifyText(
+                                                                  Column(
+                                                                    children: [
+                                                                      LinkifyText(
                                                                 getAllPostData.object?[index].isTrsnalteoption ==
-                                                                            false ||
-                                                                        getAllPostData.object?[index].isTrsnalteoption ==
-                                                                            null
-                                                                    ? "${getAllPostData.object?[index].description}"
-                                                                    : "${getAllPostData.object?[index].translatedDescription}",
+                                                                                false ||
+                                                                            getAllPostData.object?[index].isTrsnalteoption ==
+                                                                                null
+                                                                        ? "${getAllPostData.object?[index].description}"
+                                                                        : "${getAllPostData.object?[index].translatedDescription}",
                                                                 linkStyle:
-                                                                    TextStyle(
-                                                                  color: Colors
-                                                                      .blue,
-                                                                  fontFamily:
-                                                                      'outfit',
+                                                                        TextStyle(
+                                                                      color: Colors
+                                                                          .blue,
+                                                                      fontFamily:
+                                                                          'outfit',
                                                                 ),
                                                                 textStyle:
-                                                                    TextStyle(
-                                                                  color: Colors
-                                                                      .black,
-                                                                  fontFamily:
-                                                                      'outfit',
+                                                                        TextStyle(
+                                                                      color: Colors
+                                                                          .black,
+                                                                      fontFamily:
+                                                                          'outfit',
                                                                 ),
                                                                 linkTypes: [
-                                                                  LinkType.url,
-                                                                  LinkType
-                                                                      .userTag,
-                                                                  LinkType
-                                                                      .hashTag,
-                                                                  // LinkType
-                                                                  //     .email
+                                                                      LinkType.url,
+                                                                      LinkType
+                                                                          .userTag,
+                                                                      LinkType
+                                                                          .hashTag,
+                                                                      // LinkType
+                                                                      //     .email
                                                                 ],
                                                                 onTap:
-                                                                    (link) async {
-                                                                  /// do stuff with `link` like
-                                                                  /// if(link.type == Link.url) launchUrl(link.value);
+                                                                        (link) async {
+                                                                      /// do stuff with `link` like
+                                                                      /// if(link.type == Link.url) launchUrl(link.value);
 
-                                                                  var SelectedTest =
-                                                                      link.value
-                                                                          .toString();
-                                                                  var Link = SelectedTest
-                                                                      .startsWith(
-                                                                          'https');
-                                                                  var Link1 = SelectedTest
-                                                                      .startsWith(
-                                                                          'http');
-                                                                  var Link2 = SelectedTest
-                                                                      .startsWith(
-                                                                          'www');
-                                                                  var Link3 = SelectedTest
-                                                                      .startsWith(
-                                                                          'WWW');
-                                                                  var Link4 = SelectedTest
-                                                                      .startsWith(
-                                                                          'HTTPS');
-                                                                  var Link5 = SelectedTest
-                                                                      .startsWith(
-                                                                          'HTTP');
-                                                                  var Link6 = SelectedTest
-                                                                      .startsWith(
-                                                                          'https://pdslink.page.link/');
-                                                                  print(SelectedTest
-                                                                      .toString());
+                                                                      var SelectedTest =
+                                                                          link.value
+                                                                              .toString();
+                                                                      var Link = SelectedTest
+                                                                          .startsWith(
+                                                                              'https');
+                                                                      var Link1 = SelectedTest
+                                                                          .startsWith(
+                                                                              'http');
+                                                                      var Link2 = SelectedTest
+                                                                          .startsWith(
+                                                                              'www');
+                                                                      var Link3 = SelectedTest
+                                                                          .startsWith(
+                                                                              'WWW');
+                                                                      var Link4 = SelectedTest
+                                                                          .startsWith(
+                                                                              'HTTPS');
+                                                                      var Link5 = SelectedTest
+                                                                          .startsWith(
+                                                                              'HTTP');
+                                                                      var Link6 = SelectedTest
+                                                                          .startsWith(
+                                                                              'https://pdslink.page.link/');
+                                                                      print(SelectedTest
+                                                                          .toString());
 
-                                                                  if (User_ID ==
-                                                                      null) {
-                                                                    Navigator.of(
-                                                                            context)
-                                                                        .push(MaterialPageRoute(
-                                                                            builder: (context) =>
-                                                                                RegisterCreateAccountScreen()));
-                                                                  } else {
-                                                                    if (Link ==
-                                                                            true ||
-                                                                        Link1 ==
-                                                                            true ||
-                                                                        Link2 ==
-                                                                            true ||
-                                                                        Link3 ==
-                                                                            true ||
-                                                                        Link4 ==
-                                                                            true ||
-                                                                        Link5 ==
-                                                                            true ||
-                                                                        Link6 ==
-                                                                            true) {
-                                                                      if (Link2 ==
-                                                                              true ||
-                                                                          Link3 ==
-                                                                              true) {
-                                                                        launchUrl(
-                                                                            Uri.parse("https://${link.value.toString()}"));
-                                                                        print(
-                                                                            "qqqqqqqqhttps://${link.value}");
+                                                                      if (User_ID ==
+                                                                          null) {
+                                                                        Navigator.of(
+                                                                                context)
+                                                                            .push(MaterialPageRoute(
+                                                                                builder: (context) =>
+                                                                                    RegisterCreateAccountScreen()));
                                                                       } else {
-                                                                        if (Link6 ==
-                                                                            true) {
-                                                                          print(
-                                                                              "yes i am inList =   room");
-                                                                          Navigator.push(
-                                                                              context,
-                                                                              MaterialPageRoute(
-                                                                            builder:
-                                                                                (context) {
-                                                                              return NewBottomBar(
-                                                                                buttomIndex: 1,
-                                                                              );
-                                                                            },
-                                                                          ));
+                                                                        if (Link ==
+                                                                                true ||
+                                                                            Link1 ==
+                                                                                true ||
+                                                                            Link2 ==
+                                                                                true ||
+                                                                            Link3 ==
+                                                                                true ||
+                                                                            Link4 ==
+                                                                                true ||
+                                                                            Link5 ==
+                                                                                true ||
+                                                                            Link6 ==
+                                                                                true) {
+                                                                          if (Link2 ==
+                                                                                  true ||
+                                                                              Link3 ==
+                                                                                  true) {
+                                                                            launchUrl(
+                                                                                Uri.parse("https://${link.value.toString()}"));
+                                                                            print(
+                                                                                "qqqqqqqqhttps://${link.value}");
+                                                                          } else {
+                                                                            if (Link6 ==
+                                                                                true) {
+                                                                              print(
+                                                                                  "yes i am inList =   room");
+                                                                              Navigator.push(
+                                                                                  context,
+                                                                                  MaterialPageRoute(
+                                                                                builder:
+                                                                                    (context) {
+                                                                                  return NewBottomBar(
+                                                                                    buttomIndex: 1,
+                                                                                  );
+                                                                                },
+                                                                              ));
+                                                                            } else {
+                                                                              launchUrl(Uri.parse(link
+                                                                                  .value
+                                                                                  .toString()));
+                                                                              print(
+                                                                                  "link.valuelink.value -- ${link.value}");
+                                                                            }
+                                                                          }
                                                                         } else {
-                                                                          launchUrl(Uri.parse(link
-                                                                              .value
-                                                                              .toString()));
-                                                                          print(
-                                                                              "link.valuelink.value -- ${link.value}");
+                                                                          if (link
+                                                                              .value!
+                                                                              .startsWith(
+                                                                                  '#')) {
+                                                                            /*  await BlocProvider.of<
+                                                                          GetGuestAllPostCubit>(
+                                                                      context)
+                                                              .seetinonExpried(
+                                                                      context); */
+                                                                            Navigator.push(
+                                                                                context,
+                                                                                MaterialPageRoute(
+                                                                                  builder: (context) => HashTagViewScreen(title: "${link.value}"),
+                                                                                ));
+                                                                          } else if (link
+                                                                              .value!
+                                                                              .startsWith(
+                                                                                  '@')) {
+                                                                            /*  await BlocProvider.of<
+                                                                          GetGuestAllPostCubit>(
+                                                                      context)
+                                                              .seetinonExpried(
+                                                                      context); */
+                                                                            var name;
+                                                                            var tagName;
+                                                                            name =
+                                                                                SelectedTest;
+                                                                            tagName = name.replaceAll(
+                                                                                "@",
+                                                                                "");
+                                                                            await BlocProvider.of<NewProfileSCubit>(context).UserTagAPI(
+                                                                                context,
+                                                                                tagName);
+
+                                                                            Navigator.push(
+                                                                                context,
+                                                                                MaterialPageRoute(builder:
+                                                                                    (context) {
+                                                                              return ProfileScreen(
+                                                                                  User_ID: "${userTagModel?.object}",
+                                                                                  isFollowing: "");
+                                                                            })).then((value) =>
+                                                                                Get_UserToken());
+
+                                                                            print(
+                                                                                "tagName -- ${tagName}");
+                                                                            print(
+                                                                                "user id -- ${userTagModel?.object}");
+                                                                          } else {
+                                                                            launchUrl(
+                                                                                Uri.parse("https://${link.value.toString()}"));
+                                                                          }
                                                                         }
                                                                       }
-                                                                    } else {
-                                                                      if (link
-                                                                          .value!
-                                                                          .startsWith(
-                                                                              '#')) {
-                                                                        /*  await BlocProvider.of<
-                                                                      GetGuestAllPostCubit>(
-                                                                  context)
-                                                              .seetinonExpried(
-                                                                  context); */
-                                                                        Navigator.push(
-                                                                            context,
-                                                                            MaterialPageRoute(
-                                                                              builder: (context) => HashTagViewScreen(title: "${link.value}"),
-                                                                            ));
-                                                                      } else if (link
-                                                                          .value!
-                                                                          .startsWith(
-                                                                              '@')) {
-                                                                        /*  await BlocProvider.of<
-                                                                      GetGuestAllPostCubit>(
-                                                                  context)
-                                                              .seetinonExpried(
-                                                                  context); */
-                                                                        var name;
-                                                                        var tagName;
-                                                                        name =
-                                                                            SelectedTest;
-                                                                        tagName = name.replaceAll(
-                                                                            "@",
-                                                                            "");
-                                                                        await BlocProvider.of<NewProfileSCubit>(context).UserTagAPI(
-                                                                            context,
-                                                                            tagName);
-
-                                                                        Navigator.push(
-                                                                            context,
-                                                                            MaterialPageRoute(builder:
-                                                                                (context) {
-                                                                          return ProfileScreen(
-                                                                              User_ID: "${userTagModel?.object}",
-                                                                              isFollowing: "");
-                                                                        })).then((value) =>
-                                                                            Get_UserToken());
-
-                                                                        print(
-                                                                            "tagName -- ${tagName}");
-                                                                        print(
-                                                                            "user id -- ${userTagModel?.object}");
-                                                                      } else {
-                                                                        launchUrl(
-                                                                            Uri.parse("https://${link.value.toString()}"));
-                                                                      }
-                                                                    }
-                                                                  }
                                                                 },
                                                               ),
+                                                                      if (extractUrls(getAllPostData.object?[index].description ?? "").isNotEmpty)
+                                                                        isYouTubeUrl(extractUrls(getAllPostData.object?[index].description ?? "").first)
+                                                                            ? FutureBuilder(
+                                                                            future: fetchYoutubeThumbnail(extractUrls(getAllPostData.object?[index].description ?? "").first),
+                                                                            builder: (context, snap) {
+                                                                              return Container(
+                                                                                height: 250,
+                                                                                decoration: BoxDecoration(image: DecorationImage(image: CachedNetworkImageProvider(snap.data.toString())), borderRadius: BorderRadius.circular(10)),
+                                                                                clipBehavior: Clip.antiAlias,
+                                                                                child: Center(
+                                                                                    child: IconButton(
+                                                                                      icon: Icon(
+                                                                                        Icons.play_circle_fill_rounded,
+                                                                                        color: Colors.white,
+                                                                                        size: 60,
+                                                                                      ),
+                                                                                      onPressed: () {
+                                                                                        playLink(extractUrls(getAllPostData.object?[index].description ?? "").first, context);
+                                                                                      },
+                                                                                    )),
+                                                                              );
+                                                                            })
+                                                                            : Padding(
+                                                                          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                                                                          child: AnyLinkPreview(
+                                                                            link: extractUrls(getAllPostData.object?[index].description ?? "").first,
+                                                                            displayDirection: UIDirection.uiDirectionHorizontal,
+                                                                            showMultimedia: true,
+                                                                            bodyMaxLines: 5,
+                                                                            bodyTextOverflow: TextOverflow.ellipsis,
+                                                                            titleStyle: TextStyle(
+                                                                              color: Colors.black,
+                                                                              fontWeight: FontWeight.bold,
+                                                                              fontSize: 15,
+                                                                            ),
+                                                                            bodyStyle: TextStyle(color: Colors.grey, fontSize: 12),
+                                                                            errorBody: 'Show my custom error body',
+                                                                            errorTitle: 'Show my custom error title',
+                                                                            errorWidget: null,
+                                                                            errorImage: "https://flutter.dev/",
+                                                                            cache: Duration(days: 7),
+                                                                            backgroundColor: Colors.grey[300],
+                                                                            borderRadius: 12,
+                                                                            removeElevation: false,
+                                                                            boxShadow: [
+                                                                              BoxShadow(blurRadius: 3, color: Colors.grey)
+                                                                            ],
+                                                                            onTap: () {
+                                                                              launchUrl(Uri.parse(extractUrls(getAllPostData.object?[index].description ?? "").first));
+                                                                            }, // This disables tap event
+                                                                          ),
+                                                                        ),
+                                                                    ],
+                                                                  ),
                                                             ),
                                                           ),
                                                         ],
@@ -5464,169 +5534,225 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                       padding:
                                                           const EdgeInsets.only(
                                                               left: 16),
-                                                      child: LinkifyText(
-                                                        "${getAllPostData.object?[index].repostOn?.description}",
-                                                        linkStyle: TextStyle(
-                                                          color: Colors.blue,
-                                                          fontFamily: 'outfit',
-                                                        ),
-                                                        textStyle: TextStyle(
-                                                          color: Colors.black,
-                                                          fontFamily: 'outfit',
-                                                        ),
-                                                        linkTypes: [
-                                                          LinkType.url,
-                                                          LinkType.userTag,
-                                                          LinkType.hashTag,
-                                                          // LinkType
-                                                          //     .email
-                                                        ],
-                                                        onTap: (link) async {
-                                                          /// do stuff with `link` like
-                                                          /// if(link.type == Link.url) launchUrl(link.value);
+                                                      child: Column(
+                                                        children: [
+                                                          LinkifyText(
+                                                            "${getAllPostData.object?[index].repostOn?.description}",
+                                                            linkStyle: TextStyle(
+                                                              color: Colors.blue,
+                                                              fontFamily: 'outfit',
+                                                            ),
+                                                            textStyle: TextStyle(
+                                                              color: Colors.black,
+                                                              fontFamily: 'outfit',
+                                                            ),
+                                                            linkTypes: [
+                                                              LinkType.url,
+                                                              LinkType.userTag,
+                                                              LinkType.hashTag,
+                                                              // LinkType
+                                                              //     .email
+                                                            ],
+                                                            onTap: (link) async {
+                                                              /// do stuff with `link` like
+                                                              /// if(link.type == Link.url) launchUrl(link.value);
 
-                                                          var SelectedTest =
-                                                              link.value
-                                                                  .toString();
-                                                          var Link =
-                                                              SelectedTest
+                                                              var SelectedTest =
+                                                                  link.value
+                                                                      .toString();
+                                                              var Link =
+                                                                  SelectedTest
+                                                                      .startsWith(
+                                                                          'https');
+                                                              var Link1 =
+                                                                  SelectedTest
+                                                                      .startsWith(
+                                                                          'http');
+                                                              var Link2 =
+                                                                  SelectedTest
+                                                                      .startsWith(
+                                                                          'www');
+                                                              var Link3 =
+                                                                  SelectedTest
+                                                                      .startsWith(
+                                                                          'WWW');
+                                                              var Link4 =
+                                                                  SelectedTest
+                                                                      .startsWith(
+                                                                          'HTTPS');
+                                                              var Link5 =
+                                                                  SelectedTest
+                                                                      .startsWith(
+                                                                          'HTTP');
+                                                              var Link6 = SelectedTest
                                                                   .startsWith(
-                                                                      'https');
-                                                          var Link1 =
-                                                              SelectedTest
-                                                                  .startsWith(
-                                                                      'http');
-                                                          var Link2 =
-                                                              SelectedTest
-                                                                  .startsWith(
-                                                                      'www');
-                                                          var Link3 =
-                                                              SelectedTest
-                                                                  .startsWith(
-                                                                      'WWW');
-                                                          var Link4 =
-                                                              SelectedTest
-                                                                  .startsWith(
-                                                                      'HTTPS');
-                                                          var Link5 =
-                                                              SelectedTest
-                                                                  .startsWith(
-                                                                      'HTTP');
-                                                          var Link6 = SelectedTest
-                                                              .startsWith(
-                                                                  'https://pdslink.page.link/');
-                                                          print(SelectedTest
-                                                              .toString());
+                                                                      'https://pdslink.page.link/');
+                                                              print(SelectedTest
+                                                                  .toString());
 
-                                                          if (User_ID == null) {
-                                                            Navigator.of(
-                                                                    context)
-                                                                .push(MaterialPageRoute(
-                                                                    builder:
-                                                                        (context) =>
-                                                                            RegisterCreateAccountScreen()));
-                                                          } else {
-                                                            if (Link == true ||
-                                                                Link1 == true ||
-                                                                Link2 == true ||
-                                                                Link3 == true ||
-                                                                Link4 == true ||
-                                                                Link5 == true ||
-                                                                Link6 == true) {
-                                                              if (Link2 ==
-                                                                      true ||
-                                                                  Link3 ==
-                                                                      true) {
-                                                                launchUrl(Uri.parse(
-                                                                    "https://${link.value.toString()}"));
-                                                                print(
-                                                                    "qqqqqqqqhttps://${link.value}");
-                                                              } else {
-                                                                if (Link6 ==
-                                                                    true) {
-                                                                  print(
-                                                                      "yes i am inList =   room");
-                                                                  Navigator.push(
-                                                                      context,
-                                                                      MaterialPageRoute(
-                                                                    builder:
-                                                                        (context) {
-                                                                      return NewBottomBar(
-                                                                        buttomIndex:
-                                                                            1,
-                                                                      );
-                                                                    },
-                                                                  ));
-                                                                } else {
-                                                                  launchUrl(Uri
-                                                                      .parse(link
-                                                                          .value
-                                                                          .toString()));
-                                                                  print(
-                                                                      "link.valuelink.value -- ${link.value}");
-                                                                }
-                                                              }
-                                                            } else {
-                                                              if (link.value!
-                                                                  .startsWith(
-                                                                      '#')) {
-                                                                /*   await BlocProvider.of<
-                                                              GetGuestAllPostCubit>(
-                                                          context)
-                                                      .seetinonExpried(context); */
-                                                                print(
-                                                                    "aaaaaaaaaa == ${link}");
-                                                                Navigator.push(
-                                                                    context,
-                                                                    MaterialPageRoute(
-                                                                      builder: (context) =>
-                                                                          HashTagViewScreen(
-                                                                              title: "${link.value}"),
-                                                                    ));
-                                                              } else if (link
-                                                                  .value!
-                                                                  .startsWith(
-                                                                      '@')) {
-                                                                /*  await BlocProvider.of<
-                                                              GetGuestAllPostCubit>(
-                                                          context)
-                                                      .seetinonExpried(context); */
-                                                                var name;
-                                                                var tagName;
-                                                                name =
-                                                                    SelectedTest;
-                                                                tagName = name
-                                                                    .replaceAll(
-                                                                        "@",
-                                                                        "");
-                                                                await BlocProvider.of<
-                                                                            NewProfileSCubit>(
+                                                              if (User_ID == null) {
+                                                                Navigator.of(
                                                                         context)
-                                                                    .UserTagAPI(
-                                                                        context,
-                                                                        tagName);
-
-                                                                Navigator.push(
-                                                                    context,
-                                                                    MaterialPageRoute(
+                                                                    .push(MaterialPageRoute(
+                                                                        builder:
+                                                                            (context) =>
+                                                                                RegisterCreateAccountScreen()));
+                                                              } else {
+                                                                if (Link == true ||
+                                                                    Link1 == true ||
+                                                                    Link2 == true ||
+                                                                    Link3 == true ||
+                                                                    Link4 == true ||
+                                                                    Link5 == true ||
+                                                                    Link6 == true) {
+                                                                  if (Link2 ==
+                                                                          true ||
+                                                                      Link3 ==
+                                                                          true) {
+                                                                    launchUrl(Uri.parse(
+                                                                        "https://${link.value.toString()}"));
+                                                                    print(
+                                                                        "qqqqqqqqhttps://${link.value}");
+                                                                  } else {
+                                                                    if (Link6 ==
+                                                                        true) {
+                                                                      print(
+                                                                          "yes i am inList =   room");
+                                                                      Navigator.push(
+                                                                          context,
+                                                                          MaterialPageRoute(
                                                                         builder:
                                                                             (context) {
-                                                                  return ProfileScreen(
-                                                                      User_ID:
-                                                                          "${userTagModel?.object}",
-                                                                      isFollowing:
-                                                                          "");
-                                                                })).then((value) =>
-                                                                    Get_UserToken());
+                                                                          return NewBottomBar(
+                                                                            buttomIndex:
+                                                                                1,
+                                                                          );
+                                                                        },
+                                                                      ));
+                                                                    } else {
+                                                                      launchUrl(Uri
+                                                                          .parse(link
+                                                                              .value
+                                                                              .toString()));
+                                                                      print(
+                                                                          "link.valuelink.value -- ${link.value}");
+                                                                    }
+                                                                  }
+                                                                } else {
+                                                                  if (link.value!
+                                                                      .startsWith(
+                                                                          '#')) {
+                                                                    /*   await BlocProvider.of<
+                                                                  GetGuestAllPostCubit>(
+                                                              context)
+                                                          .seetinonExpried(context); */
+                                                                    print(
+                                                                        "aaaaaaaaaa == ${link}");
+                                                                    Navigator.push(
+                                                                        context,
+                                                                        MaterialPageRoute(
+                                                                          builder: (context) =>
+                                                                              HashTagViewScreen(
+                                                                                  title: "${link.value}"),
+                                                                        ));
+                                                                  } else if (link
+                                                                      .value!
+                                                                      .startsWith(
+                                                                          '@')) {
+                                                                    /*  await BlocProvider.of<
+                                                                  GetGuestAllPostCubit>(
+                                                              context)
+                                                          .seetinonExpried(context); */
+                                                                    var name;
+                                                                    var tagName;
+                                                                    name =
+                                                                        SelectedTest;
+                                                                    tagName = name
+                                                                        .replaceAll(
+                                                                            "@",
+                                                                            "");
+                                                                    await BlocProvider.of<
+                                                                                NewProfileSCubit>(
+                                                                            context)
+                                                                        .UserTagAPI(
+                                                                            context,
+                                                                            tagName);
 
-                                                                print(
-                                                                    "tagName -- ${tagName}");
-                                                                print(
-                                                                    "user id -- ${userTagModel?.object}");
+                                                                    Navigator.push(
+                                                                        context,
+                                                                        MaterialPageRoute(
+                                                                            builder:
+                                                                                (context) {
+                                                                      return ProfileScreen(
+                                                                          User_ID:
+                                                                              "${userTagModel?.object}",
+                                                                          isFollowing:
+                                                                              "");
+                                                                    })).then((value) =>
+                                                                        Get_UserToken());
+
+                                                                    print(
+                                                                        "tagName -- ${tagName}");
+                                                                    print(
+                                                                        "user id -- ${userTagModel?.object}");
+                                                                  }
+                                                                }
                                                               }
-                                                            }
-                                                          }
-                                                        },
+                                                            },
+                                                          ),
+                                                          if (extractUrls(getAllPostData.object?[index].repostOn?.description ?? "").isNotEmpty)
+                                                            isYouTubeUrl(extractUrls(getAllPostData.object?[index].repostOn?.description ?? "").first)
+                                                                ? FutureBuilder(
+                                                                future: fetchYoutubeThumbnail(extractUrls(getAllPostData.object?[index].repostOn?.description ?? "").first),
+                                                                builder: (context, snap) {
+                                                                  return Container(
+                                                                    height: 250,
+                                                                    decoration: BoxDecoration(image: DecorationImage(image: CachedNetworkImageProvider(snap.data.toString())), borderRadius: BorderRadius.circular(10)),
+                                                                    clipBehavior: Clip.antiAlias,
+                                                                    child: Center(
+                                                                        child: IconButton(
+                                                                          icon: Icon(
+                                                                            Icons.play_circle_fill_rounded,
+                                                                            color: Colors.white,
+                                                                            size: 60,
+                                                                          ),
+                                                                          onPressed: () {
+                                                                            playLink(extractUrls(getAllPostData.object?[index].repostOn?.description ?? "").first, context);
+                                                                          },
+                                                                        )),
+                                                                  );
+                                                                })
+                                                                : Padding(
+                                                              padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                                                              child: AnyLinkPreview(
+                                                                link: extractUrls(getAllPostData.object?[index].repostOn?.description ?? "").first,
+                                                                displayDirection: UIDirection.uiDirectionHorizontal,
+                                                                showMultimedia: true,
+                                                                bodyMaxLines: 5,
+                                                                bodyTextOverflow: TextOverflow.ellipsis,
+                                                                titleStyle: TextStyle(
+                                                                  color: Colors.black,
+                                                                  fontWeight: FontWeight.bold,
+                                                                  fontSize: 15,
+                                                                ),
+                                                                bodyStyle: TextStyle(color: Colors.grey, fontSize: 12),
+                                                                errorBody: 'Show my custom error body',
+                                                                errorTitle: 'Show my custom error title',
+                                                                errorWidget: null,
+                                                                errorImage: "https://flutter.dev/",
+                                                                cache: Duration(days: 7),
+                                                                backgroundColor: Colors.grey[300],
+                                                                borderRadius: 12,
+                                                                removeElevation: false,
+                                                                boxShadow: [
+                                                                  BoxShadow(blurRadius: 3, color: Colors.grey)
+                                                                ],
+                                                                onTap: () {
+                                                                  launchUrl(Uri.parse(extractUrls(getAllPostData.object?[index].repostOn?.description ?? "").first));
+                                                                }, // This disables tap event
+                                                              ),
+                                                            ),
+                                                        ],
                                                       ))
                                                   : SizedBox(),
                                               Container(
@@ -6061,13 +6187,44 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                         fontSize: 14),
                                                   ),
                                             GestureDetector(
-                                              onTap: () {
-                                                _onShareXFileFromAssets(context,
-                                                    androidLink:
-                                                        '${getAllPostData.object?[index].postLink}'
-                                                    /* iosLink:
-                                                      "https://apps.apple.com/inList =  /app/growder-b2b-platform/id6451333863" */
-                                                    );
+                                              onTap: () async {
+                                                if (getAllPostData.object![index].postDataType != "VIDEO") {
+                                                  String thumb = "";
+                                                  if (getAllPostData.object![index].thumbnailImageUrl != null) {
+                                                    thumb = getAllPostData.object![index].thumbnailImageUrl!;
+                                                  } else {
+                                                    if (getAllPostData.object![index].postData != null && getAllPostData.object![index].postData!.isNotEmpty) {
+                                                      thumb = getAllPostData.object![index].postData!.first;
+                                                    } else {
+                                                      if (getAllPostData.object![index].repostOn != null && getAllPostData.object![index].repostOn!.thumbnailImageUrl != null) {
+                                                        thumb = getAllPostData.object![index].repostOn!.thumbnailImageUrl!;
+                                                      } else {
+                                                        thumb = getAllPostData.object![index].repostOn != null && getAllPostData.object![index].repostOn!.postData != null && getAllPostData.object![index].repostOn!.postData!.isNotEmpty ? getAllPostData.object![index].repostOn!.postData!.first : "";
+                                                      }
+                                                    }
+                                                  }
+                                                  _onShareXFileFromAssets(
+                                                    context,
+                                                    thumb,
+                                                    getAllPostData.object![index].postUserName ?? "",
+                                                    getAllPostData.object![index].description ?? "",
+                                                    androidLink: '${getAllPostData.object![index].postLink}',
+                                                  );
+                                                } else {
+                                                  final fileName = await VideoThumbnail.thumbnailFile(
+                                                    video: getAllPostData.object![index].postData?.first ?? "",
+                                                    thumbnailPath: (await getTemporaryDirectory()).path,
+                                                    imageFormat: ImageFormat.WEBP,
+                                                    quality: 100,
+                                                  );
+                                                  _onShareXFileFromAssets(
+                                                    context,
+                                                    fileName!,
+                                                    getAllPostData.object![index].postUserName ?? "",
+                                                    getAllPostData.object![index].description ?? "",
+                                                    androidLink: '${getAllPostData.object![index].postLink}',
+                                                  );
+                                                }
                                               },
                                               child: Container(
                                                 height: 20,
@@ -6502,124 +6659,180 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                     child:
                                                                         Container(
                                                                       child:
-                                                                          LinkifyText(
+                                                                          Column(
+                                                                            children: [
+                                                                              LinkifyText(
                                                                         getAllPostData.object?[index].isTrsnalteoption == false ||
-                                                                                getAllPostData.object?[index].isTrsnalteoption == null
-                                                                            ? "${getAllPostData.object?[index].description}"
-                                                                            : "${getAllPostData.object?[index].translatedDescription}",
+                                                                                    getAllPostData.object?[index].isTrsnalteoption == null
+                                                                                ? "${getAllPostData.object?[index].description}"
+                                                                                : "${getAllPostData.object?[index].translatedDescription}",
                                                                         linkStyle:
-                                                                            TextStyle(
-                                                                          color:
-                                                                              Colors.blue,
-                                                                          fontFamily:
-                                                                              'outfit',
+                                                                                TextStyle(
+                                                                              color:
+                                                                                  Colors.blue,
+                                                                              fontFamily:
+                                                                                  'outfit',
                                                                         ),
                                                                         textStyle:
-                                                                            TextStyle(
-                                                                          color:
-                                                                              Colors.black,
-                                                                          fontFamily:
-                                                                              'outfit',
+                                                                                TextStyle(
+                                                                              color:
+                                                                                  Colors.black,
+                                                                              fontFamily:
+                                                                                  'outfit',
                                                                         ),
                                                                         linkTypes: [
-                                                                          LinkType
-                                                                              .url,
-                                                                          LinkType
-                                                                              .userTag,
-                                                                          LinkType
-                                                                              .hashTag,
-                                                                          // LinkType
-                                                                          //     .email
+                                                                              LinkType
+                                                                                  .url,
+                                                                              LinkType
+                                                                                  .userTag,
+                                                                              LinkType
+                                                                                  .hashTag,
+                                                                              // LinkType
+                                                                              //     .email
                                                                         ],
                                                                         onTap:
-                                                                            (link) async {
-                                                                          /// do stuff with `link` like
-                                                                          /// if(link.type == Link.url) launchUrl(link.value);
+                                                                                (link) async {
+                                                                              /// do stuff with `link` like
+                                                                              /// if(link.type == Link.url) launchUrl(link.value);
 
-                                                                          var SelectedTest = link
-                                                                              .value
-                                                                              .toString();
-                                                                          var Link =
-                                                                              SelectedTest.startsWith('https');
-                                                                          var Link1 =
-                                                                              SelectedTest.startsWith('http');
-                                                                          var Link2 =
-                                                                              SelectedTest.startsWith('www');
-                                                                          var Link3 =
-                                                                              SelectedTest.startsWith('WWW');
-                                                                          var Link4 =
-                                                                              SelectedTest.startsWith('HTTPS');
-                                                                          var Link5 =
-                                                                              SelectedTest.startsWith('HTTP');
-                                                                          var Link6 =
-                                                                              SelectedTest.startsWith('https://pdslink.page.link/');
-                                                                          print("tag -- " +
-                                                                              SelectedTest.toString());
+                                                                              var SelectedTest = link
+                                                                                  .value
+                                                                                  .toString();
+                                                                              var Link =
+                                                                                  SelectedTest.startsWith('https');
+                                                                              var Link1 =
+                                                                                  SelectedTest.startsWith('http');
+                                                                              var Link2 =
+                                                                                  SelectedTest.startsWith('www');
+                                                                              var Link3 =
+                                                                                  SelectedTest.startsWith('WWW');
+                                                                              var Link4 =
+                                                                                  SelectedTest.startsWith('HTTPS');
+                                                                              var Link5 =
+                                                                                  SelectedTest.startsWith('HTTP');
+                                                                              var Link6 =
+                                                                                  SelectedTest.startsWith('https://pdslink.page.link/');
+                                                                              print("tag -- " +
+                                                                                  SelectedTest.toString());
 
-                                                                          if (User_ID ==
-                                                                              null) {
-                                                                            Navigator.of(context).push(MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
-                                                                          } else {
-                                                                            if (Link == true ||
-                                                                                Link1 == true ||
-                                                                                Link2 == true ||
-                                                                                Link3 == true ||
-                                                                                Link4 == true ||
-                                                                                Link5 == true ||
-                                                                                Link6 == true) {
-                                                                              if (Link2 == true || Link3 == true) {
-                                                                                launchUrl(Uri.parse("https://${link.value.toString()}"));
-                                                                                print("qqqqqqqqhttps://${link.value}");
+                                                                              if (User_ID ==
+                                                                                  null) {
+                                                                                Navigator.of(context).push(MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
                                                                               } else {
-                                                                                if (Link6 == true) {
-                                                                                  print("yes i am inList =   room");
-                                                                                  Navigator.push(context, MaterialPageRoute(
-                                                                                    builder: (context) {
-                                                                                      return NewBottomBar(
-                                                                                        buttomIndex: 1,
-                                                                                      );
-                                                                                    },
-                                                                                  ));
-                                                                                } else {
-                                                                                  launchUrl(Uri.parse(link.value.toString()));
-                                                                                  print("link.valuelink.value -- ${link.value}");
+                                                                                if (Link == true ||
+                                                                                    Link1 == true ||
+                                                                                    Link2 == true ||
+                                                                                    Link3 == true ||
+                                                                                    Link4 == true ||
+                                                                                    Link5 == true ||
+                                                                                    Link6 == true) {
+                                                                                  if (Link2 == true || Link3 == true) {
+                                                                                    launchUrl(Uri.parse("https://${link.value.toString()}"));
+                                                                                    print("qqqqqqqqhttps://${link.value}");
+                                                                                  } else {
+                                                                                    if (Link6 == true) {
+                                                                                      print("yes i am inList =   room");
+                                                                                      Navigator.push(context, MaterialPageRoute(
+                                                                                        builder: (context) {
+                                                                                          return NewBottomBar(
+                                                                                            buttomIndex: 1,
+                                                                                          );
+                                                                                        },
+                                                                                      ));
+                                                                                    } else {
+                                                                                      launchUrl(Uri.parse(link.value.toString()));
+                                                                                      print("link.valuelink.value -- ${link.value}");
+                                                                                    }
+                                                                                  }
+                                                                                } else if (link.value != null) {
+                                                                                  if (link.value!.startsWith('#')) {
+                                                                                    /*   await BlocProvider
+                                                                      .of<GetGuestAllPostCubit>(
+                                                                              context)
+                                                                  .seetinonExpried(
+                                                                      context); */
+                                                                                    Navigator.push(
+                                                                                        context,
+                                                                                        MaterialPageRoute(
+                                                                                          builder: (context) => HashTagViewScreen(title: "${link.value}"),
+                                                                                        ));
+                                                                                  } else if (link.value!.startsWith('@')) {
+                                                                                    /*  await BlocProvider
+                                                                      .of<GetGuestAllPostCubit>(
+                                                                              context)
+                                                                  .seetinonExpried(
+                                                                      context); */
+                                                                                    var name;
+                                                                                    var tagName;
+                                                                                    name = SelectedTest;
+                                                                                    tagName = name.replaceAll("@", "");
+                                                                                    await BlocProvider.of<NewProfileSCubit>(context).UserTagAPI(context, tagName);
+
+                                                                                    Navigator.push(context, MaterialPageRoute(builder: (context) {
+                                                                                      return ProfileScreen(User_ID: "${userTagModel?.object}", isFollowing: "");
+                                                                                    })).then((value) => Get_UserToken());
+
+                                                                                    print("tagName -- ${tagName}");
+                                                                                    print("user id -- ${userTagModel?.object}");
+                                                                                  }
                                                                                 }
                                                                               }
-                                                                            } else if (link.value != null) {
-                                                                              if (link.value!.startsWith('#')) {
-                                                                                /*   await BlocProvider
-                                                                      .of<GetGuestAllPostCubit>(
-                                                                          context)
-                                                                  .seetinonExpried(
-                                                                      context); */
-                                                                                Navigator.push(
-                                                                                    context,
-                                                                                    MaterialPageRoute(
-                                                                                      builder: (context) => HashTagViewScreen(title: "${link.value}"),
-                                                                                    ));
-                                                                              } else if (link.value!.startsWith('@')) {
-                                                                                /*  await BlocProvider
-                                                                      .of<GetGuestAllPostCubit>(
-                                                                          context)
-                                                                  .seetinonExpried(
-                                                                      context); */
-                                                                                var name;
-                                                                                var tagName;
-                                                                                name = SelectedTest;
-                                                                                tagName = name.replaceAll("@", "");
-                                                                                await BlocProvider.of<NewProfileSCubit>(context).UserTagAPI(context, tagName);
-
-                                                                                Navigator.push(context, MaterialPageRoute(builder: (context) {
-                                                                                  return ProfileScreen(User_ID: "${userTagModel?.object}", isFollowing: "");
-                                                                                })).then((value) => Get_UserToken());
-
-                                                                                print("tagName -- ${tagName}");
-                                                                                print("user id -- ${userTagModel?.object}");
-                                                                              }
-                                                                            }
-                                                                          }
                                                                         },
                                                                       ),
+                                                                              if (extractUrls(getAllPostData.object?[index].description ?? "").isNotEmpty)
+                                                                                isYouTubeUrl(extractUrls(getAllPostData.object?[index].description ?? "").first)
+                                                                                    ? FutureBuilder(
+                                                                                    future: fetchYoutubeThumbnail(extractUrls(getAllPostData.object?[index].description ?? "").first),
+                                                                                    builder: (context, snap) {
+                                                                                      return Container(
+                                                                                        height: 250,
+                                                                                        decoration: BoxDecoration(image: DecorationImage(image: CachedNetworkImageProvider(snap.data.toString())), borderRadius: BorderRadius.circular(10)),
+                                                                                        clipBehavior: Clip.antiAlias,
+                                                                                        child: Center(
+                                                                                            child: IconButton(
+                                                                                              icon: Icon(
+                                                                                                Icons.play_circle_fill_rounded,
+                                                                                                color: Colors.white,
+                                                                                                size: 60,
+                                                                                              ),
+                                                                                              onPressed: () {
+                                                                                                playLink(extractUrls(getAllPostData.object?[index].description ?? "").first, context);
+                                                                                              },
+                                                                                            )),
+                                                                                      );
+                                                                                    })
+                                                                                    : Padding(
+                                                                                  padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                                                                                  child: AnyLinkPreview(
+                                                                                    link: extractUrls(getAllPostData.object?[index].description ?? "").first,
+                                                                                    displayDirection: UIDirection.uiDirectionHorizontal,
+                                                                                    showMultimedia: true,
+                                                                                    bodyMaxLines: 5,
+                                                                                    bodyTextOverflow: TextOverflow.ellipsis,
+                                                                                    titleStyle: TextStyle(
+                                                                                      color: Colors.black,
+                                                                                      fontWeight: FontWeight.bold,
+                                                                                      fontSize: 15,
+                                                                                    ),
+                                                                                    bodyStyle: TextStyle(color: Colors.grey, fontSize: 12),
+                                                                                    errorBody: 'Show my custom error body',
+                                                                                    errorTitle: 'Show my custom error title',
+                                                                                    errorWidget: null,
+                                                                                    errorImage: "https://flutter.dev/",
+                                                                                    cache: Duration(days: 7),
+                                                                                    backgroundColor: Colors.grey[300],
+                                                                                    borderRadius: 12,
+                                                                                    removeElevation: false,
+                                                                                    boxShadow: [
+                                                                                      BoxShadow(blurRadius: 3, color: Colors.grey)
+                                                                                    ],
+                                                                                    onTap: () {
+                                                                                      launchUrl(Uri.parse(extractUrls(getAllPostData.object?[index].description ?? "").first));
+                                                                                    }, // This disables tap event
+                                                                                  ),
+                                                                                ),
+                                                                            ],
+                                                                          ),
                                                                     ),
                                                                   ),
                                                                   SizedBox(
@@ -7124,14 +7337,44 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                             fontSize: 14),
                                                       ),
                                                 GestureDetector(
-                                                  onTap: () {
-                                                    _onShareXFileFromAssets(
-                                                      context,
-                                                      androidLink:
-                                                          '${getAllPostData.object?[index].postLink}',
-                                                      /* iosLink:
-                                                      "https://apps.apple.com/inList =  /app/growder-b2b-platform/id6451333863" */
-                                                    );
+                                                  onTap: () async {
+                                                    if (getAllPostData.object![index].postDataType != "VIDEO") {
+                                                      String thumb = "";
+                                                      if (getAllPostData.object![index].thumbnailImageUrl != null) {
+                                                        thumb = getAllPostData.object![index].thumbnailImageUrl!;
+                                                      } else {
+                                                        if (getAllPostData.object![index].postData != null && getAllPostData.object![index].postData!.isNotEmpty) {
+                                                          thumb = getAllPostData.object![index].postData!.first;
+                                                        } else {
+                                                          if (getAllPostData.object![index].repostOn != null && getAllPostData.object![index].repostOn!.thumbnailImageUrl != null) {
+                                                            thumb = getAllPostData.object![index].repostOn!.thumbnailImageUrl!;
+                                                          } else {
+                                                            thumb = getAllPostData.object![index].repostOn != null && getAllPostData.object![index].repostOn!.postData != null && getAllPostData.object![index].repostOn!.postData!.isNotEmpty ? getAllPostData.object![index].repostOn!.postData!.first : "";
+                                                          }
+                                                        }
+                                                      }
+                                                      _onShareXFileFromAssets(
+                                                        context,
+                                                        thumb,
+                                                        getAllPostData.object![index].postUserName ?? "",
+                                                        getAllPostData.object![index].description ?? "",
+                                                        androidLink: '${getAllPostData.object![index].postLink}',
+                                                      );
+                                                    } else {
+                                                      final fileName = await VideoThumbnail.thumbnailFile(
+                                                        video: getAllPostData.object![index].postData?.first ?? "",
+                                                        thumbnailPath: (await getTemporaryDirectory()).path,
+                                                        imageFormat: ImageFormat.WEBP,
+                                                        quality: 100,
+                                                      );
+                                                      _onShareXFileFromAssets(
+                                                        context,
+                                                        fileName!,
+                                                        getAllPostData.object![index].postUserName ?? "",
+                                                        getAllPostData.object![index].description ?? "",
+                                                        androidLink: '${getAllPostData.object![index].postLink}',
+                                                      );
+                                                    }
                                                   },
                                                   child: Container(
                                                     height: 20,
@@ -7378,32 +7621,116 @@ class _ProfileScreenState extends State<ProfileScreen>
         });
   }
 
-  void _onShareXFileFromAssets(BuildContext context,
-      {String? androidLink}) async {
-    RenderBox? box = context.findAncestorRenderObjectOfType();
+  void _onShareXFileFromAssets(BuildContext context, String postLink, String userName, String description, {String? androidLink}) async {
+    // RenderBox? box = context.findAncestorRenderObjectOfType();
 
-    var directory = await getApplicationDocumentsDirectory();
+    var directory = await getTemporaryDirectory();
 
-    if (Platform.isAndroid) {
-      await Share.shareXFiles(
-        [XFile("/sdcard/download/IP__image.jpg")],
-        subject: "Share",
-        text: "Try This Awesome App \n\n Android :- ${androidLink}",
-        sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size,
-      );
+    if (postLink.isNotEmpty) {
+      _permissionReady = await _checkPermission();
+      await _prepareSaveDir();
+
+      if (_permissionReady) {
+        print("Downloading");
+        print("${postLink}");
+        try {
+          await Dio().download(
+            postLink.toString(),
+            directory.path + "/" + "IP__image.jpg",
+          );
+
+          print("Download Completed.");
+        } catch (e) {
+          print("Download Failed.\n\n" + e.toString());
+        }
+      }
+      if (Platform.isAndroid) {
+        Share.shareXFiles(
+          [XFile(postLink.startsWith("http") ? "${directory.path}/IP__image.jpg" : postLink)],
+          subject: "Share",
+          text: "$userName posted ${description.isNotEmpty ? "\n\n${description.split(" ").first}.... \n\n" : ""}on InPackaging \n\n https://www.inpackaging.com \n\n ${androidLink}",
+          // sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size,
+        );
+      } else {
+        Share.shareXFiles(
+          [XFile(directory.path + Platform.pathSeparator + 'Growder_Image/IP__image.jpg')],
+          subject: "Share",
+          text: "$userName posted ${description.isNotEmpty ? "\n\n${description.split(" ").first}.... \n\n" : ""}on InPackaging \n\n https://www.inpackaging.com \n\n ${androidLink}",
+          // sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size,
+        );
+      }
     } else {
-      await Share.shareXFiles(
-        [
-          XFile(directory.path +
-              Platform.pathSeparator +
-              'Growder_Image/IP__image.jpg')
-        ],
-        subject: "Share",
-        text: "Try This Awesome App \n\n Android :- ${androidLink}",
-        sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size,
-      );
+      print('No Invoice Available');
+
+      if (Platform.isAndroid) {
+        Share.shareXFiles(
+          [XFile("/sdcard/download/IP__image.jpg")],
+          subject: "Share",
+          text: "$userName posted ${description.isNotEmpty ? "\n\n${description.split(" ").first}.... \n\n" : ""}on InPackaging \n\n https://www.inpackaging.com \n\n ${androidLink}",
+          // sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size,
+        );
+      } else {
+        directory = await getApplicationDocumentsDirectory();
+        Share.shareXFiles(
+          [XFile(directory.path + Platform.pathSeparator + 'Growder_Image/IP__image.jpg')],
+          subject: "Share",
+          text: "$userName posted ${description.isNotEmpty ? "\n\n${description.split(" ").first}.... \n\n" : ""}on InPackaging \n https://www.inpackaging.com \n ${androidLink}",
+          // sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size,
+        );
+      }
     }
   }
+
+  Future<bool> _checkPermission() async {
+    if (Platform.isAndroid) {
+      DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+      AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+      print("objectobjectobjectobjectobjectobjectobjectobject ${androidInfo.version.release}");
+      version = int.parse(androidInfo.version.release);
+      // final SharedPreferences prefs = await SharedPreferences.getInstance();
+      // version =
+      //     await int.parse(prefs.getString(UserdefaultsData.version).toString());
+      print('dddwssadasdasdasdasdasd ${version}');
+    }
+    if (Platform.isAndroid) {
+      final status = (version ?? 0) < 13 ? await Permission.storage.status : PermissionStatus.granted;
+      if (status != PermissionStatus.granted) {
+        print('gegegegegegegegegegegegegege');
+        print('gegegegegegegegegegegegegege $status');
+        final result = (version ?? 0) < 13 ? await Permission.storage.request() : PermissionStatus.granted;
+        if (result == PermissionStatus.granted) {
+          return true;
+        }
+      } else {
+        return true;
+      }
+    } else {
+      return true;
+    }
+    return false;
+  }
+
+  Future<void> _prepareSaveDir() async {
+    _localPath = (await _findLocalPath())!;
+
+    print(_localPath);
+    final savedDir = Directory(_localPath);
+    bool hasExisted = await savedDir.exists();
+    if (!hasExisted) {
+      savedDir.create();
+      print('first vvvvvvvvvvvvvvvvvvv');
+    }
+  }
+
+  Future<String?> _findLocalPath() async {
+    if (Platform.isAndroid) {
+      return "/sdcard/download/";
+    } else {
+      var directory = await getApplicationDocumentsDirectory();
+      return directory.path + Platform.pathSeparator + 'IP_Image';
+    }
+  }
+
 
   soicalFunationSave({String? apiName, int? index}) async {
     print("fghdfghdfgh");
@@ -7878,196 +8205,252 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                     Expanded(
                                                       child: Container(
                                                         // color: Colors.amber,
-                                                        child: LinkifyText(
-                                                          GetSavePostData
-                                                                          ?.object?[
-                                                                              index]
-                                                                          .isTrsnalteoption ==
-                                                                      false ||
-                                                                  GetSavePostData
-                                                                          ?.object?[
-                                                                              index]
-                                                                          .isTrsnalteoption ==
-                                                                      null
-                                                              ? "${GetSavePostData?.object?[index].description}"
-                                                              : "${GetSavePostData?.object?[index].translatedDescription}",
-                                                          linkStyle: TextStyle(
-                                                            color: Colors.blue,
-                                                            fontFamily:
-                                                                'outfit',
-                                                          ),
-                                                          textStyle: TextStyle(
-                                                            color: Colors.black,
-                                                            fontFamily:
-                                                                'outfit',
-                                                          ),
-                                                          linkTypes: [
-                                                            LinkType.url,
-                                                            LinkType.userTag,
-                                                            LinkType.hashTag,
-                                                            // LinkType
-                                                            //     .email
-                                                          ],
-                                                          onTap: (link) async {
-                                                            /// do stuff with `link` like
-                                                            /// if(link.type == Link.url) launchUrl(link.value);
+                                                        child: Column(
+                                                          children: [
+                                                            LinkifyText(
+                                                              GetSavePostData
+                                                                              ?.object?[
+                                                                                  index]
+                                                                              .isTrsnalteoption ==
+                                                                          false ||
+                                                                      GetSavePostData
+                                                                              ?.object?[
+                                                                                  index]
+                                                                              .isTrsnalteoption ==
+                                                                          null
+                                                                  ? "${GetSavePostData?.object?[index].description}"
+                                                                  : "${GetSavePostData?.object?[index].translatedDescription}",
+                                                              linkStyle: TextStyle(
+                                                                color: Colors.blue,
+                                                                fontFamily:
+                                                                    'outfit',
+                                                              ),
+                                                              textStyle: TextStyle(
+                                                                color: Colors.black,
+                                                                fontFamily:
+                                                                    'outfit',
+                                                              ),
+                                                              linkTypes: [
+                                                                LinkType.url,
+                                                                LinkType.userTag,
+                                                                LinkType.hashTag,
+                                                                // LinkType
+                                                                //     .email
+                                                              ],
+                                                              onTap: (link) async {
+                                                                /// do stuff with `link` like
+                                                                /// if(link.type == Link.url) launchUrl(link.value);
 
-                                                            var SelectedTest =
-                                                                link.value
-                                                                    .toString();
-                                                            var Link =
-                                                                SelectedTest
+                                                                var SelectedTest =
+                                                                    link.value
+                                                                        .toString();
+                                                                var Link =
+                                                                    SelectedTest
+                                                                        .startsWith(
+                                                                            'https');
+                                                                var Link1 =
+                                                                    SelectedTest
+                                                                        .startsWith(
+                                                                            'http');
+                                                                var Link2 =
+                                                                    SelectedTest
+                                                                        .startsWith(
+                                                                            'www');
+                                                                var Link3 =
+                                                                    SelectedTest
+                                                                        .startsWith(
+                                                                            'WWW');
+                                                                var Link4 =
+                                                                    SelectedTest
+                                                                        .startsWith(
+                                                                            'HTTPS');
+                                                                var Link5 =
+                                                                    SelectedTest
+                                                                        .startsWith(
+                                                                            'HTTP');
+                                                                var Link6 = SelectedTest
                                                                     .startsWith(
-                                                                        'https');
-                                                            var Link1 =
-                                                                SelectedTest
-                                                                    .startsWith(
-                                                                        'http');
-                                                            var Link2 =
-                                                                SelectedTest
-                                                                    .startsWith(
-                                                                        'www');
-                                                            var Link3 =
-                                                                SelectedTest
-                                                                    .startsWith(
-                                                                        'WWW');
-                                                            var Link4 =
-                                                                SelectedTest
-                                                                    .startsWith(
-                                                                        'HTTPS');
-                                                            var Link5 =
-                                                                SelectedTest
-                                                                    .startsWith(
-                                                                        'HTTP');
-                                                            var Link6 = SelectedTest
-                                                                .startsWith(
-                                                                    'https://pdslink.page.link/');
-                                                            print(SelectedTest
-                                                                .toString());
+                                                                        'https://pdslink.page.link/');
+                                                                print(SelectedTest
+                                                                    .toString());
 
-                                                            if (User_ID ==
-                                                                null) {
-                                                              Navigator.of(
-                                                                      context)
-                                                                  .push(MaterialPageRoute(
-                                                                      builder:
-                                                                          (context) =>
-                                                                              RegisterCreateAccountScreen()));
-                                                            } else {
-                                                              if (Link ==
-                                                                      true ||
-                                                                  Link1 ==
-                                                                      true ||
-                                                                  Link2 ==
-                                                                      true ||
-                                                                  Link3 ==
-                                                                      true ||
-                                                                  Link4 ==
-                                                                      true ||
-                                                                  Link5 ==
-                                                                      true ||
-                                                                  Link6 ==
-                                                                      true) {
-                                                                if (Link2 ==
-                                                                        true ||
-                                                                    Link3 ==
-                                                                        true) {
-                                                                  launchUrl(
-                                                                      Uri.parse(
-                                                                          "https://${link.value.toString()}"));
-                                                                  print(
-                                                                      "qqqqqqqqhttps://${link.value}");
-                                                                } else {
-                                                                  if (Link6 ==
-                                                                      true) {
-                                                                    print(
-                                                                        "yes i am inList =   room");
-                                                                    Navigator.push(
-                                                                        context,
-                                                                        MaterialPageRoute(
-                                                                      builder:
-                                                                          (context) {
-                                                                        return NewBottomBar(
-                                                                          buttomIndex:
-                                                                              1,
-                                                                        );
-                                                                      },
-                                                                    ));
-                                                                  } else {
-                                                                    launchUrl(Uri
-                                                                        .parse(link
-                                                                            .value
-                                                                            .toString()));
-                                                                    print(
-                                                                        "link.valuelink.value -- ${link.value}");
-                                                                  }
-                                                                }
-                                                              } else {
-                                                                if (link.value!
-                                                                    .startsWith(
-                                                                        '#')) {
-                                                                  /*  await BlocProvider.of<
-                                                              GetGuestAllPostCubit>(
-                                                          context)
-                                                      .seetinonExpried(
-                                                          context); */
-                                                                  Navigator.push(
-                                                                      context,
-                                                                      MaterialPageRoute(
-                                                                        builder:
-                                                                            (context) =>
-                                                                                HashTagViewScreen(title: "${link.value}"),
-                                                                      ));
-                                                                } else if (link
-                                                                    .value!
-                                                                    .startsWith(
-                                                                        '@')) {
-                                                                  /*  await BlocProvider.of<
-                                                              GetGuestAllPostCubit>(
-                                                          context)
-                                                      .seetinonExpried(
-                                                          context); */
-                                                                  var name;
-                                                                  var tagName;
-                                                                  name =
-                                                                      SelectedTest;
-                                                                  tagName = name
-                                                                      .replaceAll(
-                                                                          "@",
-                                                                          "");
-                                                                  await BlocProvider.of<
-                                                                              NewProfileSCubit>(
+                                                                if (User_ID ==
+                                                                    null) {
+                                                                  Navigator.of(
                                                                           context)
-                                                                      .UserTagAPI(
-                                                                          context,
-                                                                          tagName);
-
-                                                                  Navigator.push(
-                                                                      context,
-                                                                      MaterialPageRoute(
+                                                                      .push(MaterialPageRoute(
+                                                                          builder:
+                                                                              (context) =>
+                                                                                  RegisterCreateAccountScreen()));
+                                                                } else {
+                                                                  if (Link ==
+                                                                          true ||
+                                                                      Link1 ==
+                                                                          true ||
+                                                                      Link2 ==
+                                                                          true ||
+                                                                      Link3 ==
+                                                                          true ||
+                                                                      Link4 ==
+                                                                          true ||
+                                                                      Link5 ==
+                                                                          true ||
+                                                                      Link6 ==
+                                                                          true) {
+                                                                    if (Link2 ==
+                                                                            true ||
+                                                                        Link3 ==
+                                                                            true) {
+                                                                      launchUrl(
+                                                                          Uri.parse(
+                                                                              "https://${link.value.toString()}"));
+                                                                      print(
+                                                                          "qqqqqqqqhttps://${link.value}");
+                                                                    } else {
+                                                                      if (Link6 ==
+                                                                          true) {
+                                                                        print(
+                                                                            "yes i am inList =   room");
+                                                                        Navigator.push(
+                                                                            context,
+                                                                            MaterialPageRoute(
                                                                           builder:
                                                                               (context) {
-                                                                    return ProfileScreen(
-                                                                        User_ID:
-                                                                            "${userTagModel?.object}",
-                                                                        isFollowing:
-                                                                            "");
-                                                                  })).then(
-                                                                      (value) =>
-                                                                          Get_UserToken());
+                                                                            return NewBottomBar(
+                                                                              buttomIndex:
+                                                                                  1,
+                                                                            );
+                                                                          },
+                                                                        ));
+                                                                      } else {
+                                                                        launchUrl(Uri
+                                                                            .parse(link
+                                                                                .value
+                                                                                .toString()));
+                                                                        print(
+                                                                            "link.valuelink.value -- ${link.value}");
+                                                                      }
+                                                                    }
+                                                                  } else {
+                                                                    if (link.value!
+                                                                        .startsWith(
+                                                                            '#')) {
+                                                                      /*  await BlocProvider.of<
+                                                                  GetGuestAllPostCubit>(
+                                                              context)
+                                                      .seetinonExpried(
+                                                              context); */
+                                                                      Navigator.push(
+                                                                          context,
+                                                                          MaterialPageRoute(
+                                                                            builder:
+                                                                                (context) =>
+                                                                                    HashTagViewScreen(title: "${link.value}"),
+                                                                          ));
+                                                                    } else if (link
+                                                                        .value!
+                                                                        .startsWith(
+                                                                            '@')) {
+                                                                      /*  await BlocProvider.of<
+                                                                  GetGuestAllPostCubit>(
+                                                              context)
+                                                      .seetinonExpried(
+                                                              context); */
+                                                                      var name;
+                                                                      var tagName;
+                                                                      name =
+                                                                          SelectedTest;
+                                                                      tagName = name
+                                                                          .replaceAll(
+                                                                              "@",
+                                                                              "");
+                                                                      await BlocProvider.of<
+                                                                                  NewProfileSCubit>(
+                                                                              context)
+                                                                          .UserTagAPI(
+                                                                              context,
+                                                                              tagName);
 
-                                                                  print(
-                                                                      "tagName -- ${tagName}");
-                                                                  print(
-                                                                      "user id -- ${userTagModel?.object}");
-                                                                } else {
-                                                                  launchUrl(
-                                                                      Uri.parse(
-                                                                          "https://${link.value.toString()}"));
+                                                                      Navigator.push(
+                                                                          context,
+                                                                          MaterialPageRoute(
+                                                                              builder:
+                                                                                  (context) {
+                                                                        return ProfileScreen(
+                                                                            User_ID:
+                                                                                "${userTagModel?.object}",
+                                                                            isFollowing:
+                                                                                "");
+                                                                      })).then(
+                                                                          (value) =>
+                                                                              Get_UserToken());
+
+                                                                      print(
+                                                                          "tagName -- ${tagName}");
+                                                                      print(
+                                                                          "user id -- ${userTagModel?.object}");
+                                                                    } else {
+                                                                      launchUrl(
+                                                                          Uri.parse(
+                                                                              "https://${link.value.toString()}"));
+                                                                    }
+                                                                  }
                                                                 }
-                                                              }
-                                                            }
-                                                          },
+                                                              },
+                                                            ),
+                                                            if (extractUrls(GetSavePostData?.object?[index].description ?? "").isNotEmpty)
+                                                              isYouTubeUrl(extractUrls(GetSavePostData?.object?[index].description ?? "").first)
+                                                                  ? FutureBuilder(
+                                                                  future: fetchYoutubeThumbnail(extractUrls(GetSavePostData?.object?[index].description ?? "").first),
+                                                                  builder: (context, snap) {
+                                                                    return Container(
+                                                                      height: 250,
+                                                                      decoration: BoxDecoration(image: DecorationImage(image: CachedNetworkImageProvider(snap.data.toString())), borderRadius: BorderRadius.circular(10)),
+                                                                      clipBehavior: Clip.antiAlias,
+                                                                      child: Center(
+                                                                          child: IconButton(
+                                                                            icon: Icon(
+                                                                              Icons.play_circle_fill_rounded,
+                                                                              color: Colors.white,
+                                                                              size: 60,
+                                                                            ),
+                                                                            onPressed: () {
+                                                                              playLink(extractUrls(GetSavePostData?.object?[index].description ?? "").first, context);
+                                                                            },
+                                                                          )),
+                                                                    );
+                                                                  })
+                                                                  : Padding(
+                                                                padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                                                                child: AnyLinkPreview(
+                                                                  link: extractUrls(GetSavePostData?.object?[index].description ?? "").first,
+                                                                  displayDirection: UIDirection.uiDirectionHorizontal,
+                                                                  showMultimedia: true,
+                                                                  bodyMaxLines: 5,
+                                                                  bodyTextOverflow: TextOverflow.ellipsis,
+                                                                  titleStyle: TextStyle(
+                                                                    color: Colors.black,
+                                                                    fontWeight: FontWeight.bold,
+                                                                    fontSize: 15,
+                                                                  ),
+                                                                  bodyStyle: TextStyle(color: Colors.grey, fontSize: 12),
+                                                                  errorBody: 'Show my custom error body',
+                                                                  errorTitle: 'Show my custom error title',
+                                                                  errorWidget: null,
+                                                                  errorImage: "https://flutter.dev/",
+                                                                  cache: Duration(days: 7),
+                                                                  backgroundColor: Colors.grey[300],
+                                                                  borderRadius: 12,
+                                                                  removeElevation: false,
+                                                                  boxShadow: [
+                                                                    BoxShadow(blurRadius: 3, color: Colors.grey)
+                                                                  ],
+                                                                  onTap: () {
+                                                                    launchUrl(Uri.parse(extractUrls(GetSavePostData?.object?[index].description ?? "").first));
+                                                                  }, // This disables tap event
+                                                                ),
+                                                              ),
+                                                          ],
                                                         ),
                                                       ),
                                                     ),
@@ -8546,152 +8929,208 @@ class _ProfileScreenState extends State<ProfileScreen>
                                             ? Padding(
                                                 padding: const EdgeInsets.only(
                                                     left: 16),
-                                                child: LinkifyText(
-                                                  "${GetSavePostData?.object?[index].repostOn?.description}",
-                                                  linkStyle: TextStyle(
-                                                    color: Colors.blue,
-                                                    fontFamily: 'outfit',
-                                                  ),
-                                                  textStyle: TextStyle(
-                                                    color: Colors.black,
-                                                    fontFamily: 'outfit',
-                                                  ),
-                                                  linkTypes: [
-                                                    LinkType.url,
-                                                    LinkType.userTag,
-                                                    LinkType.hashTag,
-                                                    // LinkType
-                                                    //     .email
-                                                  ],
-                                                  onTap: (link) async {
-                                                    /// do stuff with `link` like
-                                                    /// if(link.type == Link.url) launchUrl(link.value);
+                                                child: Column(
+                                                  children: [
+                                                    LinkifyText(
+                                                      "${GetSavePostData?.object?[index].repostOn?.description}",
+                                                      linkStyle: TextStyle(
+                                                        color: Colors.blue,
+                                                        fontFamily: 'outfit',
+                                                      ),
+                                                      textStyle: TextStyle(
+                                                        color: Colors.black,
+                                                        fontFamily: 'outfit',
+                                                      ),
+                                                      linkTypes: [
+                                                        LinkType.url,
+                                                        LinkType.userTag,
+                                                        LinkType.hashTag,
+                                                        // LinkType
+                                                        //     .email
+                                                      ],
+                                                      onTap: (link) async {
+                                                        /// do stuff with `link` like
+                                                        /// if(link.type == Link.url) launchUrl(link.value);
 
-                                                    var SelectedTest =
-                                                        link.value.toString();
-                                                    var Link =
-                                                        SelectedTest.startsWith(
-                                                            'https');
-                                                    var Link1 =
-                                                        SelectedTest.startsWith(
-                                                            'http');
-                                                    var Link2 =
-                                                        SelectedTest.startsWith(
-                                                            'www');
-                                                    var Link3 =
-                                                        SelectedTest.startsWith(
-                                                            'WWW');
-                                                    var Link4 =
-                                                        SelectedTest.startsWith(
-                                                            'HTTPS');
-                                                    var Link5 =
-                                                        SelectedTest.startsWith(
-                                                            'HTTP');
-                                                    var Link6 =
-                                                        SelectedTest.startsWith(
-                                                            'https://pdslink.page.link/');
-                                                    print(SelectedTest
-                                                        .toString());
+                                                        var SelectedTest =
+                                                            link.value.toString();
+                                                        var Link =
+                                                            SelectedTest.startsWith(
+                                                                'https');
+                                                        var Link1 =
+                                                            SelectedTest.startsWith(
+                                                                'http');
+                                                        var Link2 =
+                                                            SelectedTest.startsWith(
+                                                                'www');
+                                                        var Link3 =
+                                                            SelectedTest.startsWith(
+                                                                'WWW');
+                                                        var Link4 =
+                                                            SelectedTest.startsWith(
+                                                                'HTTPS');
+                                                        var Link5 =
+                                                            SelectedTest.startsWith(
+                                                                'HTTP');
+                                                        var Link6 =
+                                                            SelectedTest.startsWith(
+                                                                'https://pdslink.page.link/');
+                                                        print(SelectedTest
+                                                            .toString());
 
-                                                    if (User_ID == null) {
-                                                      Navigator.of(context).push(
-                                                          MaterialPageRoute(
-                                                              builder: (context) =>
-                                                                  RegisterCreateAccountScreen()));
-                                                    } else {
-                                                      if (Link == true ||
-                                                          Link1 == true ||
-                                                          Link2 == true ||
-                                                          Link3 == true ||
-                                                          Link4 == true ||
-                                                          Link5 == true ||
-                                                          Link6 == true) {
-                                                        if (Link2 == true ||
-                                                            Link3 == true) {
-                                                          launchUrl(Uri.parse(
-                                                              "https://${link.value.toString()}"));
-                                                          print(
-                                                              "qqqqqqqqhttps://${link.value}");
+                                                        if (User_ID == null) {
+                                                          Navigator.of(context).push(
+                                                              MaterialPageRoute(
+                                                                  builder: (context) =>
+                                                                      RegisterCreateAccountScreen()));
                                                         } else {
-                                                          if (Link6 == true) {
-                                                            print(
-                                                                "yes i am inList =   room");
-                                                            Navigator.push(
-                                                                context,
-                                                                MaterialPageRoute(
-                                                              builder:
-                                                                  (context) {
-                                                                return NewBottomBar(
-                                                                  buttomIndex:
-                                                                      1,
-                                                                );
-                                                              },
-                                                            ));
-                                                          } else {
-                                                            launchUrl(Uri.parse(
-                                                                link.value
-                                                                    .toString()));
-                                                            print(
-                                                                "link.valuelink.value -- ${link.value}");
-                                                          }
-                                                        }
-                                                      } else {
-                                                        if (link.value!
-                                                            .startsWith('#')) {
-                                                          /*   await BlocProvider.of<
-                                                      GetGuestAllPostCubit>(
-                                                  context)
-                                              .seetinonExpried(context); */
-                                                          print(
-                                                              "aaaaaaaaaa == ${link}");
-                                                          Navigator.push(
-                                                              context,
-                                                              MaterialPageRoute(
-                                                                builder: (context) =>
-                                                                    HashTagViewScreen(
-                                                                        title:
-                                                                            "${link.value}"),
-                                                              ));
-                                                        } else if (link.value!
-                                                            .startsWith('@')) {
-                                                          /*  await BlocProvider.of<
-                                                      GetGuestAllPostCubit>(
-                                                  context)
-                                              .seetinonExpried(context); */
-                                                          var name;
-                                                          var tagName;
-                                                          name = SelectedTest;
-                                                          tagName =
-                                                              name.replaceAll(
-                                                                  "@", "");
-                                                          await BlocProvider.of<
-                                                                      NewProfileSCubit>(
-                                                                  context)
-                                                              .UserTagAPI(
-                                                                  context,
-                                                                  tagName);
-
-                                                          Navigator.push(
-                                                              context,
-                                                              MaterialPageRoute(
+                                                          if (Link == true ||
+                                                              Link1 == true ||
+                                                              Link2 == true ||
+                                                              Link3 == true ||
+                                                              Link4 == true ||
+                                                              Link5 == true ||
+                                                              Link6 == true) {
+                                                            if (Link2 == true ||
+                                                                Link3 == true) {
+                                                              launchUrl(Uri.parse(
+                                                                  "https://${link.value.toString()}"));
+                                                              print(
+                                                                  "qqqqqqqqhttps://${link.value}");
+                                                            } else {
+                                                              if (Link6 == true) {
+                                                                print(
+                                                                    "yes i am inList =   room");
+                                                                Navigator.push(
+                                                                    context,
+                                                                    MaterialPageRoute(
                                                                   builder:
                                                                       (context) {
-                                                            return ProfileScreen(
-                                                                User_ID:
-                                                                    "${userTagModel?.object}",
-                                                                isFollowing:
-                                                                    "");
-                                                          })).then((value) =>
-                                                              Get_UserToken());
+                                                                    return NewBottomBar(
+                                                                      buttomIndex:
+                                                                          1,
+                                                                    );
+                                                                  },
+                                                                ));
+                                                              } else {
+                                                                launchUrl(Uri.parse(
+                                                                    link.value
+                                                                        .toString()));
+                                                                print(
+                                                                    "link.valuelink.value -- ${link.value}");
+                                                              }
+                                                            }
+                                                          } else {
+                                                            if (link.value!
+                                                                .startsWith('#')) {
+                                                              /*   await BlocProvider.of<
+                                                          GetGuestAllPostCubit>(
+                                                      context)
+                                              .seetinonExpried(context); */
+                                                              print(
+                                                                  "aaaaaaaaaa == ${link}");
+                                                              Navigator.push(
+                                                                  context,
+                                                                  MaterialPageRoute(
+                                                                    builder: (context) =>
+                                                                        HashTagViewScreen(
+                                                                            title:
+                                                                                "${link.value}"),
+                                                                  ));
+                                                            } else if (link.value!
+                                                                .startsWith('@')) {
+                                                              /*  await BlocProvider.of<
+                                                          GetGuestAllPostCubit>(
+                                                      context)
+                                              .seetinonExpried(context); */
+                                                              var name;
+                                                              var tagName;
+                                                              name = SelectedTest;
+                                                              tagName =
+                                                                  name.replaceAll(
+                                                                      "@", "");
+                                                              await BlocProvider.of<
+                                                                          NewProfileSCubit>(
+                                                                      context)
+                                                                  .UserTagAPI(
+                                                                      context,
+                                                                      tagName);
 
-                                                          print(
-                                                              "tagName -- ${tagName}");
-                                                          print(
-                                                              "user id -- ${userTagModel?.object}");
+                                                              Navigator.push(
+                                                                  context,
+                                                                  MaterialPageRoute(
+                                                                      builder:
+                                                                          (context) {
+                                                                return ProfileScreen(
+                                                                    User_ID:
+                                                                        "${userTagModel?.object}",
+                                                                    isFollowing:
+                                                                        "");
+                                                              })).then((value) =>
+                                                                  Get_UserToken());
+
+                                                              print(
+                                                                  "tagName -- ${tagName}");
+                                                              print(
+                                                                  "user id -- ${userTagModel?.object}");
+                                                            }
+                                                          }
                                                         }
-                                                      }
-                                                    }
-                                                  },
+                                                      },
+                                                    ),
+                                                    if (extractUrls(GetSavePostData?.object?[index].repostOn?.description ?? "").isNotEmpty)
+                                                      isYouTubeUrl(extractUrls(GetSavePostData?.object?[index].repostOn?.description ?? "").first)
+                                                          ? FutureBuilder(
+                                                          future: fetchYoutubeThumbnail(extractUrls(GetSavePostData?.object?[index].repostOn?.description ?? "").first),
+                                                          builder: (context, snap) {
+                                                            return Container(
+                                                              height: 250,
+                                                              decoration: BoxDecoration(image: DecorationImage(image: CachedNetworkImageProvider(snap.data.toString())), borderRadius: BorderRadius.circular(10)),
+                                                              clipBehavior: Clip.antiAlias,
+                                                              child: Center(
+                                                                  child: IconButton(
+                                                                    icon: Icon(
+                                                                      Icons.play_circle_fill_rounded,
+                                                                      color: Colors.white,
+                                                                      size: 60,
+                                                                    ),
+                                                                    onPressed: () {
+                                                                      playLink(extractUrls(GetSavePostData?.object?[index].repostOn?.description ?? "").first, context);
+                                                                    },
+                                                                  )),
+                                                            );
+                                                          })
+                                                          : Padding(
+                                                        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                                                        child: AnyLinkPreview(
+                                                          link: extractUrls(GetSavePostData?.object?[index].repostOn?.description ?? "").first,
+                                                          displayDirection: UIDirection.uiDirectionHorizontal,
+                                                          showMultimedia: true,
+                                                          bodyMaxLines: 5,
+                                                          bodyTextOverflow: TextOverflow.ellipsis,
+                                                          titleStyle: TextStyle(
+                                                            color: Colors.black,
+                                                            fontWeight: FontWeight.bold,
+                                                            fontSize: 15,
+                                                          ),
+                                                          bodyStyle: TextStyle(color: Colors.grey, fontSize: 12),
+                                                          errorBody: 'Show my custom error body',
+                                                          errorTitle: 'Show my custom error title',
+                                                          errorWidget: null,
+                                                          errorImage: "https://flutter.dev/",
+                                                          cache: Duration(days: 7),
+                                                          backgroundColor: Colors.grey[300],
+                                                          borderRadius: 12,
+                                                          removeElevation: false,
+                                                          boxShadow: [
+                                                            BoxShadow(blurRadius: 3, color: Colors.grey)
+                                                          ],
+                                                          onTap: () {
+                                                            launchUrl(Uri.parse(extractUrls(GetSavePostData?.object?[index].repostOn?.description ?? "").first));
+                                                          }, // This disables tap event
+                                                        ),
+                                                      ),
+                                                  ],
                                                 ))
                                             : SizedBox(),
                                         Container(
@@ -9154,13 +9593,44 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                   fontSize: 14),
                                             ),
                                       GestureDetector(
-                                        onTap: () {
-                                          _onShareXFileFromAssets(context,
-                                              androidLink:
-                                                  '${GetSavePostData?.object?[index].postLink}'
-                                              /* iosLink:
-                                              "https://apps.apple.com/inList =  /app/growder-b2b-platform/id6451333863" */
-                                              );
+                                        onTap: () async {
+                                          if (GetSavePostData!.object![index].postDataType != "VIDEO") {
+                                            String thumb = "";
+                                            if (GetSavePostData!.object![index].thumbnailImageUrl != null) {
+                                              thumb = GetSavePostData!.object![index].thumbnailImageUrl!;
+                                            } else {
+                                              if (GetSavePostData!.object![index].postData != null && GetSavePostData!.object![index].postData!.isNotEmpty) {
+                                                thumb = GetSavePostData!.object![index].postData!.first;
+                                              } else {
+                                                if (GetSavePostData!.object![index].repostOn != null && GetSavePostData!.object![index].repostOn!.thumbnailImageUrl != null) {
+                                                  thumb = GetSavePostData!.object![index].repostOn!.thumbnailImageUrl!;
+                                                } else {
+                                                  thumb = GetSavePostData!.object![index].repostOn != null && GetSavePostData!.object![index].repostOn!.postData != null && GetSavePostData!.object![index].repostOn!.postData!.isNotEmpty ? GetSavePostData!.object![index].repostOn!.postData!.first : "";
+                                                }
+                                              }
+                                            }
+                                            _onShareXFileFromAssets(
+                                              context,
+                                              thumb,
+                                              GetSavePostData!.object![index].postUserName ?? "",
+                                              GetSavePostData!.object![index].description ?? "",
+                                              androidLink: '${GetSavePostData!.object![index].postLink}',
+                                            );
+                                          } else {
+                                            final fileName = await VideoThumbnail.thumbnailFile(
+                                              video: GetSavePostData!.object![index].postData?.first ?? "",
+                                              thumbnailPath: (await getTemporaryDirectory()).path,
+                                              imageFormat: ImageFormat.WEBP,
+                                              quality: 100,
+                                            );
+                                            _onShareXFileFromAssets(
+                                              context,
+                                              fileName!,
+                                              GetSavePostData!.object![index].postUserName ?? "",
+                                              GetSavePostData!.object![index].description ?? "",
+                                              androidLink: '${GetSavePostData!.object![index].postLink}',
+                                            );
+                                          }
                                         },
                                         child: Container(
                                           height: 20,
@@ -9480,187 +9950,243 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                       children: [
                                                         Expanded(
                                                           child: Container(
-                                                            child: LinkifyText(
-                                                              GetSavePostData?.object?[index].isTrsnalteoption ==
-                                                                          false ||
-                                                                      GetSavePostData
-                                                                              ?.object?[index]
-                                                                              .isTrsnalteoption ==
-                                                                          null
-                                                                  ? "${GetSavePostData?.object?[index].description}"
-                                                                  : "${GetSavePostData?.object?[index].translatedDescription}",
-                                                              linkStyle:
-                                                                  TextStyle(
-                                                                color:
-                                                                    Colors.blue,
-                                                                fontFamily:
-                                                                    'outfit',
-                                                              ),
-                                                              textStyle:
-                                                                  TextStyle(
-                                                                color: Colors
-                                                                    .black,
-                                                                fontFamily:
-                                                                    'outfit',
-                                                              ),
-                                                              linkTypes: [
-                                                                LinkType.url,
-                                                                LinkType
-                                                                    .userTag,
-                                                                LinkType
-                                                                    .hashTag,
-                                                                // LinkType
-                                                                //     .email
-                                                              ],
-                                                              onTap:
-                                                                  (link) async {
-                                                                /// do stuff with `link` like
-                                                                /// if(link.type == Link.url) launchUrl(link.value);
+                                                            child: Column(
+                                                              children: [
+                                                                LinkifyText(
+                                                                  GetSavePostData?.object?[index].isTrsnalteoption ==
+                                                                              false ||
+                                                                          GetSavePostData
+                                                                                  ?.object?[index]
+                                                                                  .isTrsnalteoption ==
+                                                                              null
+                                                                      ? "${GetSavePostData?.object?[index].description}"
+                                                                      : "${GetSavePostData?.object?[index].translatedDescription}",
+                                                                  linkStyle:
+                                                                      TextStyle(
+                                                                    color:
+                                                                        Colors.blue,
+                                                                    fontFamily:
+                                                                        'outfit',
+                                                                  ),
+                                                                  textStyle:
+                                                                      TextStyle(
+                                                                    color: Colors
+                                                                        .black,
+                                                                    fontFamily:
+                                                                        'outfit',
+                                                                  ),
+                                                                  linkTypes: [
+                                                                    LinkType.url,
+                                                                    LinkType
+                                                                        .userTag,
+                                                                    LinkType
+                                                                        .hashTag,
+                                                                    // LinkType
+                                                                    //     .email
+                                                                  ],
+                                                                  onTap:
+                                                                      (link) async {
+                                                                    /// do stuff with `link` like
+                                                                    /// if(link.type == Link.url) launchUrl(link.value);
 
-                                                                var SelectedTest =
-                                                                    link.value
-                                                                        .toString();
-                                                                var Link = SelectedTest
-                                                                    .startsWith(
-                                                                        'https');
-                                                                var Link1 = SelectedTest
-                                                                    .startsWith(
-                                                                        'http');
-                                                                var Link2 =
-                                                                    SelectedTest
+                                                                    var SelectedTest =
+                                                                        link.value
+                                                                            .toString();
+                                                                    var Link = SelectedTest
                                                                         .startsWith(
-                                                                            'www');
-                                                                var Link3 =
-                                                                    SelectedTest
+                                                                            'https');
+                                                                    var Link1 = SelectedTest
                                                                         .startsWith(
-                                                                            'WWW');
-                                                                var Link4 = SelectedTest
-                                                                    .startsWith(
-                                                                        'HTTPS');
-                                                                var Link5 = SelectedTest
-                                                                    .startsWith(
-                                                                        'HTTP');
-                                                                var Link6 = SelectedTest
-                                                                    .startsWith(
-                                                                        'https://pdslink.page.link/');
-                                                                print("tag -- " +
-                                                                    SelectedTest
-                                                                        .toString());
+                                                                            'http');
+                                                                    var Link2 =
+                                                                        SelectedTest
+                                                                            .startsWith(
+                                                                                'www');
+                                                                    var Link3 =
+                                                                        SelectedTest
+                                                                            .startsWith(
+                                                                                'WWW');
+                                                                    var Link4 = SelectedTest
+                                                                        .startsWith(
+                                                                            'HTTPS');
+                                                                    var Link5 = SelectedTest
+                                                                        .startsWith(
+                                                                            'HTTP');
+                                                                    var Link6 = SelectedTest
+                                                                        .startsWith(
+                                                                            'https://pdslink.page.link/');
+                                                                    print("tag -- " +
+                                                                        SelectedTest
+                                                                            .toString());
 
-                                                                if (User_ID ==
-                                                                    null) {
-                                                                  Navigator.of(
-                                                                          context)
-                                                                      .push(MaterialPageRoute(
-                                                                          builder: (context) =>
-                                                                              RegisterCreateAccountScreen()));
-                                                                } else {
-                                                                  if (Link ==
-                                                                          true ||
-                                                                      Link1 ==
-                                                                          true ||
-                                                                      Link2 ==
-                                                                          true ||
-                                                                      Link3 ==
-                                                                          true ||
-                                                                      Link4 ==
-                                                                          true ||
-                                                                      Link5 ==
-                                                                          true ||
-                                                                      Link6 ==
-                                                                          true) {
-                                                                    if (Link2 ==
-                                                                            true ||
-                                                                        Link3 ==
-                                                                            true) {
-                                                                      launchUrl(
-                                                                          Uri.parse(
-                                                                              "https://${link.value.toString()}"));
-                                                                      print(
-                                                                          "qqqqqqqqhttps://${link.value}");
+                                                                    if (User_ID ==
+                                                                        null) {
+                                                                      Navigator.of(
+                                                                              context)
+                                                                          .push(MaterialPageRoute(
+                                                                              builder: (context) =>
+                                                                                  RegisterCreateAccountScreen()));
                                                                     } else {
-                                                                      if (Link6 ==
-                                                                          true) {
-                                                                        print(
-                                                                            "yes i am inList =   room");
-                                                                        Navigator.push(
-                                                                            context,
-                                                                            MaterialPageRoute(
-                                                                          builder:
-                                                                              (context) {
-                                                                            return NewBottomBar(
-                                                                              buttomIndex: 1,
-                                                                            );
-                                                                          },
-                                                                        ));
-                                                                      } else {
-                                                                        launchUrl(Uri.parse(link
-                                                                            .value
-                                                                            .toString()));
-                                                                        print(
-                                                                            "link.valuelink.value -- ${link.value}");
+                                                                      if (Link ==
+                                                                              true ||
+                                                                          Link1 ==
+                                                                              true ||
+                                                                          Link2 ==
+                                                                              true ||
+                                                                          Link3 ==
+                                                                              true ||
+                                                                          Link4 ==
+                                                                              true ||
+                                                                          Link5 ==
+                                                                              true ||
+                                                                          Link6 ==
+                                                                              true) {
+                                                                        if (Link2 ==
+                                                                                true ||
+                                                                            Link3 ==
+                                                                                true) {
+                                                                          launchUrl(
+                                                                              Uri.parse(
+                                                                                  "https://${link.value.toString()}"));
+                                                                          print(
+                                                                              "qqqqqqqqhttps://${link.value}");
+                                                                        } else {
+                                                                          if (Link6 ==
+                                                                              true) {
+                                                                            print(
+                                                                                "yes i am inList =   room");
+                                                                            Navigator.push(
+                                                                                context,
+                                                                                MaterialPageRoute(
+                                                                              builder:
+                                                                                  (context) {
+                                                                                return NewBottomBar(
+                                                                                  buttomIndex: 1,
+                                                                                );
+                                                                              },
+                                                                            ));
+                                                                          } else {
+                                                                            launchUrl(Uri.parse(link
+                                                                                .value
+                                                                                .toString()));
+                                                                            print(
+                                                                                "link.valuelink.value -- ${link.value}");
+                                                                          }
+                                                                        }
+                                                                      } else if (link
+                                                                              .value !=
+                                                                          null) {
+                                                                        if (link
+                                                                            .value!
+                                                                            .startsWith(
+                                                                                '#')) {
+                                                                          /*   await BlocProvider
+                                                                  .of<GetGuestAllPostCubit>(
+                                                                      context)
+                                                          .seetinonExpried(
+                                                                  context); */
+                                                                          Navigator.push(
+                                                                              context,
+                                                                              MaterialPageRoute(
+                                                                                builder: (context) =>
+                                                                                    HashTagViewScreen(title: "${link.value}"),
+                                                                              ));
+                                                                        } else if (link
+                                                                            .value!
+                                                                            .startsWith(
+                                                                                '@')) {
+                                                                          /*  await BlocProvider
+                                                                  .of<GetGuestAllPostCubit>(
+                                                                      context)
+                                                          .seetinonExpried(
+                                                                  context); */
+                                                                          var name;
+                                                                          var tagName;
+                                                                          name =
+                                                                              SelectedTest;
+                                                                          tagName =
+                                                                              name.replaceAll(
+                                                                                  "@",
+                                                                                  "");
+                                                                          await BlocProvider.of<NewProfileSCubit>(context).UserTagAPI(
+                                                                              context,
+                                                                              tagName);
+
+                                                                          Navigator.push(
+                                                                              context,
+                                                                              MaterialPageRoute(builder:
+                                                                                  (context) {
+                                                                            return ProfileScreen(
+                                                                                User_ID:
+                                                                                    "${userTagModel?.object}",
+                                                                                isFollowing:
+                                                                                    "");
+                                                                          })).then(
+                                                                              (value) =>
+                                                                                  Get_UserToken());
+
+                                                                          print(
+                                                                              "tagName -- ${tagName}");
+                                                                          print(
+                                                                              "user id -- ${userTagModel?.object}");
+                                                                        }
                                                                       }
                                                                     }
-                                                                  } else if (link
-                                                                          .value !=
-                                                                      null) {
-                                                                    if (link
-                                                                        .value!
-                                                                        .startsWith(
-                                                                            '#')) {
-                                                                      /*   await BlocProvider
-                                                              .of<GetGuestAllPostCubit>(
-                                                                  context)
-                                                          .seetinonExpried(
-                                                              context); */
-                                                                      Navigator.push(
-                                                                          context,
-                                                                          MaterialPageRoute(
-                                                                            builder: (context) =>
-                                                                                HashTagViewScreen(title: "${link.value}"),
-                                                                          ));
-                                                                    } else if (link
-                                                                        .value!
-                                                                        .startsWith(
-                                                                            '@')) {
-                                                                      /*  await BlocProvider
-                                                              .of<GetGuestAllPostCubit>(
-                                                                  context)
-                                                          .seetinonExpried(
-                                                              context); */
-                                                                      var name;
-                                                                      var tagName;
-                                                                      name =
-                                                                          SelectedTest;
-                                                                      tagName =
-                                                                          name.replaceAll(
-                                                                              "@",
-                                                                              "");
-                                                                      await BlocProvider.of<NewProfileSCubit>(context).UserTagAPI(
-                                                                          context,
-                                                                          tagName);
-
-                                                                      Navigator.push(
-                                                                          context,
-                                                                          MaterialPageRoute(builder:
-                                                                              (context) {
-                                                                        return ProfileScreen(
-                                                                            User_ID:
-                                                                                "${userTagModel?.object}",
-                                                                            isFollowing:
-                                                                                "");
-                                                                      })).then(
-                                                                          (value) =>
-                                                                              Get_UserToken());
-
-                                                                      print(
-                                                                          "tagName -- ${tagName}");
-                                                                      print(
-                                                                          "user id -- ${userTagModel?.object}");
-                                                                    }
-                                                                  }
-                                                                }
-                                                              },
+                                                                  },
+                                                                ),
+                                                                if (extractUrls(GetSavePostData?.object?[index].description ?? "").isNotEmpty)
+                                                                  isYouTubeUrl(extractUrls(GetSavePostData?.object?[index].description ?? "").first)
+                                                                      ? FutureBuilder(
+                                                                      future: fetchYoutubeThumbnail(extractUrls(GetSavePostData?.object?[index].description ?? "").first),
+                                                                      builder: (context, snap) {
+                                                                        return Container(
+                                                                          height: 250,
+                                                                          decoration: BoxDecoration(image: DecorationImage(image: CachedNetworkImageProvider(snap.data.toString())), borderRadius: BorderRadius.circular(10)),
+                                                                          clipBehavior: Clip.antiAlias,
+                                                                          child: Center(
+                                                                              child: IconButton(
+                                                                                icon: Icon(
+                                                                                  Icons.play_circle_fill_rounded,
+                                                                                  color: Colors.white,
+                                                                                  size: 60,
+                                                                                ),
+                                                                                onPressed: () {
+                                                                                  playLink(extractUrls(GetSavePostData?.object?[index].description ?? "").first, context);
+                                                                                },
+                                                                              )),
+                                                                        );
+                                                                      })
+                                                                      : Padding(
+                                                                    padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                                                                    child: AnyLinkPreview(
+                                                                      link: extractUrls(GetSavePostData?.object?[index].description ?? "").first,
+                                                                      displayDirection: UIDirection.uiDirectionHorizontal,
+                                                                      showMultimedia: true,
+                                                                      bodyMaxLines: 5,
+                                                                      bodyTextOverflow: TextOverflow.ellipsis,
+                                                                      titleStyle: TextStyle(
+                                                                        color: Colors.black,
+                                                                        fontWeight: FontWeight.bold,
+                                                                        fontSize: 15,
+                                                                      ),
+                                                                      bodyStyle: TextStyle(color: Colors.grey, fontSize: 12),
+                                                                      errorBody: 'Show my custom error body',
+                                                                      errorTitle: 'Show my custom error title',
+                                                                      errorWidget: null,
+                                                                      errorImage: "https://flutter.dev/",
+                                                                      cache: Duration(days: 7),
+                                                                      backgroundColor: Colors.grey[300],
+                                                                      borderRadius: 12,
+                                                                      removeElevation: false,
+                                                                      boxShadow: [
+                                                                        BoxShadow(blurRadius: 3, color: Colors.grey)
+                                                                      ],
+                                                                      onTap: () {
+                                                                        launchUrl(Uri.parse(extractUrls(GetSavePostData?.object?[index].description ?? "").first));
+                                                                      }, // This disables tap event
+                                                                    ),
+                                                                  ),
+                                                              ],
                                                             ),
                                                           ),
                                                         ),
@@ -10163,14 +10689,44 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                   fontSize: 14),
                                             ),
                                       GestureDetector(
-                                        onTap: () {
-                                          _onShareXFileFromAssets(
-                                            context,
-                                            androidLink:
-                                                '${GetSavePostData?.object?[index].postLink}',
-                                            /* iosLink:
-                                              "https://apps.apple.com/inList =  /app/growder-b2b-platform/id6451333863" */
-                                          );
+                                        onTap: () async {
+                                          if (GetSavePostData!.object![index].postDataType != "VIDEO") {
+                                            String thumb = "";
+                                            if (GetSavePostData!.object![index].thumbnailImageUrl != null) {
+                                              thumb = GetSavePostData!.object![index].thumbnailImageUrl!;
+                                            } else {
+                                              if (GetSavePostData!.object![index].postData != null && GetSavePostData!.object![index].postData!.isNotEmpty) {
+                                                thumb = GetSavePostData!.object![index].postData!.first;
+                                              } else {
+                                                if (GetSavePostData!.object![index].repostOn != null && GetSavePostData!.object![index].repostOn!.thumbnailImageUrl != null) {
+                                                  thumb = GetSavePostData!.object![index].repostOn!.thumbnailImageUrl!;
+                                                } else {
+                                                  thumb = GetSavePostData!.object![index].repostOn != null && GetSavePostData!.object![index].repostOn!.postData != null && GetSavePostData!.object![index].repostOn!.postData!.isNotEmpty ? GetSavePostData!.object![index].repostOn!.postData!.first : "";
+                                                }
+                                              }
+                                            }
+                                            _onShareXFileFromAssets(
+                                              context,
+                                              thumb,
+                                              GetSavePostData!.object![index].postUserName ?? "",
+                                              GetSavePostData!.object![index].description ?? "",
+                                              androidLink: '${GetSavePostData!.object![index].postLink}',
+                                            );
+                                          } else {
+                                            final fileName = await VideoThumbnail.thumbnailFile(
+                                              video: GetSavePostData!.object![index].postData?.first ?? "",
+                                              thumbnailPath: (await getTemporaryDirectory()).path,
+                                              imageFormat: ImageFormat.WEBP,
+                                              quality: 100,
+                                            );
+                                            _onShareXFileFromAssets(
+                                              context,
+                                              fileName!,
+                                              GetSavePostData!.object![index].postUserName ?? "",
+                                              GetSavePostData!.object![index].description ?? "",
+                                              androidLink: '${GetSavePostData!.object![index].postLink}',
+                                            );
+                                          }
                                         },
                                         child: Container(
                                           height: 20,
@@ -12094,6 +12650,284 @@ class _ProfileScreenState extends State<ProfileScreen>
           ),
         ),
       ],
+    );
+  }
+
+  late PlayerState _playerState;
+  late YoutubeMetaData _videoMetaData;
+  double _volume = 100;
+  bool _muted = false;
+  bool _isPlayerReady = false;
+
+  String extractPlaylistId(String playlistLink) {
+    Uri uri = Uri.parse(playlistLink);
+
+    String playlistId = '';
+
+    // Check if the link is a valid YouTube playlist link
+    if (uri.host == 'www.youtube.com' || uri.host == 'youtube.com') {
+      if (uri.pathSegments.contains('playlist')) {
+        int index = uri.pathSegments.indexOf('playlist');
+        if (index != -1 /*&& index + 1 < uri.pathSegments.length*/) {
+          playlistId = uri.queryParameters['list']!;
+        }
+      }
+    } else if (uri.host == 'youtu.be') {
+      // If the link is a short link
+      playlistId = uri.pathSegments.first;
+    }
+
+    return playlistId;
+  }
+
+  Future<List<String>> getPlaylistVideos(String playlistId) async {
+    // final url = "https://www.youtube.com/playlist?list=RDF0SflZWxv8k";
+    final url =
+        "https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=50&playlistId=$playlistId&key=AIzaSyAT_gzTjHn9XuvQsmGdY63br7lKhD2KRdo";
+    final response = await http.get(Uri.parse(url));
+    if (response.statusCode == 200) {
+      // Parse the HTML content to extract video IDs (implementation depends on website structure)
+      List<String> videoIds = [];
+      final Map<String, dynamic> data = json.decode(response.body);
+      for (var item in data['items']) {
+        videoIds.add(item['snippet']['resourceId']['videoId']);
+      }
+      return videoIds; // List of video IDs
+    } else {
+      print("Failed to fetch playlist videos");
+      return [];
+    }
+  }
+
+  String extractLiveId(String liveLink) {
+    Uri uri = Uri.parse(liveLink);
+
+    String liveId = '';
+
+    // Check if the link is a valid YouTube live link
+    if (uri.host == 'www.youtube.com' || uri.host == 'youtube.com') {
+      if (uri.pathSegments.contains('watch')) {
+        // If the link contains 'watch' segment
+        int index = uri.pathSegments.indexOf('watch');
+        if (index != -1 && index + 1 < uri.pathSegments.length) {
+          // Get the video ID
+          liveId = uri.queryParameters['v']!;
+        }
+      } else if (uri.pathSegments.contains('live')) {
+        // If the link contains 'live' segment
+        int index = uri.pathSegments.indexOf('live');
+        if (index != -1 && index + 1 < uri.pathSegments.length) {
+          // Get the live ID
+          liveId = uri.pathSegments[index + 1];
+        }
+      }
+    } else if (uri.host == 'youtu.be') {
+      // If the link is a short link
+      liveId = uri.pathSegments.first;
+    }
+
+    return liveId;
+  }
+
+  Future<Widget> getYoutubePlayer(
+      String videoUrl, Function() fullScreen) async {
+    late YoutubePlayerController _controller;
+    String videoId = "";
+    if (videoUrl.toLowerCase().contains("playlist")) {
+      String playlistId = extractPlaylistId(videoUrl);
+      var videoIds = await getPlaylistVideos(playlistId);
+      videoId = videoIds.first;
+    } else if (videoUrl.toLowerCase().contains("live")) {
+      videoId = extractLiveId(videoUrl);
+    } else {
+      videoId = YoutubePlayer.convertUrlToId(videoUrl)!;
+    }
+    print("video id ========================> $videoId");
+    _controller = YoutubePlayerController(
+      initialVideoId: videoId,
+      flags: YoutubePlayerFlags(
+        mute: false,
+        autoPlay: true,
+        disableDragSeek: false,
+        loop: false,
+        isLive: videoUrl.toLowerCase().contains("live"),
+        forceHD: false,
+        enableCaption: true,
+      ),
+    );
+    _videoMetaData = const YoutubeMetaData();
+    _playerState = PlayerState.unknown;
+
+    return YoutubePlayerBuilder(
+      onEnterFullScreen: () {
+        _controller.toggleFullScreenMode();
+        _controller.dispose();
+        fullScreen.call();
+      },
+      builder: (context, player) {
+        return player;
+      },
+      player: YoutubePlayer(
+        controller: _controller,
+        showVideoProgressIndicator: true,
+        progressIndicatorColor: Colors.red,
+        progressColors: const ProgressBarColors(
+          playedColor: Colors.red,
+          handleColor: Colors.redAccent,
+        ),
+        bottomActions: [
+          const SizedBox(width: 14.0),
+          CurrentPosition(),
+          const SizedBox(width: 8.0),
+          ProgressBar(
+            isExpanded: true,
+            colors: const ProgressBarColors(
+              playedColor: Colors.red,
+              handleColor: Colors.redAccent,
+            ),
+          ),
+          RemainingDuration(),
+          const PlaybackSpeedButton(),
+          IconButton(
+            icon: Icon(
+              _controller.value.isFullScreen
+                  ? Icons.fullscreen_exit
+                  : Icons.fullscreen,
+              color: Colors.white,
+            ),
+            onPressed: () => fullScreen.call(),
+          ),
+        ],
+        onReady: () {
+          _controller.addListener(() {
+            if (_isPlayerReady && mounted && !_controller.value.isFullScreen) {
+              setState(() {
+                _playerState = _controller.value.playerState;
+                _videoMetaData = _controller.metadata;
+              });
+            }
+          });
+        },
+      ),
+    );
+  }
+
+  bool isYouTubeUrl(String url) {
+    // Regular expression pattern to match YouTube URLs
+    RegExp youtubeVideoRegex =
+    RegExp(r"^https?://(?:www\.)?youtube\.com/(?:watch\?v=)?([^#&?]+)");
+    RegExp youtubeShortsRegex =
+    RegExp(r"^https?://(?:www\.)?youtube\.com/shorts/([^#&?]+)");
+
+    if (youtubeVideoRegex.hasMatch(url) || youtubeShortsRegex.hasMatch(url)) {
+      return true;
+    }
+
+    // Additional checks based on specific test link patterns (optional)
+    if (url.contains("youtu.be/")) {
+      // This check might need adjustments if Youtube short URLs change format
+      return true;
+    }
+
+    return false;
+  }
+
+  Future<String> fetchYoutubeThumbnail(String url) async {
+    try {
+      // Extract video ID from YouTube URL
+      // We will use this to build our own custom UI
+      List<String> urls = extractUrls(url);
+      Metadata? _metadata = await AnyLinkPreview.getMetadata(
+        link: urls.first,
+        cache: Duration(days: 1),
+        // proxyUrl: "https://cors-anywhere.herokuapp.com/", // Need for web
+      );
+      return _metadata?.image ?? "";
+    } catch (e) {
+      print('Error: $e');
+      return "";
+    }
+  }
+
+  List<String> extractUrls(String text) {
+    RegExp regExp = RegExp(
+      r"https?:\/\/[\w\-]+(\.[\w\-]+)+[\w\-.,@?^=%&:/~\+#]*[\w\-@?^=%&/~\+#]?",
+      caseSensitive: false,
+    );
+
+    List<String> urls =
+    regExp.allMatches(text).map((match) => match.group(0)!).toList();
+    List<String> finalUrls = [];
+    RegExp urlRegex = RegExp(r"(http(s)?://)", caseSensitive: false);
+    urls.forEach((element) {
+      if (urlRegex.allMatches(element).toList().length > 1) {
+        String xyz = element.replaceAll("http", ",http");
+        List<String> splitted = xyz.split(RegExp(r",|;"));
+        splitted.forEach((element1) {
+          if (element1.isNotEmpty) finalUrls.add(element1);
+        });
+      } else {
+        finalUrls.add(element);
+      }
+    });
+    return finalUrls;
+  }
+
+  void playLink(String videoUrl, BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext ctx) {
+        return Center(
+          child: Container(
+              width: MediaQuery.of(context).size.width * 0.90,
+              height: MediaQuery.of(context).size.width * 0.80,
+              decoration: ShapeDecoration(
+                  color: Colors.black,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10))),
+              clipBehavior: Clip.antiAlias,
+              child: Stack(
+                children: [
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      FutureBuilder(
+                          future: getYoutubePlayer(videoUrl, () {
+                            Navigator.pop(ctx);
+                            launchUrl(Uri.parse(videoUrl));
+                          }),
+                          builder: (context, snap) {
+                            if (snap.data != null)
+                              return snap.data as Widget;
+                            else
+                              return Center(
+                                child: CircularProgressIndicator(
+                                  color: Colors.white,
+                                ),
+                              );
+                          })
+                    ],
+                  ),
+                  Align(
+                    alignment: Alignment.topRight,
+                    child: Material(
+                      color: Colors.transparent,
+                      child: IconButton(
+                        icon: Icon(
+                          Icons.close,
+                          color: Colors.white,
+                          size: 30,
+                        ),
+                        onPressed: () {
+                          Navigator.pop(ctx);
+                        },
+                      ),
+                    ),
+                  )
+                ],
+              )),
+        );
+      },
     );
   }
 }

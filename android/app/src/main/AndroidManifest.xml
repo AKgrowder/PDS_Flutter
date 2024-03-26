@@ -28,7 +28,7 @@
 
         
     <application
-        android:label="Inpackaging"
+        android:label="InPackaging"
         android:name="${applicationName}"
         android:usesCleartextTraffic="true"
         android:resizeableActivity="true"
@@ -63,6 +63,8 @@
                 <data android:scheme="mailto" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
+                <data android:host="inpackaging.page.link" android:scheme="https"/>
+                <data android:host="inpackaging.page.link" android:scheme="http"/>
                </intent-filter> 
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
