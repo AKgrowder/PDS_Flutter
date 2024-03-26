@@ -3,7 +3,10 @@
 import 'dart:io';
 import 'dart:math';
 
+import 'package:any_link_preview/any_link_preview.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:device_info_plus/device_info_plus.dart';
+import 'package:dio/dio.dart';
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -45,11 +48,14 @@ import 'package:pds/presentation/recent_blog/recent_blog_screen.dart';
 import 'package:pds/presentation/register_create_account_screen/register_create_account_screen.dart';
 import 'package:pds/widgets/commentPdf.dart';
 import 'package:pds/widgets/custom_text_form_field.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:pinch_zoom/pinch_zoom.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:translator/translator.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:video_thumbnail/video_thumbnail.dart';
+import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 import '../../API/Bloc/followerBlock/followBlock.dart';
 import '../../API/Bloc/my_account_Bloc/my_account_cubit.dart';
@@ -63,17 +69,16 @@ import '../settings/setting_screen.dart';
 import 'comment_bottom_sheet.dart';
 import 'followers.dart';
 import 'switchProfilebootmSheet.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class ProfileScreen extends StatefulWidget {
   String User_ID;
   String? isFollowing;
   bool? ProfileNotification;
   String? Screen;
-  ProfileScreen(
-      {required this.User_ID,
-      required this.isFollowing,
-      this.ProfileNotification,
-      this.Screen});
+
+  ProfileScreen({required this.User_ID, required this.isFollowing, this.ProfileNotification, this.Screen});
 
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
@@ -83,11 +88,11 @@ class NotificationModel {
   int id;
   String title;
   bool isSelected;
+
   NotificationModel(this.id, this.title, {this.isSelected = false});
 }
 
-class _ProfileScreenState extends State<ProfileScreen>
-    with SingleTickerProviderStateMixin, Observer {
+class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProviderStateMixin, Observer {
   List<String> tabData = ["Details", "Post", "Comments", "Saved"];
   List<String> soicalScreen = [
     "Details",
@@ -98,6 +103,7 @@ class _ProfileScreenState extends State<ProfileScreen>
   DateTime? parsedDateTimeBlogs;
   String? User_ID;
   List<String> SaveList = ["Post", "Blog"];
+
   // List<String>
   String industryTypesArray = "";
   String ExpertiseData = "";
@@ -138,6 +144,7 @@ class _ProfileScreenState extends State<ProfileScreen>
   int FinalSavePostCount = 0;
   int SavePostCount = 0;
   int SaveBlogCount = 0;
+
   // String? User_ID;
   int? value1;
   bool isDataGet = false;
@@ -188,6 +195,12 @@ class _ProfileScreenState extends State<ProfileScreen>
   bool scrolldown = false;
   bool isOpen = false;
   bool isDataGetValue = false;
+  late bool _permissionReady;
+
+  int? version;
+
+  String _localPath = "";
+
   void launchEmail(String emailAddress) async {
     final Uri emailLaunchUri = Uri(
       // scheme: 'Test',
@@ -220,8 +233,7 @@ class _ProfileScreenState extends State<ProfileScreen>
 
   void myScroll() async {
     _scrollController.addListener(() {
-      if (_scrollController.position.userScrollDirection ==
-          ScrollDirection.reverse) {
+      if (_scrollController.position.userScrollDirection == ScrollDirection.reverse) {
         if (!isScrollingDown || !scrolldown) {
           isScrollingDown = true;
           scrolldown = true;
@@ -229,8 +241,7 @@ class _ProfileScreenState extends State<ProfileScreen>
           hideFloting();
         }
       }
-      if (_scrollController.position.userScrollDirection ==
-          ScrollDirection.forward) {
+      if (_scrollController.position.userScrollDirection == ScrollDirection.forward) {
         if (isScrollingDown || !scrolldown) {
           isScrollingDown = false;
           scrolldown = false;
@@ -311,11 +322,11 @@ class _ProfileScreenState extends State<ProfileScreen>
       " ",
     ),
   ];
+
   savedataFuntion(String userId) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     User_Module = prefs.getString(PreferencesKey.module);
-    soicalData =
-        prefs.getBool(PreferencesKey.videoCallaudiocallcompnypagecreation);
+    soicalData = prefs.getBool(PreferencesKey.videoCallaudiocallcompnypagecreation);
     super.setState(() {});
 
     BlocProvider.of<NewProfileSCubit>(context).get_about_me(context, userId);
@@ -338,17 +349,10 @@ class _ProfileScreenState extends State<ProfileScreen>
   }
 
   getAllAPI_Data() async {
-    widget.ProfileNotification == true
-        ? BlocProvider.of<NewProfileSCubit>(context)
-            .NewProfileSAPI(context, widget.User_ID, true)
-        : BlocProvider.of<NewProfileSCubit>(context)
-            .NewProfileSAPI(context, widget.User_ID, false);
-    BlocProvider.of<NewProfileSCubit>(context)
-        .getFollwerApi(context, widget.User_ID);
-    BlocProvider.of<NewProfileSCubit>(context)
-        .getAllFollwing(context, widget.User_ID);
-    BlocProvider.of<NewProfileSCubit>(context)
-        .GetWorkExperienceAPI(context, widget.User_ID);
+    widget.ProfileNotification == true ? BlocProvider.of<NewProfileSCubit>(context).NewProfileSAPI(context, widget.User_ID, true) : BlocProvider.of<NewProfileSCubit>(context).NewProfileSAPI(context, widget.User_ID, false);
+    BlocProvider.of<NewProfileSCubit>(context).getFollwerApi(context, widget.User_ID);
+    BlocProvider.of<NewProfileSCubit>(context).getAllFollwing(context, widget.User_ID);
+    BlocProvider.of<NewProfileSCubit>(context).GetWorkExperienceAPI(context, widget.User_ID);
   }
 
   getUserSavedData() async {
@@ -374,8 +378,7 @@ class _ProfileScreenState extends State<ProfileScreen>
   }
 
   void _scrollListener() {
-    if (_scrollController.position.userScrollDirection ==
-        ScrollDirection.reverse) {
+    if (_scrollController.position.userScrollDirection == ScrollDirection.reverse) {
       setState(() {
         _isScrolledUp = true;
       });
@@ -401,8 +404,7 @@ class _ProfileScreenState extends State<ProfileScreen>
           }
           return false;
         },
-        child: BlocConsumer<NewProfileSCubit, NewProfileSState>(
-            listener: (context, state) async {
+        child: BlocConsumer<NewProfileSCubit, NewProfileSState>(listener: (context, state) async {
           if (state is NewProfileSErrorState) {
             SnackBar snackBar = SnackBar(
               content: Text(state.error),
@@ -428,8 +430,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                 margin: EdgeInsets.only(bottom: 100),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(20),
-                  child: Image.asset(ImageConstant.loader,
-                      fit: BoxFit.cover, height: 100.0, width: 100),
+                  child: Image.asset(ImageConstant.loader, fit: BoxFit.cover, height: 100.0, width: 100),
                 ),
               ),
             );
@@ -463,25 +464,20 @@ class _ProfileScreenState extends State<ProfileScreen>
             print("i check accountTyp--${NewProfileData?.object?.accountType}");
             isDataGet = true;
             print(NewProfileData?.object?.module);
-            BlocProvider.of<NewProfileSCubit>(context)
-                .GetAppPostAPI(context, "${NewProfileData?.object?.userUid}");
+            BlocProvider.of<NewProfileSCubit>(context).GetAppPostAPI(context, "${NewProfileData?.object?.userUid}");
 
-            BlocProvider.of<NewProfileSCubit>(context)
-                .GetSavePostAPI(context, "${NewProfileData?.object?.userUid}");
+            BlocProvider.of<NewProfileSCubit>(context).GetSavePostAPI(context, "${NewProfileData?.object?.userUid}");
 
-            BlocProvider.of<NewProfileSCubit>(context).GetPostCommetAPI(
-                context, "${NewProfileData?.object?.userUid}", "desc");
+            BlocProvider.of<NewProfileSCubit>(context).GetPostCommetAPI(context, "${NewProfileData?.object?.userUid}", "desc");
             savedataFuntion(NewProfileData?.object?.userUid ?? '');
 
             NewProfileData?.object?.industryTypes?.forEach((element) {
               // industryTypesArray.add("${element.industryTypeName}");
 
               if (industryTypesArray == "") {
-                industryTypesArray =
-                    "${industryTypesArray}${element.industryTypeName}";
+                industryTypesArray = "${industryTypesArray}${element.industryTypeName}";
               } else {
-                industryTypesArray =
-                    "${industryTypesArray}, ${element.industryTypeName}";
+                industryTypesArray = "${industryTypesArray}, ${element.industryTypeName}";
               }
             });
 
@@ -508,17 +504,11 @@ class _ProfileScreenState extends State<ProfileScreen>
             priceContrller.text = "${NewProfileData?.object?.fees}";
             Expertise.text = ExpertiseData;
             if (state.PublicRoomData.object?.workingHours != null) {
-              workignStart = state.PublicRoomData.object?.workingHours
-                  .toString()
-                  .split(" to ")
-                  .first;
+              workignStart = state.PublicRoomData.object?.workingHours.toString().split(" to ").first;
 
               start = workignStart?.split(' ')[0];
               startAm = workignStart?.split(' ')[1];
-              workignend = state.PublicRoomData.object?.workingHours
-                  .toString()
-                  .split(" to ")
-                  .last;
+              workignend = state.PublicRoomData.object?.workingHours.toString().split(" to ").last;
               end = workignend?.split(' ')[0];
               endAm = workignend?.split(' ')[1];
             }
@@ -538,21 +528,18 @@ class _ProfileScreenState extends State<ProfileScreen>
               UserProfilePostCount = UserProfilePostCount + 1;
               var PostCount = UserProfilePostCount / 2;
               var aa = "${PostCount}";
-              print(
-                  "PostCountPostCountPostCountPostCountPostCountPostCountPostCountPostCountPostCount : 1 :- ${PostCount}  :::::- ${UserProfilePostCount}");
+              print("PostCountPostCountPostCountPostCountPostCountPostCountPostCountPostCountPostCount : 1 :- ${PostCount}  :::::- ${UserProfilePostCount}");
               print("sadasdsadasdsadasdsadasdsadasdsadasd : ------> ${aa}");
 
               int? y = int.parse(aa.split('.')[0]);
               print("sadasdsadasdsadasdsadasdsadasdsadasd : ------> ${y}");
               FinalPostCount = y;
               UserProfilePostCount = UserProfilePostCount - 1;
-              print(
-                  "sadasdsadasdsadasdsadasdsadasdsadasd : ------> ${FinalPostCount}");
+              print("sadasdsadasdsadasdsadasdsadasdsadasd : ------> ${FinalPostCount}");
             } else {
               print(UserProfilePostCount);
               var PostCount = UserProfilePostCount / 2;
-              print(
-                  "PostCountPostCountPostCountPostCountPostCountPostCountPostCountPostCountPostCount : 2 :- ${PostCount}  :::::- ${UserProfilePostCount}");
+              print("PostCountPostCountPostCountPostCountPostCountPostCountPostCountPostCountPostCount : 2 :- ${PostCount}  :::::- ${UserProfilePostCount}");
               var aa = "${PostCount}";
               print("sadasdsadasdsadasdsadasdsadasdsadasd : ------> ${aa}");
 
@@ -560,8 +547,7 @@ class _ProfileScreenState extends State<ProfileScreen>
               print("sadasdsadasdsadasdsadasdsadasdsadasd : ------> ${y}");
 
               FinalPostCount = y;
-              print(
-                  "sadasdsadasdsadasdsadasdsadasdsadasd : ------> ${FinalPostCount}");
+              print("sadasdsadasdsadasdsadasdsadasdsadasd : ------> ${FinalPostCount}");
             }
 
             GetAllPostData?.object?.forEach((element) {
@@ -577,8 +563,7 @@ class _ProfileScreenState extends State<ProfileScreen>
             });
           }
           if (state is GetUserPostCommetLoadedState) {
-            print(
-                "Get Comment Get Comment Get Comment Get Comment Get Comment Get Comment Get Comment ");
+            print("Get Comment Get Comment Get Comment Get Comment Get Comment Get Comment Get Comment ");
             print(state.GetUserPostCommet);
             GetUserPostCommetData = state.GetUserPostCommet;
             CommentsPostCount = GetUserPostCommetData?.object?.length ?? 0;
@@ -612,13 +597,8 @@ class _ProfileScreenState extends State<ProfileScreen>
             ScaffoldMessenger.of(context).showSnackBar(snackBar);
           }
           if (state is PostLikeLoadedState) {
-            widget.ProfileNotification == true
-                ? BlocProvider.of<NewProfileSCubit>(context)
-                    .NewProfileSAPI(context, widget.User_ID, true)
-                : BlocProvider.of<NewProfileSCubit>(context)
-                    .NewProfileSAPI(context, widget.User_ID, false);
-            if (state.likePost.object != 'Post Liked Successfully' &&
-                state.likePost.object != 'Post Unliked Successfully') {
+            widget.ProfileNotification == true ? BlocProvider.of<NewProfileSCubit>(context).NewProfileSAPI(context, widget.User_ID, true) : BlocProvider.of<NewProfileSCubit>(context).NewProfileSAPI(context, widget.User_ID, false);
+            if (state.likePost.object != 'Post Liked Successfully' && state.likePost.object != 'Post Unliked Successfully') {
               SnackBar snackBar = SnackBar(
                 content: Text(state.likePost.object.toString()),
                 backgroundColor: ColorConstant.primary_color,
@@ -632,8 +612,7 @@ class _ProfileScreenState extends State<ProfileScreen>
           if (state is UserTagLoadedState) {
             userTagModel = state.userTagModel;
             Navigator.push(context, MaterialPageRoute(builder: (context) {
-              return ProfileScreen(
-                  User_ID: "${state.userTagModel.object}", isFollowing: "");
+              return ProfileScreen(User_ID: "${state.userTagModel.object}", isFollowing: "");
             }));
 
             // print("tagName -- ${tagName}");
@@ -673,16 +652,9 @@ class _ProfileScreenState extends State<ProfileScreen>
           if (state is GetAllHashtagState) {
             getAllHashtag = state.getAllHashtag;
 
-            for (int i = 0;
-                i < (getAllHashtag?.object?.content?.length ?? 0);
-                i++) {
+            for (int i = 0; i < (getAllHashtag?.object?.content?.length ?? 0); i++) {
               // getAllHashtag?.object?.content?[i].split('#').last;
-              Map<String, dynamic> dataSetup = {
-                'id': '${i}',
-                'display':
-                    '${getAllHashtag?.object?.content?[i].split('#').last}',
-                'style': TextStyle(color: Colors.blue)
-              };
+              Map<String, dynamic> dataSetup = {'id': '${i}', 'display': '${getAllHashtag?.object?.content?[i].split('#').last}', 'style': TextStyle(color: Colors.blue)};
               heshTageData.add(dataSetup);
               if (heshTageData.isNotEmpty == true) {
                 isHeshTegData = true;
@@ -696,14 +668,11 @@ class _ProfileScreenState extends State<ProfileScreen>
               backgroundColor: ColorConstant.primary_color,
             );
             ScaffoldMessenger.of(context).showSnackBar(snackBar);
-            BlocProvider.of<NewProfileSCubit>(context)
-                .GetAppPostAPI(context, "${NewProfileData?.object?.userUid}");
+            BlocProvider.of<NewProfileSCubit>(context).GetAppPostAPI(context, "${NewProfileData?.object?.userUid}");
           }
           if (state is Getallcompenypagelodedstate) {
             getallcompenypagemodel = state.getallcompenypagemodel;
-            userCompanyPageUid = getallcompenypagemodel?.object?.content
-                ?.firstWhere((element) => element.isSwitched == true)
-                .userCompanyPageUid;
+            userCompanyPageUid = getallcompenypagemodel?.object?.content?.firstWhere((element) => element.isSwitched == true).userCompanyPageUid;
             print("userCompanyPageUiduserCompanyPageUid-${userCompanyPageUid}");
           }
         }, builder: (context, state) {
@@ -715,8 +684,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                         margin: EdgeInsets.only(bottom: 100),
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(20),
-                          child: Image.asset(ImageConstant.loader,
-                              fit: BoxFit.cover, height: 100.0, width: 100),
+                          child: Image.asset(ImageConstant.loader, fit: BoxFit.cover, height: 100.0, width: 100),
                         ),
                       ),
                     )
@@ -734,8 +702,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                           stretch: true,
                           elevation: 0,
                           flexibleSpace: LayoutBuilder(
-                            builder: (BuildContext context,
-                                BoxConstraints constraints) {
+                            builder: (BuildContext context, BoxConstraints constraints) {
                               return FlexibleSpaceBar(
                                 centerTitle: true,
                                 expandedTitleScale: 1,
@@ -746,89 +713,51 @@ class _ProfileScreenState extends State<ProfileScreen>
                                     children: [
                                       GestureDetector(
                                         onTap: () {
-                                          if (NewProfileData
-                                                      ?.object
-                                                      ?.userBackgroundPic
-                                                      ?.isNotEmpty ==
-                                                  true &&
-                                              NewProfileData?.object
-                                                      ?.userBackgroundPic !=
-                                                  '') {
+                                          if (NewProfileData?.object?.userBackgroundPic?.isNotEmpty == true && NewProfileData?.object?.userBackgroundPic != '') {
                                             Navigator.push(
                                                 context,
                                                 MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      ProfileandDocumentScreen(
-                                                    path: NewProfileData?.object
-                                                        ?.userBackgroundPic,
+                                                  builder: (context) => ProfileandDocumentScreen(
+                                                    path: NewProfileData?.object?.userBackgroundPic,
                                                     title: "",
                                                   ),
                                                 ));
                                           } else {
-                                            Navigator.of(context).push(
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        ProfileandDocumentScreen(
-                                                          path:
-                                                              'https://inpackaging-images.s3.ap-south-1.amazonaws.com/misc/InPackaging_Logo.png',
-                                                          title: '',
-                                                        )));
+                                            Navigator.of(context).push(MaterialPageRoute(
+                                                builder: (context) => ProfileandDocumentScreen(
+                                                      path: 'https://inpackaging-images.s3.ap-south-1.amazonaws.com/misc/InPackaging_Logo.png',
+                                                      title: '',
+                                                    )));
                                           }
                                         },
                                         child: Container(
                                           color: Colors.white,
                                           height: _height / 3.4,
                                           width: _width,
-                                          child: NewProfileData?.object
-                                                          ?.userBackgroundPic ==
-                                                      null ||
-                                                  NewProfileData?.object
-                                                          ?.userBackgroundPic ==
-                                                      ''
+                                          child: NewProfileData?.object?.userBackgroundPic == null || NewProfileData?.object?.userBackgroundPic == ''
                                               ? Padding(
-                                                  padding:
-                                                      const EdgeInsets.all(8.0),
+                                                  padding: const EdgeInsets.all(8.0),
                                                   child: CustomImageView(
-                                                    svgPath: ImageConstant
-                                                        .splashImage,
+                                                    svgPath: ImageConstant.splashImage,
                                                     /* fit: BoxFit.fill, */
-                                                    radius: BorderRadius.only(
-                                                        bottomRight:
-                                                            Radius.circular(20),
-                                                        bottomLeft:
-                                                            Radius.circular(
-                                                                20)),
+                                                    radius: BorderRadius.only(bottomRight: Radius.circular(20), bottomLeft: Radius.circular(20)),
                                                   ),
                                                 )
-                                              : CustomImageView(
-                                                  url:
-                                                      "${NewProfileData?.object?.userBackgroundPic}",
-                                                  fit: BoxFit.cover,
-                                                  radius: BorderRadius.only(
-                                                      bottomRight:
-                                                          Radius.circular(20),
-                                                      bottomLeft:
-                                                          Radius.circular(20))
+                                              : CustomImageView(url: "${NewProfileData?.object?.userBackgroundPic}", fit: BoxFit.cover, radius: BorderRadius.only(bottomRight: Radius.circular(20), bottomLeft: Radius.circular(20))
                                                   // BorderRadius.circular(25),
                                                   ),
                                         ),
                                       ),
                                       _isScrolledUp == false
                                           ? Padding(
-                                              padding: EdgeInsets.only(
-                                                  top: 55, left: 16),
+                                              padding: EdgeInsets.only(top: 55, left: 16),
                                               child: GestureDetector(
                                                 onTap: () {
-                                                  if (widget
-                                                          .Screen?.isNotEmpty ==
-                                                      true) {
+                                                  if (widget.Screen?.isNotEmpty == true) {
                                                     Navigator.push(
                                                         context,
                                                         MaterialPageRoute(
-                                                          builder: (context) =>
-                                                              NewBottomBar(
-                                                                  buttomIndex:
-                                                                      0),
+                                                          builder: (context) => NewBottomBar(buttomIndex: 0),
                                                         ));
                                                   } else {
                                                     Navigator.pop(context);
@@ -837,8 +766,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                 child: Container(
                                                   height: 30,
                                                   width: 30,
-                                                  color: Color.fromRGBO(
-                                                      255, 255, 255, 0.3),
+                                                  color: Color.fromRGBO(255, 255, 255, 0.3),
                                                   child: Center(
                                                     child: Image.asset(
                                                       ImageConstant.backArrow,
@@ -858,28 +786,17 @@ class _ProfileScreenState extends State<ProfileScreen>
                                             GestureDetector(
                                               onTap: () {
                                                 print("frgfgdfggdfgdfhghfdgh");
-                                                if (NewProfileData
-                                                            ?.object
-                                                            ?.userProfilePic
-                                                            ?.isNotEmpty ==
-                                                        true &&
-                                                    NewProfileData?.object
-                                                            ?.userProfilePic !=
-                                                        '') {
+                                                if (NewProfileData?.object?.userProfilePic?.isNotEmpty == true && NewProfileData?.object?.userProfilePic != '') {
                                                   Navigator.push(
                                                       context,
                                                       MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            ProfileandDocumentScreen(
-                                                          path: NewProfileData
-                                                              ?.object
-                                                              ?.userProfilePic,
+                                                        builder: (context) => ProfileandDocumentScreen(
+                                                          path: NewProfileData?.object?.userProfilePic,
                                                           title: "",
                                                         ),
                                                       ));
                                                 } else {
-                                                  Navigator.of(context)
-                                                      .push(MaterialPageRoute(
+                                                  Navigator.of(context).push(MaterialPageRoute(
                                                     builder: (context) =>
                                                         /* ProfileandDocumentScreen(
                                                                     path:
@@ -888,8 +805,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                   ) */
 
                                                         ProfilePage(
-                                                      image: ImageConstant
-                                                          .tomcruse,
+                                                      image: ImageConstant.tomcruse,
                                                     ),
                                                   ));
                                                 }
@@ -897,66 +813,40 @@ class _ProfileScreenState extends State<ProfileScreen>
                                               child: Container(
                                                 height: 150,
                                                 width: 150,
-                                                decoration: BoxDecoration(
-                                                    shape: BoxShape.circle,
-                                                    color: Colors.white),
+                                                decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.white),
                                                 child: Padding(
-                                                    padding:
-                                                        const EdgeInsets.all(
-                                                            4.0),
-                                                    child: NewProfileData
-                                                                    ?.object
-                                                                    ?.userProfilePic ==
-                                                                null ||
-                                                            NewProfileData
-                                                                    ?.object
-                                                                    ?.userProfilePic ==
-                                                                ''
+                                                    padding: const EdgeInsets.all(4.0),
+                                                    child: NewProfileData?.object?.userProfilePic == null || NewProfileData?.object?.userProfilePic == ''
                                                         ? CircleAvatar(
-                                                            backgroundColor:
-                                                                Colors.white,
-                                                            backgroundImage:
-                                                                AssetImage(
-                                                              ImageConstant
-                                                                  .tomcruse,
+                                                            backgroundColor: Colors.white,
+                                                            backgroundImage: AssetImage(
+                                                              ImageConstant.tomcruse,
                                                             ),
                                                             radius: 25,
                                                           )
                                                         /* CustomImageView(
                                                           imagePath: ImageConstant
                                                               .tomcruse,
-                                                               
+
                                                           radius:
                                                               BorderRadius.all(
                                                             Radius.circular(20),
                                                           ),
                                                         ) */
                                                         : CircleAvatar(
-                                                            backgroundColor:
-                                                                Colors.white,
-                                                            backgroundImage:
-                                                                NetworkImage(
-                                                                    "${NewProfileData?.object?.userProfilePic}"),
+                                                            backgroundColor: Colors.white,
+                                                            backgroundImage: NetworkImage("${NewProfileData?.object?.userProfilePic}"),
                                                             radius: 25,
                                                           )),
                                               ),
                                             ),
-                                            if (getallcompenypagemodel?.object
-                                                        ?.content?.isNotEmpty ==
-                                                    true &&
-                                                getallcompenypagemodel?.object
-                                                        ?.content?.length !=
-                                                    1 &&
-                                                soicalData == true)
+                                            if (getallcompenypagemodel?.object?.content?.isNotEmpty == true && getallcompenypagemodel?.object?.content?.length != 1 && soicalData == true)
                                               Positioned(
                                                 bottom: 5,
                                                 right: -0,
                                                 child: GestureDetector(
                                                   onTap: () {
-                                                    showProfileSwitchBottomSheet(
-                                                        context,
-                                                        getallcompenypagemodel!,
-                                                        '${User_ID}');
+                                                    showProfileSwitchBottomSheet(context, getallcompenypagemodel!, '${User_ID}');
                                                     /* _showPopupMenuSwitchAccount(
                                                           details.globalPosition,
                                                           context,
@@ -965,21 +855,13 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                   child: Container(
                                                       height: 40,
                                                       width: 40,
-                                                      decoration: BoxDecoration(
-                                                          shape:
-                                                              BoxShape.circle,
-                                                          color: ColorConstant
-                                                              .primaryLight_color),
+                                                      decoration: BoxDecoration(shape: BoxShape.circle, color: ColorConstant.primaryLight_color),
                                                       child: Center(
                                                         child: Padding(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                  .all(8.0),
+                                                          padding: const EdgeInsets.all(8.0),
                                                           child: Image.asset(
-                                                            ImageConstant
-                                                                .switchAccount,
-                                                            color: ColorConstant
-                                                                .primary_color,
+                                                            ImageConstant.switchAccount,
+                                                            color: ColorConstant.primary_color,
                                                           ),
                                                         ),
                                                       )),
@@ -998,9 +880,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                         SliverToBoxAdapter(
                           child: Column(
                             children: [
-                              User_Module == "EMPLOYEE" &&
-                                      NewProfileData?.object?.approvalStatus ==
-                                          "PARTIALLY_REGISTERED"
+                              User_Module == "EMPLOYEE" && NewProfileData?.object?.approvalStatus == "PARTIALLY_REGISTERED"
                                   ? Padding(
                                       padding: const EdgeInsets.only(top: 15),
                                       child: Row(
@@ -1010,36 +890,27 @@ class _ProfileScreenState extends State<ProfileScreen>
                                             child: Container(
                                               height: 30,
                                               decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(20),
+                                                borderRadius: BorderRadius.circular(20),
                                                 color: Color(0xffD5EED5),
                                               ),
                                               child: Padding(
-                                                padding: const EdgeInsets.only(
-                                                    left: 15, right: 15),
+                                                padding: const EdgeInsets.only(left: 15, right: 15),
                                                 child: Row(
-                                                  mainAxisSize:
-                                                      MainAxisSize.min,
+                                                  mainAxisSize: MainAxisSize.min,
                                                   children: [
                                                     Container(
                                                         height: 10,
                                                         width: 10,
-                                                        decoration:
-                                                            BoxDecoration(
-                                                          shape:
-                                                              BoxShape.circle,
-                                                          color:
-                                                              Color(0xff019801),
+                                                        decoration: BoxDecoration(
+                                                          shape: BoxShape.circle,
+                                                          color: Color(0xff019801),
                                                         )),
                                                     SizedBox(
                                                       width: 10,
                                                     ),
                                                     Text(
                                                       "Profile APPROVED",
-                                                      style: TextStyle(
-                                                          fontSize: 15,
-                                                          fontWeight:
-                                                              FontWeight.w600),
+                                                      style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
                                                     )
                                                   ],
                                                 ),
@@ -1051,10 +922,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                     )
                                   : User_ID == NewProfileData?.object?.userUid
                                       ? Padding(
-                                          padding: EdgeInsets.only(
-                                              top: User_CompnyPageModule == null
-                                                  ? 15
-                                                  : 0),
+                                          padding: EdgeInsets.only(top: User_CompnyPageModule == null ? 15 : 0),
                                           child: Row(
                                             mainAxisSize: MainAxisSize.min,
                                             children: [
@@ -1063,37 +931,19 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                   child: Container(
                                                     height: 30,
                                                     decoration: BoxDecoration(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              20),
-                                                      color: NewProfileData
-                                                                  ?.object
-                                                                  ?.approvalStatus ==
-                                                              "PARTIALLY_REGISTERED"
+                                                      borderRadius: BorderRadius.circular(20),
+                                                      color: NewProfileData?.object?.approvalStatus == "PARTIALLY_REGISTERED"
                                                           ? Color(0xffB6D9EC)
-                                                          : NewProfileData
-                                                                      ?.object
-                                                                      ?.approvalStatus ==
-                                                                  "PENDING"
-                                                              ? Color(
-                                                                  0xffFFDBA8)
-                                                              : NewProfileData
-                                                                          ?.object
-                                                                          ?.approvalStatus ==
-                                                                      "APPROVED"
-                                                                  ? Color(
-                                                                      0xffD5EED5)
-                                                                  : Color(
-                                                                      0xffFFE0E1),
+                                                          : NewProfileData?.object?.approvalStatus == "PENDING"
+                                                              ? Color(0xffFFDBA8)
+                                                              : NewProfileData?.object?.approvalStatus == "APPROVED"
+                                                                  ? Color(0xffD5EED5)
+                                                                  : Color(0xffFFE0E1),
                                                     ),
                                                     child: Padding(
-                                                      padding:
-                                                          const EdgeInsets.only(
-                                                              left: 15,
-                                                              right: 15),
+                                                      padding: const EdgeInsets.only(left: 15, right: 15),
                                                       child: Row(
-                                                        mainAxisSize:
-                                                            MainAxisSize.min,
+                                                        mainAxisSize: MainAxisSize.min,
                                                         children: [
                                                           Container(
                                                             height: 10,
@@ -1114,26 +964,15 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                           Text(
                                                             "Profile ${NewProfileData?.object?.approvalStatus}",
                                                             style: TextStyle(
-                                                                color: NewProfileData
-                                                                            ?.object
-                                                                            ?.approvalStatus ==
-                                                                        "PARTIALLY_REGISTERED"
-                                                                    ? Color(
-                                                                        0xff1A94D7)
-                                                                    : NewProfileData?.object?.approvalStatus ==
-                                                                            "PENDING"
-                                                                        ? Color(
-                                                                            0xffC28432)
-                                                                        : NewProfileData?.object?.approvalStatus ==
-                                                                                "APPROVED"
-                                                                            ? Color(
-                                                                                0xff019801)
-                                                                            : Color(
-                                                                                0xffFF000B),
+                                                                color: NewProfileData?.object?.approvalStatus == "PARTIALLY_REGISTERED"
+                                                                    ? Color(0xff1A94D7)
+                                                                    : NewProfileData?.object?.approvalStatus == "PENDING"
+                                                                        ? Color(0xffC28432)
+                                                                        : NewProfileData?.object?.approvalStatus == "APPROVED"
+                                                                            ? Color(0xff019801)
+                                                                            : Color(0xffFF000B),
                                                                 fontSize: 15,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w600),
+                                                                fontWeight: FontWeight.w600),
                                                           )
                                                         ],
                                                       ),
@@ -1145,16 +984,11 @@ class _ProfileScreenState extends State<ProfileScreen>
                                         )
                                       : SizedBox(),
                               Padding(
-                                padding: EdgeInsets.only(
-                                    top:
-                                        User_CompnyPageModule == null ? 20 : 0),
+                                padding: EdgeInsets.only(top: User_CompnyPageModule == null ? 20 : 0),
                                 child: Center(
                                   child: Text(
                                     '${User_CompnyPageModule == null ? NewProfileData?.object?.name : NewProfileData?.object?.companyName}',
-                                    style: TextStyle(
-                                        fontSize: 26,
-                                        fontFamily: "outfit",
-                                        fontWeight: FontWeight.bold),
+                                    style: TextStyle(fontSize: 26, fontFamily: "outfit", fontWeight: FontWeight.bold),
                                   ),
                                 ),
                               ),
@@ -1169,27 +1003,15 @@ class _ProfileScreenState extends State<ProfileScreen>
                                       left: 0,
                                     ),
                                     child: Text(
-                                      User_CompnyPageModule == null
-                                          ? '@${NewProfileData?.object?.userName}'
-                                          : '${NewProfileData?.object?.companyPageType}',
-                                      style: TextStyle(
-                                          fontSize: 18,
-                                          fontFamily: "outfit",
-                                          fontWeight: FontWeight.bold,
-                                          color: Color(0xff444444)),
+                                      User_CompnyPageModule == null ? '@${NewProfileData?.object?.userName}' : '${NewProfileData?.object?.companyPageType}',
+                                      style: TextStyle(fontSize: 18, fontFamily: "outfit", fontWeight: FontWeight.bold, color: Color(0xff444444)),
                                     ),
                                   ),
-                                  NewProfileData?.object?.approvalStatus ==
-                                              'PENDING' ||
-                                          NewProfileData
-                                                  ?.object?.approvalStatus ==
-                                              'REJECTED'
+                                  NewProfileData?.object?.approvalStatus == 'PENDING' || NewProfileData?.object?.approvalStatus == 'REJECTED'
                                       ? SizedBox()
-                                      : NewProfileData?.object?.module ==
-                                              "EXPERT"
+                                      : NewProfileData?.object?.module == "EXPERT"
                                           ? Padding(
-                                              padding: const EdgeInsets.only(
-                                                  bottom: 4, left: 3),
+                                              padding: const EdgeInsets.only(bottom: 4, left: 3),
                                               child: Image.asset(
                                                 ImageConstant.Star,
                                                 height: 18,
@@ -1204,8 +1026,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                               ),
                               User_ID == widget.User_ID
                                   ? Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
+                                      mainAxisAlignment: MainAxisAlignment.center,
                                       children: [
                                         GestureDetector(
                                           onTap: () {
@@ -1215,30 +1036,17 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                       builder: (context) =>
                                                           ShowProfileScreen(),
                                                     )); */
-                                            Navigator.push(context,
-                                                MaterialPageRoute(
-                                                    builder: (context) {
+                                            Navigator.push(context, MaterialPageRoute(builder: (context) {
                                               return MultiBlocProvider(
                                                   providers: [
-                                                    BlocProvider<
-                                                        MyAccountCubit>(
-                                                      create: (context) =>
-                                                          MyAccountCubit(),
+                                                    BlocProvider<MyAccountCubit>(
+                                                      create: (context) => MyAccountCubit(),
                                                     ),
                                                   ],
                                                   child: EditProfileScreen(
-                                                    newProfileData:
-                                                        NewProfileData,
+                                                    newProfileData: NewProfileData,
                                                   ));
-                                            })).then((value) => widget
-                                                        .ProfileNotification ==
-                                                    true
-                                                ? BlocProvider.of<NewProfileSCubit>(context)
-                                                    .NewProfileSAPI(context,
-                                                        widget.User_ID, true)
-                                                : BlocProvider.of<NewProfileSCubit>(context)
-                                                    .NewProfileSAPI(context,
-                                                        widget.User_ID, false));
+                                            })).then((value) => widget.ProfileNotification == true ? BlocProvider.of<NewProfileSCubit>(context).NewProfileSAPI(context, widget.User_ID, true) : BlocProvider.of<NewProfileSCubit>(context).NewProfileSAPI(context, widget.User_ID, false));
                                           },
                                           child: Container(
                                             alignment: Alignment.center,
@@ -1246,21 +1054,14 @@ class _ProfileScreenState extends State<ProfileScreen>
                                             width: _width / 2.6,
                                             decoration: BoxDecoration(
                                                 color: Colors.white,
-                                                borderRadius:
-                                                    BorderRadius.circular(10),
+                                                borderRadius: BorderRadius.circular(10),
                                                 border: Border.all(
-                                                  color: ColorConstant
-                                                      .primary_color,
+                                                  color: ColorConstant.primary_color,
                                                 )),
                                             child: Text(
                                               'View Profile',
                                               maxLines: 1,
-                                              style: TextStyle(
-                                                  fontFamily: "outfit",
-                                                  fontSize: 18,
-                                                  color: ColorConstant
-                                                      .primary_color,
-                                                  fontWeight: FontWeight.w500),
+                                              style: TextStyle(fontFamily: "outfit", fontSize: 18, color: ColorConstant.primary_color, fontWeight: FontWeight.w500),
                                             ),
                                           ),
                                         ),
@@ -1269,43 +1070,13 @@ class _ProfileScreenState extends State<ProfileScreen>
                                             Navigator.push(
                                                 context,
                                                 MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        SettingScreen(
-                                                          accountType:
-                                                              NewProfileData
-                                                                      ?.object
-                                                                      ?.accountType ??
-                                                                  '',
-                                                          module: NewProfileData?.object?.module == 'COMPANY' &&
-                                                                  NewProfileData
-                                                                          ?.object
-                                                                          ?.approvalStatus !=
-                                                                      "PENDING" &&
-                                                                  NewProfileData
-                                                                          ?.object
-                                                                          ?.approvalStatus !=
-                                                                      "REJECTED"
-                                                              ? true
-                                                              : false,
-                                                          userCompanyPageUid:
-                                                              userCompanyPageUid,
+                                                    builder: (context) => SettingScreen(
+                                                          accountType: NewProfileData?.object?.accountType ?? '',
+                                                          module: NewProfileData?.object?.module == 'COMPANY' && NewProfileData?.object?.approvalStatus != "PENDING" && NewProfileData?.object?.approvalStatus != "REJECTED" ? true : false,
+                                                          userCompanyPageUid: userCompanyPageUid,
                                                         ))).then((value) {
-                                              widget.ProfileNotification == true
-                                                  ? BlocProvider.of<
-                                                              NewProfileSCubit>(
-                                                          context)
-                                                      .NewProfileSAPI(context,
-                                                          widget.User_ID, true)
-                                                  : BlocProvider.of<
-                                                              NewProfileSCubit>(
-                                                          context)
-                                                      .NewProfileSAPI(
-                                                          context,
-                                                          widget.User_ID,
-                                                          false);
-                                              BlocProvider.of<NewProfileSCubit>(
-                                                      context)
-                                                  .getallcompenypagee(context);
+                                              widget.ProfileNotification == true ? BlocProvider.of<NewProfileSCubit>(context).NewProfileSAPI(context, widget.User_ID, true) : BlocProvider.of<NewProfileSCubit>(context).NewProfileSAPI(context, widget.User_ID, false);
+                                              BlocProvider.of<NewProfileSCubit>(context).getallcompenypagee(context);
                                             });
                                           },
                                           child: Container(
@@ -1313,10 +1084,8 @@ class _ProfileScreenState extends State<ProfileScreen>
                                             height: 45,
                                             width: 50,
                                             decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
-                                              color:
-                                                  ColorConstant.primary_color,
+                                              borderRadius: BorderRadius.circular(10),
+                                              color: ColorConstant.primary_color,
                                             ),
                                             child: Icon(
                                               Icons.settings,
@@ -1335,23 +1104,15 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                 height: 45,
                                                 width: _width / 3,
                                                 decoration: BoxDecoration(
-                                                  color: ColorConstant
-                                                      .primary_color,
-                                                  borderRadius:
-                                                      BorderRadius.circular(10),
+                                                  color: ColorConstant.primary_color,
+                                                  borderRadius: BorderRadius.circular(10),
                                                 ),
                                                 child: Text(
                                                   'Following',
-                                                  style: TextStyle(
-                                                      fontFamily: "outfit",
-                                                      fontSize: 18,
-                                                      color: Colors.white,
-                                                      fontWeight:
-                                                          FontWeight.w500),
+                                                  style: TextStyle(fontFamily: "outfit", fontSize: 18, color: Colors.white, fontWeight: FontWeight.w500),
                                                 ),
                                               )
-                                            : NewProfileData?.object?.isBlock ==
-                                                    true
+                                            : NewProfileData?.object?.isBlock == true
                                                 ? GestureDetector(
                                                     /* key: blockKey,
                                                 onTap: () {
@@ -1365,128 +1126,73 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                 }, */
 
                                                     child: Container(
-                                                      alignment:
-                                                          Alignment.center,
+                                                      alignment: Alignment.center,
                                                       height: 45,
                                                       width: _width / 3,
                                                       decoration: BoxDecoration(
-                                                        color: ColorConstant
-                                                            .primary_color,
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(10),
+                                                        color: ColorConstant.primary_color,
+                                                        borderRadius: BorderRadius.circular(10),
                                                       ),
                                                       child: Text(
                                                         'Unblock',
-                                                        style: TextStyle(
-                                                            fontFamily:
-                                                                "outfit",
-                                                            fontSize: 18,
-                                                            color: Colors.white,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .w500),
+                                                        style: TextStyle(fontFamily: "outfit", fontSize: 18, color: Colors.white, fontWeight: FontWeight.w500),
                                                       ),
                                                     ),
                                                   )
                                                 : GestureDetector(
                                                     onTap: () {
-                                                      BlocProvider.of<
-                                                                  NewProfileSCubit>(
-                                                              context)
-                                                          .followWIngMethod(
-                                                              NewProfileData
-                                                                  ?.object
-                                                                  ?.userUid
-                                                                  .toString(),
-                                                              context);
+                                                      BlocProvider.of<NewProfileSCubit>(context).followWIngMethod(NewProfileData?.object?.userUid.toString(), context);
                                                       // print(${name[0].toUpperCase()}${name.substring(1).toLowerCase()});
                                                     },
                                                     child: Container(
-                                                      alignment:
-                                                          Alignment.center,
+                                                      alignment: Alignment.center,
                                                       height: 45,
                                                       width: _width / 3,
                                                       decoration: BoxDecoration(
-                                                        color: ColorConstant
-                                                            .primary_color,
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(10),
+                                                        color: ColorConstant.primary_color,
+                                                        borderRadius: BorderRadius.circular(10),
                                                       ),
                                                       child: Text(
                                                         '${NewProfileData?.object?.isFollowing?.toString()[0].toUpperCase()}${NewProfileData?.object?.isFollowing?.toString().substring(1).toLowerCase()}',
-                                                        style: TextStyle(
-                                                            fontFamily:
-                                                                "outfit",
-                                                            fontSize: 18,
-                                                            color: Colors.white,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .w500),
+                                                        style: TextStyle(fontFamily: "outfit", fontSize: 18, color: Colors.white, fontWeight: FontWeight.w500),
                                                       ),
                                                     ),
                                                   ),
-                                        NewProfileData?.object?.isFollowing ==
-                                                    "FOLLOWING" ||
-                                                NewProfileData
-                                                        ?.object?.accountType ==
-                                                    "PUBLIC"
+                                        NewProfileData?.object?.isFollowing == "FOLLOWING" || NewProfileData?.object?.accountType == "PUBLIC"
                                             ? Padding(
-                                                padding: const EdgeInsets.only(
-                                                    left: 10),
+                                                padding: const EdgeInsets.only(left: 10),
                                                 child: GestureDetector(
                                                   onTap: () {
-                                                    BlocProvider.of<
-                                                                NewProfileSCubit>(
-                                                            context)
-                                                        .DMChatListm(
-                                                            "${NewProfileData?.object?.userUid}",
-                                                            context);
+                                                    BlocProvider.of<NewProfileSCubit>(context).DMChatListm("${NewProfileData?.object?.userUid}", context);
                                                   },
                                                   child: Container(
                                                     height: 40,
                                                     width: 40,
                                                     decoration: BoxDecoration(
-                                                      color: ColorConstant
-                                                          .primary_color,
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              10),
+                                                      color: ColorConstant.primary_color,
+                                                      borderRadius: BorderRadius.circular(10),
                                                     ),
                                                     child: Center(
-                                                      child: CustomImageView(
-                                                          height: 20,
-                                                          width: 20,
-                                                          imagePath:
-                                                              ImageConstant
-                                                                  .chat),
+                                                      child: CustomImageView(height: 20, width: 20, imagePath: ImageConstant.chat),
                                                     ),
                                                   ),
                                                 ),
                                               )
                                             : SizedBox(),
                                         Padding(
-                                          padding:
-                                              const EdgeInsets.only(left: 10),
+                                          padding: const EdgeInsets.only(left: 10),
                                           child: GestureDetector(
                                             key: blockKey,
                                             onTap: () {
-                                              showPopupMenuBlock(
-                                                  context,
-                                                  NewProfileData
-                                                      ?.object?.userUid,
-                                                  NewProfileData?.object?.name,
-                                                  blockKey);
+                                              showPopupMenuBlock(context, NewProfileData?.object?.userUid, NewProfileData?.object?.name, blockKey);
                                             },
                                             child: Container(
-                                              /*  */ height: 40,
+                                              /*  */
+                                              height: 40,
                                               width: 40,
                                               decoration: BoxDecoration(
-                                                color:
-                                                    ColorConstant.primary_color,
-                                                borderRadius:
-                                                    BorderRadius.circular(10),
+                                                color: ColorConstant.primary_color,
+                                                borderRadius: BorderRadius.circular(10),
                                               ),
                                               child: Center(
                                                 child: Icon(
@@ -1525,8 +1231,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                         onTap: () {
                                           super.setState(() {
                                             updateType();
-                                            arrNotiyTypeList[1].isSelected =
-                                                true;
+                                            arrNotiyTypeList[1].isSelected = true;
                                           });
                                         },
                                         child: Container(
@@ -1538,34 +1243,19 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                 height: 10,
                                               ),
                                               Text(
-                                                NewProfileData
-                                                            ?.object?.isBlock ==
-                                                        true
-                                                    ? "0"
-                                                    : '${NewProfileData?.object?.postCount}',
-                                                style: TextStyle(
-                                                    fontFamily: "outfit",
-                                                    fontSize: 25,
-                                                    color: Color(0xff000000),
-                                                    fontWeight:
-                                                        FontWeight.bold),
+                                                NewProfileData?.object?.isBlock == true ? "0" : '${NewProfileData?.object?.postCount}',
+                                                style: TextStyle(fontFamily: "outfit", fontSize: 25, color: Color(0xff000000), fontWeight: FontWeight.bold),
                                               ),
                                               Text(
                                                 'Post',
-                                                style: TextStyle(
-                                                    fontFamily: "outfit",
-                                                    fontSize: 16,
-                                                    color: Color(0xff444444),
-                                                    fontWeight:
-                                                        FontWeight.w500),
+                                                style: TextStyle(fontFamily: "outfit", fontSize: 16, color: Color(0xff444444), fontWeight: FontWeight.w500),
                                               )
                                             ],
                                           ),
                                         ),
                                       ),
                                       Padding(
-                                        padding: const EdgeInsets.only(
-                                            top: 20, bottom: 20),
+                                        padding: const EdgeInsets.only(top: 20, bottom: 20),
                                         child: VerticalDivider(
                                           thickness: 1.5,
                                           color: Color(0xffC2C2C2),
@@ -1573,56 +1263,26 @@ class _ProfileScreenState extends State<ProfileScreen>
                                       ),
                                       GestureDetector(
                                         onTap: () {
-                                          if (NewProfileData
-                                                      ?.object?.isFollowing ==
-                                                  'FOLLOWING' ||
-                                              User_ID ==
-                                                  NewProfileData
-                                                      ?.object?.userUid) {
-                                            if (followersClassModel1
-                                                    ?.object?.isNotEmpty ==
-                                                true) {
+                                          if (NewProfileData?.object?.isFollowing == 'FOLLOWING' || User_ID == NewProfileData?.object?.userUid) {
+                                            if (followersClassModel1?.object?.isNotEmpty == true) {
                                               //this is i want this
-                                              Navigator.push(context,
-                                                  MaterialPageRoute(
-                                                      builder: (context) {
+                                              Navigator.push(context, MaterialPageRoute(builder: (context) {
                                                 return MultiBlocProvider(
                                                   providers: [
                                                     BlocProvider<FollowerBlock>(
-                                                      create: (context) =>
-                                                          FollowerBlock(),
+                                                      create: (context) => FollowerBlock(),
                                                     ),
                                                   ],
                                                   child: Followers(
                                                     User_ID: widget.User_ID,
                                                     appBarName: 'Followers',
                                                     userId: widget.User_ID,
-                                                    userCompanyPageUid:
-                                                        userCompanyPageUid,
+                                                    userCompanyPageUid: userCompanyPageUid,
                                                   ),
                                                 );
                                               })).then((value) {
-                                                widget.ProfileNotification ==
-                                                        true
-                                                    ? BlocProvider.of<
-                                                                NewProfileSCubit>(
-                                                            context)
-                                                        .NewProfileSAPI(
-                                                            context,
-                                                            widget.User_ID,
-                                                            true)
-                                                    : BlocProvider.of<
-                                                                NewProfileSCubit>(
-                                                            context)
-                                                        .NewProfileSAPI(
-                                                            context,
-                                                            widget.User_ID,
-                                                            false);
-                                                BlocProvider.of<
-                                                            NewProfileSCubit>(
-                                                        context)
-                                                    .getFollwerApi(context,
-                                                        widget.User_ID);
+                                                widget.ProfileNotification == true ? BlocProvider.of<NewProfileSCubit>(context).NewProfileSAPI(context, widget.User_ID, true) : BlocProvider.of<NewProfileSCubit>(context).NewProfileSAPI(context, widget.User_ID, false);
+                                                BlocProvider.of<NewProfileSCubit>(context).getFollwerApi(context, widget.User_ID);
                                               });
                                               /*    Navigator.push(
                                                 context,
@@ -1641,20 +1301,12 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                         context, widget.User_ID)); */
                                             }
                                           } else {
-                                            if (NewProfileData
-                                                        ?.object?.accountType ==
-                                                    'PUBLIC' &&
-                                                NewProfileData
-                                                        ?.object?.isFollowing ==
-                                                    'FOLLOW') {
-                                              Navigator.push(context,
-                                                  MaterialPageRoute(
-                                                      builder: (context) {
+                                            if (NewProfileData?.object?.accountType == 'PUBLIC' && NewProfileData?.object?.isFollowing == 'FOLLOW') {
+                                              Navigator.push(context, MaterialPageRoute(builder: (context) {
                                                 return MultiBlocProvider(
                                                   providers: [
                                                     BlocProvider<FollowerBlock>(
-                                                      create: (context) =>
-                                                          FollowerBlock(),
+                                                      create: (context) => FollowerBlock(),
                                                     ),
                                                   ],
                                                   child: Followers(
@@ -1664,27 +1316,8 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                   ),
                                                 );
                                               })).then((value) {
-                                                widget.ProfileNotification ==
-                                                        true
-                                                    ? BlocProvider.of<
-                                                                NewProfileSCubit>(
-                                                            context)
-                                                        .NewProfileSAPI(
-                                                            context,
-                                                            widget.User_ID,
-                                                            true)
-                                                    : BlocProvider.of<
-                                                                NewProfileSCubit>(
-                                                            context)
-                                                        .NewProfileSAPI(
-                                                            context,
-                                                            widget.User_ID,
-                                                            false);
-                                                BlocProvider.of<
-                                                            NewProfileSCubit>(
-                                                        context)
-                                                    .getFollwerApi(context,
-                                                        widget.User_ID);
+                                                widget.ProfileNotification == true ? BlocProvider.of<NewProfileSCubit>(context).NewProfileSAPI(context, widget.User_ID, true) : BlocProvider.of<NewProfileSCubit>(context).NewProfileSAPI(context, widget.User_ID, false);
+                                                BlocProvider.of<NewProfileSCubit>(context).getFollwerApi(context, widget.User_ID);
                                               });
                                             }
                                           }
@@ -1698,34 +1331,19 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                 height: 11,
                                               ),
                                               Text(
-                                                NewProfileData
-                                                            ?.object?.isBlock ==
-                                                        true
-                                                    ? "0"
-                                                    : '${NewProfileData?.object?.followersCount}',
-                                                style: TextStyle(
-                                                    fontFamily: "outfit",
-                                                    fontSize: 25,
-                                                    color: Color(0xff000000),
-                                                    fontWeight:
-                                                        FontWeight.bold),
+                                                NewProfileData?.object?.isBlock == true ? "0" : '${NewProfileData?.object?.followersCount}',
+                                                style: TextStyle(fontFamily: "outfit", fontSize: 25, color: Color(0xff000000), fontWeight: FontWeight.bold),
                                               ),
                                               Text(
                                                 'Followers',
-                                                style: TextStyle(
-                                                    fontFamily: "outfit",
-                                                    fontSize: 16,
-                                                    color: Color(0xff444444),
-                                                    fontWeight:
-                                                        FontWeight.w500),
+                                                style: TextStyle(fontFamily: "outfit", fontSize: 16, color: Color(0xff444444), fontWeight: FontWeight.w500),
                                               )
                                             ],
                                           ),
                                         ),
                                       ),
                                       Padding(
-                                        padding: const EdgeInsets.only(
-                                            top: 20, bottom: 20),
+                                        padding: const EdgeInsets.only(top: 20, bottom: 20),
                                         child: VerticalDivider(
                                           thickness: 1.5,
                                           color: Color(0xffC2C2C2),
@@ -1733,23 +1351,13 @@ class _ProfileScreenState extends State<ProfileScreen>
                                       ),
                                       GestureDetector(
                                         onTap: () {
-                                          if (NewProfileData
-                                                      ?.object?.isFollowing ==
-                                                  'FOLLOWING' ||
-                                              User_ID ==
-                                                  NewProfileData
-                                                      ?.object?.userUid) {
-                                            if (followersClassModel2
-                                                    ?.object?.isNotEmpty ==
-                                                true) {
-                                              Navigator.push(context,
-                                                  MaterialPageRoute(
-                                                      builder: (context) {
+                                          if (NewProfileData?.object?.isFollowing == 'FOLLOWING' || User_ID == NewProfileData?.object?.userUid) {
+                                            if (followersClassModel2?.object?.isNotEmpty == true) {
+                                              Navigator.push(context, MaterialPageRoute(builder: (context) {
                                                 return MultiBlocProvider(
                                                   providers: [
                                                     BlocProvider<FollowerBlock>(
-                                                      create: (context) =>
-                                                          FollowerBlock(),
+                                                      create: (context) => FollowerBlock(),
                                                     ),
                                                   ],
                                                   child: Followers(
@@ -1758,33 +1366,15 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                     userId: widget.User_ID,
                                                   ),
                                                 );
-                                              })).then((value) => widget
-                                                          .ProfileNotification ==
-                                                      true
-                                                  ? BlocProvider.of<NewProfileSCubit>(context)
-                                                      .NewProfileSAPI(context,
-                                                          widget.User_ID, true)
-                                                  : BlocProvider.of<NewProfileSCubit>(context)
-                                                      .NewProfileSAPI(
-                                                          context,
-                                                          widget.User_ID,
-                                                          false));
+                                              })).then((value) => widget.ProfileNotification == true ? BlocProvider.of<NewProfileSCubit>(context).NewProfileSAPI(context, widget.User_ID, true) : BlocProvider.of<NewProfileSCubit>(context).NewProfileSAPI(context, widget.User_ID, false));
                                             }
                                           } else {
-                                            if (NewProfileData
-                                                        ?.object?.accountType ==
-                                                    'PUBLIC' &&
-                                                NewProfileData
-                                                        ?.object?.isFollowing ==
-                                                    'FOLLOW') {
-                                              Navigator.push(context,
-                                                  MaterialPageRoute(
-                                                      builder: (context) {
+                                            if (NewProfileData?.object?.accountType == 'PUBLIC' && NewProfileData?.object?.isFollowing == 'FOLLOW') {
+                                              Navigator.push(context, MaterialPageRoute(builder: (context) {
                                                 return MultiBlocProvider(
                                                   providers: [
                                                     BlocProvider<FollowerBlock>(
-                                                      create: (context) =>
-                                                          FollowerBlock(),
+                                                      create: (context) => FollowerBlock(),
                                                     ),
                                                   ],
                                                   child: Followers(
@@ -1793,17 +1383,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                     userId: widget.User_ID,
                                                   ),
                                                 );
-                                              })).then((value) => widget
-                                                          .ProfileNotification ==
-                                                      true
-                                                  ? BlocProvider.of<NewProfileSCubit>(context)
-                                                      .NewProfileSAPI(context,
-                                                          widget.User_ID, true)
-                                                  : BlocProvider.of<NewProfileSCubit>(context)
-                                                      .NewProfileSAPI(
-                                                          context,
-                                                          widget.User_ID,
-                                                          false));
+                                              })).then((value) => widget.ProfileNotification == true ? BlocProvider.of<NewProfileSCubit>(context).NewProfileSAPI(context, widget.User_ID, true) : BlocProvider.of<NewProfileSCubit>(context).NewProfileSAPI(context, widget.User_ID, false));
                                             }
                                           }
                                         },
@@ -1816,26 +1396,12 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                 height: 11,
                                               ),
                                               Text(
-                                                NewProfileData
-                                                            ?.object?.isBlock ==
-                                                        true
-                                                    ? "0"
-                                                    : '${NewProfileData?.object?.followingCount}',
-                                                style: TextStyle(
-                                                    fontFamily: "outfit",
-                                                    fontSize: 25,
-                                                    color: Color(0xff000000),
-                                                    fontWeight:
-                                                        FontWeight.bold),
+                                                NewProfileData?.object?.isBlock == true ? "0" : '${NewProfileData?.object?.followingCount}',
+                                                style: TextStyle(fontFamily: "outfit", fontSize: 25, color: Color(0xff000000), fontWeight: FontWeight.bold),
                                               ),
                                               Text(
                                                 'Following',
-                                                style: TextStyle(
-                                                    fontFamily: "outfit",
-                                                    fontSize: 16,
-                                                    color: Color(0xff444444),
-                                                    fontWeight:
-                                                        FontWeight.w500),
+                                                style: TextStyle(fontFamily: "outfit", fontSize: 16, color: Color(0xff444444), fontWeight: FontWeight.w500),
                                               )
                                             ],
                                           ),
@@ -1888,8 +1454,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                   ? SizedBox()
                                   : Container(
                                       child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceEvenly,
+                                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                         children: [
                                           Expanded(
                                             child: GestureDetector(
@@ -1909,8 +1474,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                             children: [
                                                               const Spacer(),
                                                               Text("Details",
-                                                                  textScaleFactor:
-                                                                      1.0,
+                                                                  textScaleFactor: 1.0,
                                                                   style: TextStyle(
                                                                       // color: arrNotiyTypeList[3].isSelected
                                                                       //     ? Colors.white
@@ -1921,13 +1485,11 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                               Spacer(),
                                                             ],
                                                           ),
-                                                          arrNotiyTypeList[0]
-                                                                  .isSelected
+                                                          arrNotiyTypeList[0].isSelected
                                                               ? Divider(
                                                                   endIndent: 20,
                                                                   indent: 20,
-                                                                  color: Colors
-                                                                      .black,
+                                                                  color: Colors.black,
                                                                 )
                                                               : SizedBox(),
                                                         ],
@@ -1939,8 +1501,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                               onTap: () {
                                                 super.setState(() {
                                                   updateType();
-                                                  arrNotiyTypeList[0]
-                                                      .isSelected = true;
+                                                  arrNotiyTypeList[0].isSelected = true;
                                                   selectedIndex = 0;
                                                   print("abcd");
                                                 });
@@ -1964,8 +1525,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                           children: [
                                                             const Spacer(),
                                                             Text("Post",
-                                                                textScaleFactor:
-                                                                    1.0,
+                                                                textScaleFactor: 1.0,
                                                                 style: TextStyle(
                                                                     // color: arrNotiyTypeList[3].isSelected
                                                                     //     ? Colors.white
@@ -1976,13 +1536,11 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                             Spacer(),
                                                           ],
                                                         ),
-                                                        arrNotiyTypeList[1]
-                                                                .isSelected
+                                                        arrNotiyTypeList[1].isSelected
                                                             ? Divider(
                                                                 endIndent: 30,
                                                                 indent: 30,
-                                                                color: Colors
-                                                                    .black,
+                                                                color: Colors.black,
                                                               )
                                                             : SizedBox(),
                                                       ],
@@ -1993,8 +1551,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                               onTap: () {
                                                 super.setState(() {
                                                   updateType();
-                                                  arrNotiyTypeList[1]
-                                                      .isSelected = true;
+                                                  arrNotiyTypeList[1].isSelected = true;
                                                   selectedIndex = 1;
                                                   print("abcd");
                                                 });
@@ -2011,8 +1568,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                 children: [
                                                   Container(
                                                       height: 40,
-                                                      alignment:
-                                                          Alignment.center,
+                                                      alignment: Alignment.center,
                                                       // color: arrNotiyTypeList[2].isSelected
                                                       //     ? ColorConstant.primary_color
                                                       //     : Theme.of(context).brightness == Brightness.light
@@ -2025,8 +1581,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                               children: [
                                                                 const Spacer(),
                                                                 Text("Comments",
-                                                                    textScaleFactor:
-                                                                        1.0,
+                                                                    textScaleFactor: 1.0,
                                                                     style: TextStyle(
                                                                         // color: arrNotiyTypeList[3].isSelected
                                                                         //     ? Colors.white
@@ -2037,14 +1592,11 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                 Spacer(),
                                                               ],
                                                             ),
-                                                            arrNotiyTypeList[2]
-                                                                    .isSelected
+                                                            arrNotiyTypeList[2].isSelected
                                                                 ? Divider(
-                                                                    endIndent:
-                                                                        5,
+                                                                    endIndent: 5,
                                                                     indent: 5,
-                                                                    color: Colors
-                                                                        .black,
+                                                                    color: Colors.black,
                                                                   )
                                                                 : SizedBox(),
                                                           ],
@@ -2055,23 +1607,19 @@ class _ProfileScreenState extends State<ProfileScreen>
                                               onTap: () {
                                                 super.setState(() {
                                                   updateType();
-                                                  arrNotiyTypeList[2]
-                                                      .isSelected = true;
+                                                  arrNotiyTypeList[2].isSelected = true;
                                                   selectedIndex = 2;
                                                 });
                                                 print("abcd");
                                               },
                                             ),
                                           ),
-                                          User_ID ==
-                                                  NewProfileData
-                                                      ?.object?.userUid
+                                          User_ID == NewProfileData?.object?.userUid
                                               ? Expanded(
                                                   child: GestureDetector(
                                                     child: Container(
                                                         height: 40,
-                                                        alignment:
-                                                            Alignment.center,
+                                                        alignment: Alignment.center,
                                                         // color: arrNotiyTypeList[3].isSelected
                                                         //     ? ColorConstant.primary_color
                                                         //     : Theme.of(context).brightness == Brightness.light
@@ -2084,8 +1632,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                 children: [
                                                                   const Spacer(),
                                                                   Text("Saved",
-                                                                      textScaleFactor:
-                                                                          1.0,
+                                                                      textScaleFactor: 1.0,
                                                                       style: TextStyle(
                                                                           // color: arrNotiyTypeList[3].isSelected
                                                                           //     ? Colors.white
@@ -2096,16 +1643,11 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                   Spacer(),
                                                                 ],
                                                               ),
-                                                              arrNotiyTypeList[
-                                                                          3]
-                                                                      .isSelected
+                                                              arrNotiyTypeList[3].isSelected
                                                                   ? Divider(
-                                                                      endIndent:
-                                                                          25,
-                                                                      indent:
-                                                                          25,
-                                                                      color: Colors
-                                                                          .black,
+                                                                      endIndent: 25,
+                                                                      indent: 25,
+                                                                      color: Colors.black,
                                                                     )
                                                                   : SizedBox(),
                                                             ],
@@ -2114,8 +1656,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                     onTap: () {
                                                       super.setState(() {
                                                         updateType();
-                                                        arrNotiyTypeList[3]
-                                                            .isSelected = true;
+                                                        arrNotiyTypeList[3].isSelected = true;
                                                         selectedIndex = 3;
                                                       });
                                                       print("abcd");
@@ -2178,76 +1719,60 @@ class _ProfileScreenState extends State<ProfileScreen>
                                     }
                                   },
                                   onHorizontalDragEnd: (details) {
-                                    Scrollable.ensureVisible(
-                                        key.currentContext!,
-                                        duration: Duration(microseconds: 400));
+                                    Scrollable.ensureVisible(key.currentContext!, duration: Duration(microseconds: 400));
 
-                                    if (User_ID !=
-                                        NewProfileData?.object?.userUid) {
-                                      if (swipLeft == false &&
-                                          swipeRigth == true) {
+                                    if (User_ID != NewProfileData?.object?.userUid) {
+                                      if (swipLeft == false && swipeRigth == true) {
                                         if (selectedIndex != 0) {
                                           selectedIndex--;
                                           super.setState(() {
                                             updateType();
-                                            arrNotiyTypeList[selectedIndex]
-                                                .isSelected = true;
+                                            arrNotiyTypeList[selectedIndex].isSelected = true;
                                           });
                                         }
                                         print("Swiped right");
-                                      } else if (swipLeft == true &&
-                                          swipeRigth == false) {
+                                      } else if (swipLeft == true && swipeRigth == false) {
                                         if (selectedIndex != 2) {
                                           selectedIndex++;
                                           super.setState(() {
                                             updateType();
-                                            arrNotiyTypeList[selectedIndex]
-                                                .isSelected = true;
+                                            arrNotiyTypeList[selectedIndex].isSelected = true;
                                           });
                                         }
                                         print("Swiped left");
                                       }
                                     } else {
-                                      if (swipLeft == false &&
-                                          swipeRigth == true) {
+                                      if (swipLeft == false && swipeRigth == true) {
                                         if (selectedIndex != 0) {
                                           selectedIndex--;
                                           super.setState(() {
                                             updateType();
-                                            arrNotiyTypeList[selectedIndex]
-                                                .isSelected = true;
+                                            arrNotiyTypeList[selectedIndex].isSelected = true;
                                           });
                                         }
                                         print("Swiped right");
-                                      } else if (swipLeft == true &&
-                                          swipeRigth == false) {
+                                      } else if (swipLeft == true && swipeRigth == false) {
                                         if (selectedIndex != 3) {
                                           selectedIndex++;
                                           super.setState(() {
                                             updateType();
-                                            arrNotiyTypeList[selectedIndex]
-                                                .isSelected = true;
+                                            arrNotiyTypeList[selectedIndex].isSelected = true;
                                           });
                                         }
                                         print("Swiped left");
                                       }
                                     }
 
-                                    scrollController.animateTo(0.0,
-                                        duration: Duration(milliseconds: 300),
-                                        curve: Curves.easeOut);
+                                    scrollController.animateTo(0.0, duration: Duration(milliseconds: 300), curve: Curves.easeOut);
                                   },
                                   child: Container(
                                     child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      mainAxisAlignment: MainAxisAlignment.start,
                                       children: <Widget>[
                                         /// Content of Tab 1
                                         arrNotiyTypeList[0].isSelected
-                                            ? NewProfileData?.object?.isBlock ==
-                                                    true
+                                            ? NewProfileData?.object?.isBlock == true
                                                 ? Column(
                                                     children: [
                                                       SizedBox(
@@ -2255,66 +1780,43 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                       ),
                                                       Center(
                                                         child: Image.asset(
-                                                          ImageConstant
-                                                              .nopostimage,
+                                                          ImageConstant.nopostimage,
                                                           height: _height / 5,
                                                         ),
                                                       ),
                                                     ],
                                                   )
                                                 : Padding(
-                                                    padding:
-                                                        const EdgeInsets.only(
-                                                            left: 16,
-                                                            right: 16,
-                                                            top: 14),
+                                                    padding: const EdgeInsets.only(left: 16, right: 16, top: 14),
                                                     child: Column(
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
+                                                      crossAxisAlignment: CrossAxisAlignment.start,
                                                       children: [
                                                         /* if (User_ID ==
                                                         NewProfileData
                                                             ?.object?.userUid) */
                                                         Card(
                                                             color: Colors.white,
-                                                            borderOnForeground:
-                                                                true,
+                                                            borderOnForeground: true,
                                                             elevation: 10,
-                                                            shape:
-                                                                RoundedRectangleBorder(
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          15.0),
+                                                            shape: RoundedRectangleBorder(
+                                                              borderRadius: BorderRadius.circular(15.0),
                                                             ),
                                                             child: Column(
                                                               children: [
                                                                 Padding(
-                                                                  padding: const EdgeInsets
-                                                                          .only(
-                                                                      top: 10,
-                                                                      right: 20,
-                                                                      left: 20),
+                                                                  padding: const EdgeInsets.only(top: 10, right: 20, left: 20),
                                                                   child: Row(
-                                                                    mainAxisAlignment:
-                                                                        MainAxisAlignment
-                                                                            .spaceBetween,
+                                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                                     children: [
                                                                       Text(
                                                                         'About Me',
-                                                                        style:
-                                                                            TextStyle(
-                                                                          color:
-                                                                              Colors.black,
-                                                                          fontSize:
-                                                                              18,
-                                                                          fontWeight:
-                                                                              FontWeight.w600,
+                                                                        style: TextStyle(
+                                                                          color: Colors.black,
+                                                                          fontSize: 18,
+                                                                          fontWeight: FontWeight.w600,
                                                                         ),
                                                                       ),
-                                                                      User_ID !=
-                                                                              NewProfileData?.object?.userUid
+                                                                      User_ID != NewProfileData?.object?.userUid
                                                                           ? SizedBox.shrink()
                                                                           : GestureDetector(
                                                                               onTap: () {
@@ -2359,34 +1861,19 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                     ],
                                                                   ),
                                                                 ),
-                                                                isUpDate ==
-                                                                        false
+                                                                isUpDate == false
                                                                     ? Padding(
-                                                                        padding: const EdgeInsets.only(
-                                                                            top:
-                                                                                12,
-                                                                            left:
-                                                                                10,
-                                                                            right:
-                                                                                10,
-                                                                            bottom:
-                                                                                15),
-                                                                        child:
-                                                                            Container(
-                                                                          margin:
-                                                                              EdgeInsets.only(left: 10),
-                                                                          alignment:
-                                                                              Alignment.topLeft,
-                                                                          child:
-                                                                              LinkifyText(
+                                                                        padding: const EdgeInsets.only(top: 12, left: 10, right: 10, bottom: 15),
+                                                                        child: Container(
+                                                                          margin: EdgeInsets.only(left: 10),
+                                                                          alignment: Alignment.topLeft,
+                                                                          child: LinkifyText(
                                                                             "${aboutMe.text}",
-                                                                            linkStyle:
-                                                                                TextStyle(
+                                                                            linkStyle: TextStyle(
                                                                               color: Colors.blue,
                                                                               fontFamily: 'outfit',
                                                                             ),
-                                                                            textStyle:
-                                                                                TextStyle(
+                                                                            textStyle: TextStyle(
                                                                               color: Colors.black,
                                                                               fontFamily: 'outfit',
                                                                             ),
@@ -2397,8 +1884,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                               // LinkType
                                                                               //     .email
                                                                             ],
-                                                                            onTap:
-                                                                                (link) async {
+                                                                            onTap: (link) async {
                                                                               /// do stuff with `link` like
                                                                               /// if(link.type == Link.url) launchUrl(link.value);
 
@@ -2457,12 +1943,9 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                         ),
                                                                       )
                                                                     : Padding(
-                                                                        padding:
-                                                                            const EdgeInsets.only(left: 0),
-                                                                        child:
-                                                                            Column(
-                                                                          crossAxisAlignment:
-                                                                              CrossAxisAlignment.start,
+                                                                        padding: const EdgeInsets.only(left: 0),
+                                                                        child: Column(
+                                                                          crossAxisAlignment: CrossAxisAlignment.start,
                                                                           children: [
                                                                             SizedBox(
                                                                               height: 15,
@@ -2703,7 +2186,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                             fontFamily:
                                                                                 "outfit"),
                                                                       ), */
-      
+
                                                                       LinkifyText(
                                                                     "${NewProfileData?.object?.aboutMe}",
                                                                     linkStyle:
@@ -2733,7 +2216,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                         (link) async {
                                                                       /// do stuff with `link` like
                                                                       /// if(link.type == Link.url) launchUrl(link.value);
-      
+
                                                                       var SelectedTest =
                                                                           link.value
                                                                               .toString();
@@ -2760,7 +2243,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                               'https://pdslink.page.link/');
                                                                       print(SelectedTest
                                                                           .toString());
-      
+
                                                                       if (User_ID ==
                                                                           null) {
                                                                         Navigator.of(
@@ -2896,7 +2379,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                           fontFamily:
                                                                               "outfit"),
                                                                     ), */
-      
+
                                                                       LinkifyText(
                                                                     "${NewProfileData?.object?.aboutMe}",
                                                                     linkStyle:
@@ -2926,7 +2409,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                         (link) async {
                                                                       /// do stuff with `link` like
                                                                       /// if(link.type == Link.url) launchUrl(link.value);
-      
+
                                                                       var SelectedTest =
                                                                           link.value
                                                                               .toString();
@@ -2953,7 +2436,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                               'https://pdslink.page.link/');
                                                                       print(SelectedTest
                                                                           .toString());
-      
+
                                                                       if (User_ID ==
                                                                           null) {
                                                                         Navigator.of(
@@ -3097,7 +2580,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                           fontFamily:
                                                                               "outfit"),
                                                                     ), */
-      
+
                                                                             LinkifyText(
                                                                           "${NewProfileData?.object?.aboutMe}",
                                                                           linkStyle:
@@ -3128,7 +2611,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                               (link) async {
                                                                             /// do stuff with `link` like
                                                                             /// if(link.type == Link.url) launchUrl(link.value);
-      
+
                                                                             var SelectedTest = link
                                                                                 .value
                                                                                 .toString();
@@ -3148,7 +2631,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                                 SelectedTest.startsWith('https://pdslink.page.link/');
                                                                             print(SelectedTest
                                                                                 .toString());
-      
+
                                                                             if (User_ID ==
                                                                                 null) {
                                                                               Navigator.of(context)
@@ -3335,7 +2818,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                                 (link) async {
                                                                               /// do stuff with `link` like
                                                                               /// if(link.type == Link.url) launchUrl(link.value);
-      
+
                                                                               var SelectedTest = link
                                                                                   .value
                                                                                   .toString();
@@ -3355,7 +2838,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                                   SelectedTest.startsWith('https://pdslink.page.link/');
                                                                               print(
                                                                                   SelectedTest.toString());
-      
+
                                                                               if (User_ID ==
                                                                                   null) {
                                                                                 Navigator.of(context).push(MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
@@ -3422,7 +2905,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                               height:
                                                                                   15,
                                                                             ),
-      
+
                                                                             SizedBox(
                                                                               height:
                                                                                   5,
@@ -3505,7 +2988,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                                                             ),
                                                                                                           );
                                                                                                         }
-      
+
                                                                                                         return Container(
                                                                                                           color: Colors.amber,
                                                                                                         );
@@ -3537,7 +3020,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                                                                                   ), */
                                                                                                               );
                                                                                                         }
-      
+
                                                                                                         return Container(
                                                                                                           color: Colors.amber,
                                                                                                         );
@@ -3550,7 +3033,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                                       ],
                                                                                     ),
                                                                                   ),
-      
+
                                                                             // Padding(
                                                                             //         padding: const EdgeInsets
                                                                             //                 .only(
@@ -3588,77 +3071,40 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                       ),
                                                               ],
                                                             )), */
-                                                        NewProfileData?.object
-                                                                    ?.module ==
-                                                                "EXPERT"
+                                                        NewProfileData?.object?.module == "EXPERT"
                                                             ? Card(
-                                                                color: Colors
-                                                                    .white,
-                                                                borderOnForeground:
-                                                                    true,
+                                                                color: Colors.white,
+                                                                borderOnForeground: true,
                                                                 elevation: 10,
-                                                                shape:
-                                                                    RoundedRectangleBorder(
-                                                                  borderRadius:
-                                                                      BorderRadius
-                                                                          .circular(
-                                                                              15.0),
+                                                                shape: RoundedRectangleBorder(
+                                                                  borderRadius: BorderRadius.circular(15.0),
                                                                 ),
                                                                 /*  child: expertUser(_height, _width) */
-                                                                child:
-                                                                    expertUser(
-                                                                        _height,
-                                                                        _width),
+                                                                child: expertUser(_height, _width),
                                                               )
                                                             : SizedBox(),
-                                                        NewProfileData?.object
-                                                                    ?.module ==
-                                                                "COMPANY"
+                                                        NewProfileData?.object?.module == "COMPANY"
                                                             ? Card(
-                                                                color: Colors
-                                                                    .white,
-                                                                borderOnForeground:
-                                                                    true,
+                                                                color: Colors.white,
+                                                                borderOnForeground: true,
                                                                 elevation: 10,
-                                                                shape:
-                                                                    RoundedRectangleBorder(
-                                                                  borderRadius:
-                                                                      BorderRadius
-                                                                          .circular(
-                                                                              15.0),
+                                                                shape: RoundedRectangleBorder(
+                                                                  borderRadius: BorderRadius.circular(15.0),
                                                                 ),
                                                                 /*  child: expertUser(_height, _width) */
-                                                                child:
-                                                                    compnayUser(
-                                                                        _height,
-                                                                        _width),
+                                                                child: compnayUser(_height, _width),
                                                               )
                                                             : SizedBox(),
-                                                        NewProfileData?.object
-                                                                        ?.module ==
-                                                                    "COMPANY" &&
-                                                                NewProfileData
-                                                                        ?.object
-                                                                        ?.approvalStatus !=
-                                                                    'PENDING'
+                                                        NewProfileData?.object?.module == "COMPANY" && NewProfileData?.object?.approvalStatus != 'PENDING'
                                                             ? Card(
-                                                                color: Colors
-                                                                    .white,
-                                                                borderOnForeground:
-                                                                    true,
+                                                                color: Colors.white,
+                                                                borderOnForeground: true,
                                                                 elevation: 10,
-                                                                shape:
-                                                                    RoundedRectangleBorder(
-                                                                  borderRadius:
-                                                                      BorderRadius
-                                                                          .circular(
-                                                                              15.0),
+                                                                shape: RoundedRectangleBorder(
+                                                                  borderRadius: BorderRadius.circular(15.0),
                                                                 ),
                                                                 /*  child: expertUser(_height, _width) */
-                                                                child:
-                                                                    experience(
-                                                                        _height,
-                                                                        _width),
+                                                                child: experience(_height, _width),
                                                               ) /*  Padding(
                                                           padding:
                                                               const EdgeInsets.only(
@@ -3680,31 +3126,16 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                           ),
                                                         ) */
                                                             : SizedBox(),
-                                                        NewProfileData?.object
-                                                                        ?.module ==
-                                                                    "EXPERT" &&
-                                                                NewProfileData
-                                                                        ?.object
-                                                                        ?.approvalStatus !=
-                                                                    'PENDING'
+                                                        NewProfileData?.object?.module == "EXPERT" && NewProfileData?.object?.approvalStatus != 'PENDING'
                                                             ? Card(
-                                                                color: Colors
-                                                                    .white,
-                                                                borderOnForeground:
-                                                                    true,
+                                                                color: Colors.white,
+                                                                borderOnForeground: true,
                                                                 elevation: 10,
-                                                                shape:
-                                                                    RoundedRectangleBorder(
-                                                                  borderRadius:
-                                                                      BorderRadius
-                                                                          .circular(
-                                                                              15.0),
+                                                                shape: RoundedRectangleBorder(
+                                                                  borderRadius: BorderRadius.circular(15.0),
                                                                 ),
                                                                 /*  child: expertUser(_height, _width) */
-                                                                child:
-                                                                    experience(
-                                                                        _height,
-                                                                        _width),
+                                                                child: experience(_height, _width),
                                                               )
                                                             : SizedBox()
                                                       ],
@@ -3714,8 +3145,7 @@ class _ProfileScreenState extends State<ProfileScreen>
 
                                         /// Content of Tab 2
                                         arrNotiyTypeList[1].isSelected
-                                            ? creratePostUser(
-                                                GetAllPostData, _width, _height)
+                                            ? creratePostUser(GetAllPostData, _width, _height)
                                             /* Container(
                                               height: FinalPostCount * 185,
                                               // color: Colors.yellow,
@@ -3750,7 +3180,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                             // OpenSaveImagepostModel
                                                             print(
                                                                 "Open SavePost Click in one post");
-      
+
                                                             Navigator.push(
                                                               context,
                                                               MaterialPageRoute(
@@ -3765,9 +3195,9 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                           },
                                                           //Ankur will code
                                                           child:
-      
+
                                                               ///   TEST IMAGE
-      
+
                                                               GetAllPostData
                                                                           ?.object?[
                                                                               index]
@@ -3831,7 +3261,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                               decoration: BoxDecoration(
                                                                                   borderRadius: BorderRadius.circular(
                                                                                       20)), // Remove margin
-                                
+
                                                                               child:
                                                                                   DocumentViewScreen1(
                                                                                 path: GetAllPostData
@@ -3900,28 +3330,10 @@ class _ProfileScreenState extends State<ProfileScreen>
 
                                         /// Content of Tab 3
                                         arrNotiyTypeList[2].isSelected
-                                            ? User_ID ==
-                                                        NewProfileData
-                                                            ?.object?.userUid ||
-                                                    (NewProfileData?.object
-                                                            ?.accountType ==
-                                                        'PUBLIC') ||
-                                                    (NewProfileData?.object
-                                                                ?.isFollowing ==
-                                                            'FOLLOWING' &&
-                                                        NewProfileData?.object
-                                                                ?.accountType ==
-                                                            'PRIVATE')
-                                                ? GetUserPostCommetData?.object
-                                                            ?.isNotEmpty ??
-                                                        true
+                                            ? User_ID == NewProfileData?.object?.userUid || (NewProfileData?.object?.accountType == 'PUBLIC') || (NewProfileData?.object?.isFollowing == 'FOLLOWING' && NewProfileData?.object?.accountType == 'PRIVATE')
+                                                ? GetUserPostCommetData?.object?.isNotEmpty ?? true
                                                     ? Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                    .only(
-                                                                left: 16,
-                                                                right: 16,
-                                                                top: 0),
+                                                        padding: const EdgeInsets.only(left: 16, right: 16, top: 0),
                                                         child: Column(
                                                           children: [
                                                             Row(
@@ -3929,42 +3341,23 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                 Container(
                                                                   width: 150,
                                                                   height: 25,
-                                                                  decoration:
-                                                                      ShapeDecoration(
-                                                                    color: Color(
-                                                                        0xFFFBD8D9),
-                                                                    shape:
-                                                                        RoundedRectangleBorder(
-                                                                      borderRadius:
-                                                                          BorderRadius.circular(
-                                                                              100),
+                                                                  decoration: ShapeDecoration(
+                                                                    color: Color(0xFFFBD8D9),
+                                                                    shape: RoundedRectangleBorder(
+                                                                      borderRadius: BorderRadius.circular(100),
                                                                     ),
                                                                   ),
-                                                                  child:
-                                                                      DropdownButtonHideUnderline(
-                                                                    child: DropdownButton<
-                                                                        String>(
+                                                                  child: DropdownButtonHideUnderline(
+                                                                    child: DropdownButton<String>(
                                                                       // Step 3.
-                                                                      value:
-                                                                          selctedValue,
+                                                                      value: selctedValue,
                                                                       // Step 4.
-                                                                      items: <String>[
-                                                                        'Newest to oldest',
-                                                                        'oldest to Newest'
-                                                                      ].map<
-                                                                          DropdownMenuItem<
-                                                                              String>>((String
-                                                                          value) {
-                                                                        return DropdownMenuItem<
-                                                                            String>(
-                                                                          value:
-                                                                              value,
-                                                                          child:
-                                                                              Padding(
-                                                                            padding:
-                                                                                EdgeInsets.only(left: 10),
-                                                                            child:
-                                                                                Text(
+                                                                      items: <String>['Newest to oldest', 'oldest to Newest'].map<DropdownMenuItem<String>>((String value) {
+                                                                        return DropdownMenuItem<String>(
+                                                                          value: value,
+                                                                          child: Padding(
+                                                                            padding: EdgeInsets.only(left: 10),
+                                                                            child: Text(
                                                                               value,
                                                                               style: TextStyle(
                                                                                 color: Color(0xFFF58E92),
@@ -3978,26 +3371,14 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                         );
                                                                       }).toList(),
                                                                       // Step 5.
-                                                                      onChanged:
-                                                                          (String?
-                                                                              newValue) {
-                                                                        super.setState(
-                                                                            () {
-                                                                          if (newValue ==
-                                                                              "Newest to oldest") {
-                                                                            BlocProvider.of<NewProfileSCubit>(context).GetPostCommetAPI(
-                                                                                context,
-                                                                                "${NewProfileData?.object?.userUid}",
-                                                                                "asc"); //asc
-                                                                          } else if (newValue ==
-                                                                              "oldest to Newest") {
-                                                                            BlocProvider.of<NewProfileSCubit>(context).GetPostCommetAPI(
-                                                                                context,
-                                                                                "${NewProfileData?.object?.userUid}",
-                                                                                "desc");
+                                                                      onChanged: (String? newValue) {
+                                                                        super.setState(() {
+                                                                          if (newValue == "Newest to oldest") {
+                                                                            BlocProvider.of<NewProfileSCubit>(context).GetPostCommetAPI(context, "${NewProfileData?.object?.userUid}", "asc"); //asc
+                                                                          } else if (newValue == "oldest to Newest") {
+                                                                            BlocProvider.of<NewProfileSCubit>(context).GetPostCommetAPI(context, "${NewProfileData?.object?.userUid}", "desc");
                                                                           }
-                                                                          selctedValue =
-                                                                              newValue!;
+                                                                          selctedValue = newValue!;
                                                                         });
                                                                       },
                                                                     ),
@@ -4005,28 +3386,16 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                 ),
                                                               ],
                                                             ),
-                                                            isDataGetValue ==
-                                                                    false
+                                                            isDataGetValue == false
                                                                 ? SizedBox()
-                                                                : ListView
-                                                                    .builder(
-                                                                    shrinkWrap:
-                                                                        true,
-                                                                    physics:
-                                                                        NeverScrollableScrollPhysics(),
-                                                                    itemCount: GetUserPostCommetData
-                                                                        ?.object
-                                                                        ?.length,
-                                                                    itemBuilder:
-                                                                        (context,
-                                                                            index) {
-                                                                      DateTime
-                                                                          parsedDateTime =
-                                                                          DateTime.parse(
-                                                                              '${GetUserPostCommetData?.object?[index].createdAt ?? ""}');
+                                                                : ListView.builder(
+                                                                    shrinkWrap: true,
+                                                                    physics: NeverScrollableScrollPhysics(),
+                                                                    itemCount: GetUserPostCommetData?.object?.length,
+                                                                    itemBuilder: (context, index) {
+                                                                      DateTime parsedDateTime = DateTime.parse('${GetUserPostCommetData?.object?[index].createdAt ?? ""}');
                                                                       return Padding(
-                                                                        padding:
-                                                                            const EdgeInsets.only(bottom: 10),
+                                                                        padding: const EdgeInsets.only(bottom: 10),
                                                                         child: GestureDetector(
                                                                             onTap: () {
                                                                               Navigator.push(
@@ -4205,27 +3574,16 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                     : Center(
                                                         child: Text(
                                                         "No Comments available",
-                                                        style: TextStyle(
-                                                            color: Colors.black,
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                            fontFamily:
-                                                                'outfit',
-                                                            fontSize: 20),
+                                                        style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontFamily: 'outfit', fontSize: 20),
                                                       ))
                                                 : Column(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .center,
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .center,
+                                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                                    mainAxisAlignment: MainAxisAlignment.center,
                                                     children: [
                                                       SizedBox(height: 50),
                                                       Center(
                                                           child: Image.asset(
-                                                        ImageConstant
-                                                            .nopostimage,
+                                                        ImageConstant.nopostimage,
                                                         height: 150,
                                                       )),
                                                       SizedBox(height: 50),
@@ -4244,79 +3602,52 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                 //     : SaveBlogCount * 155 + 100,
                                                 // color: Colors.green,
                                                 child: Padding(
-                                                  padding:
-                                                      EdgeInsets.only(top: 0),
+                                                  padding: EdgeInsets.only(top: 0),
                                                   child: Column(
                                                     children: [
                                                       Row(
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .center,
-                                                          crossAxisAlignment:
-                                                              CrossAxisAlignment
-                                                                  .center,
+                                                          mainAxisAlignment: MainAxisAlignment.center,
+                                                          crossAxisAlignment: CrossAxisAlignment.center,
                                                           children: List.generate(
                                                               SaveList.length,
                                                               (index) => GestureDetector(
                                                                   onTap: () {
-                                                                    dataSetup =
-                                                                        null;
-                                                                    value1 =
-                                                                        index;
+                                                                    dataSetup = null;
+                                                                    value1 = index;
 
-                                                                    SharedPreferencesFunction(
-                                                                        value1 ??
-                                                                            0);
-                                                                    super.setState(
-                                                                        () {});
+                                                                    SharedPreferencesFunction(value1 ?? 0);
+                                                                    super.setState(() {});
                                                                   },
                                                                   child: Container(
-                                                                    alignment:
-                                                                        Alignment
-                                                                            .center,
-                                                                    margin: EdgeInsets
-                                                                        .only(
-                                                                            left:
-                                                                                15),
+                                                                    alignment: Alignment.center,
+                                                                    margin: EdgeInsets.only(left: 15),
                                                                     width: 100,
                                                                     height: 25,
-                                                                    decoration:
-                                                                        ShapeDecoration(
-                                                                      color: value1 ==
-                                                                              index
-                                                                          ? ColorConstant
-                                                                              .primary_color
+                                                                    decoration: ShapeDecoration(
+                                                                      color: value1 == index
+                                                                          ? ColorConstant.primary_color
                                                                           : dataSetup == index
                                                                               ? ColorConstant.primary_color
                                                                               : Color(0xFFFBD8D9),
-                                                                      shape:
-                                                                          RoundedRectangleBorder(
-                                                                        borderRadius:
-                                                                            BorderRadius.circular(100),
+                                                                      shape: RoundedRectangleBorder(
+                                                                        borderRadius: BorderRadius.circular(100),
                                                                       ),
                                                                     ),
                                                                     child: Text(
-                                                                      SaveList[
-                                                                          index],
-                                                                      style:
-                                                                          TextStyle(
-                                                                        color: value1 ==
-                                                                                index
+                                                                      SaveList[index],
+                                                                      style: TextStyle(
+                                                                        color: value1 == index
                                                                             ? Colors.white
                                                                             : dataSetup == index
                                                                                 ? Colors.white
                                                                                 : Color(0xFFF58E92),
-                                                                        fontSize:
-                                                                            14,
-                                                                        fontFamily:
-                                                                            "outfit",
-                                                                        fontWeight:
-                                                                            FontWeight.w400,
+                                                                        fontSize: 14,
+                                                                        fontFamily: "outfit",
+                                                                        fontWeight: FontWeight.w400,
                                                                       ),
                                                                     ),
                                                                   )))),
-                                                      NavagtionPassing(
-                                                          _width, _height)
+                                                      NavagtionPassing(_width, _height)
                                                     ],
                                                   ),
                                                 ),
@@ -4353,8 +3684,7 @@ class _ProfileScreenState extends State<ProfileScreen>
   }
 
   bool _isLink(String input) {
-    RegExp linkRegex = RegExp(
-        r'^https?:\/\/(?:www\.)?[a-zA-Z0-9-]+(?:\.[a-zA-Z]+)+(?:[^\s]*)$');
+    RegExp linkRegex = RegExp(r'^https?:\/\/(?:www\.)?[a-zA-Z0-9-]+(?:\.[a-zA-Z]+)+(?:[^\s]*)$');
     return linkRegex.hasMatch(input);
   }
 
@@ -4369,8 +3699,7 @@ class _ProfileScreenState extends State<ProfileScreen>
   soicalFunation({String? apiName, int? index}) async {
     print("fghdfghdfgh");
     if (apiName == 'like_post') {
-      await BlocProvider.of<NewProfileSCubit>(context)
-          .like_post(GetAllPostData?.object?[index ?? 0].postUid, context);
+      await BlocProvider.of<NewProfileSCubit>(context).like_post(GetAllPostData?.object?[index ?? 0].postUid, context);
       print("isLiked-->${GetAllPostData?.object?[index ?? 0].isLiked}");
       if (GetAllPostData?.object?[index ?? 0].isLiked == true) {
         GetAllPostData?.object?[index ?? 0].isLiked = false;
@@ -4385,8 +3714,7 @@ class _ProfileScreenState extends State<ProfileScreen>
         GetAllPostData?.object?[index ?? 0].likedCount = a + b;
       }
     } else if (apiName == 'savedata') {
-      await BlocProvider.of<NewProfileSCubit>(context)
-          .savedData(GetAllPostData?.object?[index ?? 0].postUid, context);
+      await BlocProvider.of<NewProfileSCubit>(context).savedData(GetAllPostData?.object?[index ?? 0].postUid, context);
 
       if (GetAllPostData?.object?[index ?? 0].isSaved == true) {
         GetAllPostData?.object?[index ?? 0].isSaved = false;
@@ -4401,10 +3729,7 @@ class _ProfileScreenState extends State<ProfileScreen>
     double _width,
     double _height,
   ) {
-    return User_ID == NewProfileData?.object?.userUid ||
-            (NewProfileData?.object?.accountType == 'PUBLIC') ||
-            (NewProfileData?.object?.isFollowing == 'FOLLOWING' &&
-                NewProfileData?.object?.accountType == 'PRIVATE')
+    return User_ID == NewProfileData?.object?.userUid || (NewProfileData?.object?.accountType == 'PUBLIC') || (NewProfileData?.object?.isFollowing == 'FOLLOWING' && NewProfileData?.object?.accountType == 'PRIVATE')
         ? getAllPostData?.object?.isNotEmpty ?? true
             ? ListView.builder(
                 padding: EdgeInsets.zero,
@@ -4419,25 +3744,20 @@ class _ProfileScreenState extends State<ProfileScreen>
                       _pageControllers.add(PageController());
                       _currentPages.add(0);
                     });
-                    WidgetsBinding.instance
-                        .addPostFrameCallback((timeStamp) => super.setState(() {
-                              added = true;
-                            }));
+                    WidgetsBinding.instance.addPostFrameCallback((timeStamp) => super.setState(() {
+                          added = true;
+                        }));
                   }
 
-                  DateTime parsedDateTime = DateTime.parse(
-                      '${getAllPostData?.object?[index].createdAt ?? ""}');
+                  DateTime parsedDateTime = DateTime.parse('${getAllPostData?.object?[index].createdAt ?? ""}');
                   DateTime? repostTime;
                   if (getAllPostData!.object![index].repostOn != null) {
-                    repostTime = DateTime.parse(
-                        '${getAllPostData.object?[index].repostOn!.createdAt ?? ""}');
+                    repostTime = DateTime.parse('${getAllPostData.object?[index].repostOn!.createdAt ?? ""}');
                     print("repost time = $parsedDateTime");
                   }
                   bool DataGet = false;
-                  if (getAllPostData.object?[index].description != null &&
-                      getAllPostData.object?[index].description != '') {
-                    DataGet =
-                        _isLink('${getAllPostData.object?[index].description}');
+                  if (getAllPostData.object?[index].description != null && getAllPostData.object?[index].description != '') {
+                    DataGet = _isLink('${getAllPostData.object?[index].description}');
                   }
                   return getAllPostData.object?[index].isReports == true
                       ? Container(
@@ -4450,9 +3770,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                               SizedBox(
                                 height: 10,
                               ),
-                              SizedBox(
-                                  height: 20,
-                                  child: Image.asset(ImageConstant.greenseen)),
+                              SizedBox(height: 20, child: Image.asset(ImageConstant.greenseen)),
                               SizedBox(
                                 height: 10,
                               ),
@@ -4475,25 +3793,20 @@ class _ProfileScreenState extends State<ProfileScreen>
                         )
                       : getAllPostData.object?[index].repostOn != null
                           ? Padding(
-                              padding: EdgeInsets.only(
-                                  left: 0, right: 0, top: 10, bottom: 10),
+                              padding: EdgeInsets.only(left: 0, right: 0, top: 10, bottom: 10),
                               child: GestureDetector(
                                 onDoubleTap: () async {
-                                  await soicalFunation(
-                                      apiName: 'like_post', index: index);
+                                  await soicalFunation(apiName: 'like_post', index: index);
                                 },
                                 child: Container(
                                   decoration: BoxDecoration(
                                     color: Colors.white,
-                                    border: Border.all(
-                                        color: Color.fromRGBO(0, 0, 0,
-                                            0.25)), /* borderRadius: BorderRadius.circular(15) */
+                                    border: Border.all(color: Color.fromRGBO(0, 0, 0, 0.25)), /* borderRadius: BorderRadius.circular(15) */
                                   ),
                                   // height: 300,
                                   width: _width,
                                   child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       SizedBox(
                                         height: 10,
@@ -4506,160 +3819,84 @@ class _ProfileScreenState extends State<ProfileScreen>
                                               /*  await BlocProvider.of<GetGuestAllPostCubit>(
                                         context)
                                     .seetinonExpried(context); */
-                                              Navigator.push(context,
-                                                  MaterialPageRoute(
-                                                      builder: (context) {
-                                                return MultiBlocProvider(
-                                                    providers: [
-                                                      BlocProvider<
-                                                          NewProfileSCubit>(
-                                                        create: (context) =>
-                                                            NewProfileSCubit(),
-                                                      ),
-                                                    ],
-                                                    child: ProfileScreen(
-                                                        User_ID:
-                                                            "${getAllPostData.object?[index].userUid}",
-                                                        isFollowing:
-                                                            getAllPostData
-                                                                .object?[index]
-                                                                .isFollowing));
-                                              })).then(
-                                                  (value) => Get_UserToken());
+                                              Navigator.push(context, MaterialPageRoute(builder: (context) {
+                                                return MultiBlocProvider(providers: [
+                                                  BlocProvider<NewProfileSCubit>(
+                                                    create: (context) => NewProfileSCubit(),
+                                                  ),
+                                                ], child: ProfileScreen(User_ID: "${getAllPostData.object?[index].userUid}", isFollowing: getAllPostData.object?[index].isFollowing));
+                                              })).then((value) => Get_UserToken());
 
                                               ///
                                             },
-                                            child: getAllPostData.object?[index]
-                                                            .userProfilePic !=
-                                                        null &&
-                                                    getAllPostData
-                                                            .object?[index]
-                                                            .userProfilePic !=
-                                                        ""
+                                            child: getAllPostData.object?[index].userProfilePic != null && getAllPostData.object?[index].userProfilePic != ""
                                                 ? CircleAvatar(
-                                                    backgroundImage: NetworkImage(
-                                                        "${getAllPostData.object?[index].userProfilePic}"),
-                                                    backgroundColor:
-                                                        Colors.white,
+                                                    backgroundImage: NetworkImage("${getAllPostData.object?[index].userProfilePic}"),
+                                                    backgroundColor: Colors.white,
                                                     radius: 25,
                                                   )
                                                 : CircleAvatar(
                                                     child: CustomImageView(
-                                                      imagePath: ImageConstant
-                                                          .tomcruse,
+                                                      imagePath: ImageConstant.tomcruse,
                                                       height: 50,
                                                       width: 50,
                                                       fit: BoxFit.fill,
-                                                      radius:
-                                                          BorderRadius.circular(
-                                                              25),
+                                                      radius: BorderRadius.circular(25),
                                                     ),
                                                   ),
                                           ),
                                           title: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
+                                            crossAxisAlignment: CrossAxisAlignment.start,
                                             children: [
                                               GestureDetector(
                                                 onTap: () async {
                                                   /*   await BlocProvider.of<GetGuestAllPostCubit>(
                                             context)
                                         .seetinonExpried(context); */
-                                                  Navigator.push(context,
-                                                      MaterialPageRoute(
-                                                          builder: (context) {
-                                                    return MultiBlocProvider(
-                                                        providers: [
-                                                          BlocProvider<
-                                                              NewProfileSCubit>(
-                                                            create: (context) =>
-                                                                NewProfileSCubit(),
-                                                          ),
-                                                        ],
-                                                        child: ProfileScreen(
-                                                            User_ID:
-                                                                "${getAllPostData.object?[index].userUid}",
-                                                            isFollowing:
-                                                                getAllPostData
-                                                                    .object?[
-                                                                        index]
-                                                                    .isFollowing));
-                                                  })).then((value) =>
-                                                      Get_UserToken());
+                                                  Navigator.push(context, MaterialPageRoute(builder: (context) {
+                                                    return MultiBlocProvider(providers: [
+                                                      BlocProvider<NewProfileSCubit>(
+                                                        create: (context) => NewProfileSCubit(),
+                                                      ),
+                                                    ], child: ProfileScreen(User_ID: "${getAllPostData.object?[index].userUid}", isFollowing: getAllPostData.object?[index].isFollowing));
+                                                  })).then((value) => Get_UserToken());
 
                                                   //
                                                 },
                                                 child: Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
+                                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                   children: [
                                                     Container(
                                                       // color: Colors.amber,
                                                       child: Text(
                                                         "${getAllPostData.object?[index].postUserName}",
-                                                        style: TextStyle(
-                                                            fontSize: 20,
-                                                            fontFamily:
-                                                                "outfit",
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .bold),
+                                                        style: TextStyle(fontSize: 20, fontFamily: "outfit", fontWeight: FontWeight.bold),
                                                       ),
                                                     ),
-                                                    getAllPostData
-                                                                .object?[index]
-                                                                .userUid ==
-                                                            User_ID
+                                                    getAllPostData.object?[index].userUid == User_ID
                                                         ? GestureDetector(
                                                             key: buttonKey,
                                                             onTap: () {
-                                                              showPopupMenu(
-                                                                  context,
-                                                                  index,
-                                                                  buttonKey,
-                                                                  getAllPostData);
+                                                              showPopupMenu(context, index, buttonKey, getAllPostData);
                                                             },
                                                             child: Icon(
-                                                              Icons
-                                                                  .more_vert_rounded,
+                                                              Icons.more_vert_rounded,
                                                               size: 25,
                                                             ),
                                                           )
-                                                        : getAllPostData
-                                                                    .object?[
-                                                                        index]
-                                                                    .userUid ==
-                                                                User_ID
+                                                        : getAllPostData.object?[index].userUid == User_ID
                                                             ? SizedBox()
                                                             : GestureDetector(
                                                                 key: buttonKey,
-                                                                onTap:
-                                                                    () async {
-                                                                  showPopupMenu1(
-                                                                      context,
-                                                                      index,
-                                                                      buttonKey,
-                                                                      getAllPostData
-                                                                          .object?[
-                                                                              index]
-                                                                          .postUid,
-                                                                      '_ProfileScreenState');
+                                                                onTap: () async {
+                                                                  showPopupMenu1(context, index, buttonKey, getAllPostData.object?[index].postUid, '_ProfileScreenState');
                                                                 },
-                                                                child: Container(
-                                                                    height: 25,
-                                                                    width: 40,
-                                                                    color: Colors
-                                                                        .transparent,
-                                                                    child: Icon(
-                                                                        Icons
-                                                                            .more_vert_rounded)))
+                                                                child: Container(height: 25, width: 40, color: Colors.transparent, child: Icon(Icons.more_vert_rounded)))
                                                   ],
                                                 ),
                                               ),
                                               Text(
-                                                getTimeDifference(
-                                                    parsedDateTime),
+                                                getTimeDifference(parsedDateTime),
                                                 style: TextStyle(
                                                   fontSize: 12,
                                                   fontFamily: "outfit",
@@ -4673,38 +3910,25 @@ class _ProfileScreenState extends State<ProfileScreen>
                                         height: 10,
                                       ),
 
-                                      getAllPostData
-                                                  .object?[index].description !=
-                                              null
+                                      getAllPostData.object?[index].description != null
                                           ? Padding(
-                                              padding: const EdgeInsets.only(
-                                                  left: 16),
+                                              padding: const EdgeInsets.only(left: 16),
                                               child: GestureDetector(
                                                   onTap: () async {
                                                     if (DataGet == true) {
-                                                      await launch(
-                                                          '${getAllPostData.object?[index].description}',
-                                                          forceWebView: true,
-                                                          enableJavaScript:
-                                                              true);
+                                                      await launch('${getAllPostData.object?[index].description}', forceWebView: true, enableJavaScript: true);
                                                     } else {
                                                       Navigator.push(
                                                         context,
                                                         MaterialPageRoute(
-                                                            builder: (context) =>
-                                                                OpenSavePostImage(
-                                                                  PostID: getAllPostData
-                                                                      .object?[
-                                                                          index]
-                                                                      .postUid,
+                                                            builder: (context) => OpenSavePostImage(
+                                                                  PostID: getAllPostData.object?[index].postUid,
                                                                 )),
                                                       );
                                                     }
                                                   },
                                                   child: Column(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
+                                                    crossAxisAlignment: CrossAxisAlignment.start,
                                                     children: [
                                                       /*                  GestureDetector(
                                                 onTap: () async {
@@ -4757,57 +3981,29 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                                     ),
                                                                                   ))),
                                                                             ), */
-                                                      getAllPostData
-                                                                  .object?[
-                                                                      index]
-                                                                  .translatedDescription !=
-                                                              null
+                                                      getAllPostData.object?[index].translatedDescription != null
                                                           ? GestureDetector(
                                                               onTap: () async {
-                                                                super.setState(
-                                                                    () {
-                                                                  if (getAllPostData
-                                                                              .object?[
-                                                                                  index]
-                                                                              .isTrsnalteoption ==
-                                                                          false ||
-                                                                      getAllPostData
-                                                                              .object?[index]
-                                                                              .isTrsnalteoption ==
-                                                                          null) {
-                                                                    getAllPostData
-                                                                        .object?[
-                                                                            index]
-                                                                        .isTrsnalteoption = true;
+                                                                super.setState(() {
+                                                                  if (getAllPostData.object?[index].isTrsnalteoption == false || getAllPostData.object?[index].isTrsnalteoption == null) {
+                                                                    getAllPostData.object?[index].isTrsnalteoption = true;
                                                                   } else {
-                                                                    getAllPostData
-                                                                        .object?[
-                                                                            index]
-                                                                        .isTrsnalteoption = false;
+                                                                    getAllPostData.object?[index].isTrsnalteoption = false;
                                                                   }
                                                                 });
                                                               },
                                                               child: Container(
                                                                   width: 80,
-                                                                  decoration:
-                                                                      BoxDecoration(
-                                                                    color: ColorConstant
-                                                                        .primaryLight_color,
-                                                                    borderRadius:
-                                                                        BorderRadius.circular(
-                                                                            10),
+                                                                  decoration: BoxDecoration(
+                                                                    color: ColorConstant.primaryLight_color,
+                                                                    borderRadius: BorderRadius.circular(10),
                                                                   ),
                                                                   child: Center(
-                                                                      child:
-                                                                          Text(
+                                                                      child: Text(
                                                                     "Translate",
-                                                                    style:
-                                                                        TextStyle(
-                                                                      fontFamily:
-                                                                          'outfit',
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .bold,
+                                                                    style: TextStyle(
+                                                                      fontFamily: 'outfit',
+                                                                      fontWeight: FontWeight.bold,
                                                                     ),
                                                                   ))),
                                                             )
@@ -4820,178 +4016,151 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                           Expanded(
                                                             child: Container(
                                                               // color: Colors.amber,
-                                                              child:
+                                                              child: Column(
+                                                                children: [
                                                                   LinkifyText(
-                                                                getAllPostData.object?[index].isTrsnalteoption ==
-                                                                            false ||
-                                                                        getAllPostData.object?[index].isTrsnalteoption ==
-                                                                            null
-                                                                    ? "${getAllPostData.object?[index].description}"
-                                                                    : "${getAllPostData.object?[index].translatedDescription}",
-                                                                linkStyle:
-                                                                    TextStyle(
-                                                                  color: Colors
-                                                                      .blue,
-                                                                  fontFamily:
-                                                                      'outfit',
-                                                                ),
-                                                                textStyle:
-                                                                    TextStyle(
-                                                                  color: Colors
-                                                                      .black,
-                                                                  fontFamily:
-                                                                      'outfit',
-                                                                ),
-                                                                linkTypes: [
-                                                                  LinkType.url,
-                                                                  LinkType
-                                                                      .userTag,
-                                                                  LinkType
-                                                                      .hashTag,
-                                                                  // LinkType
-                                                                  //     .email
-                                                                ],
-                                                                onTap:
-                                                                    (link) async {
-                                                                  /// do stuff with `link` like
-                                                                  /// if(link.type == Link.url) launchUrl(link.value);
+                                                                    getAllPostData.object?[index].isTrsnalteoption == false || getAllPostData.object?[index].isTrsnalteoption == null ? "${getAllPostData.object?[index].description}" : "${getAllPostData.object?[index].translatedDescription}",
+                                                                    linkStyle: TextStyle(
+                                                                      color: Colors.blue,
+                                                                      fontFamily: 'outfit',
+                                                                    ),
+                                                                    textStyle: TextStyle(
+                                                                      color: Colors.black,
+                                                                      fontFamily: 'outfit',
+                                                                    ),
+                                                                    linkTypes: [
+                                                                      LinkType.url,
+                                                                      LinkType.userTag,
+                                                                      LinkType.hashTag,
+                                                                      // LinkType
+                                                                      //     .email
+                                                                    ],
+                                                                    onTap: (link) async {
+                                                                      /// do stuff with `link` like
+                                                                      /// if(link.type == Link.url) launchUrl(link.value);
 
-                                                                  var SelectedTest =
-                                                                      link.value
-                                                                          .toString();
-                                                                  var Link = SelectedTest
-                                                                      .startsWith(
-                                                                          'https');
-                                                                  var Link1 = SelectedTest
-                                                                      .startsWith(
-                                                                          'http');
-                                                                  var Link2 = SelectedTest
-                                                                      .startsWith(
-                                                                          'www');
-                                                                  var Link3 = SelectedTest
-                                                                      .startsWith(
-                                                                          'WWW');
-                                                                  var Link4 = SelectedTest
-                                                                      .startsWith(
-                                                                          'HTTPS');
-                                                                  var Link5 = SelectedTest
-                                                                      .startsWith(
-                                                                          'HTTP');
-                                                                  var Link6 = SelectedTest
-                                                                      .startsWith(
-                                                                          'https://pdslink.page.link/');
-                                                                  print(SelectedTest
-                                                                      .toString());
+                                                                      var SelectedTest = link.value.toString();
+                                                                      var Link = SelectedTest.startsWith('https');
+                                                                      var Link1 = SelectedTest.startsWith('http');
+                                                                      var Link2 = SelectedTest.startsWith('www');
+                                                                      var Link3 = SelectedTest.startsWith('WWW');
+                                                                      var Link4 = SelectedTest.startsWith('HTTPS');
+                                                                      var Link5 = SelectedTest.startsWith('HTTP');
+                                                                      var Link6 = SelectedTest.startsWith('https://pdslink.page.link/');
+                                                                      print(SelectedTest.toString());
 
-                                                                  if (User_ID ==
-                                                                      null) {
-                                                                    Navigator.of(
-                                                                            context)
-                                                                        .push(MaterialPageRoute(
-                                                                            builder: (context) =>
-                                                                                RegisterCreateAccountScreen()));
-                                                                  } else {
-                                                                    if (Link ==
-                                                                            true ||
-                                                                        Link1 ==
-                                                                            true ||
-                                                                        Link2 ==
-                                                                            true ||
-                                                                        Link3 ==
-                                                                            true ||
-                                                                        Link4 ==
-                                                                            true ||
-                                                                        Link5 ==
-                                                                            true ||
-                                                                        Link6 ==
-                                                                            true) {
-                                                                      if (Link2 ==
-                                                                              true ||
-                                                                          Link3 ==
-                                                                              true) {
-                                                                        launchUrl(
-                                                                            Uri.parse("https://${link.value.toString()}"));
-                                                                        print(
-                                                                            "qqqqqqqqhttps://${link.value}");
+                                                                      if (User_ID == null) {
+                                                                        Navigator.of(context).push(MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
                                                                       } else {
-                                                                        if (Link6 ==
-                                                                            true) {
-                                                                          print(
-                                                                              "yes i am inList =   room");
-                                                                          Navigator.push(
-                                                                              context,
-                                                                              MaterialPageRoute(
-                                                                            builder:
-                                                                                (context) {
-                                                                              return NewBottomBar(
-                                                                                buttomIndex: 1,
-                                                                              );
-                                                                            },
-                                                                          ));
+                                                                        if (Link == true || Link1 == true || Link2 == true || Link3 == true || Link4 == true || Link5 == true || Link6 == true) {
+                                                                          if (Link2 == true || Link3 == true) {
+                                                                            launchUrl(Uri.parse("https://${link.value.toString()}"));
+                                                                            print("qqqqqqqqhttps://${link.value}");
+                                                                          } else {
+                                                                            if (Link6 == true) {
+                                                                              print("yes i am inList =   room");
+                                                                              Navigator.push(context, MaterialPageRoute(
+                                                                                builder: (context) {
+                                                                                  return NewBottomBar(
+                                                                                    buttomIndex: 1,
+                                                                                  );
+                                                                                },
+                                                                              ));
+                                                                            } else {
+                                                                              launchUrl(Uri.parse(link.value.toString()));
+                                                                              print("link.valuelink.value -- ${link.value}");
+                                                                            }
+                                                                          }
                                                                         } else {
-                                                                          launchUrl(Uri.parse(link
-                                                                              .value
-                                                                              .toString()));
-                                                                          print(
-                                                                              "link.valuelink.value -- ${link.value}");
+                                                                          if (link.value!.startsWith('#')) {
+                                                                            /*  await BlocProvider.of<
+                                                                          GetGuestAllPostCubit>(
+                                                                      context)
+                                                                  .seetinonExpried(
+                                                                      context); */
+                                                                            Navigator.push(
+                                                                                context,
+                                                                                MaterialPageRoute(
+                                                                                  builder: (context) => HashTagViewScreen(title: "${link.value}"),
+                                                                                ));
+                                                                          } else if (link.value!.startsWith('@')) {
+                                                                            /*  await BlocProvider.of<
+                                                                          GetGuestAllPostCubit>(
+                                                                      context)
+                                                                  .seetinonExpried(
+                                                                      context); */
+                                                                            var name;
+                                                                            var tagName;
+                                                                            name = SelectedTest;
+                                                                            tagName = name.replaceAll("@", "");
+                                                                            await BlocProvider.of<NewProfileSCubit>(context).UserTagAPI(context, tagName);
+
+                                                                            Navigator.push(context, MaterialPageRoute(builder: (context) {
+                                                                              return ProfileScreen(User_ID: "${userTagModel?.object}", isFollowing: "");
+                                                                            })).then((value) => Get_UserToken());
+
+                                                                            print("tagName -- ${tagName}");
+                                                                            print("user id -- ${userTagModel?.object}");
+                                                                          } else {
+                                                                            launchUrl(Uri.parse("https://${link.value.toString()}"));
+                                                                          }
                                                                         }
                                                                       }
-                                                                    } else {
-                                                                      if (link
-                                                                          .value!
-                                                                          .startsWith(
-                                                                              '#')) {
-                                                                        /*  await BlocProvider.of<
-                                                                      GetGuestAllPostCubit>(
-                                                                  context)
-                                                              .seetinonExpried(
-                                                                  context); */
-                                                                        Navigator.push(
-                                                                            context,
-                                                                            MaterialPageRoute(
-                                                                              builder: (context) => HashTagViewScreen(title: "${link.value}"),
-                                                                            ));
-                                                                      } else if (link
-                                                                          .value!
-                                                                          .startsWith(
-                                                                              '@')) {
-                                                                        /*  await BlocProvider.of<
-                                                                      GetGuestAllPostCubit>(
-                                                                  context)
-                                                              .seetinonExpried(
-                                                                  context); */
-                                                                        var name;
-                                                                        var tagName;
-                                                                        name =
-                                                                            SelectedTest;
-                                                                        tagName = name.replaceAll(
-                                                                            "@",
-                                                                            "");
-                                                                        await BlocProvider.of<NewProfileSCubit>(context).UserTagAPI(
-                                                                            context,
-                                                                            tagName);
-
-                                                                        Navigator.push(
-                                                                            context,
-                                                                            MaterialPageRoute(builder:
-                                                                                (context) {
-                                                                          return ProfileScreen(
-                                                                              User_ID: "${userTagModel?.object}",
-                                                                              isFollowing: "");
-                                                                        })).then((value) =>
-                                                                            Get_UserToken());
-
-                                                                        print(
-                                                                            "tagName -- ${tagName}");
-                                                                        print(
-                                                                            "user id -- ${userTagModel?.object}");
-                                                                      } else {
-                                                                        launchUrl(
-                                                                            Uri.parse("https://${link.value.toString()}"));
-                                                                      }
-                                                                    }
-                                                                  }
-                                                                },
+                                                                    },
+                                                                  ),
+                                                                  if (extractUrls(getAllPostData.object?[index].description ?? "").isNotEmpty)
+                                                                    isYouTubeUrl(extractUrls(getAllPostData.object?[index].description ?? "").first)
+                                                                        ? FutureBuilder(
+                                                                        future: fetchYoutubeThumbnail(extractUrls(getAllPostData.object?[index].description ?? "").first),
+                                                                        builder: (context, snap) {
+                                                                          return Container(
+                                                                            height: 250,
+                                                                            decoration: BoxDecoration(image: DecorationImage(image: CachedNetworkImageProvider(snap.data.toString())), borderRadius: BorderRadius.circular(10)),
+                                                                            clipBehavior: Clip.antiAlias,
+                                                                            child: Center(
+                                                                                child: IconButton(
+                                                                                  icon: Icon(
+                                                                                    Icons.play_circle_fill_rounded,
+                                                                                    color: Colors.white,
+                                                                                    size: 60,
+                                                                                  ),
+                                                                                  onPressed: () {
+                                                                                    playLink(extractUrls(getAllPostData.object?[index].description ?? "").first, context);
+                                                                                  },
+                                                                                )),
+                                                                          );
+                                                                        })
+                                                                        : Padding(
+                                                                      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                                                                      child: AnyLinkPreview(
+                                                                        link: extractUrls(getAllPostData.object?[index].description ?? "").first,
+                                                                        displayDirection: UIDirection.uiDirectionHorizontal,
+                                                                        showMultimedia: true,
+                                                                        bodyMaxLines: 5,
+                                                                        bodyTextOverflow: TextOverflow.ellipsis,
+                                                                        titleStyle: TextStyle(
+                                                                          color: Colors.black,
+                                                                          fontWeight: FontWeight.bold,
+                                                                          fontSize: 15,
+                                                                        ),
+                                                                        bodyStyle: TextStyle(color: Colors.grey, fontSize: 12),
+                                                                        errorBody: 'Show my custom error body',
+                                                                        errorTitle: 'Show my custom error title',
+                                                                        errorWidget: null,
+                                                                        errorImage: "https://flutter.dev/",
+                                                                        cache: Duration(days: 7),
+                                                                        backgroundColor: Colors.grey[300],
+                                                                        borderRadius: 12,
+                                                                        removeElevation: false,
+                                                                        boxShadow: [
+                                                                          BoxShadow(blurRadius: 3, color: Colors.grey)
+                                                                        ],
+                                                                        onTap: () {
+                                                                          launchUrl(Uri.parse(extractUrls(getAllPostData.object?[index].description ?? "").first));
+                                                                        }, // This disables tap event
+                                                                      ),
+                                                                    ),
+                                                                ],
                                                               ),
                                                             ),
                                                           ),
@@ -5002,87 +4171,50 @@ class _ProfileScreenState extends State<ProfileScreen>
                                             )
                                           : SizedBox(),
 
-                                      (getAllPostData.object?[index].postData
-                                                  ?.isEmpty ??
-                                              false)
+                                      (getAllPostData.object?[index].postData?.isEmpty ?? false)
                                           ? SizedBox()
                                           : Container(
                                               // height: 200,
                                               width: _width,
-                                              child: getAllPostData
-                                                          .object?[index]
-                                                          .postDataType ==
-                                                      null
+                                              child: getAllPostData.object?[index].postDataType == null
                                                   ? SizedBox()
-                                                  : getAllPostData
-                                                              .object?[index]
-                                                              .postData
-                                                              ?.length ==
-                                                          1
-                                                      ? (getAllPostData
-                                                                  .object?[
-                                                                      index]
-                                                                  .postDataType ==
-                                                              "IMAGE"
+                                                  : getAllPostData.object?[index].postData?.length == 1
+                                                      ? (getAllPostData.object?[index].postDataType == "IMAGE"
                                                           ? GestureDetector(
                                                               onTap: () {
                                                                 Navigator.push(
                                                                   context,
                                                                   MaterialPageRoute(
-                                                                      builder:
-                                                                          (context) =>
-                                                                              OpenSavePostImage(
-                                                                                PostID: getAllPostData.object?[index].postUid,
-                                                                                index: index,
-                                                                              )),
+                                                                      builder: (context) => OpenSavePostImage(
+                                                                            PostID: getAllPostData.object?[index].postUid,
+                                                                            index: index,
+                                                                          )),
                                                                 );
                                                               },
                                                               child: Container(
                                                                 height: 200,
                                                                 width: _width,
-                                                                margin: EdgeInsets
-                                                                    .only(
-                                                                        left:
-                                                                            16,
-                                                                        top: 15,
-                                                                        right:
-                                                                            16),
+                                                                margin: EdgeInsets.only(left: 16, top: 15, right: 16),
                                                                 child: Center(
-                                                                    child:
-                                                                        CustomImageView(
-                                                                  url:
-                                                                      "${getAllPostData.object?[index].postData?[0]}",
+                                                                    child: CustomImageView(
+                                                                  url: "${getAllPostData.object?[index].postData?[0]}",
                                                                 )),
                                                               ),
                                                             )
-                                                          : getAllPostData
-                                                                      .object?[
-                                                                          index]
-                                                                      .postDataType ==
-                                                                  "VIDEO"
+                                                          : getAllPostData.object?[index].postDataType == "VIDEO"
                                                               ? /* repostControllers[0].value.isInitialized
                                                                                     ?   */
                                                               Padding(
-                                                                  padding: const EdgeInsets
-                                                                          .only(
-                                                                      right: 20,
-                                                                      top: 15),
+                                                                  padding: const EdgeInsets.only(right: 20, top: 15),
                                                                   child: Column(
-                                                                    mainAxisSize:
-                                                                        MainAxisSize
-                                                                            .min,
+                                                                    mainAxisSize: MainAxisSize.min,
                                                                     children: [
                                                                       Container(
                                                                         // height: 180,
-                                                                        width:
-                                                                            _width,
-                                                                        child:
-                                                                            VideoListItem1(
-                                                                          videoUrl:
-                                                                              videoUrls[index],
-                                                                          PostID: getAllPostData
-                                                                              .object?[index]
-                                                                              .postUid,
+                                                                        width: _width,
+                                                                        child: VideoListItem1(
+                                                                          videoUrl: videoUrls[index],
+                                                                          PostID: getAllPostData.object?[index].postUid,
                                                                           /*  isData:
                                                                 User_ID == null
                                                                     ? false
@@ -5094,16 +4226,8 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                 )
                                                               // : SizedBox()
                                                               //this is the ATTACHMENT
-                                                              : getAllPostData
-                                                                          .object?[
-                                                                              index]
-                                                                          .postDataType ==
-                                                                      "ATTACHMENT"
-                                                                  ? (getAllPostData
-                                                                              .object?[index]
-                                                                              .postData
-                                                                              ?.isNotEmpty ==
-                                                                          true)
+                                                              : getAllPostData.object?[index].postDataType == "ATTACHMENT"
+                                                                  ? (getAllPostData.object?[index].postData?.isNotEmpty == true)
                                                                       ? /* Container(
                                                                                             height: 200,
                                                                                             width: _width,
@@ -5143,46 +4267,23 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                           children: [
                                                             Stack(
                                                               children: [
-                                                                if ((getAllPostData
-                                                                        .object?[
-                                                                            index]
-                                                                        .postData
-                                                                        ?.isNotEmpty ??
-                                                                    false)) ...[
+                                                                if ((getAllPostData.object?[index].postData?.isNotEmpty ?? false)) ...[
                                                                   SizedBox(
                                                                     height: 200,
-                                                                    child: PageView
-                                                                        .builder(
-                                                                      onPageChanged:
-                                                                          (page) {
-                                                                        super.setState(
-                                                                            () {
-                                                                          _currentPages[index] =
-                                                                              page;
-                                                                          imageCount1 =
-                                                                              page + 1;
+                                                                    child: PageView.builder(
+                                                                      onPageChanged: (page) {
+                                                                        super.setState(() {
+                                                                          _currentPages[index] = page;
+                                                                          imageCount1 = page + 1;
                                                                         });
                                                                       },
-                                                                      controller:
-                                                                          _pageControllers[
-                                                                              index],
-                                                                      itemCount: getAllPostData
-                                                                          .object?[
-                                                                              index]
-                                                                          .postData
-                                                                          ?.length,
-                                                                      itemBuilder:
-                                                                          (BuildContext context,
-                                                                              int index1) {
-                                                                        if (getAllPostData.object?[index].postDataType ==
-                                                                            "IMAGE") {
+                                                                      controller: _pageControllers[index],
+                                                                      itemCount: getAllPostData.object?[index].postData?.length,
+                                                                      itemBuilder: (BuildContext context, int index1) {
+                                                                        if (getAllPostData.object?[index].postDataType == "IMAGE") {
                                                                           return Container(
-                                                                            width:
-                                                                                _width,
-                                                                            margin: EdgeInsets.only(
-                                                                                left: 16,
-                                                                                top: 15,
-                                                                                right: 16),
+                                                                            width: _width,
+                                                                            margin: EdgeInsets.only(left: 16, top: 15, right: 16),
                                                                             child: Center(
                                                                                 child: GestureDetector(
                                                                               onTap: () {
@@ -5226,8 +4327,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                               ),
                                                                             )),
                                                                           );
-                                                                        } else if (getAllPostData.object?[index].postDataType ==
-                                                                            "ATTACHMENT") {
+                                                                        } else if (getAllPostData.object?[index].postDataType == "ATTACHMENT") {
                                                                           return Container(
                                                                               height: 200,
                                                                               width: _width,
@@ -5242,22 +4342,14 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                       bottom: 5,
                                                                       left: 0,
                                                                       right: 0,
-                                                                      child:
-                                                                          Padding(
-                                                                        padding:
-                                                                            const EdgeInsets.only(top: 0),
-                                                                        child:
-                                                                            Container(
-                                                                          height:
-                                                                              20,
-                                                                          child:
-                                                                              DotsIndicator(
-                                                                            dotsCount:
-                                                                                getAllPostData.object?[index].postData?.length ?? 0,
-                                                                            position:
-                                                                                _currentPages[index].toDouble(),
-                                                                            decorator:
-                                                                                DotsDecorator(
+                                                                      child: Padding(
+                                                                        padding: const EdgeInsets.only(top: 0),
+                                                                        child: Container(
+                                                                          height: 20,
+                                                                          child: DotsIndicator(
+                                                                            dotsCount: getAllPostData.object?[index].postData?.length ?? 0,
+                                                                            position: _currentPages[index].toDouble(),
+                                                                            decorator: DotsDecorator(
                                                                               size: const Size(10.0, 7.0),
                                                                               activeSize: const Size(10.0, 10.0),
                                                                               spacing: const EdgeInsets.symmetric(horizontal: 2),
@@ -5277,23 +4369,13 @@ class _ProfileScreenState extends State<ProfileScreen>
                                       // inner post portion
 
                                       Padding(
-                                        padding: const EdgeInsets.only(
-                                            left: 10,
-                                            right: 10,
-                                            bottom: 10,
-                                            top: 20),
+                                        padding: const EdgeInsets.only(left: 10, right: 10, bottom: 10, top: 20),
                                         child: Container(
-                                          decoration: BoxDecoration(
-                                              color: Colors.white,
-                                              border: Border.all(
-                                                  color: Colors.grey.shade200),
-                                              borderRadius:
-                                                  BorderRadius.circular(15)),
+                                          decoration: BoxDecoration(color: Colors.white, border: Border.all(color: Colors.grey.shade200), borderRadius: BorderRadius.circular(15)),
                                           // height: 300,
                                           width: _width,
                                           child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
+                                            crossAxisAlignment: CrossAxisAlignment.start,
                                             children: [
                                               SizedBox(
                                                 height: 10,
@@ -5306,66 +4388,31 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                       /*    await BlocProvider.of<
                                                 GetGuestAllPostCubit>(context)
                                             .seetinonExpried(context); */
-                                                      Navigator.push(context,
-                                                          MaterialPageRoute(
-                                                              builder:
-                                                                  (context) {
-                                                        return MultiBlocProvider(
-                                                            providers: [
-                                                              BlocProvider<
-                                                                  NewProfileSCubit>(
-                                                                create: (context) =>
-                                                                    NewProfileSCubit(),
-                                                              ),
-                                                            ],
-                                                            child: ProfileScreen(
-                                                                User_ID:
-                                                                    "${getAllPostData.object?[index].repostOn?.userUid}",
-                                                                isFollowing:
-                                                                    getAllPostData
-                                                                        .object?[
-                                                                            index]
-                                                                        .repostOn
-                                                                        ?.isFollowing));
-                                                      })).then((value) =>
-                                                          Get_UserToken());
+                                                      Navigator.push(context, MaterialPageRoute(builder: (context) {
+                                                        return MultiBlocProvider(providers: [
+                                                          BlocProvider<NewProfileSCubit>(
+                                                            create: (context) => NewProfileSCubit(),
+                                                          ),
+                                                        ], child: ProfileScreen(User_ID: "${getAllPostData.object?[index].repostOn?.userUid}", isFollowing: getAllPostData.object?[index].repostOn?.isFollowing));
+                                                      })).then((value) => Get_UserToken());
                                                       //
                                                     },
-                                                    child: getAllPostData
-                                                                    .object?[
-                                                                        index]
-                                                                    .repostOn
-                                                                    ?.userProfilePic !=
-                                                                null &&
-                                                            getAllPostData
-                                                                    .object?[
-                                                                        index]
-                                                                    .repostOn
-                                                                    ?.userProfilePic !=
-                                                                ""
+                                                    child: getAllPostData.object?[index].repostOn?.userProfilePic != null && getAllPostData.object?[index].repostOn?.userProfilePic != ""
                                                         ? CircleAvatar(
-                                                            backgroundImage:
-                                                                NetworkImage(
-                                                                    "${getAllPostData.object?[index].repostOn?.userProfilePic}"),
-                                                            backgroundColor:
-                                                                Colors.white,
+                                                            backgroundImage: NetworkImage("${getAllPostData.object?[index].repostOn?.userProfilePic}"),
+                                                            backgroundColor: Colors.white,
                                                             radius: 25,
                                                           )
                                                         : CustomImageView(
-                                                            imagePath:
-                                                                ImageConstant
-                                                                    .tomcruse,
+                                                            imagePath: ImageConstant.tomcruse,
                                                             height: 50,
                                                             width: 50,
                                                             fit: BoxFit.fill,
-                                                            radius: BorderRadius
-                                                                .circular(25),
+                                                            radius: BorderRadius.circular(25),
                                                           ),
                                                   ),
                                                   title: Column(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
+                                                    crossAxisAlignment: CrossAxisAlignment.start,
                                                     children: [
                                                       GestureDetector(
                                                         onTap: () async {
@@ -5373,29 +4420,13 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                           GetGuestAllPostCubit>(
                                                       context)
                                                   .seetinonExpried(context); */
-                                                          Navigator.push(
-                                                              context,
-                                                              MaterialPageRoute(
-                                                                  builder:
-                                                                      (context) {
-                                                            return MultiBlocProvider(
-                                                                providers: [
-                                                                  BlocProvider<
-                                                                      NewProfileSCubit>(
-                                                                    create: (context) =>
-                                                                        NewProfileSCubit(),
-                                                                  ),
-                                                                ],
-                                                                child: ProfileScreen(
-                                                                    User_ID:
-                                                                        "${getAllPostData.object?[index].repostOn?.userUid}",
-                                                                    isFollowing: getAllPostData
-                                                                        .object?[
-                                                                            index]
-                                                                        .repostOn
-                                                                        ?.isFollowing));
-                                                          })).then((value) =>
-                                                              Get_UserToken());
+                                                          Navigator.push(context, MaterialPageRoute(builder: (context) {
+                                                            return MultiBlocProvider(providers: [
+                                                              BlocProvider<NewProfileSCubit>(
+                                                                create: (context) => NewProfileSCubit(),
+                                                              ),
+                                                            ], child: ProfileScreen(User_ID: "${getAllPostData.object?[index].repostOn?.userUid}", isFollowing: getAllPostData.object?[index].repostOn?.isFollowing));
+                                                          })).then((value) => Get_UserToken());
                                                           //
                                                         },
                                                         child: Container(
@@ -5403,25 +4434,12 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                           // Colors.amber,
                                                           child: Text(
                                                             "${getAllPostData.object?[index].repostOn?.postUserName}",
-                                                            style: TextStyle(
-                                                                fontSize: 20,
-                                                                fontFamily:
-                                                                    "outfit",
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold),
+                                                            style: TextStyle(fontSize: 20, fontFamily: "outfit", fontWeight: FontWeight.bold),
                                                           ),
                                                         ),
                                                       ),
                                                       Text(
-                                                        getAllPostData
-                                                                    .object?[
-                                                                        index]
-                                                                    .repostOn ==
-                                                                null
-                                                            ? ""
-                                                            : getTimeDifference(
-                                                                repostTime!),
+                                                        getAllPostData.object?[index].repostOn == null ? "" : getTimeDifference(repostTime!),
                                                         style: TextStyle(
                                                           fontSize: 12,
                                                           fontFamily: "outfit",
@@ -5434,264 +4452,193 @@ class _ProfileScreenState extends State<ProfileScreen>
                                               SizedBox(
                                                 height: 10,
                                               ),
-                                              getAllPostData
-                                                          .object?[index]
-                                                          .repostOn
-                                                          ?.description !=
-                                                      null
+                                              getAllPostData.object?[index].repostOn?.description != null
                                                   ? Padding(
-                                                      padding:
-                                                          const EdgeInsets.only(
-                                                              left: 16),
-                                                      child: LinkifyText(
-                                                        "${getAllPostData.object?[index].repostOn?.description}",
-                                                        linkStyle: TextStyle(
-                                                          color: Colors.blue,
-                                                          fontFamily: 'outfit',
-                                                        ),
-                                                        textStyle: TextStyle(
-                                                          color: Colors.black,
-                                                          fontFamily: 'outfit',
-                                                        ),
-                                                        linkTypes: [
-                                                          LinkType.url,
-                                                          LinkType.userTag,
-                                                          LinkType.hashTag,
-                                                          // LinkType
-                                                          //     .email
-                                                        ],
-                                                        onTap: (link) async {
-                                                          /// do stuff with `link` like
-                                                          /// if(link.type == Link.url) launchUrl(link.value);
+                                                      padding: const EdgeInsets.only(left: 16),
+                                                      child: Column(
+                                                        children: [
+                                                          LinkifyText(
+                                                            "${getAllPostData.object?[index].repostOn?.description}",
+                                                            linkStyle: TextStyle(
+                                                              color: Colors.blue,
+                                                              fontFamily: 'outfit',
+                                                            ),
+                                                            textStyle: TextStyle(
+                                                              color: Colors.black,
+                                                              fontFamily: 'outfit',
+                                                            ),
+                                                            linkTypes: [
+                                                              LinkType.url,
+                                                              LinkType.userTag,
+                                                              LinkType.hashTag,
+                                                              // LinkType
+                                                              //     .email
+                                                            ],
+                                                            onTap: (link) async {
+                                                              /// do stuff with `link` like
+                                                              /// if(link.type == Link.url) launchUrl(link.value);
 
-                                                          var SelectedTest =
-                                                              link.value
-                                                                  .toString();
-                                                          var Link =
-                                                              SelectedTest
-                                                                  .startsWith(
-                                                                      'https');
-                                                          var Link1 =
-                                                              SelectedTest
-                                                                  .startsWith(
-                                                                      'http');
-                                                          var Link2 =
-                                                              SelectedTest
-                                                                  .startsWith(
-                                                                      'www');
-                                                          var Link3 =
-                                                              SelectedTest
-                                                                  .startsWith(
-                                                                      'WWW');
-                                                          var Link4 =
-                                                              SelectedTest
-                                                                  .startsWith(
-                                                                      'HTTPS');
-                                                          var Link5 =
-                                                              SelectedTest
-                                                                  .startsWith(
-                                                                      'HTTP');
-                                                          var Link6 = SelectedTest
-                                                              .startsWith(
-                                                                  'https://pdslink.page.link/');
-                                                          print(SelectedTest
-                                                              .toString());
+                                                              var SelectedTest = link.value.toString();
+                                                              var Link = SelectedTest.startsWith('https');
+                                                              var Link1 = SelectedTest.startsWith('http');
+                                                              var Link2 = SelectedTest.startsWith('www');
+                                                              var Link3 = SelectedTest.startsWith('WWW');
+                                                              var Link4 = SelectedTest.startsWith('HTTPS');
+                                                              var Link5 = SelectedTest.startsWith('HTTP');
+                                                              var Link6 = SelectedTest.startsWith('https://pdslink.page.link/');
+                                                              print(SelectedTest.toString());
 
-                                                          if (User_ID == null) {
-                                                            Navigator.of(
-                                                                    context)
-                                                                .push(MaterialPageRoute(
-                                                                    builder:
-                                                                        (context) =>
-                                                                            RegisterCreateAccountScreen()));
-                                                          } else {
-                                                            if (Link == true ||
-                                                                Link1 == true ||
-                                                                Link2 == true ||
-                                                                Link3 == true ||
-                                                                Link4 == true ||
-                                                                Link5 == true ||
-                                                                Link6 == true) {
-                                                              if (Link2 ==
-                                                                      true ||
-                                                                  Link3 ==
-                                                                      true) {
-                                                                launchUrl(Uri.parse(
-                                                                    "https://${link.value.toString()}"));
-                                                                print(
-                                                                    "qqqqqqqqhttps://${link.value}");
+                                                              if (User_ID == null) {
+                                                                Navigator.of(context).push(MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
                                                               } else {
-                                                                if (Link6 ==
-                                                                    true) {
-                                                                  print(
-                                                                      "yes i am inList =   room");
-                                                                  Navigator.push(
-                                                                      context,
-                                                                      MaterialPageRoute(
-                                                                    builder:
-                                                                        (context) {
-                                                                      return NewBottomBar(
-                                                                        buttomIndex:
-                                                                            1,
-                                                                      );
-                                                                    },
-                                                                  ));
+                                                                if (Link == true || Link1 == true || Link2 == true || Link3 == true || Link4 == true || Link5 == true || Link6 == true) {
+                                                                  if (Link2 == true || Link3 == true) {
+                                                                    launchUrl(Uri.parse("https://${link.value.toString()}"));
+                                                                    print("qqqqqqqqhttps://${link.value}");
+                                                                  } else {
+                                                                    if (Link6 == true) {
+                                                                      print("yes i am inList =   room");
+                                                                      Navigator.push(context, MaterialPageRoute(
+                                                                        builder: (context) {
+                                                                          return NewBottomBar(
+                                                                            buttomIndex: 1,
+                                                                          );
+                                                                        },
+                                                                      ));
+                                                                    } else {
+                                                                      launchUrl(Uri.parse(link.value.toString()));
+                                                                      print("link.valuelink.value -- ${link.value}");
+                                                                    }
+                                                                  }
                                                                 } else {
-                                                                  launchUrl(Uri
-                                                                      .parse(link
-                                                                          .value
-                                                                          .toString()));
-                                                                  print(
-                                                                      "link.valuelink.value -- ${link.value}");
+                                                                  if (link.value!.startsWith('#')) {
+                                                                    /*   await BlocProvider.of<
+                                                                  GetGuestAllPostCubit>(
+                                                              context)
+                                                          .seetinonExpried(context); */
+                                                                    print("aaaaaaaaaa == ${link}");
+                                                                    Navigator.push(
+                                                                        context,
+                                                                        MaterialPageRoute(
+                                                                          builder: (context) => HashTagViewScreen(title: "${link.value}"),
+                                                                        ));
+                                                                  } else if (link.value!.startsWith('@')) {
+                                                                    /*  await BlocProvider.of<
+                                                                  GetGuestAllPostCubit>(
+                                                              context)
+                                                          .seetinonExpried(context); */
+                                                                    var name;
+                                                                    var tagName;
+                                                                    name = SelectedTest;
+                                                                    tagName = name.replaceAll("@", "");
+                                                                    await BlocProvider.of<NewProfileSCubit>(context).UserTagAPI(context, tagName);
+
+                                                                    Navigator.push(context, MaterialPageRoute(builder: (context) {
+                                                                      return ProfileScreen(User_ID: "${userTagModel?.object}", isFollowing: "");
+                                                                    })).then((value) => Get_UserToken());
+
+                                                                    print("tagName -- ${tagName}");
+                                                                    print("user id -- ${userTagModel?.object}");
+                                                                  }
                                                                 }
                                                               }
-                                                            } else {
-                                                              if (link.value!
-                                                                  .startsWith(
-                                                                      '#')) {
-                                                                /*   await BlocProvider.of<
-                                                              GetGuestAllPostCubit>(
-                                                          context)
-                                                      .seetinonExpried(context); */
-                                                                print(
-                                                                    "aaaaaaaaaa == ${link}");
-                                                                Navigator.push(
-                                                                    context,
-                                                                    MaterialPageRoute(
-                                                                      builder: (context) =>
-                                                                          HashTagViewScreen(
-                                                                              title: "${link.value}"),
-                                                                    ));
-                                                              } else if (link
-                                                                  .value!
-                                                                  .startsWith(
-                                                                      '@')) {
-                                                                /*  await BlocProvider.of<
-                                                              GetGuestAllPostCubit>(
-                                                          context)
-                                                      .seetinonExpried(context); */
-                                                                var name;
-                                                                var tagName;
-                                                                name =
-                                                                    SelectedTest;
-                                                                tagName = name
-                                                                    .replaceAll(
-                                                                        "@",
-                                                                        "");
-                                                                await BlocProvider.of<
-                                                                            NewProfileSCubit>(
-                                                                        context)
-                                                                    .UserTagAPI(
-                                                                        context,
-                                                                        tagName);
-
-                                                                Navigator.push(
-                                                                    context,
-                                                                    MaterialPageRoute(
-                                                                        builder:
-                                                                            (context) {
-                                                                  return ProfileScreen(
-                                                                      User_ID:
-                                                                          "${userTagModel?.object}",
-                                                                      isFollowing:
-                                                                          "");
-                                                                })).then((value) =>
-                                                                    Get_UserToken());
-
-                                                                print(
-                                                                    "tagName -- ${tagName}");
-                                                                print(
-                                                                    "user id -- ${userTagModel?.object}");
-                                                              }
-                                                            }
-                                                          }
-                                                        },
-                                                      ))
+                                                            },
+                                                          ),
+                                                          if (extractUrls(getAllPostData.object?[index].repostOn?.description ?? "").isNotEmpty)
+                                                            isYouTubeUrl(extractUrls(getAllPostData.object?[index].repostOn?.description ?? "").first)
+                                                                ? FutureBuilder(
+                                                                future: fetchYoutubeThumbnail(extractUrls(getAllPostData.object?[index].repostOn?.description ?? "").first),
+                                                                builder: (context, snap) {
+                                                                  return Container(
+                                                                    height: 250,
+                                                                    decoration: BoxDecoration(image: DecorationImage(image: CachedNetworkImageProvider(snap.data.toString())), borderRadius: BorderRadius.circular(10)),
+                                                                    clipBehavior: Clip.antiAlias,
+                                                                    child: Center(
+                                                                        child: IconButton(
+                                                                          icon: Icon(
+                                                                            Icons.play_circle_fill_rounded,
+                                                                            color: Colors.white,
+                                                                            size: 60,
+                                                                          ),
+                                                                          onPressed: () {
+                                                                            playLink(extractUrls(getAllPostData.object?[index].repostOn?.description ?? "").first, context);
+                                                                          },
+                                                                        )),
+                                                                  );
+                                                                })
+                                                                : Padding(
+                                                              padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                                                              child: AnyLinkPreview(
+                                                                link: extractUrls(getAllPostData.object?[index].repostOn?.description ?? "").first,
+                                                                displayDirection: UIDirection.uiDirectionHorizontal,
+                                                                showMultimedia: true,
+                                                                bodyMaxLines: 5,
+                                                                bodyTextOverflow: TextOverflow.ellipsis,
+                                                                titleStyle: TextStyle(
+                                                                  color: Colors.black,
+                                                                  fontWeight: FontWeight.bold,
+                                                                  fontSize: 15,
+                                                                ),
+                                                                bodyStyle: TextStyle(color: Colors.grey, fontSize: 12),
+                                                                errorBody: 'Show my custom error body',
+                                                                errorTitle: 'Show my custom error title',
+                                                                errorWidget: null,
+                                                                errorImage: "https://flutter.dev/",
+                                                                cache: Duration(days: 7),
+                                                                backgroundColor: Colors.grey[300],
+                                                                borderRadius: 12,
+                                                                removeElevation: false,
+                                                                boxShadow: [
+                                                                  BoxShadow(blurRadius: 3, color: Colors.grey)
+                                                                ],
+                                                                onTap: () {
+                                                                  launchUrl(Uri.parse(extractUrls(getAllPostData.object?[index].repostOn?.description ?? "").first));
+                                                                }, // This disables tap event
+                                                              ),
+                                                            ),
+                                                        ],
+                                                      )
+                                              )
                                                   : SizedBox(),
                                               Container(
                                                 width: _width,
-                                                child: getAllPostData
-                                                            .object?[index]
-                                                            .repostOn
-                                                            ?.postDataType ==
-                                                        null
+                                                child: getAllPostData.object?[index].repostOn?.postDataType == null
                                                     ? SizedBox()
-                                                    : getAllPostData
-                                                                .object?[index]
-                                                                .repostOn
-                                                                ?.postData
-                                                                ?.length ==
-                                                            1
-                                                        ? (getAllPostData
-                                                                    .object?[
-                                                                        index]
-                                                                    .repostOn
-                                                                    ?.postDataType ==
-                                                                "IMAGE"
+                                                    : getAllPostData.object?[index].repostOn?.postData?.length == 1
+                                                        ? (getAllPostData.object?[index].repostOn?.postDataType == "IMAGE"
                                                             ? GestureDetector(
                                                                 onTap: () {
-                                                                  Navigator
-                                                                      .push(
+                                                                  Navigator.push(
                                                                     context,
                                                                     MaterialPageRoute(
-                                                                        builder: (context) =>
-                                                                            OpenSavePostImage(
+                                                                        builder: (context) => OpenSavePostImage(
                                                                               PostID: getAllPostData.object?[index].repostOn?.postUid,
                                                                               index: index,
                                                                             )),
                                                                   );
                                                                 },
-                                                                child:
-                                                                    Container(
+                                                                child: Container(
                                                                   width: _width,
                                                                   height: 150,
-                                                                  margin: EdgeInsets
-                                                                      .only(
-                                                                          left:
-                                                                              16,
-                                                                          top:
-                                                                              15,
-                                                                          right:
-                                                                              16),
+                                                                  margin: EdgeInsets.only(left: 16, top: 15, right: 16),
                                                                   child: Center(
-                                                                      child:
-                                                                          CustomImageView(
-                                                                    url:
-                                                                        "${getAllPostData.object?[index].repostOn?.postData?[0]}",
+                                                                      child: CustomImageView(
+                                                                    url: "${getAllPostData.object?[index].repostOn?.postData?[0]}",
                                                                   )),
                                                                 ),
                                                               )
-                                                            : getAllPostData
-                                                                        .object?[
-                                                                            index]
-                                                                        .repostOn
-                                                                        ?.postDataType ==
-                                                                    "VIDEO"
+                                                            : getAllPostData.object?[index].repostOn?.postDataType == "VIDEO"
                                                                 ? /* repostMainControllers[0].value.isInitialized
                                                                                       ? */
                                                                 Padding(
-                                                                    padding: const EdgeInsets
-                                                                            .only(
-                                                                        right:
-                                                                            20,
-                                                                        top:
-                                                                            15),
-                                                                    child:
-                                                                        Column(
-                                                                      mainAxisSize:
-                                                                          MainAxisSize
-                                                                              .min,
+                                                                    padding: const EdgeInsets.only(right: 20, top: 15),
+                                                                    child: Column(
+                                                                      mainAxisSize: MainAxisSize.min,
                                                                       children: [
                                                                         VideoListItem1(
-                                                                          videoUrl:
-                                                                              videoUrls[index],
-                                                                          discrption: getAllPostData
-                                                                              .object?[index]
-                                                                              .repostOn
-                                                                              ?.description,
-                                                                          PostID: getAllPostData
-                                                                              .object?[index]
-                                                                              .postUid,
+                                                                          videoUrl: videoUrls[index],
+                                                                          discrption: getAllPostData.object?[index].repostOn?.description,
+                                                                          PostID: getAllPostData.object?[index].postUid,
                                                                           /*  isData:
                                                                 User_ID == null
                                                                     ? false
@@ -5701,24 +4648,16 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                     ),
                                                                   )
                                                                 // : SizedBox()
-                                                                : getAllPostData
-                                                                            .object?[index]
-                                                                            .repostOn
-                                                                            ?.postDataType ==
-                                                                        "ATTACHMENT"
+                                                                : getAllPostData.object?[index].repostOn?.postDataType == "ATTACHMENT"
                                                                     ? Stack(
                                                                         children: [
                                                                           Container(
-                                                                            height:
-                                                                                400,
-                                                                            width:
-                                                                                _width,
-                                                                            color:
-                                                                                Colors.transparent,
+                                                                            height: 400,
+                                                                            width: _width,
+                                                                            color: Colors.transparent,
                                                                           ),
                                                                           GestureDetector(
-                                                                            onTap:
-                                                                                () {
+                                                                            onTap: () {
                                                                               print("objectobjectobjectobject");
                                                                               Navigator.push(context, MaterialPageRoute(
                                                                                 builder: (context) {
@@ -5728,8 +4667,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                                 },
                                                                               ));
                                                                             },
-                                                                            child:
-                                                                                Container(
+                                                                            child: Container(
                                                                               child: CachedNetworkImage(
                                                                                 imageUrl: getAllPostData.object?[index].repostOn?.thumbnailImageUrl ?? "",
                                                                                 fit: BoxFit.cover,
@@ -5743,40 +4681,20 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                             children: [
                                                               Stack(
                                                                 children: [
-                                                                  if ((getAllPostData
-                                                                          .object?[
-                                                                              index]
-                                                                          .repostOn
-                                                                          ?.postData
-                                                                          ?.isNotEmpty ??
-                                                                      false)) ...[
+                                                                  if ((getAllPostData.object?[index].repostOn?.postData?.isNotEmpty ?? false)) ...[
                                                                     SizedBox(
-                                                                      height:
-                                                                          300,
-                                                                      child: PageView
-                                                                          .builder(
-                                                                        onPageChanged:
-                                                                            (page) {
-                                                                          super.setState(
-                                                                              () {
-                                                                            _currentPages[index] =
-                                                                                page;
-                                                                            imageCount2 =
-                                                                                page + 1;
+                                                                      height: 300,
+                                                                      child: PageView.builder(
+                                                                        onPageChanged: (page) {
+                                                                          super.setState(() {
+                                                                            _currentPages[index] = page;
+                                                                            imageCount2 = page + 1;
                                                                           });
                                                                         },
-                                                                        controller:
-                                                                            _pageControllers[index],
-                                                                        itemCount: getAllPostData
-                                                                            .object?[index]
-                                                                            .repostOn
-                                                                            ?.postData
-                                                                            ?.length,
-                                                                        itemBuilder:
-                                                                            (BuildContext context,
-                                                                                int index1) {
-                                                                          if (getAllPostData.object?[index].repostOn?.postDataType ==
-                                                                              "IMAGE") {
+                                                                        controller: _pageControllers[index],
+                                                                        itemCount: getAllPostData.object?[index].repostOn?.postData?.length,
+                                                                        itemBuilder: (BuildContext context, int index1) {
+                                                                          if (getAllPostData.object?[index].repostOn?.postDataType == "IMAGE") {
                                                                             return GestureDetector(
                                                                               onTap: () {
                                                                                 print("Repost Opne Full screen");
@@ -5825,8 +4743,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                                 )),
                                                                               ),
                                                                             );
-                                                                          } else if (getAllPostData.object?[index].repostOn?.postDataType ==
-                                                                              "ATTACHMENT") {
+                                                                          } else if (getAllPostData.object?[index].repostOn?.postDataType == "ATTACHMENT") {
                                                                             return Container(
                                                                                 height: 400,
                                                                                 width: _width,
@@ -5838,21 +4755,14 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                       ),
                                                                     ),
                                                                     Positioned(
-                                                                        bottom:
-                                                                            5,
+                                                                        bottom: 5,
                                                                         left: 0,
-                                                                        right:
-                                                                            0,
-                                                                        child:
-                                                                            Padding(
-                                                                          padding:
-                                                                              const EdgeInsets.only(top: 0),
-                                                                          child:
-                                                                              Container(
-                                                                            height:
-                                                                                20,
-                                                                            child:
-                                                                                DotsIndicator(
+                                                                        right: 0,
+                                                                        child: Padding(
+                                                                          padding: const EdgeInsets.only(top: 0),
+                                                                          child: Container(
+                                                                            height: 20,
+                                                                            child: DotsIndicator(
                                                                               dotsCount: getAllPostData.object?[index].repostOn?.postData?.length ?? 1,
                                                                               position: _currentPages[index].toDouble(),
                                                                               decorator: DotsDecorator(
@@ -5879,8 +4789,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                         ),
                                       ),
                                       Padding(
-                                        padding:
-                                            const EdgeInsets.only(left: 13),
+                                        padding: const EdgeInsets.only(left: 13),
                                         child: Divider(
                                           thickness: 1,
                                         ),
@@ -5889,8 +4798,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                         height: 5,
                                       ),
                                       Padding(
-                                        padding: const EdgeInsets.only(
-                                            top: 0, right: 16),
+                                        padding: const EdgeInsets.only(top: 0, right: 16),
                                         child: Row(
                                           children: [
                                             SizedBox(
@@ -5898,22 +4806,15 @@ class _ProfileScreenState extends State<ProfileScreen>
                                             ),
                                             GestureDetector(
                                               onTap: () async {
-                                                await soicalFunation(
-                                                    apiName: 'like_post',
-                                                    index: index);
+                                                await soicalFunation(apiName: 'like_post', index: index);
                                               },
                                               child: Container(
                                                 color: Colors.transparent,
                                                 child: Padding(
-                                                  padding:
-                                                      const EdgeInsets.all(5.0),
-                                                  child: getAllPostData
-                                                              .object?[index]
-                                                              .isLiked !=
-                                                          true
+                                                  padding: const EdgeInsets.all(5.0),
+                                                  child: getAllPostData.object?[index].isLiked != true
                                                       ? Image.asset(
-                                                          ImageConstant
-                                                              .likewithout,
+                                                          ImageConstant.likewithout,
                                                           height: 20,
                                                         )
                                                       : Image.asset(
@@ -5926,9 +4827,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                             SizedBox(
                                               width: 0,
                                             ),
-                                            getAllPostData.object?[index]
-                                                        .likedCount ==
-                                                    0
+                                            getAllPostData.object?[index].likedCount == 0
                                                 ? SizedBox()
                                                 : GestureDetector(
                                                     onTap: () {
@@ -5936,29 +4835,22 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                     context,
                                                     MaterialPageRoute(
                                                         builder: (context) =>
-                                                       
+
                                                             ShowAllPostLike("${getAllPostData?.object?[index].postUid}"))); */
 
-                                                      Navigator.push(context,
-                                                          MaterialPageRoute(
+                                                      Navigator.push(context, MaterialPageRoute(
                                                         builder: (context) {
-                                                          return ShowAllPostLike(
-                                                              "${getAllPostData.object?[index].postUid}");
+                                                          return ShowAllPostLike("${getAllPostData.object?[index].postUid}");
                                                         },
                                                       ));
                                                     },
                                                     child: Container(
                                                       color: Colors.transparent,
                                                       child: Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                .all(5.0),
+                                                        padding: const EdgeInsets.all(5.0),
                                                         child: Text(
                                                           "${getAllPostData.object?[index].likedCount}",
-                                                          style: TextStyle(
-                                                              fontFamily:
-                                                                  "outfit",
-                                                              fontSize: 14),
+                                                          style: TextStyle(fontFamily: "outfit", fontSize: 14),
                                                         ),
                                                       ),
                                                     ),
@@ -5968,20 +4860,14 @@ class _ProfileScreenState extends State<ProfileScreen>
                                             ),
                                             GestureDetector(
                                               onTap: () async {
-                                                BlocProvider.of<
-                                                            AddcommentCubit>(
-                                                        context)
-                                                    .Addcomment(context,
-                                                        '${getAllPostData.object?[index].postUid}');
+                                                BlocProvider.of<AddcommentCubit>(context).Addcomment(context, '${getAllPostData.object?[index].postUid}');
 
-                                                _settingModalBottomSheet1(
-                                                    context, index, _height);
+                                                _settingModalBottomSheet1(context, index, _height);
                                               },
                                               child: Container(
                                                 color: Colors.transparent,
                                                 child: Padding(
-                                                  padding:
-                                                      const EdgeInsets.all(5.0),
+                                                  padding: const EdgeInsets.all(5.0),
                                                   child: Image.asset(
                                                     ImageConstant.meesage,
                                                     height: 15,
@@ -5992,29 +4878,23 @@ class _ProfileScreenState extends State<ProfileScreen>
                                             SizedBox(
                                               width: 5,
                                             ),
-                                            getAllPostData.object?[index]
-                                                        .commentCount ==
-                                                    0
+                                            getAllPostData.object?[index].commentCount == 0
                                                 ? SizedBox()
                                                 : Text(
                                                     "${getAllPostData.object?[index].commentCount}",
-                                                    style: TextStyle(
-                                                        fontFamily: "outfit",
-                                                        fontSize: 14),
+                                                    style: TextStyle(fontFamily: "outfit", fontSize: 14),
                                                   ),
                                             SizedBox(
                                               width: 8,
                                             ),
                                             GestureDetector(
                                               onTap: () {
-                                                rePostBottomSheet(
-                                                    context, index);
+                                                rePostBottomSheet(context, index);
                                               },
                                               child: Container(
                                                 color: Colors.transparent,
                                                 child: Padding(
-                                                  padding:
-                                                      const EdgeInsets.all(5.0),
+                                                  padding: const EdgeInsets.all(5.0),
                                                   child: Image.asset(
                                                     ImageConstant.vector2,
                                                     height: 13,
@@ -6025,57 +4905,70 @@ class _ProfileScreenState extends State<ProfileScreen>
                                             SizedBox(
                                               width: 5,
                                             ),
-                                            getAllPostData.object?[index]
-                                                            .repostCount ==
-                                                        null ||
-                                                    getAllPostData
-                                                            .object?[index]
-                                                            .repostCount ==
-                                                        0
+                                            getAllPostData.object?[index].repostCount == null || getAllPostData.object?[index].repostCount == 0
                                                 ? SizedBox()
                                                 : Text(
                                                     '${getAllPostData.object?[index].repostCount}',
-                                                    style: TextStyle(
-                                                        fontFamily: "outfit",
-                                                        fontSize: 14),
+                                                    style: TextStyle(fontFamily: "outfit", fontSize: 14),
                                                   ),
                                             GestureDetector(
-                                              onTap: () {
-                                                _onShareXFileFromAssets(context,
-                                                    androidLink:
-                                                        '${getAllPostData.object?[index].postLink}'
-                                                    /* iosLink:
-                                                      "https://apps.apple.com/inList =  /app/growder-b2b-platform/id6451333863" */
-                                                    );
+                                              onTap: () async {
+                                                if (getAllPostData.object![index].postDataType != "VIDEO") {
+                                                  String thumb = "";
+                                                  if (getAllPostData.object![index].thumbnailImageUrl != null) {
+                                                    thumb = getAllPostData.object![index].thumbnailImageUrl!;
+                                                  } else {
+                                                    if (getAllPostData.object![index].postData != null && getAllPostData.object![index].postData!.isNotEmpty) {
+                                                      thumb = getAllPostData.object![index].postData!.first;
+                                                    } else {
+                                                      if (getAllPostData.object![index].repostOn != null && getAllPostData.object![index].repostOn!.thumbnailImageUrl != null) {
+                                                        thumb = getAllPostData.object![index].repostOn!.thumbnailImageUrl!;
+                                                      } else {
+                                                        thumb = getAllPostData.object![index].repostOn != null && getAllPostData.object![index].repostOn!.postData != null && getAllPostData.object![index].repostOn!.postData!.isNotEmpty ? getAllPostData.object![index].repostOn!.postData!.first : "";
+                                                      }
+                                                    }
+                                                  }
+                                                  _onShareXFileFromAssets(
+                                                    context,
+                                                    thumb,
+                                                    getAllPostData.object![index].postUserName ?? "",
+                                                    getAllPostData.object![index].description ?? "",
+                                                    androidLink: '${getAllPostData.object![index].postLink}',
+                                                  );
+                                                } else {
+                                                  final fileName = await VideoThumbnail.thumbnailFile(
+                                                    video: getAllPostData.object![index].postData?.first ?? "",
+                                                    thumbnailPath: (await getTemporaryDirectory()).path,
+                                                    imageFormat: ImageFormat.WEBP,
+                                                    quality: 100,
+                                                  );
+                                                  _onShareXFileFromAssets(
+                                                    context,
+                                                    fileName!,
+                                                    getAllPostData.object![index].postUserName ?? "",
+                                                    getAllPostData.object![index].description ?? "",
+                                                    androidLink: '${getAllPostData.object![index].postLink}',
+                                                  );
+                                                }
                                               },
                                               child: Container(
                                                 height: 20,
                                                 width: 30,
                                                 color: Colors.transparent,
-                                                child: Icon(Icons.share_rounded,
-                                                    size: 20),
+                                                child: Icon(Icons.share_rounded, size: 20),
                                               ),
                                             ),
                                             Spacer(),
                                             GestureDetector(
                                               onTap: () async {
-                                                await soicalFunation(
-                                                    apiName: 'savedata',
-                                                    index: index);
+                                                await soicalFunation(apiName: 'savedata', index: index);
                                               },
                                               child: Container(
                                                 color: Colors.transparent,
                                                 child: Padding(
-                                                  padding:
-                                                      const EdgeInsets.all(5.0),
+                                                  padding: const EdgeInsets.all(5.0),
                                                   child: Image.asset(
-                                                    getAllPostData
-                                                                .object?[index]
-                                                                .isSaved ==
-                                                            false
-                                                        ? ImageConstant.savePin
-                                                        : ImageConstant
-                                                            .Savefill,
+                                                    getAllPostData.object?[index].isSaved == false ? ImageConstant.savePin : ImageConstant.Savefill,
                                                     height: 17,
                                                   ),
                                                 ),
@@ -6103,10 +4996,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                       SizedBox(
                                         height: 10,
                                       ),
-                                      SizedBox(
-                                          height: 20,
-                                          child: Image.asset(
-                                              ImageConstant.greenseen)),
+                                      SizedBox(height: 20, child: Image.asset(ImageConstant.greenseen)),
                                       SizedBox(
                                         height: 10,
                                       ),
@@ -6128,27 +5018,22 @@ class _ProfileScreenState extends State<ProfileScreen>
                                   ),
                                 )
                               : Padding(
-                                  padding: EdgeInsets.only(
-                                      left: 0, right: 0, top: 10, bottom: 10),
+                                  padding: EdgeInsets.only(left: 0, right: 0, top: 10, bottom: 10),
                                   child: GestureDetector(
                                     onDoubleTap: () async {
-                                      await soicalFunation(
-                                          apiName: 'like_post', index: index);
+                                      await soicalFunation(apiName: 'like_post', index: index);
                                     },
                                     child: Container(
                                       decoration: BoxDecoration(
                                         color: Colors.white,
-                                        border: Border.all(
-                                            color:
-                                                Color.fromRGBO(0, 0, 0, 0.25)),
+                                        border: Border.all(color: Color.fromRGBO(0, 0, 0, 0.25)),
                                         /* borderRadius:
                                               BorderRadius.circular(15) */
                                       ),
                                       // height: 300,
                                       width: _width,
                                       child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+                                        crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
                                           SizedBox(
                                             height: 10,
@@ -6162,61 +5047,31 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                     /*   await BlocProvider.of<GetGuestAllPostCubit>(
                                         context)
                                     .seetinonExpried(context); */
-                                                    Navigator.push(context,
-                                                        MaterialPageRoute(
-                                                            builder: (context) {
-                                                      return MultiBlocProvider(
-                                                          providers: [
-                                                            BlocProvider<
-                                                                NewProfileSCubit>(
-                                                              create: (context) =>
-                                                                  NewProfileSCubit(),
-                                                            ),
-                                                          ],
-                                                          child: ProfileScreen(
-                                                              User_ID:
-                                                                  "${getAllPostData.object?[index].userUid}",
-                                                              isFollowing:
-                                                                  getAllPostData
-                                                                      .object?[
-                                                                          index]
-                                                                      .isFollowing));
-                                                    })).then((value) =>
-                                                        Get_UserToken());
+                                                    Navigator.push(context, MaterialPageRoute(builder: (context) {
+                                                      return MultiBlocProvider(providers: [
+                                                        BlocProvider<NewProfileSCubit>(
+                                                          create: (context) => NewProfileSCubit(),
+                                                        ),
+                                                      ], child: ProfileScreen(User_ID: "${getAllPostData.object?[index].userUid}", isFollowing: getAllPostData.object?[index].isFollowing));
+                                                    })).then((value) => Get_UserToken());
                                                     //
                                                   },
-                                                  child: getAllPostData
-                                                                  .object?[
-                                                                      index]
-                                                                  .userProfilePic !=
-                                                              null &&
-                                                          getAllPostData
-                                                                  .object?[
-                                                                      index]
-                                                                  .userProfilePic !=
-                                                              ""
+                                                  child: getAllPostData.object?[index].userProfilePic != null && getAllPostData.object?[index].userProfilePic != ""
                                                       ? CircleAvatar(
-                                                          backgroundImage:
-                                                              NetworkImage(
-                                                                  "${getAllPostData.object?[index].userProfilePic}"),
-                                                          backgroundColor:
-                                                              Colors.white,
+                                                          backgroundImage: NetworkImage("${getAllPostData.object?[index].userProfilePic}"),
+                                                          backgroundColor: Colors.white,
                                                           radius: 25,
                                                         )
                                                       : CustomImageView(
-                                                          imagePath:
-                                                              ImageConstant
-                                                                  .tomcruse,
+                                                          imagePath: ImageConstant.tomcruse,
                                                           height: 50,
                                                           width: 50,
                                                           fit: BoxFit.fill,
-                                                          radius: BorderRadius
-                                                              .circular(25),
+                                                          radius: BorderRadius.circular(25),
                                                         ),
                                                 ),
                                                 title: Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
                                                   children: [
                                                     // SizedBox(
                                                     //   height: 6,
@@ -6226,27 +5081,13 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                         /*    await BlocProvider.of<GetGuestAllPostCubit>(
                                             context)
                                         .seetinonExpried(context); */
-                                                        Navigator.push(context,
-                                                            MaterialPageRoute(
-                                                                builder:
-                                                                    (context) {
-                                                          return MultiBlocProvider(
-                                                              providers: [
-                                                                BlocProvider<
-                                                                    NewProfileSCubit>(
-                                                                  create: (context) =>
-                                                                      NewProfileSCubit(),
-                                                                ),
-                                                              ],
-                                                              child: ProfileScreen(
-                                                                  User_ID:
-                                                                      "${getAllPostData.object?[index].userUid}",
-                                                                  isFollowing: getAllPostData
-                                                                      .object?[
-                                                                          index]
-                                                                      .isFollowing));
-                                                        })).then((value) =>
-                                                            Get_UserToken());
+                                                        Navigator.push(context, MaterialPageRoute(builder: (context) {
+                                                          return MultiBlocProvider(providers: [
+                                                            BlocProvider<NewProfileSCubit>(
+                                                              create: (context) => NewProfileSCubit(),
+                                                            ),
+                                                          ], child: ProfileScreen(User_ID: "${getAllPostData.object?[index].userUid}", isFollowing: getAllPostData.object?[index].isFollowing));
+                                                        })).then((value) => Get_UserToken());
                                                         //
                                                       },
                                                       child: Row(
@@ -6255,13 +5096,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                             // color: Colors.red,
                                                             child: Text(
                                                               "${getAllPostData.object?[index].postUserName}",
-                                                              style: TextStyle(
-                                                                  fontSize: 20,
-                                                                  fontFamily:
-                                                                      "outfit",
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold),
+                                                              style: TextStyle(fontSize: 20, fontFamily: "outfit", fontWeight: FontWeight.bold),
                                                             ),
                                                           ),
                                                           /*  Spacer(),
@@ -6287,8 +5122,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                     ),
                                                     //FIndText
                                                     Text(
-                                                      getTimeDifference(
-                                                          parsedDateTime),
+                                                      getTimeDifference(parsedDateTime),
                                                       style: TextStyle(
                                                         fontSize: 12,
                                                         fontFamily: "outfit",
@@ -6296,45 +5130,28 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                     ),
                                                   ],
                                                 ),
-                                                trailing: getAllPostData
-                                                            .object?[index]
-                                                            .userUid !=
-                                                        User_ID
+                                                trailing: getAllPostData.object?[index].userUid != User_ID
                                                     ? GestureDetector(
                                                         key: buttonKey,
                                                         onTap: () async {
-                                                          showPopupMenu1(
-                                                              context,
-                                                              index,
-                                                              buttonKey,
-                                                              getAllPostData
-                                                                  .object?[
-                                                                      index]
-                                                                  .postUid,
-                                                              '_ProfileScreenState');
+                                                          showPopupMenu1(context, index, buttonKey, getAllPostData.object?[index].postUid, '_ProfileScreenState');
                                                         },
                                                         child: Container(
                                                             height: 25,
                                                             width: 40,
                                                             /*   color: Color.fromARGB(
                                                     219, 189, 3, 3), */
-                                                            child: Icon(Icons
-                                                                .more_vert_rounded)))
+                                                            child: Icon(Icons.more_vert_rounded)))
                                                     : Container(
                                                         height: 25,
                                                         width: 40,
                                                         child: GestureDetector(
                                                           key: buttonKey,
                                                           onTap: () {
-                                                            showPopupMenu(
-                                                                context,
-                                                                index,
-                                                                buttonKey,
-                                                                getAllPostData);
+                                                            showPopupMenu(context, index, buttonKey, getAllPostData);
                                                           },
                                                           child: Icon(
-                                                            Icons
-                                                                .more_vert_outlined,
+                                                            Icons.more_vert_outlined,
                                                           ),
                                                         ),
                                                       )),
@@ -6342,41 +5159,27 @@ class _ProfileScreenState extends State<ProfileScreen>
                                           SizedBox(
                                             height: 10,
                                           ),
-                                          getAllPostData.object?[index]
-                                                      .description !=
-                                                  null
+                                          getAllPostData.object?[index].description != null
                                               ? Padding(
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                          left: 16),
+                                                  padding: const EdgeInsets.only(left: 16),
                                                   child:
                                                       //this is the despcation
                                                       GestureDetector(
                                                           onTap: () async {
-                                                            if (DataGet ==
-                                                                true) {
-                                                              await launch(
-                                                                  '${getAllPostData.object?[index].description}',
-                                                                  forceWebView:
-                                                                      true,
-                                                                  enableJavaScript:
-                                                                      true);
+                                                            if (DataGet == true) {
+                                                              await launch('${getAllPostData.object?[index].description}', forceWebView: true, enableJavaScript: true);
                                                             } else {
                                                               Navigator.push(
                                                                 context,
                                                                 MaterialPageRoute(
-                                                                    builder:
-                                                                        (context) =>
-                                                                            OpenSavePostImage(
-                                                                              PostID: getAllPostData.object?[index].postUid,
-                                                                            )),
+                                                                    builder: (context) => OpenSavePostImage(
+                                                                          PostID: getAllPostData.object?[index].postUid,
+                                                                        )),
                                                               );
                                                             }
                                                           },
                                                           child: Column(
-                                                            crossAxisAlignment:
-                                                                CrossAxisAlignment
-                                                                    .start,
+                                                            crossAxisAlignment: CrossAxisAlignment.start,
                                                             children: [
                                                               /*  GestureDetector(
                                                                               onTap: () async {
@@ -6432,39 +5235,27 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                                     ),
                                                                                   ))),
                                                                             ), */
-                                                              getAllPostData
-                                                                          .object?[
-                                                                              index]
-                                                                          .translatedDescription !=
-                                                                      null
+                                                              getAllPostData.object?[index].translatedDescription != null
                                                                   ? GestureDetector(
-                                                                      onTap:
-                                                                          () async {
-                                                                        super.setState(
-                                                                            () {
-                                                                          if (getAllPostData.object?[index].isTrsnalteoption == false ||
-                                                                              getAllPostData.object?[index].isTrsnalteoption == null) {
-                                                                            getAllPostData.object?[index].isTrsnalteoption =
-                                                                                true;
+                                                                      onTap: () async {
+                                                                        super.setState(() {
+                                                                          if (getAllPostData.object?[index].isTrsnalteoption == false || getAllPostData.object?[index].isTrsnalteoption == null) {
+                                                                            getAllPostData.object?[index].isTrsnalteoption = true;
                                                                           } else {
-                                                                            getAllPostData.object?[index].isTrsnalteoption =
-                                                                                false;
+                                                                            getAllPostData.object?[index].isTrsnalteoption = false;
                                                                           }
                                                                         });
                                                                       },
                                                                       child: Container(
                                                                           width: 80,
                                                                           decoration: BoxDecoration(
-                                                                            color:
-                                                                                ColorConstant.primaryLight_color,
-                                                                            borderRadius:
-                                                                                BorderRadius.circular(10),
+                                                                            color: ColorConstant.primaryLight_color,
+                                                                            borderRadius: BorderRadius.circular(10),
                                                                           ),
                                                                           child: Center(
                                                                               child: Text(
                                                                             "Translate",
-                                                                            style:
-                                                                                TextStyle(
+                                                                            style: TextStyle(
                                                                               fontFamily: 'outfit',
                                                                               fontWeight: FontWeight.bold,
                                                                             ),
@@ -6478,126 +5269,150 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                               Row(
                                                                 children: [
                                                                   Expanded(
-                                                                    child:
-                                                                        Container(
-                                                                      child:
+                                                                    child: Container(
+                                                                      child: Column(
+                                                                        children: [
                                                                           LinkifyText(
-                                                                        getAllPostData.object?[index].isTrsnalteoption == false ||
-                                                                                getAllPostData.object?[index].isTrsnalteoption == null
-                                                                            ? "${getAllPostData.object?[index].description}"
-                                                                            : "${getAllPostData.object?[index].translatedDescription}",
-                                                                        linkStyle:
-                                                                            TextStyle(
-                                                                          color:
-                                                                              Colors.blue,
-                                                                          fontFamily:
-                                                                              'outfit',
-                                                                        ),
-                                                                        textStyle:
-                                                                            TextStyle(
-                                                                          color:
-                                                                              Colors.black,
-                                                                          fontFamily:
-                                                                              'outfit',
-                                                                        ),
-                                                                        linkTypes: [
-                                                                          LinkType
-                                                                              .url,
-                                                                          LinkType
-                                                                              .userTag,
-                                                                          LinkType
-                                                                              .hashTag,
-                                                                          // LinkType
-                                                                          //     .email
-                                                                        ],
-                                                                        onTap:
-                                                                            (link) async {
-                                                                          /// do stuff with `link` like
-                                                                          /// if(link.type == Link.url) launchUrl(link.value);
+                                                                            getAllPostData.object?[index].isTrsnalteoption == false || getAllPostData.object?[index].isTrsnalteoption == null ? "${getAllPostData.object?[index].description}" : "${getAllPostData.object?[index].translatedDescription}",
+                                                                            linkStyle: TextStyle(
+                                                                              color: Colors.blue,
+                                                                              fontFamily: 'outfit',
+                                                                            ),
+                                                                            textStyle: TextStyle(
+                                                                              color: Colors.black,
+                                                                              fontFamily: 'outfit',
+                                                                            ),
+                                                                            linkTypes: [
+                                                                              LinkType.url,
+                                                                              LinkType.userTag,
+                                                                              LinkType.hashTag,
+                                                                              // LinkType
+                                                                              //     .email
+                                                                            ],
+                                                                            onTap: (link) async {
+                                                                              /// do stuff with `link` like
+                                                                              /// if(link.type == Link.url) launchUrl(link.value);
 
-                                                                          var SelectedTest = link
-                                                                              .value
-                                                                              .toString();
-                                                                          var Link =
-                                                                              SelectedTest.startsWith('https');
-                                                                          var Link1 =
-                                                                              SelectedTest.startsWith('http');
-                                                                          var Link2 =
-                                                                              SelectedTest.startsWith('www');
-                                                                          var Link3 =
-                                                                              SelectedTest.startsWith('WWW');
-                                                                          var Link4 =
-                                                                              SelectedTest.startsWith('HTTPS');
-                                                                          var Link5 =
-                                                                              SelectedTest.startsWith('HTTP');
-                                                                          var Link6 =
-                                                                              SelectedTest.startsWith('https://pdslink.page.link/');
-                                                                          print("tag -- " +
-                                                                              SelectedTest.toString());
+                                                                              var SelectedTest = link.value.toString();
+                                                                              var Link = SelectedTest.startsWith('https');
+                                                                              var Link1 = SelectedTest.startsWith('http');
+                                                                              var Link2 = SelectedTest.startsWith('www');
+                                                                              var Link3 = SelectedTest.startsWith('WWW');
+                                                                              var Link4 = SelectedTest.startsWith('HTTPS');
+                                                                              var Link5 = SelectedTest.startsWith('HTTP');
+                                                                              var Link6 = SelectedTest.startsWith('https://pdslink.page.link/');
+                                                                              print("tag -- " + SelectedTest.toString());
 
-                                                                          if (User_ID ==
-                                                                              null) {
-                                                                            Navigator.of(context).push(MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
-                                                                          } else {
-                                                                            if (Link == true ||
-                                                                                Link1 == true ||
-                                                                                Link2 == true ||
-                                                                                Link3 == true ||
-                                                                                Link4 == true ||
-                                                                                Link5 == true ||
-                                                                                Link6 == true) {
-                                                                              if (Link2 == true || Link3 == true) {
-                                                                                launchUrl(Uri.parse("https://${link.value.toString()}"));
-                                                                                print("qqqqqqqqhttps://${link.value}");
+                                                                              if (User_ID == null) {
+                                                                                Navigator.of(context).push(MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
                                                                               } else {
-                                                                                if (Link6 == true) {
-                                                                                  print("yes i am inList =   room");
-                                                                                  Navigator.push(context, MaterialPageRoute(
-                                                                                    builder: (context) {
-                                                                                      return NewBottomBar(
-                                                                                        buttomIndex: 1,
-                                                                                      );
-                                                                                    },
-                                                                                  ));
-                                                                                } else {
-                                                                                  launchUrl(Uri.parse(link.value.toString()));
-                                                                                  print("link.valuelink.value -- ${link.value}");
+                                                                                if (Link == true || Link1 == true || Link2 == true || Link3 == true || Link4 == true || Link5 == true || Link6 == true) {
+                                                                                  if (Link2 == true || Link3 == true) {
+                                                                                    launchUrl(Uri.parse("https://${link.value.toString()}"));
+                                                                                    print("qqqqqqqqhttps://${link.value}");
+                                                                                  } else {
+                                                                                    if (Link6 == true) {
+                                                                                      print("yes i am inList =   room");
+                                                                                      Navigator.push(context, MaterialPageRoute(
+                                                                                        builder: (context) {
+                                                                                          return NewBottomBar(
+                                                                                            buttomIndex: 1,
+                                                                                          );
+                                                                                        },
+                                                                                      ));
+                                                                                    } else {
+                                                                                      launchUrl(Uri.parse(link.value.toString()));
+                                                                                      print("link.valuelink.value -- ${link.value}");
+                                                                                    }
+                                                                                  }
+                                                                                } else if (link.value != null) {
+                                                                                  if (link.value!.startsWith('#')) {
+                                                                                    /*   await BlocProvider
+                                                                          .of<GetGuestAllPostCubit>(
+                                                                              context)
+                                                                  .seetinonExpried(
+                                                                          context); */
+                                                                                    Navigator.push(
+                                                                                        context,
+                                                                                        MaterialPageRoute(
+                                                                                          builder: (context) => HashTagViewScreen(title: "${link.value}"),
+                                                                                        ));
+                                                                                  } else if (link.value!.startsWith('@')) {
+                                                                                    /*  await BlocProvider
+                                                                          .of<GetGuestAllPostCubit>(
+                                                                              context)
+                                                                  .seetinonExpried(
+                                                                          context); */
+                                                                                    var name;
+                                                                                    var tagName;
+                                                                                    name = SelectedTest;
+                                                                                    tagName = name.replaceAll("@", "");
+                                                                                    await BlocProvider.of<NewProfileSCubit>(context).UserTagAPI(context, tagName);
+
+                                                                                    Navigator.push(context, MaterialPageRoute(builder: (context) {
+                                                                                      return ProfileScreen(User_ID: "${userTagModel?.object}", isFollowing: "");
+                                                                                    })).then((value) => Get_UserToken());
+
+                                                                                    print("tagName -- ${tagName}");
+                                                                                    print("user id -- ${userTagModel?.object}");
+                                                                                  }
                                                                                 }
                                                                               }
-                                                                            } else if (link.value != null) {
-                                                                              if (link.value!.startsWith('#')) {
-                                                                                /*   await BlocProvider
-                                                                      .of<GetGuestAllPostCubit>(
-                                                                          context)
-                                                                  .seetinonExpried(
-                                                                      context); */
-                                                                                Navigator.push(
-                                                                                    context,
-                                                                                    MaterialPageRoute(
-                                                                                      builder: (context) => HashTagViewScreen(title: "${link.value}"),
-                                                                                    ));
-                                                                              } else if (link.value!.startsWith('@')) {
-                                                                                /*  await BlocProvider
-                                                                      .of<GetGuestAllPostCubit>(
-                                                                          context)
-                                                                  .seetinonExpried(
-                                                                      context); */
-                                                                                var name;
-                                                                                var tagName;
-                                                                                name = SelectedTest;
-                                                                                tagName = name.replaceAll("@", "");
-                                                                                await BlocProvider.of<NewProfileSCubit>(context).UserTagAPI(context, tagName);
-
-                                                                                Navigator.push(context, MaterialPageRoute(builder: (context) {
-                                                                                  return ProfileScreen(User_ID: "${userTagModel?.object}", isFollowing: "");
-                                                                                })).then((value) => Get_UserToken());
-
-                                                                                print("tagName -- ${tagName}");
-                                                                                print("user id -- ${userTagModel?.object}");
-                                                                              }
-                                                                            }
-                                                                          }
-                                                                        },
+                                                                            },
+                                                                          ),
+                                                                          if (extractUrls(getAllPostData.object?[index].description ?? "").isNotEmpty)
+                                                                            isYouTubeUrl(extractUrls(getAllPostData.object?[index].description ?? "").first)
+                                                                                ? FutureBuilder(
+                                                                                future: fetchYoutubeThumbnail(extractUrls(getAllPostData.object?[index].description ?? "").first),
+                                                                                builder: (context, snap) {
+                                                                                  return Container(
+                                                                                    height: 250,
+                                                                                    decoration: BoxDecoration(image: DecorationImage(image: CachedNetworkImageProvider(snap.data.toString())), borderRadius: BorderRadius.circular(10)),
+                                                                                    clipBehavior: Clip.antiAlias,
+                                                                                    child: Center(
+                                                                                        child: IconButton(
+                                                                                          icon: Icon(
+                                                                                            Icons.play_circle_fill_rounded,
+                                                                                            color: Colors.white,
+                                                                                            size: 60,
+                                                                                          ),
+                                                                                          onPressed: () {
+                                                                                            playLink(extractUrls(getAllPostData.object?[index].description ?? "").first, context);
+                                                                                          },
+                                                                                        )),
+                                                                                  );
+                                                                                })
+                                                                                : Padding(
+                                                                              padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                                                                              child: AnyLinkPreview(
+                                                                                link: extractUrls(getAllPostData.object?[index].description ?? "").first,
+                                                                                displayDirection: UIDirection.uiDirectionHorizontal,
+                                                                                showMultimedia: true,
+                                                                                bodyMaxLines: 5,
+                                                                                bodyTextOverflow: TextOverflow.ellipsis,
+                                                                                titleStyle: TextStyle(
+                                                                                  color: Colors.black,
+                                                                                  fontWeight: FontWeight.bold,
+                                                                                  fontSize: 15,
+                                                                                ),
+                                                                                bodyStyle: TextStyle(color: Colors.grey, fontSize: 12),
+                                                                                errorBody: 'Show my custom error body',
+                                                                                errorTitle: 'Show my custom error title',
+                                                                                errorWidget: null,
+                                                                                errorImage: "https://flutter.dev/",
+                                                                                cache: Duration(days: 7),
+                                                                                backgroundColor: Colors.grey[300],
+                                                                                borderRadius: 12,
+                                                                                removeElevation: false,
+                                                                                boxShadow: [
+                                                                                  BoxShadow(blurRadius: 3, color: Colors.grey)
+                                                                                ],
+                                                                                onTap: () {
+                                                                                  launchUrl(Uri.parse(extractUrls(getAllPostData.object?[index].description ?? "").first));
+                                                                                }, // This disables tap event
+                                                                              ),
+                                                                            ),
+                                                                        ],
                                                                       ),
                                                                     ),
                                                                   ),
@@ -6614,55 +5429,35 @@ class _ProfileScreenState extends State<ProfileScreen>
 
                                           Container(
                                             width: _width,
-                                            child: getAllPostData.object?[index]
-                                                        .postDataType ==
-                                                    null
+                                            child: getAllPostData.object?[index].postDataType == null
                                                 ? SizedBox()
-                                                : getAllPostData.object?[index]
-                                                            .postData?.length ==
-                                                        1
-                                                    ? (getAllPostData
-                                                                .object?[index]
-                                                                .postDataType ==
-                                                            "IMAGE"
+                                                : getAllPostData.object?[index].postData?.length == 1
+                                                    ? (getAllPostData.object?[index].postDataType == "IMAGE"
                                                         ? GestureDetector(
                                                             onTap: () {
                                                               Navigator.push(
                                                                 context,
                                                                 MaterialPageRoute(
-                                                                    builder:
-                                                                        (context) =>
-                                                                            OpenSavePostImage(
-                                                                              PostID: getAllPostData.object?[index].postUid,
-                                                                              index: index,
-                                                                            )),
+                                                                    builder: (context) => OpenSavePostImage(
+                                                                          PostID: getAllPostData.object?[index].postUid,
+                                                                          index: index,
+                                                                        )),
                                                               );
                                                             },
                                                             child: Container(
                                                               width: _width,
-                                                              margin: EdgeInsets
-                                                                  .only(
-                                                                      left: 0,
-                                                                      top: 15,
-                                                                      right: 0),
+                                                              margin: EdgeInsets.only(left: 0, top: 15, right: 0),
                                                               child: Center(
-                                                                child:
-                                                                    PinchZoom(
-                                                                  child:
-                                                                      CachedNetworkImage(
-                                                                    imageUrl:
-                                                                        "${getAllPostData.object?[index].postData?[0]}",
+                                                                child: PinchZoom(
+                                                                  child: CachedNetworkImage(
+                                                                    imageUrl: "${getAllPostData.object?[index].postData?[0]}",
                                                                   ),
                                                                   maxScale: 4,
-                                                                  onZoomStart:
-                                                                      () {
-                                                                    print(
-                                                                        'Start zooming');
+                                                                  onZoomStart: () {
+                                                                    print('Start zooming');
                                                                   },
-                                                                  onZoomEnd:
-                                                                      () {
-                                                                    print(
-                                                                        'Stop zooming');
+                                                                  onZoomEnd: () {
+                                                                    print('Stop zooming');
                                                                   },
                                                                 ),
                                                                 /*      CustomImageView(
@@ -6672,26 +5467,14 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                               ),
                                                             ),
                                                           )
-                                                        : getAllPostData
-                                                                    .object?[
-                                                                        index]
-                                                                    .postDataType ==
-                                                                "VIDEO"
+                                                        : getAllPostData.object?[index].postDataType == "VIDEO"
                                                             ? /*  mainPostControllers[0].value.isInitialized
                                                                               ? */
 
                                                             Padding(
-                                                                padding:
-                                                                    const EdgeInsets
-                                                                            .only(
-                                                                        right:
-                                                                            20,
-                                                                        top:
-                                                                            15),
+                                                                padding: const EdgeInsets.only(right: 20, top: 15),
                                                                 child: Column(
-                                                                  mainAxisSize:
-                                                                      MainAxisSize
-                                                                          .min,
+                                                                  mainAxisSize: MainAxisSize.min,
                                                                   children: [
                                                                     /* Container(
                                                                                             height: 250,
@@ -6701,13 +5484,8 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                                             )), */
 
                                                                     VideoListItem1(
-                                                                      videoUrl:
-                                                                          videoUrls[
-                                                                              index],
-                                                                      PostID: getAllPostData
-                                                                          .object?[
-                                                                              index]
-                                                                          .postUid,
+                                                                      videoUrl: videoUrls[index],
+                                                                      PostID: getAllPostData.object?[index].postUid,
                                                                       /* isData: User_ID == null
                                                         ? false
                                                         : true, */
@@ -6717,32 +5495,20 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                               )
                                                             // : SizedBox()
 
-                                                            : getAllPostData
-                                                                        .object?[
-                                                                            index]
-                                                                        .postDataType ==
-                                                                    "ATTACHMENT"
-                                                                ? (getAllPostData
-                                                                            .object?[index]
-                                                                            .postData
-                                                                            ?.isNotEmpty ==
-                                                                        true)
+                                                            : getAllPostData.object?[index].postDataType == "ATTACHMENT"
+                                                                ? (getAllPostData.object?[index].postData?.isNotEmpty == true)
                                                                     ? Stack(
                                                                         children: [
                                                                           Container(
-                                                                            height:
-                                                                                400,
-                                                                            width:
-                                                                                _width,
-                                                                            color:
-                                                                                Colors.transparent,
+                                                                            height: 400,
+                                                                            width: _width,
+                                                                            color: Colors.transparent,
                                                                             /* child: DocumentViewScreen1(
                                                                                             path: getAllPostData?.object?[index].postData?[0].toString(),
                                                                                           ) */
                                                                           ),
                                                                           GestureDetector(
-                                                                            onTap:
-                                                                                () {
+                                                                            onTap: () {
                                                                               print("objectobjectobjectobject");
                                                                               Navigator.push(context, MaterialPageRoute(
                                                                                 builder: (context) {
@@ -6752,8 +5518,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                                 },
                                                                               ));
                                                                             },
-                                                                            child:
-                                                                                Container(
+                                                                            child: Container(
                                                                               child: CachedNetworkImage(
                                                                                 imageUrl: getAllPostData.object?[index].thumbnailImageUrl ?? "",
                                                                                 fit: BoxFit.cover,
@@ -6768,57 +5533,26 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                         children: [
                                                           Stack(
                                                             children: [
-                                                              if ((getAllPostData
-                                                                      .object?[
-                                                                          index]
-                                                                      .postData
-                                                                      ?.isNotEmpty ??
-                                                                  false)) ...[
+                                                              if ((getAllPostData.object?[index].postData?.isNotEmpty ?? false)) ...[
                                                                 Container(
-                                                                  height:
-                                                                      _height /
-                                                                          1.4,
-                                                                  child: PageView
-                                                                      .builder(
-                                                                    onPageChanged:
-                                                                        (page) {
-                                                                      super.setState(
-                                                                          () {
-                                                                        _currentPages[index] =
-                                                                            page;
-                                                                        imageCount =
-                                                                            page +
-                                                                                1;
+                                                                  height: _height / 1.4,
+                                                                  child: PageView.builder(
+                                                                    onPageChanged: (page) {
+                                                                      super.setState(() {
+                                                                        _currentPages[index] = page;
+                                                                        imageCount = page + 1;
                                                                       });
                                                                     },
-                                                                    controller:
-                                                                        _pageControllers[
-                                                                            index],
-                                                                    itemCount: getAllPostData
-                                                                        .object?[
-                                                                            index]
-                                                                        .postData
-                                                                        ?.length,
-                                                                    itemBuilder:
-                                                                        (BuildContext
-                                                                                context,
-                                                                            int index1) {
-                                                                      if (getAllPostData
-                                                                              .object?[
-                                                                                  index]
-                                                                              .postDataType ==
-                                                                          "IMAGE") {
+                                                                    controller: _pageControllers[index],
+                                                                    itemCount: getAllPostData.object?[index].postData?.length,
+                                                                    itemBuilder: (BuildContext context, int index1) {
+                                                                      if (getAllPostData.object?[index].postDataType == "IMAGE") {
                                                                         return Container(
-                                                                          width:
-                                                                              _width,
-                                                                          margin: EdgeInsets.only(
-                                                                              left: 0,
-                                                                              top: 15,
-                                                                              right: 0),
+                                                                          width: _width,
+                                                                          margin: EdgeInsets.only(left: 0, top: 15, right: 0),
                                                                           child: Center(
                                                                               child: GestureDetector(
-                                                                            onTap:
-                                                                                () {
+                                                                            onTap: () {
                                                                               Navigator.push(
                                                                                 context,
                                                                                 MaterialPageRoute(
@@ -6828,8 +5562,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                                         )),
                                                                               );
                                                                             },
-                                                                            child:
-                                                                                Stack(
+                                                                            child: Stack(
                                                                               children: [
                                                                                 Align(
                                                                                   alignment: Alignment.center,
@@ -6872,17 +5605,11 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                             ),
                                                                           )),
                                                                         );
-                                                                      } else if (getAllPostData
-                                                                              .object?[index]
-                                                                              .postDataType ==
-                                                                          "ATTACHMENT") {
+                                                                      } else if (getAllPostData.object?[index].postDataType == "ATTACHMENT") {
                                                                         return Container(
-                                                                            height:
-                                                                                400,
-                                                                            width:
-                                                                                _width,
-                                                                            child:
-                                                                                DocumentViewScreen1(
+                                                                            height: 400,
+                                                                            width: _width,
+                                                                            child: DocumentViewScreen1(
                                                                               path: getAllPostData.object?[index].postData?[index1].toString(),
                                                                             ));
                                                                       }
@@ -6893,34 +5620,19 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                     bottom: 5,
                                                                     left: 0,
                                                                     right: 0,
-                                                                    child:
-                                                                        Padding(
-                                                                      padding: const EdgeInsets
-                                                                              .only(
-                                                                          top:
-                                                                              0),
-                                                                      child:
-                                                                          Container(
-                                                                        height:
-                                                                            20,
-                                                                        child:
-                                                                            DotsIndicator(
-                                                                          dotsCount:
-                                                                              getAllPostData.object?[index].postData?.length ?? 0,
-                                                                          position:
-                                                                              _currentPages[index].toDouble(),
-                                                                          decorator:
-                                                                              DotsDecorator(
-                                                                            size:
-                                                                                const Size(10.0, 7.0),
-                                                                            activeSize:
-                                                                                const Size(10.0, 10.0),
-                                                                            spacing:
-                                                                                const EdgeInsets.symmetric(horizontal: 2),
-                                                                            activeColor:
-                                                                                ColorConstant.primary_color,
-                                                                            color:
-                                                                                Color(0xff6A6A6A),
+                                                                    child: Padding(
+                                                                      padding: const EdgeInsets.only(top: 0),
+                                                                      child: Container(
+                                                                        height: 20,
+                                                                        child: DotsIndicator(
+                                                                          dotsCount: getAllPostData.object?[index].postData?.length ?? 0,
+                                                                          position: _currentPages[index].toDouble(),
+                                                                          decorator: DotsDecorator(
+                                                                            size: const Size(10.0, 7.0),
+                                                                            activeSize: const Size(10.0, 10.0),
+                                                                            spacing: const EdgeInsets.symmetric(horizontal: 2),
+                                                                            activeColor: ColorConstant.primary_color,
+                                                                            color: Color(0xff6A6A6A),
                                                                           ),
                                                                         ),
                                                                       ),
@@ -6934,8 +5646,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                           ),
 
                                           Padding(
-                                            padding:
-                                                const EdgeInsets.only(left: 13),
+                                            padding: const EdgeInsets.only(left: 13),
                                             child: Divider(
                                               thickness: 1,
                                             ),
@@ -6944,8 +5655,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                             height: 5,
                                           ),
                                           Padding(
-                                            padding: const EdgeInsets.only(
-                                                top: 0, right: 16),
+                                            padding: const EdgeInsets.only(top: 0, right: 16),
                                             child: Row(
                                               children: [
                                                 SizedBox(
@@ -6953,28 +5663,19 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                 ),
                                                 GestureDetector(
                                                   onTap: () async {
-                                                    await soicalFunation(
-                                                        apiName: 'like_post',
-                                                        index: index);
+                                                    await soicalFunation(apiName: 'like_post', index: index);
                                                   },
                                                   child: Container(
                                                     color: Colors.transparent,
                                                     child: Padding(
-                                                      padding:
-                                                          EdgeInsets.all(5.0),
-                                                      child: getAllPostData
-                                                                  .object?[
-                                                                      index]
-                                                                  .isLiked !=
-                                                              true
+                                                      padding: EdgeInsets.all(5.0),
+                                                      child: getAllPostData.object?[index].isLiked != true
                                                           ? Image.asset(
-                                                              ImageConstant
-                                                                  .likewithout,
+                                                              ImageConstant.likewithout,
                                                               height: 18,
                                                             )
                                                           : Image.asset(
-                                                              ImageConstant
-                                                                  .like,
+                                                              ImageConstant.like,
                                                               height: 18,
                                                             ),
                                                     ),
@@ -6983,38 +5684,25 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                 SizedBox(
                                                   width: 0,
                                                 ),
-                                                getAllPostData.object?[index]
-                                                            .likedCount ==
-                                                        0
+                                                getAllPostData.object?[index].likedCount == 0
                                                     ? SizedBox()
                                                     : GestureDetector(
                                                         onTap: () {
-                                                          Navigator.push(
-                                                              context,
-                                                              MaterialPageRoute(
+                                                          Navigator.push(context, MaterialPageRoute(
                                                             builder: (context) {
-                                                              return ShowAllPostLike(
-                                                                  "${getAllPostData.object?[index].postUid}");
+                                                              return ShowAllPostLike("${getAllPostData.object?[index].postUid}");
                                                             },
                                                           ));
                                                         },
                                                         child: Container(
-                                                          color: Colors
-                                                              .transparent,
+                                                          color: Colors.transparent,
                                                           child: Padding(
-                                                            padding:
-                                                                EdgeInsets.all(
-                                                                    5.0),
+                                                            padding: EdgeInsets.all(5.0),
                                                             child: Align(
-                                                              alignment: Alignment
-                                                                  .centerLeft,
+                                                              alignment: Alignment.centerLeft,
                                                               child: Text(
                                                                 "${getAllPostData.object?[index].likedCount}",
-                                                                style: TextStyle(
-                                                                    fontFamily:
-                                                                        "outfit",
-                                                                    fontSize:
-                                                                        14),
+                                                                style: TextStyle(fontFamily: "outfit", fontSize: 14),
                                                               ),
                                                             ),
                                                           ),
@@ -7025,58 +5713,39 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                 ),
                                                 GestureDetector(
                                                     onTap: () async {
-                                                      BlocProvider.of<
-                                                                  AddcommentCubit>(
-                                                              context)
-                                                          .Addcomment(context,
-                                                              '${getAllPostData.object?[index].postUid}');
+                                                      BlocProvider.of<AddcommentCubit>(context).Addcomment(context, '${getAllPostData.object?[index].postUid}');
 
-                                                      _settingModalBottomSheet1(
-                                                          context,
-                                                          index,
-                                                          _height);
+                                                      _settingModalBottomSheet1(context, index, _height);
                                                     },
                                                     child: Container(
-                                                        color:
-                                                            Colors.transparent,
+                                                        color: Colors.transparent,
                                                         child: Padding(
-                                                            padding:
-                                                                EdgeInsets.all(
-                                                                    5.0),
+                                                            padding: EdgeInsets.all(5.0),
                                                             child: Image.asset(
-                                                              ImageConstant
-                                                                  .meesage,
+                                                              ImageConstant.meesage,
                                                               height: 15,
                                                               // width: 15,
                                                             )))),
                                                 SizedBox(
                                                   width: 5,
                                                 ),
-                                                getAllPostData.object?[index]
-                                                            .commentCount ==
-                                                        0
+                                                getAllPostData.object?[index].commentCount == 0
                                                     ? SizedBox()
                                                     : Text(
                                                         "${getAllPostData.object?[index].commentCount}",
-                                                        style: TextStyle(
-                                                            fontFamily:
-                                                                "outfit",
-                                                            fontSize: 14),
+                                                        style: TextStyle(fontFamily: "outfit", fontSize: 14),
                                                       ),
                                                 SizedBox(
                                                   width: 5,
                                                 ),
                                                 GestureDetector(
                                                   onTap: () {
-                                                    rePostBottomSheet(
-                                                        context, index);
+                                                    rePostBottomSheet(context, index);
                                                   },
                                                   child: Container(
                                                     color: Colors.transparent,
                                                     child: Padding(
-                                                      padding:
-                                                          const EdgeInsets.all(
-                                                              5.0),
+                                                      padding: const EdgeInsets.all(5.0),
                                                       child: Image.asset(
                                                         ImageConstant.vector2,
                                                         height: 13,
@@ -7087,63 +5756,70 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                 SizedBox(
                                                   width: 5,
                                                 ),
-                                                getAllPostData.object?[index]
-                                                                .repostCount ==
-                                                            null ||
-                                                        getAllPostData
-                                                                .object?[index]
-                                                                .repostCount ==
-                                                            0
+                                                getAllPostData.object?[index].repostCount == null || getAllPostData.object?[index].repostCount == 0
                                                     ? SizedBox()
                                                     : Text(
                                                         '${getAllPostData.object?[index].repostCount}',
-                                                        style: TextStyle(
-                                                            fontFamily:
-                                                                "outfit",
-                                                            fontSize: 14),
+                                                        style: TextStyle(fontFamily: "outfit", fontSize: 14),
                                                       ),
                                                 GestureDetector(
-                                                  onTap: () {
-                                                    _onShareXFileFromAssets(
-                                                      context,
-                                                      androidLink:
-                                                          '${getAllPostData.object?[index].postLink}',
-                                                      /* iosLink:
-                                                      "https://apps.apple.com/inList =  /app/growder-b2b-platform/id6451333863" */
-                                                    );
+                                                  onTap: () async {
+                                                    if (getAllPostData.object![index].postDataType != "VIDEO") {
+                                                      String thumb = "";
+                                                      if (getAllPostData.object![index].thumbnailImageUrl != null) {
+                                                        thumb = getAllPostData.object![index].thumbnailImageUrl!;
+                                                      } else {
+                                                        if (getAllPostData.object![index].postData != null && getAllPostData.object![index].postData!.isNotEmpty) {
+                                                          thumb = getAllPostData.object![index].postData!.first;
+                                                        } else {
+                                                          if (getAllPostData.object![index].repostOn != null && getAllPostData.object![index].repostOn!.thumbnailImageUrl != null) {
+                                                            thumb = getAllPostData.object![index].repostOn!.thumbnailImageUrl!;
+                                                          } else {
+                                                            thumb = getAllPostData.object![index].repostOn != null && getAllPostData.object![index].repostOn!.postData != null && getAllPostData.object![index].repostOn!.postData!.isNotEmpty ? getAllPostData.object![index].repostOn!.postData!.first : "";
+                                                          }
+                                                        }
+                                                      }
+                                                      _onShareXFileFromAssets(
+                                                        context,
+                                                        thumb,
+                                                        getAllPostData.object![index].postUserName ?? "",
+                                                        getAllPostData.object![index].description ?? "",
+                                                        androidLink: '${getAllPostData.object![index].postLink}',
+                                                      );
+                                                    } else {
+                                                      final fileName = await VideoThumbnail.thumbnailFile(
+                                                        video: getAllPostData.object![index].postData?.first ?? "",
+                                                        thumbnailPath: (await getTemporaryDirectory()).path,
+                                                        imageFormat: ImageFormat.WEBP,
+                                                        quality: 100,
+                                                      );
+                                                      _onShareXFileFromAssets(
+                                                        context,
+                                                        fileName!,
+                                                        getAllPostData.object![index].postUserName ?? "",
+                                                        getAllPostData.object![index].description ?? "",
+                                                        androidLink: '${getAllPostData.object![index].postLink}',
+                                                      );
+                                                    }
                                                   },
                                                   child: Container(
                                                     height: 20,
                                                     width: 30,
                                                     color: Colors.transparent,
-                                                    child: Icon(
-                                                        Icons.share_rounded,
-                                                        size: 20),
+                                                    child: Icon(Icons.share_rounded, size: 20),
                                                   ),
                                                 ),
                                                 Spacer(),
                                                 GestureDetector(
                                                   onTap: () async {
-                                                    await soicalFunation(
-                                                        apiName: 'savedata',
-                                                        index: index);
+                                                    await soicalFunation(apiName: 'savedata', index: index);
                                                   },
                                                   child: Container(
                                                     color: Colors.transparent,
                                                     child: Padding(
-                                                      padding:
-                                                          const EdgeInsets.all(
-                                                              5.0),
+                                                      padding: const EdgeInsets.all(5.0),
                                                       child: Image.asset(
-                                                        getAllPostData
-                                                                    .object?[
-                                                                        index]
-                                                                    .isSaved ==
-                                                                false
-                                                            ? ImageConstant
-                                                                .savePin
-                                                            : ImageConstant
-                                                                .Savefill,
+                                                        getAllPostData.object?[index].isSaved == false ? ImageConstant.savePin : ImageConstant.Savefill,
                                                         height: 17,
                                                       ),
                                                     ),
@@ -7165,11 +5841,7 @@ class _ProfileScreenState extends State<ProfileScreen>
             : Center(
                 child: Text(
                 "No post Uploaded",
-                style: TextStyle(
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold,
-                    fontFamily: 'outfit',
-                    fontSize: 20),
+                style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontFamily: 'outfit', fontSize: 20),
               ))
         : Column(
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -7198,23 +5870,12 @@ class _ProfileScreenState extends State<ProfileScreen>
         isDismissible: true,
         showDragHandle: true, */
 
-        enableDrag: true,
+        enableDrag: false,
         constraints: BoxConstraints(maxHeight: _heigth / 2),
         context: context,
         builder: (BuildContext bc) {
-          print(
-              "userUiduserUid == >>>>>>> ${GetAllPostData?.object?[index].userUid}");
-          return StatefulBuilder(
-              builder: (BuildContext context, StateSetter setState) {
-            return CommentBottomSheet(
-                isFoollinng: GetAllPostData?.object?[index].isFollowing,
-                useruid: GetAllPostData?.object?[index].userUid ?? "",
-                userProfile:
-                    GetAllPostData?.object?[index].userProfilePic ?? "",
-                UserName: GetAllPostData?.object?[index].postUserName ?? "",
-                desc: GetAllPostData?.object?[index].description ?? "",
-                postUuID: GetAllPostData?.object?[index].postUid ?? "");
-          });
+          print("userUiduserUid == >>>>>>> ${GetAllPostData?.object?[index].userUid}");
+          return CommentBottomSheet(isFoollinng: GetAllPostData?.object?[index].isFollowing, useruid: GetAllPostData?.object?[index].userUid ?? "", userProfile: GetAllPostData?.object?[index].userProfilePic ?? "", UserName: GetAllPostData?.object?[index].postUserName ?? "", desc: GetAllPostData?.object?[index].description ?? "", postUuID: GetAllPostData?.object?[index].postUid ?? "");
         });
     ;
   }
@@ -7230,12 +5891,10 @@ class _ProfileScreenState extends State<ProfileScreen>
         print("value check --${value.endsWith(' #')}");
         if (value.endsWith(' #')) {
           String data1 = value.split(' #').last.replaceAll('#', '');
-          BlocProvider.of<NewProfileSCubit>(context)
-              .GetAllHashtag(context, '10', '#${data1.trim()}');
+          BlocProvider.of<NewProfileSCubit>(context).GetAllHashtag(context, '10', '#${data1.trim()}');
         } else {
           String data = value.split(' @').last.replaceAll('@', '');
-          BlocProvider.of<NewProfileSCubit>(context)
-              .search_user_for_inbox(context, '${data.trim()}', '1');
+          BlocProvider.of<NewProfileSCubit>(context).search_user_for_inbox(context, '${data.trim()}', '1');
         }
       } else if (value.endsWith(' #')) {
         print("ends with value-${value}");
@@ -7245,8 +5904,7 @@ class _ProfileScreenState extends State<ProfileScreen>
     } else if (value.contains('#')) {
       print("check length-${value}");
       String data1 = value.split(' #').last.replaceAll('#', '');
-      BlocProvider.of<NewProfileSCubit>(context)
-          .GetAllHashtag(context, '10', '#${data1.trim()}');
+      BlocProvider.of<NewProfileSCubit>(context).GetAllHashtag(context, '10', '#${data1.trim()}');
     } else {
       super.setState(() {
         // postText.text = postText.text + ' ' + postTexContrlloer.join(' ,');
@@ -7273,9 +5931,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                     child: Container(
                   height: 5,
                   width: 150,
-                  decoration: BoxDecoration(
-                      color: Colors.grey,
-                      borderRadius: BorderRadius.circular(25)),
+                  decoration: BoxDecoration(color: Colors.grey, borderRadius: BorderRadius.circular(25)),
                 )),
                 SizedBox(
                   height: 35,
@@ -7293,17 +5949,12 @@ class _ProfileScreenState extends State<ProfileScreen>
                       ),
                       onTap: () async {
                         Map<String, dynamic> param = {"postType": "PUBLIC"};
-                        BlocProvider.of<NewProfileSCubit>(context).RePostAPI(
-                            context,
-                            param,
-                            GetAllPostData?.object?[index].postUid,
-                            "Repost");
+                        BlocProvider.of<NewProfileSCubit>(context).RePostAPI(context, param, GetAllPostData?.object?[index].postUid, "Repost");
                         if (widget.Screen?.isNotEmpty == true) {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) =>
-                                    NewBottomBar(buttomIndex: 0),
+                                builder: (context) => NewBottomBar(buttomIndex: 0),
                               ));
                         } else {
                           Navigator.pop(context);
@@ -7328,20 +5979,16 @@ class _ProfileScreenState extends State<ProfileScreen>
                       Navigator.push(context, MaterialPageRoute(
                         builder: (context) {
                           return RePostScreen(
-                            userProfile:
-                                GetAllPostData?.object?[index].userProfilePic,
-                            username:
-                                GetAllPostData?.object?[index].postUserName,
+                            userProfile: GetAllPostData?.object?[index].userProfilePic,
+                            username: GetAllPostData?.object?[index].postUserName,
                             date: GetAllPostData?.object?[index].createdAt,
                             desc: GetAllPostData?.object?[index].description,
                             postData: GetAllPostData?.object?[index].postData,
-                            postDataType:
-                                GetAllPostData?.object?[index].postDataType,
+                            postDataType: GetAllPostData?.object?[index].postDataType,
                             index: index,
                             GetAllPostData: GetAllPostData,
                             postUid: GetAllPostData?.object?[index].postUid,
-                            thumbNailURL: GetAllPostData
-                                ?.object?[index].thumbnailImageUrl,
+                            thumbNailURL: GetAllPostData?.object?[index].thumbnailImageUrl,
                           );
                         },
                       ));
@@ -7358,38 +6005,120 @@ class _ProfileScreenState extends State<ProfileScreen>
         });
   }
 
-  void _onShareXFileFromAssets(BuildContext context,
-      {String? androidLink}) async {
-    RenderBox? box = context.findAncestorRenderObjectOfType();
+  void _onShareXFileFromAssets(BuildContext context, String postLink, String userName, String description, {String? androidLink}) async {
+    // RenderBox? box = context.findAncestorRenderObjectOfType();
 
-    var directory = await getApplicationDocumentsDirectory();
+    var directory = await getTemporaryDirectory();
 
-    if (Platform.isAndroid) {
-      await Share.shareXFiles(
-        [XFile("/sdcard/download/IP__image.jpg")],
-        subject: "Share",
-        text: "Try This Awesome App \n\n Android :- ${androidLink}",
-        sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size,
-      );
+    if (postLink.isNotEmpty) {
+      _permissionReady = await _checkPermission();
+      await _prepareSaveDir();
+
+      if (_permissionReady) {
+        print("Downloading");
+        print("${postLink}");
+        try {
+          await Dio().download(
+            postLink.toString(),
+            directory.path + "/" + "IP__image.jpg",
+          );
+
+          print("Download Completed.");
+        } catch (e) {
+          print("Download Failed.\n\n" + e.toString());
+        }
+      }
+      if (Platform.isAndroid) {
+        Share.shareXFiles(
+          [XFile(postLink.startsWith("http") ? "${directory.path}/IP__image.jpg" : postLink)],
+          subject: "Share",
+          text: "$userName posted ${description.isNotEmpty ? "\n\n${description.split(" ").first}.... \n\n" : ""}on InPackaging \n\n https://www.inpackaging.com \n\n ${androidLink}",
+          // sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size,
+        );
+      } else {
+        Share.shareXFiles(
+          [XFile(directory.path + Platform.pathSeparator + 'Growder_Image/IP__image.jpg')],
+          subject: "Share",
+          text: "$userName posted ${description.isNotEmpty ? "\n\n${description.split(" ").first}.... \n\n" : ""}on InPackaging \n\n https://www.inpackaging.com \n\n ${androidLink}",
+          // sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size,
+        );
+      }
     } else {
-      await Share.shareXFiles(
-        [
-          XFile(directory.path +
-              Platform.pathSeparator +
-              'Growder_Image/IP__image.jpg')
-        ],
-        subject: "Share",
-        text: "Try This Awesome App \n\n Android :- ${androidLink}",
-        sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size,
-      );
+      print('No Invoice Available');
+
+      if (Platform.isAndroid) {
+        Share.shareXFiles(
+          [XFile("/sdcard/download/IP__image.jpg")],
+          subject: "Share",
+          text: "$userName posted ${description.isNotEmpty ? "\n\n${description.split(" ").first}.... \n\n" : ""}on InPackaging \n\n https://www.inpackaging.com \n\n ${androidLink}",
+          // sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size,
+        );
+      } else {
+        directory = await getApplicationDocumentsDirectory();
+        Share.shareXFiles(
+          [XFile(directory.path + Platform.pathSeparator + 'Growder_Image/IP__image.jpg')],
+          subject: "Share",
+          text: "$userName posted ${description.isNotEmpty ? "\n\n${description.split(" ").first}.... \n\n" : ""}on InPackaging \n https://www.inpackaging.com \n ${androidLink}",
+          // sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size,
+        );
+      }
+    }
+  }
+
+  Future<bool> _checkPermission() async {
+    if (Platform.isAndroid) {
+      DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+      AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+      print("objectobjectobjectobjectobjectobjectobjectobject ${androidInfo.version.release}");
+      version = int.parse(androidInfo.version.release);
+      // final SharedPreferences prefs = await SharedPreferences.getInstance();
+      // version =
+      //     await int.parse(prefs.getString(UserdefaultsData.version).toString());
+      print('dddwssadasdasdasdasdasd ${version}');
+    }
+    if (Platform.isAndroid) {
+      final status = (version ?? 0) < 13 ? await Permission.storage.status : PermissionStatus.granted;
+      if (status != PermissionStatus.granted) {
+        print('gegegegegegegegegegegegegege');
+        print('gegegegegegegegegegegegegege $status');
+        final result = (version ?? 0) < 13 ? await Permission.storage.request() : PermissionStatus.granted;
+        if (result == PermissionStatus.granted) {
+          return true;
+        }
+      } else {
+        return true;
+      }
+    } else {
+      return true;
+    }
+    return false;
+  }
+
+  Future<void> _prepareSaveDir() async {
+    _localPath = (await _findLocalPath())!;
+
+    print(_localPath);
+    final savedDir = Directory(_localPath);
+    bool hasExisted = await savedDir.exists();
+    if (!hasExisted) {
+      savedDir.create();
+      print('first vvvvvvvvvvvvvvvvvvv');
+    }
+  }
+
+  Future<String?> _findLocalPath() async {
+    if (Platform.isAndroid) {
+      return "/sdcard/download/";
+    } else {
+      var directory = await getApplicationDocumentsDirectory();
+      return directory.path + Platform.pathSeparator + 'IP_Image';
     }
   }
 
   soicalFunationSave({String? apiName, int? index}) async {
     print("fghdfghdfgh");
     if (apiName == 'like_post') {
-      await BlocProvider.of<NewProfileSCubit>(context)
-          .like_post(GetSavePostData?.object?[index ?? 0].postUid, context);
+      await BlocProvider.of<NewProfileSCubit>(context).like_post(GetSavePostData?.object?[index ?? 0].postUid, context);
       print("isLiked-->${GetSavePostData?.object?[index ?? 0].isLiked}");
       if (GetSavePostData?.object?[index ?? 0].isLiked == true) {
         GetSavePostData?.object?[index ?? 0].isLiked = false;
@@ -7404,8 +6133,7 @@ class _ProfileScreenState extends State<ProfileScreen>
         GetSavePostData?.object?[index ?? 0].likedCount = a + b;
       }
     } else if (apiName == 'savedata') {
-      await BlocProvider.of<NewProfileSCubit>(context)
-          .savedData(GetSavePostData?.object?[index ?? 0].postUid, context);
+      await BlocProvider.of<NewProfileSCubit>(context).savedData(GetSavePostData?.object?[index ?? 0].postUid, context);
 
       if (GetSavePostData?.object?[index ?? 0].isSaved == true) {
         GetSavePostData?.object?[index ?? 0].isSaved = false;
@@ -7427,21 +6155,12 @@ class _ProfileScreenState extends State<ProfileScreen>
         isDismissible: true,
         showDragHandle: true, */
         constraints: BoxConstraints(maxHeight: _heigth / 2),
-        enableDrag: true,
+        enableDrag: false,
         context: context,
         builder: (BuildContext bc) {
-          print(
-              "userUiduserUid == >>>>>>> ${GetSavePostData?.object?[index].userUid}");
-          return StatefulBuilder(
-              builder: (BuildContext context, StateSetter setState) {
-            return CommentBottomSheet(
-                isFoollinng: GetSavePostData?.object?[index].isFollowing,
-                useruid: GetSavePostData?.object?[index].userUid ?? "",
-                userProfile:
-                    GetSavePostData?.object?[index].userProfilePic ?? "",
-                UserName: GetSavePostData?.object?[index].postUserName ?? "",
-                desc: GetSavePostData?.object?[index].description ?? "",
-                postUuID: GetSavePostData?.object?[index].postUid ?? "");
+          print("userUiduserUid == >>>>>>> ${GetSavePostData?.object?[index].userUid}");
+          return StatefulBuilder(builder: (BuildContext context, StateSetter setState) {
+            return CommentBottomSheet(isFoollinng: GetSavePostData?.object?[index].isFollowing, useruid: GetSavePostData?.object?[index].userUid ?? "", userProfile: GetSavePostData?.object?[index].userProfilePic ?? "", UserName: GetSavePostData?.object?[index].postUserName ?? "", desc: GetSavePostData?.object?[index].description ?? "", postUuID: GetSavePostData?.object?[index].postUid ?? "");
           });
         });
     ;
@@ -7464,9 +6183,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                     child: Container(
                   height: 5,
                   width: 150,
-                  decoration: BoxDecoration(
-                      color: Colors.grey,
-                      borderRadius: BorderRadius.circular(25)),
+                  decoration: BoxDecoration(color: Colors.grey, borderRadius: BorderRadius.circular(25)),
                 )),
                 SizedBox(
                   height: 35,
@@ -7484,18 +6201,13 @@ class _ProfileScreenState extends State<ProfileScreen>
                       ),
                       onTap: () async {
                         Map<String, dynamic> param = {"postType": "PUBLIC"};
-                        BlocProvider.of<NewProfileSCubit>(context).RePostAPI(
-                            context,
-                            param,
-                            GetSavePostData?.object?[index].postUid,
-                            "Repost");
+                        BlocProvider.of<NewProfileSCubit>(context).RePostAPI(context, param, GetSavePostData?.object?[index].postUid, "Repost");
 
                         if (widget.Screen?.isNotEmpty == true) {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) =>
-                                    NewBottomBar(buttomIndex: 0),
+                                builder: (context) => NewBottomBar(buttomIndex: 0),
                               ));
                         } else {
                           Navigator.pop(context);
@@ -7520,20 +6232,16 @@ class _ProfileScreenState extends State<ProfileScreen>
                       Navigator.push(context, MaterialPageRoute(
                         builder: (context) {
                           return RePostScreen(
-                            userProfile:
-                                GetSavePostData?.object?[index].userProfilePic,
-                            username:
-                                GetSavePostData?.object?[index].postUserName,
+                            userProfile: GetSavePostData?.object?[index].userProfilePic,
+                            username: GetSavePostData?.object?[index].postUserName,
                             date: GetSavePostData?.object?[index].createdAt,
                             desc: GetSavePostData?.object?[index].description,
                             postData: GetSavePostData?.object?[index].postData,
-                            postDataType:
-                                GetSavePostData?.object?[index].postDataType,
+                            postDataType: GetSavePostData?.object?[index].postDataType,
                             index: index,
                             GetSavePostData: GetSavePostData,
                             postUid: GetSavePostData?.object?[index].postUid,
-                            thumbNailURL: GetSavePostData
-                                ?.object?[index].thumbnailImageUrl,
+                            thumbNailURL: GetSavePostData?.object?[index].thumbnailImageUrl,
                           );
                         },
                       ));
@@ -7564,41 +6272,32 @@ class _ProfileScreenState extends State<ProfileScreen>
                     _pageControllers.add(PageController());
                     _currentPages.add(0);
                   });
-                  WidgetsBinding.instance
-                      .addPostFrameCallback((timeStamp) => super.setState(() {
-                            added = true;
-                          }));
+                  WidgetsBinding.instance.addPostFrameCallback((timeStamp) => super.setState(() {
+                        added = true;
+                      }));
                 }
 
-                DateTime parsedDateTime = DateTime.parse(
-                    '${GetSavePostData?.object?[index].createdAt ?? ""}');
+                DateTime parsedDateTime = DateTime.parse('${GetSavePostData?.object?[index].createdAt ?? ""}');
                 DateTime? repostTime;
                 if (GetSavePostData!.object![index].repostOn != null) {
-                  repostTime = DateTime.parse(
-                      '${GetSavePostData?.object?[index].repostOn!.createdAt ?? ""}');
+                  repostTime = DateTime.parse('${GetSavePostData?.object?[index].repostOn!.createdAt ?? ""}');
                   print("repost time = $parsedDateTime");
                 }
                 bool DataGet = false;
-                if (GetSavePostData?.object?[index].description != null &&
-                    GetSavePostData?.object?[index].description != '') {
-                  DataGet =
-                      _isLink('${GetSavePostData?.object?[index].description}');
+                if (GetSavePostData?.object?[index].description != null && GetSavePostData?.object?[index].description != '') {
+                  DataGet = _isLink('${GetSavePostData?.object?[index].description}');
                 }
                 return GetSavePostData?.object?[index].repostOn != null
                     ? Padding(
-                        padding: EdgeInsets.only(
-                            left: 0, right: 0, top: 10, bottom: 10),
+                        padding: EdgeInsets.only(left: 0, right: 0, top: 10, bottom: 10),
                         child: GestureDetector(
                           onDoubleTap: () async {
-                            await soicalFunationSave(
-                                apiName: 'like_post', index: index);
+                            await soicalFunationSave(apiName: 'like_post', index: index);
                           },
                           child: Container(
                             decoration: BoxDecoration(
                               color: Colors.white,
-                              border: Border.all(
-                                  color: Color.fromRGBO(0, 0, 0,
-                                      0.25)), /* borderRadius: BorderRadius.circular(15) */
+                              border: Border.all(color: Color.fromRGBO(0, 0, 0, 0.25)), /* borderRadius: BorderRadius.circular(15) */
                             ),
                             // height: 300,
                             width: _width,
@@ -7616,35 +6315,19 @@ class _ProfileScreenState extends State<ProfileScreen>
                                         /*  await BlocProvider.of<GetGuestAllPostCubit>(
                                 context)
                             .seetinonExpried(context); */
-                                        Navigator.push(context,
-                                            MaterialPageRoute(
-                                                builder: (context) {
-                                          return MultiBlocProvider(
-                                              providers: [
-                                                BlocProvider<NewProfileSCubit>(
-                                                  create: (context) =>
-                                                      NewProfileSCubit(),
-                                                ),
-                                              ],
-                                              child: ProfileScreen(
-                                                  User_ID:
-                                                      "${GetSavePostData?.object?[index].userUid}",
-                                                  isFollowing: GetSavePostData
-                                                      ?.object?[index]
-                                                      .isFollowing));
+                                        Navigator.push(context, MaterialPageRoute(builder: (context) {
+                                          return MultiBlocProvider(providers: [
+                                            BlocProvider<NewProfileSCubit>(
+                                              create: (context) => NewProfileSCubit(),
+                                            ),
+                                          ], child: ProfileScreen(User_ID: "${GetSavePostData?.object?[index].userUid}", isFollowing: GetSavePostData?.object?[index].isFollowing));
                                         })).then((value) => Get_UserToken());
 
                                         ///
                                       },
-                                      child: GetSavePostData?.object?[index]
-                                                      .userProfilePic !=
-                                                  null &&
-                                              GetSavePostData?.object?[index]
-                                                      .userProfilePic !=
-                                                  ""
+                                      child: GetSavePostData?.object?[index].userProfilePic != null && GetSavePostData?.object?[index].userProfilePic != ""
                                           ? CircleAvatar(
-                                              backgroundImage: NetworkImage(
-                                                  "${GetSavePostData?.object?[index].userProfilePic}"),
+                                              backgroundImage: NetworkImage("${GetSavePostData?.object?[index].userProfilePic}"),
                                               backgroundColor: Colors.white,
                                               radius: 25,
                                             )
@@ -7657,34 +6340,20 @@ class _ProfileScreenState extends State<ProfileScreen>
                                             ),
                                     ),
                                     title: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         GestureDetector(
                                           onTap: () async {
                                             /*   await BlocProvider.of<GetGuestAllPostCubit>(
                                     context)
                                 .seetinonExpried(context); */
-                                            Navigator.push(context,
-                                                MaterialPageRoute(
-                                                    builder: (context) {
-                                              return MultiBlocProvider(
-                                                  providers: [
-                                                    BlocProvider<
-                                                        NewProfileSCubit>(
-                                                      create: (context) =>
-                                                          NewProfileSCubit(),
-                                                    ),
-                                                  ],
-                                                  child: ProfileScreen(
-                                                      User_ID:
-                                                          "${GetSavePostData?.object?[index].userUid}",
-                                                      isFollowing:
-                                                          GetSavePostData
-                                                              ?.object?[index]
-                                                              .isFollowing));
-                                            })).then(
-                                                (value) => Get_UserToken());
+                                            Navigator.push(context, MaterialPageRoute(builder: (context) {
+                                              return MultiBlocProvider(providers: [
+                                                BlocProvider<NewProfileSCubit>(
+                                                  create: (context) => NewProfileSCubit(),
+                                                ),
+                                              ], child: ProfileScreen(User_ID: "${GetSavePostData?.object?[index].userUid}", isFollowing: GetSavePostData?.object?[index].isFollowing));
+                                            })).then((value) => Get_UserToken());
 
                                             //
                                           },
@@ -7692,10 +6361,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                             // color: Colors.amber,
                                             child: Text(
                                               "${GetSavePostData?.object?[index].postUserName}",
-                                              style: TextStyle(
-                                                  fontSize: 20,
-                                                  fontFamily: "outfit",
-                                                  fontWeight: FontWeight.bold),
+                                              style: TextStyle(fontSize: 20, fontFamily: "outfit", fontWeight: FontWeight.bold),
                                             ),
                                           ),
                                         ),
@@ -7714,40 +6380,29 @@ class _ProfileScreenState extends State<ProfileScreen>
                                   height: 10,
                                 ),
 
-                                GetSavePostData?.object?[index].description !=
-                                        null
+                                GetSavePostData?.object?[index].description != null
                                     ? Padding(
-                                        padding:
-                                            const EdgeInsets.only(left: 16),
+                                        padding: const EdgeInsets.only(left: 16),
                                         child: GestureDetector(
                                             onTap: () async {
                                               if (DataGet == true) {
-                                                await launch(
-                                                    '${GetSavePostData?.object?[index].description}',
-                                                    forceWebView: true,
-                                                    enableJavaScript: true);
+                                                await launch('${GetSavePostData?.object?[index].description}', forceWebView: true, enableJavaScript: true);
                                               } else {
                                                 Navigator.push(
                                                   context,
                                                   MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          OpenSavePostImage(
-                                                            PostID:
-                                                                GetSavePostData
-                                                                    ?.object?[
-                                                                        index]
-                                                                    .postUid,
+                                                      builder: (context) => OpenSavePostImage(
+                                                            PostID: GetSavePostData?.object?[index].postUid,
                                                           )),
                                                 );
                                               }
                                             },
                                             child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
+                                              crossAxisAlignment: CrossAxisAlignment.start,
                                               children: [
                                                 /*                  GestureDetector(
                                                                       onTap: () async {
-                                                                       
+
                                                                         String inputText = "${GetSavePostData?.object?[index].description}";
                                                                         String translatedTextGujarati = await translateText(inputText, 'gu');
                                                                         String translatedTextHindi = await translateText(inputText, 'hi');
@@ -7796,56 +6451,29 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                             ),
                                                                           ))),
                                                                     ), */
-                                                GetSavePostData?.object?[index]
-                                                            .translatedDescription !=
-                                                        null
+                                                GetSavePostData?.object?[index].translatedDescription != null
                                                     ? GestureDetector(
                                                         onTap: () async {
                                                           super.setState(() {
-                                                            if (GetSavePostData
-                                                                        ?.object?[
-                                                                            index]
-                                                                        .isTrsnalteoption ==
-                                                                    false ||
-                                                                GetSavePostData
-                                                                        ?.object?[
-                                                                            index]
-                                                                        .isTrsnalteoption ==
-                                                                    null) {
-                                                              GetSavePostData
-                                                                      ?.object?[
-                                                                          index]
-                                                                      .isTrsnalteoption =
-                                                                  true;
+                                                            if (GetSavePostData?.object?[index].isTrsnalteoption == false || GetSavePostData?.object?[index].isTrsnalteoption == null) {
+                                                              GetSavePostData?.object?[index].isTrsnalteoption = true;
                                                             } else {
-                                                              GetSavePostData
-                                                                      ?.object?[
-                                                                          index]
-                                                                      .isTrsnalteoption =
-                                                                  false;
+                                                              GetSavePostData?.object?[index].isTrsnalteoption = false;
                                                             }
                                                           });
                                                         },
                                                         child: Container(
                                                             width: 80,
-                                                            decoration:
-                                                                BoxDecoration(
-                                                              color: ColorConstant
-                                                                  .primaryLight_color,
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          10),
+                                                            decoration: BoxDecoration(
+                                                              color: ColorConstant.primaryLight_color,
+                                                              borderRadius: BorderRadius.circular(10),
                                                             ),
                                                             child: Center(
                                                                 child: Text(
                                                               "Translate",
                                                               style: TextStyle(
-                                                                fontFamily:
-                                                                    'outfit',
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold,
+                                                                fontFamily: 'outfit',
+                                                                fontWeight: FontWeight.bold,
                                                               ),
                                                             ))),
                                                       )
@@ -7858,196 +6486,151 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                     Expanded(
                                                       child: Container(
                                                         // color: Colors.amber,
-                                                        child: LinkifyText(
-                                                          GetSavePostData
-                                                                          ?.object?[
-                                                                              index]
-                                                                          .isTrsnalteoption ==
-                                                                      false ||
-                                                                  GetSavePostData
-                                                                          ?.object?[
-                                                                              index]
-                                                                          .isTrsnalteoption ==
-                                                                      null
-                                                              ? "${GetSavePostData?.object?[index].description}"
-                                                              : "${GetSavePostData?.object?[index].translatedDescription}",
-                                                          linkStyle: TextStyle(
-                                                            color: Colors.blue,
-                                                            fontFamily:
-                                                                'outfit',
-                                                          ),
-                                                          textStyle: TextStyle(
-                                                            color: Colors.black,
-                                                            fontFamily:
-                                                                'outfit',
-                                                          ),
-                                                          linkTypes: [
-                                                            LinkType.url,
-                                                            LinkType.userTag,
-                                                            LinkType.hashTag,
-                                                            // LinkType
-                                                            //     .email
-                                                          ],
-                                                          onTap: (link) async {
-                                                            /// do stuff with `link` like
-                                                            /// if(link.type == Link.url) launchUrl(link.value);
+                                                        child: Column(
+                                                          children: [
+                                                            LinkifyText(
+                                                              GetSavePostData?.object?[index].isTrsnalteoption == false || GetSavePostData?.object?[index].isTrsnalteoption == null ? "${GetSavePostData?.object?[index].description}" : "${GetSavePostData?.object?[index].translatedDescription}",
+                                                              linkStyle: TextStyle(
+                                                                color: Colors.blue,
+                                                                fontFamily: 'outfit',
+                                                              ),
+                                                              textStyle: TextStyle(
+                                                                color: Colors.black,
+                                                                fontFamily: 'outfit',
+                                                              ),
+                                                              linkTypes: [
+                                                                LinkType.url,
+                                                                LinkType.userTag,
+                                                                LinkType.hashTag,
+                                                                // LinkType
+                                                                //     .email
+                                                              ],
+                                                              onTap: (link) async {
+                                                                /// do stuff with `link` like
+                                                                /// if(link.type == Link.url) launchUrl(link.value);
 
-                                                            var SelectedTest =
-                                                                link.value
-                                                                    .toString();
-                                                            var Link =
-                                                                SelectedTest
-                                                                    .startsWith(
-                                                                        'https');
-                                                            var Link1 =
-                                                                SelectedTest
-                                                                    .startsWith(
-                                                                        'http');
-                                                            var Link2 =
-                                                                SelectedTest
-                                                                    .startsWith(
-                                                                        'www');
-                                                            var Link3 =
-                                                                SelectedTest
-                                                                    .startsWith(
-                                                                        'WWW');
-                                                            var Link4 =
-                                                                SelectedTest
-                                                                    .startsWith(
-                                                                        'HTTPS');
-                                                            var Link5 =
-                                                                SelectedTest
-                                                                    .startsWith(
-                                                                        'HTTP');
-                                                            var Link6 = SelectedTest
-                                                                .startsWith(
-                                                                    'https://pdslink.page.link/');
-                                                            print(SelectedTest
-                                                                .toString());
+                                                                var SelectedTest = link.value.toString();
+                                                                var Link = SelectedTest.startsWith('https');
+                                                                var Link1 = SelectedTest.startsWith('http');
+                                                                var Link2 = SelectedTest.startsWith('www');
+                                                                var Link3 = SelectedTest.startsWith('WWW');
+                                                                var Link4 = SelectedTest.startsWith('HTTPS');
+                                                                var Link5 = SelectedTest.startsWith('HTTP');
+                                                                var Link6 = SelectedTest.startsWith('https://pdslink.page.link/');
+                                                                print(SelectedTest.toString());
 
-                                                            if (User_ID ==
-                                                                null) {
-                                                              Navigator.of(
-                                                                      context)
-                                                                  .push(MaterialPageRoute(
-                                                                      builder:
-                                                                          (context) =>
-                                                                              RegisterCreateAccountScreen()));
-                                                            } else {
-                                                              if (Link ==
-                                                                      true ||
-                                                                  Link1 ==
-                                                                      true ||
-                                                                  Link2 ==
-                                                                      true ||
-                                                                  Link3 ==
-                                                                      true ||
-                                                                  Link4 ==
-                                                                      true ||
-                                                                  Link5 ==
-                                                                      true ||
-                                                                  Link6 ==
-                                                                      true) {
-                                                                if (Link2 ==
-                                                                        true ||
-                                                                    Link3 ==
-                                                                        true) {
-                                                                  launchUrl(
-                                                                      Uri.parse(
-                                                                          "https://${link.value.toString()}"));
-                                                                  print(
-                                                                      "qqqqqqqqhttps://${link.value}");
+                                                                if (User_ID == null) {
+                                                                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
                                                                 } else {
-                                                                  if (Link6 ==
-                                                                      true) {
-                                                                    print(
-                                                                        "yes i am inList =   room");
-                                                                    Navigator.push(
-                                                                        context,
-                                                                        MaterialPageRoute(
-                                                                      builder:
-                                                                          (context) {
-                                                                        return NewBottomBar(
-                                                                          buttomIndex:
-                                                                              1,
-                                                                        );
-                                                                      },
-                                                                    ));
+                                                                  if (Link == true || Link1 == true || Link2 == true || Link3 == true || Link4 == true || Link5 == true || Link6 == true) {
+                                                                    if (Link2 == true || Link3 == true) {
+                                                                      launchUrl(Uri.parse("https://${link.value.toString()}"));
+                                                                      print("qqqqqqqqhttps://${link.value}");
+                                                                    } else {
+                                                                      if (Link6 == true) {
+                                                                        print("yes i am inList =   room");
+                                                                        Navigator.push(context, MaterialPageRoute(
+                                                                          builder: (context) {
+                                                                            return NewBottomBar(
+                                                                              buttomIndex: 1,
+                                                                            );
+                                                                          },
+                                                                        ));
+                                                                      } else {
+                                                                        launchUrl(Uri.parse(link.value.toString()));
+                                                                        print("link.valuelink.value -- ${link.value}");
+                                                                      }
+                                                                    }
                                                                   } else {
-                                                                    launchUrl(Uri
-                                                                        .parse(link
-                                                                            .value
-                                                                            .toString()));
-                                                                    print(
-                                                                        "link.valuelink.value -- ${link.value}");
+                                                                    if (link.value!.startsWith('#')) {
+                                                                      /*  await BlocProvider.of<
+                                                                  GetGuestAllPostCubit>(
+                                                              context)
+                                                      .seetinonExpried(
+                                                              context); */
+                                                                      Navigator.push(
+                                                                          context,
+                                                                          MaterialPageRoute(
+                                                                            builder: (context) => HashTagViewScreen(title: "${link.value}"),
+                                                                          ));
+                                                                    } else if (link.value!.startsWith('@')) {
+                                                                      /*  await BlocProvider.of<
+                                                                  GetGuestAllPostCubit>(
+                                                              context)
+                                                      .seetinonExpried(
+                                                              context); */
+                                                                      var name;
+                                                                      var tagName;
+                                                                      name = SelectedTest;
+                                                                      tagName = name.replaceAll("@", "");
+                                                                      await BlocProvider.of<NewProfileSCubit>(context).UserTagAPI(context, tagName);
+
+                                                                      Navigator.push(context, MaterialPageRoute(builder: (context) {
+                                                                        return ProfileScreen(User_ID: "${userTagModel?.object}", isFollowing: "");
+                                                                      })).then((value) => Get_UserToken());
+
+                                                                      print("tagName -- ${tagName}");
+                                                                      print("user id -- ${userTagModel?.object}");
+                                                                    } else {
+                                                                      launchUrl(Uri.parse("https://${link.value.toString()}"));
+                                                                    }
                                                                   }
                                                                 }
-                                                              } else {
-                                                                if (link.value!
-                                                                    .startsWith(
-                                                                        '#')) {
-                                                                  /*  await BlocProvider.of<
-                                                              GetGuestAllPostCubit>(
-                                                          context)
-                                                      .seetinonExpried(
-                                                          context); */
-                                                                  Navigator.push(
-                                                                      context,
-                                                                      MaterialPageRoute(
-                                                                        builder:
-                                                                            (context) =>
-                                                                                HashTagViewScreen(title: "${link.value}"),
-                                                                      ));
-                                                                } else if (link
-                                                                    .value!
-                                                                    .startsWith(
-                                                                        '@')) {
-                                                                  /*  await BlocProvider.of<
-                                                              GetGuestAllPostCubit>(
-                                                          context)
-                                                      .seetinonExpried(
-                                                          context); */
-                                                                  var name;
-                                                                  var tagName;
-                                                                  name =
-                                                                      SelectedTest;
-                                                                  tagName = name
-                                                                      .replaceAll(
-                                                                          "@",
-                                                                          "");
-                                                                  await BlocProvider.of<
-                                                                              NewProfileSCubit>(
-                                                                          context)
-                                                                      .UserTagAPI(
-                                                                          context,
-                                                                          tagName);
-
-                                                                  Navigator.push(
-                                                                      context,
-                                                                      MaterialPageRoute(
-                                                                          builder:
-                                                                              (context) {
-                                                                    return ProfileScreen(
-                                                                        User_ID:
-                                                                            "${userTagModel?.object}",
-                                                                        isFollowing:
-                                                                            "");
-                                                                  })).then(
-                                                                      (value) =>
-                                                                          Get_UserToken());
-
-                                                                  print(
-                                                                      "tagName -- ${tagName}");
-                                                                  print(
-                                                                      "user id -- ${userTagModel?.object}");
-                                                                } else {
-                                                                  launchUrl(
-                                                                      Uri.parse(
-                                                                          "https://${link.value.toString()}"));
-                                                                }
-                                                              }
-                                                            }
-                                                          },
+                                                              },
+                                                            ),
+                                                            if (extractUrls(GetSavePostData?.object?[index].description ?? "").isNotEmpty)
+                                                              isYouTubeUrl(extractUrls(GetSavePostData?.object?[index].description ?? "").first)
+                                                                  ? FutureBuilder(
+                                                                  future: fetchYoutubeThumbnail(extractUrls(GetSavePostData?.object?[index].description ?? "").first),
+                                                                  builder: (context, snap) {
+                                                                    return Container(
+                                                                      height: 250,
+                                                                      decoration: BoxDecoration(image: DecorationImage(image: CachedNetworkImageProvider(snap.data.toString())), borderRadius: BorderRadius.circular(10)),
+                                                                      clipBehavior: Clip.antiAlias,
+                                                                      child: Center(
+                                                                          child: IconButton(
+                                                                            icon: Icon(
+                                                                              Icons.play_circle_fill_rounded,
+                                                                              color: Colors.white,
+                                                                              size: 60,
+                                                                            ),
+                                                                            onPressed: () {
+                                                                              playLink(extractUrls(GetSavePostData?.object?[index].description ?? "").first, context);
+                                                                            },
+                                                                          )),
+                                                                    );
+                                                                  })
+                                                                  : Padding(
+                                                                padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                                                                child: AnyLinkPreview(
+                                                                  link: extractUrls(GetSavePostData?.object?[index].description ?? "").first,
+                                                                  displayDirection: UIDirection.uiDirectionHorizontal,
+                                                                  showMultimedia: true,
+                                                                  bodyMaxLines: 5,
+                                                                  bodyTextOverflow: TextOverflow.ellipsis,
+                                                                  titleStyle: TextStyle(
+                                                                    color: Colors.black,
+                                                                    fontWeight: FontWeight.bold,
+                                                                    fontSize: 15,
+                                                                  ),
+                                                                  bodyStyle: TextStyle(color: Colors.grey, fontSize: 12),
+                                                                  errorBody: 'Show my custom error body',
+                                                                  errorTitle: 'Show my custom error title',
+                                                                  errorWidget: null,
+                                                                  errorImage: "https://flutter.dev/",
+                                                                  cache: Duration(days: 7),
+                                                                  backgroundColor: Colors.grey[300],
+                                                                  borderRadius: 12,
+                                                                  removeElevation: false,
+                                                                  boxShadow: [
+                                                                    BoxShadow(blurRadius: 3, color: Colors.grey)
+                                                                  ],
+                                                                  onTap: () {
+                                                                    launchUrl(Uri.parse(extractUrls(GetSavePostData?.object?[index].description ?? "").first));
+                                                                  }, // This disables tap event
+                                                                ),
+                                                              ),
+                                                          ],
                                                         ),
                                                       ),
                                                     ),
@@ -8058,85 +6641,50 @@ class _ProfileScreenState extends State<ProfileScreen>
                                       )
                                     : SizedBox(),
 
-                                (GetSavePostData?.object?[index].postData
-                                            ?.isEmpty ??
-                                        false)
+                                (GetSavePostData?.object?[index].postData?.isEmpty ?? false)
                                     ? SizedBox()
                                     : Container(
                                         // height: 200,
                                         width: _width,
-                                        child: GetSavePostData?.object?[index]
-                                                    .postDataType ==
-                                                null
+                                        child: GetSavePostData?.object?[index].postDataType == null
                                             ? SizedBox()
-                                            : GetSavePostData?.object?[index]
-                                                        .postData?.length ==
-                                                    1
-                                                ? (GetSavePostData
-                                                            ?.object?[index]
-                                                            .postDataType ==
-                                                        "IMAGE"
+                                            : GetSavePostData?.object?[index].postData?.length == 1
+                                                ? (GetSavePostData?.object?[index].postDataType == "IMAGE"
                                                     ? GestureDetector(
                                                         onTap: () {
                                                           Navigator.push(
                                                             context,
                                                             MaterialPageRoute(
-                                                                builder:
-                                                                    (context) =>
-                                                                        OpenSavePostImage(
-                                                                          PostID: GetSavePostData
-                                                                              ?.object?[index]
-                                                                              .postUid,
-                                                                          index:
-                                                                              index,
-                                                                        )),
+                                                                builder: (context) => OpenSavePostImage(
+                                                                      PostID: GetSavePostData?.object?[index].postUid,
+                                                                      index: index,
+                                                                    )),
                                                           );
                                                         },
                                                         child: Container(
                                                           height: 200,
                                                           width: _width,
-                                                          margin:
-                                                              EdgeInsets.only(
-                                                                  left: 16,
-                                                                  top: 15,
-                                                                  right: 16),
+                                                          margin: EdgeInsets.only(left: 16, top: 15, right: 16),
                                                           child: Center(
-                                                              child:
-                                                                  CustomImageView(
-                                                            url:
-                                                                "${GetSavePostData?.object?[index].postData?[0]}",
+                                                              child: CustomImageView(
+                                                            url: "${GetSavePostData?.object?[index].postData?[0]}",
                                                           )),
                                                         ),
                                                       )
-                                                    : GetSavePostData
-                                                                ?.object?[index]
-                                                                .postDataType ==
-                                                            "VIDEO"
+                                                    : GetSavePostData?.object?[index].postDataType == "VIDEO"
                                                         ? /* repostControllers[0].value.isInitialized
                                                                             ?   */
                                                         Padding(
-                                                            padding:
-                                                                const EdgeInsets
-                                                                        .only(
-                                                                    right: 20,
-                                                                    top: 15),
+                                                            padding: const EdgeInsets.only(right: 20, top: 15),
                                                             child: Column(
-                                                              mainAxisSize:
-                                                                  MainAxisSize
-                                                                      .min,
+                                                              mainAxisSize: MainAxisSize.min,
                                                               children: [
                                                                 Container(
                                                                   // height: 180,
                                                                   width: _width,
-                                                                  child:
-                                                                      VideoListItem1(
-                                                                    videoUrl:
-                                                                        videoUrls[
-                                                                            index],
-                                                                    PostID: GetSavePostData
-                                                                        ?.object?[
-                                                                            index]
-                                                                        .postUid,
+                                                                  child: VideoListItem1(
+                                                                    videoUrl: videoUrls[index],
+                                                                    PostID: GetSavePostData?.object?[index].postUid,
                                                                     /* isData: User_ID ==
                                                                       null
                                                                   ? false
@@ -8148,17 +6696,8 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                           )
                                                         // : SizedBox()
                                                         //this is the ATTACHMENT
-                                                        : GetSavePostData
-                                                                    ?.object?[
-                                                                        index]
-                                                                    .postDataType ==
-                                                                "ATTACHMENT"
-                                                            ? (GetSavePostData
-                                                                        ?.object?[
-                                                                            index]
-                                                                        .postData
-                                                                        ?.isNotEmpty ==
-                                                                    true)
+                                                        : GetSavePostData?.object?[index].postDataType == "ATTACHMENT"
+                                                            ? (GetSavePostData?.object?[index].postData?.isNotEmpty == true)
                                                                 ? /* Container(
                                                                                     height: 200,
                                                                                     width: _width,
@@ -8168,37 +6707,25 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                 Stack(
                                                                     children: [
                                                                       Container(
-                                                                        height:
-                                                                            400,
-                                                                        width:
-                                                                            _width,
-                                                                        color: Colors
-                                                                            .transparent,
+                                                                        height: 400,
+                                                                        width: _width,
+                                                                        color: Colors.transparent,
                                                                       ),
                                                                       GestureDetector(
-                                                                        onTap:
-                                                                            () {
-                                                                          print(
-                                                                              "objectobjectobjectobject");
-                                                                          Navigator.push(
-                                                                              context,
-                                                                              MaterialPageRoute(
-                                                                            builder:
-                                                                                (context) {
+                                                                        onTap: () {
+                                                                          print("objectobjectobjectobject");
+                                                                          Navigator.push(context, MaterialPageRoute(
+                                                                            builder: (context) {
                                                                               return DocumentViewScreen1(
                                                                                 path: GetSavePostData?.object?[index].postData?[0].toString(),
                                                                               );
                                                                             },
                                                                           ));
                                                                         },
-                                                                        child:
-                                                                            Container(
-                                                                          child:
-                                                                              CachedNetworkImage(
-                                                                            imageUrl:
-                                                                                GetSavePostData?.object?[index].thumbnailImageUrl ?? "",
-                                                                            fit:
-                                                                                BoxFit.cover,
+                                                                        child: Container(
+                                                                          child: CachedNetworkImage(
+                                                                            imageUrl: GetSavePostData?.object?[index].thumbnailImageUrl ?? "",
+                                                                            fit: BoxFit.cover,
                                                                           ),
                                                                         ),
                                                                       )
@@ -8210,63 +6737,27 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                     children: [
                                                       Stack(
                                                         children: [
-                                                          if ((GetSavePostData
-                                                                  ?.object?[
-                                                                      index]
-                                                                  .postData
-                                                                  ?.isNotEmpty ??
-                                                              false)) ...[
+                                                          if ((GetSavePostData?.object?[index].postData?.isNotEmpty ?? false)) ...[
                                                             SizedBox(
                                                               height: 200,
-                                                              child: PageView
-                                                                  .builder(
-                                                                onPageChanged:
-                                                                    (page) {
-                                                                  super
-                                                                      .setState(
-                                                                          () {
-                                                                    _currentPages[
-                                                                            index] =
-                                                                        page;
-                                                                    imageCount1 =
-                                                                        page +
-                                                                            1;
+                                                              child: PageView.builder(
+                                                                onPageChanged: (page) {
+                                                                  super.setState(() {
+                                                                    _currentPages[index] = page;
+                                                                    imageCount1 = page + 1;
                                                                   });
                                                                 },
-                                                                controller:
-                                                                    _pageControllers[
-                                                                        index],
-                                                                itemCount:
-                                                                    GetSavePostData
-                                                                        ?.object?[
-                                                                            index]
-                                                                        .postData
-                                                                        ?.length,
-                                                                itemBuilder:
-                                                                    (BuildContext
-                                                                            context,
-                                                                        int index1) {
-                                                                  if (GetSavePostData
-                                                                          ?.object?[
-                                                                              index]
-                                                                          .postDataType ==
-                                                                      "IMAGE") {
+                                                                controller: _pageControllers[index],
+                                                                itemCount: GetSavePostData?.object?[index].postData?.length,
+                                                                itemBuilder: (BuildContext context, int index1) {
+                                                                  if (GetSavePostData?.object?[index].postDataType == "IMAGE") {
                                                                     return Container(
-                                                                      width:
-                                                                          _width,
-                                                                      margin: EdgeInsets.only(
-                                                                          left:
-                                                                              16,
-                                                                          top:
-                                                                              15,
-                                                                          right:
-                                                                              16),
+                                                                      width: _width,
+                                                                      margin: EdgeInsets.only(left: 16, top: 15, right: 16),
                                                                       child: Center(
                                                                           child: GestureDetector(
-                                                                        onTap:
-                                                                            () {
-                                                                          Navigator
-                                                                              .push(
+                                                                        onTap: () {
+                                                                          Navigator.push(
                                                                             context,
                                                                             MaterialPageRoute(
                                                                                 builder: (context) => OpenSavePostImage(
@@ -8275,8 +6766,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                                     )),
                                                                           );
                                                                         },
-                                                                        child:
-                                                                            Stack(
+                                                                        child: Stack(
                                                                           children: [
                                                                             Align(
                                                                               alignment: Alignment.topCenter,
@@ -8307,22 +6797,12 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                         ),
                                                                       )),
                                                                     );
-                                                                  } else if (GetSavePostData
-                                                                          ?.object?[
-                                                                              index]
-                                                                          .postDataType ==
-                                                                      "ATTACHMENT") {
+                                                                  } else if (GetSavePostData?.object?[index].postDataType == "ATTACHMENT") {
                                                                     return Container(
-                                                                        height:
-                                                                            200,
-                                                                        width:
-                                                                            _width,
-                                                                        child:
-                                                                            DocumentViewScreen1(
-                                                                          path: GetSavePostData
-                                                                              ?.object?[index]
-                                                                              .postData?[index1]
-                                                                              .toString(),
+                                                                        height: 200,
+                                                                        width: _width,
+                                                                        child: DocumentViewScreen1(
+                                                                          path: GetSavePostData?.object?[index].postData?[index1].toString(),
                                                                         ));
                                                                   }
                                                                 },
@@ -8333,34 +6813,18 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                 left: 0,
                                                                 right: 0,
                                                                 child: Padding(
-                                                                  padding: const EdgeInsets
-                                                                          .only(
-                                                                      top: 0),
-                                                                  child:
-                                                                      Container(
+                                                                  padding: const EdgeInsets.only(top: 0),
+                                                                  child: Container(
                                                                     height: 20,
-                                                                    child:
-                                                                        DotsIndicator(
-                                                                      dotsCount:
-                                                                          GetSavePostData?.object?[index].postData?.length ??
-                                                                              0,
-                                                                      position:
-                                                                          _currentPages[index]
-                                                                              .toDouble(),
-                                                                      decorator:
-                                                                          DotsDecorator(
-                                                                        size: const Size(
-                                                                            10.0,
-                                                                            7.0),
-                                                                        activeSize: const Size(
-                                                                            10.0,
-                                                                            10.0),
-                                                                        spacing:
-                                                                            const EdgeInsets.symmetric(horizontal: 2),
-                                                                        activeColor:
-                                                                            ColorConstant.primary_color,
-                                                                        color: Color(
-                                                                            0xff6A6A6A),
+                                                                    child: DotsIndicator(
+                                                                      dotsCount: GetSavePostData?.object?[index].postData?.length ?? 0,
+                                                                      position: _currentPages[index].toDouble(),
+                                                                      decorator: DotsDecorator(
+                                                                        size: const Size(10.0, 7.0),
+                                                                        activeSize: const Size(10.0, 10.0),
+                                                                        spacing: const EdgeInsets.symmetric(horizontal: 2),
+                                                                        activeColor: ColorConstant.primary_color,
+                                                                        color: Color(0xff6A6A6A),
                                                                       ),
                                                                     ),
                                                                   ),
@@ -8375,20 +6839,13 @@ class _ProfileScreenState extends State<ProfileScreen>
                                 // inner post portion
 
                                 Padding(
-                                  padding: const EdgeInsets.only(
-                                      left: 10, right: 10, bottom: 10, top: 20),
+                                  padding: const EdgeInsets.only(left: 10, right: 10, bottom: 10, top: 20),
                                   child: Container(
-                                    decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        border: Border.all(
-                                            color: Colors.grey.shade200),
-                                        borderRadius:
-                                            BorderRadius.circular(15)),
+                                    decoration: BoxDecoration(color: Colors.white, border: Border.all(color: Colors.grey.shade200), borderRadius: BorderRadius.circular(15)),
                                     // height: 300,
                                     width: _width,
                                     child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         SizedBox(
                                           height: 10,
@@ -8401,61 +6858,31 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                 /*    await BlocProvider.of<
                                         GetGuestAllPostCubit>(context)
                                     .seetinonExpried(context); */
-                                                Navigator.push(context,
-                                                    MaterialPageRoute(
-                                                        builder: (context) {
-                                                  return MultiBlocProvider(
-                                                      providers: [
-                                                        BlocProvider<
-                                                            NewProfileSCubit>(
-                                                          create: (context) =>
-                                                              NewProfileSCubit(),
-                                                        ),
-                                                      ],
-                                                      child: ProfileScreen(
-                                                          User_ID:
-                                                              "${GetSavePostData?.object?[index].repostOn?.userUid}",
-                                                          isFollowing:
-                                                              GetSavePostData
-                                                                  ?.object?[
-                                                                      index]
-                                                                  .repostOn
-                                                                  ?.isFollowing));
-                                                })).then(
-                                                    (value) => Get_UserToken());
+                                                Navigator.push(context, MaterialPageRoute(builder: (context) {
+                                                  return MultiBlocProvider(providers: [
+                                                    BlocProvider<NewProfileSCubit>(
+                                                      create: (context) => NewProfileSCubit(),
+                                                    ),
+                                                  ], child: ProfileScreen(User_ID: "${GetSavePostData?.object?[index].repostOn?.userUid}", isFollowing: GetSavePostData?.object?[index].repostOn?.isFollowing));
+                                                })).then((value) => Get_UserToken());
                                                 //
                                               },
-                                              child: GetSavePostData
-                                                              ?.object?[index]
-                                                              .repostOn
-                                                              ?.userProfilePic !=
-                                                          null &&
-                                                      GetSavePostData
-                                                              ?.object?[index]
-                                                              .repostOn
-                                                              ?.userProfilePic !=
-                                                          ""
+                                              child: GetSavePostData?.object?[index].repostOn?.userProfilePic != null && GetSavePostData?.object?[index].repostOn?.userProfilePic != ""
                                                   ? CircleAvatar(
-                                                      backgroundImage: NetworkImage(
-                                                          "${GetSavePostData?.object?[index].repostOn?.userProfilePic}"),
-                                                      backgroundColor:
-                                                          Colors.white,
+                                                      backgroundImage: NetworkImage("${GetSavePostData?.object?[index].repostOn?.userProfilePic}"),
+                                                      backgroundColor: Colors.white,
                                                       radius: 25,
                                                     )
                                                   : CustomImageView(
-                                                      imagePath: ImageConstant
-                                                          .tomcruse,
+                                                      imagePath: ImageConstant.tomcruse,
                                                       height: 50,
                                                       width: 50,
                                                       fit: BoxFit.fill,
-                                                      radius:
-                                                          BorderRadius.circular(
-                                                              25),
+                                                      radius: BorderRadius.circular(25),
                                                     ),
                                             ),
                                             title: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
+                                              crossAxisAlignment: CrossAxisAlignment.start,
                                               children: [
                                                 GestureDetector(
                                                   onTap: () async {
@@ -8463,28 +6890,13 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                   GetGuestAllPostCubit>(
                                               context)
                                           .seetinonExpried(context); */
-                                                    Navigator.push(context,
-                                                        MaterialPageRoute(
-                                                            builder: (context) {
-                                                      return MultiBlocProvider(
-                                                          providers: [
-                                                            BlocProvider<
-                                                                NewProfileSCubit>(
-                                                              create: (context) =>
-                                                                  NewProfileSCubit(),
-                                                            ),
-                                                          ],
-                                                          child: ProfileScreen(
-                                                              User_ID:
-                                                                  "${GetSavePostData?.object?[index].repostOn?.userUid}",
-                                                              isFollowing:
-                                                                  GetSavePostData
-                                                                      ?.object?[
-                                                                          index]
-                                                                      .repostOn
-                                                                      ?.isFollowing));
-                                                    })).then((value) =>
-                                                        Get_UserToken());
+                                                    Navigator.push(context, MaterialPageRoute(builder: (context) {
+                                                      return MultiBlocProvider(providers: [
+                                                        BlocProvider<NewProfileSCubit>(
+                                                          create: (context) => NewProfileSCubit(),
+                                                        ),
+                                                      ], child: ProfileScreen(User_ID: "${GetSavePostData?.object?[index].repostOn?.userUid}", isFollowing: GetSavePostData?.object?[index].repostOn?.isFollowing));
+                                                    })).then((value) => Get_UserToken());
                                                     //
                                                   },
                                                   child: Container(
@@ -8492,22 +6904,12 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                     //     Colors.amber,
                                                     child: Text(
                                                       "${GetSavePostData?.object?[index].repostOn?.postUserName}",
-                                                      style: TextStyle(
-                                                          fontSize: 20,
-                                                          fontFamily: "outfit",
-                                                          fontWeight:
-                                                              FontWeight.bold),
+                                                      style: TextStyle(fontSize: 20, fontFamily: "outfit", fontWeight: FontWeight.bold),
                                                     ),
                                                   ),
                                                 ),
                                                 Text(
-                                                  GetSavePostData
-                                                              ?.object?[index]
-                                                              .repostOn ==
-                                                          null
-                                                      ? ""
-                                                      : getTimeDifference(
-                                                          repostTime!),
+                                                  GetSavePostData?.object?[index].repostOn == null ? "" : getTimeDifference(repostTime!),
                                                   style: TextStyle(
                                                     fontSize: 12,
                                                     fontFamily: "outfit",
@@ -8520,240 +6922,192 @@ class _ProfileScreenState extends State<ProfileScreen>
                                         SizedBox(
                                           height: 10,
                                         ),
-                                        GetSavePostData?.object?[index].repostOn
-                                                    ?.description !=
-                                                null
+                                        GetSavePostData?.object?[index].repostOn?.description != null
                                             ? Padding(
-                                                padding: const EdgeInsets.only(
-                                                    left: 16),
-                                                child: LinkifyText(
-                                                  "${GetSavePostData?.object?[index].repostOn?.description}",
-                                                  linkStyle: TextStyle(
-                                                    color: Colors.blue,
-                                                    fontFamily: 'outfit',
-                                                  ),
-                                                  textStyle: TextStyle(
-                                                    color: Colors.black,
-                                                    fontFamily: 'outfit',
-                                                  ),
-                                                  linkTypes: [
-                                                    LinkType.url,
-                                                    LinkType.userTag,
-                                                    LinkType.hashTag,
-                                                    // LinkType
-                                                    //     .email
-                                                  ],
-                                                  onTap: (link) async {
-                                                    /// do stuff with `link` like
-                                                    /// if(link.type == Link.url) launchUrl(link.value);
+                                                padding: const EdgeInsets.only(left: 16),
+                                                child: Column(
+                                                  children: [
+                                                    LinkifyText(
+                                                      "${GetSavePostData?.object?[index].repostOn?.description}",
+                                                      linkStyle: TextStyle(
+                                                        color: Colors.blue,
+                                                        fontFamily: 'outfit',
+                                                      ),
+                                                      textStyle: TextStyle(
+                                                        color: Colors.black,
+                                                        fontFamily: 'outfit',
+                                                      ),
+                                                      linkTypes: [
+                                                        LinkType.url,
+                                                        LinkType.userTag,
+                                                        LinkType.hashTag,
+                                                        // LinkType
+                                                        //     .email
+                                                      ],
+                                                      onTap: (link) async {
+                                                        /// do stuff with `link` like
+                                                        /// if(link.type == Link.url) launchUrl(link.value);
 
-                                                    var SelectedTest =
-                                                        link.value.toString();
-                                                    var Link =
-                                                        SelectedTest.startsWith(
-                                                            'https');
-                                                    var Link1 =
-                                                        SelectedTest.startsWith(
-                                                            'http');
-                                                    var Link2 =
-                                                        SelectedTest.startsWith(
-                                                            'www');
-                                                    var Link3 =
-                                                        SelectedTest.startsWith(
-                                                            'WWW');
-                                                    var Link4 =
-                                                        SelectedTest.startsWith(
-                                                            'HTTPS');
-                                                    var Link5 =
-                                                        SelectedTest.startsWith(
-                                                            'HTTP');
-                                                    var Link6 =
-                                                        SelectedTest.startsWith(
-                                                            'https://pdslink.page.link/');
-                                                    print(SelectedTest
-                                                        .toString());
+                                                        var SelectedTest = link.value.toString();
+                                                        var Link = SelectedTest.startsWith('https');
+                                                        var Link1 = SelectedTest.startsWith('http');
+                                                        var Link2 = SelectedTest.startsWith('www');
+                                                        var Link3 = SelectedTest.startsWith('WWW');
+                                                        var Link4 = SelectedTest.startsWith('HTTPS');
+                                                        var Link5 = SelectedTest.startsWith('HTTP');
+                                                        var Link6 = SelectedTest.startsWith('https://pdslink.page.link/');
+                                                        print(SelectedTest.toString());
 
-                                                    if (User_ID == null) {
-                                                      Navigator.of(context).push(
-                                                          MaterialPageRoute(
-                                                              builder: (context) =>
-                                                                  RegisterCreateAccountScreen()));
-                                                    } else {
-                                                      if (Link == true ||
-                                                          Link1 == true ||
-                                                          Link2 == true ||
-                                                          Link3 == true ||
-                                                          Link4 == true ||
-                                                          Link5 == true ||
-                                                          Link6 == true) {
-                                                        if (Link2 == true ||
-                                                            Link3 == true) {
-                                                          launchUrl(Uri.parse(
-                                                              "https://${link.value.toString()}"));
-                                                          print(
-                                                              "qqqqqqqqhttps://${link.value}");
+                                                        if (User_ID == null) {
+                                                          Navigator.of(context).push(MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
                                                         } else {
-                                                          if (Link6 == true) {
-                                                            print(
-                                                                "yes i am inList =   room");
-                                                            Navigator.push(
-                                                                context,
-                                                                MaterialPageRoute(
-                                                              builder:
-                                                                  (context) {
-                                                                return NewBottomBar(
-                                                                  buttomIndex:
-                                                                      1,
-                                                                );
-                                                              },
-                                                            ));
+                                                          if (Link == true || Link1 == true || Link2 == true || Link3 == true || Link4 == true || Link5 == true || Link6 == true) {
+                                                            if (Link2 == true || Link3 == true) {
+                                                              launchUrl(Uri.parse("https://${link.value.toString()}"));
+                                                              print("qqqqqqqqhttps://${link.value}");
+                                                            } else {
+                                                              if (Link6 == true) {
+                                                                print("yes i am inList =   room");
+                                                                Navigator.push(context, MaterialPageRoute(
+                                                                  builder: (context) {
+                                                                    return NewBottomBar(
+                                                                      buttomIndex: 1,
+                                                                    );
+                                                                  },
+                                                                ));
+                                                              } else {
+                                                                launchUrl(Uri.parse(link.value.toString()));
+                                                                print("link.valuelink.value -- ${link.value}");
+                                                              }
+                                                            }
                                                           } else {
-                                                            launchUrl(Uri.parse(
-                                                                link.value
-                                                                    .toString()));
-                                                            print(
-                                                                "link.valuelink.value -- ${link.value}");
+                                                            if (link.value!.startsWith('#')) {
+                                                              /*   await BlocProvider.of<
+                                                          GetGuestAllPostCubit>(
+                                                      context)
+                                              .seetinonExpried(context); */
+                                                              print("aaaaaaaaaa == ${link}");
+                                                              Navigator.push(
+                                                                  context,
+                                                                  MaterialPageRoute(
+                                                                    builder: (context) => HashTagViewScreen(title: "${link.value}"),
+                                                                  ));
+                                                            } else if (link.value!.startsWith('@')) {
+                                                              /*  await BlocProvider.of<
+                                                          GetGuestAllPostCubit>(
+                                                      context)
+                                              .seetinonExpried(context); */
+                                                              var name;
+                                                              var tagName;
+                                                              name = SelectedTest;
+                                                              tagName = name.replaceAll("@", "");
+                                                              await BlocProvider.of<NewProfileSCubit>(context).UserTagAPI(context, tagName);
+
+                                                              Navigator.push(context, MaterialPageRoute(builder: (context) {
+                                                                return ProfileScreen(User_ID: "${userTagModel?.object}", isFollowing: "");
+                                                              })).then((value) => Get_UserToken());
+
+                                                              print("tagName -- ${tagName}");
+                                                              print("user id -- ${userTagModel?.object}");
+                                                            }
                                                           }
                                                         }
-                                                      } else {
-                                                        if (link.value!
-                                                            .startsWith('#')) {
-                                                          /*   await BlocProvider.of<
-                                                      GetGuestAllPostCubit>(
-                                                  context)
-                                              .seetinonExpried(context); */
-                                                          print(
-                                                              "aaaaaaaaaa == ${link}");
-                                                          Navigator.push(
-                                                              context,
-                                                              MaterialPageRoute(
-                                                                builder: (context) =>
-                                                                    HashTagViewScreen(
-                                                                        title:
-                                                                            "${link.value}"),
-                                                              ));
-                                                        } else if (link.value!
-                                                            .startsWith('@')) {
-                                                          /*  await BlocProvider.of<
-                                                      GetGuestAllPostCubit>(
-                                                  context)
-                                              .seetinonExpried(context); */
-                                                          var name;
-                                                          var tagName;
-                                                          name = SelectedTest;
-                                                          tagName =
-                                                              name.replaceAll(
-                                                                  "@", "");
-                                                          await BlocProvider.of<
-                                                                      NewProfileSCubit>(
-                                                                  context)
-                                                              .UserTagAPI(
-                                                                  context,
-                                                                  tagName);
-
-                                                          Navigator.push(
-                                                              context,
-                                                              MaterialPageRoute(
-                                                                  builder:
-                                                                      (context) {
-                                                            return ProfileScreen(
-                                                                User_ID:
-                                                                    "${userTagModel?.object}",
-                                                                isFollowing:
-                                                                    "");
-                                                          })).then((value) =>
-                                                              Get_UserToken());
-
-                                                          print(
-                                                              "tagName -- ${tagName}");
-                                                          print(
-                                                              "user id -- ${userTagModel?.object}");
-                                                        }
-                                                      }
-                                                    }
-                                                  },
+                                                      },
+                                                    ),
+                                                    if (extractUrls(GetSavePostData?.object?[index].repostOn?.description ?? "").isNotEmpty)
+                                                      isYouTubeUrl(extractUrls(GetSavePostData?.object?[index].repostOn?.description ?? "").first)
+                                                          ? FutureBuilder(
+                                                          future: fetchYoutubeThumbnail(extractUrls(GetSavePostData?.object?[index].repostOn?.description ?? "").first),
+                                                          builder: (context, snap) {
+                                                            return Container(
+                                                              height: 250,
+                                                              decoration: BoxDecoration(image: DecorationImage(image: CachedNetworkImageProvider(snap.data.toString())), borderRadius: BorderRadius.circular(10)),
+                                                              clipBehavior: Clip.antiAlias,
+                                                              child: Center(
+                                                                  child: IconButton(
+                                                                    icon: Icon(
+                                                                      Icons.play_circle_fill_rounded,
+                                                                      color: Colors.white,
+                                                                      size: 60,
+                                                                    ),
+                                                                    onPressed: () {
+                                                                      playLink(extractUrls(GetSavePostData?.object?[index].repostOn?.description ?? "").first, context);
+                                                                    },
+                                                                  )),
+                                                            );
+                                                          })
+                                                          : Padding(
+                                                        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                                                        child: AnyLinkPreview(
+                                                          link: extractUrls(GetSavePostData?.object?[index].repostOn?.description ?? "").first,
+                                                          displayDirection: UIDirection.uiDirectionHorizontal,
+                                                          showMultimedia: true,
+                                                          bodyMaxLines: 5,
+                                                          bodyTextOverflow: TextOverflow.ellipsis,
+                                                          titleStyle: TextStyle(
+                                                            color: Colors.black,
+                                                            fontWeight: FontWeight.bold,
+                                                            fontSize: 15,
+                                                          ),
+                                                          bodyStyle: TextStyle(color: Colors.grey, fontSize: 12),
+                                                          errorBody: 'Show my custom error body',
+                                                          errorTitle: 'Show my custom error title',
+                                                          errorWidget: null,
+                                                          errorImage: "https://flutter.dev/",
+                                                          cache: Duration(days: 7),
+                                                          backgroundColor: Colors.grey[300],
+                                                          borderRadius: 12,
+                                                          removeElevation: false,
+                                                          boxShadow: [
+                                                            BoxShadow(blurRadius: 3, color: Colors.grey)
+                                                          ],
+                                                          onTap: () {
+                                                            launchUrl(Uri.parse(extractUrls(GetSavePostData?.object?[index].repostOn?.description ?? "").first));
+                                                          }, // This disables tap event
+                                                        ),
+                                                      ),
+                                                  ],
                                                 ))
                                             : SizedBox(),
                                         Container(
                                           width: _width,
-                                          child: GetSavePostData?.object?[index]
-                                                      .repostOn?.postDataType ==
-                                                  null
+                                          child: GetSavePostData?.object?[index].repostOn?.postDataType == null
                                               ? SizedBox()
-                                              : GetSavePostData
-                                                          ?.object?[index]
-                                                          .repostOn
-                                                          ?.postData
-                                                          ?.length ==
-                                                      1
-                                                  ? (GetSavePostData
-                                                              ?.object?[index]
-                                                              .repostOn
-                                                              ?.postDataType ==
-                                                          "IMAGE"
+                                              : GetSavePostData?.object?[index].repostOn?.postData?.length == 1
+                                                  ? (GetSavePostData?.object?[index].repostOn?.postDataType == "IMAGE"
                                                       ? GestureDetector(
                                                           onTap: () {
                                                             Navigator.push(
                                                               context,
                                                               MaterialPageRoute(
-                                                                  builder:
-                                                                      (context) =>
-                                                                          OpenSavePostImage(
-                                                                            PostID:
-                                                                                GetSavePostData?.object?[index].repostOn?.postUid,
-                                                                            index:
-                                                                                index,
-                                                                          )),
+                                                                  builder: (context) => OpenSavePostImage(
+                                                                        PostID: GetSavePostData?.object?[index].repostOn?.postUid,
+                                                                        index: index,
+                                                                      )),
                                                             );
                                                           },
                                                           child: Container(
                                                             width: _width,
                                                             height: 150,
-                                                            margin:
-                                                                EdgeInsets.only(
-                                                                    left: 16,
-                                                                    top: 15,
-                                                                    right: 16),
+                                                            margin: EdgeInsets.only(left: 16, top: 15, right: 16),
                                                             child: Center(
-                                                                child:
-                                                                    CustomImageView(
-                                                              url:
-                                                                  "${GetSavePostData?.object?[index].repostOn?.postData?[0]}",
+                                                                child: CustomImageView(
+                                                              url: "${GetSavePostData?.object?[index].repostOn?.postData?[0]}",
                                                             )),
                                                           ),
                                                         )
-                                                      : GetSavePostData
-                                                                  ?.object?[
-                                                                      index]
-                                                                  .repostOn
-                                                                  ?.postDataType ==
-                                                              "VIDEO"
+                                                      : GetSavePostData?.object?[index].repostOn?.postDataType == "VIDEO"
                                                           ? /* repostMainControllers[0].value.isInitialized
                                                                               ? */
                                                           Padding(
-                                                              padding:
-                                                                  const EdgeInsets
-                                                                          .only(
-                                                                      right: 20,
-                                                                      top: 15),
+                                                              padding: const EdgeInsets.only(right: 20, top: 15),
                                                               child: Column(
-                                                                mainAxisSize:
-                                                                    MainAxisSize
-                                                                        .min,
+                                                                mainAxisSize: MainAxisSize.min,
                                                                 children: [
                                                                   VideoListItem1(
-                                                                    videoUrl:
-                                                                        videoUrls[
-                                                                            index],
-                                                                    PostID: GetSavePostData
-                                                                        ?.object?[
-                                                                            index]
-                                                                        .postUid,
-                                                                    discrption: GetSavePostData
-                                                                        ?.object?[
-                                                                            index]
-                                                                        .repostOn
-                                                                        ?.description,
+                                                                    videoUrl: videoUrls[index],
+                                                                    PostID: GetSavePostData?.object?[index].postUid,
+                                                                    discrption: GetSavePostData?.object?[index].repostOn?.description,
                                                                     /* isData: User_ID ==
                                                                       null
                                                                   ? false
@@ -8763,46 +7117,29 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                               ),
                                                             )
                                                           // : SizedBox()
-                                                          : GetSavePostData
-                                                                      ?.object?[
-                                                                          index]
-                                                                      .repostOn
-                                                                      ?.postDataType ==
-                                                                  "ATTACHMENT"
+                                                          : GetSavePostData?.object?[index].repostOn?.postDataType == "ATTACHMENT"
                                                               ? Stack(
                                                                   children: [
                                                                     Container(
-                                                                      height:
-                                                                          400,
-                                                                      width:
-                                                                          _width,
-                                                                      color: Colors
-                                                                          .transparent,
+                                                                      height: 400,
+                                                                      width: _width,
+                                                                      color: Colors.transparent,
                                                                     ),
                                                                     GestureDetector(
-                                                                      onTap:
-                                                                          () {
-                                                                        print(
-                                                                            "objectobjectobjectobject");
-                                                                        Navigator.push(
-                                                                            context,
-                                                                            MaterialPageRoute(
-                                                                          builder:
-                                                                              (context) {
+                                                                      onTap: () {
+                                                                        print("objectobjectobjectobject");
+                                                                        Navigator.push(context, MaterialPageRoute(
+                                                                          builder: (context) {
                                                                             return DocumentViewScreen1(
                                                                               path: GetSavePostData?.object?[index].repostOn?.postData?[0].toString(),
                                                                             );
                                                                           },
                                                                         ));
                                                                       },
-                                                                      child:
-                                                                          Container(
-                                                                        child:
-                                                                            CachedNetworkImage(
-                                                                          imageUrl:
-                                                                              GetSavePostData?.object?[index].repostOn?.thumbnailImageUrl ?? "",
-                                                                          fit: BoxFit
-                                                                              .cover,
+                                                                      child: Container(
+                                                                        child: CachedNetworkImage(
+                                                                          imageUrl: GetSavePostData?.object?[index].repostOn?.thumbnailImageUrl ?? "",
+                                                                          fit: BoxFit.cover,
                                                                         ),
                                                                       ),
                                                                     )
@@ -8813,57 +7150,25 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                       children: [
                                                         Stack(
                                                           children: [
-                                                            if ((GetSavePostData
-                                                                    ?.object?[
-                                                                        index]
-                                                                    .repostOn
-                                                                    ?.postData
-                                                                    ?.isNotEmpty ??
-                                                                false)) ...[
+                                                            if ((GetSavePostData?.object?[index].repostOn?.postData?.isNotEmpty ?? false)) ...[
                                                               SizedBox(
                                                                 height: 300,
-                                                                child: PageView
-                                                                    .builder(
-                                                                  onPageChanged:
-                                                                      (page) {
-                                                                    super
-                                                                        .setState(
-                                                                            () {
-                                                                      _currentPages[
-                                                                              index] =
-                                                                          page;
-                                                                      imageCount2 =
-                                                                          page +
-                                                                              1;
+                                                                child: PageView.builder(
+                                                                  onPageChanged: (page) {
+                                                                    super.setState(() {
+                                                                      _currentPages[index] = page;
+                                                                      imageCount2 = page + 1;
                                                                     });
                                                                   },
-                                                                  controller:
-                                                                      _pageControllers[
-                                                                          index],
-                                                                  itemCount: GetSavePostData
-                                                                      ?.object?[
-                                                                          index]
-                                                                      .repostOn
-                                                                      ?.postData
-                                                                      ?.length,
-                                                                  itemBuilder:
-                                                                      (BuildContext
-                                                                              context,
-                                                                          int index1) {
-                                                                    if (GetSavePostData
-                                                                            ?.object?[
-                                                                                index]
-                                                                            .repostOn
-                                                                            ?.postDataType ==
-                                                                        "IMAGE") {
+                                                                  controller: _pageControllers[index],
+                                                                  itemCount: GetSavePostData?.object?[index].repostOn?.postData?.length,
+                                                                  itemBuilder: (BuildContext context, int index1) {
+                                                                    if (GetSavePostData?.object?[index].repostOn?.postDataType == "IMAGE") {
                                                                       return GestureDetector(
-                                                                        onTap:
-                                                                            () {
-                                                                          print(
-                                                                              "Repost Opne Full screen");
+                                                                        onTap: () {
+                                                                          print("Repost Opne Full screen");
 
-                                                                          Navigator
-                                                                              .push(
+                                                                          Navigator.push(
                                                                             context,
                                                                             MaterialPageRoute(
                                                                                 builder: (context) => OpenSavePostImage(
@@ -8872,14 +7177,9 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                                     )),
                                                                           );
                                                                         },
-                                                                        child:
-                                                                            Container(
-                                                                          width:
-                                                                              _width,
-                                                                          margin: EdgeInsets.only(
-                                                                              left: 16,
-                                                                              top: 15,
-                                                                              right: 16),
+                                                                        child: Container(
+                                                                          width: _width,
+                                                                          margin: EdgeInsets.only(left: 16, top: 15, right: 16),
                                                                           child: Center(
                                                                               child: Stack(
                                                                             children: [
@@ -8912,20 +7212,12 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                           )),
                                                                         ),
                                                                       );
-                                                                    } else if (GetSavePostData
-                                                                            ?.object?[index]
-                                                                            .repostOn
-                                                                            ?.postDataType ==
-                                                                        "ATTACHMENT") {
+                                                                    } else if (GetSavePostData?.object?[index].repostOn?.postDataType == "ATTACHMENT") {
                                                                       return Container(
-                                                                          height:
-                                                                              400,
-                                                                          width:
-                                                                              _width,
-                                                                          child:
-                                                                              DocumentViewScreen1(
-                                                                            path:
-                                                                                GetSavePostData?.object?[index].repostOn?.postData?[index1].toString(),
+                                                                          height: 400,
+                                                                          width: _width,
+                                                                          child: DocumentViewScreen1(
+                                                                            path: GetSavePostData?.object?[index].repostOn?.postData?[index1].toString(),
                                                                           ));
                                                                     }
                                                                   },
@@ -8935,36 +7227,19 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                   bottom: 5,
                                                                   left: 0,
                                                                   right: 0,
-                                                                  child:
-                                                                      Padding(
-                                                                    padding: const EdgeInsets
-                                                                            .only(
-                                                                        top: 0),
-                                                                    child:
-                                                                        Container(
-                                                                      height:
-                                                                          20,
-                                                                      child:
-                                                                          DotsIndicator(
-                                                                        dotsCount:
-                                                                            GetSavePostData?.object?[index].repostOn?.postData?.length ??
-                                                                                1,
-                                                                        position:
-                                                                            _currentPages[index].toDouble(),
-                                                                        decorator:
-                                                                            DotsDecorator(
-                                                                          size: const Size(
-                                                                              10.0,
-                                                                              7.0),
-                                                                          activeSize: const Size(
-                                                                              10.0,
-                                                                              10.0),
-                                                                          spacing:
-                                                                              const EdgeInsets.symmetric(horizontal: 2),
-                                                                          activeColor:
-                                                                              ColorConstant.primary_color,
-                                                                          color:
-                                                                              Color(0xff6A6A6A),
+                                                                  child: Padding(
+                                                                    padding: const EdgeInsets.only(top: 0),
+                                                                    child: Container(
+                                                                      height: 20,
+                                                                      child: DotsIndicator(
+                                                                        dotsCount: GetSavePostData?.object?[index].repostOn?.postData?.length ?? 1,
+                                                                        position: _currentPages[index].toDouble(),
+                                                                        decorator: DotsDecorator(
+                                                                          size: const Size(10.0, 7.0),
+                                                                          activeSize: const Size(10.0, 10.0),
+                                                                          spacing: const EdgeInsets.symmetric(horizontal: 2),
+                                                                          activeColor: ColorConstant.primary_color,
+                                                                          color: Color(0xff6A6A6A),
                                                                         ),
                                                                       ),
                                                                     ),
@@ -8992,8 +7267,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                   height: 5,
                                 ),
                                 Padding(
-                                  padding:
-                                      const EdgeInsets.only(top: 0, right: 16),
+                                  padding: const EdgeInsets.only(top: 0, right: 16),
                                   child: Row(
                                     children: [
                                       SizedBox(
@@ -9001,18 +7275,13 @@ class _ProfileScreenState extends State<ProfileScreen>
                                       ),
                                       GestureDetector(
                                         onTap: () async {
-                                          await soicalFunationSave(
-                                              apiName: 'like_post',
-                                              index: index);
+                                          await soicalFunationSave(apiName: 'like_post', index: index);
                                         },
                                         child: Container(
                                           color: Colors.transparent,
                                           child: Padding(
                                             padding: const EdgeInsets.all(5.0),
-                                            child: GetSavePostData
-                                                        ?.object?[index]
-                                                        .isLiked !=
-                                                    true
+                                            child: GetSavePostData?.object?[index].isLiked != true
                                                 ? Image.asset(
                                                     ImageConstant.likewithout,
                                                     height: 20,
@@ -9027,9 +7296,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                       SizedBox(
                                         width: 0,
                                       ),
-                                      GetSavePostData
-                                                  ?.object?[index].likedCount ==
-                                              0
+                                      GetSavePostData?.object?[index].likedCount == 0
                                           ? SizedBox()
                                           : GestureDetector(
                                               onTap: () {
@@ -9037,27 +7304,22 @@ class _ProfileScreenState extends State<ProfileScreen>
                                             context,
                                             MaterialPageRoute(
                                                 builder: (context) =>
-                                               
+
                                                     ShowAllPostLike("${GetSavePostData??.object?[index].postUid}"))); */
 
-                                                Navigator.push(context,
-                                                    MaterialPageRoute(
+                                                Navigator.push(context, MaterialPageRoute(
                                                   builder: (context) {
-                                                    return ShowAllPostLike(
-                                                        "${GetSavePostData?.object?[index].postUid}");
+                                                    return ShowAllPostLike("${GetSavePostData?.object?[index].postUid}");
                                                   },
                                                 ));
                                               },
                                               child: Container(
                                                 color: Colors.transparent,
                                                 child: Padding(
-                                                  padding:
-                                                      const EdgeInsets.all(5.0),
+                                                  padding: const EdgeInsets.all(5.0),
                                                   child: Text(
                                                     "${GetSavePostData?.object?[index].likedCount}",
-                                                    style: TextStyle(
-                                                        fontFamily: "outfit",
-                                                        fontSize: 14),
+                                                    style: TextStyle(fontFamily: "outfit", fontSize: 14),
                                                   ),
                                                 ),
                                               ),
@@ -9067,13 +7329,9 @@ class _ProfileScreenState extends State<ProfileScreen>
                                       ),
                                       GestureDetector(
                                         onTap: () async {
-                                          BlocProvider.of<AddcommentCubit>(
-                                                  context)
-                                              .Addcomment(context,
-                                                  '${GetSavePostData?.object?[index].postUid}');
+                                          BlocProvider.of<AddcommentCubit>(context).Addcomment(context, '${GetSavePostData?.object?[index].postUid}');
 
-                                          _settingModalBottomSheetSave(
-                                              context, index, _height);
+                                          _settingModalBottomSheetSave(context, index, _height);
                                         },
                                         child: Container(
                                           color: Colors.transparent,
@@ -9089,15 +7347,11 @@ class _ProfileScreenState extends State<ProfileScreen>
                                       SizedBox(
                                         width: 5,
                                       ),
-                                      GetSavePostData?.object?[index]
-                                                  .commentCount ==
-                                              0
+                                      GetSavePostData?.object?[index].commentCount == 0
                                           ? SizedBox()
                                           : Text(
                                               "${GetSavePostData?.object?[index].commentCount}",
-                                              style: TextStyle(
-                                                  fontFamily: "outfit",
-                                                  fontSize: 14),
+                                              style: TextStyle(fontFamily: "outfit", fontSize: 14),
                                             ),
                                       SizedBox(
                                         width: 8,
@@ -9120,53 +7374,70 @@ class _ProfileScreenState extends State<ProfileScreen>
                                       SizedBox(
                                         width: 5,
                                       ),
-                                      GetSavePostData?.object?[index]
-                                                      .repostCount ==
-                                                  null ||
-                                              GetSavePostData?.object?[index]
-                                                      .repostCount ==
-                                                  0
+                                      GetSavePostData?.object?[index].repostCount == null || GetSavePostData?.object?[index].repostCount == 0
                                           ? SizedBox()
                                           : Text(
                                               '${GetSavePostData?.object?[index].repostCount}',
-                                              style: TextStyle(
-                                                  fontFamily: "outfit",
-                                                  fontSize: 14),
+                                              style: TextStyle(fontFamily: "outfit", fontSize: 14),
                                             ),
                                       GestureDetector(
-                                        onTap: () {
-                                          _onShareXFileFromAssets(context,
-                                              androidLink:
-                                                  '${GetSavePostData?.object?[index].postLink}'
-                                              /* iosLink:
-                                              "https://apps.apple.com/inList =  /app/growder-b2b-platform/id6451333863" */
-                                              );
+                                        onTap: () async {
+                                          if (GetSavePostData!.object![index].postDataType != "VIDEO") {
+                                            String thumb = "";
+                                            if (GetSavePostData!.object![index].thumbnailImageUrl != null) {
+                                              thumb = GetSavePostData!.object![index].thumbnailImageUrl!;
+                                            } else {
+                                              if (GetSavePostData!.object![index].postData != null && GetSavePostData!.object![index].postData!.isNotEmpty) {
+                                                thumb = GetSavePostData!.object![index].postData!.first;
+                                              } else {
+                                                if (GetSavePostData!.object![index].repostOn != null && GetSavePostData!.object![index].repostOn!.thumbnailImageUrl != null) {
+                                                  thumb = GetSavePostData!.object![index].repostOn!.thumbnailImageUrl!;
+                                                } else {
+                                                  thumb = GetSavePostData!.object![index].repostOn != null && GetSavePostData!.object![index].repostOn!.postData != null && GetSavePostData!.object![index].repostOn!.postData!.isNotEmpty ? GetSavePostData!.object![index].repostOn!.postData!.first : "";
+                                                }
+                                              }
+                                            }
+                                            _onShareXFileFromAssets(
+                                              context,
+                                              thumb,
+                                              GetSavePostData!.object![index].postUserName ?? "",
+                                              GetSavePostData!.object![index].description ?? "",
+                                              androidLink: '${GetSavePostData!.object![index].postLink}',
+                                            );
+                                          } else {
+                                            final fileName = await VideoThumbnail.thumbnailFile(
+                                              video: GetSavePostData!.object![index].postData?.first ?? "",
+                                              thumbnailPath: (await getTemporaryDirectory()).path,
+                                              imageFormat: ImageFormat.WEBP,
+                                              quality: 100,
+                                            );
+                                            _onShareXFileFromAssets(
+                                              context,
+                                              fileName!,
+                                              GetSavePostData!.object![index].postUserName ?? "",
+                                              GetSavePostData!.object![index].description ?? "",
+                                              androidLink: '${GetSavePostData!.object![index].postLink}',
+                                            );
+                                          }
                                         },
                                         child: Container(
                                           height: 20,
                                           width: 30,
                                           color: Colors.transparent,
-                                          child: Icon(Icons.share_rounded,
-                                              size: 20),
+                                          child: Icon(Icons.share_rounded, size: 20),
                                         ),
                                       ),
                                       Spacer(),
                                       GestureDetector(
                                         onTap: () async {
-                                          await soicalFunationSave(
-                                              apiName: 'savedata',
-                                              index: index);
+                                          await soicalFunationSave(apiName: 'savedata', index: index);
                                         },
                                         child: Container(
                                           color: Colors.transparent,
                                           child: Padding(
                                             padding: const EdgeInsets.all(5.0),
                                             child: Image.asset(
-                                              GetSavePostData?.object?[index]
-                                                          .isSaved ==
-                                                      false
-                                                  ? ImageConstant.savePin
-                                                  : ImageConstant.Savefill,
+                                              GetSavePostData?.object?[index].isSaved == false ? ImageConstant.savePin : ImageConstant.Savefill,
                                               height: 17,
                                             ),
                                           ),
@@ -9184,19 +7455,15 @@ class _ProfileScreenState extends State<ProfileScreen>
                         ),
                       )
                     : Padding(
-                        padding: EdgeInsets.only(
-                            left: 0, right: 0, top: 10, bottom: 10),
+                        padding: EdgeInsets.only(left: 0, right: 0, top: 10, bottom: 10),
                         child: GestureDetector(
                           onDoubleTap: () async {
-                            await soicalFunationSave(
-                                apiName: 'like_post', index: index);
+                            await soicalFunationSave(apiName: 'like_post', index: index);
                           },
                           child: Container(
                             decoration: BoxDecoration(
                               // color: Colors.red,
-                              border: Border.all(
-                                  color: Color.fromRGBO(0, 0, 0,
-                                      0.25)), /* borderRadius: BorderRadius.circular(15) */
+                              border: Border.all(color: Color.fromRGBO(0, 0, 0, 0.25)), /* borderRadius: BorderRadius.circular(15) */
                             ),
                             // height: 300,
                             width: _width,
@@ -9214,34 +7481,18 @@ class _ProfileScreenState extends State<ProfileScreen>
                                         /*   await BlocProvider.of<GetGuestAllPostCubit>(
                                 context)
                             .seetinonExpried(context); */
-                                        Navigator.push(context,
-                                            MaterialPageRoute(
-                                                builder: (context) {
-                                          return MultiBlocProvider(
-                                              providers: [
-                                                BlocProvider<NewProfileSCubit>(
-                                                  create: (context) =>
-                                                      NewProfileSCubit(),
-                                                ),
-                                              ],
-                                              child: ProfileScreen(
-                                                  User_ID:
-                                                      "${GetSavePostData?.object?[index].userUid}",
-                                                  isFollowing: GetSavePostData
-                                                      ?.object?[index]
-                                                      .isFollowing));
+                                        Navigator.push(context, MaterialPageRoute(builder: (context) {
+                                          return MultiBlocProvider(providers: [
+                                            BlocProvider<NewProfileSCubit>(
+                                              create: (context) => NewProfileSCubit(),
+                                            ),
+                                          ], child: ProfileScreen(User_ID: "${GetSavePostData?.object?[index].userUid}", isFollowing: GetSavePostData?.object?[index].isFollowing));
                                         })).then((value) => Get_UserToken());
                                         //
                                       },
-                                      child: GetSavePostData?.object?[index]
-                                                      .userProfilePic !=
-                                                  null &&
-                                              GetSavePostData?.object?[index]
-                                                      .userProfilePic !=
-                                                  ""
+                                      child: GetSavePostData?.object?[index].userProfilePic != null && GetSavePostData?.object?[index].userProfilePic != ""
                                           ? CircleAvatar(
-                                              backgroundImage: NetworkImage(
-                                                  "${GetSavePostData?.object?[index].userProfilePic}"),
+                                              backgroundImage: NetworkImage("${GetSavePostData?.object?[index].userProfilePic}"),
                                               backgroundColor: Colors.white,
                                               radius: 25,
                                             )
@@ -9254,8 +7505,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                             ),
                                     ),
                                     title: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         // SizedBox(
                                         //   height: 6,
@@ -9265,36 +7515,20 @@ class _ProfileScreenState extends State<ProfileScreen>
                                             /*    await BlocProvider.of<GetGuestAllPostCubit>(
                                     context)
                                 .seetinonExpried(context); */
-                                            Navigator.push(context,
-                                                MaterialPageRoute(
-                                                    builder: (context) {
-                                              return MultiBlocProvider(
-                                                  providers: [
-                                                    BlocProvider<
-                                                        NewProfileSCubit>(
-                                                      create: (context) =>
-                                                          NewProfileSCubit(),
-                                                    ),
-                                                  ],
-                                                  child: ProfileScreen(
-                                                      User_ID:
-                                                          "${GetSavePostData?.object?[index].userUid}",
-                                                      isFollowing:
-                                                          GetSavePostData
-                                                              ?.object?[index]
-                                                              .isFollowing));
-                                            })).then(
-                                                (value) => Get_UserToken());
+                                            Navigator.push(context, MaterialPageRoute(builder: (context) {
+                                              return MultiBlocProvider(providers: [
+                                                BlocProvider<NewProfileSCubit>(
+                                                  create: (context) => NewProfileSCubit(),
+                                                ),
+                                              ], child: ProfileScreen(User_ID: "${GetSavePostData?.object?[index].userUid}", isFollowing: GetSavePostData?.object?[index].isFollowing));
+                                            })).then((value) => Get_UserToken());
                                             //
                                           },
                                           child: Container(
                                             // color: Colors.amber,
                                             child: Text(
                                               "${GetSavePostData?.object?[index].postUserName}",
-                                              style: TextStyle(
-                                                  fontSize: 20,
-                                                  fontFamily: "outfit",
-                                                  fontWeight: FontWeight.bold),
+                                              style: TextStyle(fontSize: 20, fontFamily: "outfit", fontWeight: FontWeight.bold),
                                             ),
                                           ),
                                         ),
@@ -9313,37 +7547,27 @@ class _ProfileScreenState extends State<ProfileScreen>
                                 SizedBox(
                                   height: 10,
                                 ),
-                                GetSavePostData?.object?[index].description !=
-                                        null
+                                GetSavePostData?.object?[index].description != null
                                     ? Padding(
-                                        padding:
-                                            const EdgeInsets.only(left: 16),
+                                        padding: const EdgeInsets.only(left: 16),
                                         child:
                                             //this is the despcation
                                             GestureDetector(
                                                 onTap: () async {
                                                   if (DataGet == true) {
-                                                    await launch(
-                                                        '${GetSavePostData?.object?[index].description}',
-                                                        forceWebView: true,
-                                                        enableJavaScript: true);
+                                                    await launch('${GetSavePostData?.object?[index].description}', forceWebView: true, enableJavaScript: true);
                                                   } else {
                                                     Navigator.push(
                                                       context,
                                                       MaterialPageRoute(
-                                                          builder: (context) =>
-                                                              OpenSavePostImage(
-                                                                PostID: GetSavePostData
-                                                                    ?.object?[
-                                                                        index]
-                                                                    .postUid,
+                                                          builder: (context) => OpenSavePostImage(
+                                                                PostID: GetSavePostData?.object?[index].postUid,
                                                               )),
                                                     );
                                                   }
                                                 },
                                                 child: Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
                                                   children: [
                                                     /*  GestureDetector(
                                                                       onTap: () async {
@@ -9399,56 +7623,29 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                             ),
                                                                           ))),
                                                                     ), */
-                                                    GetSavePostData
-                                                                ?.object?[index]
-                                                                .translatedDescription !=
-                                                            null
+                                                    GetSavePostData?.object?[index].translatedDescription != null
                                                         ? GestureDetector(
                                                             onTap: () async {
-                                                              super
-                                                                  .setState(() {
-                                                                if (GetSavePostData
-                                                                            ?.object?[
-                                                                                index]
-                                                                            .isTrsnalteoption ==
-                                                                        false ||
-                                                                    GetSavePostData
-                                                                            ?.object?[index]
-                                                                            .isTrsnalteoption ==
-                                                                        null) {
-                                                                  GetSavePostData
-                                                                      ?.object?[
-                                                                          index]
-                                                                      .isTrsnalteoption = true;
+                                                              super.setState(() {
+                                                                if (GetSavePostData?.object?[index].isTrsnalteoption == false || GetSavePostData?.object?[index].isTrsnalteoption == null) {
+                                                                  GetSavePostData?.object?[index].isTrsnalteoption = true;
                                                                 } else {
-                                                                  GetSavePostData
-                                                                      ?.object?[
-                                                                          index]
-                                                                      .isTrsnalteoption = false;
+                                                                  GetSavePostData?.object?[index].isTrsnalteoption = false;
                                                                 }
                                                               });
                                                             },
                                                             child: Container(
                                                                 width: 80,
-                                                                decoration:
-                                                                    BoxDecoration(
-                                                                  color: ColorConstant
-                                                                      .primaryLight_color,
-                                                                  borderRadius:
-                                                                      BorderRadius
-                                                                          .circular(
-                                                                              10),
+                                                                decoration: BoxDecoration(
+                                                                  color: ColorConstant.primaryLight_color,
+                                                                  borderRadius: BorderRadius.circular(10),
                                                                 ),
                                                                 child: Center(
                                                                     child: Text(
                                                                   "Translate",
-                                                                  style:
-                                                                      TextStyle(
-                                                                    fontFamily:
-                                                                        'outfit',
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .bold,
+                                                                  style: TextStyle(
+                                                                    fontFamily: 'outfit',
+                                                                    fontWeight: FontWeight.bold,
                                                                   ),
                                                                 ))),
                                                           )
@@ -9461,133 +7658,60 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                         Expanded(
                                                           child: Container(
                                                             child: LinkifyText(
-                                                              GetSavePostData?.object?[index].isTrsnalteoption ==
-                                                                          false ||
-                                                                      GetSavePostData
-                                                                              ?.object?[index]
-                                                                              .isTrsnalteoption ==
-                                                                          null
-                                                                  ? "${GetSavePostData?.object?[index].description}"
-                                                                  : "${GetSavePostData?.object?[index].translatedDescription}",
-                                                              linkStyle:
-                                                                  TextStyle(
-                                                                color:
-                                                                    Colors.blue,
-                                                                fontFamily:
-                                                                    'outfit',
+                                                              GetSavePostData?.object?[index].isTrsnalteoption == false || GetSavePostData?.object?[index].isTrsnalteoption == null ? "${GetSavePostData?.object?[index].description}" : "${GetSavePostData?.object?[index].translatedDescription}",
+                                                              linkStyle: TextStyle(
+                                                                color: Colors.blue,
+                                                                fontFamily: 'outfit',
                                                               ),
-                                                              textStyle:
-                                                                  TextStyle(
-                                                                color: Colors
-                                                                    .black,
-                                                                fontFamily:
-                                                                    'outfit',
+                                                              textStyle: TextStyle(
+                                                                color: Colors.black,
+                                                                fontFamily: 'outfit',
                                                               ),
                                                               linkTypes: [
                                                                 LinkType.url,
-                                                                LinkType
-                                                                    .userTag,
-                                                                LinkType
-                                                                    .hashTag,
+                                                                LinkType.userTag,
+                                                                LinkType.hashTag,
                                                                 // LinkType
                                                                 //     .email
                                                               ],
-                                                              onTap:
-                                                                  (link) async {
+                                                              onTap: (link) async {
                                                                 /// do stuff with `link` like
                                                                 /// if(link.type == Link.url) launchUrl(link.value);
 
-                                                                var SelectedTest =
-                                                                    link.value
-                                                                        .toString();
-                                                                var Link = SelectedTest
-                                                                    .startsWith(
-                                                                        'https');
-                                                                var Link1 = SelectedTest
-                                                                    .startsWith(
-                                                                        'http');
-                                                                var Link2 =
-                                                                    SelectedTest
-                                                                        .startsWith(
-                                                                            'www');
-                                                                var Link3 =
-                                                                    SelectedTest
-                                                                        .startsWith(
-                                                                            'WWW');
-                                                                var Link4 = SelectedTest
-                                                                    .startsWith(
-                                                                        'HTTPS');
-                                                                var Link5 = SelectedTest
-                                                                    .startsWith(
-                                                                        'HTTP');
-                                                                var Link6 = SelectedTest
-                                                                    .startsWith(
-                                                                        'https://pdslink.page.link/');
-                                                                print("tag -- " +
-                                                                    SelectedTest
-                                                                        .toString());
+                                                                var SelectedTest = link.value.toString();
+                                                                var Link = SelectedTest.startsWith('https');
+                                                                var Link1 = SelectedTest.startsWith('http');
+                                                                var Link2 = SelectedTest.startsWith('www');
+                                                                var Link3 = SelectedTest.startsWith('WWW');
+                                                                var Link4 = SelectedTest.startsWith('HTTPS');
+                                                                var Link5 = SelectedTest.startsWith('HTTP');
+                                                                var Link6 = SelectedTest.startsWith('https://pdslink.page.link/');
+                                                                print("tag -- " + SelectedTest.toString());
 
-                                                                if (User_ID ==
-                                                                    null) {
-                                                                  Navigator.of(
-                                                                          context)
-                                                                      .push(MaterialPageRoute(
-                                                                          builder: (context) =>
-                                                                              RegisterCreateAccountScreen()));
+                                                                if (User_ID == null) {
+                                                                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
                                                                 } else {
-                                                                  if (Link ==
-                                                                          true ||
-                                                                      Link1 ==
-                                                                          true ||
-                                                                      Link2 ==
-                                                                          true ||
-                                                                      Link3 ==
-                                                                          true ||
-                                                                      Link4 ==
-                                                                          true ||
-                                                                      Link5 ==
-                                                                          true ||
-                                                                      Link6 ==
-                                                                          true) {
-                                                                    if (Link2 ==
-                                                                            true ||
-                                                                        Link3 ==
-                                                                            true) {
-                                                                      launchUrl(
-                                                                          Uri.parse(
-                                                                              "https://${link.value.toString()}"));
-                                                                      print(
-                                                                          "qqqqqqqqhttps://${link.value}");
+                                                                  if (Link == true || Link1 == true || Link2 == true || Link3 == true || Link4 == true || Link5 == true || Link6 == true) {
+                                                                    if (Link2 == true || Link3 == true) {
+                                                                      launchUrl(Uri.parse("https://${link.value.toString()}"));
+                                                                      print("qqqqqqqqhttps://${link.value}");
                                                                     } else {
-                                                                      if (Link6 ==
-                                                                          true) {
-                                                                        print(
-                                                                            "yes i am inList =   room");
-                                                                        Navigator.push(
-                                                                            context,
-                                                                            MaterialPageRoute(
-                                                                          builder:
-                                                                              (context) {
+                                                                      if (Link6 == true) {
+                                                                        print("yes i am inList =   room");
+                                                                        Navigator.push(context, MaterialPageRoute(
+                                                                          builder: (context) {
                                                                             return NewBottomBar(
                                                                               buttomIndex: 1,
                                                                             );
                                                                           },
                                                                         ));
                                                                       } else {
-                                                                        launchUrl(Uri.parse(link
-                                                                            .value
-                                                                            .toString()));
-                                                                        print(
-                                                                            "link.valuelink.value -- ${link.value}");
+                                                                        launchUrl(Uri.parse(link.value.toString()));
+                                                                        print("link.valuelink.value -- ${link.value}");
                                                                       }
                                                                     }
-                                                                  } else if (link
-                                                                          .value !=
-                                                                      null) {
-                                                                    if (link
-                                                                        .value!
-                                                                        .startsWith(
-                                                                            '#')) {
+                                                                  } else if (link.value != null) {
+                                                                    if (link.value!.startsWith('#')) {
                                                                       /*   await BlocProvider
                                                               .of<GetGuestAllPostCubit>(
                                                                   context)
@@ -9596,13 +7720,9 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                       Navigator.push(
                                                                           context,
                                                                           MaterialPageRoute(
-                                                                            builder: (context) =>
-                                                                                HashTagViewScreen(title: "${link.value}"),
+                                                                            builder: (context) => HashTagViewScreen(title: "${link.value}"),
                                                                           ));
-                                                                    } else if (link
-                                                                        .value!
-                                                                        .startsWith(
-                                                                            '@')) {
+                                                                    } else if (link.value!.startsWith('@')) {
                                                                       /*  await BlocProvider
                                                               .of<GetGuestAllPostCubit>(
                                                                   context)
@@ -9610,33 +7730,16 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                               context); */
                                                                       var name;
                                                                       var tagName;
-                                                                      name =
-                                                                          SelectedTest;
-                                                                      tagName =
-                                                                          name.replaceAll(
-                                                                              "@",
-                                                                              "");
-                                                                      await BlocProvider.of<NewProfileSCubit>(context).UserTagAPI(
-                                                                          context,
-                                                                          tagName);
+                                                                      name = SelectedTest;
+                                                                      tagName = name.replaceAll("@", "");
+                                                                      await BlocProvider.of<NewProfileSCubit>(context).UserTagAPI(context, tagName);
 
-                                                                      Navigator.push(
-                                                                          context,
-                                                                          MaterialPageRoute(builder:
-                                                                              (context) {
-                                                                        return ProfileScreen(
-                                                                            User_ID:
-                                                                                "${userTagModel?.object}",
-                                                                            isFollowing:
-                                                                                "");
-                                                                      })).then(
-                                                                          (value) =>
-                                                                              Get_UserToken());
+                                                                      Navigator.push(context, MaterialPageRoute(builder: (context) {
+                                                                        return ProfileScreen(User_ID: "${userTagModel?.object}", isFollowing: "");
+                                                                      })).then((value) => Get_UserToken());
 
-                                                                      print(
-                                                                          "tagName -- ${tagName}");
-                                                                      print(
-                                                                          "user id -- ${userTagModel?.object}");
+                                                                      print("tagName -- ${tagName}");
+                                                                      print("user id -- ${userTagModel?.object}");
                                                                     }
                                                                   }
                                                                 }
@@ -9657,52 +7760,36 @@ class _ProfileScreenState extends State<ProfileScreen>
 
                                 Container(
                                   width: _width,
-                                  child: GetSavePostData
-                                              ?.object?[index].postDataType ==
-                                          null
+                                  child: GetSavePostData?.object?[index].postDataType == null
                                       ? SizedBox()
-                                      : GetSavePostData?.object?[index].postData
-                                                  ?.length ==
-                                              1
-                                          ? (GetSavePostData?.object?[index]
-                                                      .postDataType ==
-                                                  "IMAGE"
+                                      : GetSavePostData?.object?[index].postData?.length == 1
+                                          ? (GetSavePostData?.object?[index].postDataType == "IMAGE"
                                               ? GestureDetector(
                                                   onTap: () {
                                                     Navigator.push(
                                                       context,
                                                       MaterialPageRoute(
-                                                          builder: (context) =>
-                                                              OpenSavePostImage(
-                                                                PostID: GetSavePostData
-                                                                    ?.object?[
-                                                                        index]
-                                                                    .postUid,
+                                                          builder: (context) => OpenSavePostImage(
+                                                                PostID: GetSavePostData?.object?[index].postUid,
                                                                 index: index,
                                                               )),
                                                     );
                                                   },
                                                   child: Container(
                                                     width: _width,
-                                                    margin: EdgeInsets.only(
-                                                        left: 0,
-                                                        top: 15,
-                                                        right: 0),
+                                                    margin: EdgeInsets.only(left: 0, top: 15, right: 0),
                                                     child: Center(
                                                       child: /* CustomImageView(
                                                       url:
                                                           "${GetSavePostData?.object?[index].postData?[0]}",
                                                     ) */
                                                           PinchZoom(
-                                                        child:
-                                                            CachedNetworkImage(
-                                                          imageUrl:
-                                                              "${GetSavePostData?.object?[index].postData?[0]}",
+                                                        child: CachedNetworkImage(
+                                                          imageUrl: "${GetSavePostData?.object?[index].postData?[0]}",
                                                         ),
                                                         maxScale: 4,
                                                         onZoomStart: () {
-                                                          print(
-                                                              'Start zooming');
+                                                          print('Start zooming');
                                                         },
                                                         onZoomEnd: () {
                                                           print('Stop zooming');
@@ -9711,20 +7798,14 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                     ),
                                                   ),
                                                 )
-                                              : GetSavePostData?.object?[index]
-                                                          .postDataType ==
-                                                      "VIDEO"
+                                              : GetSavePostData?.object?[index].postDataType == "VIDEO"
                                                   ? /*  mainPostControllers[0].value.isInitialized
                                                                       ? */
 
                                                   Padding(
-                                                      padding:
-                                                          const EdgeInsets.only(
-                                                              right: 20,
-                                                              top: 15),
+                                                      padding: const EdgeInsets.only(right: 20, top: 15),
                                                       child: Column(
-                                                        mainAxisSize:
-                                                            MainAxisSize.min,
+                                                        mainAxisSize: MainAxisSize.min,
                                                         children: [
                                                           /* Container(
                                                                                     height: 250,
@@ -9733,15 +7814,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                                       controller: chewieController[index],
                                                                                     )), */
 
-                                                          VideoListItem1(
-                                                              videoUrl:
-                                                                  videoUrls[
-                                                                      index],
-                                                              PostID:
-                                                                  GetSavePostData
-                                                                      ?.object?[
-                                                                          index]
-                                                                      .postUid
+                                                          VideoListItem1(videoUrl: videoUrls[index], PostID: GetSavePostData?.object?[index].postUid
                                                               /* isData: User_ID == null
                                                           ? false
                                                           : true, */
@@ -9751,54 +7824,33 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                     )
                                                   // : SizedBox()
 
-                                                  : GetSavePostData
-                                                              ?.object?[index]
-                                                              .postDataType ==
-                                                          "ATTACHMENT"
-                                                      ? (GetSavePostData
-                                                                  ?.object?[
-                                                                      index]
-                                                                  .postData
-                                                                  ?.isNotEmpty ==
-                                                              true)
+                                                  : GetSavePostData?.object?[index].postDataType == "ATTACHMENT"
+                                                      ? (GetSavePostData?.object?[index].postData?.isNotEmpty == true)
                                                           ? Stack(
                                                               children: [
                                                                 Container(
                                                                   height: 400,
                                                                   width: _width,
-                                                                  color: Colors
-                                                                      .transparent,
+                                                                  color: Colors.transparent,
                                                                   /* child: DocumentViewScreen1(
                                                                                     path: GetSavePostData??.object?[index].postData?[0].toString(),
                                                                                   ) */
                                                                 ),
                                                                 GestureDetector(
                                                                   onTap: () {
-                                                                    print(
-                                                                        "objectobjectobjectobject");
-                                                                    Navigator.push(
-                                                                        context,
-                                                                        MaterialPageRoute(
-                                                                      builder:
-                                                                          (context) {
+                                                                    print("objectobjectobjectobject");
+                                                                    Navigator.push(context, MaterialPageRoute(
+                                                                      builder: (context) {
                                                                         return DocumentViewScreen1(
-                                                                          path: GetSavePostData
-                                                                              ?.object?[index]
-                                                                              .postData?[0]
-                                                                              .toString(),
+                                                                          path: GetSavePostData?.object?[index].postData?[0].toString(),
                                                                         );
                                                                       },
                                                                     ));
                                                                   },
-                                                                  child:
-                                                                      Container(
-                                                                    child:
-                                                                        CachedNetworkImage(
-                                                                      imageUrl:
-                                                                          GetSavePostData?.object?[index].thumbnailImageUrl ??
-                                                                              "",
-                                                                      fit: BoxFit
-                                                                          .cover,
+                                                                  child: Container(
+                                                                    child: CachedNetworkImage(
+                                                                      imageUrl: GetSavePostData?.object?[index].thumbnailImageUrl ?? "",
+                                                                      fit: BoxFit.cover,
                                                                     ),
                                                                   ),
                                                                 )
@@ -9810,59 +7862,30 @@ class _ProfileScreenState extends State<ProfileScreen>
                                               children: [
                                                 Stack(
                                                   children: [
-                                                    if ((GetSavePostData
-                                                            ?.object?[index]
-                                                            .postData
-                                                            ?.isNotEmpty ??
-                                                        false)) ...[
+                                                    if ((GetSavePostData?.object?[index].postData?.isNotEmpty ?? false)) ...[
                                                       Container(
                                                         height: _height / 1.4,
                                                         child: PageView.builder(
-                                                          onPageChanged:
-                                                              (page) {
+                                                          onPageChanged: (page) {
                                                             super.setState(() {
-                                                              _currentPages[
-                                                                  index] = page;
-                                                              imageCount =
-                                                                  page + 1;
+                                                              _currentPages[index] = page;
+                                                              imageCount = page + 1;
                                                             });
                                                           },
-                                                          controller:
-                                                              _pageControllers[
-                                                                  index],
-                                                          itemCount:
-                                                              GetSavePostData
-                                                                  ?.object?[
-                                                                      index]
-                                                                  .postData
-                                                                  ?.length,
-                                                          itemBuilder:
-                                                              (BuildContext
-                                                                      context,
-                                                                  int index1) {
-                                                            if (GetSavePostData
-                                                                    ?.object?[
-                                                                        index]
-                                                                    .postDataType ==
-                                                                "IMAGE") {
+                                                          controller: _pageControllers[index],
+                                                          itemCount: GetSavePostData?.object?[index].postData?.length,
+                                                          itemBuilder: (BuildContext context, int index1) {
+                                                            if (GetSavePostData?.object?[index].postDataType == "IMAGE") {
                                                               return Container(
                                                                 width: _width,
-                                                                margin: EdgeInsets
-                                                                    .only(
-                                                                        left: 0,
-                                                                        top: 15,
-                                                                        right:
-                                                                            0),
+                                                                margin: EdgeInsets.only(left: 0, top: 15, right: 0),
                                                                 child: Center(
-                                                                    child:
-                                                                        GestureDetector(
+                                                                    child: GestureDetector(
                                                                   onTap: () {
-                                                                    Navigator
-                                                                        .push(
+                                                                    Navigator.push(
                                                                       context,
                                                                       MaterialPageRoute(
-                                                                          builder: (context) =>
-                                                                              OpenSavePostImage(
+                                                                          builder: (context) => OpenSavePostImage(
                                                                                 PostID: GetSavePostData?.object?[index].postUid,
                                                                                 index: index1,
                                                                               )),
@@ -9871,23 +7894,16 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                   child: Stack(
                                                                     children: [
                                                                       Align(
-                                                                        alignment:
-                                                                            Alignment.center,
-                                                                        child:
-                                                                            PinchZoom(
-                                                                          child:
-                                                                              CachedNetworkImage(
-                                                                            imageUrl:
-                                                                                "${GetSavePostData?.object?[index].postData?[index1]}",
+                                                                        alignment: Alignment.center,
+                                                                        child: PinchZoom(
+                                                                          child: CachedNetworkImage(
+                                                                            imageUrl: "${GetSavePostData?.object?[index].postData?[index1]}",
                                                                           ),
-                                                                          maxScale:
-                                                                              4,
-                                                                          onZoomStart:
-                                                                              () {
+                                                                          maxScale: 4,
+                                                                          onZoomStart: () {
                                                                             print('Start zooming');
                                                                           },
-                                                                          onZoomEnd:
-                                                                              () {
+                                                                          onZoomEnd: () {
                                                                             print('Stop zooming');
                                                                           },
                                                                         ),
@@ -9897,14 +7913,10 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                         ) */
                                                                       ),
                                                                       Align(
-                                                                        alignment:
-                                                                            Alignment.topRight,
-                                                                        child:
-                                                                            Card(
-                                                                          color:
-                                                                              Colors.transparent,
-                                                                          elevation:
-                                                                              0,
+                                                                        alignment: Alignment.topRight,
+                                                                        child: Card(
+                                                                          color: Colors.transparent,
+                                                                          elevation: 0,
                                                                           child: Container(
                                                                               alignment: Alignment.center,
                                                                               height: 30,
@@ -9923,22 +7935,12 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                   ),
                                                                 )),
                                                               );
-                                                            } else if (GetSavePostData
-                                                                    ?.object?[
-                                                                        index]
-                                                                    .postDataType ==
-                                                                "ATTACHMENT") {
+                                                            } else if (GetSavePostData?.object?[index].postDataType == "ATTACHMENT") {
                                                               return Container(
                                                                   height: 400,
                                                                   width: _width,
-                                                                  child:
-                                                                      DocumentViewScreen1(
-                                                                    path: GetSavePostData
-                                                                        ?.object?[
-                                                                            index]
-                                                                        .postData?[
-                                                                            index1]
-                                                                        .toString(),
+                                                                  child: DocumentViewScreen1(
+                                                                    path: GetSavePostData?.object?[index].postData?[index1].toString(),
                                                                   ));
                                                             }
                                                           },
@@ -9949,42 +7951,18 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                           left: 0,
                                                           right: 0,
                                                           child: Padding(
-                                                            padding:
-                                                                const EdgeInsets
-                                                                        .only(
-                                                                    top: 0),
+                                                            padding: const EdgeInsets.only(top: 0),
                                                             child: Container(
                                                               height: 20,
-                                                              child:
-                                                                  DotsIndicator(
-                                                                dotsCount: GetSavePostData
-                                                                        ?.object?[
-                                                                            index]
-                                                                        .postData
-                                                                        ?.length ??
-                                                                    0,
-                                                                position: _currentPages[
-                                                                        index]
-                                                                    .toDouble(),
-                                                                decorator:
-                                                                    DotsDecorator(
-                                                                  size:
-                                                                      const Size(
-                                                                          10.0,
-                                                                          7.0),
-                                                                  activeSize:
-                                                                      const Size(
-                                                                          10.0,
-                                                                          10.0),
-                                                                  spacing: const EdgeInsets
-                                                                          .symmetric(
-                                                                      horizontal:
-                                                                          2),
-                                                                  activeColor:
-                                                                      ColorConstant
-                                                                          .primary_color,
-                                                                  color: Color(
-                                                                      0xff6A6A6A),
+                                                              child: DotsIndicator(
+                                                                dotsCount: GetSavePostData?.object?[index].postData?.length ?? 0,
+                                                                position: _currentPages[index].toDouble(),
+                                                                decorator: DotsDecorator(
+                                                                  size: const Size(10.0, 7.0),
+                                                                  activeSize: const Size(10.0, 10.0),
+                                                                  spacing: const EdgeInsets.symmetric(horizontal: 2),
+                                                                  activeColor: ColorConstant.primary_color,
+                                                                  color: Color(0xff6A6A6A),
                                                                 ),
                                                               ),
                                                             ),
@@ -10007,8 +7985,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                   height: 5,
                                 ),
                                 Padding(
-                                  padding:
-                                      const EdgeInsets.only(top: 0, right: 16),
+                                  padding: const EdgeInsets.only(top: 0, right: 16),
                                   child: Row(
                                     children: [
                                       SizedBox(
@@ -10016,18 +7993,13 @@ class _ProfileScreenState extends State<ProfileScreen>
                                       ),
                                       GestureDetector(
                                         onTap: () async {
-                                          await soicalFunationSave(
-                                              apiName: 'like_post',
-                                              index: index);
+                                          await soicalFunationSave(apiName: 'like_post', index: index);
                                         },
                                         child: Container(
                                           color: Colors.transparent,
                                           child: Padding(
                                             padding: EdgeInsets.all(5.0),
-                                            child: GetSavePostData
-                                                        ?.object?[index]
-                                                        .isLiked !=
-                                                    true
+                                            child: GetSavePostData?.object?[index].isLiked != true
                                                 ? Image.asset(
                                                     ImageConstant.likewithout,
                                                     height: 18,
@@ -10042,17 +8014,13 @@ class _ProfileScreenState extends State<ProfileScreen>
                                       SizedBox(
                                         width: 0,
                                       ),
-                                      GetSavePostData
-                                                  ?.object?[index].likedCount ==
-                                              0
+                                      GetSavePostData?.object?[index].likedCount == 0
                                           ? SizedBox()
                                           : GestureDetector(
                                               onTap: () {
-                                                Navigator.push(context,
-                                                    MaterialPageRoute(
+                                                Navigator.push(context, MaterialPageRoute(
                                                   builder: (context) {
-                                                    return ShowAllPostLike(
-                                                        "${GetSavePostData?.object?[index].postUid}");
+                                                    return ShowAllPostLike("${GetSavePostData?.object?[index].postUid}");
                                                   },
                                                 ));
                                               },
@@ -10061,13 +8029,10 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                 child: Padding(
                                                   padding: EdgeInsets.all(5.0),
                                                   child: Align(
-                                                    alignment:
-                                                        Alignment.centerLeft,
+                                                    alignment: Alignment.centerLeft,
                                                     child: Text(
                                                       "${GetSavePostData?.object?[index].likedCount}",
-                                                      style: TextStyle(
-                                                          fontFamily: "outfit",
-                                                          fontSize: 14),
+                                                      style: TextStyle(fontFamily: "outfit", fontSize: 14),
                                                     ),
                                                   ),
                                                 ),
@@ -10078,13 +8043,9 @@ class _ProfileScreenState extends State<ProfileScreen>
                                       ),
                                       GestureDetector(
                                           onTap: () async {
-                                            BlocProvider.of<AddcommentCubit>(
-                                                    context)
-                                                .Addcomment(context,
-                                                    '${GetSavePostData?.object?[index].postUid}');
+                                            BlocProvider.of<AddcommentCubit>(context).Addcomment(context, '${GetSavePostData?.object?[index].postUid}');
 
-                                            _settingModalBottomSheetSave(
-                                                context, index, _height);
+                                            _settingModalBottomSheetSave(context, index, _height);
                                           },
                                           child: Container(
                                               color: Colors.transparent,
@@ -10098,15 +8059,11 @@ class _ProfileScreenState extends State<ProfileScreen>
                                       SizedBox(
                                         width: 5,
                                       ),
-                                      GetSavePostData?.object?[index]
-                                                  .commentCount ==
-                                              0
+                                      GetSavePostData?.object?[index].commentCount == 0
                                           ? SizedBox()
                                           : Text(
                                               "${GetSavePostData?.object?[index].commentCount}",
-                                              style: TextStyle(
-                                                  fontFamily: "outfit",
-                                                  fontSize: 14),
+                                              style: TextStyle(fontFamily: "outfit", fontSize: 14),
                                             ),
                                       SizedBox(
                                         width: 5,
@@ -10129,54 +8086,70 @@ class _ProfileScreenState extends State<ProfileScreen>
                                       SizedBox(
                                         width: 5,
                                       ),
-                                      GetSavePostData?.object?[index]
-                                                      .repostCount ==
-                                                  null ||
-                                              GetSavePostData?.object?[index]
-                                                      .repostCount ==
-                                                  0
+                                      GetSavePostData?.object?[index].repostCount == null || GetSavePostData?.object?[index].repostCount == 0
                                           ? SizedBox()
                                           : Text(
                                               '${GetSavePostData?.object?[index].repostCount}',
-                                              style: TextStyle(
-                                                  fontFamily: "outfit",
-                                                  fontSize: 14),
+                                              style: TextStyle(fontFamily: "outfit", fontSize: 14),
                                             ),
                                       GestureDetector(
-                                        onTap: () {
-                                          _onShareXFileFromAssets(
-                                            context,
-                                            androidLink:
-                                                '${GetSavePostData?.object?[index].postLink}',
-                                            /* iosLink:
-                                              "https://apps.apple.com/inList =  /app/growder-b2b-platform/id6451333863" */
-                                          );
+                                        onTap: () async {
+                                          if (GetSavePostData!.object![index].postDataType != "VIDEO") {
+                                            String thumb = "";
+                                            if (GetSavePostData!.object![index].thumbnailImageUrl != null) {
+                                              thumb = GetSavePostData!.object![index].thumbnailImageUrl!;
+                                            } else {
+                                              if (GetSavePostData!.object![index].postData != null && GetSavePostData!.object![index].postData!.isNotEmpty) {
+                                                thumb = GetSavePostData!.object![index].postData!.first;
+                                              } else {
+                                                if (GetSavePostData!.object![index].repostOn != null && GetSavePostData!.object![index].repostOn!.thumbnailImageUrl != null) {
+                                                  thumb = GetSavePostData!.object![index].repostOn!.thumbnailImageUrl!;
+                                                } else {
+                                                  thumb = GetSavePostData!.object![index].repostOn != null && GetSavePostData!.object![index].repostOn!.postData != null && GetSavePostData!.object![index].repostOn!.postData!.isNotEmpty ? GetSavePostData!.object![index].repostOn!.postData!.first : "";
+                                                }
+                                              }
+                                            }
+                                            _onShareXFileFromAssets(
+                                              context,
+                                              thumb,
+                                              GetSavePostData!.object![index].postUserName ?? "",
+                                              GetSavePostData!.object![index].description ?? "",
+                                              androidLink: '${GetSavePostData!.object![index].postLink}',
+                                            );
+                                          } else {
+                                            final fileName = await VideoThumbnail.thumbnailFile(
+                                              video: GetSavePostData!.object![index].postData?.first ?? "",
+                                              thumbnailPath: (await getTemporaryDirectory()).path,
+                                              imageFormat: ImageFormat.WEBP,
+                                              quality: 100,
+                                            );
+                                            _onShareXFileFromAssets(
+                                              context,
+                                              fileName!,
+                                              GetSavePostData!.object![index].postUserName ?? "",
+                                              GetSavePostData!.object![index].description ?? "",
+                                              androidLink: '${GetSavePostData!.object![index].postLink}',
+                                            );
+                                          }
                                         },
                                         child: Container(
                                           height: 20,
                                           width: 30,
                                           color: Colors.transparent,
-                                          child: Icon(Icons.share_rounded,
-                                              size: 20),
+                                          child: Icon(Icons.share_rounded, size: 20),
                                         ),
                                       ),
                                       Spacer(),
                                       GestureDetector(
                                         onTap: () async {
-                                          await soicalFunationSave(
-                                              apiName: 'savedata',
-                                              index: index);
+                                          await soicalFunationSave(apiName: 'savedata', index: index);
                                         },
                                         child: Container(
                                           color: Colors.transparent,
                                           child: Padding(
                                             padding: const EdgeInsets.all(5.0),
                                             child: Image.asset(
-                                              GetSavePostData?.object?[index]
-                                                          .isSaved ==
-                                                      false
-                                                  ? ImageConstant.savePin
-                                                  : ImageConstant.Savefill,
+                                              GetSavePostData?.object?[index].isSaved == false ? ImageConstant.savePin : ImageConstant.Savefill,
                                               height: 17,
                                             ),
                                           ),
@@ -10198,11 +8171,7 @@ class _ProfileScreenState extends State<ProfileScreen>
           : Center(
               child: Text(
                 "No saved posts available.",
-                style: TextStyle(
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold,
-                    fontFamily: 'outfit',
-                    fontSize: 20),
+                style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontFamily: 'outfit', fontSize: 20),
               ),
             );
     } else {
@@ -10212,31 +8181,14 @@ class _ProfileScreenState extends State<ProfileScreen>
               child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.start,
-                  children: List.generate(
-                      saveAllBlogModelData?.object?.length ?? 0, (index) {
-                    parsedDateTimeBlogs = DateTime.parse(
-                        '${saveAllBlogModelData?.object?[index].createdAt ?? ""}');
+                  children: List.generate(saveAllBlogModelData?.object?.length ?? 0, (index) {
+                    parsedDateTimeBlogs = DateTime.parse('${saveAllBlogModelData?.object?[index].createdAt ?? ""}');
                     return GestureDetector(
                       onTap: () {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => RecentBlogScren(
-                                  description1: saveAllBlogModelData
-                                          ?.object?[index].description
-                                          .toString() ??
-                                      "",
-                                  title: saveAllBlogModelData
-                                          ?.object?[index].title
-                                          .toString() ??
-                                      "",
-                                  imageURL: saveAllBlogModelData
-                                          ?.object?[index].image
-                                          .toString() ??
-                                      "",
-                                  ProfileScreenMove: true,
-                                  index: index,
-                                  saveAllBlogModelData: saveAllBlogModelData),
+                              builder: (context) => RecentBlogScren(description1: saveAllBlogModelData?.object?[index].description.toString() ?? "", title: saveAllBlogModelData?.object?[index].title.toString() ?? "", imageURL: saveAllBlogModelData?.object?[index].image.toString() ?? "", ProfileScreenMove: true, index: index, saveAllBlogModelData: saveAllBlogModelData),
                             )).then((value) => getAllAPI_Data());
                       },
                       child: Container(
@@ -10259,8 +8211,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                   borderRadius: BorderRadius.circular(10),
                                 ),
                                 child: CustomImageView(
-                                  url:
-                                      "${saveAllBlogModelData?.object?[index].image}",
+                                  url: "${saveAllBlogModelData?.object?[index].image}",
                                   fit: BoxFit.fill,
                                 ),
                               ),
@@ -10279,10 +8230,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                     child: Text(
                                       "${saveAllBlogModelData?.object?[index].title}",
                                       overflow: TextOverflow.ellipsis,
-                                      style: TextStyle(
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.w600,
-                                          color: Colors.black),
+                                      style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600, color: Colors.black),
                                     ),
                                   ),
                                   SizedBox(
@@ -10294,124 +8242,109 @@ class _ProfileScreenState extends State<ProfileScreen>
                                       "${saveAllBlogModelData?.object?[index].description}",
                                       maxLines: 3,
                                       overflow: TextOverflow.ellipsis,
-                                      style: TextStyle(
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.w600,
-                                          color: Colors.grey),
+                                      style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: Colors.grey),
                                     ),
                                   ),
                                   Spacer(),
                                   Padding(
-                                    padding: const EdgeInsets.only(
-                                        left: 20, right: 10, bottom: 10),
-                                    child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.end,
-                                        children: [
-                                          Text(
-                                            customFormat(parsedDateTimeBlogs!),
-                                            style: TextStyle(
-                                                fontSize: 9.5,
-                                                fontWeight: FontWeight.w400,
-                                                color: Colors.grey),
-                                          ),
-                                          // Text(
-                                          //   "10:47 pm",
-                                          //   style: TextStyle(
-                                          //       fontSize: 9.5,
-                                          //       fontWeight: FontWeight.w400,
-                                          //       color: Colors.grey),
-                                          // ),
+                                    padding: const EdgeInsets.only(left: 20, right: 10, bottom: 10),
+                                    child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, crossAxisAlignment: CrossAxisAlignment.end, children: [
+                                      Text(
+                                        customFormat(parsedDateTimeBlogs!),
+                                        style: TextStyle(fontSize: 9.5, fontWeight: FontWeight.w400, color: Colors.grey),
+                                      ),
+                                      // Text(
+                                      //   "10:47 pm",
+                                      //   style: TextStyle(
+                                      //       fontSize: 9.5,
+                                      //       fontWeight: FontWeight.w400,
+                                      //       color: Colors.grey),
+                                      // ),
 
-                                          Text(
-                                            " ",
-                                            style: TextStyle(
-                                                fontSize: 9.5,
-                                                fontWeight: FontWeight.w400,
-                                                color: Colors.grey),
-                                          ),
-                                          Spacer(),
-                                          // GestureDetector(
-                                          //   onTap: () {
-                                          //     print("click on Blog like button");
+                                      Text(
+                                        " ",
+                                        style: TextStyle(fontSize: 9.5, fontWeight: FontWeight.w400, color: Colors.grey),
+                                      ),
+                                      Spacer(),
+                                      // GestureDetector(
+                                      //   onTap: () {
+                                      //     print("click on Blog like button");
 
-                                          //     BlocProvider.of<NewProfileSCubit>(
-                                          //             context)
-                                          //         .ProfileLikeBlog(
-                                          //             context,
-                                          //             "${User_ID}",
-                                          //             "${saveAllBlogModelData?.object?[index].uid}");
-                                          //     if (saveAllBlogModelData
-                                          //             ?.object?[index].isLiked ==
-                                          //         false) {
-                                          //       saveAllBlogModelData
-                                          //           ?.object?[index].isLiked = true;
-                                          //     } else {
-                                          //       saveAllBlogModelData?.object?[index]
-                                          //           .isLiked = false;
-                                          //     }
-                                          //   },
-                                          //   child: saveAllBlogModelData
-                                          //               ?.object?[index].isLiked ==
-                                          //           false
-                                          //       ? Icon(Icons.favorite_border)
-                                          //       : Icon(
-                                          //           Icons.favorite,
-                                          //           color: Colors.red,
-                                          //         ),
-                                          // ),
-                                          // SizedBox(
-                                          //   width: 10,
-                                          // ),
-                                          // GestureDetector(
-                                          //     onTap: () {
-                                          //       print("Unsave Button");
+                                      //     BlocProvider.of<NewProfileSCubit>(
+                                      //             context)
+                                      //         .ProfileLikeBlog(
+                                      //             context,
+                                      //             "${User_ID}",
+                                      //             "${saveAllBlogModelData?.object?[index].uid}");
+                                      //     if (saveAllBlogModelData
+                                      //             ?.object?[index].isLiked ==
+                                      //         false) {
+                                      //       saveAllBlogModelData
+                                      //           ?.object?[index].isLiked = true;
+                                      //     } else {
+                                      //       saveAllBlogModelData?.object?[index]
+                                      //           .isLiked = false;
+                                      //     }
+                                      //   },
+                                      //   child: saveAllBlogModelData
+                                      //               ?.object?[index].isLiked ==
+                                      //           false
+                                      //       ? Icon(Icons.favorite_border)
+                                      //       : Icon(
+                                      //           Icons.favorite,
+                                      //           color: Colors.red,
+                                      //         ),
+                                      // ),
+                                      // SizedBox(
+                                      //   width: 10,
+                                      // ),
+                                      // GestureDetector(
+                                      //     onTap: () {
+                                      //       print("Unsave Button");
 
-                                          //       BlocProvider.of<NewProfileSCubit>(
-                                          //               context)
-                                          //           .ProfileSaveBlog(
-                                          //               context,
-                                          //               "${User_ID}",
-                                          //               "${saveAllBlogModelData?.object?[index].uid}");
+                                      //       BlocProvider.of<NewProfileSCubit>(
+                                      //               context)
+                                      //           .ProfileSaveBlog(
+                                      //               context,
+                                      //               "${User_ID}",
+                                      //               "${saveAllBlogModelData?.object?[index].uid}");
 
-                                          //       if (saveAllBlogModelData
-                                          //               ?.object?[index].isSaved ==
-                                          //           true) {
-                                          //         saveAllBlogModelData?.object
-                                          //             ?.removeAt(index);
-                                          //         super.setState(() {
-                                          //           SaveBlogCount =
-                                          //               saveAllBlogModelData
-                                          //                       ?.object?.length ??
-                                          //                   0;
-                                          //         });
-                                          //       }
-                                          //     },
-                                          //     child: Container(
-                                          //       height: 25,
-                                          //       width: 25,
-                                          //       decoration: BoxDecoration(
-                                          //           borderRadius:
-                                          //               BorderRadius.circular(5),
-                                          //           color: Colors.white),
-                                          //       child: Center(
-                                          //           child: Padding(
-                                          //         padding:
-                                          //             const EdgeInsets.all(5.0),
-                                          //         child: Image.asset(
-                                          //           saveAllBlogModelData
-                                          //                       ?.object?[index]
-                                          //                       .isSaved ==
-                                          //                   false
-                                          //               ? ImageConstant.savePin
-                                          //               : ImageConstant.Savefill,
-                                          //           width: 12.5,
-                                          //         ),
-                                          //       )),
-                                          //     )),
-                                        ]),
+                                      //       if (saveAllBlogModelData
+                                      //               ?.object?[index].isSaved ==
+                                      //           true) {
+                                      //         saveAllBlogModelData?.object
+                                      //             ?.removeAt(index);
+                                      //         super.setState(() {
+                                      //           SaveBlogCount =
+                                      //               saveAllBlogModelData
+                                      //                       ?.object?.length ??
+                                      //                   0;
+                                      //         });
+                                      //       }
+                                      //     },
+                                      //     child: Container(
+                                      //       height: 25,
+                                      //       width: 25,
+                                      //       decoration: BoxDecoration(
+                                      //           borderRadius:
+                                      //               BorderRadius.circular(5),
+                                      //           color: Colors.white),
+                                      //       child: Center(
+                                      //           child: Padding(
+                                      //         padding:
+                                      //             const EdgeInsets.all(5.0),
+                                      //         child: Image.asset(
+                                      //           saveAllBlogModelData
+                                      //                       ?.object?[index]
+                                      //                       .isSaved ==
+                                      //                   false
+                                      //               ? ImageConstant.savePin
+                                      //               : ImageConstant.Savefill,
+                                      //           width: 12.5,
+                                      //         ),
+                                      //       )),
+                                      //     )),
+                                    ]),
                                   ),
                                 ],
                               ),
@@ -10425,24 +8358,14 @@ class _ProfileScreenState extends State<ProfileScreen>
           : Center(
               child: Text(
                 "No saved blogs available.",
-                style: TextStyle(
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold,
-                    fontFamily: 'outfit',
-                    fontSize: 20),
+                style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontFamily: 'outfit', fontSize: 20),
               ),
             );
     }
   }
 
   Widget expertUser(_height, _width) {
-    if (User_ID == NewProfileData?.object?.userUid ||
-        (NewProfileData?.object?.accountType == 'PUBLIC' &&
-            NewProfileData?.object?.approvalStatus != "PENDING" &&
-            NewProfileData?.object?.approvalStatus != "REJECTED") ||
-        (NewProfileData?.object?.isFollowing == 'FOLLOWING' &&
-            NewProfileData?.object?.approvalStatus != "PENDING" &&
-            NewProfileData?.object?.approvalStatus != "REJECTED")) {
+    if (User_ID == NewProfileData?.object?.userUid || (NewProfileData?.object?.accountType == 'PUBLIC' && NewProfileData?.object?.approvalStatus != "PENDING" && NewProfileData?.object?.approvalStatus != "REJECTED") || (NewProfileData?.object?.isFollowing == 'FOLLOWING' && NewProfileData?.object?.approvalStatus != "PENDING" && NewProfileData?.object?.approvalStatus != "REJECTED")) {
       return Column(
         children: [
           ListTile(
@@ -10469,12 +8392,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                     MaterialPageRoute(
                         builder: (context) => EditProfileScreen(
                               newProfileData: NewProfileData,
-                            ))).then((value) =>
-                    widget.ProfileNotification == true
-                        ? BlocProvider.of<NewProfileSCubit>(context)
-                            .NewProfileSAPI(context, widget.User_ID, true)
-                        : BlocProvider.of<NewProfileSCubit>(context)
-                            .NewProfileSAPI(context, widget.User_ID, false));
+                            ))).then((value) => widget.ProfileNotification == true ? BlocProvider.of<NewProfileSCubit>(context).NewProfileSAPI(context, widget.User_ID, true) : BlocProvider.of<NewProfileSCubit>(context).NewProfileSAPI(context, widget.User_ID, false));
               },
               child: User_ID == NewProfileData?.object?.userUid
                   ? Icon(
@@ -10485,9 +8403,7 @@ class _ProfileScreenState extends State<ProfileScreen>
             ),
           ),
           Container(
-            height: User_ID == NewProfileData?.object?.userUid
-                ? _height / 1.3
-                : _height / 1.5,
+            height: User_ID == NewProfileData?.object?.userUid ? _height / 1.3 : _height / 1.5,
             width: _width,
             //  color: Colors.amber,
             child: Padding(
@@ -10551,7 +8467,8 @@ class _ProfileScreenState extends State<ProfileScreen>
                   Container(
                     width: _width,
                     child: CustomTextFormField(
-                      readOnly: true, maxLines: 4,
+                      readOnly: true,
+                      maxLines: 4,
                       controller: IndustryType,
                       margin: EdgeInsets.only(
                         top: 10,
@@ -10573,11 +8490,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                       },
                       // textStyle: theme.textTheme.titleMedium!,
                       hintText: "Industry Type",
-                      textStyle: TextStyle(
-                          fontWeight: FontWeight.w400,
-                          wordSpacing: 1,
-                          letterSpacing: 1,
-                          fontFamily: 'outfit'),
+                      textStyle: TextStyle(fontWeight: FontWeight.w400, wordSpacing: 1, letterSpacing: 1, fontFamily: 'outfit'),
                       // hintStyle: theme.textTheme.titleMedium!,
                       textInputAction: TextInputAction.next,
                       filled: true,
@@ -10672,14 +8585,12 @@ class _ProfileScreenState extends State<ProfileScreen>
                                 ),
 
                                 validator: (value) {
-                                  RegExp nameRegExp =
-                                      RegExp(r"^[a-zA-Z0-9\s'@]+$");
+                                  RegExp nameRegExp = RegExp(r"^[a-zA-Z0-9\s'@]+$");
                                   if (value!.isEmpty) {
                                     return 'Please Enter Name';
                                   } else if (!nameRegExp.hasMatch(value)) {
                                     return 'Input cannot contains prohibited special characters';
-                                  } else if (value.length <= 0 ||
-                                      value.length > 50) {
+                                  } else if (value.length <= 0 || value.length > 50) {
                                     return 'Minimum length required';
                                   } else if (value.contains('..')) {
                                     return 'username does not contain is correct';
@@ -10724,20 +8635,14 @@ class _ProfileScreenState extends State<ProfileScreen>
                           child: Container(
                             height: 40,
                             width: 130,
-                            decoration: BoxDecoration(
-                                color: Color(0xffF6F6F6),
-                                borderRadius: BorderRadius.circular(10)),
+                            decoration: BoxDecoration(color: Color(0xffF6F6F6), borderRadius: BorderRadius.circular(10)),
                             child: Row(
                               children: [
                                 Padding(
                                     padding: EdgeInsets.only(left: 20),
                                     child: Text(
-                                      start != null
-                                          ? start.toString()
-                                          : '00:00',
-                                      style: TextStyle(
-                                          fontSize: 15,
-                                          color: Color(0xff989898)),
+                                      start != null ? start.toString() : '00:00',
+                                      style: TextStyle(fontSize: 15, color: Color(0xff989898)),
                                     )),
                                 SizedBox(
                                   width: 7,
@@ -10746,11 +8651,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                   thickness: 2,
                                   color: Color(0xff989898),
                                 ),
-                                Text(
-                                    startAm != null ? startAm.toString() : 'AM',
-                                    style: TextStyle(
-                                        fontSize: 15,
-                                        color: Color(0xff989898))),
+                                Text(startAm != null ? startAm.toString() : 'AM', style: TextStyle(fontSize: 15, color: Color(0xff989898))),
                               ],
                             ),
                           ),
@@ -10780,18 +8681,14 @@ class _ProfileScreenState extends State<ProfileScreen>
                           child: Container(
                             height: 40,
                             width: 130,
-                            decoration: BoxDecoration(
-                                color: Color(0xffF6F6F6),
-                                borderRadius: BorderRadius.circular(10)),
+                            decoration: BoxDecoration(color: Color(0xffF6F6F6), borderRadius: BorderRadius.circular(10)),
                             child: Row(
                               children: [
                                 Padding(
                                     padding: EdgeInsets.only(left: 20),
                                     child: Text(
                                       end != null ? end.toString() : "00:00",
-                                      style: TextStyle(
-                                          fontSize: 15,
-                                          color: Color(0xff989898)),
+                                      style: TextStyle(fontSize: 15, color: Color(0xff989898)),
                                     )),
                                 SizedBox(
                                   width: 7,
@@ -10800,10 +8697,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                   thickness: 2,
                                   color: Color(0xff989898),
                                 ),
-                                Text(endAm != null ? endAm.toString() : "PM",
-                                    style: TextStyle(
-                                        fontSize: 15,
-                                        color: Color(0xff989898))),
+                                Text(endAm != null ? endAm.toString() : "PM", style: TextStyle(fontSize: 15, color: Color(0xff989898))),
                               ],
                             ),
                           ),
@@ -10830,11 +8724,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                         Container(
                             height: 50,
                             width: _width - 175,
-                            decoration: BoxDecoration(
-                                color: Color(0XFFF6F6F6),
-                                borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(5),
-                                    bottomLeft: Radius.circular(5))),
+                            decoration: BoxDecoration(color: Color(0XFFF6F6F6), borderRadius: BorderRadius.only(topLeft: Radius.circular(5), bottomLeft: Radius.circular(5))),
                             child: Padding(
                               padding: const EdgeInsets.only(top: 15, left: 20),
                               child: Text(
@@ -10851,11 +8741,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                 child: Container(
                                   height: 50,
                                   width: _width / 4.5,
-                                  decoration: BoxDecoration(
-                                      color: Color(0XFF777777),
-                                      borderRadius: BorderRadius.only(
-                                          topRight: Radius.circular(5),
-                                          bottomRight: Radius.circular(5))),
+                                  decoration: BoxDecoration(color: Color(0XFF777777), borderRadius: BorderRadius.only(topRight: Radius.circular(5), bottomRight: Radius.circular(5))),
                                   child: Center(
                                     child: Text(
                                       "Choose",
@@ -10872,22 +8758,15 @@ class _ProfileScreenState extends State<ProfileScreen>
                             : Container(
                                 height: 50,
                                 width: _width / 4.5,
-                                decoration: BoxDecoration(
-                                    color: Color.fromARGB(255, 228, 228, 228),
-                                    borderRadius: BorderRadius.only(
-                                        topRight: Radius.circular(5),
-                                        bottomRight: Radius.circular(5))),
+                                decoration: BoxDecoration(color: Color.fromARGB(255, 228, 228, 228), borderRadius: BorderRadius.only(topRight: Radius.circular(5), bottomRight: Radius.circular(5))),
                                 child: GestureDetector(
                                   onTap: () async {
                                     if (dopcument != null) {
-                                      Navigator.of(context).push(
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  DocumentViewScreen(
-                                                    path: NewProfileData
-                                                        ?.object?.userDocument,
-                                                    title: 'Pdf',
-                                                  )));
+                                      Navigator.of(context).push(MaterialPageRoute(
+                                          builder: (context) => DocumentViewScreen(
+                                                path: NewProfileData?.object?.userDocument,
+                                                title: 'Pdf',
+                                              )));
                                     }
                                   },
                                   child: Center(
@@ -10920,13 +8799,7 @@ class _ProfileScreenState extends State<ProfileScreen>
   }
 
   Widget experience(_height, _width) {
-    if (User_ID == NewProfileData?.object?.userUid ||
-        (NewProfileData?.object?.accountType == 'PUBLIC' &&
-            NewProfileData?.object?.approvalStatus != "PENDING" &&
-            NewProfileData?.object?.approvalStatus != "REJECTED") ||
-        (NewProfileData?.object?.isFollowing == 'FOLLOWING' &&
-            NewProfileData?.object?.approvalStatus != "PENDING" &&
-            NewProfileData?.object?.approvalStatus != "REJECTED")) {
+    if (User_ID == NewProfileData?.object?.userUid || (NewProfileData?.object?.accountType == 'PUBLIC' && NewProfileData?.object?.approvalStatus != "PENDING" && NewProfileData?.object?.approvalStatus != "REJECTED") || (NewProfileData?.object?.isFollowing == 'FOLLOWING' && NewProfileData?.object?.approvalStatus != "PENDING" && NewProfileData?.object?.approvalStatus != "REJECTED")) {
       return Column(
         children: [
           ListTile(
@@ -10952,16 +8825,9 @@ class _ProfileScreenState extends State<ProfileScreen>
                                   typeName: NewProfileData?.object?.module,
                                 );
                               },
-                            )).then((value) =>
-                                BlocProvider.of<NewProfileSCubit>(context)
-                                    .GetWorkExperienceAPI(
-                                        context, widget.User_ID));
+                            )).then((value) => BlocProvider.of<NewProfileSCubit>(context).GetWorkExperienceAPI(context, widget.User_ID));
                           },
-                          child: User_ID == NewProfileData?.object?.userUid &&
-                                  NewProfileData?.object?.approvalStatus !=
-                                      "PENDING" &&
-                                  NewProfileData?.object?.approvalStatus !=
-                                      "REJECTED"
+                          child: User_ID == NewProfileData?.object?.userUid && NewProfileData?.object?.approvalStatus != "PENDING" && NewProfileData?.object?.approvalStatus != "REJECTED"
                               ? Icon(
                                   Icons.edit,
                                   color: Colors.black,
@@ -10973,17 +8839,12 @@ class _ProfileScreenState extends State<ProfileScreen>
                   ),
                   GestureDetector(
                     onTap: () {
-                      print(
-                          "modulemodule == ${NewProfileData?.object?.module}");
+                      print("modulemodule == ${NewProfileData?.object?.module}");
                       Navigator.push(context, MaterialPageRoute(
                         builder: (context) {
-                          return AddWorkExperienceScreen(
-                              typeName: NewProfileData?.object?.module,
-                              userID: widget.User_ID);
+                          return AddWorkExperienceScreen(typeName: NewProfileData?.object?.module, userID: widget.User_ID);
                         },
-                      )).then((value) =>
-                          BlocProvider.of<NewProfileSCubit>(context)
-                              .GetWorkExperienceAPI(context, widget.User_ID));
+                      )).then((value) => BlocProvider.of<NewProfileSCubit>(context).GetWorkExperienceAPI(context, widget.User_ID));
                     },
                     child: User_ID == NewProfileData?.object?.userUid
                         ? Icon(
@@ -11006,30 +8867,18 @@ class _ProfileScreenState extends State<ProfileScreen>
               // print(
               //     "endData-${addWorkExperienceModel?.object?[index].endDate}");
 
-              formattedDateStart = DateFormat('dd-MM-yyyy').format(
-                  DateFormat('yyyy-MM-dd').parse(
-                      addWorkExperienceModel?.object?[index].startDate ??
-                          DateTime.now().toIso8601String()));
+              formattedDateStart = DateFormat('dd-MM-yyyy').format(DateFormat('yyyy-MM-dd').parse(addWorkExperienceModel?.object?[index].startDate ?? DateTime.now().toIso8601String()));
               if (addWorkExperienceModel?.object?[index].endDate != 'Present') {
                 // print(
                 //     "this is the Data Get-${addWorkExperienceModel?.object?[index].endDate}");
-                formattedDateEnd = DateFormat('dd-MM-yyyy').format(
-                    DateFormat('yyyy-MM-dd').parse(
-                        addWorkExperienceModel?.object?[index].endDate ??
-                            DateTime.now().toIso8601String()));
+                formattedDateEnd = DateFormat('dd-MM-yyyy').format(DateFormat('yyyy-MM-dd').parse(addWorkExperienceModel?.object?[index].endDate ?? DateTime.now().toIso8601String()));
               }
               return ListTile(
                 titleAlignment: ListTileTitleAlignment.top,
-                leading: addWorkExperienceModel
-                                ?.object?[index].userProfilePic !=
-                            null &&
-                        addWorkExperienceModel?.object?[index].userProfilePic !=
-                            ''
+                leading: addWorkExperienceModel?.object?[index].userProfilePic != null && addWorkExperienceModel?.object?[index].userProfilePic != ''
                     ? CircleAvatar(
                         backgroundColor: Colors.white,
-                        backgroundImage: NetworkImage(addWorkExperienceModel
-                                ?.object?[index].userProfilePic ??
-                            ''),
+                        backgroundImage: NetworkImage(addWorkExperienceModel?.object?[index].userProfilePic ?? ''),
                       )
                     : CustomImageView(
                         imagePath: ImageConstant.tomcruse,
@@ -11119,13 +8968,7 @@ class _ProfileScreenState extends State<ProfileScreen>
             NewProfileData?.object?.accountType == 'PRIVATE' &&
             NewProfileData?.object?.approvalStatus != "PENDING" &&
             NewProfileData?.object?.approvalStatus != "REJECTED")) */
-    if (User_ID == NewProfileData?.object?.userUid ||
-        (NewProfileData?.object?.accountType == 'PUBLIC' &&
-            NewProfileData?.object?.approvalStatus != "PENDING" &&
-            NewProfileData?.object?.approvalStatus != "REJECTED") ||
-        (NewProfileData?.object?.isFollowing == 'FOLLOWING' &&
-            NewProfileData?.object?.approvalStatus != "PENDING" &&
-            NewProfileData?.object?.approvalStatus != "REJECTED")) {
+    if (User_ID == NewProfileData?.object?.userUid || (NewProfileData?.object?.accountType == 'PUBLIC' && NewProfileData?.object?.approvalStatus != "PENDING" && NewProfileData?.object?.approvalStatus != "REJECTED") || (NewProfileData?.object?.isFollowing == 'FOLLOWING' && NewProfileData?.object?.approvalStatus != "PENDING" && NewProfileData?.object?.approvalStatus != "REJECTED")) {
       return Column(
         children: [
           ListTile(
@@ -11152,15 +8995,9 @@ class _ProfileScreenState extends State<ProfileScreen>
                     MaterialPageRoute(
                         builder: (context) => EditProfileScreen(
                               newProfileData: NewProfileData,
-                            ))).then((value) =>
-                    widget.ProfileNotification == true
-                        ? BlocProvider.of<NewProfileSCubit>(context)
-                            .NewProfileSAPI(context, widget.User_ID, true)
-                        : BlocProvider.of<NewProfileSCubit>(context)
-                            .NewProfileSAPI(context, widget.User_ID, false));
+                            ))).then((value) => widget.ProfileNotification == true ? BlocProvider.of<NewProfileSCubit>(context).NewProfileSAPI(context, widget.User_ID, true) : BlocProvider.of<NewProfileSCubit>(context).NewProfileSAPI(context, widget.User_ID, false));
               },
-              child: User_ID == NewProfileData?.object?.userUid &&
-                      NewProfileData?.object?.approvalStatus != "PENDING"
+              child: User_ID == NewProfileData?.object?.userUid && NewProfileData?.object?.approvalStatus != "PENDING"
                   ? Icon(
                       Icons.edit,
                       color: Colors.black,
@@ -11170,9 +9007,7 @@ class _ProfileScreenState extends State<ProfileScreen>
           ),
           Container(
             // color: Colors.amber,
-            height: User_ID == NewProfileData?.object?.userUid
-                ? _height / 1.9
-                : 400,
+            height: User_ID == NewProfileData?.object?.userUid ? _height / 1.9 : 400,
             width: _width,
             child: Padding(
               padding: const EdgeInsets.only(right: 16, left: 16),
@@ -11280,13 +9115,10 @@ class _ProfileScreenState extends State<ProfileScreen>
                   Container(
                     width: _width,
                     child: CustomTextFormField(
-                      readOnly: true, maxLines: 4,
+                      readOnly: true,
+                      maxLines: 4,
                       controller: IndustryType,
-                      textStyle: TextStyle(
-                          fontWeight: FontWeight.w400,
-                          wordSpacing: 1,
-                          letterSpacing: 1,
-                          fontFamily: 'outfit'),
+                      textStyle: TextStyle(fontWeight: FontWeight.w400, wordSpacing: 1, letterSpacing: 1, fontFamily: 'outfit'),
                       margin: EdgeInsets.only(
                         top: 10,
                       ),
@@ -11334,14 +9166,9 @@ class _ProfileScreenState extends State<ProfileScreen>
                           child: Container(
                               height: 50,
                               // width: _width - 175,
-                              decoration: BoxDecoration(
-                                  color: Color(0XFFF6F6F6),
-                                  borderRadius: BorderRadius.only(
-                                      topLeft: Radius.circular(5),
-                                      bottomLeft: Radius.circular(5))),
+                              decoration: BoxDecoration(color: Color(0XFFF6F6F6), borderRadius: BorderRadius.only(topLeft: Radius.circular(5), bottomLeft: Radius.circular(5))),
                               child: Padding(
-                                padding:
-                                    const EdgeInsets.only(top: 15, left: 10),
+                                padding: const EdgeInsets.only(top: 15, left: 10),
                                 child: Text(
                                   '${dopcument.toString().split('/').last}',
                                   overflow: TextOverflow.ellipsis,
@@ -11352,18 +9179,13 @@ class _ProfileScreenState extends State<ProfileScreen>
                         dopcument == "Upload Image"
                             ? GestureDetector(
                                 onTap: () async {
-                                  print(
-                                      'dopcument.toString()--${dopcument.toString()}');
+                                  print('dopcument.toString()--${dopcument.toString()}');
                                   filepath = await prepareTestPdf(0);
                                 },
                                 child: Container(
                                   height: 50,
                                   // width: _width / 4.5,
-                                  decoration: BoxDecoration(
-                                      color: Color(0XFF777777),
-                                      borderRadius: BorderRadius.only(
-                                          topRight: Radius.circular(5),
-                                          bottomRight: Radius.circular(5))),
+                                  decoration: BoxDecoration(color: Color(0XFF777777), borderRadius: BorderRadius.only(topRight: Radius.circular(5), bottomRight: Radius.circular(5))),
                                   child: Center(
                                     child: Text(
                                       "Choose",
@@ -11385,19 +9207,14 @@ class _ProfileScreenState extends State<ProfileScreen>
                                   print("dfsdfgsdfgdfg-${dopcument}");
                                   Navigator.of(context).push(MaterialPageRoute(
                                       builder: (context) => DocumentViewScreen1(
-                                            path: NewProfileData
-                                                ?.object?.userDocument,
+                                            path: NewProfileData?.object?.userDocument,
                                             title: 'Pdf',
                                           )));
                                 },
                                 child: Container(
                                   height: 50,
                                   width: _width / 4.5,
-                                  decoration: BoxDecoration(
-                                      color: Color.fromARGB(255, 228, 228, 228),
-                                      borderRadius: BorderRadius.only(
-                                          topRight: Radius.circular(5),
-                                          bottomRight: Radius.circular(5))),
+                                  decoration: BoxDecoration(color: Color.fromARGB(255, 228, 228, 228), borderRadius: BorderRadius.only(topRight: Radius.circular(5), bottomRight: Radius.circular(5))),
                                   child: Center(
                                     child: Text(
                                       "Open",
@@ -11440,8 +9257,7 @@ class _ProfileScreenState extends State<ProfileScreen>
       start = time?.split(' ')[0];
       startAm = time?.split(' ')[1];
     } else {
-      workignStart =
-          NewProfileData?.object?.workingHours.toString().split(" to ").first;
+      workignStart = NewProfileData?.object?.workingHours.toString().split(" to ").first;
 
       start = workignStart?.split(' ')[0];
       startAm = workignStart?.split(' ')[1];
@@ -11470,8 +9286,7 @@ class _ProfileScreenState extends State<ProfileScreen>
       end = time?.split(' ')[0];
       endAm = time?.split(' ')[1];
     } else {
-      workignend =
-          NewProfileData?.object?.workingHours.toString().split(" to ").last;
+      workignend = NewProfileData?.object?.workingHours.toString().split(" to ").last;
       end = workignend?.split(' ')[0];
       endAm = workignend?.split(' ')[1];
     }
@@ -11483,85 +9298,62 @@ class _ProfileScreenState extends State<ProfileScreen>
     }
   }
 
-  void showPopupMenu(BuildContext context, int index, buttonKey,
-      GetAppUserPostModel? getAllPostData) {
-    final RenderBox button =
-        buttonKey.currentContext!.findRenderObject() as RenderBox;
-    final RenderBox overlay =
-        Overlay.of(context).context.findRenderObject() as RenderBox;
+  void showPopupMenu(BuildContext context, int index, buttonKey, GetAppUserPostModel? getAllPostData) {
+    final RenderBox button = buttonKey.currentContext!.findRenderObject() as RenderBox;
+    final RenderBox overlay = Overlay.of(context).context.findRenderObject() as RenderBox;
 
     final RelativeRect position = RelativeRect.fromRect(
       Rect.fromPoints(
         button.localToGlobal(Offset.zero, ancestor: overlay),
-        button.localToGlobal(button.size.bottomLeft(Offset.zero),
-            ancestor: overlay),
+        button.localToGlobal(button.size.bottomLeft(Offset.zero), ancestor: overlay),
       ),
       Offset.zero & overlay.size,
     );
-    getAllPostData?.object?[index].description == null ||
-            getAllPostData?.object?[index].description == ""
-        ? showMenu(
-            context: context,
-            position: position,
-            items: <PopupMenuItem<String>>[
-                PopupMenuItem<String>(
-                  value: 'delete',
-                  child: Container(
-                    width: 130,
-                    height: 40,
-                    child: Center(
-                      child: Text(
-                        'Delete',
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    ),
-                    decoration: BoxDecoration(
-                        color: ColorConstant.primary_color,
-                        borderRadius: BorderRadius.circular(5)),
+    getAllPostData?.object?[index].description == null || getAllPostData?.object?[index].description == ""
+        ? showMenu(context: context, position: position, items: <PopupMenuItem<String>>[
+            PopupMenuItem<String>(
+              value: 'delete',
+              child: Container(
+                width: 130,
+                height: 40,
+                child: Center(
+                  child: Text(
+                    'Delete',
+                    style: TextStyle(color: Colors.white),
                   ),
                 ),
-              ]).then((value) {
+                decoration: BoxDecoration(color: ColorConstant.primary_color, borderRadius: BorderRadius.circular(5)),
+              ),
+            ),
+          ]).then((value) {
             if (value == 'delete') {
               showDeleteConfirmationDialog(context, getAllPostData, index);
             }
           })
-        : showMenu(
-            context: context,
-            position: position,
-            items: <PopupMenuItem<String>>[
-                PopupMenuItem<String>(
-                  value: 'edit',
-                  child: GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => CreateNewPost(
-                              PostID: getAllPostData?.object?[index].postUid,
-                              edittextdata:
-                                  getAllPostData?.object?[index].description,
-                              mutliplePost:
-                                  getAllPostData?.object?[index].postData,
-                              getAllPostData: getAllPostData,
-                              date: getAllPostData
-                                  ?.object?[index].repostOn?.createdAt,
-                              desc: getAllPostData
-                                  ?.object?[index].repostOn?.description,
-                              postData: getAllPostData
-                                  ?.object?[index].repostOn?.postData,
-                              postDataTypeRepost: getAllPostData
-                                  ?.object?[index].repostOn?.postDataType,
-                              userProfile:
-                                  getAllPostData?.object?[index].userProfilePic,
-                              username: getAllPostData
-                                  ?.object?[index].repostOn?.postUserName,
-                              thumbNailURL: getAllPostData
-                                  ?.object?[index].repostOn?.thumbnailImageUrl,
-                              postDataType:
-                                  getAllPostData?.object?[index].postDataType,
-                            ),
-                          ));
-                      /*  print(getAllPostData?.object?[index].description);
+        : showMenu(context: context, position: position, items: <PopupMenuItem<String>>[
+            PopupMenuItem<String>(
+              value: 'edit',
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => CreateNewPost(
+                          PostID: getAllPostData?.object?[index].postUid,
+                          edittextdata: getAllPostData?.object?[index].description,
+                          mutliplePost: getAllPostData?.object?[index].postData,
+                          getAllPostData: getAllPostData,
+                          date: getAllPostData?.object?[index].repostOn?.createdAt,
+                          desc: getAllPostData?.object?[index].repostOn?.description,
+                          postData: getAllPostData?.object?[index].repostOn?.postData,
+                          postDataTypeRepost: getAllPostData?.object?[index].repostOn?.postDataType,
+                          userProfile: getAllPostData?.object?[index].userProfilePic,
+                          username: getAllPostData?.object?[index].repostOn?.postUserName,
+                          thumbNailURL: getAllPostData?.object?[index].repostOn?.thumbnailImageUrl,
+                          postDataType: getAllPostData?.object?[index].postDataType,
+                        ),
+                      ));
+                  /*  print(getAllPostData?.object?[index].description);
                   if (getAllPostData?.object?[index].postType == "IMAGE" &&
                       getAllPostData?.object?[index].postData?.length == 1) {
                     print("sdfgsdvfsdfgsdfg");
@@ -11641,47 +9433,42 @@ class _ProfileScreenState extends State<ProfileScreen>
                           context, "${NewProfileData?.object?.userUid}");
                     });
                   } */
-                    },
-                    child: Container(
-                      width: 130,
-                      height: 40,
-                      child: Center(
-                        child: Text(
-                          'Edit',
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      ),
-                      decoration: BoxDecoration(
-                          color: ColorConstant.primary_color,
-                          borderRadius: BorderRadius.circular(5)),
+                },
+                child: Container(
+                  width: 130,
+                  height: 40,
+                  child: Center(
+                    child: Text(
+                      'Edit',
+                      style: TextStyle(color: Colors.white),
                     ),
                   ),
+                  decoration: BoxDecoration(color: ColorConstant.primary_color, borderRadius: BorderRadius.circular(5)),
                 ),
-                PopupMenuItem<String>(
-                  value: 'delete',
-                  child: Container(
-                    width: 130,
-                    height: 40,
-                    child: Center(
-                      child: Text(
-                        'Delete',
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    ),
-                    decoration: BoxDecoration(
-                        color: ColorConstant.primary_color,
-                        borderRadius: BorderRadius.circular(5)),
+              ),
+            ),
+            PopupMenuItem<String>(
+              value: 'delete',
+              child: Container(
+                width: 130,
+                height: 40,
+                child: Center(
+                  child: Text(
+                    'Delete',
+                    style: TextStyle(color: Colors.white),
                   ),
                 ),
-              ]).then((value) {
+                decoration: BoxDecoration(color: ColorConstant.primary_color, borderRadius: BorderRadius.circular(5)),
+              ),
+            ),
+          ]).then((value) {
             if (value == 'delete') {
               showDeleteConfirmationDialog(context, getAllPostData, index);
             }
           });
   }
 
-  void showDeleteConfirmationDialog(
-      BuildContext context, GetAppUserPostModel? getAllPostData, int index) {
+  void showDeleteConfirmationDialog(BuildContext context, GetAppUserPostModel? getAllPostData, int index) {
     showDialog(
       context: context,
       builder: (context) {
@@ -11702,13 +9489,10 @@ class _ProfileScreenState extends State<ProfileScreen>
                   children: [
                     GestureDetector(
                       onTap: () {
-                        print(
-                            "--------------------------------------------------${NewProfileData?.object?.userUid}");
+                        print("--------------------------------------------------${NewProfileData?.object?.userUid}");
 
                         super.setState(() {});
-                        BlocProvider.of<NewProfileSCubit>(context).DeletePost(
-                            '${getAllPostData?.object?[index].postUid}',
-                            context);
+                        BlocProvider.of<NewProfileSCubit>(context).DeletePost('${getAllPostData?.object?[index].postUid}', context);
                         getAllPostData?.object?.removeAt(index);
                         // Navigator.of(context).pop();
                       },
@@ -11736,16 +9520,12 @@ class _ProfileScreenState extends State<ProfileScreen>
                         margin: EdgeInsets.only(left: 10),
                         height: 30,
                         width: 80,
-                        decoration: BoxDecoration(
-                            border:
-                                Border.all(color: ColorConstant.primary_color),
-                            borderRadius: BorderRadius.circular(5)),
+                        decoration: BoxDecoration(border: Border.all(color: ColorConstant.primary_color), borderRadius: BorderRadius.circular(5)),
                         // color: Colors.green,
                         child: Center(
                           child: Text(
                             "No",
-                            style:
-                                TextStyle(color: ColorConstant.primary_color),
+                            style: TextStyle(color: ColorConstant.primary_color),
                           ),
                         ),
                       ),
@@ -11757,7 +9537,7 @@ class _ProfileScreenState extends State<ProfileScreen>
           ),
           actionsPadding: EdgeInsets.all(5),
           /* actions: <Widget>[
-           
+
             SizedBox(
               width: 40,
               height: 50,
@@ -11781,10 +9561,7 @@ class _ProfileScreenState extends State<ProfileScreen>
       if (result != null) {
         file = result.files.first;
 
-        if ((file.path?.contains(".mp4") ?? false) ||
-            (file.path?.contains(".mov") ?? false) ||
-            (file.path?.contains(".mp3") ?? false) ||
-            (file.path?.contains(".m4a") ?? false)) {
+        if ((file.path?.contains(".mp4") ?? false) || (file.path?.contains(".mov") ?? false) || (file.path?.contains(".mp3") ?? false) || (file.path?.contains(".m4a") ?? false)) {
           showDialog(
             context: context,
             builder: (ctx) => AlertDialog(
@@ -11838,7 +9615,7 @@ class _ProfileScreenState extends State<ProfileScreen>
     var STR = ((bytes / pow(1024, i)).toStringAsFixed(decimals));
     print('getFileSizevariable-${file1.path}');
     value2 = double.parse(STR);
-/* 
+/*
     print("value2-->$value2"); */
     switch (i) {
       case 0:
@@ -11886,8 +9663,7 @@ class _ProfileScreenState extends State<ProfileScreen>
             context: context,
             builder: (ctx) => AlertDialog(
               title: Text("Max Size ${10}MB"),
-              content: Text(
-                  "This file size ${value2} ${suffixes[i]} Selected Max size ${10}MB"),
+              content: Text("This file size ${value2} ${suffixes[i]} Selected Max size ${10}MB"),
               actions: <Widget>[
                 TextButton(
                   onPressed: () {
@@ -11973,12 +9749,9 @@ class _ProfileScreenState extends State<ProfileScreen>
     }
   }
 
-  void showPopupMenuBlock(
-      BuildContext context, String? userID, String? userName, buttonKey) async {
-    final RenderBox button =
-        buttonKey.currentContext!.findRenderObject() as RenderBox;
-    final RenderBox overlay =
-        Overlay.of(context).context.findRenderObject() as RenderBox;
+  void showPopupMenuBlock(BuildContext context, String? userID, String? userName, buttonKey) async {
+    final RenderBox button = buttonKey.currentContext!.findRenderObject() as RenderBox;
+    final RenderBox overlay = Overlay.of(context).context.findRenderObject() as RenderBox;
 
     /*  final RelativeRect position = RelativeRect.fromRect(
       Rect.fromPoints(
@@ -12017,15 +9790,8 @@ class _ProfileScreenState extends State<ProfileScreen>
             }
             showDialog(
               context: context,
-              builder: (_) => BlockUserdailog(
-                  blockUserID: userID,
-                  userName: userName,
-                  Blockuser: Blockuser),
-            ).then((value) => widget.ProfileNotification == true
-                ? BlocProvider.of<NewProfileSCubit>(context)
-                    .NewProfileSAPI(context, widget.User_ID, true)
-                : BlocProvider.of<NewProfileSCubit>(context)
-                    .NewProfileSAPI(context, widget.User_ID, false));
+              builder: (_) => BlockUserdailog(blockUserID: userID, userName: userName, Blockuser: Blockuser),
+            ).then((value) => widget.ProfileNotification == true ? BlocProvider.of<NewProfileSCubit>(context).NewProfileSAPI(context, widget.User_ID, true) : BlocProvider.of<NewProfileSCubit>(context).NewProfileSAPI(context, widget.User_ID, false));
           },
           height: 25,
           value: Blockuser == true ? 'Block' : 'UnBlock',
@@ -12042,15 +9808,8 @@ class _ProfileScreenState extends State<ProfileScreen>
               }
               showDialog(
                 context: context,
-                builder: (_) => BlockUserdailog(
-                    blockUserID: userID,
-                    userName: userName,
-                    Blockuser: Blockuser),
-              ).then((value) => widget.ProfileNotification == true
-                  ? BlocProvider.of<NewProfileSCubit>(context)
-                      .NewProfileSAPI(context, widget.User_ID, true)
-                  : BlocProvider.of<NewProfileSCubit>(context)
-                      .NewProfileSAPI(context, widget.User_ID, false));
+                builder: (_) => BlockUserdailog(blockUserID: userID, userName: userName, Blockuser: Blockuser),
+              ).then((value) => widget.ProfileNotification == true ? BlocProvider.of<NewProfileSCubit>(context).NewProfileSAPI(context, widget.User_ID, true) : BlocProvider.of<NewProfileSCubit>(context).NewProfileSAPI(context, widget.User_ID, false));
             },
             child: Container(
               child: Center(
@@ -12074,6 +9833,284 @@ class _ProfileScreenState extends State<ProfileScreen>
           ),
         ),
       ],
+    );
+  }
+
+  late PlayerState _playerState;
+  late YoutubeMetaData _videoMetaData;
+  double _volume = 100;
+  bool _muted = false;
+  bool _isPlayerReady = false;
+
+  String extractPlaylistId(String playlistLink) {
+    Uri uri = Uri.parse(playlistLink);
+
+    String playlistId = '';
+
+    // Check if the link is a valid YouTube playlist link
+    if (uri.host == 'www.youtube.com' || uri.host == 'youtube.com') {
+      if (uri.pathSegments.contains('playlist')) {
+        int index = uri.pathSegments.indexOf('playlist');
+        if (index != -1 /*&& index + 1 < uri.pathSegments.length*/) {
+          playlistId = uri.queryParameters['list']!;
+        }
+      }
+    } else if (uri.host == 'youtu.be') {
+      // If the link is a short link
+      playlistId = uri.pathSegments.first;
+    }
+
+    return playlistId;
+  }
+
+  Future<List<String>> getPlaylistVideos(String playlistId) async {
+    // final url = "https://www.youtube.com/playlist?list=RDF0SflZWxv8k";
+    final url =
+        "https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=50&playlistId=$playlistId&key=AIzaSyAT_gzTjHn9XuvQsmGdY63br7lKhD2KRdo";
+    final response = await http.get(Uri.parse(url));
+    if (response.statusCode == 200) {
+      // Parse the HTML content to extract video IDs (implementation depends on website structure)
+      List<String> videoIds = [];
+      final Map<String, dynamic> data = json.decode(response.body);
+      for (var item in data['items']) {
+        videoIds.add(item['snippet']['resourceId']['videoId']);
+      }
+      return videoIds; // List of video IDs
+    } else {
+      print("Failed to fetch playlist videos");
+      return [];
+    }
+  }
+
+  String extractLiveId(String liveLink) {
+    Uri uri = Uri.parse(liveLink);
+
+    String liveId = '';
+
+    // Check if the link is a valid YouTube live link
+    if (uri.host == 'www.youtube.com' || uri.host == 'youtube.com') {
+      if (uri.pathSegments.contains('watch')) {
+        // If the link contains 'watch' segment
+        int index = uri.pathSegments.indexOf('watch');
+        if (index != -1 && index + 1 < uri.pathSegments.length) {
+          // Get the video ID
+          liveId = uri.queryParameters['v']!;
+        }
+      } else if (uri.pathSegments.contains('live')) {
+        // If the link contains 'live' segment
+        int index = uri.pathSegments.indexOf('live');
+        if (index != -1 && index + 1 < uri.pathSegments.length) {
+          // Get the live ID
+          liveId = uri.pathSegments[index + 1];
+        }
+      }
+    } else if (uri.host == 'youtu.be') {
+      // If the link is a short link
+      liveId = uri.pathSegments.first;
+    }
+
+    return liveId;
+  }
+
+  Future<Widget> getYoutubePlayer(
+      String videoUrl, Function() fullScreen) async {
+    late YoutubePlayerController _controller;
+    String videoId = "";
+    if (videoUrl.toLowerCase().contains("playlist")) {
+      String playlistId = extractPlaylistId(videoUrl);
+      var videoIds = await getPlaylistVideos(playlistId);
+      videoId = videoIds.first;
+    } else if (videoUrl.toLowerCase().contains("live")) {
+      videoId = extractLiveId(videoUrl);
+    } else {
+      videoId = YoutubePlayer.convertUrlToId(videoUrl)!;
+    }
+    print("video id ========================> $videoId");
+    _controller = YoutubePlayerController(
+      initialVideoId: videoId,
+      flags: YoutubePlayerFlags(
+        mute: false,
+        autoPlay: true,
+        disableDragSeek: false,
+        loop: false,
+        isLive: videoUrl.toLowerCase().contains("live"),
+        forceHD: false,
+        enableCaption: true,
+      ),
+    );
+    _videoMetaData = const YoutubeMetaData();
+    _playerState = PlayerState.unknown;
+
+    return YoutubePlayerBuilder(
+      onEnterFullScreen: () {
+        _controller.toggleFullScreenMode();
+        _controller.dispose();
+        fullScreen.call();
+      },
+      builder: (context, player) {
+        return player;
+      },
+      player: YoutubePlayer(
+        controller: _controller,
+        showVideoProgressIndicator: true,
+        progressIndicatorColor: Colors.red,
+        progressColors: const ProgressBarColors(
+          playedColor: Colors.red,
+          handleColor: Colors.redAccent,
+        ),
+        bottomActions: [
+          const SizedBox(width: 14.0),
+          CurrentPosition(),
+          const SizedBox(width: 8.0),
+          ProgressBar(
+            isExpanded: true,
+            colors: const ProgressBarColors(
+              playedColor: Colors.red,
+              handleColor: Colors.redAccent,
+            ),
+          ),
+          RemainingDuration(),
+          const PlaybackSpeedButton(),
+          IconButton(
+            icon: Icon(
+              _controller.value.isFullScreen
+                  ? Icons.fullscreen_exit
+                  : Icons.fullscreen,
+              color: Colors.white,
+            ),
+            onPressed: () => fullScreen.call(),
+          ),
+        ],
+        onReady: () {
+          _controller.addListener(() {
+            if (_isPlayerReady && mounted && !_controller.value.isFullScreen) {
+              setState(() {
+                _playerState = _controller.value.playerState;
+                _videoMetaData = _controller.metadata;
+              });
+            }
+          });
+        },
+      ),
+    );
+  }
+
+  bool isYouTubeUrl(String url) {
+    // Regular expression pattern to match YouTube URLs
+    RegExp youtubeVideoRegex =
+    RegExp(r"^https?://(?:www\.)?youtube\.com/(?:watch\?v=)?([^#&?]+)");
+    RegExp youtubeShortsRegex =
+    RegExp(r"^https?://(?:www\.)?youtube\.com/shorts/([^#&?]+)");
+
+    if (youtubeVideoRegex.hasMatch(url) || youtubeShortsRegex.hasMatch(url)) {
+      return true;
+    }
+
+    // Additional checks based on specific test link patterns (optional)
+    if (url.contains("youtu.be/")) {
+      // This check might need adjustments if Youtube short URLs change format
+      return true;
+    }
+
+    return false;
+  }
+
+  Future<String> fetchYoutubeThumbnail(String url) async {
+    try {
+      // Extract video ID from YouTube URL
+      // We will use this to build our own custom UI
+      List<String> urls = extractUrls(url);
+      Metadata? _metadata = await AnyLinkPreview.getMetadata(
+        link: urls.first,
+        cache: Duration(days: 1),
+        // proxyUrl: "https://cors-anywhere.herokuapp.com/", // Need for web
+      );
+      return _metadata?.image ?? "";
+    } catch (e) {
+      print('Error: $e');
+      return "";
+    }
+  }
+
+  List<String> extractUrls(String text) {
+    RegExp regExp = RegExp(
+      r"https?:\/\/[\w\-]+(\.[\w\-]+)+[\w\-.,@?^=%&:/~\+#]*[\w\-@?^=%&/~\+#]?",
+      caseSensitive: false,
+    );
+
+    List<String> urls =
+    regExp.allMatches(text).map((match) => match.group(0)!).toList();
+    List<String> finalUrls = [];
+    RegExp urlRegex = RegExp(r"(http(s)?://)", caseSensitive: false);
+    urls.forEach((element) {
+      if (urlRegex.allMatches(element).toList().length > 1) {
+        String xyz = element.replaceAll("http", ",http");
+        List<String> splitted = xyz.split(RegExp(r",|;"));
+        splitted.forEach((element1) {
+          if (element1.isNotEmpty) finalUrls.add(element1);
+        });
+      } else {
+        finalUrls.add(element);
+      }
+    });
+    return finalUrls;
+  }
+
+  void playLink(String videoUrl, BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext ctx) {
+        return Center(
+          child: Container(
+              width: MediaQuery.of(context).size.width * 0.90,
+              height: MediaQuery.of(context).size.width * 0.80,
+              decoration: ShapeDecoration(
+                  color: Colors.black,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10))),
+              clipBehavior: Clip.antiAlias,
+              child: Stack(
+                children: [
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      FutureBuilder(
+                          future: getYoutubePlayer(videoUrl, () {
+                            Navigator.pop(ctx);
+                            launchUrl(Uri.parse(videoUrl));
+                          }),
+                          builder: (context, snap) {
+                            if (snap.data != null)
+                              return snap.data as Widget;
+                            else
+                              return Center(
+                                child: CircularProgressIndicator(
+                                  color: Colors.white,
+                                ),
+                              );
+                          })
+                    ],
+                  ),
+                  Align(
+                    alignment: Alignment.topRight,
+                    child: Material(
+                      color: Colors.transparent,
+                      child: IconButton(
+                        icon: Icon(
+                          Icons.close,
+                          color: Colors.white,
+                          size: 30,
+                        ),
+                        onPressed: () {
+                          Navigator.pop(ctx);
+                        },
+                      ),
+                    ),
+                  )
+                ],
+              )),
+        );
+      },
     );
   }
 }

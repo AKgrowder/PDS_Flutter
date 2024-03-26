@@ -5016,9 +5016,24 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                               Navigator.of(context).push(MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
                                                                             } else {
                                                                               if (AllGuestPostRoomData?.object?.content?[index].postDataType != "VIDEO") {
+                                                                                String thumb="";
+                                                                                if (AllGuestPostRoomData!.object!.content![index].thumbnailImageUrl != null) {
+                                                                                  thumb = AllGuestPostRoomData!.object!.content![index].thumbnailImageUrl!;
+                                                                                } else {
+                                                                                  if (AllGuestPostRoomData!.object!.content![index].postData != null && AllGuestPostRoomData!.object!.content![index].postData!.isNotEmpty) {
+                                                                                    thumb = AllGuestPostRoomData!.object!.content![index].postData!.first;
+                                                                                  } else {
+                                                                                    if (AllGuestPostRoomData!.object!.content![index].repostOn != null && AllGuestPostRoomData!.object!.content![index].repostOn!.thumbnailImageUrl != null) {
+                                                                                      thumb = AllGuestPostRoomData!.object!.content![index].repostOn!.thumbnailImageUrl!;
+                                                                                    } else {
+                                                                                      thumb = AllGuestPostRoomData!.object!.content![index].repostOn != null && AllGuestPostRoomData!.object!.content![index].repostOn!.postData != null && AllGuestPostRoomData!.object!.content![index].repostOn!.postData!.isNotEmpty ?
+                                                                                      AllGuestPostRoomData!.object!.content![index].repostOn!.postData!.first : "";
+                                                                                    }
+                                                                                  }
+                                                                                }
                                                                                 _onShareXFileFromAssets(
                                                                                   context,
-                                                                                  AllGuestPostRoomData?.object?.content?[index].thumbnailImageUrl ?? (AllGuestPostRoomData!.object!.content![index].postData!.isNotEmpty ? AllGuestPostRoomData!.object!.content![index].postData!.first : AllGuestPostRoomData?.object?.content?[index].repostOn?.thumbnailImageUrl ?? (AllGuestPostRoomData!.object!.content![index].repostOn!.postData!.isNotEmpty ? AllGuestPostRoomData!.object!.content![index].repostOn!.postData!.first : "")),
+                                                                                  thumb,
                                                                                   AllGuestPostRoomData?.object?.content?[index].postUserName ?? "",
                                                                                   AllGuestPostRoomData?.object?.content?[index].description ?? "",
                                                                                   androidLink: '${AllGuestPostRoomData?.object?.content?[index].postLink}',
@@ -5804,7 +5819,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                             )), */
 
                                                                                               VideoListItem1(
-                                                                                                videoUrl: videoUrls[index],
+                                                                                                videoUrl: videoUrls[index].isNotEmpty ? videoUrls[index]: "",
                                                                                                 PostID: AllGuestPostRoomData?.object?.content?[index].postUid,
                                                                                                 // isData: User_ID == null ? false : true,
                                                                                               ),
@@ -6269,10 +6284,24 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                             "check Data Get-${AllGuestPostRoomData?.object?.content?[index].postLink}");
                                                                         if (AllGuestPostRoomData?.object?.content?[index].postDataType !=
                                                                             "VIDEO") {
+                                                                          String thumb="";
+                                                                          if (AllGuestPostRoomData!.object!.content![index].thumbnailImageUrl != null) {
+                                                                            thumb = AllGuestPostRoomData!.object!.content![index].thumbnailImageUrl!;
+                                                                          } else {
+                                                                            if (AllGuestPostRoomData!.object!.content![index].postData != null && AllGuestPostRoomData!.object!.content![index].postData!.isNotEmpty) {
+                                                                              thumb = AllGuestPostRoomData!.object!.content![index].postData!.first;
+                                                                            } else {
+                                                                              if (AllGuestPostRoomData!.object!.content![index].repostOn != null && AllGuestPostRoomData!.object!.content![index].repostOn!.thumbnailImageUrl != null) {
+                                                                                thumb = AllGuestPostRoomData!.object!.content![index].repostOn!.thumbnailImageUrl!;
+                                                                              } else {
+                                                                                thumb = AllGuestPostRoomData!.object!.content![index].repostOn != null && AllGuestPostRoomData!.object!.content![index].repostOn!.postData != null && AllGuestPostRoomData!.object!.content![index].repostOn!.postData!.isNotEmpty ?
+                                                                                AllGuestPostRoomData!.object!.content![index].repostOn!.postData!.first : "";
+                                                                              }
+                                                                            }
+                                                                          }
                                                                           _onShareXFileFromAssets(
                                                                             context,
-                                                                            AllGuestPostRoomData?.object?.content?[index].thumbnailImageUrl ??
-                                                                                (AllGuestPostRoomData!.object!.content![index].postData!.isNotEmpty ? AllGuestPostRoomData!.object!.content![index].postData!.first : AllGuestPostRoomData?.object?.content?[index].repostOn?.thumbnailImageUrl ?? (AllGuestPostRoomData!.object!.content![index].repostOn!.postData!.isNotEmpty ? AllGuestPostRoomData!.object!.content![index].repostOn!.postData!.first : "")),
+                                                                            thumb,
                                                                             AllGuestPostRoomData?.object?.content?[index].postUserName ??
                                                                                 "",
                                                                             AllGuestPostRoomData?.object?.content?[index].description ??
@@ -7737,36 +7766,28 @@ class _HomeScreenNewState extends State<HomeScreenNew>
             useSafeArea: true,
             isDismissible: true,
             showDragHandle: true, */
-            enableDrag: true,
+            enableDrag: false,
             constraints: BoxConstraints(maxHeight: _heigth / 2),
             context: context,
             builder: (BuildContext bc) {
-              return GestureDetector(
-                onVerticalDragDown: (details) {
-                  setState(() {
-                    _show = true;
-                  });
-                  Navigator.pop(context);
-                },
-                child: CommentBottomSheet(
-                    isFoollinng: AllGuestPostRoomData
-                        ?.object?.content?[index].isFollowing,
-                    useruid:
-                        AllGuestPostRoomData?.object?.content?[index].userUid ??
-                            "",
-                    userProfile: AllGuestPostRoomData
-                            ?.object?.content?[index].userProfilePic ??
-                        "",
-                    UserName: AllGuestPostRoomData
-                            ?.object?.content?[index].postUserName ??
-                        "",
-                    desc: AllGuestPostRoomData
-                            ?.object?.content?[index].description ??
-                        "",
-                    postUuID:
-                        AllGuestPostRoomData?.object?.content?[index].postUid ??
-                            ""),
-              );
+              return CommentBottomSheet(
+                  isFoollinng: AllGuestPostRoomData
+                      ?.object?.content?[index].isFollowing,
+                  useruid:
+                      AllGuestPostRoomData?.object?.content?[index].userUid ??
+                          "",
+                  userProfile: AllGuestPostRoomData
+                          ?.object?.content?[index].userProfilePic ??
+                      "",
+                  UserName: AllGuestPostRoomData
+                          ?.object?.content?[index].postUserName ??
+                      "",
+                  desc: AllGuestPostRoomData
+                          ?.object?.content?[index].description ??
+                      "",
+                  postUuID:
+                      AllGuestPostRoomData?.object?.content?[index].postUid ??
+                          "");
             })
         /* .then((value) => BlocProvider.of<GetGuestAllPostCubit>(context)
             .GetallBlog(context, User_ID ?? "")) */
@@ -7779,22 +7800,14 @@ class _HomeScreenNewState extends State<HomeScreenNew>
             useSafeArea: true,
             isDismissible: true,
             showDragHandle: true, */
-            enableDrag: true,
+            enableDrag: false,
             constraints: BoxConstraints(maxHeight: _heigth / 2),
             context: context,
             builder: (BuildContext bc) {
-              return GestureDetector(
-                onVerticalDragDown: (details) {
-                  setState(() {
-                    _show = true;
-                  });
-                  Navigator.pop(context);
-                },
-                child: BlogCommentBottomSheet(
-                  blogUid: getallBlogModel1?.object?[index].uid,
-                  isFoollinng:
-                      AllGuestPostRoomData?.object?.content?[index].isFollowing,
-                ),
+              return BlogCommentBottomSheet(
+                blogUid: getallBlogModel1?.object?[index].uid,
+                isFoollinng:
+                    AllGuestPostRoomData?.object?.content?[index].isFollowing,
               );
             })
         /* .then((value) => BlocProvider.of<GetGuestAllPostCubit>(context)
@@ -7897,107 +7910,99 @@ class _HomeScreenNewState extends State<HomeScreenNew>
 
   void rePostBottomSheet(context, index) {
     showBottomSheet(
-        enableDrag: true,
+        enableDrag: false,
         context: context,
         builder: (BuildContext bc) {
-          return GestureDetector(
-            onVerticalDragDown: (details) {
-              setState(() {
-                _show = true;
-              });
-              Navigator.pop(context);
-            },
-            child: Container(
-              height: 200,
-              child: new Wrap(
-                children: [
-                  Container(
-                    height: 20,
-                    width: 50,
-                    color: Colors.transparent,
-                  ),
-                  Center(
-                      child: Container(
-                    height: 5,
-                    width: 150,
-                    decoration: BoxDecoration(
-                        color: Colors.grey,
-                        borderRadius: BorderRadius.circular(25)),
-                  )),
-                  SizedBox(
-                    height: 35,
-                  ),
-                  Center(
-                    child: new ListTile(
-                        leading: new Image.asset(
-                          ImageConstant.vector2,
-                          height: 20,
-                        ),
-                        title: new Text('RePost'),
-                        subtitle: Text(
-                          "Share this post with your followers",
-                          style: TextStyle(fontSize: 10, color: Colors.grey),
-                        ),
-                        onTap: () async {
-                          Map<String, dynamic> param = {"postType": "PUBLIC"};
-                          BlocProvider.of<GetGuestAllPostCubit>(context)
-                              .RePostAPI(
-                                  context,
-                                  param,
-                                  AllGuestPostRoomData
-                                      ?.object?.content?[index].postUid,
-                                  "Repost");
-                          Navigator.pop(context);
-                        }),
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  Center(
-                    child: new ListTile(
-                      leading: new Icon(
-                        Icons.edit_outlined,
-                        color: Colors.black,
+          return Container(
+            height: 200,
+            child: new Wrap(
+              children: [
+                Container(
+                  height: 20,
+                  width: 50,
+                  color: Colors.transparent,
+                ),
+                Center(
+                    child: Container(
+                  height: 5,
+                  width: 150,
+                  decoration: BoxDecoration(
+                      color: Colors.grey,
+                      borderRadius: BorderRadius.circular(25)),
+                )),
+                SizedBox(
+                  height: 35,
+                ),
+                Center(
+                  child: new ListTile(
+                      leading: new Image.asset(
+                        ImageConstant.vector2,
+                        height: 20,
                       ),
-                      title: new Text('Quote'),
+                      title: new Text('RePost'),
                       subtitle: Text(
-                        "Add a comment, photo or GIF before you share this post",
+                        "Share this post with your followers",
                         style: TextStyle(fontSize: 10, color: Colors.grey),
                       ),
                       onTap: () async {
-                        Navigator.push(context, MaterialPageRoute(
-                          builder: (context) {
-                            return RePostScreen(
-                              userProfile: AllGuestPostRoomData
-                                  ?.object?.content?[index].userProfilePic,
-                              username: AllGuestPostRoomData
-                                  ?.object?.content?[index].postUserName,
-                              date: AllGuestPostRoomData
-                                  ?.object?.content?[index].createdAt,
-                              desc: AllGuestPostRoomData
-                                  ?.object?.content?[index].description,
-                              postData: AllGuestPostRoomData
-                                  ?.object?.content?[index].postData,
-                              postDataType: AllGuestPostRoomData
-                                  ?.object?.content?[index].postDataType,
-                              index: index,
-                              AllGuestPostRoomData: AllGuestPostRoomData,
-                              postUid: AllGuestPostRoomData
-                                  ?.object?.content?[index].postUid,
-                              thumbNailURL: AllGuestPostRoomData
-                                  ?.object?.content?[index].thumbnailImageUrl,
-                            );
-                          },
-                        ));
-                        // Navigator.pop(context);
-                      },
+                        Map<String, dynamic> param = {"postType": "PUBLIC"};
+                        BlocProvider.of<GetGuestAllPostCubit>(context)
+                            .RePostAPI(
+                                context,
+                                param,
+                                AllGuestPostRoomData
+                                    ?.object?.content?[index].postUid,
+                                "Repost");
+                        Navigator.pop(context);
+                      }),
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                Center(
+                  child: new ListTile(
+                    leading: new Icon(
+                      Icons.edit_outlined,
+                      color: Colors.black,
                     ),
+                    title: new Text('Quote'),
+                    subtitle: Text(
+                      "Add a comment, photo or GIF before you share this post",
+                      style: TextStyle(fontSize: 10, color: Colors.grey),
+                    ),
+                    onTap: () async {
+                      Navigator.push(context, MaterialPageRoute(
+                        builder: (context) {
+                          return RePostScreen(
+                            userProfile: AllGuestPostRoomData
+                                ?.object?.content?[index].userProfilePic,
+                            username: AllGuestPostRoomData
+                                ?.object?.content?[index].postUserName,
+                            date: AllGuestPostRoomData
+                                ?.object?.content?[index].createdAt,
+                            desc: AllGuestPostRoomData
+                                ?.object?.content?[index].description,
+                            postData: AllGuestPostRoomData
+                                ?.object?.content?[index].postData,
+                            postDataType: AllGuestPostRoomData
+                                ?.object?.content?[index].postDataType,
+                            index: index,
+                            AllGuestPostRoomData: AllGuestPostRoomData,
+                            postUid: AllGuestPostRoomData
+                                ?.object?.content?[index].postUid,
+                            thumbNailURL: AllGuestPostRoomData
+                                ?.object?.content?[index].thumbnailImageUrl,
+                          );
+                        },
+                      ));
+                      // Navigator.pop(context);
+                    },
                   ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                ],
-              ),
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+              ],
             ),
           );
         });
