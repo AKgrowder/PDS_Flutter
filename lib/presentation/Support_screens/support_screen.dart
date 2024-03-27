@@ -28,7 +28,7 @@ class _SupportScreenState extends State<SupportScreen> {
     // double width = MediaQuery.of(context).size.width;
     double _height = MediaQuery.of(context).size.height;
     return Scaffold(
-      // backgroundColor: Colors.white,
+      // backgroundColor: Colors.white, resizeToAvoidBottomInset: false,
       appBar: CustomAppBar(
         height: 100,
         title: Text(
