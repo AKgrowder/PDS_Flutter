@@ -786,7 +786,7 @@ class _SettingScreenState extends State<SettingScreen> {
           [XFile("/data/data/com.ip.app/files/IP__Image.jpg")],
           subject: "Share",
           text:
-              "Try This Awesome App \n\n Android :- https://play.google.com/store/apps/details?id=com.pds.app",
+              "Try This Awesome App \n\n Android :- https://play.google.com/store/apps/details?id=com.ip.app",
           sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size,
         );
       }
