@@ -37,7 +37,7 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
   dynamic dataSetup;
   TextEditingController searchController = TextEditingController();
   List text = ["For You", "Trending"];
-  List text1 = ["All", "Pages", "Experts"];
+  List text1 = ["All", /*"Pages",*/ "Experts"];
   bool dataget = false;
   GetAllUserListModel? getalluserlistModel;
   SearchPages? searchPages;
@@ -59,7 +59,7 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
   bool isExpert = false;
   var UserLogin_ID;
   GetDataInSerch? getDataInSerch;
-  int? length;
+  int length = 0;
   HashtagModel? hashtagModel; /* 
   HashTagImageModel? hashTagImageModel; */
   bool apiDataSetup = false;
@@ -82,13 +82,13 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
       // await BlocProvider.of<HashTagCubit>(context)
       //     .getAllNoticationsCountAPI(context);
       await BlocProvider.of<HashTagCubit>(context)
-          .HashTagForYouAPI(context, 'FOR YOU', '1');
+          .HashTagForYouAPI(context, 'FOR YOU', '1',false);
     } else {
       await BlocProvider.of<HashTagCubit>(context).seetinonExpried(context);
       await BlocProvider.of<HashTagCubit>(context)
           .getAllNoticationsCountAPI(context);
       await BlocProvider.of<HashTagCubit>(context)
-          .HashTagForYouAPI(context, 'FOR YOU', '1');
+          .HashTagForYouAPI(context, 'FOR YOU', '1',true);
       await BlocProvider.of<HashTagCubit>(context).serchDataGet(
         context,
       );
@@ -152,6 +152,7 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                 } else {
                   length = 5;
                 }
+                print("foreachcheck-${length}");
               }
             }
             if (state is HashTagLoadedState) {
@@ -186,6 +187,7 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
             } */
           },
           builder: (context, state) {
+            print("foreachcheck-${length}");
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -240,14 +242,14 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                                       BlocProvider.of<HashTagCubit>(context)
                                           .getalluser(
                                               1, hashTageValue.trim(), context);
-                                    } else if (indexxx == 1) {
+                                    } /*else if (indexxx == 1) {
                                       String hashTageValue = searchController
                                           .text
                                           .replaceAll("#", "%23");
                                       BlocProvider.of<HashTagCubit>(context)
                                           .serchPagesCompnay(context, '1',
                                               hashTageValue.trim());
-                                    } else {
+                                    } */else {
                                       print("index is not 0");
                                       String hashTageValue =
                                           value.replaceAll("#", "%23");
@@ -262,14 +264,14 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
 
                                       BlocProvider.of<HashTagCubit>(context)
                                           .getalluser(1, value.trim(), context);
-                                    } else if (indexxx == 1) {
+                                    } /*else if (indexxx == 1) {
                                       BlocProvider.of<HashTagCubit>(context)
                                           .serchPagesCompnay(
                                         context,
                                         '1',
                                         searchController.text.trim(),
                                       );
-                                    } else {
+                                    } */else {
                                       print("else condison woking");
                                       BlocProvider.of<HashTagCubit>(context)
                                           .getalluser(1, value.trim(), context,
@@ -342,14 +344,14 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                                   print("i want to  chrck-${value.trim()}");
                                   BlocProvider.of<HashTagCubit>(context)
                                       .getalluser(1, value.trim(), context);
-                                } else if (indexxx == 1) {
+                                } /*else if (indexxx == 1) {
                                   BlocProvider.of<HashTagCubit>(context)
                                       .serchPagesCompnay(
                                     context,
                                     '1',
                                     searchController.text.trim(),
                                   );
-                                } else {
+                                } */else {
                                   BlocProvider.of<HashTagCubit>(context)
                                       .getalluser(1, value.trim(), context,
                                           filterModule: 'EXPERT');
@@ -410,7 +412,7 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                                       BlocProvider.of<HashTagCubit>(context)
                                           .getalluser(
                                               1, hashTageValue.trim(), context);
-                                    } else if (indexxx == 1) {
+                                    } /*else if (indexxx == 1) {
                                       String hashTageValue = searchController
                                           .text
                                           .replaceAll("#", "%23");
@@ -420,7 +422,7 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                                         '1',
                                         hashTageValue.trim(),
                                       );
-                                    } else {
+                                    }*/ else {
                                       print("index is not 0");
                                       String hashTageValue = searchController
                                           .text
@@ -437,14 +439,14 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                                               1,
                                               searchController.text.trim(),
                                               context);
-                                    } else if (indexxx == 1) {
+                                    } /*else if (indexxx == 1) {
                                       BlocProvider.of<HashTagCubit>(context)
                                           .serchPagesCompnay(
                                         context,
                                         '1',
                                         searchController.text.trim(),
                                       );
-                                    } else {
+                                    }*/ else {
                                       BlocProvider.of<HashTagCubit>(context)
                                           .getalluser(
                                               1,
@@ -501,11 +503,11 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                                         //TRENDING
                                         BlocProvider.of<HashTagCubit>(context)
                                             .HashTagForYouAPI(
-                                                context, 'TRENDING', '1');
+                                                context, 'TRENDING', '1',UserLogin_ID != null);
                                       } else {
                                         BlocProvider.of<HashTagCubit>(context)
                                             .HashTagForYouAPI(
-                                                context, 'FOR YOU', '1');
+                                                context, 'FOR YOU', '1',UserLogin_ID != null);
                                       }
                                       if (mounted) {
                                         super.setState(() {
@@ -629,7 +631,7 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                                 // color: Colors.amber,
                                 child: Column(
                                   children:
-                                      List.generate((length ?? 0), (index) {
+                                      List.generate(length, (index) {
                                     return Padding(
                                       padding: const EdgeInsets.all(8.0),
                                       child: GestureDetector(
@@ -655,7 +657,7 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                                                       1,
                                                       hashTageValue.trim(),
                                                       context);
-                                            } else if (indexxx == 1) {
+                                            } /*else if (indexxx == 1) {
                                               String hashTageValue =
                                                   searchController.text
                                                       .replaceAll("#", "%23");
@@ -666,7 +668,7 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                                                 '1',
                                                 hashTageValue.trim(),
                                               );
-                                            } else {
+                                            }*/ else {
                                               print("index is not 0");
                                               String hashTageValue =
                                                   searchController.text
@@ -689,7 +691,7 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                                                       searchController.text
                                                           .trim(),
                                                       context);
-                                            } else if (indexxx == 1) {
+                                            } /*else if (indexxx == 1) {
                                               BlocProvider.of<HashTagCubit>(
                                                       context)
                                                   .serchPagesCompnay(
@@ -697,7 +699,7 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                                                 '1',
                                                 searchController.text.trim(),
                                               );
-                                            } else {
+                                            }*/ else {
                                               BlocProvider.of<HashTagCubit>(
                                                       context)
                                                   .getalluser(
@@ -774,7 +776,7 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                                   BlocProvider.of<HashTagCubit>(context)
                                       .getalluser(
                                           1, hashTageValue.trim(), context);
-                                } else if (indexxx == 1) {
+                                } /*else if (indexxx == 1) {
                                   String hashTageValue = searchController.text
                                       .replaceAll("#", "%23");
                                   BlocProvider.of<HashTagCubit>(context)
@@ -783,7 +785,7 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                                     '1',
                                     hashTageValue.trim(),
                                   );
-                                } else {
+                                }*/ else {
                                   BlocProvider.of<HashTagCubit>(context)
                                       .getalluser(
                                           1,
@@ -902,7 +904,7 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
               offSet: hashtagModel?.object?.pageable?.pageNumber,
               onPagination: (p0) async {
                 BlocProvider.of<HashTagCubit>(context)
-                    .HashTagForYouAPIDataGet(context, 'FOR YOU', '${(p0 + 1)}');
+                    .HashTagForYouAPIDataGet(context, 'FOR YOU', '${(p0 + 1)}',UserLogin_ID != null);
               },
               items: ListView.builder(
                 padding: EdgeInsets.zero,
@@ -995,7 +997,7 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                         onPagination: (p0) async {
                           BlocProvider.of<HashTagCubit>(context)
                               .HashTagForYouAPIDataGet(
-                                  context, 'TRENDING', '${(p0 + 1)}');
+                                  context, 'TRENDING', '${(p0 + 1)}',UserLogin_ID != null);
                         },
                         items: ListView.builder(
                           shrinkWrap: true,
@@ -1350,7 +1352,7 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
             );
           },
         );
-      } else if (indexxx == 1) {
+      } /*else if (indexxx == 1) {
         print("check lenth index1");
         return isSerchCompnayPage == false
             ? SizedBox()
@@ -1437,7 +1439,7 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                   ),
                 ),
               );
-      } else {
+      }*/ else {
         return isExpert == false
             ? SizedBox()
             : Expanded(

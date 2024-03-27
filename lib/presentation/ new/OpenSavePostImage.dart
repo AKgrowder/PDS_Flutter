@@ -198,12 +198,6 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> with Observer {
         }
       }
 
-      if (state is PostLikeLoadedState) {
-        BlocProvider.of<OpenSaveCubit>(context).openSaveImagePostAPI(
-          context,
-          "${widget.PostID}",
-        );
-      }
       if (state is RePostLoadedState) {
         SnackBar snackBar = SnackBar(
           content: Text(state.RePost.object.toString()),
@@ -228,6 +222,10 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> with Observer {
           );
           ScaffoldMessenger.of(context).showSnackBar(snackBar);
         }
+        BlocProvider.of<OpenSaveCubit>(context).openSaveImagePostAPI(
+          context,
+          "${widget.PostID}",
+        );
       }
       if (state is UserTagSaveLoadedState) {
         userTagModel = await state.userTagModel;
@@ -592,8 +590,8 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> with Observer {
                                                                       ?.object
                                                                       ?.isTrsnalteoption ==
                                                                   null)
-                                                          ? "${OpenSaveModelData?.object?.description?.substring(0, maxLength)} ...ReadMore"
-                                                          : "${OpenSaveModelData?.object?.translatedDescription?.substring(0, maxLength)} ...ReadMore",
+                                                          ? "${OpenSaveModelData?.object?.description?.substring(0, (OpenSaveModelData?.object?.description?.length ?? 0) > maxLength ?maxLength:(OpenSaveModelData?.object?.description?.length ?? 0))}${(OpenSaveModelData?.object?.description?.length ?? 0) > maxLength ? ' ...ReadMore' : ''}"
+                                                          : "${OpenSaveModelData?.object?.translatedDescription?.substring(0, (OpenSaveModelData?.object?.translatedDescription?.length ?? 0) > maxLength ?maxLength:(OpenSaveModelData?.object?.translatedDescription?.length ?? 0))}${(OpenSaveModelData?.object?.translatedDescription?.length ?? 0) > maxLength ? ' ...ReadMore' : ''}",
                                                   linkStyle: TextStyle(
                                                     color: Colors.blue,
                                                     fontFamily: 'outfit',
@@ -653,12 +651,13 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> with Observer {
                                                         }
                                                       });
                                                     }
-                                                    if (uuid == null) {
+                                                    /*if (uuid == null) {
                                                       Navigator.of(context).push(
                                                           MaterialPageRoute(
                                                               builder: (context) =>
                                                                   RegisterCreateAccountScreen()));
-                                                    } else {
+                                                    } else */
+
                                                       if (Link == true ||
                                                           Link1 == true ||
                                                           Link2 == true ||
@@ -677,7 +676,11 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> with Observer {
                                                             launchUrl(Uri.parse(
                                                                 "https://${link.value.toString()}"));
                                                         } else {
+
                                                           if (Link6 == true) {
+      if (uuid == null) {
+      Navigator.of(context).push(MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
+      } else {
                                                             print(
                                                                 "yes i am in room");
                                                             Navigator.push(
@@ -690,7 +693,7 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> with Observer {
                                                                       1,
                                                                 );
                                                               },
-                                                            ));
+                                                            ));}
                                                           } else {
                                                             if (isYouTubeUrl(
                                                                 SelectedTest)) {
@@ -706,9 +709,13 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> with Observer {
                                                                 "link.valuelink.value -- ${link.value}");
                                                           }
                                                         }
-                                                      } else {
+                                                      } else
+                                                      {
                                                         if (link.value!
                                                             .startsWith('#')) {
+                                                      if (uuid == null) {
+                                                      Navigator.of(context).push(MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
+                                                      } else {
                                                           print("${link}");
                                                           Navigator.push(
                                                               context,
@@ -717,9 +724,12 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> with Observer {
                                                                     HashTagViewScreen(
                                                                         title:
                                                                             "${link.value}"),
-                                                              ));
+                                                              ));}
                                                         } else if (link.value!
                                                             .startsWith('@')) {
+                                                      if (uuid == null) {
+                                                      Navigator.of(context).push(MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
+                                                      } else {
                                                           var name;
                                                           var tagName;
                                                           name = SelectedTest;
@@ -748,13 +758,13 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> with Observer {
                                                           print(
                                                               "tagName -- ${tagName}");
                                                           print(
-                                                              "user id -- ${userTagModel?.object}");
+                                                              "user id -- ${userTagModel?.object}");}
                                                         } else {
                                                           // launchUrl(Uri.parse(
                                                           //     "https://${link.value.toString()}"));
                                                         }
                                                       }
-                                                    }
+
                                                   },
                                                 ),
                                                 Row(
@@ -1439,6 +1449,7 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> with Observer {
                                                       alignment:
                                                           Alignment.centerLeft,
                                                       child: Column(
+                                                        crossAxisAlignment: CrossAxisAlignment.start,
                                                         children: [
                                                           LinkifyText(
                                                             readmoree == true
@@ -1531,7 +1542,7 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> with Observer {
                                                                       'https://pdslink.page.link/');
                                                               print(SelectedTest
                                                                   .toString());
-                                                              if (uuid ==
+                                                              /*if (uuid ==
                                                                   null) {
                                                                 Navigator.of(
                                                                         context)
@@ -1539,7 +1550,8 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> with Observer {
                                                                         builder:
                                                                             (context) =>
                                                                                 RegisterCreateAccountScreen()));
-                                                              } else {
+                                                              } else */
+
                                                                 if (Link ==
                                                                         true ||
                                                                     Link1 ==
@@ -1570,6 +1582,9 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> with Observer {
                                                                   } else {
                                                                     if (Link6 ==
                                                                         true) {
+      if (uuid == null) {
+      Navigator.of(context).push(MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
+      } else {
                                                                       print(
                                                                           "yes i am in room");
                                                                       Navigator.push(
@@ -1582,7 +1597,7 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> with Observer {
                                                                                 1,
                                                                           );
                                                                         },
-                                                                      ));
+                                                                      ));}
                                                                     } else {
                                                                       if (isYouTubeUrl(
                                                                           SelectedTest)) {
@@ -1597,11 +1612,15 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> with Observer {
                                                                           "link.valuelink.value -- ${link.value}");
                                                                     }
                                                                   }
-                                                                } else {
+                                                                }
+                                                                else {
                                                                   if (link
                                                                       .value!
                                                                       .startsWith(
                                                                           '#')) {
+      if (uuid == null) {
+      Navigator.of(context).push(MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
+      } else {
                                                                     print(
                                                                         "${link}");
                                                                     Navigator.push(
@@ -1609,11 +1628,14 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> with Observer {
                                                                         MaterialPageRoute(
                                                                           builder: (context) =>
                                                                               HashTagViewScreen(title: "${link.value}"),
-                                                                        ));
+                                                                        ));}
                                                                   } else if (link
                                                                       .value!
                                                                       .startsWith(
                                                                           '@')) {
+      if (uuid == null) {
+      Navigator.of(context).push(MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
+      } else {
                                                                     var name;
                                                                     var tagName;
                                                                     name =
@@ -1642,13 +1664,13 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> with Observer {
                                                                     print(
                                                                         "tagName -- ${tagName}");
                                                                     print(
-                                                                        "user id -- ${userTagModel?.object}");
+                                                                        "user id -- ${userTagModel?.object}");}
                                                                   } else {
                                                                     // launchUrl(Uri.parse(
                                                                     //     "https://${link.value.toString()}"));
                                                                   }
                                                                 }
-                                                              }
+
                                                             },
                                                           ),
                                                           if (extractUrls(OpenSaveModelData
@@ -2817,6 +2839,9 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> with Observer {
                                                     launchUrl(Uri.parse("https://${link.value.toString()}"));
                                                 } else {
                                                   if (Link6 == true) {
+                                              if (uuid == null) {
+                                              Navigator.of(context).push(MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
+                                              } else {
                                                     print("yes i am in room");
                                                     Navigator.push(context, MaterialPageRoute(
                                                       builder: (context) {
@@ -2824,7 +2849,7 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> with Observer {
                                                           buttomIndex: 1,
                                                         );
                                                       },
-                                                    ));
+                                                    ));}
                                                   } else {
                                                     if (isYouTubeUrl(SelectedTest)) {
                                                       playLink(SelectedTest, context);
@@ -2835,13 +2860,19 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> with Observer {
                                                 }
                                               } else {
                                                 if (link.value!.startsWith('#')) {
+                                              if (uuid == null) {
+                                              Navigator.of(context).push(MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
+                                              } else {
                                                   print("${link}");
                                                   Navigator.push(
                                                       context,
                                                       MaterialPageRoute(
                                                         builder: (context) => HashTagViewScreen(title: "${link.value}"),
-                                                      ));
+                                                      ));}
                                                 } else if (link.value!.startsWith('@')) {
+                                              if (uuid == null) {
+                                              Navigator.of(context).push(MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
+                                              } else {
                                                   var name;
                                                   var tagName;
                                                   name = SelectedTest;
@@ -2853,7 +2884,7 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> with Observer {
                                                   }));
 
                                                   print("tagName -- ${tagName}");
-                                                  print("user id -- ${userTagModel?.object}");
+                                                  print("user id -- ${userTagModel?.object}");}
                                                 } else {
                                                   // launchUrl(Uri.parse(
                                                   //     "https://${link.value.toString()}"));
@@ -4118,7 +4149,9 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> with Observer {
         });
   }
 
-  void _onShareXFileFromAssets(BuildContext context, String postLink, String userName, String description, {String? androidLink}) async {
+  void _onShareXFileFromAssets(BuildContext context, String postLink,
+      String userName, String description,
+      {String? androidLink}) async {
     // RenderBox? box = context.findAncestorRenderObjectOfType();
 
     var directory = await getTemporaryDirectory();
@@ -4126,6 +4159,18 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> with Observer {
     if (postLink.isNotEmpty) {
       _permissionReady = await _checkPermission();
       await _prepareSaveDir();
+      if(Platform.isAndroid) {
+        DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+        AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+        version = int.parse(androidInfo.version.release);
+        if((version ?? 0) >= 13){
+          PermissionStatus status = await Permission.photos.request();
+          _permissionReady =status == PermissionStatus.granted;
+        }
+      }
+
+
+
 
       if (_permissionReady) {
         print("Downloading");
@@ -4142,39 +4187,65 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> with Observer {
         }
       }
       if (Platform.isAndroid) {
+
         Share.shareXFiles(
-          [XFile(postLink.startsWith("http") ? "${directory.path}/IP__image.jpg" : postLink)],
+          [
+            XFile(postLink.startsWith("http")
+                ? "${directory.path}/IP__image.jpg"
+                : postLink)
+          ],
           subject: "Share",
-          text: "$userName posted ${description.isNotEmpty ? "\n\n${description.split(" ").first}.... \n\n" : ""}on InPackaging \n\n https://www.inpackaging.com \n\n ${androidLink}",
+          text:
+          "$userName posted ${description.isNotEmpty ? "\n\n${description.length > 50 ? description.substring(0,50):description}.... \n\n" : ""}on InPackaging \n\n https://www.inpackaging.com \n\n ${androidLink}",
           // sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size,
         );
       } else {
         Share.shareXFiles(
-          [XFile(directory.path + Platform.pathSeparator + 'Growder_Image/IP__image.jpg')],
+          [
+            XFile(directory.path +
+                Platform.pathSeparator +
+                'IP/IP__image.jpg')
+          ],
           subject: "Share",
-          text: "$userName posted ${description.isNotEmpty ? "\n\n${description.split(" ").first}.... \n\n" : ""}on InPackaging \n\n https://www.inpackaging.com \n\n ${androidLink}",
+          text:
+          "$userName posted ${description.isNotEmpty ? "\n\n${description.length > 50 ? description.substring(0,50):description}.... \n\n" : ""}on InPackaging \n\n https://www.inpackaging.com \n\n ${androidLink}",
           // sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size,
         );
       }
     } else {
       print('No Invoice Available');
-
+      if(Platform.isAndroid) {
+        DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+        AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+        version = int.parse(androidInfo.version.release);
+        if((version ?? 0) >= 13){
+          PermissionStatus status = await Permission.photos.request();
+          _permissionReady =status == PermissionStatus.granted;
+        }
+      }
       if (Platform.isAndroid) {
-        Share.shareXFiles(
-          [XFile("/sdcard/download/IP__image.jpg")],
-          subject: "Share",
-          text: "$userName posted ${description.isNotEmpty ? "\n\n${description.split(" ").first}.... \n\n" : ""}on InPackaging \n\n https://www.inpackaging.com \n\n ${androidLink}",
-          // sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size,
-        );
+        if((version ?? 0) >= 13){
+          PermissionStatus status = await Permission.photos.request();
+          _permissionReady =status == PermissionStatus.granted;
+        }
+        if(_permissionReady) {
+          Share.shareXFiles(
+            [XFile("/data/data/com.ip.app/ip/IP__image.jpg")],
+            subject: "Share",
+            text: "$userName posted ${description.isNotEmpty ? "\n\n${description.length > 50 ? description.substring(0,50):description}.... \n\n" : ""}on InPackaging \n\n https://www.inpackaging.com \n\n ${androidLink}",
+            // sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size,
+          );
+        }
       } else {
         directory = await getApplicationDocumentsDirectory();
         Share.shareXFiles(
-          [XFile(directory.path + Platform.pathSeparator + 'Growder_Image/IP__image.jpg')],
+          [XFile(directory.path + Platform.pathSeparator + 'IP/IP__image.jpg')],
           subject: "Share",
-          text: "$userName posted ${description.isNotEmpty ? "\n\n${description.split(" ").first}.... \n\n" : ""}on InPackaging \n https://www.inpackaging.com \n ${androidLink}",
+          text: "$userName posted ${description.isNotEmpty ? "\n\n${description.length > 50 ? description.substring(0,50):description}.... \n\n" : ""}on InPackaging \n https://www.inpackaging.com \n ${androidLink}",
           // sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size,
         );
       }
+
     }
   }
 
@@ -4221,7 +4292,7 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> with Observer {
 
   Future<String?> _findLocalPath() async {
     if (Platform.isAndroid) {
-      return "/sdcard/download/";
+      return "/data/data/com.ip.app/ip/";
     } else {
       var directory = await getApplicationDocumentsDirectory();
       return directory.path + Platform.pathSeparator + 'IP__Image';

@@ -95,6 +95,10 @@ GetGuestAllPostModel? AllGuestPostRoomData;
 GetAllStoryModel? getAllStoryModel;
 List<String> userName = [];
 bool apiCalingdone = false;
+FetchAllExpertsModel? AllExperData;
+GetallBlogModel? getallBlogModel1;
+bool isDataget = false;
+
 
 class HomeScreenNew extends StatefulWidget {
   ScrollController scrollController;
@@ -149,7 +153,6 @@ class _HomeScreenNewState extends State<HomeScreenNew>
   bool storyAdded = false;
   BuildContext? storycontext;
   List<Widget> storyPagedata = [];
-  FetchAllExpertsModel? AllExperData;
   SystemConfigModel? systemConfigModel;
   int? secound;
   int sliderCurrentPosition = 0;
@@ -163,8 +166,6 @@ class _HomeScreenNewState extends State<HomeScreenNew>
   String? UserProfileImage;
   String? UserStatus;
   String? User_IDStroy;
-  GetallBlogModel? getallBlogModel1;
-  bool isDataget = false;
   DateTime? parsedDateTimeBlogs;
   String? AutoSetRoomID;
   String? appApkMinVersion;
@@ -440,6 +441,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
     print("video id ========================> $videoId");
     _controller = YoutubePlayerController(
       initialVideoId: videoId,
+
       flags: YoutubePlayerFlags(
         mute: false,
         autoPlay: true,
@@ -1266,6 +1268,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
   }
 
   Get_UserToken() async {
+    shareImageDownload();
     _postCubit = await BlocProvider.of<GetGuestAllPostCubit>(context);
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     var Token = prefs.getString(PreferencesKey.loginJwt);
@@ -1280,7 +1283,6 @@ class _HomeScreenNewState extends State<HomeScreenNew>
     print("User Token :--- " + "${Token}");
     print("User_id-${User_ID}");
     User_ID == null ? api() : NewApi();
-    shareImageDownload();
     AutoOpenPostBool = prefs.getBool(PreferencesKey.AutoOpenPostBool) ?? false;
     if (AutoOpenPostBool == true) {
       AutoOpenPostID = prefs.getString(PreferencesKey.AutoOpenPostID);
@@ -1445,8 +1447,8 @@ class _HomeScreenNewState extends State<HomeScreenNew>
       await BlocProvider.of<GetGuestAllPostCubit>(context)
           .getAllNoticationsCountAPI(context);
     });
-    await BlocProvider.of<GetGuestAllPostCubit>(context)
-        .getallcompenypagee(context);
+    // await BlocProvider.of<GetGuestAllPostCubit>(context)
+    //     .getallcompenypagee(context);
     await BlocProvider.of<GetGuestAllPostCubit>(context)
         .get_all_master_report_typeApiMethod(context);
     await BlocProvider.of<GetGuestAllPostCubit>(context)
@@ -3611,6 +3613,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                                 child: Container(
                                                                                                   // color: Colors.amber,
                                                                                                   child: Column(
+                                                                                                    crossAxisAlignment: CrossAxisAlignment.start,
                                                                                                     children: [
                                                                                                       LinkifyText(
                                                                                                         // AllGuestPostRoomData?.object?.content?[index].isTrsnalteoption == false || AllGuestPostRoomData?.object?.content?[index].isTrsnalteoption == null ? "${AllGuestPostRoomData?.object?.content?[index].description}" : "${AllGuestPostRoomData?.object?.content?[index].translatedDescription}",
@@ -3619,8 +3622,8 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                                                 ? "${AllGuestPostRoomData?.object?.content?[index].description}${(AllGuestPostRoomData?.object?.content?[index].description?.length ?? 0) > maxLength ? ' ....ReadLess' : ''}"
                                                                                                                 : "${AllGuestPostRoomData?.object?.content?[index].translatedDescription}"
                                                                                                             : (AllGuestPostRoomData?.object?.content?[index].isTrsnalteoption == false || AllGuestPostRoomData?.object?.content?[index].isTrsnalteoption == null)
-                                                                                                                ? "${AllGuestPostRoomData?.object?.content?[index].description?.substring(0, maxLength)} ....ReadMore"
-                                                                                                                : "${AllGuestPostRoomData?.object?.content?[index].translatedDescription?.substring(0, maxLength)} ....ReadMore", // asdsd
+                                                                                                                ? "${AllGuestPostRoomData?.object?.content?[index].description?.substring(0, (AllGuestPostRoomData?.object?.content?[index].description?.length ?? 0) > maxLength ?maxLength:(AllGuestPostRoomData?.object?.content?[index].description?.length ?? 0))}${(AllGuestPostRoomData?.object?.content?[index].description?.length ?? 0) > maxLength ? ' ....ReadMore' : ''}"
+                                                                                                                : "${AllGuestPostRoomData?.object?.content?[index].translatedDescription?.substring(0, (AllGuestPostRoomData?.object?.content?[index].translatedDescription?.length ?? 0) > maxLength ?maxLength:(AllGuestPostRoomData?.object?.content?[index].translatedDescription?.length ?? 0))}${(AllGuestPostRoomData?.object?.content?[index].translatedDescription?.length ?? 0) > maxLength ? ' ....ReadMore' : ''}", // asdsd
                                                                                                         linkStyle: TextStyle(
                                                                                                           color: Colors.blue,
                                                                                                           fontFamily: 'outfit',
@@ -3665,6 +3668,9 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                                               } else {
                                                                                                                 print("ssaddsaddsdssaddsaddsdssaddsaddsdssaddsaddsd:- 3");
                                                                                                                 if (Link6 == true) {
+              if (User_ID == null) {
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
+              } else {
                                                                                                                   print("ssaddsaddsdssaddsaddsdssaddsaddsdssaddsaddsd:- 4");
                                                                                                                   print("yes i am inList =   room");
                                                                                                                   Navigator.push(context, MaterialPageRoute(
@@ -3673,7 +3679,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                                                         buttomIndex: 1,
                                                                                                                       );
                                                                                                                     },
-                                                                                                                  ));
+                                                                                                                  ));}
                                                                                                                 } else {
                                                                                                                   print("ssaddsaddsdssaddsaddsdssaddsaddsdssaddsaddsd:- 5");
                                                                                                                   if (isYouTubeUrl(SelectedTest)) {
@@ -3686,14 +3692,20 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                                             } else {
                                                                                                               print("ssaddsaddsdssaddsaddsdssaddsaddsdssaddsaddsd:- 6");
                                                                                                               if (link.value!.startsWith('#')) {
+              if (User_ID == null) {
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
+              } else {
                                                                                                                 print("ssaddsaddsdssaddsaddsdssaddsaddsdssaddsaddsd:- 7");
                                                                                                                 await BlocProvider.of<GetGuestAllPostCubit>(context).seetinonExpried(context);
                                                                                                                 Navigator.push(
                                                                                                                     context,
                                                                                                                     MaterialPageRoute(
                                                                                                                       builder: (context) => HashTagViewScreen(title: "${link.value}"),
-                                                                                                                    ));
+                                                                                                                    ));}
                                                                                                               } else if (link.value!.startsWith('@')) {
+              if (User_ID == null) {
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
+              } else {
                                                                                                                 print("ssaddsaddsdssaddsaddsdssaddsaddsdssaddsaddsd:- 8");
                                                                                                                 await BlocProvider.of<GetGuestAllPostCubit>(context).seetinonExpried(context);
                                                                                                                 var name;
@@ -3707,7 +3719,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                                                 // })).then((value) => Get_UserToken());
 
                                                                                                                 print("tagName -- ${tagName}");
-                                                                                                                print("user id -- ${userTagModel?.object}");
+                                                                                                                print("user id -- ${userTagModel?.object}");}
                                                                                                               } else {
                                                                                                                 print("ssaddsaddsdssaddsaddsdssaddsaddsdssaddsaddsd:- 9");
                                                                                                                 // launchUrl(Uri.parse("https://${link.value.toString()}"));
@@ -3746,6 +3758,9 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                                                   print("qqqqqqqqhttps://${link.value}");
                                                                                                                 } else {
                                                                                                                   if (Link6 == true) {
+              if (User_ID == null) {
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
+              } else {
                                                                                                                     print("yes i am inList =   room");
                                                                                                                     Navigator.push(context, MaterialPageRoute(
                                                                                                                       builder: (context) {
@@ -3753,7 +3768,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                                                           buttomIndex: 1,
                                                                                                                         );
                                                                                                                       },
-                                                                                                                    ));
+                                                                                                                    ));}
                                                                                                                   } else {
                                                                                                                     if (isYouTubeUrl(SelectedTest)) {
                                                                                                                       playLink(SelectedTest, context);
@@ -3764,13 +3779,19 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                                                 }
                                                                                                               } else {
                                                                                                                 if (link.value!.startsWith('#')) {
+              if (User_ID == null) {
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
+              } else {
                                                                                                                   await BlocProvider.of<GetGuestAllPostCubit>(context).seetinonExpried(context);
                                                                                                                   Navigator.push(
                                                                                                                       context,
                                                                                                                       MaterialPageRoute(
                                                                                                                         builder: (context) => HashTagViewScreen(title: "${link.value}"),
-                                                                                                                      ));
+                                                                                                                      ));}
                                                                                                                 } else if (link.value!.startsWith('@')) {
+              if (User_ID == null) {
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
+              } else {
                                                                                                                   await BlocProvider.of<GetGuestAllPostCubit>(context).seetinonExpried(context);
                                                                                                                   var name;
                                                                                                                   var tagName;
@@ -3783,7 +3804,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                                                   // })).then((value) => Get_UserToken());
 
                                                                                                                   print("tagName -- ${tagName}");
-                                                                                                                  print("user id -- ${userTagModel?.object}");
+                                                                                                                  print("user id -- ${userTagModel?.object}");}
                                                                                                                 } else {
                                                                                                                   // launchUrl(Uri.parse("https://${link.value.toString()}"));
                                                                                                                 }
@@ -4271,6 +4292,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                         ? Padding(
                                                                                             padding: const EdgeInsets.only(left: 16),
                                                                                             child: Column(
+                                                                                              crossAxisAlignment: CrossAxisAlignment.start,
                                                                                               children: [
                                                                                                 LinkifyText(
                                                                                                   readmoree[index] == true
@@ -4281,7 +4303,9 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                                           ? (AllGuestPostRoomData?.object?.content?[index].repostOn?.description?.length ?? 0) > maxLength
                                                                                                               ? "${AllGuestPostRoomData?.object?.content?[index].repostOn?.description?.substring(0, maxLength)} ....ReadMore"
                                                                                                               : '${AllGuestPostRoomData?.object?.content?[index].repostOn?.description}'
-                                                                                                          : "${AllGuestPostRoomData?.object?.content?[index].repostOn?.translatedDescription == null ? '' : AllGuestPostRoomData?.object?.content?[index].repostOn?.translatedDescription?.substring(0, maxLength)} ....ReadMore",
+                                                                                                          : (AllGuestPostRoomData?.object?.content?[index].repostOn?.translatedDescription?.length ?? 0) > maxLength
+                                                                                                      ? "${AllGuestPostRoomData?.object?.content?[index].repostOn?.translatedDescription == null ? '' : AllGuestPostRoomData?.object?.content?[index].repostOn?.translatedDescription?.substring(0, maxLength)} ....ReadMore"
+                                                                                                      : "${AllGuestPostRoomData?.object?.content?[index].repostOn?.translatedDescription == null ? '' : AllGuestPostRoomData?.object?.content?[index].repostOn?.translatedDescription}",
                                                                                                   linkStyle: TextStyle(
                                                                                                     color: Colors.blue,
                                                                                                     fontFamily: 'outfit',
@@ -4326,6 +4350,9 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                                         } else {
                                                                                                           print("vcvcvcvcvcvcvcvcvcvcvcvvcvcvcvcvcvcvcvcvcvcvcv = 3");
                                                                                                           if (Link6 == true) {
+              if (User_ID == null) {
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
+              } else {
                                                                                                             print("vcvcvcvcvcvcvcvcvcvcvcvvcvcvcvcvcvcvcvcvcvcvcv = 4");
                                                                                                             print("yes i am inList =   room");
                                                                                                             Navigator.push(context, MaterialPageRoute(
@@ -4334,7 +4361,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                                                   buttomIndex: 1,
                                                                                                                 );
                                                                                                               },
-                                                                                                            ));
+                                                                                                            ));}
                                                                                                           } else {
                                                                                                             print("vcvcvcvcvcvcvcvcvcvcvcvvcvcvcvcvcvcvcvcvcvcvcv = 5");
                                                                                                             if (isYouTubeUrl(SelectedTest)) {
@@ -4347,6 +4374,9 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                                       } else {
                                                                                                         print("vcvcvcvcvcvcvcvcvcvcvcvvcvcvcvcvcvcvcvcvcvcvcv = 6");
                                                                                                         if (link.value!.startsWith('#')) {
+              if (User_ID == null) {
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
+              } else {
                                                                                                           print("vcvcvcvcvcvcvcvcvcvcvcvvcvcvcvcvcvcvcvcvcvcvcv = 7");
                                                                                                           await BlocProvider.of<GetGuestAllPostCubit>(context).seetinonExpried(context);
                                                                                                           print("aaaaaaaaaa == ${link}");
@@ -4354,8 +4384,11 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                                               context,
                                                                                                               MaterialPageRoute(
                                                                                                                 builder: (context) => HashTagViewScreen(title: "${link.value}"),
-                                                                                                              ));
+                                                                                                              ));}
                                                                                                         } else if (link.value!.startsWith('@')) {
+              if (User_ID == null) {
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
+              } else {
                                                                                                           print("vcvcvcvcvcvcvcvcvcvcvcvvcvcvcvcvcvcvcvcvcvcvcv = 8");
                                                                                                           await BlocProvider.of<GetGuestAllPostCubit>(context).seetinonExpried(context);
                                                                                                           var name;
@@ -4369,7 +4402,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                                           // })).then((value) => Get_UserToken());
 
                                                                                                           print("tagName -- ${tagName}");
-                                                                                                          print("user id -- ${userTagModel?.object}");
+                                                                                                          print("user id -- ${userTagModel?.object}");}
                                                                                                         } else {
                                                                                                           print("vcvcvcvcvcvcvcvcvcvcvcvvcvcvcvcvcvcvcvcvcvcvcv = 9");
                                                                                                           setState(() {
@@ -4406,6 +4439,9 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                                             print("qqqqqqqqhttps://${link.value}");
                                                                                                           } else {
                                                                                                             if (Link6 == true) {
+              if (User_ID == null) {
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
+              } else {
                                                                                                               print("yes i am inList =   room");
                                                                                                               Navigator.push(context, MaterialPageRoute(
                                                                                                                 builder: (context) {
@@ -4413,7 +4449,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                                                     buttomIndex: 1,
                                                                                                                   );
                                                                                                                 },
-                                                                                                              ));
+                                                                                                              ));}
                                                                                                             } else {
                                                                                                               if (isYouTubeUrl(SelectedTest)) {
                                                                                                                 playLink(SelectedTest, context);
@@ -4424,14 +4460,20 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                                           }
                                                                                                         } else {
                                                                                                           if (link.value!.startsWith('#')) {
+              if (User_ID == null) {
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
+              } else {
                                                                                                             await BlocProvider.of<GetGuestAllPostCubit>(context).seetinonExpried(context);
                                                                                                             print("aaaaaaaaaa == ${link}");
                                                                                                             Navigator.push(
                                                                                                                 context,
                                                                                                                 MaterialPageRoute(
                                                                                                                   builder: (context) => HashTagViewScreen(title: "${link.value}"),
-                                                                                                                ));
+                                                                                                                ));}
                                                                                                           } else if (link.value!.startsWith('@')) {
+              if (User_ID == null) {
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
+              } else {
                                                                                                             await BlocProvider.of<GetGuestAllPostCubit>(context).seetinonExpried(context);
                                                                                                             var name;
                                                                                                             var tagName;
@@ -4444,7 +4486,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                                             // })).then((value) => Get_UserToken());
 
                                                                                                             print("tagName -- ${tagName}");
-                                                                                                            print("user id -- ${userTagModel?.object}");
+                                                                                                            print("user id -- ${userTagModel?.object}");}
                                                                                                           }
                                                                                                         }
                                                                                                       // }
@@ -5453,6 +5495,9 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                                       } else {
                                                                                                         print("objectobjectobjectobjectobjectobjectobject:- 3");
                                                                                                         if (Link6 == true) {
+              if (User_ID == null) {
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
+              } else {
                                                                                                           print("yes i am inList =   room");
                                                                                                           Navigator.push(context, MaterialPageRoute(
                                                                                                             builder: (context) {
@@ -5460,7 +5505,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                                                 buttomIndex: 1,
                                                                                                               );
                                                                                                             },
-                                                                                                          ));
+                                                                                                          ));}
                                                                                                         } else {
                                                                                                           if (isYouTubeUrl(SelectedTest)) {
                                                                                                             playLink(SelectedTest, context);
@@ -5472,28 +5517,35 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                                     } else if (link.value != null) {
                                                                                                       print("objectobjectobjectobjectobjectobjectobject:- 4");
                                                                                                       if (link.value!.startsWith('#')) {
+              if (User_ID == null) {
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
+              } else {
                                                                                                         print("objectobjectobjectobjectobjectobjectobject:- 5");
                                                                                                         await BlocProvider.of<GetGuestAllPostCubit>(context).seetinonExpried(context);
                                                                                                         Navigator.push(
                                                                                                             context,
                                                                                                             MaterialPageRoute(
                                                                                                               builder: (context) => HashTagViewScreen(title: "${link.value}"),
-                                                                                                            ));
+                                                                                                            ));}
                                                                                                       } else if (link.value!.startsWith('@')) {
-                                                                                                        print("objectobjectobjectobjectobjectobjectobject:- 6");
-                                                                                                        await BlocProvider.of<GetGuestAllPostCubit>(context).seetinonExpried(context);
-                                                                                                        var name;
-                                                                                                        var tagName;
-                                                                                                        name = SelectedTest;
-                                                                                                        tagName = name.replaceAll("@", "");
-                                                                                                        await BlocProvider.of<GetGuestAllPostCubit>(context).UserTagAPI(context, tagName);
+              if (User_ID == null) {
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
+              } else {
+                print("objectobjectobjectobjectobjectobjectobject:- 6");
+                await BlocProvider.of<GetGuestAllPostCubit>(context).seetinonExpried(context);
+                var name;
+                var tagName;
+                name = SelectedTest;
+                tagName = name.replaceAll("@", "");
+                await BlocProvider.of<GetGuestAllPostCubit>(context).UserTagAPI(context, tagName);
 
-                                                                                                        // Navigator.push(context, MaterialPageRoute(builder: (context) {
-                                                                                                        //   return ProfileScreen(User_ID: "${userTagModel?.object}", isFollowing: "");
-                                                                                                        // })).then((value) => Get_UserToken());
+                // Navigator.push(context, MaterialPageRoute(builder: (context) {
+                //   return ProfileScreen(User_ID: "${userTagModel?.object}", isFollowing: "");
+                // })).then((value) => Get_UserToken());
 
-                                                                                                        print("tagName -- ${tagName}");
-                                                                                                        print("user id -- ${userTagModel?.object}");
+                print("tagName -- ${tagName}");
+                print("user id -- ${userTagModel?.object}");
+              }
                                                                                                       } else {
                                                                                                         print("objectobjectobjectobjectobjectobjectobject:- 7");
                                                                                                         setState(() {
@@ -5531,6 +5583,9 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                                           print("qqqqqqqqhttps://${link.value}");
                                                                                                         } else {
                                                                                                           if (Link6 == true) {
+              if (User_ID == null) {
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
+              } else {
                                                                                                             print("yes i am inList =   room");
                                                                                                             Navigator.push(context, MaterialPageRoute(
                                                                                                               builder: (context) {
@@ -5538,7 +5593,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                                                   buttomIndex: 1,
                                                                                                                 );
                                                                                                               },
-                                                                                                            ));
+                                                                                                            ));}
                                                                                                           } else {
                                                                                                             if (isYouTubeUrl(SelectedTest)) {
                                                                                                               playLink(SelectedTest, context);
@@ -5549,13 +5604,19 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                                         }
                                                                                                       } else if (link.value != null) {
                                                                                                         if (link.value!.startsWith('#')) {
+              if (User_ID == null) {
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
+              } else {
                                                                                                           await BlocProvider.of<GetGuestAllPostCubit>(context).seetinonExpried(context);
                                                                                                           Navigator.push(
                                                                                                               context,
                                                                                                               MaterialPageRoute(
                                                                                                                 builder: (context) => HashTagViewScreen(title: "${link.value}"),
-                                                                                                              ));
+                                                                                                              ));}
                                                                                                         } else if (link.value!.startsWith('@')) {
+              if (User_ID == null) {
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
+              } else {
                                                                                                           await BlocProvider.of<GetGuestAllPostCubit>(context).seetinonExpried(context);
                                                                                                           var name;
                                                                                                           var tagName;
@@ -5568,7 +5629,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                                           // })).then((value) => Get_UserToken());
 
                                                                                                           print("tagName -- ${tagName}");
-                                                                                                          print("user id -- ${userTagModel?.object}");
+                                                                                                          print("user id -- ${userTagModel?.object}");}
                                                                                                         }
                                                                                                       }
                                                                                                     // }
@@ -8048,6 +8109,18 @@ thumb,
     if (postLink.isNotEmpty) {
       _permissionReady = await _checkPermission();
       await _prepareSaveDir();
+      if(Platform.isAndroid) {
+        DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+        AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+        version = int.parse(androidInfo.version.release);
+        if((version ?? 0) >= 13){
+          PermissionStatus status = await Permission.photos.request();
+          _permissionReady =status == PermissionStatus.granted;
+        }
+      }
+
+
+
 
       if (_permissionReady) {
         print("Downloading");
@@ -8064,6 +8137,7 @@ thumb,
         }
       }
       if (Platform.isAndroid) {
+
         Share.shareXFiles(
           [
             XFile(postLink.startsWith("http")
@@ -8072,7 +8146,7 @@ thumb,
           ],
           subject: "Share",
           text:
-              "$userName posted ${description.isNotEmpty ? "\n\n${description.split(" ").first}.... \n\n" : ""}on InPackaging \n\n https://www.inpackaging.com \n\n ${androidLink}",
+              "$userName posted ${description.isNotEmpty ? "\n\n${description.length > 50 ? description.substring(0,50):description}.... \n\n" : ""}on InPackaging \n\n https://www.inpackaging.com \n\n ${androidLink}",
           // sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size,
         );
       } else {
@@ -8080,39 +8154,48 @@ thumb,
           [
             XFile(directory.path +
                 Platform.pathSeparator +
-                'Growder_Image/IP__image.jpg')
+                'IP/IP__image.jpg')
           ],
           subject: "Share",
           text:
-              "$userName posted ${description.isNotEmpty ? "\n\n${description.split(" ").first}.... \n\n" : ""}on InPackaging \n\n https://www.inpackaging.com \n\n ${androidLink}",
+              "$userName posted ${description.isNotEmpty ? "\n\n${description.length > 50 ? description.substring(0,50):description}.... \n\n" : ""}on InPackaging \n\n https://www.inpackaging.com \n\n ${androidLink}",
           // sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size,
         );
       }
     } else {
       print('No Invoice Available');
-
-      if (Platform.isAndroid) {
-        Share.shareXFiles(
-          [XFile("/sdcard/download/IP__image.jpg")],
-          subject: "Share",
-          text:
-              "$userName posted ${description.isNotEmpty ? "\n\n${description.split(" ").first}.... \n\n" : ""}on InPackaging \n\n https://www.inpackaging.com \n\n ${androidLink}",
-          // sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size,
-        );
-      } else {
-        directory = await getApplicationDocumentsDirectory();
-        Share.shareXFiles(
-          [
-            XFile(directory.path +
-                Platform.pathSeparator +
-                'Growder_Image/IP__image.jpg')
-          ],
-          subject: "Share",
-          text:
-              "$userName posted ${description.isNotEmpty ? "\n\n${description.split(" ").first}.... \n\n" : ""}on InPackaging \n https://www.inpackaging.com \n ${androidLink}",
-          // sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size,
-        );
+      if(Platform.isAndroid) {
+        DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+        AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+        version = int.parse(androidInfo.version.release);
+        if((version ?? 0) >= 13){
+          PermissionStatus status = await Permission.photos.request();
+          _permissionReady =status == PermissionStatus.granted;
+        }
       }
+        if (Platform.isAndroid) {
+          if((version ?? 0) >= 13){
+            PermissionStatus status = await Permission.photos.request();
+            _permissionReady =status == PermissionStatus.granted;
+          }
+          if(_permissionReady) {
+          Share.shareXFiles(
+            [XFile("/data/data/com.ip.app/ip/IP__image.jpg")],
+            subject: "Share",
+            text: "$userName posted ${description.isNotEmpty ? "\n\n${description.length > 50 ? description.substring(0,50):description}.... \n\n" : ""}on InPackaging \n\n https://www.inpackaging.com \n\n ${androidLink}",
+            // sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size,
+          );
+        }
+      } else {
+          directory = await getApplicationDocumentsDirectory();
+          Share.shareXFiles(
+            [XFile(directory.path + Platform.pathSeparator + 'IP/IP__image.jpg')],
+            subject: "Share",
+            text: "$userName posted ${description.isNotEmpty ? "\n\n${description.length > 50 ? description.substring(0,50):description}.... \n\n" : ""}on InPackaging \n https://www.inpackaging.com \n ${androidLink}",
+            // sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size,
+          );
+        }
+
     }
   }
 
@@ -8194,7 +8277,7 @@ thumb,
 
   Future<String?> _findLocalPath() async {
     if (Platform.isAndroid) {
-      return "/sdcard/download/";
+      return "/data/data/com.ip.app/ip/";
     } else {
       var directory = await getApplicationDocumentsDirectory();
       return directory.path + Platform.pathSeparator + 'IP_Image';

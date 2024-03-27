@@ -74,10 +74,15 @@ class ApiServices {
 
     print("API => ******** ${baseURL + APIurl}");
 
+    final headers1 = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ${Token}'
+    };
+
     final hasInternet = await checkInternet();
     if (hasInternet == true) {
       final response = await get(
-        Uri.parse(baseURL + APIurl), /*  headers: headers1 */
+        Uri.parse(baseURL + APIurl),headers: headers1
       );
       print("response - ${response.body}");
       if (response.statusCode == 602) {

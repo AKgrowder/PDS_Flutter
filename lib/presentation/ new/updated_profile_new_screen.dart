@@ -7378,7 +7378,7 @@ class _MyHomePageState extends State<ShowProfileScreen>
 
     if (Platform.isAndroid) {
       await Share.shareXFiles(
-        [XFile("/sdcard/download/IP__image.jpg")],
+        [XFile("/data/data/com.ip.app/ip/IP__image.jpg")],
         subject: "Share",
         text: "Try This Awesome App \n\n Android :- ${androidLink}",
         sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size,
@@ -7388,7 +7388,7 @@ class _MyHomePageState extends State<ShowProfileScreen>
         [
           XFile(directory.path +
               Platform.pathSeparator +
-              'Growder_Image/IP__image.jpg')
+              'IP/IP__image.jpg')
         ],
         subject: "Share",
         text: "Try This Awesome App \n\n iOS :- ${androidLink}",

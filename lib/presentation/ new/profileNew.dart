@@ -345,6 +345,7 @@ class _ProfileScreenState extends State<ProfileScreen>
     value1 = 0;
 
     super.initState();
+    super.initState();
   }
 
   getAllAPI_Data() async {
@@ -1327,11 +1328,11 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                             context,
                                                             widget.User_ID,
                                                             false);
-                                                BlocProvider.of<
-                                                            NewProfileSCubit>(
-                                                        context)
-                                                    .getallcompenypagee(
-                                                        context);
+                                                // BlocProvider.of<
+                                                //             NewProfileSCubit>(
+                                                //         context)
+                                                //     .getallcompenypagee(
+                                                //         context);
                                               });
                                             },
                                             child: Container(
@@ -2463,7 +2464,10 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                                 } else {
                                                                                   if (Link == true || Link1 == true || Link2 == true || Link3 == true || Link4 == true || Link5 == true || Link6 == true) {
                                                                                     if (Link2 == true || Link3 == true) {
-                                                                                      launchUrl(Uri.parse("https://${link.value.toString()}"));
+                                                                                      if (isYouTubeUrl(SelectedTest)) {
+                                                                                        playLink(SelectedTest, context);
+                                                                                      } else
+                                                                                        launchUrl(Uri.parse("https://${link.value.toString()}"));
                                                                                       print("qqqqqqqqhttps://${link.value}");
                                                                                     } else {
                                                                                       if (Link6 == true) {
@@ -2476,7 +2480,10 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                                           },
                                                                                         ));
                                                                                       } else {
-                                                                                        launchUrl(Uri.parse(link.value.toString()));
+                                                                                        if (isYouTubeUrl(SelectedTest)) {
+                                                                                          playLink(SelectedTest, context);
+                                                                                        } else
+                                                                                          launchUrl(Uri.parse(link.value.toString()));
                                                                                         print("link.valuelink.value -- ${link.value}");
                                                                                       }
                                                                                     }
@@ -2494,7 +2501,10 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                                       tagName = name.replaceAll("@", "");
                                                                                       await BlocProvider.of<NewProfileSCubit>(context).UserTagAPI(context, tagName);
                                                                                     } else {
-                                                                                      launchUrl(Uri.parse("https://${link.value.toString()}"));
+                                                                                      if (isYouTubeUrl(SelectedTest)) {
+                                                                                        playLink(SelectedTest, context);
+                                                                                      } else
+                                                                                        launchUrl(Uri.parse("https://${link.value.toString()}"));
                                                                                     }
                                                                                   }
                                                                                 }
@@ -4857,6 +4867,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                               // color: Colors.amber,
                                                               child:
                                                                   Column(
+                                                                    crossAxisAlignment: CrossAxisAlignment.start,
                                                                     children: [
                                                                       LinkifyText(
                                                                 getAllPostData.object?[index].isTrsnalteoption ==
@@ -4946,7 +4957,10 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                                   true ||
                                                                               Link3 ==
                                                                                   true) {
-                                                                            launchUrl(
+                                                                            if (isYouTubeUrl(SelectedTest)) {
+                                                                              playLink(SelectedTest, context);
+                                                                            } else
+                                                                              launchUrl(
                                                                                 Uri.parse("https://${link.value.toString()}"));
                                                                             print(
                                                                                 "qqqqqqqqhttps://${link.value}");
@@ -4966,7 +4980,10 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                                 },
                                                                               ));
                                                                             } else {
-                                                                              launchUrl(Uri.parse(link
+                                                                              if (isYouTubeUrl(SelectedTest)) {
+                                                                                playLink(SelectedTest, context);
+                                                                              } else
+                                                                                launchUrl(Uri.parse(link
                                                                                   .value
                                                                                   .toString()));
                                                                               print(
@@ -5008,7 +5025,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                                 context,
                                                                                 tagName);
 
-                                                                            Navigator.push(
+                                                                            /*Navigator.push(
                                                                                 context,
                                                                                 MaterialPageRoute(builder:
                                                                                     (context) {
@@ -5016,14 +5033,17 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                                   User_ID: "${userTagModel?.object}",
                                                                                   isFollowing: "");
                                                                             })).then((value) =>
-                                                                                Get_UserToken());
+                                                                                Get_UserToken());*/
 
                                                                             print(
                                                                                 "tagName -- ${tagName}");
                                                                             print(
                                                                                 "user id -- ${userTagModel?.object}");
                                                                           } else {
-                                                                            launchUrl(
+                                                                            if (isYouTubeUrl(SelectedTest)) {
+                                                                              playLink(SelectedTest, context);
+                                                                            } else
+                                                                              launchUrl(
                                                                                 Uri.parse("https://${link.value.toString()}"));
                                                                           }
                                                                         }
@@ -5535,6 +5555,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                           const EdgeInsets.only(
                                                               left: 16),
                                                       child: Column(
+                                                        crossAxisAlignment: CrossAxisAlignment.start,
                                                         children: [
                                                           LinkifyText(
                                                             "${getAllPostData.object?[index].repostOn?.description}",
@@ -5609,7 +5630,10 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                           true ||
                                                                       Link3 ==
                                                                           true) {
-                                                                    launchUrl(Uri.parse(
+                                                                    if (isYouTubeUrl(SelectedTest)) {
+                                                                      playLink(SelectedTest, context);
+                                                                    } else
+                                                                      launchUrl(Uri.parse(
                                                                         "https://${link.value.toString()}"));
                                                                     print(
                                                                         "qqqqqqqqhttps://${link.value}");
@@ -5630,7 +5654,10 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                         },
                                                                       ));
                                                                     } else {
-                                                                      launchUrl(Uri
+                                                                      if (isYouTubeUrl(SelectedTest)) {
+                                                                        playLink(SelectedTest, context);
+                                                                      } else
+                                                                        launchUrl(Uri
                                                                           .parse(link
                                                                               .value
                                                                               .toString()));
@@ -5678,7 +5705,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                             context,
                                                                             tagName);
 
-                                                                    Navigator.push(
+                                                                    /*Navigator.push(
                                                                         context,
                                                                         MaterialPageRoute(
                                                                             builder:
@@ -5689,7 +5716,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                           isFollowing:
                                                                               "");
                                                                     })).then((value) =>
-                                                                        Get_UserToken());
+                                                                        Get_UserToken());*/
 
                                                                     print(
                                                                         "tagName -- ${tagName}");
@@ -6660,6 +6687,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                         Container(
                                                                       child:
                                                                           Column(
+                                                                            crossAxisAlignment: CrossAxisAlignment.start,
                                                                             children: [
                                                                               LinkifyText(
                                                                         getAllPostData.object?[index].isTrsnalteoption == false ||
@@ -6727,7 +6755,10 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                                     Link5 == true ||
                                                                                     Link6 == true) {
                                                                                   if (Link2 == true || Link3 == true) {
-                                                                                    launchUrl(Uri.parse("https://${link.value.toString()}"));
+                                                                                    if (isYouTubeUrl(SelectedTest)) {
+                                                                                      playLink(SelectedTest, context);
+                                                                                    } else
+                                                                                      launchUrl(Uri.parse("https://${link.value.toString()}"));
                                                                                     print("qqqqqqqqhttps://${link.value}");
                                                                                   } else {
                                                                                     if (Link6 == true) {
@@ -6740,7 +6771,10 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                                         },
                                                                                       ));
                                                                                     } else {
-                                                                                      launchUrl(Uri.parse(link.value.toString()));
+                                                                                      if (isYouTubeUrl(SelectedTest)) {
+                                                                                        playLink(SelectedTest, context);
+                                                                                      } else
+                                                                                        launchUrl(Uri.parse(link.value.toString()));
                                                                                       print("link.valuelink.value -- ${link.value}");
                                                                                     }
                                                                                   }
@@ -6768,9 +6802,9 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                                     tagName = name.replaceAll("@", "");
                                                                                     await BlocProvider.of<NewProfileSCubit>(context).UserTagAPI(context, tagName);
 
-                                                                                    Navigator.push(context, MaterialPageRoute(builder: (context) {
+                                                                                    /*Navigator.push(context, MaterialPageRoute(builder: (context) {
                                                                                       return ProfileScreen(User_ID: "${userTagModel?.object}", isFollowing: "");
-                                                                                    })).then((value) => Get_UserToken());
+                                                                                    })).then((value) => Get_UserToken());*/
 
                                                                                     print("tagName -- ${tagName}");
                                                                                     print("user id -- ${userTagModel?.object}");
@@ -7492,11 +7526,11 @@ class _ProfileScreenState extends State<ProfileScreen>
       if (value.length >= 1 && value.contains('@')) {
         print("value check --${value.endsWith(' #')}");
         if (value.endsWith(' #')) {
-          String data1 = value.split(' #').last.replaceAll('#', '');
+          String data1 = value.split(' #').last.split(" ").first.replaceAll('#', '');
           BlocProvider.of<NewProfileSCubit>(context)
               .GetAllHashtag(context, '10', '#${data1.trim()}');
         } else {
-          String data = value.split(' @').last.replaceAll('@', '');
+          String data = value.split(' @').last.split(" ").first.replaceAll('@', '');
           BlocProvider.of<NewProfileSCubit>(context)
               .search_user_for_inbox(context, '${data.trim()}', '1');
         }
@@ -7507,7 +7541,7 @@ class _ProfileScreenState extends State<ProfileScreen>
       }
     } else if (value.contains('#')) {
       print("check length-${value}");
-      String data1 = value.split(' #').last.replaceAll('#', '');
+      String data1 = value.split(' #').last.split(" ").first.replaceAll('#', '');
       BlocProvider.of<NewProfileSCubit>(context)
           .GetAllHashtag(context, '10', '#${data1.trim()}');
     } else {
@@ -7621,7 +7655,9 @@ class _ProfileScreenState extends State<ProfileScreen>
         });
   }
 
-  void _onShareXFileFromAssets(BuildContext context, String postLink, String userName, String description, {String? androidLink}) async {
+  void _onShareXFileFromAssets(BuildContext context, String postLink,
+      String userName, String description,
+      {String? androidLink}) async {
     // RenderBox? box = context.findAncestorRenderObjectOfType();
 
     var directory = await getTemporaryDirectory();
@@ -7629,6 +7665,18 @@ class _ProfileScreenState extends State<ProfileScreen>
     if (postLink.isNotEmpty) {
       _permissionReady = await _checkPermission();
       await _prepareSaveDir();
+      if(Platform.isAndroid) {
+        DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+        AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+        version = int.parse(androidInfo.version.release);
+        if((version ?? 0) >= 13){
+          PermissionStatus status = await Permission.photos.request();
+          _permissionReady =status == PermissionStatus.granted;
+        }
+      }
+
+
+
 
       if (_permissionReady) {
         print("Downloading");
@@ -7645,39 +7693,65 @@ class _ProfileScreenState extends State<ProfileScreen>
         }
       }
       if (Platform.isAndroid) {
+
         Share.shareXFiles(
-          [XFile(postLink.startsWith("http") ? "${directory.path}/IP__image.jpg" : postLink)],
+          [
+            XFile(postLink.startsWith("http")
+                ? "${directory.path}/IP__image.jpg"
+                : postLink)
+          ],
           subject: "Share",
-          text: "$userName posted ${description.isNotEmpty ? "\n\n${description.split(" ").first}.... \n\n" : ""}on InPackaging \n\n https://www.inpackaging.com \n\n ${androidLink}",
+          text:
+          "$userName posted ${description.isNotEmpty ? "\n\n${description.length > 50 ? description.substring(0,50):description}.... \n\n" : ""}on InPackaging \n\n https://www.inpackaging.com \n\n ${androidLink}",
           // sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size,
         );
       } else {
         Share.shareXFiles(
-          [XFile(directory.path + Platform.pathSeparator + 'Growder_Image/IP__image.jpg')],
+          [
+            XFile(directory.path +
+                Platform.pathSeparator +
+                'IP/IP__image.jpg')
+          ],
           subject: "Share",
-          text: "$userName posted ${description.isNotEmpty ? "\n\n${description.split(" ").first}.... \n\n" : ""}on InPackaging \n\n https://www.inpackaging.com \n\n ${androidLink}",
+          text:
+          "$userName posted ${description.isNotEmpty ? "\n\n${description.length > 50 ? description.substring(0,50):description}.... \n\n" : ""}on InPackaging \n\n https://www.inpackaging.com \n\n ${androidLink}",
           // sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size,
         );
       }
     } else {
       print('No Invoice Available');
-
+      if(Platform.isAndroid) {
+        DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+        AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+        version = int.parse(androidInfo.version.release);
+        if((version ?? 0) >= 13){
+          PermissionStatus status = await Permission.photos.request();
+          _permissionReady =status == PermissionStatus.granted;
+        }
+      }
       if (Platform.isAndroid) {
-        Share.shareXFiles(
-          [XFile("/sdcard/download/IP__image.jpg")],
-          subject: "Share",
-          text: "$userName posted ${description.isNotEmpty ? "\n\n${description.split(" ").first}.... \n\n" : ""}on InPackaging \n\n https://www.inpackaging.com \n\n ${androidLink}",
-          // sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size,
-        );
+        if((version ?? 0) >= 13){
+          PermissionStatus status = await Permission.photos.request();
+          _permissionReady =status == PermissionStatus.granted;
+        }
+        if(_permissionReady) {
+          Share.shareXFiles(
+            [XFile("/data/data/com.ip.app/ip/IP__image.jpg")],
+            subject: "Share",
+            text: "$userName posted ${description.isNotEmpty ? "\n\n${description.length > 50 ? description.substring(0,50):description}.... \n\n" : ""}on InPackaging \n\n https://www.inpackaging.com \n\n ${androidLink}",
+            // sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size,
+          );
+        }
       } else {
         directory = await getApplicationDocumentsDirectory();
         Share.shareXFiles(
-          [XFile(directory.path + Platform.pathSeparator + 'Growder_Image/IP__image.jpg')],
+          [XFile(directory.path + Platform.pathSeparator + 'IP/IP__image.jpg')],
           subject: "Share",
-          text: "$userName posted ${description.isNotEmpty ? "\n\n${description.split(" ").first}.... \n\n" : ""}on InPackaging \n https://www.inpackaging.com \n ${androidLink}",
+          text: "$userName posted ${description.isNotEmpty ? "\n\n${description.length > 50 ? description.substring(0,50):description}.... \n\n" : ""}on InPackaging \n https://www.inpackaging.com \n ${androidLink}",
           // sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size,
         );
       }
+
     }
   }
 
@@ -7724,7 +7798,7 @@ class _ProfileScreenState extends State<ProfileScreen>
 
   Future<String?> _findLocalPath() async {
     if (Platform.isAndroid) {
-      return "/sdcard/download/";
+      return "/data/data/com.ip.app/ip/";
     } else {
       var directory = await getApplicationDocumentsDirectory();
       return directory.path + Platform.pathSeparator + 'IP_Image';
@@ -8206,6 +8280,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                       child: Container(
                                                         // color: Colors.amber,
                                                         child: Column(
+                                                          crossAxisAlignment: CrossAxisAlignment.start,
                                                           children: [
                                                             LinkifyText(
                                                               GetSavePostData
@@ -8301,7 +8376,10 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                             true ||
                                                                         Link3 ==
                                                                             true) {
-                                                                      launchUrl(
+                                                                      if (isYouTubeUrl(SelectedTest)) {
+                                                                        playLink(SelectedTest, context);
+                                                                      } else
+                                                                        launchUrl(
                                                                           Uri.parse(
                                                                               "https://${link.value.toString()}"));
                                                                       print(
@@ -8323,7 +8401,10 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                           },
                                                                         ));
                                                                       } else {
-                                                                        launchUrl(Uri
+                                                                        if (isYouTubeUrl(SelectedTest)) {
+                                                                          playLink(SelectedTest, context);
+                                                                        } else
+                                                                          launchUrl(Uri
                                                                             .parse(link
                                                                                 .value
                                                                                 .toString()));
@@ -8390,7 +8471,10 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                       print(
                                                                           "user id -- ${userTagModel?.object}");
                                                                     } else {
-                                                                      launchUrl(
+                                                                      if (isYouTubeUrl(SelectedTest)) {
+                                                                        playLink(SelectedTest, context);
+                                                                      } else
+                                                                        launchUrl(
                                                                           Uri.parse(
                                                                               "https://${link.value.toString()}"));
                                                                     }
@@ -8930,6 +9014,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                 padding: const EdgeInsets.only(
                                                     left: 16),
                                                 child: Column(
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
                                                   children: [
                                                     LinkifyText(
                                                       "${GetSavePostData?.object?[index].repostOn?.description}",
@@ -8993,7 +9078,10 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                               Link6 == true) {
                                                             if (Link2 == true ||
                                                                 Link3 == true) {
-                                                              launchUrl(Uri.parse(
+                                                              if (isYouTubeUrl(SelectedTest)) {
+                                                                playLink(SelectedTest, context);
+                                                              } else
+                                                                launchUrl(Uri.parse(
                                                                   "https://${link.value.toString()}"));
                                                               print(
                                                                   "qqqqqqqqhttps://${link.value}");
@@ -9013,7 +9101,10 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                   },
                                                                 ));
                                                               } else {
-                                                                launchUrl(Uri.parse(
+                                                                if (isYouTubeUrl(SelectedTest)) {
+                                                                  playLink(SelectedTest, context);
+                                                                } else
+                                                                  launchUrl(Uri.parse(
                                                                     link.value
                                                                         .toString()));
                                                                 print(
@@ -9951,6 +10042,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                         Expanded(
                                                           child: Container(
                                                             child: Column(
+                                                              crossAxisAlignment: CrossAxisAlignment.start,
                                                               children: [
                                                                 LinkifyText(
                                                                   GetSavePostData?.object?[index].isTrsnalteoption ==
@@ -10045,7 +10137,10 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                                 true ||
                                                                             Link3 ==
                                                                                 true) {
-                                                                          launchUrl(
+                                                                          if (isYouTubeUrl(SelectedTest)) {
+                                                                            playLink(SelectedTest, context);
+                                                                          } else
+                                                                            launchUrl(
                                                                               Uri.parse(
                                                                                   "https://${link.value.toString()}"));
                                                                           print(
@@ -10066,7 +10161,10 @@ class _ProfileScreenState extends State<ProfileScreen>
                                                                               },
                                                                             ));
                                                                           } else {
-                                                                            launchUrl(Uri.parse(link
+                                                                            if (isYouTubeUrl(SelectedTest)) {
+                                                                              playLink(SelectedTest, context);
+                                                                            } else
+                                                                              launchUrl(Uri.parse(link
                                                                                 .value
                                                                                 .toString()));
                                                                             print(

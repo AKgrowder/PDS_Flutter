@@ -525,6 +525,7 @@ class _HashTagViewScreenState extends State<HashTagViewScreen> with Observer {
                                               child: Align(
                                                 alignment: Alignment.topLeft,
                                                 child: Column(
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
                                                   children: [
                                                     LinkifyText(
                                                       "${hashTagViewData?.object?.posts?[index].description}",
@@ -1615,7 +1616,9 @@ class _HashTagViewScreenState extends State<HashTagViewScreen> with Observer {
         });
   }
 
-  void _onShareXFileFromAssets(BuildContext context, String postLink, String userName, String description, {String? androidLink}) async {
+  void _onShareXFileFromAssets(BuildContext context, String postLink,
+      String userName, String description,
+      {String? androidLink}) async {
     // RenderBox? box = context.findAncestorRenderObjectOfType();
 
     var directory = await getTemporaryDirectory();
@@ -1623,6 +1626,18 @@ class _HashTagViewScreenState extends State<HashTagViewScreen> with Observer {
     if (postLink.isNotEmpty) {
       _permissionReady = await _checkPermission();
       await _prepareSaveDir();
+      if(Platform.isAndroid) {
+        DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+        AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+        version = int.parse(androidInfo.version.release);
+        if((version ?? 0) >= 13){
+          PermissionStatus status = await Permission.photos.request();
+          _permissionReady =status == PermissionStatus.granted;
+        }
+      }
+
+
+
 
       if (_permissionReady) {
         print("Downloading");
@@ -1639,39 +1654,65 @@ class _HashTagViewScreenState extends State<HashTagViewScreen> with Observer {
         }
       }
       if (Platform.isAndroid) {
+
         Share.shareXFiles(
-          [XFile(postLink.startsWith("http") ? "${directory.path}/IP__image.jpg" : postLink)],
+          [
+            XFile(postLink.startsWith("http")
+                ? "${directory.path}/IP__image.jpg"
+                : postLink)
+          ],
           subject: "Share",
-          text: "$userName posted ${description.isNotEmpty ? "\n\n${description.split(" ").first}.... \n\n" : ""}on InPackaging \n\n https://www.inpackaging.com \n\n ${androidLink}",
+          text:
+          "$userName posted ${description.isNotEmpty ? "\n\n${description.length > 50 ? description.substring(0,50):description}.... \n\n" : ""}on InPackaging \n\n https://www.inpackaging.com \n\n ${androidLink}",
           // sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size,
         );
       } else {
         Share.shareXFiles(
-          [XFile(directory.path + Platform.pathSeparator + 'Growder_Image/IP__image.jpg')],
+          [
+            XFile(directory.path +
+                Platform.pathSeparator +
+                'IP/IP__image.jpg')
+          ],
           subject: "Share",
-          text: "$userName posted ${description.isNotEmpty ? "\n\n${description.split(" ").first}.... \n\n" : ""}on InPackaging \n\n https://www.inpackaging.com \n\n ${androidLink}",
+          text:
+          "$userName posted ${description.isNotEmpty ? "\n\n${description.length > 50 ? description.substring(0,50):description}.... \n\n" : ""}on InPackaging \n\n https://www.inpackaging.com \n\n ${androidLink}",
           // sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size,
         );
       }
     } else {
       print('No Invoice Available');
-
+      if(Platform.isAndroid) {
+        DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+        AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+        version = int.parse(androidInfo.version.release);
+        if((version ?? 0) >= 13){
+          PermissionStatus status = await Permission.photos.request();
+          _permissionReady =status == PermissionStatus.granted;
+        }
+      }
       if (Platform.isAndroid) {
-        Share.shareXFiles(
-          [XFile("/sdcard/download/IP__image.jpg")],
-          subject: "Share",
-          text: "$userName posted ${description.isNotEmpty ? "\n\n${description.split(" ").first}.... \n\n" : ""}on InPackaging \n\n https://www.inpackaging.com \n\n ${androidLink}",
-          // sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size,
-        );
+        if((version ?? 0) >= 13){
+          PermissionStatus status = await Permission.photos.request();
+          _permissionReady =status == PermissionStatus.granted;
+        }
+        if(_permissionReady) {
+          Share.shareXFiles(
+            [XFile("/data/data/com.ip.app/ip/IP__image.jpg")],
+            subject: "Share",
+            text: "$userName posted ${description.isNotEmpty ? "\n\n${description.length > 50 ? description.substring(0,50):description}.... \n\n" : ""}on InPackaging \n\n https://www.inpackaging.com \n\n ${androidLink}",
+            // sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size,
+          );
+        }
       } else {
         directory = await getApplicationDocumentsDirectory();
         Share.shareXFiles(
-          [XFile(directory.path + Platform.pathSeparator + 'Growder_Image/IP__image.jpg')],
+          [XFile(directory.path + Platform.pathSeparator + 'IP/IP__image.jpg')],
           subject: "Share",
-          text: "$userName posted ${description.isNotEmpty ? "\n\n${description.split(" ").first}.... \n\n" : ""}on InPackaging \n https://www.inpackaging.com \n ${androidLink}",
+          text: "$userName posted ${description.isNotEmpty ? "\n\n${description.length > 50 ? description.substring(0,50):description}.... \n\n" : ""}on InPackaging \n https://www.inpackaging.com \n ${androidLink}",
           // sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size,
         );
       }
+
     }
   }
 
@@ -1718,7 +1759,7 @@ class _HashTagViewScreenState extends State<HashTagViewScreen> with Observer {
 
   Future<String?> _findLocalPath() async {
     if (Platform.isAndroid) {
-      return "/sdcard/download/";
+      return "/data/data/com.ip.app/ip/";
     } else {
       var directory = await getApplicationDocumentsDirectory();
       return directory.path + Platform.pathSeparator + 'IP_Image';

@@ -1021,11 +1021,11 @@ class _BlogCommentBottomSheetState extends State<BlogCommentBottomSheet> {
       if (value.length >= 3 && value.contains('@')) {
         print("value check --${value.endsWith(' #')}");
         if (value.endsWith(' #')) {
-          String data1 = value.split(' #').last.replaceAll('#', '');
+          String data1 = value.split(' #').last.split(" ").first.replaceAll('#', '');
           BlocProvider.of<BlogcommentCubit>(context)
               .GetAllHashtag(context, '10', '#${data1.trim()}');
         } else {
-          String data = value.split(' @').last.replaceAll('@', '');
+          String data = value.split(' @').last.split(" ").first.replaceAll('@', '');
           BlocProvider.of<BlogcommentCubit>(context)
               .search_user_for_inbox(context, '${data.trim()}', '1');
         }
@@ -1034,7 +1034,7 @@ class _BlogCommentBottomSheetState extends State<BlogCommentBottomSheet> {
       } else {
         print("check lenth else-${value.length}");
       }
-      if (AnyLinkPreview.isValidLink(extractUrls(value).first)) {
+      if (extractUrls(value).isNotEmpty && AnyLinkPreview.isValidLink(extractUrls(value).first)) {
         if (_timer != null) {
           _timer?.cancel();
           _timer = Timer(Duration(seconds: 2), () {
@@ -1053,10 +1053,10 @@ class _BlogCommentBottomSheetState extends State<BlogCommentBottomSheet> {
     } else if (value.contains('#')) {
       title = "";
       print("check length-${value}");
-      String data1 = value.split(' #').last.replaceAll('#', '');
+      String data1 = value.split(' #').last.split(" ").first.replaceAll('#', '');
       BlocProvider.of<BlogcommentCubit>(context)
           .GetAllHashtag(context, '10', '#${data1.trim()}');
-      if (AnyLinkPreview.isValidLink(extractUrls(value).first)) {
+      if (extractUrls(value).isNotEmpty && AnyLinkPreview.isValidLink(extractUrls(value).first)) {
         if (_timer != null) {
           _timer?.cancel();
           _timer = Timer(Duration(seconds: 2), () {
@@ -1072,7 +1072,7 @@ class _BlogCommentBottomSheetState extends State<BlogCommentBottomSheet> {
           });
         }
       }
-    }else if (AnyLinkPreview.isValidLink(extractUrls(value).first)) {
+    }else if (extractUrls(value).isNotEmpty && AnyLinkPreview.isValidLink(extractUrls(value).first)) {
       if (_timer != null) {
         _timer?.cancel();
         _timer = Timer(Duration(seconds: 2), () {

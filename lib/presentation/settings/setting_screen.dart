@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_switch/flutter_switch.dart';
@@ -15,6 +16,7 @@ import 'package:pds/presentation/change_password_screen/change_password_screen.d
 import 'package:pds/presentation/settings/LogOut_dailog.dart';
 import 'package:pds/widgets/delete_dailog.dart';
 import 'package:pds/widgets/rateUS_dailog.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -660,20 +662,34 @@ class _SettingScreenState extends State<SettingScreen> {
   void _onShareXFileFromAssets(BuildContext context) async {
     RenderBox? box = context.findAncestorRenderObjectOfType();
     var directory = await getApplicationDocumentsDirectory();
+
     if (Platform.isAndroid) {
-      await Share.shareXFiles(
-        [XFile("/sdcard/download/IPImage.jpg")],
-        subject: "Share",
-        text:
-            "Try This Awesome App \n\n Android :- https://play.google.com/store/apps/details?id=com.pds.app",
-        sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size,
-      );
+      DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+      AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+      int version = int.parse(androidInfo.version.release);
+      bool _permissionReady= false;
+      if((version ?? 0) >= 13){
+        PermissionStatus status = await Permission.photos.request();
+        _permissionReady =status == PermissionStatus.granted;
+      }else{
+        PermissionStatus status = await Permission.storage.request();
+        _permissionReady =status == PermissionStatus.granted;
+
+      }
+      if(_permissionReady) {
+        await Share.shareXFiles(
+          [XFile("/data/data/com.ip.app/ip/IP__image.jpg")],
+          subject: "Share",
+          text: "Try This Awesome App \n\n Android :- https://play.google.com/store/apps/details?id=com.ip.app",
+          sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size,
+        );
+      }
     } else {
       await Share.shareXFiles(
         [
           XFile(directory.path +
               Platform.pathSeparator +
-              'Growder_Image/IPImage.jpg')
+              'IP/IPImage.jpg')
         ],
         subject: "Share",
         text:

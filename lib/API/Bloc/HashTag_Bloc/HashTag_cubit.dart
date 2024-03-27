@@ -30,11 +30,11 @@ class HashTagCubit extends Cubit<HashTagState> {
   }
 
   Future<void> HashTagForYouAPI(
-      BuildContext context, String hashtagViewType, String pageNumber) async {
+      BuildContext context, String hashtagViewType, String pageNumber,bool user) async {
     try {
       emit(HashTagLoadingState());
       HashTagForYouModel = await Repository()
-          .HashTagForYouAPI(context, hashtagViewType, pageNumber);
+          .HashTagForYouAPI(context, hashtagViewType, pageNumber,user);
       if (HashTagForYouModel == "Something Went Wrong, Try After Some Time.") {
         emit(HashTagErrorState("${HashTagForYouModel}"));
       } else {
@@ -49,12 +49,12 @@ class HashTagCubit extends Cubit<HashTagState> {
   }
 
   Future<void> HashTagForYouAPIDataGet(
-      BuildContext context, String hashtagViewType, String pageNumber) async {
+      BuildContext context, String hashtagViewType, String pageNumber,bool user) async {
     dynamic HasthagpagantionDataGet;
     try {
       emit(HashTagLoadingState());
       HasthagpagantionDataGet = await Repository()
-          .HashTagForYouAPI(context, hashtagViewType, pageNumber);
+          .HashTagForYouAPI(context, hashtagViewType, pageNumber,user);
       if (HasthagpagantionDataGet ==
           "Something Went Wrong, Try After Some Time.") {
         emit(HashTagErrorState("${HasthagpagantionDataGet}"));

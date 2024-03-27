@@ -2283,9 +2283,9 @@ class Repository {
   }
 
   HashTagForYouAPI(
-      BuildContext context, String hashtagViewType, String pageNumber) async {
+      BuildContext context, String hashtagViewType, String pageNumber,bool user) async {
     final response = await apiServices.getApiCall(
-        '${Config.HashTagForYou}?hashtagViewType=$hashtagViewType&pageNumber=$pageNumber&pageSize=20',
+        '${user ? 'user':'guest'}${Config.HashTagForYou}?hashtagViewType=$hashtagViewType',
         context);
 
     var jsonString = json.decode(utf8.decode(response.bodyBytes));

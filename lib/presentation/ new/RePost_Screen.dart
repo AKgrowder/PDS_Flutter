@@ -805,6 +805,7 @@ class _RePostScreenState extends State<RePostScreen> {
                                             ? Padding(
                                                 padding: const EdgeInsets.only(left: 16),
                                                 child: Column(
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
                                                   children: [
                                                     LinkifyText(
                                                       readmoree == true
@@ -818,7 +819,7 @@ class _RePostScreenState extends State<RePostScreen> {
                                                         fontFamily: 'outfit',
                                                       ),
                                                       textStyle: TextStyle(
-                                                        color: Colors.white,
+                                                        color: Colors.black,
                                                         fontFamily: 'outfit',
                                                       ),
                                                       linkTypes: [
@@ -1806,10 +1807,10 @@ class _RePostScreenState extends State<RePostScreen> {
       if (value.length >= 1 && value.contains('@')) {
         print("value check --${value.endsWith(' #')}");
         if (value.endsWith(' #')) {
-          String data1 = value.split(' #').last.replaceAll('#', '');
+          String data1 = value.split(' #').last.split(" ").first.replaceAll('#', '');
           BlocProvider.of<RePostCubit>(context).GetAllHashtag(context, '10', '#${data1.trim()}');
         } else {
-          String data = value.split(' @').last.replaceAll('@', '');
+          String data = value.split(' @').last.split(" ").first.replaceAll('@', '');
           BlocProvider.of<RePostCubit>(context).search_user_for_inbox(context, '${data.trim()}', '1');
         }
       } else if (value.endsWith(' #')) {
@@ -1817,7 +1818,7 @@ class _RePostScreenState extends State<RePostScreen> {
       } else {
         print("check lenth else-${value.length}");
       }
-      if (AnyLinkPreview.isValidLink(extractUrls(value).first)) {
+      if (extractUrls(value).isNotEmpty && AnyLinkPreview.isValidLink(extractUrls(value).first)) {
         if (_timer != null) {
           _timer?.cancel();
           _timer = Timer(Duration(seconds: 2), () {
@@ -1836,9 +1837,9 @@ class _RePostScreenState extends State<RePostScreen> {
     } else if (value.contains('#')) {
       title = "";
       print("check length-${value}");
-      String data1 = value.split(' #').last.replaceAll('#', '');
+      String data1 = value.split(' #').last.split(" ").first.replaceAll('#', '');
       BlocProvider.of<RePostCubit>(context).GetAllHashtag(context, '10', '#${data1.trim()}');
-      if (AnyLinkPreview.isValidLink(extractUrls(value).first)) {
+      if (extractUrls(value).isNotEmpty && AnyLinkPreview.isValidLink(extractUrls(value).first)) {
         if (_timer != null) {
           _timer?.cancel();
           _timer = Timer(Duration(seconds: 2), () {
@@ -1854,7 +1855,7 @@ class _RePostScreenState extends State<RePostScreen> {
           });
         }
       }
-    }else if (AnyLinkPreview.isValidLink(extractUrls(value).first)) {
+    }else if (extractUrls(value).isNotEmpty && AnyLinkPreview.isValidLink(extractUrls(value).first)) {
       if (_timer != null) {
         _timer?.cancel();
         _timer = Timer(Duration(seconds: 2), () {
