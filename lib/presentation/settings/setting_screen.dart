@@ -20,22 +20,27 @@ import 'package:pds/widgets/rateUS_dailog.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
-
+import 'package:device_info_plus/device_info_plus.dart';
 import '../../core/utils/image_constant.dart';
 import '../../core/utils/sharedPreferences.dart';
 import '../Support_screens/support_screen.dart';
 import '../my account/my_account_screen.dart';
+import 'package:permission_handler/permission_handler.dart';
 import '../policy_of_company/policies.dart';
 
 class SettingScreen extends StatefulWidget {
   String? userCompanyPageUid;
   String accountType;
   bool module;
+  String? User_CompnyPageModule;
+  GetAssignedUsersOfCompanyPage? getAssignedUsersOfCompanyPage;
 
   SettingScreen(
       {required this.accountType,
       required this.module,
-      this.userCompanyPageUid});
+      this.User_CompnyPageModule,
+      this.userCompanyPageUid,
+      this.getAssignedUsersOfCompanyPage});
   @override
   State<SettingScreen> createState() => _SettingScreenState();
 }
@@ -123,7 +128,7 @@ class _SettingScreenState extends State<SettingScreen> {
   String? userStatus;
   String? rejcteReson;
   String? User_CompnyPageModule;
-  GetAssignedUsersOfCompanyPage? getAssignedUsersOfCompanyPage;
+
   bool? UserProfileOpen;
   @override
   void initState() {
@@ -274,10 +279,6 @@ class _SettingScreenState extends State<SettingScreen> {
       ),
       body: BlocConsumer<AccountCubit, AccountState>(
         listener: (context, state) {
-          if (state is GetAssignedUsersOfCompanyPageLoadedState) {
-            getAssignedUsersOfCompanyPage = state.getAssignedUsersOfCompanyPage;
-            print("sdfgsdfgsdfgsdgfg");
-          }
           if (state is AccountLoadedState) {
             SnackBar snackBar = SnackBar(
               content: Text(state.accountType.object.toString()),
@@ -355,18 +356,19 @@ class _SettingScreenState extends State<SettingScreen> {
                       itemCount: Setting_Array.length,
                       itemBuilder: (BuildContext context, int index) {
                         print("check module -${widget.module}");
-                        print(
-                            "check Alll value -${User_CompnyPageModule}--${getAssignedUsersOfCompanyPage?.object}");
+
                         if (index == 1 ||
-                                index == 4 ||
-                                index == 0 ||
-                                index ==
-                                    3 /* ||
-                            index == 10 */
-                            ) {
+                            index == 4 ||
+                            index == 0 ||
+                            index == 3 ||
+                            (widget.module == false && index == 10) ||
+                            (User_CompnyPageModule == null &&
+                                index == 9 &&
+                                widget.getAssignedUsersOfCompanyPage?.object ==
+                                    null) || (User_CompnyPageModule != null && (index == 13 || index ==8))) {
                           return SizedBox();
                         }
-                        if (widget.module == false && index == 10) {
+                        /* if (widget.module == false && index == 10) {
                           return SizedBox();
                         }
                         if (User_CompnyPageModule == null &&
@@ -374,7 +376,7 @@ class _SettingScreenState extends State<SettingScreen> {
                                 true &&
                             index == 9) {
                           return SizedBox();
-                        }
+                        } */
                         return GestureDetector(
                           onTap: () {
                             if (Setting_Array[index] == 'Change Password') {
@@ -443,7 +445,7 @@ class _SettingScreenState extends State<SettingScreen> {
                                   MaterialPageRoute(
                                     builder: (context) => PageAdmin(
                                       getAssignedUsersOfCompanyPage:
-                                          getAssignedUsersOfCompanyPage!,
+                                          widget.getAssignedUsersOfCompanyPage!,
                                       companyPageUid: widget.userCompanyPageUid,
                                     ),
                                   ));
@@ -759,32 +761,38 @@ class _SettingScreenState extends State<SettingScreen> {
     userStatus =
         userStatus != 'APPROVED' ? userStatus?.split('-').first : userStatus;
     print("cjecldsd-${User_CompnyPageModule}");
-    if (User_CompnyPageModule != null) {
-      await BlocProvider.of<AccountCubit>(context)
-          .get_assigned_users_of_company_pageApi(
-              '${widget.userCompanyPageUid}', context);
-    }
+
     super.setState(() {});
   }
 
-  void _onShareXFileFromAssets(BuildContext context) async {
+    void _onShareXFileFromAssets(BuildContext context) async {
     RenderBox? box = context.findAncestorRenderObjectOfType();
     var directory = await getApplicationDocumentsDirectory();
+
     if (Platform.isAndroid) {
-      await Share.shareXFiles(
-        [XFile("/sdcard/download/IPImage.jpg")],
-        subject: "Share",
-        text:
-            "Try This Awesome App \n\n Android :- https://play.google.com/store/apps/details?id=com.pds.app",
-        sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size,
-      );
+      DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+      AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+      int version = int.parse(androidInfo.version.release);
+      bool _permissionReady = false;
+      if ((version ?? 0) >= 13) {
+        PermissionStatus status = await Permission.photos.request();
+        _permissionReady = status == PermissionStatus.granted;
+      } else {
+        PermissionStatus status = await Permission.storage.request();
+        _permissionReady = status == PermissionStatus.granted;
+      }
+      if (_permissionReady) {
+        await Share.shareXFiles(
+          [XFile("/data/data/com.ip.app/files/IP__Image.jpg")],
+          subject: "Share",
+          text:
+              "Try This Awesome App \n\n Android :- https://play.google.com/store/apps/details?id=com.pds.app",
+          sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size,
+        );
+      }
     } else {
       await Share.shareXFiles(
-        [
-          XFile(directory.path +
-              Platform.pathSeparator +
-              'Growder_Image/IPImage.jpg')
-        ],
+        [XFile(directory.path + Platform.pathSeparator + ' IP/IP__Image.jpg')],
         subject: "Share",
         text:
             "Try This Awesome App \n\n iOS :- https://apps.apple.com/in/app/inpackaging-knowledge-forum/id6478194670",

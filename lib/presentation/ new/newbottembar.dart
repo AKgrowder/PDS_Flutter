@@ -64,7 +64,7 @@ class _NewBottomBarState extends State<NewBottomBar> {
     // HomeNewScreen(),
     RoomsScreen(),
     // HistoryScreen(),
-    SearchBarScreen(value2: 1),
+  SearchBarScreen(value2: 1),
     // NotificationsScreen(),
 
     InboxScreen(),
