@@ -190,7 +190,6 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
           }
         },
         builder: (context, state) {
-         
           return SingleChildScrollView(
             child: Form(
               key: _formKey,
@@ -222,8 +221,8 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
                       ),
                     ),
                     Padding(
-                      padding:
-                            EdgeInsets.only(top: 10, left: _width/12, bottom: 5),
+                      padding: EdgeInsets.only(
+                          top: 10, left: _width / 12, bottom: 5),
                       child: Text(
                         "Company Name",
                         style: TextStyle(
@@ -259,8 +258,8 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
                       ),
                     ),
                     Padding(
-                      padding:
-                            EdgeInsets.only(top: 10.0, left: _width/12, bottom: 5),
+                      padding: EdgeInsets.only(
+                          top: 10.0, left: _width / 12, bottom: 5),
                       child: Text(
                         "Job Profile",
                         style: TextStyle(
@@ -339,7 +338,8 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
                       ),
                     ),
                     Padding(
-                      padding: EdgeInsets.only(top: 18, left: _width/12, bottom: 5),
+                      padding: EdgeInsets.only(
+                          top: 18, left: _width / 12, bottom: 5),
                       child: Text(
                         "Industry Type",
                         overflow: TextOverflow.ellipsis,
@@ -384,8 +384,8 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
                       ),
                     ),
                     Padding(
-                      padding:
-                            EdgeInsets.only(top: 10.0, left: _width/12, bottom: 5),
+                      padding: EdgeInsets.only(
+                          top: 10.0, left: _width / 12, bottom: 5),
                       child: Text(
                         "Document",
                         style: TextStyle(
@@ -397,27 +397,30 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
                       ),
                     ),
                     Padding(
-                      padding:   EdgeInsets.only(left: _width/12.0),
+                      padding: EdgeInsets.only(
+                          left: _width / 12.0, right: _width / 12.0),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          Container(
-                              height: 50,
-                              width: _width / 1.6,
-                              decoration: BoxDecoration(
-                                  color: Color(0XFFF6F6F6),
-                                  borderRadius: BorderRadius.only(
-                                      topLeft: Radius.circular(5),
-                                      bottomLeft: Radius.circular(5))),
-                              child: Padding(
-                                padding:
-                                    const EdgeInsets.only(top: 15, left: 20),
-                                child: Text(
-                                  '${dopcument.toString()}',
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(fontSize: 16),
-                                ),
-                              )),
+                          Expanded(
+                            child: Container(
+                                height: 50,
+                                width: _width / 1.6,
+                                decoration: BoxDecoration(
+                                    color: Color(0XFFF6F6F6),
+                                    borderRadius: BorderRadius.only(
+                                        topLeft: Radius.circular(5),
+                                        bottomLeft: Radius.circular(5))),
+                                child: Padding(
+                                  padding:
+                                      const EdgeInsets.only(top: 15, left: 20),
+                                  child: Text(
+                                    '${dopcument.toString()}',
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(fontSize: 16),
+                                  ),
+                                )),
+                          ),
                           dopcument == "Upload Document"
                               ? GestureDetector(
                                   onTap: () async {
@@ -474,8 +477,8 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
                       ),
                     ),
                     Padding(
-                      padding:   EdgeInsets.only(
-                          left: _width/12, right: _width/12, top: 10),
+                      padding: EdgeInsets.only(
+                          left: _width / 12, right: _width / 12, top: 10),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -493,7 +496,7 @@ class _CreateForamScreenState extends State<CreateForamScreen> {
                             "Max size ${finalFileSize}MB",
                             style: TextStyle(
                               fontFamily: 'outfit',
-                              fontSize: _width / 30,
+                              fontSize: 15,
                               // fontSize: 15,
                               color: Colors.black.withOpacity(0.6),
                               fontWeight: FontWeight.w500,

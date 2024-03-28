@@ -519,6 +519,8 @@ class _MyHomePageState extends State<ShowProfileScreen>
                                       module: NewProfileData?.object?.module == 'COMPANY' &&
                                                                         NewProfileData?.object?.approvalStatus =='APPROVED'?
                                                                        true:false,
+                                                                       User_CompnyPageModule:'' ,
+                                                                       
                             
 
                                   ))).then((value) =>

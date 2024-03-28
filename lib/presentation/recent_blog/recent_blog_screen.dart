@@ -57,6 +57,7 @@ class _RecentBlogScrenState extends State<RecentBlogScren> {
     double _height = MediaQuery.of(context).size.height;
     return Scaffold(
         key: scaffoldKey,
+        resizeToAvoidBottomInset: false,
         body: Stack(
           children: [
             SingleChildScrollView(
@@ -524,9 +525,8 @@ class _RecentBlogScrenState extends State<RecentBlogScren> {
         ));
   }
 
- 
   void _settingModalBottomSheetBlog(context, index, _heigth) {
-    scaffoldKey.currentState!.showBottomSheet((
+    scaffoldKey.currentState!.showBottomSheet( (
       BuildContext context,
     ) {
       return Container(

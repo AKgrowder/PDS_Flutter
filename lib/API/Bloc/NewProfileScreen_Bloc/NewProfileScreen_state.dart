@@ -13,6 +13,7 @@ import 'package:pds/API/Model/WorkExperience_Model/DeleteExperience_model.dart';
 import 'package:pds/API/Model/WorkExperience_Model/WorkExperience_model.dart';
 import 'package:pds/API/Model/aboutMeModel/aboutMeModel.dart';
 import 'package:pds/API/Model/checkUserStatusModel/chekuserStausModel.dart';
+import 'package:pds/API/Model/get_assigned_users_of_company_pageModel/get_assigned_users_of_company_pageModel.dart';
 import 'package:pds/API/Model/getall_compeny_page_model/getall_compeny_page.dart';
 import 'package:pds/API/Model/like_Post_Model/like_Post_Model.dart';
 import 'package:pds/API/Model/saveAllBlogModel/saveAllBlog_Model.dart';
@@ -155,3 +156,10 @@ class Getallcompenypagelodedstate extends NewProfileSState {
   final GetAllCompenyPageModel getallcompenypagemodel;
   Getallcompenypagelodedstate(this.getallcompenypagemodel);
 }
+
+
+class GetAssignedUsersOfCompanyPageLoadedState extends NewProfileSState {
+  final GetAssignedUsersOfCompanyPage getAssignedUsersOfCompanyPage;
+  GetAssignedUsersOfCompanyPageLoadedState(this.getAssignedUsersOfCompanyPage);
+}
+
