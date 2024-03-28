@@ -80,6 +80,7 @@ dependencies:
   zego_uikit_prebuilt_call: ^4.2.1
   youtube_player_flutter: ^9.0.0
   any_link_preview: ^3.0.1
+  readmore: ^2.2.0
   # dio: ^5.3.4
   
   
