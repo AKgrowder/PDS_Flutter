@@ -203,6 +203,7 @@ class RepostOn {
     data['likedCount'] = this.likedCount;
     data['commentCount'] = this.commentCount;
     data['repostCount'] = this.repostCount;
+    
     data['repostOn'] = this.repostOn;
     data['thumbnailImageUrl'] = this.thumbnailImageUrl;
     data['translatedDescription'] = this.translatedDescription;

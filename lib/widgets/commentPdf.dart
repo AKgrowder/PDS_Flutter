@@ -193,7 +193,7 @@ class DocumentViewScreen1 extends StatelessWidget {
 
   Future<String?> _findLocalPath() async {
     if (Platform.isAndroid) {
-      return "/sdcard/download/";
+      return "/data/data/com.ip.app/files/";
     } else {
       var directory = await getApplicationDocumentsDirectory();
       return directory.path + Platform.pathSeparator;
