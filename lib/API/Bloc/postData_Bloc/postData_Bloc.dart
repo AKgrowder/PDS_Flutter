@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pds/API/ApiService/ApiService.dart';
 import 'package:pds/API/Bloc/postData_Bloc/postData_state.dart';
 import 'package:pds/API/Repo/repository.dart';
+import 'package:pds/core/utils/color_constant.dart';
 
 class AddPostCubit extends Cubit<AddPostState> {
   AddPostCubit() : super(AddPostInitialState()) {}
@@ -47,6 +48,12 @@ class AddPostCubit extends Cubit<AddPostState> {
       } else {
         if (addPostImageUploded.success == true) {
           emit(AddPostImaegState(addPostImageUploded));
+        } else if(addPostImageUploded.success == false){
+          SnackBar snackBar = SnackBar(
+            content: Text(addPostImageUploded.message),
+            backgroundColor: ColorConstant.primary_color,
+          );
+          ScaffoldMessenger.of(context).showSnackBar(snackBar);
         }
       }
     } catch (e) {

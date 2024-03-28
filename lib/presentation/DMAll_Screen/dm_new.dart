@@ -2,17 +2,20 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:any_link_preview/any_link_preview.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_observer/Observable.dart';
 import 'package:flutter_observer/Observer.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:linkfy_text/linkfy_text.dart';
 import 'package:pds/API/Bloc/dmInbox_bloc/dmMessageState.dart';
 import 'package:pds/API/Bloc/dmInbox_bloc/dminbox_blcok.dart';
 import 'package:pds/API/Model/CreateStory_Model/all_stories.dart';
+import 'package:pds/API/Model/createDocumentModel/createDocumentModel.dart';
 import 'package:pds/API/Model/inboxScreenModel/inboxScrrenModel.dart';
 import 'package:pds/API/Model/story_model.dart';
 import 'package:pds/StoryFile/src/story_button.dart';
@@ -39,6 +42,8 @@ import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import 'package:zego_uikit_prebuilt_call/zego_uikit_prebuilt_call.dart';
 import 'package:http/http.dart' as http;
 import 'allStarMessage.dart';
+import 'dart:io';
+import 'dart:math';
 
 enum Reaction { like, laugh, love, none }
 
@@ -110,6 +115,12 @@ class _DmScreenNewState extends State<DmScreenNew> with Observer {
   String? UserLogin_ID;
   Timer? timer;
   bool? soicalData;
+  double value2 = 0.0;
+  double finalFileSize = 0;
+  double documentuploadsize = 0;
+  File? _image;
+  XFile? pickedImageFile;
+  ImagePicker picker = ImagePicker();
 
   String? DMbaseURL;
   WebSocketChannel? channel;
@@ -123,7 +134,8 @@ class _DmScreenNewState extends State<DmScreenNew> with Observer {
   bool isScrollingDown = false;
   final focus = FocusNode();
   Map<String, dynamic>? markStarred;
-
+  PlatformFile? file12;
+  ChooseDocument1? imageDataPost;
   @override
   void initState() {
     GetAllStory_Data();
@@ -145,6 +157,162 @@ class _DmScreenNewState extends State<DmScreenNew> with Observer {
       }
     });
     super.initState();
+  }
+
+  prepareTestPdf(int Index, BuildContext context) async {
+    PlatformFile file;
+
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: ['pdf', 'png', 'doc', 'jpg'],
+    );
+    {
+      if (result != null) {
+        file = result.files.first;
+
+        if ((file.path?.contains(".mp4") ?? false) ||
+            (file.path?.contains(".mov") ?? false) ||
+            (file.path?.contains(".mp3") ?? false) ||
+            (file.path?.contains(".m4a") ?? false)) {
+          showDialog(
+            context: context,
+            builder: (ctx) => AlertDialog(
+              title: Text(
+                "Selected File Error",
+                textScaleFactor: 1.0,
+              ),
+              content: Text(
+                "Only PDF, PNG, JPG Supported.",
+                textScaleFactor: 1.0,
+              ),
+              actions: <Widget>[
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(ctx).pop();
+                  },
+                  child: Container(
+                    // color: Colors.green,
+                    padding: const EdgeInsets.all(10),
+                    child: const Text("Okay"),
+                  ),
+                ),
+              ],
+            ),
+          );
+        } else {
+          getFileSize(file.path!, 1, result.files.first, Index);
+        }
+      } else {}
+    }
+    return "";
+  }
+
+  getFileSize(
+      String filepath, int decimals, PlatformFile file1, int Index) async {
+    var file = File(filepath);
+    int bytes = await file.length();
+    if (bytes <= 0) return "0 B";
+    const suffixes = ["B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"];
+    var i = (log(bytes) / log(1024)).floor();
+    var STR = ((bytes / pow(1024, i)).toStringAsFixed(decimals));
+    print('getFileSizevariable-${file1.path}');
+    value2 = double.parse(STR);
+    print("finalFileSizeaaaaa-->${finalFileSize}");
+    print("value2-->$value2");
+    switch (i) {
+      case 0:
+        print("Done file size B");
+        switch (Index) {
+          case 1:
+            if (file1.name.isNotEmpty || file1.name.toString() == null) {
+              setState(() {
+                file12 = file1;
+                _image = File(file1.path.toString());
+              });
+            }
+
+            break;
+          default:
+        }
+        print('xfjsdjfjfilenamecheckKB-${file1.path}');
+
+        break;
+      case 1:
+        print("Done file size KB");
+        switch (Index) {
+          case 0:
+            print("file1.name-->${file1.name}");
+            if (file1.name.isNotEmpty || file1.name.toString() == null) {
+              setState(() {
+                file12 = file1;
+                _image = File(file1.path.toString());
+              });
+            }
+
+            break;
+          default:
+        }
+        print('filenamecheckKB-${file1.path}');
+        print("file111.name-->${file1.name}");
+        BlocProvider.of<DmInboxCubit>(context)
+            .UplodeImageAPI(context, File(_image!.path));
+
+        setState(() {});
+
+        break;
+      case 2:
+        print("value2check-->$value2");
+        print("finalFileSize-->${finalFileSize}");
+
+        if (value2 > finalFileSize) {
+          print(
+              "this file size ${value2} Selected Max size ${finalFileSize}MB");
+
+          showDialog(
+            context: context,
+            builder: (ctx) => AlertDialog(
+              title: Text("Max Size ${finalFileSize}MB"),
+              content: Text(
+                  "This file size ${value2} Selected Max size ${finalFileSize}MB"),
+              actions: <Widget>[
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(ctx).pop();
+                  },
+                  child: Container(
+                    // color: Colors.green,
+                    padding: const EdgeInsets.all(10),
+                    child: const Text("Okay"),
+                  ),
+                ),
+              ],
+            ),
+          );
+        } else {
+          print("Done file Size 12MB");
+          print("file1.namedata-->${file1.name}");
+          switch (Index) {
+            case 1:
+              break;
+            default:
+          }
+          print('filecheckPath1111-${file1.name}');
+          print("file222.name-->${file1.name}");
+          setState(() {
+            file12 = file1;
+            _image = File(file1.path.toString());
+          });
+          BlocProvider.of<DmInboxCubit>(context)
+              .UplodeImageAPI(context, File(_image!.path));
+          /*   BlocProvider.of<PersonalChatListCubit>(context)
+              .UplodeImageAPI(context, File(_image!.path)); */
+        }
+
+        break;
+      default:
+    }
+
+    return STR;
   }
 
   myscrollFunction() {
@@ -236,6 +404,7 @@ class _DmScreenNewState extends State<DmScreenNew> with Observer {
           swipeToIndex = 0;
           isMeesageReaction = false;
           mapDataAdd?.clear();
+          _image = null;
           Map<String, dynamic> jsonString = json.decode(frame.body ?? "");
           print("check want to get-${jsonString}");
           print("login user uid -${UserLogin_ID}");
@@ -251,6 +420,7 @@ class _DmScreenNewState extends State<DmScreenNew> with Observer {
             "isDelivered": jsonString['object']['isDelivered'],
             "replyOnUid": jsonString['object']['replyMessageUid'],
           };
+          print("mapDataAdd-${mapDataAdd}");
           Content content = Content.fromJson(mapDataAdd!);
           getInboxMessagesModel?.object?.content?.add(content);
           print(
@@ -269,6 +439,9 @@ class _DmScreenNewState extends State<DmScreenNew> with Observer {
   }
 
   void sendMessageMethod() {
+    print("cehclsadasbdsfg-${imageDataPost?.object.toString()}");
+    print("cehclsadasbdsfg-${_image?.path}");
+
     if (addComment.text.isNotEmpty) {
       if (isEditMessage == false) {
         stompClient?.send(
@@ -297,6 +470,22 @@ class _DmScreenNewState extends State<DmScreenNew> with Observer {
                   "${getInboxMessagesModel?.object?.content?[isEditedindex].userChatMessageUid}",
             }));
       }
+    } else if (_image?.path != null) {
+      stompClient?.send(
+          destination: '/send_image_in_user_chat/${widget.chatInboxUid}',
+          body: json.encode({
+            "message": imageDataPost?.object.toString(),
+            "messageType": "IMAGE",
+            "userChatInboxUid": "${widget.chatInboxUid}",
+            //  "${widget.Room_ID}",
+            "userCode": "${UserLogin_ID}",
+            "isDelivered": true,
+            'uid':
+                "${getInboxMessagesModel?.object?.content?[isEditedindex].userChatMessageUid}",
+          }));
+      print("ELSE IF CEHCK");
+      print("data Goes");
+      print("imageDataPost?.object.toString-${imageDataPost?.object}");
     } else {
       SnackBar snackBar = SnackBar(
         content: Text('Please Enter Text'),
@@ -319,8 +508,13 @@ class _DmScreenNewState extends State<DmScreenNew> with Observer {
 
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     UserLogin_ID = prefs.getString(PreferencesKey.loginUserID);
+    documentuploadsize = await double.parse(
+        prefs.getString(PreferencesKey.MaxInboxUploadSizeInMB) ?? "0");
+
+    finalFileSize = documentuploadsize;
     String? UserName = prefs.getString(PreferencesKey.ProfileName);
     DMbaseURL = prefs.getString(PreferencesKey.SocketLink) ?? "";
+    print("check Vale -${DMbaseURL}");
     stompClient = StompClient(
         config: StompConfig(url: DMbaseURL!, onConnect: onConnectCallback));
     stompClient?.activate();
@@ -361,15 +555,7 @@ class _DmScreenNewState extends State<DmScreenNew> with Observer {
               if (state is getInboxLoadedState) {
                 print("this State is Calling");
                 getInboxMessagesModel = state.getInboxMessagesModel;
-                WidgetsBinding.instance.addPostFrameCallback((_) {
-                  if (isMounted == true) {
-                    if (mounted) {
-                      setState(() {
-                        _scrollToBottom();
-                      });
-                    }
-                  }
-                });
+                
               }
               if (state is GetAllStoryLoadedState) {
                 print('this stater Caling');
@@ -400,6 +586,10 @@ class _DmScreenNewState extends State<DmScreenNew> with Observer {
                     state.GetNotificationCountData.object?.notificationCount ??
                         0,
                     state.GetNotificationCountData.object?.messageCount ?? 0);
+              }
+              if (state is AddPostImaegState) {
+                imageDataPost = state.imageDataPost;
+                print("this state is calling");
               }
             },
             builder: (context, state) {
@@ -506,36 +696,36 @@ class _DmScreenNewState extends State<DmScreenNew> with Observer {
                                       ),
                                     ),
                                     Spacer(),
-                                        if(soicalData == true)
-                                        sendCallButton(
-                                      isVideoCall: false,
-                                      invitees: [
-                                        ZegoUIKitUser(
-                                            id: widget.chatOtherUseruid
-                                                .split('-')
-                                                .last
-                                                .toString(),
-                                            name: widget.chatUserName
-                                                .toLowerCase())
-                                      ],
-                                      onCallFinished:
-                                          onSendCallInvitationFinished,
-                                    ),
-                                     if(soicalData == true)
-                                    sendCallButton(
-                                      isVideoCall: true,
-                                      invitees: [
-                                        ZegoUIKitUser(
-                                            id: widget.chatOtherUseruid
-                                                .split('-')
-                                                .last
-                                                .toString(),
-                                            name: widget.chatUserName
-                                                .toLowerCase())
-                                      ],
-                                      onCallFinished:
-                                          onSendCallInvitationFinished,
-                                    ),
+                                    if (soicalData == true)
+                                      sendCallButton(
+                                        isVideoCall: false,
+                                        invitees: [
+                                          ZegoUIKitUser(
+                                              id: widget.chatOtherUseruid
+                                                  .split('-')
+                                                  .last
+                                                  .toString(),
+                                              name: widget.chatUserName
+                                                  .toLowerCase())
+                                        ],
+                                        onCallFinished:
+                                            onSendCallInvitationFinished,
+                                      ),
+                                    if (soicalData == true)
+                                      sendCallButton(
+                                        isVideoCall: true,
+                                        invitees: [
+                                          ZegoUIKitUser(
+                                              id: widget.chatOtherUseruid
+                                                  .split('-')
+                                                  .last
+                                                  .toString(),
+                                              name: widget.chatUserName
+                                                  .toLowerCase())
+                                        ],
+                                        onCallFinished:
+                                            onSendCallInvitationFinished,
+                                      ),
                                     /* GestureDetector(
                                         onTapDown: (TapDownDetails details) {
                                           _showPopupMenu(
@@ -1008,6 +1198,49 @@ class _DmScreenNewState extends State<DmScreenNew> with Observer {
                                   }, // This disables tap event
                                 ),
                               ),
+                            if (_image != null)
+                              Align(
+                                alignment: Alignment.topLeft,
+                                child: Padding(
+                                  padding: const EdgeInsets.only(left: 20),
+                                  child: Stack(
+                                    children: [
+                                      ClipRRect(
+                                        borderRadius: BorderRadius.circular(15),
+                                        child: Container(
+                                          width: 200,
+                                          height: 110,
+                                          child: Image.file(
+                                            _image!,
+                                            fit: BoxFit.cover,
+                                          ),
+                                        ),
+                                      ),
+                                      Positioned(
+                                        top: 5,
+                                        right: 5,
+                                        child: GestureDetector(
+                                          onTap: () {
+                                            setState(() {
+                                              _image = null;
+                                            });
+                                          },
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                              shape: BoxShape.circle,
+                                            ),
+                                            child: Icon(
+                                              Icons.delete,
+                                              color: Colors.red,
+                                              size: 20,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
                             if (isMeesageReaction == false)
                               Row(
                                 children: [
@@ -1072,7 +1305,7 @@ class _DmScreenNewState extends State<DmScreenNew> with Observer {
                                                 GestureDetector(
                                                   onTap: () {
                                                     // pickProfileImage();
-                                                    // prepareTestPdf(0);
+                                                    prepareTestPdf(0, context);
                                                   },
                                                   child: Image.asset(
                                                     "assets/images/paperclip-2.png",
@@ -1083,7 +1316,9 @@ class _DmScreenNewState extends State<DmScreenNew> with Observer {
                                                   width: 10.50,
                                                 ),
                                                 GestureDetector(
-                                                  onTap: () {},
+                                                  onTap: () {
+                                                    camerapicker();
+                                                  },
                                                   child: Image.asset(
                                                     "assets/images/Vector (12).png",
                                                     height: 20,
@@ -1300,7 +1535,8 @@ class _DmScreenNewState extends State<DmScreenNew> with Observer {
                                                       GestureDetector(
                                                         onTap: () {
                                                           // pickProfileImage();
-                                                          // prepareTestPdf(0);
+                                                          prepareTestPdf(
+                                                              0, context);
                                                         },
                                                         child: Image.asset(
                                                           "assets/images/paperclip-2.png",
@@ -1887,6 +2123,40 @@ class _DmScreenNewState extends State<DmScreenNew> with Observer {
     );
   }
 
+  Future<void> camerapicker() async {
+    pickedImageFile = await picker.pickImage(source: ImageSource.camera);
+    if (pickedImageFile != null) {
+      _image = File(pickedImageFile!.path);
+      setState(() {});
+      final int fileSizeInBytes = await _image!.length();
+      if (fileSizeInBytes <= finalFileSize * 1024 * 1024) {
+        BlocProvider.of<DmInboxCubit>(context)
+            .UplodeImageAPI(context, File(_image!.path));
+      } else {
+        showDialog(
+          context: context,
+          builder: (ctx) => AlertDialog(
+            title: Text("Max Size ${finalFileSize}MB"),
+            content: Text(
+                "This file size ${value2} ${fileSizeInBytes} Selected Max size ${finalFileSize}MB"),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  Navigator.of(ctx).pop();
+                },
+                child: Container(
+                  // color: Colors.green,
+                  padding: const EdgeInsets.all(10),
+                  child: const Text("Okay"),
+                ),
+              ),
+            ],
+          ),
+        );
+      }
+    }
+  }
+
   void _incrementSelectedCount() {
     if (selectedCount < 10) {
       setState(() {
@@ -2116,6 +2386,20 @@ class _MessageViewWidgetState extends State<MessageViewWidget> {
   Widget build(BuildContext context) {
     return Column(
       children: [
+        if (widget.getInboxMessagesModel.object?.content?[widget.index]
+                .messageType ==
+            'IMAGE')
+          Padding(
+            padding: EdgeInsets.only(top: 10, left: 3),
+            child: CustomImageView(
+              url:
+                  "${widget.getInboxMessagesModel.object?.content?[widget.index].message}",
+              height: 20,
+              radius: BorderRadius.circular(20),
+              width: 20,
+              fit: BoxFit.fill,
+            ),
+          ),
         if (widget.getInboxMessagesModel.object?.content?[widget.index]
                     .messageType ==
                 'IMAGE' &&
@@ -2368,132 +2652,118 @@ class _MessageViewWidgetState extends State<MessageViewWidget> {
                               topRight: Radius.circular(13))),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.end,
+                    mainAxisSize: MainAxisSize.min,
                     children: [
-                      Row(
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                      Column(
                         children: [
-                          Flexible(
-                            fit: FlexFit.loose,
-                            child: Column(
-                              children: [
-                                if (extractUrls(widget
+                          if (extractUrls(widget.getInboxMessagesModel.object
+                                      ?.content?[widget.index].message ??
+                                  "")
+                              .isNotEmpty)
+                            isYouTubeUrl(extractUrls(widget
                                             .getInboxMessagesModel
                                             .object
                                             ?.content?[widget.index]
                                             .message ??
                                         "")
-                                    .isNotEmpty)
-                                  isYouTubeUrl(extractUrls(widget
+                                    .first)
+                                ? FutureBuilder(
+                                    future: fetchYoutubeThumbnail(extractUrls(
+                                            widget
+                                                    .getInboxMessagesModel
+                                                    .object
+                                                    ?.content?[widget.index]
+                                                    .message ??
+                                                "")
+                                        .first),
+                                    builder: (context, snap) {
+                                      return Container(
+                                        height: 200,
+                                        decoration: BoxDecoration(
+                                            image: DecorationImage(
+                                                image:
+                                                    CachedNetworkImageProvider(
+                                                        snap.data.toString())),
+                                            borderRadius:
+                                                BorderRadius.circular(10)),
+                                        clipBehavior: Clip.antiAlias,
+                                        child: Center(
+                                            child: IconButton(
+                                          icon: Icon(
+                                            Icons.play_circle_fill_rounded,
+                                            color: Colors.white,
+                                            size: 60,
+                                          ),
+                                          onPressed: () {
+                                            playLink(
+                                                extractUrls(widget
+                                                            .getInboxMessagesModel
+                                                            .object
+                                                            ?.content?[
+                                                                widget.index]
+                                                            .message ??
+                                                        "")
+                                                    .first,
+                                                context);
+                                          },
+                                        )),
+                                      );
+                                    })
+                                : Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 16.0, vertical: 8.0),
+                                    child: AnyLinkPreview(
+                                      link: extractUrls(widget
                                                   .getInboxMessagesModel
                                                   .object
                                                   ?.content?[widget.index]
                                                   .message ??
                                               "")
-                                          .first)
-                                      ? FutureBuilder(
-                                          future: fetchYoutubeThumbnail(
-                                              extractUrls(widget
-                                                          .getInboxMessagesModel
-                                                          .object
-                                                          ?.content?[
-                                                              widget.index]
-                                                          .message ??
-                                                      "")
-                                                  .first),
-                                          builder: (context, snap) {
-                                            return Container(
-                                              height: 200,
-                                              decoration: BoxDecoration(
-                                                  image: DecorationImage(
-                                                      image:
-                                                          CachedNetworkImageProvider(
-                                                              snap.data
-                                                                  .toString())),
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          10)),
-                                              clipBehavior: Clip.antiAlias,
-                                              child: Center(
-                                                  child: IconButton(
-                                                icon: Icon(
-                                                  Icons
-                                                      .play_circle_fill_rounded,
-                                                  color: Colors.white,
-                                                  size: 60,
-                                                ),
-                                                onPressed: () {
-                                                  playLink(
-                                                      extractUrls(widget
-                                                                  .getInboxMessagesModel
-                                                                  .object
-                                                                  ?.content?[
-                                                                      widget
-                                                                          .index]
-                                                                  .message ??
-                                                              "")
-                                                          .first,
-                                                      context);
-                                                },
-                                              )),
-                                            );
-                                          })
-                                      : Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 16.0, vertical: 8.0),
-                                          child: AnyLinkPreview(
-                                            link: extractUrls(widget
-                                                        .getInboxMessagesModel
-                                                        .object
-                                                        ?.content?[widget.index]
-                                                        .message ??
-                                                    "")
-                                                .first,
-                                            displayDirection: UIDirection
-                                                .uiDirectionHorizontal,
-                                            showMultimedia: true,
-                                            bodyMaxLines: 5,
-                                            bodyTextOverflow:
-                                                TextOverflow.ellipsis,
-                                            titleStyle: TextStyle(
-                                              color: Colors.black,
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 15,
-                                            ),
-                                            bodyStyle: TextStyle(
-                                                color: Colors.grey,
-                                                fontSize: 12),
-                                            errorBody:
-                                                'Show my custom error body',
-                                            errorTitle:
-                                                'Show my custom error title',
-                                            errorWidget: null,
-                                            errorImage: "https://flutter.dev/",
-                                            cache: Duration(days: 7),
-                                            backgroundColor: Colors.grey[300],
-                                            borderRadius: 12,
-                                            removeElevation: false,
-                                            boxShadow: [
-                                              BoxShadow(
-                                                  blurRadius: 3,
-                                                  color: Colors.grey)
-                                            ],
-                                            onTap: () {
-                                              launchUrl(Uri.parse(extractUrls(widget
-                                                          .getInboxMessagesModel
-                                                          .object
-                                                          ?.content?[
-                                                              widget.index]
-                                                          .message ??
-                                                      "")
-                                                  .first));
-                                            }, // This disables tap event
-                                          ),
-                                        ),
-                                SizedBox(
-                                  height: 8,
-                                ),
-                                LinkifyText(
+                                          .first,
+                                      displayDirection:
+                                          UIDirection.uiDirectionHorizontal,
+                                      showMultimedia: true,
+                                      bodyMaxLines: 5,
+                                      bodyTextOverflow: TextOverflow.ellipsis,
+                                      titleStyle: TextStyle(
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 15,
+                                      ),
+                                      bodyStyle: TextStyle(
+                                          color: Colors.grey, fontSize: 12),
+                                      errorBody: 'Show my custom error body',
+                                      errorTitle: 'Show my custom error title',
+                                      errorWidget: null,
+                                      errorImage: "https://flutter.dev/",
+                                      cache: Duration(days: 7),
+                                      backgroundColor: Colors.grey[300],
+                                      borderRadius: 12,
+                                      removeElevation: false,
+                                      boxShadow: [
+                                        BoxShadow(
+                                            blurRadius: 3, color: Colors.grey)
+                                      ],
+                                      onTap: () {
+                                        launchUrl(Uri.parse(extractUrls(widget
+                                                    .getInboxMessagesModel
+                                                    .object
+                                                    ?.content?[widget.index]
+                                                    .message ??
+                                                "")
+                                            .first));
+                                      }, // This disables tap event
+                                    ),
+                                  ),
+                          /*  SizedBox(
+                                height: 8,
+                              ), */
+                          Row(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              Flexible(
+                                child: LinkifyText(
                                   widget.getInboxMessagesModel.object
                                           ?.content?[widget.index].message ??
                                       '',
@@ -2547,29 +2817,40 @@ class _MessageViewWidgetState extends State<MessageViewWidget> {
                                     }
                                   },
                                 ),
-                              ],
-                            ),
+                              ),
+                              if (widget.getInboxMessagesModel.object
+                                      ?.content?[widget.index].isStarred ==
+                                  true)
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 3),
+                                  child: Image.asset(
+                                    ImageConstant.newStar,
+                                    height: 15,
+                                  ),
+                                ),
+                              Padding(
+                                padding: EdgeInsets.only(
+                                    left: widget
+                                                .getInboxMessagesModel
+                                                .object
+                                                ?.content?[widget.index]
+                                                .isStarred ==
+                                            true
+                                        ? 3
+                                        : 5),
+                                child: Text(
+                                  customFormat(widget.parsedDateTime),
+                                  textScaleFactor: 1.0,
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.normal,
+                                      color: Colors.grey,
+                                      fontFamily: "outfit",
+                                      fontSize: 10),
+                                ),
+                              ),
+                            ],
                           ),
-                          if (widget.getInboxMessagesModel.object
-                                  ?.content?[widget.index].isStarred ==
-                              true)
-                            Image.asset(
-                              ImageConstant.newStar,
-                              height: 15,
-                            )
                         ],
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 5, left: 3),
-                        child: Text(
-                          customFormat(widget.parsedDateTime),
-                          textScaleFactor: 1.0,
-                          style: TextStyle(
-                              fontWeight: FontWeight.normal,
-                              color: Colors.grey,
-                              fontFamily: "outfit",
-                              fontSize: 10),
-                        ),
                       ),
                     ],
                   )),

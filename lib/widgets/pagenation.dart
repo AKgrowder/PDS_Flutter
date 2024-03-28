@@ -363,7 +363,6 @@ class _chatPaginationWidgetState extends State<chatPaginationWidget> {
       for (int i = 1; i <= (widget.offSet ?? 0); i++) {
         _offsetList?.add(i);
       }
-      // print("dsfhfgh-$_offsetList");
     }
     return Column(children: [
       widget.items ?? SizedBox(),
