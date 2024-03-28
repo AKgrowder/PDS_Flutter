@@ -54,8 +54,8 @@ class _MpBottomBarScreenState extends State<MpBottomBarScreen> {
     MPProductdetailsScreen(),
     PaymentAndChargeScreen(),
     CaPershonalDetailScreen(),
-    ChooseCategoryScreen(),
-    MPRagisterNowScreen(),
+    // ChooseCategoryScreen(),
+    ChooseCatgory(),
   ];
   late StreamSubscription _connectionChangeStream;
   bool isOffline = false;

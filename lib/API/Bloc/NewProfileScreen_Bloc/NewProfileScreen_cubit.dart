@@ -485,7 +485,7 @@ class NewProfileSCubit extends Cubit<NewProfileSState> {
     }
   }
 
-  Future<void>  getallcompenypagee(BuildContext context) async {
+  Future<void> getallcompenypagee(BuildContext context) async {
     dynamic getallcompenypagee;
     try {
       emit(NewProfileSLoadingState());
@@ -496,6 +496,21 @@ class NewProfileSCubit extends Cubit<NewProfileSState> {
         emit(Getallcompenypagelodedstate(getallcompenypagee));
       } else {
         emit(NewProfileSErrorState(getallcompenypagee.message));
+      }
+    } catch (e) {
+      emit(NewProfileSErrorState(e.toString()));
+    }
+  }
+
+  Future<void> get_assigned_users_of_company_pageApi(
+      String companyPageUid, BuildContext context) async {
+    dynamic getAssingDataGet;
+    try {
+      emit(NewProfileSLoadingState());
+      getAssingDataGet = await Repository()
+          .get_assigned_users_of_company_page(context, companyPageUid);
+      if (getAssingDataGet.success == true) {
+        emit(GetAssignedUsersOfCompanyPageLoadedState(getAssingDataGet));
       }
     } catch (e) {
       emit(NewProfileSErrorState(e.toString()));
