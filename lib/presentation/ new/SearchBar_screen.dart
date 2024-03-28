@@ -82,13 +82,13 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
       // await BlocProvider.of<HashTagCubit>(context)
       //     .getAllNoticationsCountAPI(context);
       await BlocProvider.of<HashTagCubit>(context)
-          .HashTagForYouAPI(context, 'FOR YOU', '1');
+          .HashTagForYouAPI(context, 'FOR YOU', '1',false);
     } else {
       await BlocProvider.of<HashTagCubit>(context).seetinonExpried(context);
       await BlocProvider.of<HashTagCubit>(context)
           .getAllNoticationsCountAPI(context);
       await BlocProvider.of<HashTagCubit>(context)
-          .HashTagForYouAPI(context, 'FOR YOU', '1');
+          .HashTagForYouAPI(context, 'FOR YOU', '1',true);
       await BlocProvider.of<HashTagCubit>(context).serchDataGet(
         context,
       );
@@ -501,11 +501,11 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                                         //TRENDING
                                         BlocProvider.of<HashTagCubit>(context)
                                             .HashTagForYouAPI(
-                                                context, 'TRENDING', '1');
+                                                context, 'TRENDING', '1',UserLogin_ID != null);
                                       } else {
                                         BlocProvider.of<HashTagCubit>(context)
                                             .HashTagForYouAPI(
-                                                context, 'FOR YOU', '1');
+                                                context, 'FOR YOU', '1',UserLogin_ID != null);
                                       }
                                       if (mounted) {
                                         super.setState(() {
@@ -902,7 +902,7 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
               offSet: hashtagModel?.object?.pageable?.pageNumber,
               onPagination: (p0) async {
                 BlocProvider.of<HashTagCubit>(context)
-                    .HashTagForYouAPIDataGet(context, 'FOR YOU', '${(p0 + 1)}');
+                    .HashTagForYouAPIDataGet(context, 'FOR YOU', '${(p0 + 1)}',UserLogin_ID != null);
               },
               items: ListView.builder(
                 padding: EdgeInsets.zero,
@@ -995,7 +995,7 @@ class _SearchBarScreenState extends State<SearchBarScreen> {
                         onPagination: (p0) async {
                           BlocProvider.of<HashTagCubit>(context)
                               .HashTagForYouAPIDataGet(
-                                  context, 'TRENDING', '${(p0 + 1)}');
+                                  context, 'TRENDING', '${(p0 + 1)}',UserLogin_ID != null);
                         },
                         items: ListView.builder(
                           shrinkWrap: true,

@@ -95,6 +95,9 @@ GetGuestAllPostModel? AllGuestPostRoomData;
 GetAllStoryModel? getAllStoryModel;
 List<String> userName = [];
 bool apiCalingdone = false;
+FetchAllExpertsModel? AllExperData;
+GetallBlogModel? getallBlogModel1;
+bool isDataget = false;
 
 class HomeScreenNew extends StatefulWidget {
   ScrollController scrollController;
@@ -150,7 +153,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
   bool storyAdded = false;
   BuildContext? storycontext;
   List<Widget> storyPagedata = [];
-  FetchAllExpertsModel? AllExperData;
+
   SystemConfigModel? systemConfigModel;
   int? secound;
   int sliderCurrentPosition = 0;
@@ -164,8 +167,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
   String? UserProfileImage;
   String? UserStatus;
   String? User_IDStroy;
-  GetallBlogModel? getallBlogModel1;
-  bool isDataget = false;
+
   DateTime? parsedDateTimeBlogs;
   String? AutoSetRoomID;
   String? appApkMinVersion;
@@ -1277,6 +1279,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
   }
 
   Get_UserToken() async {
+    shareImageDownload();
     _postCubit = await BlocProvider.of<GetGuestAllPostCubit>(context);
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     var Token = prefs.getString(PreferencesKey.loginJwt);
@@ -1291,7 +1294,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
     print("User Token :--- " + "${Token}");
     print("User_id-${User_ID}");
     User_ID == null ? api() : NewApi();
-    shareImageDownload();
+
     AutoOpenPostBool = prefs.getBool(PreferencesKey.AutoOpenPostBool) ?? false;
     if (AutoOpenPostBool == true) {
       AutoOpenPostID = prefs.getString(PreferencesKey.AutoOpenPostID);
@@ -1348,6 +1351,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
               // Get_UserToken();
 
               setColorr();
+              setState(() {});
             })
           // print("opne Save Image screen RE_POST & TAG_POST");
 
@@ -1400,7 +1404,10 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                             ? true
                                             : false,
                                   )),
-                        ).then((value) => setColorr())
+                        ).then((value) {
+                          setColorr();
+                          setState(() {});
+                        })
                       // print("opne Save Image screen LIKE_POST & COMMENT_POST & TAG_COMMENT_POST")
                       : NotificationSubject == "FOLLOW_PUBLIC_ACCOUNT" ||
                               NotificationSubject ==
@@ -1443,11 +1450,11 @@ class _HomeScreenNewState extends State<HomeScreenNew>
   }
 
   NewApi() async {
-   /*  if (User_ID != null && User_Name != null) {
+    /*  if (User_ID != null && User_Name != null) {
       String useruidsort = User_ID!.split('-').last.toString();
       onUserLogin('${useruidsort}', '${User_Name}');
     } */
-      timer = Timer.periodic(Duration(seconds: 15), (timer) async {
+    timer = Timer.periodic(Duration(seconds: 15), (timer) async {
       setState(() {
         secound = timer.tick;
       });
@@ -1608,7 +1615,6 @@ class _HomeScreenNewState extends State<HomeScreenNew>
           return true;
         },
         child: Scaffold(
-             
             resizeToAvoidBottomInset: false,
             floatingActionButton: _show
                 ? FloatingActionButton(
@@ -2201,9 +2207,8 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                               index: 0,
                             )),
                   ).then((value) {
-                    // Get_UserToken();
-
                     setColorr();
+                    setState(() {});
                   });
                 } else {
                   await BlocProvider.of<GetGuestAllPostCubit>(context)
@@ -3426,9 +3431,9 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                             MaterialPageRoute(
                                                                               builder: (context) => OpenSavePostImage(PostID: AllGuestPostRoomData?.object?.content?[index].postUid),
                                                                             )).then((value) {
-                                                                          // Get_UserToken();
-
                                                                           setColorr();
+                                                                          setState(
+                                                                              () {});
                                                                         });
                                                                       }
                                                                     },
@@ -3608,9 +3613,8 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                                       PostID: AllGuestPostRoomData?.object?.content?[index].postUid,
                                                                                                     )),
                                                                                           ).then((value) {
-                                                                                            // Get_UserToken();
-
                                                                                             setColorr();
+                                                                                            setState(() {});
                                                                                           });
                                                                                         }
                                                                                       },
@@ -3623,6 +3627,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                                 child: Container(
                                                                                                   // color: Colors.amber,
                                                                                                   child: Column(
+                                                                                                    crossAxisAlignment: CrossAxisAlignment.start,
                                                                                                     children: [
                                                                                                       LinkifyText(
                                                                                                         // AllGuestPostRoomData?.object?.content?[index].isTrsnalteoption == false || AllGuestPostRoomData?.object?.content?[index].isTrsnalteoption == null ? "${AllGuestPostRoomData?.object?.content?[index].description}" : "${AllGuestPostRoomData?.object?.content?[index].translatedDescription}",
@@ -3631,8 +3636,8 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                                                 ? "${AllGuestPostRoomData?.object?.content?[index].description}${(AllGuestPostRoomData?.object?.content?[index].description?.length ?? 0) > maxLength ? ' ....ReadLess' : ''}"
                                                                                                                 : "${AllGuestPostRoomData?.object?.content?[index].translatedDescription}"
                                                                                                             : (AllGuestPostRoomData?.object?.content?[index].isTrsnalteoption == false || AllGuestPostRoomData?.object?.content?[index].isTrsnalteoption == null)
-                                                                                                                ? "${AllGuestPostRoomData?.object?.content?[index].description?.substring(0, maxLength)} ....ReadMore"
-                                                                                                                : "${AllGuestPostRoomData?.object?.content?[index].translatedDescription?.substring(0, maxLength)} ....ReadMore", // asdsd
+                                                                                                                ? "${AllGuestPostRoomData?.object?.content?[index].description?.substring(0, (AllGuestPostRoomData?.object?.content?[index].description?.length ?? 0) > maxLength ? maxLength : (AllGuestPostRoomData?.object?.content?[index].description?.length ?? 0))}${(AllGuestPostRoomData?.object?.content?[index].description?.length ?? 0) > maxLength ? ' ....ReadMore' : ''}"
+                                                                                                                : "${AllGuestPostRoomData?.object?.content?[index].translatedDescription?.substring(0, (AllGuestPostRoomData?.object?.content?[index].translatedDescription?.length ?? 0) > maxLength ? maxLength : (AllGuestPostRoomData?.object?.content?[index].translatedDescription?.length ?? 0))}${(AllGuestPostRoomData?.object?.content?[index].translatedDescription?.length ?? 0) > maxLength ? ' ....ReadMore' : ''}",
                                                                                                         linkStyle: TextStyle(
                                                                                                           color: Colors.blue,
                                                                                                           fontFamily: 'outfit',
@@ -3951,9 +3956,8 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                                                 index: index,
                                                                                                               )),
                                                                                                     ).then((value) {
-                                                                                                      // Get_UserToken();
-
                                                                                                       setColorr();
+                                                                                                      setState(() {});
                                                                                                     });
                                                                                                     // }
                                                                                                   },
@@ -4070,9 +4074,8 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                                                                 index: index1,
                                                                                                                               )),
                                                                                                                     ).then((value) {
-                                                                                                                      // Get_UserToken();
-
                                                                                                                       setColorr();
+                                                                                                                      setState(() {});
                                                                                                                     });
                                                                                                                     // }
                                                                                                                   },
@@ -4180,9 +4183,8 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                             index: index,
                                                                                           )),
                                                                                 ).then((value) {
-                                                                                  // Get_UserToken();
-
                                                                                   setColorr();
+                                                                                  setState(() {});
                                                                                 });
                                                                                 // }
                                                                               },
@@ -4293,7 +4295,9 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                                           ? (AllGuestPostRoomData?.object?.content?[index].repostOn?.description?.length ?? 0) > maxLength
                                                                                                               ? "${AllGuestPostRoomData?.object?.content?[index].repostOn?.description?.substring(0, maxLength)} ....ReadMore"
                                                                                                               : '${AllGuestPostRoomData?.object?.content?[index].repostOn?.description}'
-                                                                                                          : "${AllGuestPostRoomData?.object?.content?[index].repostOn?.translatedDescription == null ? '' : AllGuestPostRoomData?.object?.content?[index].repostOn?.translatedDescription?.substring(0, maxLength)} ....ReadMore",
+                                                                                                          : (AllGuestPostRoomData?.object?.content?[index].repostOn?.translatedDescription?.length ?? 0) > maxLength
+                                                                                                              ? "${AllGuestPostRoomData?.object?.content?[index].repostOn?.translatedDescription == null ? '' : AllGuestPostRoomData?.object?.content?[index].repostOn?.translatedDescription?.substring(0, maxLength)} ....ReadMore"
+                                                                                                              : "${AllGuestPostRoomData?.object?.content?[index].repostOn?.translatedDescription == null ? '' : AllGuestPostRoomData?.object?.content?[index].repostOn?.translatedDescription}",
                                                                                                   linkStyle: TextStyle(
                                                                                                     color: Colors.blue,
                                                                                                     fontFamily: 'outfit',
@@ -4592,9 +4596,8 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                                                     index: index,
                                                                                                                   )),
                                                                                                         ).then((value) {
-                                                                                                          // Get_UserToken();
-
                                                                                                           setColorr();
+                                                                                                          setState(() {});
                                                                                                         });
                                                                                                         // }
                                                                                                       },
@@ -4698,9 +4701,8 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                                                                   index: index1,
                                                                                                                                 )),
                                                                                                                       ).then((value) {
-                                                                                                                        // Get_UserToken();
-
                                                                                                                         setColorr();
+                                                                                                                        setState(() {});
                                                                                                                       });
                                                                                                                       // }
                                                                                                                     },
@@ -4876,15 +4878,6 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                         ),
                                                                         GestureDetector(
                                                                           onTap:
-                                                                              
-                                                                              
-                                                                              
-                                                                              
-                                                                              
-                                                                              
-                                                                              
-                                                                              
-                                                                              
                                                                               () async {
                                                                             if (uuid ==
                                                                                 null) {
@@ -5016,9 +5009,23 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                               Navigator.of(context).push(MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
                                                                             } else {
                                                                               if (AllGuestPostRoomData?.object?.content?[index].postDataType != "VIDEO") {
+                                                                                String thumb = "";
+                                                                                if (AllGuestPostRoomData!.object!.content![index].thumbnailImageUrl != null) {
+                                                                                  thumb = AllGuestPostRoomData!.object!.content![index].thumbnailImageUrl!;
+                                                                                } else {
+                                                                                  if (AllGuestPostRoomData!.object!.content![index].postData != null && AllGuestPostRoomData!.object!.content![index].postData!.isNotEmpty) {
+                                                                                    thumb = AllGuestPostRoomData!.object!.content![index].postData!.first;
+                                                                                  } else {
+                                                                                    if (AllGuestPostRoomData!.object!.content![index].repostOn != null && AllGuestPostRoomData!.object!.content![index].repostOn!.thumbnailImageUrl != null) {
+                                                                                      thumb = AllGuestPostRoomData!.object!.content![index].repostOn!.thumbnailImageUrl!;
+                                                                                    } else {
+                                                                                      thumb = AllGuestPostRoomData!.object!.content![index].repostOn != null && AllGuestPostRoomData!.object!.content![index].repostOn!.postData != null && AllGuestPostRoomData!.object!.content![index].repostOn!.postData!.isNotEmpty ? AllGuestPostRoomData!.object!.content![index].repostOn!.postData!.first : "";
+                                                                                    }
+                                                                                  }
+                                                                                }
                                                                                 _onShareXFileFromAssets(
                                                                                   context,
-                                                                                  AllGuestPostRoomData?.object?.content?[index].thumbnailImageUrl ?? (AllGuestPostRoomData!.object!.content![index].postData!.isNotEmpty ? AllGuestPostRoomData!.object!.content![index].postData!.first : AllGuestPostRoomData?.object?.content?[index].repostOn?.thumbnailImageUrl ?? (AllGuestPostRoomData!.object!.content![index].repostOn!.postData!.isNotEmpty ? AllGuestPostRoomData!.object!.content![index].repostOn!.postData!.first : "")),
+                                                                                  thumb,
                                                                                   AllGuestPostRoomData?.object?.content?[index].postUserName ?? "",
                                                                                   AllGuestPostRoomData?.object?.content?[index].description ?? "",
                                                                                   androidLink: '${AllGuestPostRoomData?.object?.content?[index].postLink}',
@@ -5171,9 +5178,9 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                             (context) =>
                                                                                 OpenSavePostImage(PostID: AllGuestPostRoomData?.object?.content?[index].postUid),
                                                                       )).then((value) {
-                                                                    // Get_UserToken();
-
                                                                     setColorr();
+                                                                    setState(
+                                                                        () {});
                                                                   });
                                                                 }
                                                               },
@@ -5378,9 +5385,8 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                             PostID: AllGuestPostRoomData?.object?.content?[index].postUid,
                                                                                           )),
                                                                                 ).then((value) {
-                                                                                  // Get_UserToken();
-
                                                                                   setColorr();
+                                                                                  setState(() {});
                                                                                 });
                                                                               }
                                                                             },
@@ -5758,9 +5764,8 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                                     index: index,
                                                                                                   )),
                                                                                         ).then((value) {
-                                                                                          // Get_UserToken();
-
                                                                                           setColorr();
+                                                                                          setState(() {});
                                                                                         });
                                                                                         // }
                                                                                       },
@@ -5890,9 +5895,8 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                                                       index: index1,
                                                                                                                     )),
                                                                                                           ).then((value) {
-                                                                                                            // Get_UserToken();
-
                                                                                                             setColorr();
+                                                                                                            setState(() {});
                                                                                                           });
                                                                                                           // }
                                                                                                         },
@@ -6269,10 +6273,28 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                             "check Data Get-${AllGuestPostRoomData?.object?.content?[index].postLink}");
                                                                         if (AllGuestPostRoomData?.object?.content?[index].postDataType !=
                                                                             "VIDEO") {
+                                                                          String
+                                                                              thumb =
+                                                                              "";
+                                                                          if (AllGuestPostRoomData!.object!.content![index].thumbnailImageUrl !=
+                                                                              null) {
+                                                                            thumb =
+                                                                                AllGuestPostRoomData!.object!.content![index].thumbnailImageUrl!;
+                                                                          } else {
+                                                                            if (AllGuestPostRoomData!.object!.content![index].postData != null &&
+                                                                                AllGuestPostRoomData!.object!.content![index].postData!.isNotEmpty) {
+                                                                              thumb = AllGuestPostRoomData!.object!.content![index].postData!.first;
+                                                                            } else {
+                                                                              if (AllGuestPostRoomData!.object!.content![index].repostOn != null && AllGuestPostRoomData!.object!.content![index].repostOn!.thumbnailImageUrl != null) {
+                                                                                thumb = AllGuestPostRoomData!.object!.content![index].repostOn!.thumbnailImageUrl!;
+                                                                              } else {
+                                                                                thumb = AllGuestPostRoomData!.object!.content![index].repostOn != null && AllGuestPostRoomData!.object!.content![index].repostOn!.postData != null && AllGuestPostRoomData!.object!.content![index].repostOn!.postData!.isNotEmpty ? AllGuestPostRoomData!.object!.content![index].repostOn!.postData!.first : "";
+                                                                              }
+                                                                            }
+                                                                          }
                                                                           _onShareXFileFromAssets(
                                                                             context,
-                                                                            AllGuestPostRoomData?.object?.content?[index].thumbnailImageUrl ??
-                                                                                (AllGuestPostRoomData!.object!.content![index].postData!.isNotEmpty ? AllGuestPostRoomData!.object!.content![index].postData!.first : AllGuestPostRoomData?.object?.content?[index].repostOn?.thumbnailImageUrl ?? (AllGuestPostRoomData!.object!.content![index].repostOn!.postData!.isNotEmpty ? AllGuestPostRoomData!.object!.content![index].repostOn!.postData!.first : "")),
+                                                                            thumb,
                                                                             AllGuestPostRoomData?.object?.content?[index].postUserName ??
                                                                                 "",
                                                                             AllGuestPostRoomData?.object?.content?[index].description ??
@@ -7737,36 +7759,28 @@ class _HomeScreenNewState extends State<HomeScreenNew>
             useSafeArea: true,
             isDismissible: true,
             showDragHandle: true, */
-            enableDrag: true,
+            enableDrag: false,
             constraints: BoxConstraints(maxHeight: _heigth / 2),
             context: context,
             builder: (BuildContext bc) {
-              return GestureDetector(
-                onVerticalDragDown: (details) {
-                  setState(() {
-                    _show = true;
-                  });
-                  Navigator.pop(context);
-                },
-                child: CommentBottomSheet(
-                    isFoollinng: AllGuestPostRoomData
-                        ?.object?.content?[index].isFollowing,
-                    useruid:
-                        AllGuestPostRoomData?.object?.content?[index].userUid ??
-                            "",
-                    userProfile: AllGuestPostRoomData
-                            ?.object?.content?[index].userProfilePic ??
-                        "",
-                    UserName: AllGuestPostRoomData
-                            ?.object?.content?[index].postUserName ??
-                        "",
-                    desc: AllGuestPostRoomData
-                            ?.object?.content?[index].description ??
-                        "",
-                    postUuID:
-                        AllGuestPostRoomData?.object?.content?[index].postUid ??
-                            ""),
-              );
+              return CommentBottomSheet(
+                  isFoollinng:
+                      AllGuestPostRoomData?.object?.content?[index].isFollowing,
+                  useruid:
+                      AllGuestPostRoomData?.object?.content?[index].userUid ??
+                          "",
+                  userProfile: AllGuestPostRoomData
+                          ?.object?.content?[index].userProfilePic ??
+                      "",
+                  UserName: AllGuestPostRoomData
+                          ?.object?.content?[index].postUserName ??
+                      "",
+                  desc: AllGuestPostRoomData
+                          ?.object?.content?[index].description ??
+                      "",
+                  postUuID:
+                      AllGuestPostRoomData?.object?.content?[index].postUid ??
+                          "");
             })
         /* .then((value) => BlocProvider.of<GetGuestAllPostCubit>(context)
             .GetallBlog(context, User_ID ?? "")) */
@@ -7779,22 +7793,14 @@ class _HomeScreenNewState extends State<HomeScreenNew>
             useSafeArea: true,
             isDismissible: true,
             showDragHandle: true, */
-            enableDrag: true,
+            enableDrag: false,
             constraints: BoxConstraints(maxHeight: _heigth / 2),
             context: context,
             builder: (BuildContext bc) {
-              return GestureDetector(
-                onVerticalDragDown: (details) {
-                  setState(() {
-                    _show = true;
-                  });
-                  Navigator.pop(context);
-                },
-                child: BlogCommentBottomSheet(
-                  blogUid: getallBlogModel1?.object?[index].uid,
-                  isFoollinng:
-                      AllGuestPostRoomData?.object?.content?[index].isFollowing,
-                ),
+              return BlogCommentBottomSheet(
+                blogUid: getallBlogModel1?.object?[index].uid,
+                isFoollinng:
+                    AllGuestPostRoomData?.object?.content?[index].isFollowing,
               );
             })
         /* .then((value) => BlocProvider.of<GetGuestAllPostCubit>(context)
@@ -7897,107 +7903,106 @@ class _HomeScreenNewState extends State<HomeScreenNew>
 
   void rePostBottomSheet(context, index) {
     showBottomSheet(
-        enableDrag: true,
+        enableDrag: false,
         context: context,
         builder: (BuildContext bc) {
-          return GestureDetector(
-            onVerticalDragDown: (details) {
-              setState(() {
-                _show = true;
-              });
-              Navigator.pop(context);
-            },
-            child: Container(
-              height: 200,
-              child: new Wrap(
-                children: [
-                  Container(
-                    height: 20,
-                    width: 50,
-                    color: Colors.transparent,
-                  ),
-                  Center(
-                      child: Container(
-                    height: 5,
-                    width: 150,
-                    decoration: BoxDecoration(
-                        color: Colors.grey,
-                        borderRadius: BorderRadius.circular(25)),
-                  )),
-                  SizedBox(
-                    height: 35,
-                  ),
-                  Center(
-                    child: new ListTile(
-                        leading: new Image.asset(
-                          ImageConstant.vector2,
-                          height: 20,
-                        ),
-                        title: new Text('RePost'),
-                        subtitle: Text(
-                          "Share this post with your followers",
-                          style: TextStyle(fontSize: 10, color: Colors.grey),
-                        ),
-                        onTap: () async {
-                          Map<String, dynamic> param = {"postType": "PUBLIC"};
-                          BlocProvider.of<GetGuestAllPostCubit>(context)
-                              .RePostAPI(
-                                  context,
-                                  param,
-                                  AllGuestPostRoomData
-                                      ?.object?.content?[index].postUid,
-                                  "Repost");
-                          Navigator.pop(context);
-                        }),
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  Center(
-                    child: new ListTile(
-                      leading: new Icon(
-                        Icons.edit_outlined,
-                        color: Colors.black,
+          return Container(
+            height: 200,
+            child: new Wrap(
+              children: [
+                Container(
+                  height: 20,
+                  width: 50,
+                  color: Colors.transparent,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    IconButton(
+                      icon: Icon(Icons.close, color: Colors.black),
+                      onPressed: () {
+                        Map<String, dynamic> data = {'bool': true};
+                        Observable.instance.notifyObservers(
+                            ['_HomeScreenNewState'],
+                            map: data);
+                        Navigator.pop(context);
+                      },
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: 35,
+                ),
+                Center(
+                  child: new ListTile(
+                      leading: new Image.asset(
+                        ImageConstant.vector2,
+                        height: 20,
                       ),
-                      title: new Text('Quote'),
+                      title: new Text('RePost'),
                       subtitle: Text(
-                        "Add a comment, photo or GIF before you share this post",
+                        "Share this post with your followers",
                         style: TextStyle(fontSize: 10, color: Colors.grey),
                       ),
                       onTap: () async {
-                        Navigator.push(context, MaterialPageRoute(
-                          builder: (context) {
-                            return RePostScreen(
-                              userProfile: AllGuestPostRoomData
-                                  ?.object?.content?[index].userProfilePic,
-                              username: AllGuestPostRoomData
-                                  ?.object?.content?[index].postUserName,
-                              date: AllGuestPostRoomData
-                                  ?.object?.content?[index].createdAt,
-                              desc: AllGuestPostRoomData
-                                  ?.object?.content?[index].description,
-                              postData: AllGuestPostRoomData
-                                  ?.object?.content?[index].postData,
-                              postDataType: AllGuestPostRoomData
-                                  ?.object?.content?[index].postDataType,
-                              index: index,
-                              AllGuestPostRoomData: AllGuestPostRoomData,
-                              postUid: AllGuestPostRoomData
-                                  ?.object?.content?[index].postUid,
-                              thumbNailURL: AllGuestPostRoomData
-                                  ?.object?.content?[index].thumbnailImageUrl,
-                            );
-                          },
-                        ));
-                        // Navigator.pop(context);
-                      },
+                        Map<String, dynamic> param = {"postType": "PUBLIC"};
+                        BlocProvider.of<GetGuestAllPostCubit>(context)
+                            .RePostAPI(
+                                context,
+                                param,
+                                AllGuestPostRoomData
+                                    ?.object?.content?[index].postUid,
+                                "Repost");
+                        Navigator.pop(context);
+                      }),
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                Center(
+                  child: new ListTile(
+                    leading: new Icon(
+                      Icons.edit_outlined,
+                      color: Colors.black,
                     ),
+                    title: new Text('Quote'),
+                    subtitle: Text(
+                      "Add a comment, photo or GIF before you share this post",
+                      style: TextStyle(fontSize: 10, color: Colors.grey),
+                    ),
+                    onTap: () async {
+                      Navigator.push(context, MaterialPageRoute(
+                        builder: (context) {
+                          return RePostScreen(
+                            userProfile: AllGuestPostRoomData
+                                ?.object?.content?[index].userProfilePic,
+                            username: AllGuestPostRoomData
+                                ?.object?.content?[index].postUserName,
+                            date: AllGuestPostRoomData
+                                ?.object?.content?[index].createdAt,
+                            desc: AllGuestPostRoomData
+                                ?.object?.content?[index].description,
+                            postData: AllGuestPostRoomData
+                                ?.object?.content?[index].postData,
+                            postDataType: AllGuestPostRoomData
+                                ?.object?.content?[index].postDataType,
+                            index: index,
+                            AllGuestPostRoomData: AllGuestPostRoomData,
+                            postUid: AllGuestPostRoomData
+                                ?.object?.content?[index].postUid,
+                            thumbNailURL: AllGuestPostRoomData
+                                ?.object?.content?[index].thumbnailImageUrl,
+                          );
+                        },
+                      ));
+                      // Navigator.pop(context);
+                    },
                   ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                ],
-              ),
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+              ],
             ),
           );
         });
@@ -8036,6 +8041,15 @@ class _HomeScreenNewState extends State<HomeScreenNew>
     if (postLink.isNotEmpty) {
       _permissionReady = await _checkPermission();
       await _prepareSaveDir();
+      if (Platform.isAndroid) {
+        DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+        AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+        version = int.parse(androidInfo.version.release);
+        if ((version ?? 0) >= 13) {
+          PermissionStatus status = await Permission.photos.request();
+          _permissionReady = status == PermissionStatus.granted;
+        }
+      }
 
       if (_permissionReady) {
         print("Downloading");
@@ -8060,44 +8074,55 @@ class _HomeScreenNewState extends State<HomeScreenNew>
           ],
           subject: "Share",
           text:
-              "$userName posted ${description.isNotEmpty ? "\n\n${description.split(" ").first}.... \n\n" : ""}on InPackaging \n\n https://www.inpackaging.com \n\n ${androidLink}",
+              "$userName posted ${description.isNotEmpty ? "\n\n${description.length > 50 ? description.substring(0, 50) : description}.... \n\n" : ""}on InPackaging \n\n https://www.inpackaging.com \n\n ${androidLink}",
           // sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size,
         );
       } else {
         Share.shareXFiles(
           [
-            XFile(directory.path +
-                Platform.pathSeparator +
-                'Growder_Image/IP__image.jpg')
+            XFile(directory.path + Platform.pathSeparator + ' IP/IP__image.jpg')
           ],
           subject: "Share",
           text:
-              "$userName posted ${description.isNotEmpty ? "\n\n${description.split(" ").first}.... \n\n" : ""}on InPackaging \n\n https://www.inpackaging.com \n\n ${androidLink}",
+              "$userName posted ${description.isNotEmpty ? "\n\n${description.length > 50 ? description.substring(0, 50) : description}.... \n\n" : ""}on InPackaging \n\n https://www.inpackaging.com \n\n ${androidLink}",
           // sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size,
         );
       }
     } else {
       print('No Invoice Available');
+      if (Platform.isAndroid) {
+        DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+        AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+        version = int.parse(androidInfo.version.release);
+        if ((version ?? 0) >= 13) {
+          PermissionStatus status = await Permission.photos.request();
+          _permissionReady = status == PermissionStatus.granted;
+        }
+      }
 
       if (Platform.isAndroid) {
-        Share.shareXFiles(
-          [XFile("/sdcard/download/IP__image.jpg")],
-          subject: "Share",
-          text:
-              "$userName posted ${description.isNotEmpty ? "\n\n${description.split(" ").first}.... \n\n" : ""}on InPackaging \n\n https://www.inpackaging.com \n\n ${androidLink}",
-          // sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size,
-        );
+        if ((version ?? 0) >= 13) {
+          PermissionStatus status = await Permission.photos.request();
+          _permissionReady = status == PermissionStatus.granted;
+        }
+        if (_permissionReady) {
+          Share.shareXFiles(
+            [XFile("/data/data/com.ip.app/files/IP__image.jpg")],
+            subject: "Share",
+            text:
+                "$userName posted ${description.isNotEmpty ? "\n\n${description.length > 50 ? description.substring(0, 50) : description}.... \n\n" : ""}on InPackaging \n\n https://www.inpackaging.com \n\n ${androidLink}",
+            // sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size,
+          );
+        }
       } else {
         directory = await getApplicationDocumentsDirectory();
         Share.shareXFiles(
           [
-            XFile(directory.path +
-                Platform.pathSeparator +
-                'Growder_Image/IP__image.jpg')
+            XFile(directory.path + Platform.pathSeparator + ' IP/IP__image.jpg')
           ],
           subject: "Share",
           text:
-              "$userName posted ${description.isNotEmpty ? "\n\n${description.split(" ").first}.... \n\n" : ""}on InPackaging \n https://www.inpackaging.com \n ${androidLink}",
+              "$userName posted ${description.isNotEmpty ? "\n\n${description.length > 50 ? description.substring(0, 50) : description}.... \n\n" : ""}on InPackaging \n https://www.inpackaging.com \n ${androidLink}",
           // sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size,
         );
       }
@@ -8182,7 +8207,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
 
   Future<String?> _findLocalPath() async {
     if (Platform.isAndroid) {
-      return "/sdcard/download/";
+      return "/data/data/com.ip.app/files/";
     } else {
       var directory = await getApplicationDocumentsDirectory();
       return directory.path + Platform.pathSeparator + 'IP_Image';

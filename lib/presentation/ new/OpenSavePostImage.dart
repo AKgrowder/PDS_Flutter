@@ -40,6 +40,10 @@ import '../../API/Model/UserTagModel/UserTag_model.dart';
 import '../../core/utils/sharedPreferences.dart';
 import '../Create_Post_Screen/Ceratepost_Screen.dart';
 import 'home_screen_new.dart';
+import 'package:device_info_plus/device_info_plus.dart';
+import 'package:dio/dio.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:video_thumbnail/video_thumbnail.dart';
 
 // ignore: must_be_immutable
 class OpenSavePostImage extends StatefulWidget {
@@ -80,6 +84,12 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> with Observer {
   bool? readmoree;
   int maxLength = 60;
   GlobalKey buttonKey = GlobalKey();
+  bool _permissionReady = false;
+
+  String _localPath = "";
+
+  int? version;
+   int? indexOfSave;
 
   @override
   void initState() {
@@ -113,6 +123,7 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> with Observer {
         ));
     return Scaffold(
       backgroundColor: Colors.black,
+      resizeToAvoidBottomInset: false,
       body: BlocConsumer<OpenSaveCubit, OpenSaveState>(
           listener: (context, state) async {
         if (state is OpenSaveErrorState) {
@@ -191,12 +202,6 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> with Observer {
           }
         }
 
-        if (state is PostLikeLoadedState) {
-          BlocProvider.of<OpenSaveCubit>(context).openSaveImagePostAPI(
-            context,
-            "${widget.PostID}",
-          );
-        }
         if (state is RePostLoadedState) {
           SnackBar snackBar = SnackBar(
             content: Text(state.RePost.object.toString()),
@@ -221,9 +226,17 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> with Observer {
             );
             ScaffoldMessenger.of(context).showSnackBar(snackBar);
           }
+          BlocProvider.of<OpenSaveCubit>(context).openSaveImagePostAPI(
+            context,
+            "${widget.PostID}",
+          );
         }
         if (state is UserTagSaveLoadedState) {
           userTagModel = await state.userTagModel;
+          Navigator.push(context, MaterialPageRoute(builder: (context) {
+            return ProfileScreen(
+                User_ID: "${userTagModel?.object}", isFollowing: "");
+          }));
         }
       }, builder: (context, state) {
         if (state is OpenSaveLoadingState) {
@@ -644,31 +657,32 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> with Observer {
                                                         }
                                                       });
                                                     }
-                                                    if (uuid == null) {
-                                                      Navigator.of(context).push(
-                                                          MaterialPageRoute(
-                                                              builder: (context) =>
-                                                                  RegisterCreateAccountScreen()));
-                                                    } else {
-                                                      if (Link == true ||
-                                                          Link1 == true ||
-                                                          Link2 == true ||
-                                                          Link3 == true ||
-                                                          Link4 == true ||
-                                                          Link5 == true ||
-                                                          Link6 == true) {
-                                                        if (Link2 == true ||
-                                                            Link3 == true) {
-                                                          if (isYouTubeUrl(
-                                                              SelectedTest)) {
-                                                            playLink(
-                                                                SelectedTest,
-                                                                context);
-                                                          } else
-                                                            launchUrl(Uri.parse(
-                                                                "https://${link.value.toString()}"));
-                                                        } else {
-                                                          if (Link6 == true) {
+                                                    if (Link == true ||
+                                                        Link1 == true ||
+                                                        Link2 == true ||
+                                                        Link3 == true ||
+                                                        Link4 == true ||
+                                                        Link5 == true ||
+                                                        Link6 == true) {
+                                                      if (Link2 == true ||
+                                                          Link3 == true) {
+                                                        if (isYouTubeUrl(
+                                                            SelectedTest)) {
+                                                          playLink(SelectedTest,
+                                                              context);
+                                                        } else
+                                                          launchUrl(Uri.parse(
+                                                              "https://${link.value.toString()}"));
+                                                      } else {
+                                                        if (Link6 == true) {
+                                                          if (uuid == null) {
+                                                            Navigator.of(
+                                                                    context)
+                                                                .push(MaterialPageRoute(
+                                                                    builder:
+                                                                        (context) =>
+                                                                            RegisterCreateAccountScreen()));
+                                                          } else {
                                                             print(
                                                                 "yes i am in room");
                                                             Navigator.push(
@@ -682,24 +696,31 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> with Observer {
                                                                 );
                                                               },
                                                             ));
-                                                          } else {
-                                                            if (isYouTubeUrl(
-                                                                SelectedTest)) {
-                                                              playLink(
-                                                                  SelectedTest,
-                                                                  context);
-                                                            } else
-                                                              launchUrl(
-                                                                  Uri.parse(link
-                                                                      .value
-                                                                      .toString()));
-                                                            print(
-                                                                "link.valuelink.value -- ${link.value}");
                                                           }
+                                                        } else {
+                                                          if (isYouTubeUrl(
+                                                              SelectedTest)) {
+                                                            playLink(
+                                                                SelectedTest,
+                                                                context);
+                                                          } else
+                                                            launchUrl(Uri.parse(
+                                                                link.value
+                                                                    .toString()));
+                                                          print(
+                                                              "link.valuelink.value -- ${link.value}");
                                                         }
-                                                      } else {
-                                                        if (link.value!
-                                                            .startsWith('#')) {
+                                                      }
+                                                    } else {
+                                                      if (link.value!
+                                                          .startsWith('#')) {
+                                                        if (uuid == null) {
+                                                          Navigator.of(context).push(
+                                                              MaterialPageRoute(
+                                                                  builder:
+                                                                      (context) =>
+                                                                          RegisterCreateAccountScreen()));
+                                                        } else {
                                                           print("${link}");
                                                           Navigator.push(
                                                               context,
@@ -709,8 +730,16 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> with Observer {
                                                                         title:
                                                                             "${link.value}"),
                                                               ));
-                                                        } else if (link.value!
-                                                            .startsWith('@')) {
+                                                        }
+                                                      } else if (link.value!
+                                                          .startsWith('@')) {
+                                                        if (uuid == null) {
+                                                          Navigator.of(context).push(
+                                                              MaterialPageRoute(
+                                                                  builder:
+                                                                      (context) =>
+                                                                          RegisterCreateAccountScreen()));
+                                                        } else {
                                                           var name;
                                                           var tagName;
                                                           name = SelectedTest;
@@ -740,10 +769,10 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> with Observer {
                                                               "tagName -- ${tagName}");
                                                           print(
                                                               "user id -- ${userTagModel?.object}");
-                                                        } else {
-                                                          // launchUrl(Uri.parse(
-                                                          //     "https://${link.value.toString()}"));
                                                         }
+                                                      } else {
+                                                        // launchUrl(Uri.parse(
+                                                        //     "https://${link.value.toString()}"));
                                                       }
                                                     }
                                                   },
@@ -1430,6 +1459,9 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> with Observer {
                                                       alignment:
                                                           Alignment.centerLeft,
                                                       child: Column(
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
                                                         children: [
                                                           LinkifyText(
                                                             readmoree == true
@@ -1522,45 +1554,43 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> with Observer {
                                                                       'https://pdslink.page.link/');
                                                               print(SelectedTest
                                                                   .toString());
-                                                              if (uuid ==
-                                                                  null) {
-                                                                Navigator.of(
-                                                                        context)
-                                                                    .push(MaterialPageRoute(
-                                                                        builder:
-                                                                            (context) =>
-                                                                                RegisterCreateAccountScreen()));
-                                                              } else {
-                                                                if (Link ==
-                                                                        true ||
-                                                                    Link1 ==
-                                                                        true ||
-                                                                    Link2 ==
+                                                              if (Link ==
+                                                                      true ||
+                                                                  Link1 ==
+                                                                      true ||
+                                                                  Link2 ==
+                                                                      true ||
+                                                                  Link3 ==
+                                                                      true ||
+                                                                  Link4 ==
+                                                                      true ||
+                                                                  Link5 ==
+                                                                      true ||
+                                                                  Link6 ==
+                                                                      true) {
+                                                                if (Link2 ==
                                                                         true ||
                                                                     Link3 ==
-                                                                        true ||
-                                                                    Link4 ==
-                                                                        true ||
-                                                                    Link5 ==
-                                                                        true ||
-                                                                    Link6 ==
                                                                         true) {
-                                                                  if (Link2 ==
-                                                                          true ||
-                                                                      Link3 ==
-                                                                          true) {
-                                                                    if (isYouTubeUrl(
-                                                                        SelectedTest)) {
-                                                                      playLink(
-                                                                          SelectedTest,
-                                                                          context);
-                                                                    } else
-                                                                      launchUrl(
-                                                                          Uri.parse(
-                                                                              "https://${link.value.toString()}"));
-                                                                  } else {
-                                                                    if (Link6 ==
-                                                                        true) {
+                                                                  if (isYouTubeUrl(
+                                                                      SelectedTest)) {
+                                                                    playLink(
+                                                                        SelectedTest,
+                                                                        context);
+                                                                  } else
+                                                                    launchUrl(Uri
+                                                                        .parse(
+                                                                            "https://${link.value.toString()}"));
+                                                                } else {
+                                                                  if (Link6 ==
+                                                                      true) {
+                                                                    if (uuid ==
+                                                                        null) {
+                                                                      Navigator.of(
+                                                                              context)
+                                                                          .push(
+                                                                              MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
+                                                                    } else {
                                                                       print(
                                                                           "yes i am in room");
                                                                       Navigator.push(
@@ -1574,25 +1604,33 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> with Observer {
                                                                           );
                                                                         },
                                                                       ));
-                                                                    } else {
-                                                                      if (isYouTubeUrl(
-                                                                          SelectedTest)) {
-                                                                        playLink(
-                                                                            SelectedTest,
-                                                                            context);
-                                                                      } else
-                                                                        launchUrl(Uri.parse(link
-                                                                            .value
-                                                                            .toString()));
-                                                                      print(
-                                                                          "link.valuelink.value -- ${link.value}");
                                                                     }
+                                                                  } else {
+                                                                    if (isYouTubeUrl(
+                                                                        SelectedTest)) {
+                                                                      playLink(
+                                                                          SelectedTest,
+                                                                          context);
+                                                                    } else
+                                                                      launchUrl(Uri.parse(link
+                                                                          .value
+                                                                          .toString()));
+                                                                    print(
+                                                                        "link.valuelink.value -- ${link.value}");
                                                                   }
-                                                                } else {
-                                                                  if (link
-                                                                      .value!
-                                                                      .startsWith(
-                                                                          '#')) {
+                                                                }
+                                                              } else {
+                                                                if (link.value!
+                                                                    .startsWith(
+                                                                        '#')) {
+                                                                  if (uuid ==
+                                                                      null) {
+                                                                    Navigator.of(
+                                                                            context)
+                                                                        .push(MaterialPageRoute(
+                                                                            builder: (context) =>
+                                                                                RegisterCreateAccountScreen()));
+                                                                  } else {
                                                                     print(
                                                                         "${link}");
                                                                     Navigator.push(
@@ -1601,10 +1639,19 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> with Observer {
                                                                           builder: (context) =>
                                                                               HashTagViewScreen(title: "${link.value}"),
                                                                         ));
-                                                                  } else if (link
-                                                                      .value!
-                                                                      .startsWith(
-                                                                          '@')) {
+                                                                  }
+                                                                } else if (link
+                                                                    .value!
+                                                                    .startsWith(
+                                                                        '@')) {
+                                                                  if (uuid ==
+                                                                      null) {
+                                                                    Navigator.of(
+                                                                            context)
+                                                                        .push(MaterialPageRoute(
+                                                                            builder: (context) =>
+                                                                                RegisterCreateAccountScreen()));
+                                                                  } else {
                                                                     var name;
                                                                     var tagName;
                                                                     name =
@@ -1634,10 +1681,10 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> with Observer {
                                                                         "tagName -- ${tagName}");
                                                                     print(
                                                                         "user id -- ${userTagModel?.object}");
-                                                                  } else {
-                                                                    // launchUrl(Uri.parse(
-                                                                    //     "https://${link.value.toString()}"));
                                                                   }
+                                                                } else {
+                                                                  // launchUrl(Uri.parse(
+                                                                  //     "https://${link.value.toString()}"));
                                                                 }
                                                               }
                                                             },
@@ -2339,19 +2386,81 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> with Observer {
                                                       fontSize: 14),
                                                 ),
                                           GestureDetector(
-                                            onTap: () {
+                                            onTap: () async {
                                               if (uuid == null) {
                                                 Navigator.of(context).push(
                                                     MaterialPageRoute(
                                                         builder: (context) =>
                                                             RegisterCreateAccountScreen()));
                                               } else {
-                                                _onShareXFileFromAssets(context,
+                                                if (OpenSaveModelData!
+                                                        .object!.postDataType !=
+                                                    "VIDEO") {
+                                                  String thumb = "";
+                                                  if (OpenSaveModelData!.object!
+                                                          .thumbnailImageUrl !=
+                                                      null) {
+                                                    thumb = OpenSaveModelData!
+                                                        .object!
+                                                        .thumbnailImageUrl!;
+                                                  } else {
+                                                    if (OpenSaveModelData!
+                                                                .object!
+                                                                .postData !=
+                                                            null &&
+                                                        OpenSaveModelData!
+                                                            .object!
+                                                            .postData!
+                                                            .isNotEmpty) {
+                                                      thumb = OpenSaveModelData!
+                                                          .object!
+                                                          .postData!
+                                                          .first;
+                                                    } else {
+                                                      thumb = "";
+                                                    }
+                                                  }
+                                                  _onShareXFileFromAssets(
+                                                    context,
+                                                    thumb,
+                                                    OpenSaveModelData!.object!
+                                                            .postUserName ??
+                                                        "",
+                                                    OpenSaveModelData!.object!
+                                                            .description ??
+                                                        "",
                                                     androidLink:
-                                                        '${OpenSaveModelData?.object?.postLink}'
-                                                    /* iosLink:
-                                                      "https://apps.apple.com/inList =  /app/growder-b2b-platform/id6451333863" */
-                                                    );
+                                                        '${OpenSaveModelData!.object!.postLink}',
+                                                  );
+                                                } else {
+                                                  final fileName =
+                                                      await VideoThumbnail
+                                                          .thumbnailFile(
+                                                    video: OpenSaveModelData!
+                                                            .object!
+                                                            .postData
+                                                            ?.first ??
+                                                        "",
+                                                    thumbnailPath:
+                                                        (await getTemporaryDirectory())
+                                                            .path,
+                                                    imageFormat:
+                                                        ImageFormat.WEBP,
+                                                    quality: 100,
+                                                  );
+                                                  _onShareXFileFromAssets(
+                                                    context,
+                                                    fileName!,
+                                                    OpenSaveModelData!.object!
+                                                            .postUserName ??
+                                                        "",
+                                                    OpenSaveModelData!.object!
+                                                            .description ??
+                                                        "",
+                                                    androidLink:
+                                                        '${OpenSaveModelData!.object!.postLink}',
+                                                  );
+                                                }
                                               }
                                             },
                                             child: Container(
@@ -2780,15 +2889,22 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> with Observer {
                                                         "https://${link.value.toString()}"));
                                                 } else {
                                                   if (Link6 == true) {
-                                                    print("yes i am in room");
-                                                    Navigator.push(context,
-                                                        MaterialPageRoute(
-                                                      builder: (context) {
-                                                        return NewBottomBar(
-                                                          buttomIndex: 1,
-                                                        );
-                                                      },
-                                                    ));
+                                                    if (uuid == null) {
+                                                      Navigator.of(context).push(
+                                                          MaterialPageRoute(
+                                                              builder: (context) =>
+                                                                  RegisterCreateAccountScreen()));
+                                                    } else {
+                                                      print("yes i am in room");
+                                                      Navigator.push(context,
+                                                          MaterialPageRoute(
+                                                        builder: (context) {
+                                                          return NewBottomBar(
+                                                            buttomIndex: 1,
+                                                          );
+                                                        },
+                                                      ));
+                                                    }
                                                   } else {
                                                     if (isYouTubeUrl(
                                                         SelectedTest)) {
@@ -2805,41 +2921,55 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> with Observer {
                                               } else {
                                                 if (link.value!
                                                     .startsWith('#')) {
-                                                  print("${link}");
-                                                  Navigator.push(
-                                                      context,
-                                                      MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            HashTagViewScreen(
-                                                                title:
-                                                                    "${link.value}"),
-                                                      ));
+                                                  if (uuid == null) {
+                                                    Navigator.of(context).push(
+                                                        MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                RegisterCreateAccountScreen()));
+                                                  } else {
+                                                    print("${link}");
+                                                    Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              HashTagViewScreen(
+                                                                  title:
+                                                                      "${link.value}"),
+                                                        ));
+                                                  }
                                                 } else if (link.value!
                                                     .startsWith('@')) {
-                                                  var name;
-                                                  var tagName;
-                                                  name = SelectedTest;
-                                                  tagName =
-                                                      name.replaceAll("@", "");
-                                                  await BlocProvider.of<
-                                                              OpenSaveCubit>(
-                                                          context)
-                                                      .UserTagAPI(
-                                                          context, tagName);
+                                                  if (uuid == null) {
+                                                    Navigator.of(context).push(
+                                                        MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                RegisterCreateAccountScreen()));
+                                                  } else {
+                                                    var name;
+                                                    var tagName;
+                                                    name = SelectedTest;
+                                                    tagName = name.replaceAll(
+                                                        "@", "");
+                                                    await BlocProvider.of<
+                                                                OpenSaveCubit>(
+                                                            context)
+                                                        .UserTagAPI(
+                                                            context, tagName);
 
-                                                  Navigator.push(context,
-                                                      MaterialPageRoute(
-                                                          builder: (context) {
-                                                    return ProfileScreen(
-                                                        User_ID:
-                                                            "${userTagModel?.object}",
-                                                        isFollowing: "");
-                                                  }));
+                                                    Navigator.push(context,
+                                                        MaterialPageRoute(
+                                                            builder: (context) {
+                                                      return ProfileScreen(
+                                                          User_ID:
+                                                              "${userTagModel?.object}",
+                                                          isFollowing: "");
+                                                    }));
 
-                                                  print(
-                                                      "tagName -- ${tagName}");
-                                                  print(
-                                                      "user id -- ${userTagModel?.object}");
+                                                    print(
+                                                        "tagName -- ${tagName}");
+                                                    print(
+                                                        "user id -- ${userTagModel?.object}");
+                                                  }
                                                 } else {
                                                   // launchUrl(Uri.parse(
                                                   //     "https://${link.value.toString()}"));
@@ -3561,19 +3691,79 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> with Observer {
                                                     fontSize: 14),
                                               ),
                                         GestureDetector(
-                                          onTap: () {
+                                          onTap: () async {
                                             if (uuid == null) {
                                               Navigator.of(context).push(
                                                   MaterialPageRoute(
                                                       builder: (context) =>
                                                           RegisterCreateAccountScreen()));
                                             } else {
-                                              _onShareXFileFromAssets(context,
+                                              if (OpenSaveModelData!
+                                                      .object!.postDataType !=
+                                                  "VIDEO") {
+                                                String thumb = "";
+                                                if (OpenSaveModelData!.object!
+                                                        .thumbnailImageUrl !=
+                                                    null) {
+                                                  thumb = OpenSaveModelData!
+                                                      .object!
+                                                      .thumbnailImageUrl!;
+                                                } else {
+                                                  if (OpenSaveModelData!.object!
+                                                              .postData !=
+                                                          null &&
+                                                      OpenSaveModelData!
+                                                          .object!
+                                                          .postData!
+                                                          .isNotEmpty) {
+                                                    thumb = OpenSaveModelData!
+                                                        .object!
+                                                        .postData!
+                                                        .first;
+                                                  } else {
+                                                    thumb = "";
+                                                  }
+                                                }
+                                                _onShareXFileFromAssets(
+                                                  context,
+                                                  thumb,
+                                                  OpenSaveModelData!.object!
+                                                          .postUserName ??
+                                                      "",
+                                                  OpenSaveModelData!.object!
+                                                          .description ??
+                                                      "",
                                                   androidLink:
-                                                      '${OpenSaveModelData?.object?.postLink}'
-                                                  /* iosLink:
-                                                      "https://apps.apple.com/inList =  /app/growder-b2b-platform/id6451333863" */
-                                                  );
+                                                      '${OpenSaveModelData!.object!.postLink}',
+                                                );
+                                              } else {
+                                                final fileName =
+                                                    await VideoThumbnail
+                                                        .thumbnailFile(
+                                                  video: OpenSaveModelData!
+                                                          .object!
+                                                          .postData
+                                                          ?.first ??
+                                                      "",
+                                                  thumbnailPath:
+                                                      (await getTemporaryDirectory())
+                                                          .path,
+                                                  imageFormat: ImageFormat.WEBP,
+                                                  quality: 100,
+                                                );
+                                                _onShareXFileFromAssets(
+                                                  context,
+                                                  fileName!,
+                                                  OpenSaveModelData!.object!
+                                                          .postUserName ??
+                                                      "",
+                                                  OpenSaveModelData!.object!
+                                                          .description ??
+                                                      "",
+                                                  androidLink:
+                                                      '${OpenSaveModelData!.object!.postLink}',
+                                                );
+                                              }
                                             }
                                           },
                                           child: Container(
@@ -3914,12 +4104,8 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> with Observer {
   }
 
   void _settingModalBottomSheet1(context, index, _heigth) {
-    void _goToElement() {
-      scroll.animateTo((1000 * 20),
-          duration: const Duration(milliseconds: 300), curve: Curves.easeOut);
-    }
-
     showBottomSheet(
+        enableDrag: true,
         constraints: BoxConstraints(maxHeight: _heigth / 2),
         context: context,
         backgroundColor: Colors.white,
@@ -3963,10 +4149,17 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> with Observer {
 
       if (OpenSaveModelData?.object?.isSaved == true) {
         OpenSaveModelData?.object?.isSaved = false;
+       indexOfSave = AllGuestPostRoomData?.object?.content?.indexWhere(
+            (element) => element.postUid == OpenSaveModelData?.object?.postUid);
+            AllGuestPostRoomData?.object?.content?[indexOfSave ??0].isSaved = false;
+        print("index check -${indexOfSave}");
       } else {
         OpenSaveModelData?.object?.isSaved = true;
+        indexOfSave = AllGuestPostRoomData?.object?.content?.indexWhere(
+            (element) => element.postUid == OpenSaveModelData?.object?.postUid);
+            AllGuestPostRoomData?.object?.content?[indexOfSave ??0].isSaved = true;
       }
-    } /* else if (apiName == 'Follow') {
+    }/* else if (apiName == 'Follow') {
       print("dfhsdfhsdfhsdgf");
       await BlocProvider.of<OpenSaveCubit>(context)
           .followWIngMethodd(OpenSaveModelData?.object?.userUid, context);
@@ -4076,30 +4269,156 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> with Observer {
         });
   }
 
-  void _onShareXFileFromAssets(BuildContext context,
+  void _onShareXFileFromAssets(BuildContext context, String postLink,
+      String userName, String description,
       {String? androidLink}) async {
     // RenderBox? box = context.findAncestorRenderObjectOfType();
 
-    var directory = await getApplicationDocumentsDirectory();
+    var directory = await getTemporaryDirectory();
 
-    if (Platform.isAndroid) {
-      Share.shareXFiles(
-        [XFile("/sdcard/download/IP__image.jpg")],
-        subject: "Share",
-        text: "Try This Awesome App \n\n Android :- ${androidLink}",
-        // sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size,
-      );
+    if (postLink.isNotEmpty) {
+      _permissionReady = await _checkPermission();
+      await _prepareSaveDir();
+      if (Platform.isAndroid) {
+        DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+        AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+        version = int.parse(androidInfo.version.release);
+        if ((version ?? 0) >= 13) {
+          PermissionStatus status = await Permission.photos.request();
+          _permissionReady = status == PermissionStatus.granted;
+        }
+      }
+
+      if (_permissionReady) {
+        print("Downloading");
+        print("${postLink}");
+        try {
+          await Dio().download(
+            postLink.toString(),
+            directory.path + "/" + "IP__image.jpg",
+          );
+
+          print("Download Completed.");
+        } catch (e) {
+          print("Download Failed.\n\n" + e.toString());
+        }
+      }
+      if (Platform.isAndroid) {
+        Share.shareXFiles(
+          [
+            XFile(postLink.startsWith("http")
+                ? "${directory.path}/IP__image.jpg"
+                : postLink)
+          ],
+          subject: "Share",
+          text:
+              "$userName posted ${description.isNotEmpty ? "\n\n${description.length > 50 ? description.substring(0, 50) : description}.... \n\n" : ""}on InPackaging \n\n https://www.inpackaging.com \n\n ${androidLink}",
+          // sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size,
+        );
+      } else {
+        Share.shareXFiles(
+          [
+            XFile(directory.path + Platform.pathSeparator + ' IP/IP__image.jpg')
+          ],
+          subject: "Share",
+          text:
+              "$userName posted ${description.isNotEmpty ? "\n\n${description.length > 50 ? description.substring(0, 50) : description}.... \n\n" : ""}on InPackaging \n\n https://www.inpackaging.com \n\n ${androidLink}",
+          // sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size,
+        );
+      }
     } else {
-      Share.shareXFiles(
-        [
-          XFile(directory.path +
-              Platform.pathSeparator +
-              'Growder_Image/IP__image.jpg')
-        ],
-        subject: "Share",
-        text: "Try This Awesome App \n\n iOS :- ${androidLink}",
-        // sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size,
-      );
+      print('No Invoice Available');
+      if (Platform.isAndroid) {
+        DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+        AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+        version = int.parse(androidInfo.version.release);
+        if ((version ?? 0) >= 13) {
+          PermissionStatus status = await Permission.photos.request();
+          _permissionReady = status == PermissionStatus.granted;
+        }
+      }
+
+      if (Platform.isAndroid) {
+        if ((version ?? 0) >= 13) {
+          PermissionStatus status = await Permission.photos.request();
+          _permissionReady = status == PermissionStatus.granted;
+        }
+        if (_permissionReady) {
+          Share.shareXFiles(
+            [XFile("/data/data/com.ip.app/files/IP__image.jpg")],
+            subject: "Share",
+            text:
+                "$userName posted ${description.isNotEmpty ? "\n\n${description.length > 50 ? description.substring(0, 50) : description}.... \n\n" : ""}on InPackaging \n\n https://www.inpackaging.com \n\n ${androidLink}",
+            // sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size,
+          );
+        }
+      } else {
+        directory = await getApplicationDocumentsDirectory();
+        Share.shareXFiles(
+          [
+            XFile(directory.path + Platform.pathSeparator + ' IP/IP__image.jpg')
+          ],
+          subject: "Share",
+          text:
+              "$userName posted ${description.isNotEmpty ? "\n\n${description.length > 50 ? description.substring(0, 50) : description}.... \n\n" : ""}on InPackaging \n https://www.inpackaging.com \n ${androidLink}",
+          // sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size,
+        );
+      }
+    }
+  }
+
+  Future<bool> _checkPermission() async {
+    if (Platform.isAndroid) {
+      DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+      AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+      print(
+          "objectobjectobjectobjectobjectobjectobjectobject ${androidInfo.version.release}");
+      version = int.parse(androidInfo.version.release);
+      // final SharedPreferences prefs = await SharedPreferences.getInstance();
+      // version =
+      //     await int.parse(prefs.getString(UserdefaultsData.version).toString());
+      print('dddwssadasdasdasdasdasd ${version}');
+    }
+    if (Platform.isAndroid) {
+      final status = (version ?? 0) < 13
+          ? await Permission.storage.status
+          : PermissionStatus.granted;
+      if (status != PermissionStatus.granted) {
+        print('gegegegegegegegegegegegegege');
+        print('gegegegegegegegegegegegegege $status');
+        final result = (version ?? 0) < 13
+            ? await Permission.storage.request()
+            : PermissionStatus.granted;
+        if (result == PermissionStatus.granted) {
+          return true;
+        }
+      } else {
+        return true;
+      }
+    } else {
+      return true;
+    }
+    return false;
+  }
+
+  Future<void> _prepareSaveDir() async {
+    _localPath = (await _findLocalPath())!;
+
+    print(_localPath);
+    final savedDir = Directory(_localPath);
+    bool hasExisted = await savedDir.exists();
+    if (!hasExisted) {
+      savedDir.create();
+      print('first vvvvvvvvvvvvvvvvvvv');
+    }
+  }
+
+  Future<String?> _findLocalPath() async {
+    if (Platform.isAndroid) {
+      return "/data/data/com.ip.app/files/";
+    } else {
+      var directory = await getApplicationDocumentsDirectory();
+      return directory.path + Platform.pathSeparator + 'IP__Image';
     }
   }
 
