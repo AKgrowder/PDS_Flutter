@@ -224,7 +224,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   Widget build(BuildContext context) {
     double _width = MediaQuery.of(context).size.width;
     double _height = MediaQuery.of(context).size.height;
-    return Scaffold(
+    return Scaffold( resizeToAvoidBottomInset: false,
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
         child: BlocConsumer<MyAccountCubit, MyAccountState>(
@@ -1612,32 +1612,53 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              GestureDetector(
-                onTap: () {
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => DocumentViewScreen(
-                            path: /* widget.newProfileData?.object?.documentName */
-                                '${widget.newProfileData?.object?.userDocument}',
-                            title: 'Pdf',
-                          )));
-                },
-                child: Container(
-                    height: 50,
-                    width: _width / 1.6,
-                    decoration: BoxDecoration(
-                        color: Color(0XFFF6F6F6),
-                        borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(5),
-                            bottomLeft: Radius.circular(5))),
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: 15, left: 20),
-                      child: Text(
-                        // main Display Name
-                        '${dopcument}',
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(fontSize: 16),
-                      ),
-                    )),
+              Expanded(
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => DocumentViewScreen(
+                              path: /* widget.newProfileData?.object?.documentName */
+                                  '${widget.newProfileData?.object?.userDocument}',
+                              title: 'Pdf',
+                            )));
+                  },
+                  child: Container(
+                      height: 50,
+                      width: _width / 1.68,
+                      decoration: BoxDecoration(   
+                          color: Color(0XFFF6F6F6),
+                          borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(5),
+                              bottomLeft: Radius.circular(5))),
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 15, left: 20),
+                        child: Text(
+                          '${dopcument}',
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(fontSize: 16),
+                        ),
+                      )),
+
+                  /* Expanded(
+                    child: Container(
+                        height: 50,
+                        width: _width / 1.5,
+                        decoration: BoxDecoration(
+                            color: Color(0XFFF6F6F6),
+                            borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(5),
+                                bottomLeft: Radius.circular(5))),
+                        child: Padding(
+                          padding: const EdgeInsets.only(top: 15, left: 20),
+                          child: Text(
+                            // main Display Name
+                            '${dopcument}',
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(fontSize: 16),
+                          ),
+                        )),
+                  ), */
+                ),
               ),
               dopcument == "Upload Document"
                   ? GestureDetector(
@@ -1647,7 +1668,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       },
                       child: Container(
                         height: 50,
-                        width: _width / 5,
+                        width: _width / 4.5,
                         decoration: BoxDecoration(
                             color: Color(0XFF777777),
                             borderRadius: BorderRadius.only(
@@ -1671,7 +1692,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     )
                   : Container(
                       height: 50,
-                      width: _width / 5,
+                      width: _width / 4.5,
                       decoration: BoxDecoration(
                           color: Color.fromARGB(255, 228, 228, 228),
                           borderRadius: BorderRadius.only(

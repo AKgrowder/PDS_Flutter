@@ -88,12 +88,10 @@ class _ComapnyManageScreenState extends State<ComapnyManageScreen> {
                       ),
                     ),
                   )
-
                 : getallcompenypage?.object?.content?.length == 1 &&
                         getallcompenypage
                                 ?.object?.content?[0].companyPageName ==
                             null
-
                     ? Center(
                         child: Image.asset(
                           ImageConstant.emptylistimage,
@@ -369,18 +367,14 @@ class _ComapnyManageScreenState extends State<ComapnyManageScreen> {
 
     if (Platform.isAndroid) {
       Share.shareXFiles(
-        [XFile("/sdcard/download/IP__image.jpg")],
+        [XFile("/data/data/com.ip.app/files/IP__image.jpg")],
         subject: "Share",
         text: "Try This Awesome App \n\n Android :- ${androidLink}",
         // sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size,
       );
     } else {
       Share.shareXFiles(
-        [
-          XFile(directory.path +
-              Platform.pathSeparator +
-              'Growder_Image/IP__image.jpg')
-        ],
+        [XFile(directory.path + Platform.pathSeparator + ' IP/IP__image.jpg')],
         subject: "Share",
         text: "Try This Awesome App \n\n Android :- ${androidLink}",
         // sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size,

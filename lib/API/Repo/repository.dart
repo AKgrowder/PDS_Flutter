@@ -2146,7 +2146,7 @@ class Repository {
     final response = await apiServices.getApiCallWithToken(
         "${Config.GetPostCommetAPI}?userUid=${userUid}&orderBy=${orderBy}",
         context);
-    print('AddPost${response.body}');
+    print('AddPost$response');
     // var jsonString = json.decode(response.body);
     var jsonString = json.decode(utf8.decode(response.bodyBytes));
     switch (response.statusCode) {
@@ -2283,9 +2283,9 @@ class Repository {
   }
 
   HashTagForYouAPI(
-      BuildContext context, String hashtagViewType, String pageNumber) async {
+      BuildContext context, String hashtagViewType, String pageNumber,bool user) async {
     final response = await apiServices.getApiCall(
-        '${Config.HashTagForYou}?hashtagViewType=$hashtagViewType&pageNumber=$pageNumber&pageSize=20',
+        '${user ? 'user':'guest'}${Config.HashTagForYou}?hashtagViewType=$hashtagViewType&pageNumber=$pageNumber&pageSize=20',
         context);
 
     var jsonString = json.decode(utf8.decode(response.bodyBytes));

@@ -565,9 +565,10 @@ class _MpHomeScreenState extends State<MpHomeScreen> {
                               "₹990",
                               maxLines: 2,
                               style: TextStyle(
-                                fontSize: 15,
+                                fontSize: 18,
+                                color: ColorConstant.primary_color,
                                 fontFamily: 'outfit',
-                                fontWeight: FontWeight.w600,
+                                fontWeight: FontWeight.bold,
                               ),
                             ),
                           ),
@@ -589,8 +590,8 @@ class _MpHomeScreenState extends State<MpHomeScreen> {
                       ),
                       Container(
                         height: 40,
-                        child: CustomImageView( svgPath:
-                          ImageConstant.mpcartimage),
+                        child:
+                            CustomImageView(svgPath: ImageConstant.mpcartimage),
                       ),
                       /*   Container(
                         height: 40,

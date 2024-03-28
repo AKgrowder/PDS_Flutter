@@ -40,7 +40,7 @@ class Object {
   int? commentCount;
   int? repostCount;
   RepostOn? repostOn;
-  Null? thumbnailImageUrl;
+  String? thumbnailImageUrl;
   String? postLink;
   String? translatedDescription;
   bool? isTrsnalteoption;
@@ -203,6 +203,7 @@ class RepostOn {
     data['likedCount'] = this.likedCount;
     data['commentCount'] = this.commentCount;
     data['repostCount'] = this.repostCount;
+    
     data['repostOn'] = this.repostOn;
     data['thumbnailImageUrl'] = this.thumbnailImageUrl;
     data['translatedDescription'] = this.translatedDescription;

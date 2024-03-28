@@ -131,7 +131,7 @@ class ImageConstant {
   static String setting_tadu = 'assets/images/lockimageee.png';
   static String setting_settingimage = 'assets/images/settingimagge.png';
   static String setting_phone = 'assets/images/imagephonegray.png';
-  static String setting_comanyManage ="assets/images/manage_comapny_icon.png";
+  static String setting_comanyManage = "assets/images/manage_comapny_icon.png";
 
   //------------------------------defult_images----------------------------------------
   static String plusn = 'assets/images/plus.png';
@@ -292,52 +292,56 @@ class ImageConstant {
   static String switchAccount = "assets/images/switch_acc.png";
   static String emptylistimage = "assets/images/emptylistimage.png";
 
-
-
-  static String packageing_products = "assets/images/packagingproduct_service.svg";//
-  static String forum = "assets/images/knowleagefourm.svg";//
-  static String plastic_waste = "assets/images/plasticwasteimage.svg";//
-  static String pride_lab = "assets/images/pridelebimage.svg";//
-  static String raw_material_marketplace = "assets/images/rawmaterial_marketplace.svg";//
-  static String rental_packaging = "assets/images/rentalresumableproduct.svg";//
+  static String packageing_products =
+      "assets/images/packagingproduct_service.svg"; //
+  static String forum = "assets/images/knowleagefourm.svg"; //
+  static String plastic_waste = "assets/images/plasticwasteimage.svg"; //
+  static String pride_lab = "assets/images/pridelebimage.svg"; //
+  static String raw_material_marketplace =
+      "assets/images/rawmaterial_marketplace.svg"; //
+  static String rental_packaging =
+      "assets/images/rentalresumableproduct.svg"; //
   // static String ragisternowlogo = "assets/images/ragisternowlogo.png";
-  static String supplyer_image = "assets/images/supplier_image.svg";//
-  static String buyer_image = "assets/images/buyer_image.svg";//
-  static String charge_payment = "assets/images/chargepayment.png";//-----------------------svg image not found in figma----
-  static String createaccount = "assets/images/create_account_image.png";//-----------------------svg image not found in figma----
-  
+  static String supplyer_image = "assets/images/supplier_image.svg"; //
+  static String buyer_image = "assets/images/buyer_image.svg"; //
+  static String charge_payment =
+      "assets/images/chargepayment.png"; //-----------------------svg image not found in figma----
+  static String createaccount =
+      "assets/images/create_account_image.png"; //-----------------------svg image not found in figma----
+  static String AreYouBusinessAsscociate =
+      "assets/images/AreYouBusinessAsscociate.svg";
+  static String AreYouFranchiseOwner = "assets/images/AreYouFranchiseOwner.svg";
+  static String KnowledgeForum = 'assets/images/knowleagefourm.svg';
 
+  static String cartimage = "assets/images/mp_cart_image.svg"; //
+  static String orderimage = "assets/images/mp_order_image.svg"; //
+  static String productimage = "assets/images/mpProduct.svg"; //
+  static String userimage = "assets/images/userimage.svg"; //
+  static String wishlistimage = "assets/images/wishlist.svg"; //
+  static String iplogo =
+      "assets/images/IP_logo.png"; //----------------------svg image not supported
 
-  static String cartimage = "assets/images/mp_cart_image.svg";//
-  static String orderimage = "assets/images/mp_order_image.svg";//
-  static String productimage = "assets/images/mpProduct.svg";//
-  static String userimage = "assets/images/userimage.svg";//
-  static String wishlistimage = "assets/images/wishlist.svg";//
-  static String iplogo = "assets/images/IP_logo.png";//----------------------svg image not supported
-
-  
-
-
-  static String groupicon = "assets/images/categoryselaction.svg";//
-  static String notificationicon = "assets/images/notificationicon.svg";//
-  static String underapproveimage = "assets/images/underapprove.png";//---------not downlod as same as figma
+  static String groupicon = "assets/images/categoryselaction.svg"; //
+  static String notificationicon = "assets/images/notificationicon.svg"; //
+  static String underapproveimage =
+      "assets/images/underapprove.png"; //---------not downlod as same as figma
   static String walletimage = "assets/images/walletimage.png";
-  static String orderhomeimage = "assets/images/orderhomeimage.svg";//
-  static String priceimage = "assets/images/priceimage.svg";//
+  static String orderhomeimage = "assets/images/orderhomeimage.svg"; //
+  static String priceimage = "assets/images/priceimage.svg"; //
   static String homedecoreimage = "assets/images/homedecore.png";
-  static String mpsaveimage = "assets/images/saveimage.svg";//
+  static String mpsaveimage = "assets/images/saveimage.svg"; //
   static String mpunsaveimage = "assets/images/mpunsave.svg";
 
-
-  static String homefourm = "assets/images/home_fourm.svg";//
-  static String homepackagingproduct = "assets/images/Home_packaging_product.svg";//
-  static String homeplasticwaste = "assets/images/home_plasticwaste.svg";//
-  static String homepridelab = "assets/images/Home_pridelab.svg";//
-  static String homerentalpacking = "assets/images/home_rentalpackaging.svg";//
-  static String homerowmaterial = "assets/images/home_row_material.svg";//
-  static String mpcartimage = "assets/images/mpcarthomeimage.svg";//
-  static String mpproductunsaveimage = "assets/images/mp_product_unsave_image.svg";//
-
+  static String homefourm = "assets/images/home_fourm.svg"; //
+  static String homepackagingproduct =
+      "assets/images/Home_packaging_product.svg"; //
+  static String homeplasticwaste = "assets/images/home_plasticwaste.svg"; //
+  static String homepridelab = "assets/images/Home_pridelab.svg"; //
+  static String homerentalpacking = "assets/images/home_rentalpackaging.svg"; //
+  static String homerowmaterial = "assets/images/home_row_material.svg"; //
+  static String mpcartimage = "assets/images/mpcarthomeimage.svg"; //
+  static String mpproductunsaveimage =
+      "assets/images/mp_product_unsave_image.svg"; //
 
   /// end
 }

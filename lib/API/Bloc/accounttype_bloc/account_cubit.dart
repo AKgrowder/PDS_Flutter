@@ -19,18 +19,5 @@ class AccountCubit extends Cubit<AccountState> {
     }
   }
 
-  Future<void> get_assigned_users_of_company_pageApi(
-      String companyPageUid, BuildContext context) async {
-    dynamic getAssingDataGet;
-    try {
-      emit(AccountLoadingState());
-      getAssingDataGet = await Repository()
-          .get_assigned_users_of_company_page(context, companyPageUid);
-      if (getAssingDataGet.success == true) {
-        emit(GetAssignedUsersOfCompanyPageLoadedState(getAssingDataGet));
-      }
-    } catch (e) {
-      emit(AccountErrorState(e.toString()));
-    }
-  }
+ 
 }
