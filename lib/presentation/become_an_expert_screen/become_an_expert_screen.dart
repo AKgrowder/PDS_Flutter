@@ -686,23 +686,25 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          Container(
-                              height: 50,
-                              width: _width / 1.68,
-                              decoration: BoxDecoration(
-                                  color: Color(0XFFF6F6F6),
-                                  borderRadius: BorderRadius.only(
-                                      topLeft: Radius.circular(5),
-                                      bottomLeft: Radius.circular(5))),
-                              child: Padding(
-                                padding:
-                                    const EdgeInsets.only(top: 15, left: 20),
-                                child: Text(
-                                  '${dopcument.toString()}',
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(fontSize: 16),
-                                ),
-                              )),
+                          Expanded(
+                            child: Container(
+                                height: 50,
+                                width: _width / 1.68,
+                                decoration: BoxDecoration(
+                                    color: Color(0XFFF6F6F6),
+                                    borderRadius: BorderRadius.only(
+                                        topLeft: Radius.circular(5),
+                                        bottomLeft: Radius.circular(5))),
+                                child: Padding(
+                                  padding:
+                                      const EdgeInsets.only(top: 15, left: 20),
+                                  child: Text(
+                                    '${dopcument.toString()}',
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(fontSize: 16),
+                                  ),
+                                )),
+                          ),
                           dopcument == "Upload Document"
                               ? GestureDetector(
                                   onTap: () async {
@@ -763,7 +765,7 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                             textScaleFactor: 1,
                             style: TextStyle(
                               fontFamily: 'outfit',
-                              fontSize: responsiveFontSize,
+                              fontSize: 15,
                               color: Colors.grey,
                               fontWeight: FontWeight.w500,
                             ),
@@ -772,7 +774,7 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                             "Max size ${finalFileSize}MB",
                             style: TextStyle(
                               fontFamily: 'outfit',
-                              fontSize: responsiveFontSize,
+                              fontSize: 15,
                               // fontSize: 15,
                               color: Colors.black.withOpacity(0.6),
                               fontWeight: FontWeight.w500,
@@ -1074,7 +1076,7 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                               "Terms & Conditions",
                               style: TextStyle(
                                 color: theme.colorScheme.primary,
-                                fontSize: _width / 30,
+                                fontSize: 17,
                                 fontFamily: 'Outfit',
                                 fontWeight: FontWeight.w500,
                                 decoration: TextDecoration.underline,
@@ -1097,7 +1099,7 @@ class _BecomeExpertScreenState extends State<BecomeExpertScreen> {
                                 "Privacy & Policy of IP Terms",
                                 style: TextStyle(
                                   color: theme.colorScheme.primary,
-                                  fontSize: responsiveFontSize,
+                                  fontSize: 17,
                                   fontFamily: 'Outfit',
                                   fontWeight: FontWeight.w500,
                                   decoration: TextDecoration.underline,

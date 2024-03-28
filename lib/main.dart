@@ -586,7 +586,7 @@ class _MyAppState extends State<MyApp> {
           theme: ThemeData(
             visualDensity: VisualDensity.standard,
           ),
-          title: 'pds',
+          title: 'IP',
           debugShowCheckedModeBanner: false,
           home: SplashScreen(),
           navigatorKey: widget.navigatorKey,

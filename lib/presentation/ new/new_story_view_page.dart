@@ -32,10 +32,14 @@ class _NewStoryViewPageState extends State<NewStoryViewPage> {
   final StoryController controller = StoryController();
 
   StoryViewListModel? StoryViewListModelData;
+  final scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
+    double _width = MediaQuery.of(context).size.width;
+    double _height = MediaQuery.of(context).size.height;
     return Scaffold(
+      key: scaffoldKey, resizeToAvoidBottomInset: false,
       body: BlocListener<ViewStoryCubit, ViewStoryState>(
         listener: (context, state) async {
           if (state is ViewStoryErrorState) {
@@ -225,7 +229,7 @@ class _NewStoryViewPageState extends State<NewStoryViewPage> {
                             context, "${widget.data.images[index].storyUid}");
                         controller.pause();
                         showBs(context, widget.data.images[index].storyUid!,
-                            widget.data.images[index].userUid!);
+                            widget.data.images[index].userUid!, _height);
                       })
                     : StoryItem.pageImage(
                         url: widget.data.images[index].image!,
@@ -241,7 +245,7 @@ class _NewStoryViewPageState extends State<NewStoryViewPage> {
                               .StoryViewList(context,
                                   "${widget.data.images[index].storyUid}");
                           showBs(context, widget.data.images[index].storyUid!,
-                              widget.data.images[index].userUid!);
+                              widget.data.images[index].userUid!, _height);
                         },
                         caption: Material(
                           color: Colors.transparent,
@@ -419,9 +423,213 @@ class _NewStoryViewPageState extends State<NewStoryViewPage> {
     }
   }
 
-  showBs(BuildContext context, String storyUid, String uid) {
+  showBs(BuildContext context, String storyUid, String uid, _heigth) {
     var _height = MediaQuery.of(context).size.height;
     var _width = MediaQuery.of(context).size.width;
+    scaffoldKey.currentState!.showBottomSheet((
+      BuildContext context,
+    ) {
+      return Container(
+          constraints: BoxConstraints(maxHeight: _heigth / 2),
+          child: BlocConsumer<ViewStoryCubit, ViewStoryState>(
+            listener: (context, state) {
+              if (state is PostLikeLoadedState) {
+                print("check State-${state.likePost.message.toString()}");
+                BlocProvider.of<ViewStoryCubit>(context)
+                    .StoryViewList(context, "${storyUid}");
+              } else if (state is StoryViewListLoadedState) {
+                StoryViewListModelData = state.StoryViewListModelData;
+              }
+            },
+            builder: (context, state) {
+              return Column(
+                children: [
+                  SizedBox(
+                    height: 30,
+                  ),
+                  Container(
+                    width: _width,
+                    child: Row(
+                      children: [
+                        SizedBox(
+                          width: _width / 2.3,
+                        ),
+                        // Spacer(),
+                        Container(
+                          height: 2,
+                          width: 50,
+                          alignment: Alignment.center,
+                          padding: EdgeInsets.all(8.0),
+                          decoration: BoxDecoration(
+                            color: Colors.grey,
+                          ),
+                        ),
+                        Spacer(),
+                        GestureDetector(
+                          onTap: () async {
+                            await BlocProvider.of<ViewStoryCubit>(context)
+                                .delete_story(context, "${storyUid}");
+                          },
+                          child: Icon(
+                            Icons.delete,
+                            color: ColorConstant.primary_color,
+                          ),
+                        ),
+                        SizedBox(
+                          width: 30,
+                        )
+                      ],
+                    ),
+                  ),
+                  Expanded(
+                    child: ListView.separated(
+                        shrinkWrap: true,
+                        primary: true,
+                        itemCount: StoryViewListModelData?.object?.length ?? 0,
+                        separatorBuilder: (BuildContext context, int index) =>
+                            const Divider(),
+                        itemBuilder: (BuildContext context, int index) {
+                          return Container(
+                            // height: 40,
+                            width: _width,
+                            // color: Colors.green,
+                            child: ListTile(
+                              leading: GestureDetector(
+                                onTap: () {
+                                  Navigator.push(context,
+                                      MaterialPageRoute(builder: (context) {
+                                    return MultiBlocProvider(
+                                        providers: [
+                                          BlocProvider<NewProfileSCubit>(
+                                            create: (context) =>
+                                                NewProfileSCubit(),
+                                          ),
+                                        ],
+                                        child: ProfileScreen(
+                                          User_ID:
+                                              "${StoryViewListModelData?.object?[index].userUid}",
+                                          isFollowing:
+                                              "${StoryViewListModelData?.object?[index].isFollowing}",
+                                        ));
+                                  }));
+
+                                  // Navigator.push(
+                                  //     context,
+                                  //     MaterialPageRoute(
+                                  //         builder: (context) =>
+                                  //             ProfileScreen(
+                                  //               User_ID:
+                                  //                   "${StoryViewListModelData?.object?[index].userUid}",
+                                  //               isFollowing:
+                                  //                   "${StoryViewListModelData?.object?[index].isFollowing}",
+                                  //             )));
+                                },
+                                child: StoryViewListModelData
+                                                ?.object?[index].profilePic !=
+                                            null &&
+                                        StoryViewListModelData
+                                                ?.object?[index].profilePic !=
+                                            ""
+                                    ? CircleAvatar(
+                                        backgroundColor: Colors.white,
+                                        backgroundImage: NetworkImage(
+                                            "${StoryViewListModelData?.object?[index].profilePic}"),
+                                        radius: 25,
+                                      )
+                                    : CustomImageView(
+                                        imagePath: (ImageConstant.tomcruse)),
+                              ),
+                              title: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  SizedBox(
+                                    height: 6,
+                                  ),
+                                  Container(
+                                    // color: Colors.amber,
+                                    child: Text(
+                                      "${StoryViewListModelData?.object?[index].userName}",
+                                      style: TextStyle(
+                                          fontSize: 20,
+                                          fontFamily: "outfit",
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ),
+                                  // Text(
+                                  //   customFormat(
+                                  //       parsedDateTime),
+                                  //   style: TextStyle(
+                                  //     fontSize: 12,
+                                  //     fontFamily: "outfit",
+                                  //   ),
+                                  // ),
+                                ],
+                              ),
+                              trailing: widget.userId != uid
+                                  ? SizedBox()
+                                  : GestureDetector(
+                                      onTap: () async {
+                                        BlocProvider.of<ViewStoryCubit>(context)
+                                            .followWIngMethodd(
+                                                StoryViewListModelData
+                                                    ?.object?[index].userUid,
+                                                context);
+                                      },
+                                      child: Container(
+                                        height: 25,
+                                        alignment: Alignment.center,
+                                        width: 65,
+                                        margin: EdgeInsets.only(bottom: 5),
+                                        decoration: BoxDecoration(
+                                            color: ColorConstant.primary_color,
+                                            borderRadius:
+                                                BorderRadius.circular(4)),
+                                        child: StoryViewListModelData
+                                                    ?.object?[index]
+                                                    .isFollowing ==
+                                                'FOLLOW'
+                                            ? Text(
+                                                'Follow',
+                                                style: TextStyle(
+                                                    fontFamily: "outfit",
+                                                    fontSize: 12,
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Colors.white),
+                                              )
+                                            : StoryViewListModelData
+                                                        ?.object?[index]
+                                                        .isFollowing ==
+                                                    'REQUESTED'
+                                                ? Text(
+                                                    'Requested',
+                                                    style: TextStyle(
+                                                        fontFamily: "outfit",
+                                                        fontSize: 12,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        color: Colors.white),
+                                                  )
+                                                : Text(
+                                                    'Following ',
+                                                    style: TextStyle(
+                                                        fontFamily: "outfit",
+                                                        fontSize: 12,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        color: Colors.white),
+                                                  ),
+                                      ),
+                                    ),
+                            ),
+                          );
+                        }),
+                  ),
+                ],
+              );
+            },
+          ));
+    });
+
     showBottomSheet(
             /* isScrollControlled: true,
         useSafeArea: true,
