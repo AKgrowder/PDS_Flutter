@@ -14,6 +14,8 @@ import '../API/Bloc/RateUs_Bloc/RateUs_cubit.dart';
 import '../core/utils/sharedPreferences.dart';
 
 class rateUSdialog extends StatefulWidget {
+  void Function()? onClose;
+  rateUSdialog({Key? key, this.onClose}) : super(key: key);
   @override
   State<StatefulWidget> createState() => rateUSdialogState();
 }
@@ -64,7 +66,7 @@ class rateUSdialogState extends State<rateUSdialog>
           scale: scaleAnimation,
           child: Container(
             height: 420,
-            width: MediaQuery.of(context).size.width / 1.17,
+            width: 400,
             decoration: ShapeDecoration(
               color: Color.fromARGB(0, 0, 0, 0),
               shape: RoundedRectangleBorder(
@@ -75,7 +77,7 @@ class rateUSdialogState extends State<rateUSdialog>
               children: [
                 Container(
                   height: 420,
-                  width: MediaQuery.of(context).size.width / 1.17,
+                  width: 400,
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10.0),
                       color: const Color.fromARGB(255, 255, 255, 255)),
@@ -117,9 +119,7 @@ class rateUSdialogState extends State<rateUSdialog>
                           Positioned(
                             right: 0,
                             child: GestureDetector(
-                              onTap: () {
-                                Navigator.pop(context);
-                              },
+                              onTap: widget.onClose,
                               child: Padding(
                                 padding:
                                     const EdgeInsets.only(right: 7, top: 7),
