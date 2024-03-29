@@ -1620,7 +1620,7 @@ class _ProfileScreenState extends State<ProfileScreen>
                                           } else {
                                             if (NewProfileData
                                                         ?.object?.isFollowing ==
-                                                    'FOLLOWING' ||
+                                                    'FOLLOWING' || 
                                                 User_ID ==
                                                     NewProfileData
                                                         ?.object?.userUid) {
