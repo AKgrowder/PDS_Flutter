@@ -290,6 +290,7 @@ import 'package:flutter_mentions/flutter_mentions.dart';
 import 'package:pds/API/Bloc/BlogComment_BLoc/BlogComment_cubit.dart';
 import 'package:pds/API/Bloc/CreateRoom_Bloc/CreateRoom_cubit.dart';
 import 'package:pds/API/Bloc/CreateStory_Bloc/CreateStory_Cubit.dart';
+import 'package:pds/API/Bloc/DeleteUser_Bloc/DeleteUser_cubit.dart';
 import 'package:pds/API/Bloc/Edit_room_bloc/edit_room_cubit.dart';
 import 'package:pds/API/Bloc/Fatch_All_PRoom_Bloc/Fatch_PRoom_cubit.dart';
 import 'package:pds/API/Bloc/Fatch_all_members/fatch_all_members_cubit.dart';
@@ -305,6 +306,7 @@ import 'package:pds/API/Bloc/NewProfileScreen_Bloc/NewProfileScreen_cubit.dart';
 import 'package:pds/API/Bloc/OpenSaveImagepost_Bloc/OpenSaveImagepost_cubit.dart';
 import 'package:pds/API/Bloc/PersonalChatList_Bloc/PersonalChatList_cubit.dart';
 import 'package:pds/API/Bloc/PublicRoom_Bloc/CreatPublicRoom_cubit.dart';
+import 'package:pds/API/Bloc/RateUs_Bloc/RateUs_cubit.dart';
 import 'package:pds/API/Bloc/RePost_Bloc/RePost_cubit.dart';
 import 'package:pds/API/Bloc/RoomExists_bloc/RoomExists_cubit.dart';
 import 'package:pds/API/Bloc/SelectChat_bloc/SelectChat_cubit.dart';
@@ -320,6 +322,7 @@ import 'package:pds/API/Bloc/creatForum_Bloc/creat_Forum_cubit.dart';
 import 'package:pds/API/Bloc/device_info_Bloc/device_info_bloc.dart';
 import 'package:pds/API/Bloc/dmInbox_bloc/dminbox_blcok.dart';
 import 'package:pds/API/Bloc/followerBlock/followBlock.dart';
+import 'package:pds/API/Bloc/logOut_bloc/logOut_cubit.dart';
 import 'package:pds/API/Bloc/my_account_Bloc/my_account_cubit.dart';
 import 'package:pds/API/Bloc/senMSG_Bloc/senMSG_cubit.dart';
 import 'package:pds/API/Bloc/sherinvite_Block/sherinvite_cubit.dart';
@@ -333,6 +336,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:zego_uikit_prebuilt_call/zego_uikit_prebuilt_call.dart';
 import 'API/Bloc/BlockUser_Bloc/Block_user_cubit.dart';
 import 'API/Bloc/Comapny_Manage_bloc/Comapny_Manage_cubit.dart';
+import 'API/Bloc/CreateRoom_Bloc/CreateRoom_state.dart';
 import 'API/Bloc/postData_Bloc/postData_Bloc.dart';
 import 'presentation/splash_screen/splash_screen.dart';
 import 'package:flutter_langdetect/flutter_langdetect.dart' as langdetect;
@@ -448,9 +452,34 @@ class MyApp extends StatefulWidget {
   }) : super(key: key);
   @override
   State<MyApp> createState() => _MyAppState();
+  
 }
 
-class _MyAppState extends State<MyApp> {
+class _MyAppState extends State<MyApp> with WidgetsBindingObserver  {
+DateTime startTime = DateTime.now();
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  void initState() {
+    WidgetsBinding.instance.addObserver(this);
+    super.initState();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      startTime = DateTime.now();
+    }
+    if (state == AppLifecycleState.detached ||
+        state == AppLifecycleState.paused) {
+      var usageTime = DateTime.now().difference(startTime);
+      // do whatever with the usageTime
+      print('app usage Time ${usageTime}');
+    }
+  }
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
@@ -579,7 +608,13 @@ class _MyAppState extends State<MyApp> {
         ),
         BlocProvider<ComapnyManageCubit>(
           create: (context) => ComapnyManageCubit(),
-        ),
+        ),  BlocProvider<LogOutCubit>(
+          create: (context) => LogOutCubit(),
+        ), BlocProvider<RateUsCubit>(
+          create: (context) => RateUsCubit(),
+        ), BlocProvider<DeleteUserCubit>(
+          create: (context) => DeleteUserCubit(),
+        ),  
       ],
       child: Portal(
         child: MaterialApp(
