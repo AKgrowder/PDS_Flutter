@@ -41,6 +41,8 @@ class _CreateComapnyScreenState extends State<CreateComapnyScreen> {
   TextEditingController pageIDController = TextEditingController();
   TextEditingController descController = TextEditingController();
   GetAllCompanyType? getAllcompnayType;
+  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
   dataSetUpMethod() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
 
@@ -123,431 +125,410 @@ class _CreateComapnyScreenState extends State<CreateComapnyScreen> {
           },
           builder: (context, state) {
             return SingleChildScrollView(
-              child: Column(
-                children: [
-                  Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Container(
-                      height: 150,
-                      width: 150,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Colors.white,
-                      ),
-                      child: Stack(
-                        children: [
-                          chooseDocumentuploded?.object != null
-                              ? Padding(
-                                  padding: const EdgeInsets.all(4.0),
-                                  child: ClipOval(
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  children: [
+                    Align(
+                      alignment: Alignment.bottomCenter,
+                      child: Container(
+                        height: 150,
+                        width: 150,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.white,
+                        ),
+                        child: Stack(
+                          children: [
+                            chooseDocumentuploded?.object != null
+                                ? Padding(
+                                    padding: const EdgeInsets.all(4.0),
+                                    child: ClipOval(
+                                      child: FittedBox(
+                                        child: CachedNetworkImage(
+                                          placeholder: (context, url) {
+                                            return CircularProgressIndicator(
+                                              color:
+                                                  ColorConstant.primary_color,
+                                            );
+                                          },
+                                          height: 150,
+                                          width: 150,
+                                          imageUrl:
+                                              '${chooseDocumentuploded?.object.toString()}',
+                                          errorWidget: (context, url, error) =>
+                                              Icon(Icons.error),
+                                          fit: BoxFit.fill,
+                                        ),
+                                      ),
+                                    ),
+                                  )
+                                : Center(
                                     child: FittedBox(
-                                      child: CachedNetworkImage(
-                                        placeholder: (context, url) {
-                                          return CircularProgressIndicator(
-                                            color: ColorConstant.primary_color,
-                                          );
-                                        },
+                                      child: Image.asset(
+                                        ImageConstant.tomcruse,
+                                        // fit: BoxFit.cover,
                                         height: 150,
                                         width: 150,
-                                        imageUrl:
-                                            '${chooseDocumentuploded?.object.toString()}',
-                                        errorWidget: (context, url, error) =>
-                                            Icon(Icons.error),
-                                        fit: BoxFit.fill,
                                       ),
                                     ),
                                   ),
-                                )
-                              : Center(
-                                  child: FittedBox(
-                                    child: Image.asset(
-                                      ImageConstant.tomcruse,
-                                      // fit: BoxFit.cover,
-                                      height: 150,
-                                      width: 150,
+                            Positioned(
+                              bottom: 7,
+                              right: -0,
+                              child: GestureDetector(
+                                onTap: () {
+                                  gallerypicker();
+                                },
+                                child: Container(
+                                  height: 40,
+                                  width: 40,
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                        color: Color(0xffFFFFFF), width: 4),
+                                    shape: BoxShape.circle,
+                                    color: Color(0xffFBD8D9),
+                                  ),
+                                  child: Icon(
+                                    Icons.camera_alt_outlined,
+                                    color: ColorConstant.primary_color,
+                                  ),
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding:
+                          const EdgeInsets.only(left: 25, right: 25, top: 30),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            height: 45,
+                            width: _width,
+                            decoration: BoxDecoration(
+                                color: ColorConstant.primaryLight_color,
+                                borderRadius: BorderRadius.circular(5)),
+                            child: Padding(
+                              padding: const EdgeInsets.only(left: 15),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    "Company Details",
+                                    style: TextStyle(
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.w500,
+                                        color: Colors.black),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 15),
+                            child: Text(
+                              "Company Name",
+                              style: TextStyle(
+                                fontSize: 15,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ),
+                          Container(
+                            width: _width,
+                            child: CustomTextFormField(
+                              controller: comapnyNameController,
+                              maxLength: 50,
+                              margin: EdgeInsets.only(
+                                top: 10,
+                              ),
+
+                              validator: (value) {
+                                RegExp nameRegExp =
+                                    RegExp(r"^[a-zA-Z0-9\s'@]+$");
+                                if (value!.isEmpty) {
+                                  return 'Enter Company Name';
+                                } else if (!nameRegExp.hasMatch(value)) {
+                                  return 'Input cannot contains prohibited special characters';
+                                } else if (value.length < 3) {
+                                  return 'Minimum length required';
+                                } else if (value.contains('..')) {
+                                  return 'Company Name does not contain is correct';
+                                }
+
+                                return null;
+                              },
+                              // textStyle: theme.textTheme.titleMedium!,
+                              hintText: "Enter name",
+                              textStyle: TextStyle(
+                                fontWeight: FontWeight.w400,
+                                wordSpacing: 0,
+                                letterSpacing: 0,
+                              ),
+                              // hintStyle: theme.textTheme.titleMedium!,
+                              textInputAction: TextInputAction.next,
+                              filled: true,
+
+                              fillColor: appTheme.gray100,
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 10),
+                            child: Text(
+                              "Page ID",
+                              style: TextStyle(
+                                fontSize: 15,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ),
+                          Container(
+                            width: _width,
+                            child: CustomTextFormField(
+                              controller: pageIDController,
+                              maxLength: 30,
+                              margin: EdgeInsets.only(
+                                top: 10,
+                              ),
+
+                              validator: (value) {
+                                 RegExp nameRegExp = RegExp(r"^[a-zA-Z0-9\s'@]+$");
+                                if (value!.isEmpty) {
+                                  return 'Enter Page Id';
+                                } else if (!nameRegExp.hasMatch(value)) {
+                                  return 'Input cannot contains prohibited special characters';
+                                } else if (value.length < 3) {
+                                  return 'Minimum length required';
+                                } else if (value.contains('..')) {
+                                  return 'Page Id does not contain is correct';
+                                }
+
+                                return null;
+                              },
+                              // textStyle: theme.textTheme.titleMedium!,
+                              hintText: "Enter page ID",
+                              textStyle: TextStyle(
+                                fontWeight: FontWeight.w400,
+                                wordSpacing: 0,
+                                letterSpacing: 0,
+                              ),
+                              // hintStyle: theme.textTheme.titleMedium!,
+                              textInputAction: TextInputAction.next,
+                              filled: true,
+
+                              fillColor: appTheme.gray100,
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 10),
+                            child: Text(
+                              "Company Type",
+                              style: TextStyle(
+                                fontSize: 15,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ),
+                          Container(
+                            height: 50,
+                            width: _width,
+                            margin: EdgeInsets.only(
+                              top: 10,
+                            ),
+                            decoration: BoxDecoration(
+                                color: Colors.grey[100],
+                                border: Border.all(color: Colors.grey.shade200),
+                                borderRadius: BorderRadius.circular(5)),
+                            child: DropdownButtonHideUnderline(
+                              child: Padding(
+                                padding: EdgeInsets.only(left: 12),
+                                child: DropdownButton<String>(
+                                  icon: Icon(Icons.keyboard_arrow_down),
+                                  value: dropdownValue,
+                                  hint: Text('Select company type'),
+                                  onChanged: (String? value) {
+                                    // When the user selects an option from the dropdown.
+                                    setState(() {
+                                      dropdownValue = value!;
+                                    });
+                                  },
+                                  items: list?.map<DropdownMenuItem<String>>(
+                                      (String value) {
+                                    return DropdownMenuItem<String>(
+                                      value: value,
+                                      child: Text(
+                                        value,
+                                      ),
+                                    );
+                                  }).toList(),
+                                ),
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(
+                              top: 10,
+                            ),
+                            child: Text(
+                              "Description",
+                              style: TextStyle(
+                                fontSize: 15,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ),
+                          Container(
+                            width: _width,
+                            child: CustomTextFormField(
+                              maxLength: 250,
+                              maxLines: 4,
+                              controller: descController,
+                              margin: EdgeInsets.only(
+                                top: 10,
+                              ),
+
+                              validator: (value) {
+                                RegExp nameRegExp =
+                                    RegExp(r"^[a-zA-Z0-9\s'@]+$");
+                                if (!nameRegExp.hasMatch(value!)) {
+                                  return 'Input cannot contains prohibited special characters';
+                                } else if (value!.startsWith('..')) {
+                                  return 'Description does not contain is correct';
+                                }
+
+                                return null;
+                              },
+                              // textStyle: theme.textTheme.titleMedium!,
+                              hintText: "Type here...",
+                              textStyle: TextStyle(
+                                fontWeight: FontWeight.w400,
+                                wordSpacing: 0,
+                                letterSpacing: 0,
+                              ),
+                              // hintStyle: theme.textTheme.titleMedium!,
+                              textInputAction: TextInputAction.next,
+                              filled: true,
+
+                              fillColor: appTheme.gray100,
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 10),
+                            child: Row(
+                              children: [
+                                Checkbox(
+                                  activeColor: ColorConstant.primary_color,
+                                  checkColor: Colors.white,
+                                  value: isChecked,
+                                  onChanged: (bool? value) {
+                                    super.setState(() {
+                                      isChecked = value!;
+                                    });
+                                  },
+                                ),
+                                Text(
+                                  "I have Read and Agree to ",
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    fontFamily: 'Outfit',
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                                GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => Policies(
+                                            title: " ",
+                                            data: Policy_Data.turms_of_use,
+                                          ),
+                                        ));
+                                  },
+                                  child: Text(
+                                    "Terms of Use ",
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(
+                                      color: theme.colorScheme.primary,
+                                      fontSize: 12,
+                                      fontFamily: 'Outfit',
+                                      fontWeight: FontWeight.w500,
+                                      decoration: TextDecoration.underline,
                                     ),
                                   ),
                                 ),
-                          Positioned(
-                            bottom: 7,
-                            right: -0,
-                            child: GestureDetector(
-                              onTap: () {
-                                gallerypicker();
-                              },
-                              child: Container(
-                                height: 40,
-                                width: 40,
-                                decoration: BoxDecoration(
-                                  border: Border.all(
-                                      color: Color(0xffFFFFFF), width: 4),
-                                  shape: BoxShape.circle,
-                                  color: Color(0xffFBD8D9),
-                                ),
-                                child: Icon(
-                                  Icons.camera_alt_outlined,
-                                  color: ColorConstant.primary_color,
-                                ),
-                              ),
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding:
-                        const EdgeInsets.only(left: 25, right: 25, top: 30),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                          height: 45,
-                          width: _width,
-                          decoration: BoxDecoration(
-                              color: ColorConstant.primaryLight_color,
-                              borderRadius: BorderRadius.circular(5)),
-                          child: Padding(
-                            padding: const EdgeInsets.only(left: 15),
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
                                 Text(
-                                  "Company Details",
-                                  style: TextStyle(
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.w500,
-                                      color: Colors.black),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 15),
-                          child: Text(
-                            "Company Name",
-                            style: TextStyle(
-                              fontSize: 15,
-                              fontWeight: FontWeight.w500,
-                              color: Colors.black,
-                            ),
-                          ),
-                        ),
-                        Container(
-                          width: _width,
-                          child: CustomTextFormField(
-                            controller: comapnyNameController,
-                            maxLength: 50,
-                            margin: EdgeInsets.only(
-                              top: 10,
-                            ),
-
-                            validator: (value) {
-                              RegExp nameRegExp = RegExp(r"^[a-zA-Z0-9\s'@]+$");
-                              if (value!.isEmpty) {
-                                return 'Please Enter Name';
-                              } else if (!nameRegExp.hasMatch(value)) {
-                                return 'Input cannot contains prohibited special characters';
-                              } else if (value.length <= 0 ||
-                                  value.length > 50) {
-                                return 'Minimum length required';
-                              } else if (value.contains('..')) {
-                                return 'username does not contain is correct';
-                              }
-
-                              return null;
-                            },
-                            // textStyle: theme.textTheme.titleMedium!,
-                            hintText: "Enter name",
-                            textStyle: TextStyle(
-                              fontWeight: FontWeight.w400,
-                              wordSpacing: 1,
-                              letterSpacing: 1,
-                            ),
-                            // hintStyle: theme.textTheme.titleMedium!,
-                            textInputAction: TextInputAction.next,
-                            filled: true,
-
-                            fillColor: appTheme.gray100,
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 10),
-                          child: Text(
-                            "Page ID",
-                            style: TextStyle(
-                              fontSize: 15,
-                              fontWeight: FontWeight.w500,
-                              color: Colors.black,
-                            ),
-                          ),
-                        ),
-                        Container(
-                          width: _width,
-                          child: CustomTextFormField(
-                            controller: pageIDController,
-                            maxLength: 30,
-                            margin: EdgeInsets.only(
-                              top: 10,
-                            ),
-
-                            validator: (value) {
-                              RegExp nameRegExp = RegExp(r"^[a-zA-Z0-9\s'@]+$");
-                              if (value!.isEmpty) {
-                                return 'Please Enter Name';
-                              } else if (!nameRegExp.hasMatch(value)) {
-                                return 'Input cannot contains prohibited special characters';
-                              } else if (value.length <= 0 ||
-                                  value.length > 50) {
-                                return 'Minimum length required';
-                              } else if (value.contains('..')) {
-                                return 'username does not contain is correct';
-                              }
-
-                              return null;
-                            },
-                            // textStyle: theme.textTheme.titleMedium!,
-                            hintText: "Enter page ID",
-                            textStyle: TextStyle(
-                              fontWeight: FontWeight.w400,
-                              wordSpacing: 1,
-                              letterSpacing: 1,
-                            ),
-                            // hintStyle: theme.textTheme.titleMedium!,
-                            textInputAction: TextInputAction.next,
-                            filled: true,
-
-                            fillColor: appTheme.gray100,
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 10),
-                          child: Text(
-                            "Comapny Type",
-                            style: TextStyle(
-                              fontSize: 15,
-                              fontWeight: FontWeight.w500,
-                              color: Colors.black,
-                            ),
-                          ),
-                        ),
-                        Container(
-                          height: 50,
-                          width: _width,
-                          margin: EdgeInsets.only(
-                            top: 10,
-                          ),
-                          decoration: BoxDecoration(
-                              color: Colors.grey[100],
-                              border: Border.all(color: Colors.grey.shade200),
-                              borderRadius: BorderRadius.circular(5)),
-                          child: DropdownButtonHideUnderline(
-                            child: Padding(
-                              padding: EdgeInsets.only(left: 12),
-                              child: DropdownButton<String>(
-                                icon: Icon(Icons.keyboard_arrow_down),
-                                value: dropdownValue,
-                                hint: Text('Please Select company type'),
-                                onChanged: (String? value) {
-                                  // When the user selects an option from the dropdown.
-                                  setState(() {
-                                    dropdownValue = value!;
-                                  });
-                                },
-                                items: list?.map<DropdownMenuItem<String>>(
-                                    (String value) {
-                                  return DropdownMenuItem<String>(
-                                    value: value,
-                                    child: Text(
-                                      value,
-                                    ),
-                                  );
-                                }).toList(),
-                              ),
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(
-                            top: 10,
-                          ),
-                          child: Text(
-                            "Description",
-                            style: TextStyle(
-                              fontSize: 15,
-                              fontWeight: FontWeight.w500,
-                              color: Colors.black,
-                            ),
-                          ),
-                        ),
-                        Container(
-                          width: _width,
-                          child: CustomTextFormField(
-                             maxLength: 250,
-                            maxLines: 4,
-                            controller: descController,
-                            margin: EdgeInsets.only(
-                              top: 10,
-                            ),
-
-                            validator: (value) {
-                              RegExp nameRegExp = RegExp(r"^[a-zA-Z0-9\s'@]+$");
-                              if (value!.isEmpty) {
-                                return 'Please Enter Name';
-                              } else if (!nameRegExp.hasMatch(value)) {
-                                return 'Input cannot contains prohibited special characters';
-                              } else if (value.length <= 0 ||
-                                  value.length > 50) {
-                                return 'Minimum length required';
-                              } else if (value.contains('..')) {
-                                return 'username does not contain is correct';
-                              }
-
-                              return null;
-                            },
-                            // textStyle: theme.textTheme.titleMedium!,
-                            hintText: "Type here...",
-                            textStyle: TextStyle(
-                              fontWeight: FontWeight.w400,
-                              wordSpacing: 1,
-                              letterSpacing: 1,
-                            ),
-                            // hintStyle: theme.textTheme.titleMedium!,
-                            textInputAction: TextInputAction.next,
-                            filled: true,
-                            
-                            fillColor: appTheme.gray100,
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 10),
-                          child: Row(
-                            children: [
-                              Checkbox(
-                                activeColor: ColorConstant.primary_color,
-                                checkColor: Colors.white,
-                                value: isChecked,
-                                onChanged: (bool? value) {
-                                  super.setState(() {
-                                    isChecked = value!;
-                                  });
-                                },
-                              ),
-                              Text(
-                                "I have Read and Agree to ",
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  fontFamily: 'Outfit',
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                              GestureDetector(
-                                onTap: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => Policies(
-                                          title: " ",
-                                          data: Policy_Data.turms_of_use,
-                                        ),
-                                      ));
-                                },
-                                child: Text(
-                                  "Terms of Use ",
+                                  "& ",
                                   overflow: TextOverflow.ellipsis,
                                   style: TextStyle(
                                     color: theme.colorScheme.primary,
                                     fontSize: 12,
                                     fontFamily: 'Outfit',
                                     fontWeight: FontWeight.w500,
-                                    decoration: TextDecoration.underline,
                                   ),
                                 ),
-                              ),
-                              Text(
-                                "& ",
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                  color: theme.colorScheme.primary,
-                                  fontSize: 12,
-                                  fontFamily: 'Outfit',
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(right: 2),
-                                child: Center(
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) => Policies(
-                                              title: " ",
-                                              data: Policy_Data.privacy_policy1,
-                                            ),
-                                          ));
-                                    },
-                                    child: Text(
-                                      "Privacy Policy",
-                                      overflow: TextOverflow.ellipsis,
-                                      style: TextStyle(
-                                        color: theme.colorScheme.primary,
-                                        fontSize: 12,
-                                        fontFamily: 'Outfit',
-                                        fontWeight: FontWeight.w500,
-                                        decoration: TextDecoration.underline,
+                                Padding(
+                                  padding: const EdgeInsets.only(right: 2),
+                                  child: Center(
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) => Policies(
+                                                title: " ",
+                                                data:
+                                                    Policy_Data.privacy_policy1,
+                                              ),
+                                            ));
+                                      },
+                                      child: Text(
+                                        "Privacy Policy",
+                                        overflow: TextOverflow.ellipsis,
+                                        style: TextStyle(
+                                          color: theme.colorScheme.primary,
+                                          fontSize: 12,
+                                          fontFamily: 'Outfit',
+                                          fontWeight: FontWeight.w500,
+                                          decoration: TextDecoration.underline,
+                                        ),
                                       ),
                                     ),
                                   ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
-                        ),
-                        if (isChecked == true)
                           GestureDetector(
                             onTap: () {
-                              // textfiledvalidation();
-                              /* if(comapnyNameController.text.isEmpty){
-                                
+                              if (isChecked &&
+                                  _formKey.currentState!.validate()) {
+                                textfiledvalidation();
+                              } else if (!isChecked) {
+                                SnackBar snackBar = SnackBar(
+                                  content: Text(
+                                    'Accept Terms of Use and Privacy Policy',
+                                    style: TextStyle(
+                                      fontSize: 15,
+                                      fontFamily: 'outfit',
+                                    ),
+                                  ),
+                                  backgroundColor: ColorConstant.primary_color,
+                                );
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(snackBar);
                               }
-                              if (comapnyNameController.text.length < 3) {
-                                SnackBar snackBar = SnackBar(
-                                  content: Text(
-                                      'Company name should Minimum length required'),
-                                  backgroundColor: ColorConstant.primary_color,
-                                );
-                                ScaffoldMessenger.of(context)
-                                    .showSnackBar(snackBar);
-                              } else if (pageIDController.text.length < 3) {
-                                SnackBar snackBar = SnackBar(
-                                  content: Text(
-                                      'Page Id should Minimum length required'),
-                                  backgroundColor: ColorConstant.primary_color,
-                                );
-                                ScaffoldMessenger.of(context)
-                                    .showSnackBar(snackBar);
-                              } else { */
-                                var params = {
-                                  "companyPageName": comapnyNameController.text,
-                                  "companyPageType": dropdownValue,
-                                  "pageDescription": descController.text,
-                                  "pageId": pageIDController.text,
-                                  "companyPageProfilePic":
-                                      chooseDocumentuploded?.object.toString(),
-                                };
-                                print("parems--$params");
-                                BlocProvider.of<ComapnyManageCubit>(context)
-                                    .compenypageuplod(params, context)
-                                    .then((value) =>
-                                        BlocProvider.of<ComapnyManageCubit>(
-                                                context)
-                                            .getallcompenypagee(context));
-                             /*  } */
                             },
+                            // onTap: textfiledvalidation,
                             child: Container(
                               alignment: Alignment.center,
                               height: 50,
@@ -564,10 +545,11 @@ class _CreateComapnyScreenState extends State<CreateComapnyScreen> {
                               ),
                             ),
                           ),
-                      ],
-                    ),
-                  )
-                ],
+                        ],
+                      ),
+                    )
+                  ],
+                ),
               ),
             );
           },
@@ -577,35 +559,31 @@ class _CreateComapnyScreenState extends State<CreateComapnyScreen> {
   }
 
   textfiledvalidation() {
-    if (comapnyNameController.text == null ||
-        comapnyNameController.text == "") {
+    if (dropdownValue == null) {
       SnackBar snackBar = SnackBar(
-        content: Text('Please Enter Compeny Name'),
+        content: Text(
+          'Select Company Type',
+          style: TextStyle(
+            fontSize: 15,
+            fontFamily: 'outfit',
+          ),
+        ),
         backgroundColor: ColorConstant.primary_color,
       );
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
-    }
-
-    if (dropdownValue == null || dropdownValue == "") {
-      SnackBar snackBar = SnackBar(
-        content: Text('Please Enter Compeny Type'),
-        backgroundColor: ColorConstant.primary_color,
-      );
-      ScaffoldMessenger.of(context).showSnackBar(snackBar);
-    }
-    if (pageIDController.text == null || pageIDController.text == "") {
-      SnackBar snackBar = SnackBar(
-        content: Text('Please Enter Page ID'),
-        backgroundColor: ColorConstant.primary_color,
-      );
-      ScaffoldMessenger.of(context).showSnackBar(snackBar);
-    }
-    if (descController.text == null || descController.text == "") {
-      SnackBar snackBar = SnackBar(
-        content: Text('Please Enter Description'),
-        backgroundColor: ColorConstant.primary_color,
-      );
-      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    } else {
+      var params = {
+        "companyPageName": comapnyNameController.text,
+        "companyPageType": dropdownValue,
+        "pageDescription": descController.text,
+        "pageId": pageIDController.text,
+        "companyPageProfilePic": chooseDocumentuploded?.object.toString(),
+      };
+      print("parems--$params");
+      BlocProvider.of<ComapnyManageCubit>(context)
+          .compenypageuplod(params, context)
+          .then((value) => BlocProvider.of<ComapnyManageCubit>(context)
+              .getallcompenypagee(context));
     }
   }
 
