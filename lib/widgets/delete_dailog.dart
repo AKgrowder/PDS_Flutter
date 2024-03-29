@@ -14,6 +14,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../core/utils/sharedPreferences.dart';
 
 class DeleteUserdailog extends StatefulWidget {
+  void Function()? onClose;
+  DeleteUserdailog({Key? key, this.onClose}) : super(key: key);
   @override
   State<StatefulWidget> createState() => DeleteUserdailogState();
 }
@@ -53,6 +55,7 @@ class DeleteUserdailogState extends State<DeleteUserdailog>
         child: ScaleTransition(
           scale: scaleAnimation,
           child: Container(
+            width: 400,
             height: 480,
             decoration: ShapeDecoration(
               shape: RoundedRectangleBorder(
@@ -110,9 +113,7 @@ class DeleteUserdailogState extends State<DeleteUserdailog>
                               children: [
                                 Spacer(),
                                 GestureDetector(
-                                  onTap: () {
-                                    Navigator.pop(context);
-                                  },
+                                  onTap: widget.onClose,
                                   child: Container(
                                     margin: EdgeInsets.only(right: 4),
                                     height: 50,
@@ -275,9 +276,7 @@ class DeleteUserdailogState extends State<DeleteUserdailog>
                                       flex: 2,
                                       fit: FlexFit.tight,
                                       child: GestureDetector(
-                                        onTap: () {
-                                          Navigator.pop(context);
-                                        },
+                                        onTap: widget.onClose,
                                         child: Container(
                                             // width: 163,
                                             height: 48,

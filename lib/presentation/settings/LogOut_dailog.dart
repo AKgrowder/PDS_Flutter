@@ -10,6 +10,8 @@ import '../../API/Bloc/logOut_bloc/LogOut_state.dart';
 import '../../API/Bloc/logOut_bloc/logOut_cubit.dart';
 
 class LogOutdailog extends StatefulWidget {
+  void Function()? onClose;
+  LogOutdailog({Key? key, this.onClose}) : super(key: key);
   @override
   State<StatefulWidget> createState() => LogOutdailogState();
 }
@@ -81,7 +83,7 @@ class LogOutdailogState extends State<LogOutdailog>
 
                       Navigator.pushAndRemoveUntil(context,
                           MaterialPageRoute(builder: (context) {
-                        return SplashScreen(); 
+                        return SplashScreen();
                         // NewBottomBar(buttomIndex: 0);
                       }), (route) => false);
                     }
@@ -113,15 +115,12 @@ class LogOutdailogState extends State<LogOutdailog>
                                     )),
                                 height: 50,
                                 child: TextButton(
-                                  style: TextButton.styleFrom(),
-                                  child: const Text(
-                                    'No',
-                                    style: TextStyle(color: Colors.black),
-                                  ),
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                ),
+                                    style: TextButton.styleFrom(),
+                                    child: const Text(
+                                      'No',
+                                      style: TextStyle(color: Colors.black),
+                                    ),
+                                    onPressed: widget.onClose),
                               ),
                             ),
                             SizedBox(
@@ -140,7 +139,7 @@ class LogOutdailogState extends State<LogOutdailog>
                                   child: const Text('Yes',
                                       style: TextStyle(color: Colors.white)),
                                   onPressed: () async {
-                                      onUserLogout();
+                                    onUserLogout();
                                     BlocProvider.of<LogOutCubit>(context)
                                         .LogOutApi(context);
                                   },

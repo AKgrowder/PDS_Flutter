@@ -3682,15 +3682,19 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                                               } else {
                                                                                                                 print("ssaddsaddsdssaddsaddsdssaddsaddsdssaddsaddsd:- 3");
                                                                                                                 if (Link6 == true) {
-                                                                                                                  print("ssaddsaddsdssaddsaddsdssaddsaddsdssaddsaddsd:- 4");
-                                                                                                                  print("yes i am inList =   room");
-                                                                                                                  Navigator.push(context, MaterialPageRoute(
-                                                                                                                    builder: (context) {
-                                                                                                                      return NewBottomBar(
-                                                                                                                        buttomIndex: 1,
-                                                                                                                      );
-                                                                                                                    },
-                                                                                                                  ));
+                                                                                                                  if (uuid == null) {
+                                                                                                                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
+                                                                                                                  } else {
+                                                                                                                    print("ssaddsaddsdssaddsaddsdssaddsaddsdssaddsaddsd:- 4");
+                                                                                                                    print("yes i am inList =   room");
+                                                                                                                    Navigator.push(context, MaterialPageRoute(
+                                                                                                                      builder: (context) {
+                                                                                                                        return NewBottomBar(
+                                                                                                                          buttomIndex: 1,
+                                                                                                                        );
+                                                                                                                      },
+                                                                                                                    ));
+                                                                                                                  }
                                                                                                                 } else {
                                                                                                                   print("ssaddsaddsdssaddsaddsdssaddsaddsdssaddsaddsd:- 5");
                                                                                                                   if (isYouTubeUrl(SelectedTest)) {
@@ -3703,28 +3707,36 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                                             } else {
                                                                                                               print("ssaddsaddsdssaddsaddsdssaddsaddsdssaddsaddsd:- 6");
                                                                                                               if (link.value!.startsWith('#')) {
-                                                                                                                print("ssaddsaddsdssaddsaddsdssaddsaddsdssaddsaddsd:- 7");
-                                                                                                                await BlocProvider.of<GetGuestAllPostCubit>(context).seetinonExpried(context);
-                                                                                                                Navigator.push(
-                                                                                                                    context,
-                                                                                                                    MaterialPageRoute(
-                                                                                                                      builder: (context) => HashTagViewScreen(title: "${link.value}"),
-                                                                                                                    ));
+                                                                                                                if (uuid == null) {
+                                                                                                                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
+                                                                                                                } else {
+                                                                                                                  print("ssaddsaddsdssaddsaddsdssaddsaddsdssaddsaddsd:- 7");
+                                                                                                                  await BlocProvider.of<GetGuestAllPostCubit>(context).seetinonExpried(context);
+                                                                                                                  Navigator.push(
+                                                                                                                      context,
+                                                                                                                      MaterialPageRoute(
+                                                                                                                        builder: (context) => HashTagViewScreen(title: "${link.value}"),
+                                                                                                                      ));
+                                                                                                                }
                                                                                                               } else if (link.value!.startsWith('@')) {
-                                                                                                                print("ssaddsaddsdssaddsaddsdssaddsaddsdssaddsaddsd:- 8");
-                                                                                                                await BlocProvider.of<GetGuestAllPostCubit>(context).seetinonExpried(context);
-                                                                                                                var name;
-                                                                                                                var tagName;
-                                                                                                                name = SelectedTest;
-                                                                                                                tagName = name.replaceAll("@", "");
-                                                                                                                await BlocProvider.of<GetGuestAllPostCubit>(context).UserTagAPI(context, tagName);
+                                                                                                                if (uuid == null) {
+                                                                                                                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
+                                                                                                                } else {
+                                                                                                                  print("ssaddsaddsdssaddsaddsdssaddsaddsdssaddsaddsd:- 8");
+                                                                                                                  await BlocProvider.of<GetGuestAllPostCubit>(context).seetinonExpried(context);
+                                                                                                                  var name;
+                                                                                                                  var tagName;
+                                                                                                                  name = SelectedTest;
+                                                                                                                  tagName = name.replaceAll("@", "");
+                                                                                                                  await BlocProvider.of<GetGuestAllPostCubit>(context).UserTagAPI(context, tagName);
 
-                                                                                                                // Navigator.push(context, MaterialPageRoute(builder: (context) {
-                                                                                                                //   return ProfileScreen(User_ID: "${userTagModel?.object}", isFollowing: "");
-                                                                                                                // })).then((value) => Get_UserToken());
+                                                                                                                  // Navigator.push(context, MaterialPageRoute(builder: (context) {
+                                                                                                                  //   return ProfileScreen(User_ID: "${userTagModel?.object}", isFollowing: "");
+                                                                                                                  // })).then((value) => Get_UserToken());
 
-                                                                                                                print("tagName -- ${tagName}");
-                                                                                                                print("user id -- ${userTagModel?.object}");
+                                                                                                                  print("tagName -- ${tagName}");
+                                                                                                                  print("user id -- ${userTagModel?.object}");
+                                                                                                                }
                                                                                                               } else {
                                                                                                                 print("ssaddsaddsdssaddsaddsdssaddsaddsdssaddsaddsd:- 9");
                                                                                                                 // launchUrl(Uri.parse("https://${link.value.toString()}"));
@@ -3763,14 +3775,18 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                                                 print("qqqqqqqqhttps://${link.value}");
                                                                                                               } else {
                                                                                                                 if (Link6 == true) {
-                                                                                                                  print("yes i am inList =   room");
-                                                                                                                  Navigator.push(context, MaterialPageRoute(
-                                                                                                                    builder: (context) {
-                                                                                                                      return NewBottomBar(
-                                                                                                                        buttomIndex: 1,
-                                                                                                                      );
-                                                                                                                    },
-                                                                                                                  ));
+                                                                                                                  if (uuid == null) {
+                                                                                                                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
+                                                                                                                  } else {
+                                                                                                                    print("yes i am inList =   room");
+                                                                                                                    Navigator.push(context, MaterialPageRoute(
+                                                                                                                      builder: (context) {
+                                                                                                                        return NewBottomBar(
+                                                                                                                          buttomIndex: 1,
+                                                                                                                        );
+                                                                                                                      },
+                                                                                                                    ));
+                                                                                                                  }
                                                                                                                 } else {
                                                                                                                   if (isYouTubeUrl(SelectedTest)) {
                                                                                                                     playLink(SelectedTest, context);
@@ -3781,26 +3797,34 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                                               }
                                                                                                             } else {
                                                                                                               if (link.value!.startsWith('#')) {
-                                                                                                                await BlocProvider.of<GetGuestAllPostCubit>(context).seetinonExpried(context);
-                                                                                                                Navigator.push(
-                                                                                                                    context,
-                                                                                                                    MaterialPageRoute(
-                                                                                                                      builder: (context) => HashTagViewScreen(title: "${link.value}"),
-                                                                                                                    ));
+                                                                                                                if (uuid == null) {
+                                                                                                                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
+                                                                                                                } else {
+                                                                                                                  await BlocProvider.of<GetGuestAllPostCubit>(context).seetinonExpried(context);
+                                                                                                                  Navigator.push(
+                                                                                                                      context,
+                                                                                                                      MaterialPageRoute(
+                                                                                                                        builder: (context) => HashTagViewScreen(title: "${link.value}"),
+                                                                                                                      ));
+                                                                                                                }
                                                                                                               } else if (link.value!.startsWith('@')) {
-                                                                                                                await BlocProvider.of<GetGuestAllPostCubit>(context).seetinonExpried(context);
-                                                                                                                var name;
-                                                                                                                var tagName;
-                                                                                                                name = SelectedTest;
-                                                                                                                tagName = name.replaceAll("@", "");
-                                                                                                                await BlocProvider.of<GetGuestAllPostCubit>(context).UserTagAPI(context, tagName);
+                                                                                                                if (uuid == null) {
+                                                                                                                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
+                                                                                                                } else {
+                                                                                                                  await BlocProvider.of<GetGuestAllPostCubit>(context).seetinonExpried(context);
+                                                                                                                  var name;
+                                                                                                                  var tagName;
+                                                                                                                  name = SelectedTest;
+                                                                                                                  tagName = name.replaceAll("@", "");
+                                                                                                                  await BlocProvider.of<GetGuestAllPostCubit>(context).UserTagAPI(context, tagName);
 
-                                                                                                                // Navigator.push(context, MaterialPageRoute(builder: (context) {
-                                                                                                                //   return ProfileScreen(User_ID: "${userTagModel?.object}", isFollowing: "");
-                                                                                                                // })).then((value) => Get_UserToken());
+                                                                                                                  // Navigator.push(context, MaterialPageRoute(builder: (context) {
+                                                                                                                  //   return ProfileScreen(User_ID: "${userTagModel?.object}", isFollowing: "");
+                                                                                                                  // })).then((value) => Get_UserToken());
 
-                                                                                                                print("tagName -- ${tagName}");
-                                                                                                                print("user id -- ${userTagModel?.object}");
+                                                                                                                  print("tagName -- ${tagName}");
+                                                                                                                  print("user id -- ${userTagModel?.object}");
+                                                                                                                }
                                                                                                               } else {
                                                                                                                 // launchUrl(Uri.parse("https://${link.value.toString()}"));
                                                                                                               }
@@ -4342,15 +4366,19 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                                         } else {
                                                                                                           print("vcvcvcvcvcvcvcvcvcvcvcvvcvcvcvcvcvcvcvcvcvcvcv = 3");
                                                                                                           if (Link6 == true) {
-                                                                                                            print("vcvcvcvcvcvcvcvcvcvcvcvvcvcvcvcvcvcvcvcvcvcvcv = 4");
-                                                                                                            print("yes i am inList =   room");
-                                                                                                            Navigator.push(context, MaterialPageRoute(
-                                                                                                              builder: (context) {
-                                                                                                                return NewBottomBar(
-                                                                                                                  buttomIndex: 1,
-                                                                                                                );
-                                                                                                              },
-                                                                                                            ));
+                                                                                                            if (uuid == null) {
+                                                                                                              Navigator.of(context).push(MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
+                                                                                                            } else {
+                                                                                                              print("vcvcvcvcvcvcvcvcvcvcvcvvcvcvcvcvcvcvcvcvcvcvcv = 4");
+                                                                                                              print("yes i am inList =   room");
+                                                                                                              Navigator.push(context, MaterialPageRoute(
+                                                                                                                builder: (context) {
+                                                                                                                  return NewBottomBar(
+                                                                                                                    buttomIndex: 1,
+                                                                                                                  );
+                                                                                                                },
+                                                                                                              ));
+                                                                                                            }
                                                                                                           } else {
                                                                                                             print("vcvcvcvcvcvcvcvcvcvcvcvvcvcvcvcvcvcvcvcvcvcvcv = 5");
                                                                                                             if (isYouTubeUrl(SelectedTest)) {
@@ -4363,29 +4391,37 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                                       } else {
                                                                                                         print("vcvcvcvcvcvcvcvcvcvcvcvvcvcvcvcvcvcvcvcvcvcvcv = 6");
                                                                                                         if (link.value!.startsWith('#')) {
-                                                                                                          print("vcvcvcvcvcvcvcvcvcvcvcvvcvcvcvcvcvcvcvcvcvcvcv = 7");
-                                                                                                          await BlocProvider.of<GetGuestAllPostCubit>(context).seetinonExpried(context);
-                                                                                                          print("aaaaaaaaaa == ${link}");
-                                                                                                          Navigator.push(
-                                                                                                              context,
-                                                                                                              MaterialPageRoute(
-                                                                                                                builder: (context) => HashTagViewScreen(title: "${link.value}"),
-                                                                                                              ));
+                                                                                                          if (uuid == null) {
+                                                                                                            Navigator.of(context).push(MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
+                                                                                                          } else {
+                                                                                                            print("vcvcvcvcvcvcvcvcvcvcvcvvcvcvcvcvcvcvcvcvcvcvcv = 7");
+                                                                                                            await BlocProvider.of<GetGuestAllPostCubit>(context).seetinonExpried(context);
+                                                                                                            print("aaaaaaaaaa == ${link}");
+                                                                                                            Navigator.push(
+                                                                                                                context,
+                                                                                                                MaterialPageRoute(
+                                                                                                                  builder: (context) => HashTagViewScreen(title: "${link.value}"),
+                                                                                                                ));
+                                                                                                          }
                                                                                                         } else if (link.value!.startsWith('@')) {
-                                                                                                          print("vcvcvcvcvcvcvcvcvcvcvcvvcvcvcvcvcvcvcvcvcvcvcv = 8");
-                                                                                                          await BlocProvider.of<GetGuestAllPostCubit>(context).seetinonExpried(context);
-                                                                                                          var name;
-                                                                                                          var tagName;
-                                                                                                          name = SelectedTest;
-                                                                                                          tagName = name.replaceAll("@", "");
-                                                                                                          await BlocProvider.of<GetGuestAllPostCubit>(context).UserTagAPI(context, tagName);
+                                                                                                          if (uuid == null) {
+                                                                                                            Navigator.of(context).push(MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
+                                                                                                          } else {
+                                                                                                            print("vcvcvcvcvcvcvcvcvcvcvcvvcvcvcvcvcvcvcvcvcvcvcv = 8");
+                                                                                                            await BlocProvider.of<GetGuestAllPostCubit>(context).seetinonExpried(context);
+                                                                                                            var name;
+                                                                                                            var tagName;
+                                                                                                            name = SelectedTest;
+                                                                                                            tagName = name.replaceAll("@", "");
+                                                                                                            await BlocProvider.of<GetGuestAllPostCubit>(context).UserTagAPI(context, tagName);
 
-                                                                                                          // Navigator.push(context, MaterialPageRoute(builder: (context) {
-                                                                                                          //   return ProfileScreen(User_ID: "${userTagModel?.object}", isFollowing: "");
-                                                                                                          // })).then((value) => Get_UserToken());
+                                                                                                            // Navigator.push(context, MaterialPageRoute(builder: (context) {
+                                                                                                            //   return ProfileScreen(User_ID: "${userTagModel?.object}", isFollowing: "");
+                                                                                                            // })).then((value) => Get_UserToken());
 
-                                                                                                          print("tagName -- ${tagName}");
-                                                                                                          print("user id -- ${userTagModel?.object}");
+                                                                                                            print("tagName -- ${tagName}");
+                                                                                                            print("user id -- ${userTagModel?.object}");
+                                                                                                          }
                                                                                                         } else {
                                                                                                           print("vcvcvcvcvcvcvcvcvcvcvcvvcvcvcvcvcvcvcvcvcvcvcv = 9");
                                                                                                           setState(() {
@@ -4422,14 +4458,18 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                                           print("qqqqqqqqhttps://${link.value}");
                                                                                                         } else {
                                                                                                           if (Link6 == true) {
-                                                                                                            print("yes i am inList =   room");
-                                                                                                            Navigator.push(context, MaterialPageRoute(
-                                                                                                              builder: (context) {
-                                                                                                                return NewBottomBar(
-                                                                                                                  buttomIndex: 1,
-                                                                                                                );
-                                                                                                              },
-                                                                                                            ));
+                                                                                                            if (uuid == null) {
+                                                                                                              Navigator.of(context).push(MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
+                                                                                                            } else {
+                                                                                                              print("yes i am inList =   room");
+                                                                                                              Navigator.push(context, MaterialPageRoute(
+                                                                                                                builder: (context) {
+                                                                                                                  return NewBottomBar(
+                                                                                                                    buttomIndex: 1,
+                                                                                                                  );
+                                                                                                                },
+                                                                                                              ));
+                                                                                                            }
                                                                                                           } else {
                                                                                                             if (isYouTubeUrl(SelectedTest)) {
                                                                                                               playLink(SelectedTest, context);
@@ -4440,27 +4480,35 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                                         }
                                                                                                       } else {
                                                                                                         if (link.value!.startsWith('#')) {
-                                                                                                          await BlocProvider.of<GetGuestAllPostCubit>(context).seetinonExpried(context);
-                                                                                                          print("aaaaaaaaaa == ${link}");
-                                                                                                          Navigator.push(
-                                                                                                              context,
-                                                                                                              MaterialPageRoute(
-                                                                                                                builder: (context) => HashTagViewScreen(title: "${link.value}"),
-                                                                                                              ));
+                                                                                                          if (uuid == null) {
+                                                                                                            Navigator.of(context).push(MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
+                                                                                                          } else {
+                                                                                                            await BlocProvider.of<GetGuestAllPostCubit>(context).seetinonExpried(context);
+                                                                                                            print("aaaaaaaaaa == ${link}");
+                                                                                                            Navigator.push(
+                                                                                                                context,
+                                                                                                                MaterialPageRoute(
+                                                                                                                  builder: (context) => HashTagViewScreen(title: "${link.value}"),
+                                                                                                                ));
+                                                                                                          }
                                                                                                         } else if (link.value!.startsWith('@')) {
-                                                                                                          await BlocProvider.of<GetGuestAllPostCubit>(context).seetinonExpried(context);
-                                                                                                          var name;
-                                                                                                          var tagName;
-                                                                                                          name = SelectedTest;
-                                                                                                          tagName = name.replaceAll("@", "");
-                                                                                                          await BlocProvider.of<GetGuestAllPostCubit>(context).UserTagAPI(context, tagName);
+                                                                                                          if (uuid == null) {
+                                                                                                            Navigator.of(context).push(MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
+                                                                                                          } else {
+                                                                                                            await BlocProvider.of<GetGuestAllPostCubit>(context).seetinonExpried(context);
+                                                                                                            var name;
+                                                                                                            var tagName;
+                                                                                                            name = SelectedTest;
+                                                                                                            tagName = name.replaceAll("@", "");
+                                                                                                            await BlocProvider.of<GetGuestAllPostCubit>(context).UserTagAPI(context, tagName);
 
-                                                                                                          // Navigator.push(context, MaterialPageRoute(builder: (context) {
-                                                                                                          //   return ProfileScreen(User_ID: "${userTagModel?.object}", isFollowing: "");
-                                                                                                          // })).then((value) => Get_UserToken());
+                                                                                                            // Navigator.push(context, MaterialPageRoute(builder: (context) {
+                                                                                                            //   return ProfileScreen(User_ID: "${userTagModel?.object}", isFollowing: "");
+                                                                                                            // })).then((value) => Get_UserToken());
 
-                                                                                                          print("tagName -- ${tagName}");
-                                                                                                          print("user id -- ${userTagModel?.object}");
+                                                                                                            print("tagName -- ${tagName}");
+                                                                                                            print("user id -- ${userTagModel?.object}");
+                                                                                                          }
                                                                                                         }
                                                                                                       }
                                                                                                       // }
@@ -5471,14 +5519,18 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                                       } else {
                                                                                                         print("objectobjectobjectobjectobjectobjectobject:- 3");
                                                                                                         if (Link6 == true) {
-                                                                                                          print("yes i am inList =   room");
-                                                                                                          Navigator.push(context, MaterialPageRoute(
-                                                                                                            builder: (context) {
-                                                                                                              return NewBottomBar(
-                                                                                                                buttomIndex: 1,
-                                                                                                              );
-                                                                                                            },
-                                                                                                          ));
+                                                                                                          if (uuid == null) {
+                                                                                                            Navigator.of(context).push(MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
+                                                                                                          } else {
+                                                                                                            print("yes i am inList =   room");
+                                                                                                            Navigator.push(context, MaterialPageRoute(
+                                                                                                              builder: (context) {
+                                                                                                                return NewBottomBar(
+                                                                                                                  buttomIndex: 1,
+                                                                                                                );
+                                                                                                              },
+                                                                                                            ));
+                                                                                                          }
                                                                                                         } else {
                                                                                                           if (isYouTubeUrl(SelectedTest)) {
                                                                                                             playLink(SelectedTest, context);
@@ -5490,28 +5542,36 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                                     } else if (link.value != null) {
                                                                                                       print("objectobjectobjectobjectobjectobjectobject:- 4");
                                                                                                       if (link.value!.startsWith('#')) {
-                                                                                                        print("objectobjectobjectobjectobjectobjectobject:- 5");
-                                                                                                        await BlocProvider.of<GetGuestAllPostCubit>(context).seetinonExpried(context);
-                                                                                                        Navigator.push(
-                                                                                                            context,
-                                                                                                            MaterialPageRoute(
-                                                                                                              builder: (context) => HashTagViewScreen(title: "${link.value}"),
-                                                                                                            ));
+                                                                                                        if (uuid == null) {
+                                                                                                          Navigator.of(context).push(MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
+                                                                                                        } else {
+                                                                                                          print("objectobjectobjectobjectobjectobjectobject:- 5");
+                                                                                                          await BlocProvider.of<GetGuestAllPostCubit>(context).seetinonExpried(context);
+                                                                                                          Navigator.push(
+                                                                                                              context,
+                                                                                                              MaterialPageRoute(
+                                                                                                                builder: (context) => HashTagViewScreen(title: "${link.value}"),
+                                                                                                              ));
+                                                                                                        }
                                                                                                       } else if (link.value!.startsWith('@')) {
-                                                                                                        print("objectobjectobjectobjectobjectobjectobject:- 6");
-                                                                                                        await BlocProvider.of<GetGuestAllPostCubit>(context).seetinonExpried(context);
-                                                                                                        var name;
-                                                                                                        var tagName;
-                                                                                                        name = SelectedTest;
-                                                                                                        tagName = name.replaceAll("@", "");
-                                                                                                        await BlocProvider.of<GetGuestAllPostCubit>(context).UserTagAPI(context, tagName);
+                                                                                                        if (uuid == null) {
+                                                                                                          Navigator.of(context).push(MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
+                                                                                                        } else {
+                                                                                                          print("objectobjectobjectobjectobjectobjectobject:- 6");
+                                                                                                          await BlocProvider.of<GetGuestAllPostCubit>(context).seetinonExpried(context);
+                                                                                                          var name;
+                                                                                                          var tagName;
+                                                                                                          name = SelectedTest;
+                                                                                                          tagName = name.replaceAll("@", "");
+                                                                                                          await BlocProvider.of<GetGuestAllPostCubit>(context).UserTagAPI(context, tagName);
 
-                                                                                                        // Navigator.push(context, MaterialPageRoute(builder: (context) {
-                                                                                                        //   return ProfileScreen(User_ID: "${userTagModel?.object}", isFollowing: "");
-                                                                                                        // })).then((value) => Get_UserToken());
+                                                                                                          // Navigator.push(context, MaterialPageRoute(builder: (context) {
+                                                                                                          //   return ProfileScreen(User_ID: "${userTagModel?.object}", isFollowing: "");
+                                                                                                          // })).then((value) => Get_UserToken());
 
-                                                                                                        print("tagName -- ${tagName}");
-                                                                                                        print("user id -- ${userTagModel?.object}");
+                                                                                                          print("tagName -- ${tagName}");
+                                                                                                          print("user id -- ${userTagModel?.object}");
+                                                                                                        }
                                                                                                       } else {
                                                                                                         print("objectobjectobjectobjectobjectobjectobject:- 7");
                                                                                                         setState(() {
@@ -5549,14 +5609,18 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                                         print("qqqqqqqqhttps://${link.value}");
                                                                                                       } else {
                                                                                                         if (Link6 == true) {
-                                                                                                          print("yes i am inList =   room");
-                                                                                                          Navigator.push(context, MaterialPageRoute(
-                                                                                                            builder: (context) {
-                                                                                                              return NewBottomBar(
-                                                                                                                buttomIndex: 1,
-                                                                                                              );
-                                                                                                            },
-                                                                                                          ));
+                                                                                                          if (uuid == null) {
+                                                                                                            Navigator.of(context).push(MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
+                                                                                                          } else {
+                                                                                                            print("yes i am inList =   room");
+                                                                                                            Navigator.push(context, MaterialPageRoute(
+                                                                                                              builder: (context) {
+                                                                                                                return NewBottomBar(
+                                                                                                                  buttomIndex: 1,
+                                                                                                                );
+                                                                                                              },
+                                                                                                            ));
+                                                                                                          }
                                                                                                         } else {
                                                                                                           if (isYouTubeUrl(SelectedTest)) {
                                                                                                             playLink(SelectedTest, context);
@@ -5567,26 +5631,34 @@ class _HomeScreenNewState extends State<HomeScreenNew>
                                                                                                       }
                                                                                                     } else if (link.value != null) {
                                                                                                       if (link.value!.startsWith('#')) {
-                                                                                                        await BlocProvider.of<GetGuestAllPostCubit>(context).seetinonExpried(context);
-                                                                                                        Navigator.push(
-                                                                                                            context,
-                                                                                                            MaterialPageRoute(
-                                                                                                              builder: (context) => HashTagViewScreen(title: "${link.value}"),
-                                                                                                            ));
+                                                                                                        if (uuid == null) {
+                                                                                                          Navigator.of(context).push(MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
+                                                                                                        } else {
+                                                                                                          await BlocProvider.of<GetGuestAllPostCubit>(context).seetinonExpried(context);
+                                                                                                          Navigator.push(
+                                                                                                              context,
+                                                                                                              MaterialPageRoute(
+                                                                                                                builder: (context) => HashTagViewScreen(title: "${link.value}"),
+                                                                                                              ));
+                                                                                                        }
                                                                                                       } else if (link.value!.startsWith('@')) {
-                                                                                                        await BlocProvider.of<GetGuestAllPostCubit>(context).seetinonExpried(context);
-                                                                                                        var name;
-                                                                                                        var tagName;
-                                                                                                        name = SelectedTest;
-                                                                                                        tagName = name.replaceAll("@", "");
-                                                                                                        await BlocProvider.of<GetGuestAllPostCubit>(context).UserTagAPI(context, tagName);
+                                                                                                        if (uuid == null) {
+                                                                                                          Navigator.of(context).push(MaterialPageRoute(builder: (context) => RegisterCreateAccountScreen()));
+                                                                                                        } else {
+                                                                                                          await BlocProvider.of<GetGuestAllPostCubit>(context).seetinonExpried(context);
+                                                                                                          var name;
+                                                                                                          var tagName;
+                                                                                                          name = SelectedTest;
+                                                                                                          tagName = name.replaceAll("@", "");
+                                                                                                          await BlocProvider.of<GetGuestAllPostCubit>(context).UserTagAPI(context, tagName);
 
-                                                                                                        // Navigator.push(context, MaterialPageRoute(builder: (context) {
-                                                                                                        //   return ProfileScreen(User_ID: "${userTagModel?.object}", isFollowing: "");
-                                                                                                        // })).then((value) => Get_UserToken());
+                                                                                                          // Navigator.push(context, MaterialPageRoute(builder: (context) {
+                                                                                                          //   return ProfileScreen(User_ID: "${userTagModel?.object}", isFollowing: "");
+                                                                                                          // })).then((value) => Get_UserToken());
 
-                                                                                                        print("tagName -- ${tagName}");
-                                                                                                        print("user id -- ${userTagModel?.object}");
+                                                                                                          print("tagName -- ${tagName}");
+                                                                                                          print("user id -- ${userTagModel?.object}");
+                                                                                                        }
                                                                                                       }
                                                                                                     }
                                                                                                     // }
