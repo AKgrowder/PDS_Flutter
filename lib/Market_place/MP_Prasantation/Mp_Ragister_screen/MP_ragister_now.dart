@@ -21,13 +21,13 @@ class _ChooseCatgoryState extends State<ChooseCatgory> {
     {
       'name': 'Image 1',
       'image': ImageConstant.raw_material_marketplace,
-      'value': 'Raw Material Marketplace',
+      'value': 'RAW_MATERIAL_MARKET_PLACE',
       'isselected': false
     },
     {
       'name': 'Image 2',
       'image': ImageConstant.packageing_products,
-      'value': 'Packaging Products And Services',
+      'value': 'PACKAGING_PRODUCT_SERVICES',
       'isselected': false
     },
     {
