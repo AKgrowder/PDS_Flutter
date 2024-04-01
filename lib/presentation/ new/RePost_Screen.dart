@@ -2,10 +2,12 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
-
 import 'package:any_link_preview/any_link_preview.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dots_indicator/dots_indicator.dart';
+import 'package:ffmpeg_kit_flutter_full_gpl/ffmpeg_kit.dart';
+import 'package:ffmpeg_kit_flutter_full_gpl/ffmpeg_kit_config.dart';
+import 'package:ffmpeg_kit_flutter_full_gpl/return_code.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -14,6 +16,7 @@ import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:linkfy_text/linkfy_text.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:pds/API/Bloc/NewProfileScreen_Bloc/NewProfileScreen_cubit.dart';
 import 'package:pds/API/Bloc/OpenSaveImagepost_Bloc/OpenSaveImagepost_cubit.dart';
 import 'package:pds/API/Bloc/RePost_Bloc/RePost_cubit.dart';
@@ -26,6 +29,7 @@ import 'package:pds/API/Model/UserTagModel/UserTag_model.dart';
 import 'package:pds/API/Model/serchForInboxModel/serchForinboxModel.dart';
 import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/core/utils/image_constant.dart';
+import 'package:pds/core/utils/image_utils.dart';
 import 'package:pds/core/utils/sharedPreferences.dart';
 import 'package:pds/presentation/%20new/HashTagView_screen.dart';
 import 'package:pds/presentation/%20new/newbottembar.dart';
@@ -46,6 +50,8 @@ import '../../API/Model/NewProfileScreenModel/GetAppUserPost_Model.dart';
 import '../../API/Model/NewProfileScreenModel/GetSavePost_Model.dart';
 import '../Create_Post_Screen/CreatePostShow_ImageRow/photo_gallery-master/lib/photo_gallery.dart';
 import 'home_screen_new.dart';
+import 'package:path/path.dart' as path;
+
 class RePostScreen extends StatefulWidget {
   String? username;
   List? postData;
@@ -76,12 +82,17 @@ class _RePostScreenState extends State<RePostScreen> {
     documentuploadsize = await double.parse(prefs.getString(PreferencesKey.MaxPostUploadSizeInMB) ?? "0");
 
     finalFileSize = documentuploadsize;
-    super.setState(() {});
+    videoUplodeSize = await double.parse(
+        prefs.getString(PreferencesKey.MaxPostUploadSizeInMB) ?? "0");
+    setState(() {});
   }
   String title = "";
 
   bool? readmoree;
   int maxLength = 60;
+  final _exportingProgress = ValueNotifier<double>(0.0);
+  final _isExporting = ValueNotifier<bool>(false);
+  double videoUplodeSize = 0;
 
   @override
   void initState() {
@@ -1281,6 +1292,7 @@ class _RePostScreenState extends State<RePostScreen> {
                                                             mediumId: medium1!.id,
                                                             mediumType: MediumType.image,
                                                           );
+                                                          file = await _compressImage(file!);
                                                           file12 = null;
                                                           pickedImage.isEmpty;
                                                           super.setState(() {});
@@ -1367,7 +1379,32 @@ class _RePostScreenState extends State<RePostScreen> {
                         ),
                     ],
                   ),
-                )
+                ),
+              ValueListenableBuilder(
+                valueListenable: _isExporting,
+                builder: (_, bool export, Widget? child) =>
+                    AnimatedSize(
+                      duration: kThemeAnimationDuration,
+                      child: export ? child : null,
+                    ),
+                child: AlertDialog(
+                    title: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text("Compressing video... ",style: const TextStyle(fontSize: 12)),
+                        SizedBox(width: 16,),
+                        SizedBox(
+                          height: 16,
+                          width: 16,
+                          child: CircularProgressIndicator(
+                            color: primaryColor,
+                            strokeWidth: 2,
+                          ),
+                        )
+                      ],
+                    )
+                ),
+              )
             ],
           ),
         ),
@@ -1444,6 +1481,13 @@ class _RePostScreenState extends State<RePostScreen> {
     return lowerCaseImagePath.endsWith('.gif') || lowerCaseImagePath.endsWith('.svg') || lowerCaseImagePath.endsWith('.pdf') || lowerCaseImagePath.endsWith('.doc') || lowerCaseImagePath.endsWith('.mp4') || lowerCaseImagePath.endsWith('.mov') || lowerCaseImagePath.endsWith('.mp3') || lowerCaseImagePath.endsWith('.m4a');
   }
 
+  Future<File> _compressImage(File _image) async {
+    final tempDir = await getTemporaryDirectory();
+    final path = tempDir.path;
+    final compressedImage = await ImageCompressor.compressImage(_image, 100); // Adjust quality as needed
+    return compressedImage;
+  }
+
   getFileSize1(String filepath, int decimals, File file1, int Index) async {
     var file = File(filepath);
     int bytes = await file.length();
@@ -1466,6 +1510,9 @@ class _RePostScreenState extends State<RePostScreen> {
         print("Done file size KB");
 
         print('filenamecheckKB-${file1.path}');
+        for(int i = 0 ; i < pickedImage.length ; i++){
+          pickedImage[i] = await _compressImage(pickedImage[i]);
+        }
         BlocProvider.of<RePostCubit>(context).UplodeImageAPIImane(
           context,
           pickedImage,
@@ -1500,6 +1547,9 @@ class _RePostScreenState extends State<RePostScreen> {
           print("Done file Size 12MB");
           print('filecheckPath-${file1.path}');
           print('filecheckPath-${file1.path}');
+          for(int i = 0 ; i < pickedImage.length ; i++){
+            pickedImage[i] = await _compressImage(pickedImage[i]);
+          }
           BlocProvider.of<RePostCubit>(context).UplodeImageAPIImane(
             context,
             pickedImage,
@@ -1692,24 +1742,103 @@ class _RePostScreenState extends State<RePostScreen> {
     return STR;
   }
 
+
+
   Future getVideo() async {
     final pickedFile = await _imagePicker.pickVideo(source: ImageSource.gallery, preferredCameraDevice: CameraDevice.front, maxDuration: const Duration(minutes: 10));
     XFile? xfilePick = pickedFile;
-    super.setState(
-      () {
-        galleryFile.clear();
-        if (xfilePick != null) {
-          galleryFile.add(File(pickedFile!.path));
-          BlocProvider.of<RePostCubit>(context).UplodeImageAPIImane(
-            context,
-            galleryFile,
+
+    if (pickedFile != null) {
+      File videoFile = File(pickedFile.path);
+      final String tempPath = Platform.isAndroid
+          ? "/data/data/com.ip.app/files"
+          : (await getApplicationDocumentsDirectory()).path;
+      final String n = path.basenameWithoutExtension(videoFile.path);
+      final int epoch = DateTime.now().millisecondsSinceEpoch;
+      final String outputPath = "$tempPath/${n}_$epoch.mp4";
+      int fileSizeInBytes = videoFile.lengthSync();
+      double fileSizeInMB = fileSizeInBytes / (1024 * 1024);
+      if (videoFile.path.toLowerCase().endsWith('.mp4')) {
+        if (fileSizeInMB > videoUplodeSize) {
+          showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+              title: Text('File Size Exceeded'),
+              content: Text(
+                  'The selected video size ${fileSizeInMB.toStringAsFixed(2)}MB exceeds the allowed size limit of ${videoUplodeSize}MB.'),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context); // Close the dialog
+                  },
+                  child: Text('OK'),
+                ),
+              ],
+            ),
           );
         } else {
-          ScaffoldMessenger.of(context).showSnackBar(// is this context <<<
-              const SnackBar(content: Text('Nothing is selected')));
-        }
-      },
-    );
+          _isExporting.value = true;
+
+          FFmpegKit.executeAsync(
+            "-i '${videoFile.path}' -vcodec h264 -b:v 1000k -acodec mp3 '$outputPath'",
+                (session) async {
+              final state =
+              FFmpegKitConfig.sessionStateToString(await session.getState());
+              final code = await session.getReturnCode();
+
+              if (ReturnCode.isSuccess(code)) {
+                File file = File(outputPath);
+                print("check Video endswith-${file.path} ${fileSizeInMB}");
+                _isExporting.value = false;
+
+
+                galleryFile.clear();
+                if (xfilePick != null) {
+                  galleryFile.add(File(pickedFile!.path));
+                  BlocProvider.of<RePostCubit>(context).UplodeImageAPIImane(
+                    context,
+                    galleryFile,
+                  );
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(// is this context <<<
+                      const SnackBar(content: Text('Nothing is selected')));
+                }
+
+              } else {
+                print("ffmepg error : FFmpeg process exited with state $state and return code $code.\n${await session.getOutput()}");
+                ScaffoldMessenger.of(context).showSnackBar(// is this context <<<
+                    const SnackBar(content: Text('Video Compression Failed')));
+                _isExporting.value = false;
+
+                return;
+              }
+            },
+            null,
+                (stats){
+              print("ffmpeg progress : ${stats.getTime()} ${DateTime.now().toIso8601String()}");
+              // _exportingProgress.value = stats.getTime();
+            },
+          );}
+      } else {
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text('Invalid File Type'),
+            content: Text('Please select a valid MP4 video file.'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context); // Close the dialog
+                },
+                child: Text('OK'),
+              ),
+            ],
+          ),
+        );
+      }
+
+    }
+
   }
 
   Future<void> _getImageFromCamera() async {

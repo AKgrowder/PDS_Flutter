@@ -28,11 +28,11 @@ class LoginCubit extends Cubit<LoginState> {
     }
   }
   Future<void> loginApiisExistFromOnBoarding(
-      Map<String, dynamic> params, BuildContext context) async {
+     String username,String password,  BuildContext context) async {
     dynamic registeruserData;
     try {
       emit(LoginLoadingState());
-      registeruserData = await Repository().loginApiisExistFromOnBoarding(params, context);
+      registeruserData = await Repository().loginApiisExistFromOnBoarding(username,password, context);
       if (registeruserData == Config.somethingWentWrong) {
        emit( LoginErrorState("${registeruserData}"));
       } else {

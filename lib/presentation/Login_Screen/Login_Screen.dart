@@ -12,6 +12,7 @@ import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/core/utils/sharedPreferences.dart';
 import 'package:pds/presentation/%20new/newbottembar.dart';
 import 'package:pds/presentation/Login_Screen/UserReActivate_screen.dart';
+import 'package:pds/presentation/create_account_screen/create_account_screen.dart';
 import 'package:pds/presentation/otp_verification_screen/otp_verification_screen.dart';
 import 'package:pds/presentation/register_create_account_screen/register_create_account_screen.dart';
 import 'package:pds/widgets/custom_elevated_button.dart';
@@ -103,15 +104,47 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 );
               }
-              if (state is LoginLoadedState) {
-                Map<String, dynamic> dataPassing = {
-                  "username": emailAndMobileController.text,
-                  "password": passwordoneController.text,              
-                };
-                if (isPhone == true) {
-                  BlocProvider.of<LoginCubit>(context)
-                      .loginApiisExistFromOnBoarding(dataPassing, context);
+              if (state is LoginLoginisExistFromOnBoardingLoadedState) {
+                if (state.loginisexistfromonbordingmodel.object == null) {
+                  if (_formKey.currentState!.validate()) {
+                    Map<String, dynamic> dataPassing = {
+                      "username": emailAndMobileController.text,
+                      "password": passwordoneController.text,
+                      "isFromAdmin": false
+                    };
+
+                    print('dataPassing-$dataPassing');
+
+                    // if (SubmitOneTime == false) {
+                    //   SubmitOneTime = true;
+                    BlocProvider.of<LoginCubit>(context)
+                        .loginApidata(dataPassing, context);
+
+                    // }
+                  }
+                } else {
+                  print('this is the data fget');
+                  Navigator.push(context, MaterialPageRoute(builder: (context) {
+                    return CreateAccountScreen(
+                      loginisexistfromonbordingmodel : state.loginisexistfromonbordingmodel,
+                      Autofill: true,
+                      email: state.loginisexistfromonbordingmodel.object?.email,
+                      mobileNumber:
+                          state.loginisexistfromonbordingmodel.object?.mobileNo,
+                      name: state.loginisexistfromonbordingmodel.object?.name,
+                    );
+                  }));
                 }
+              }
+              if (state is LoginLoadedState) {
+                // Map<String, dynamic> dataPassing = {
+                //   "username": emailAndMobileController.text,
+                //   "password": passwordoneController.text,
+                // };
+                // if (isPhone == true) {
+                //   BlocProvider.of<LoginCubit>(context)
+                //       .loginApiisExistFromOnBoarding(dataPassing, context);
+                // }
                 SubmitOneTime = false;
                 if (state.loginModel.message == "User Deleted") {
                   showDialog(
@@ -503,21 +536,29 @@ class _LoginScreenState extends State<LoginScreen> {
                               left: 30, right: 30, top: 10),
                           child: CustomElevatedButton(
                             onTap: () {
-                              if (_formKey.currentState!.validate()) {
-                                Map<String, dynamic> dataPassing = {
-                                  "username": emailAndMobileController.text,
-                                  "password": passwordoneController.text,
-                                  "isFromAdmin": false
-                                };
-
-                                print('dataPassing-$dataPassing');
-
-                                // if (SubmitOneTime == false) {
-                                //   SubmitOneTime = true;
+                              if (isPhone == true) {
                                 BlocProvider.of<LoginCubit>(context)
-                                    .loginApidata(dataPassing, context);
+                                    .loginApiisExistFromOnBoarding(
+                                        emailAndMobileController.text,
+                                        passwordoneController.text,
+                                        context);
+                              } else {
+                                if (_formKey.currentState!.validate()) {
+                                  Map<String, dynamic> dataPassing = {
+                                    "username": emailAndMobileController.text,
+                                    "password": passwordoneController.text,
+                                    "isFromAdmin": false
+                                  };
 
-                                // }
+                                  print('dataPassing-$dataPassing');
+
+                                  // if (SubmitOneTime == false) {
+                                  //   SubmitOneTime = true;
+                                  BlocProvider.of<LoginCubit>(context)
+                                      .loginApidata(dataPassing, context);
+
+                                  // }
+                                }
                               }
                             },
                             text: "Log In",
