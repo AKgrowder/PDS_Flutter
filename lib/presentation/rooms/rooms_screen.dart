@@ -1860,39 +1860,40 @@ class _RoomsScreenState extends State<RoomsScreen> {
                             // checkuserdata == false
                             // ? SizedBox()
                             // :
-                            User_Mood == "EXPERT"
+                            /*  User_Mood == "EXPERT"
                                 ? SizedBox()
-                                : Padding(
-                                    padding: const EdgeInsets.all(18.0),
-                                    child: GestureDetector(
-                                      onTap: () {
-                                        /*  showDialog(
+                                :  */
+                            Padding(
+                              padding: const EdgeInsets.all(18.0),
+                              child: GestureDetector(
+                                onTap: () {
+                                  /*  showDialog(
                                   context: context,
                                   builder: (_) => BlocProvider<CreateRoomCubit>(
                                       create: (context) => CreateRoomCubit(),
                                       child: CreateRoomScreen()),
                                 ); */
 
-                                        //  CreatRoom(_height, _width)
-                                        //                                     : CreateForum()
+                                  //  CreatRoom(_height, _width)
+                                  //                                     : CreateForum()
 
-                                        checkuserdata == "PARTIALLY_REGISTERED"
-                                            ? CreateForum()
-                                            : checkuserdata == "PENDING"
-                                                ? showAlert()
-                                                : checkuserdata == "APPROVED"
-                                                    ? setState(() {
-                                                        createRoomDailog = true;
-                                                      }) /* CreatRoom(_height, _width) */
-                                                    : showAlert1();
-                                      },
-                                      child: CustomImageView(
-                                        imagePath: ImageConstant.addroomimage,
-                                        height: 55,
-                                        alignment: Alignment.bottomRight,
-                                      ),
-                                    ),
-                                  ),
+                                  checkuserdata == "PARTIALLY_REGISTERED"
+                                      ? CreateForum()
+                                      : checkuserdata == "PENDING"
+                                          ? showAlert()
+                                          : checkuserdata == "APPROVED"
+                                              ? setState(() {
+                                                  createRoomDailog = true;
+                                                }) /* CreatRoom(_height, _width) */
+                                              : showAlert1();
+                                },
+                                child: CustomImageView(
+                                  imagePath: ImageConstant.addroomimage,
+                                  height: 55,
+                                  alignment: Alignment.bottomRight,
+                                ),
+                              ),
+                            ),
                           ],
                         );
                 }

@@ -265,7 +265,7 @@ class _MobileNumberLoginScreenState extends State<MobileNumberLoginScreen> {
                 onTap: () {
                   showDialog(
                     context: context,
-                    builder: (_) => OtpVarificationDilog(),
+                    builder: (_) => OtpVarificationDilog(mobileNumber: '',),
                   );
                 },
                 child: Container(

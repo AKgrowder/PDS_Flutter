@@ -47,8 +47,6 @@ dependencies:
   file_picker: 
   permission_handler:
   dotted_border: ^2.1.0
-  stories_editor:
-    path: ./stories_editor
   photo_view: ^0.14.0
   multi_select_flutter: ^4.1.3
   flutter_switch: ^0.3.2
@@ -81,6 +79,21 @@ dependencies:
   youtube_player_flutter: ^9.0.0
   any_link_preview: ^3.0.1
   readmore: ^2.2.0
+  photo_manager:
+    path: ./photo_manager
+  image: ^4.0.17
+  image_gallery_saver: ^2.0.3
+  modal_gif_picker: ^0.0.2
+  perfect_freehand: ^1.0.4
+  align_positioned: ^3.0.0
+  fluttertoast: ^8.1.1
+  oktoast: ^3.3.1
+  animated_text_kit: ^4.2.2
+  flutter_screenutil: ^5.9.0
+  http:
+  video_editor: ^3.0.0
+  ffmpeg_kit_flutter_full_gpl: 6.0.3
+  flutter_image_compress: ^2.2.0
   # dio: ^5.3.4
   
   
