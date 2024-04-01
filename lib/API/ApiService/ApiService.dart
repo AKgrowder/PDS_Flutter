@@ -215,13 +215,17 @@ class ApiServices {
     final headers1 = {
       'Content-Type': 'application/json',
     };
+    UpdateBaseURL();
+    print("heder check And Get -${headers1}");
+    print("params -${params}");
 
     final hasInternet = await checkInternet();
     if (hasInternet == true) {
       print("check Valuie");
+      print("apiUrl-${baseURL + APIurl}");
       final response = await post(Uri.parse(baseURL + APIurl),
           headers: headers1, body: json.encode(params));
-      print("responnce body -${response.body}");
+      print("responnce body -${response}");
       return response;
     } else {
       Navigator.push(

@@ -22,21 +22,26 @@ class LoginRegisterCubit extends Cubit<LoginRegtistrtionState> {
   LoginRegisterCubit() : super(LoginRegtistrtionInitialState()) {}
   Future<void> loginApidata(
       Map<String, dynamic> params, BuildContext context) async {
-        print("dsfsdfsdgfsdgfgsdfgsdfg");
+    print("dsfsdfsdgfsdgfgsdfgsdfg");
     dynamic loginAndRegsitrionData;
     try {
       emit(LoginRegtistrtionLoadingState());
-      loginAndRegsitrionData =
-          await ApiMethod().isMobileNoExists(EndPoints.isMobileNoExists, params, context);
-      if (loginAndRegsitrionData.status == ApiData.Success) {
+      loginAndRegsitrionData = await ApiMethod()
+          .isMobileNoExists(EndPoints.isMobileNoExists, params, context);
+
+      if (loginAndRegsitrionData.status == RequestResponce.responceSucces) {
         emit(LoginRegtistrtionResponceGetState(loginAndRegsitrionData));
-      } else if (loginAndRegsitrionData.status == ApiData.Failed) {
+        
+      } else if (loginAndRegsitrionData.status ==
+          RequestResponce.responceFailed) {
         CustomFlushBar().flushBar(
             text: loginAndRegsitrionData.data['message'],
             context: context,
             duration: 2,
             backgroundColor: ColorConstant.primary_color);
       }
-    } catch (e) {}
+    } catch (e) {
+      print("errror -${e.toString()}");
+    }
   }
 }

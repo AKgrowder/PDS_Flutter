@@ -2,7 +2,9 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:pds/core/utils/sharedPreferences.dart';
 import 'package:pinput/pinput.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../core/utils/color_constant.dart';
 import '../../core/utils/image_constant.dart';
@@ -20,9 +22,10 @@ class ForgetPasswordDilogState extends State<ForgetPasswordDilog>
     with SingleTickerProviderStateMixin {
   late AnimationController controller;
   late Animation<double> scaleAnimation;
-  TextEditingController OTPController = TextEditingController();
+  TextEditingController otpTimer = TextEditingController();
   bool isPhonee = false;
   TextEditingController contectnumberrController = TextEditingController();
+  
 
   @override
   void initState() {
@@ -249,6 +252,8 @@ class ForgetPasswordDilogState extends State<ForgetPasswordDilog>
 
 //-------------------------------------------------OtpVarificationDilog---------------------------------------------------------------------
 class OtpVarificationDilog extends StatefulWidget {
+  String mobileNumber;
+  OtpVarificationDilog({required this.mobileNumber});
   @override
   State<StatefulWidget> createState() => OtpVarificationDilogState();
 }
@@ -263,16 +268,26 @@ class OtpVarificationDilogState extends State<OtpVarificationDilog>
   int _secondsRemaining = 0;
   int otpTimer = 0;
   bool tm = false;
+  timer() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    otpTimer = await prefs.getInt(PreferencesKey.otpTimer) ?? 0;
+    print(" otp timer  ${otpTimer}");
+    super.setState(() {
+      _secondsRemaining = otpTimer;
+    });
+  }
 
   @override
   void initState() {
+    
     super.initState();
 
     controller =
         AnimationController(vsync: this, duration: Duration(milliseconds: 450));
     scaleAnimation =
         CurvedAnimation(parent: controller, curve: Curves.elasticInOut);
-
+     timer();
+      _startTimer();
     controller.addListener(() {
       super.setState(() {});
     });
@@ -282,8 +297,7 @@ class OtpVarificationDilogState extends State<OtpVarificationDilog>
 
   @override
   void dispose() {
-    // TODO: implement dispose
-
+    _timer?.cancel();
     super.dispose();
   }
 
@@ -348,6 +362,7 @@ class OtpVarificationDilogState extends State<OtpVarificationDilog>
                               right: 0,
                               child: GestureDetector(
                                 onTap: () {
+                                   _timer?.cancel();
                                   Navigator.pop(context);
                                 },
                                 child: Padding(
@@ -377,7 +392,7 @@ class OtpVarificationDilogState extends State<OtpVarificationDilog>
                           child: Align(
                               alignment: Alignment.center,
                               child: Text(
-                                "One time Password to be sent to 1234 567 890",
+                                "One time Password to be sent to ${widget.mobileNumber}",
                                 textScaleFactor: 1.0,
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
@@ -431,9 +446,12 @@ class OtpVarificationDilogState extends State<OtpVarificationDilog>
                             onCompleted: (pin) => print(pin),
                           ),
                         ),
-                        Padding(
+                        /* Com */
+                      
+                        /* Padding(
                           padding: const EdgeInsets.only(bottom: 0, top: 15),
                           child: GestureDetector(
+                            onTap: {},
                             child: Padding(
                               padding: const EdgeInsets.only(
                                   top: 10, left: 20, right: 20),
@@ -457,7 +475,7 @@ class OtpVarificationDilogState extends State<OtpVarificationDilog>
                               ),
                             ),
                           ),
-                        ),
+                        ), */
                         Padding(
                           padding: EdgeInsets.only(top: 19, bottom: 5),
                           child: Row(
@@ -860,4 +878,3 @@ class ChangePasswordDilogState extends State<ChangePasswordDilog>
     );
   }
 }
-
