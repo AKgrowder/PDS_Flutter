@@ -31,7 +31,7 @@ class ApiServices {
           // "https://0b8e-2405-201-200b-a0cf-4523-3bc3-2996-dc22.ngrok.io/";
           // "https://uatapi.inpackaging.com/";
           // "https://api.inpackaging.com/";
-          "http://192.168.29.100:8081/";
+          "http://192.168.29.150:8081/";
     }
 
     print(baseURL);
@@ -69,7 +69,7 @@ class ApiServices {
           // "https://0b8e-2405-201-200b-a0cf-4523-3bc3-2996-dc22.ngrok.io/";
           // "https://uatapi.inpackaging.com/";
           // "https://api.inpackaging.com/";
-          "http://192.168.29.100:8081/";
+          "http://192.168.29.150:8081/";
     }
 
     print("API => ******** ${baseURL + APIurl}");
@@ -207,6 +207,28 @@ class ApiServices {
       } else {
         return response;
       }
+    }
+  }
+
+  postApiwithOutToken(
+      String APIurl, Map<String, dynamic> params, BuildContext context) async {
+    final headers1 = {
+      'Content-Type': 'application/json',
+    };
+
+    final hasInternet = await checkInternet();
+    if (hasInternet == true) {
+      print("check Valuie");
+      final response = await post(Uri.parse(baseURL + APIurl),
+          headers: headers1, body: json.encode(params));
+      print("responnce body -${response.body}");
+      return response;
+    } else {
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => NoInterNetScreen(),
+          ));
     }
   }
 
@@ -426,12 +448,11 @@ class ApiServices {
 setLOGOUT(BuildContext context) async {
   var height = MediaQuery.of(context).size.height;
   var width = MediaQuery.of(context).size.width;
- 
 
   Future.delayed(const Duration(seconds: 2), () async {
     // Navigator.pop(context);
     print("please again login");
-     onUserLogout();
+    onUserLogout();
     await setLogOut(context);
     ScaffoldMessenger.of(context).hideCurrentSnackBar();
   });

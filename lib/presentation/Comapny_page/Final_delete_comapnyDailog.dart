@@ -1,7 +1,5 @@
 import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:pds/API/Bloc/BlockUser_Bloc/Block_user_state.dart';
 import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/core/utils/image_constant.dart';
 
@@ -86,12 +84,6 @@ class _DeleteComapnyDailogState extends State<FinalDeleteComapnyDailog>
                                   color: Color.fromARGB(0, 0, 0, 0),
                                   child: Align(
                                     alignment: Alignment.centerRight,
-                                    child: Image.asset(
-                                      ImageConstant.closeimage,
-                                      height: 40,
-                                      width: 40,
-                                      fit: BoxFit.fill,
-                                    ),
                                   ),
                                 ),
                               ),

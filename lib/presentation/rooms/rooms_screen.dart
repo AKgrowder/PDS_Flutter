@@ -6,13 +6,16 @@ import 'package:intl/intl.dart';
 import 'package:pds/API/Bloc/CreateRoom_Bloc/CreateRoom_state.dart';
 import 'package:pds/dialogs/assigh_adminn_dilog.dart';
 import 'package:pds/dialogs/edit_dilog.dart';
+import 'package:pds/dilogs/create_room_dilog_.dart';
 import 'package:pds/dilogs/invite_dilog.dart';
 import 'package:pds/presentation/%20new/newbottembar.dart';
 import 'package:pds/presentation/%20new/profileNew.dart';
+import 'package:pds/presentation/DMAll_Screen/dm_new.dart';
 import 'package:pds/presentation/experts/experts_screen.dart';
 import 'package:pds/presentation/room_members/room_members_screen.dart';
 import 'package:pds/presentation/rooms/room_details_screen.dart';
 import 'package:pds/presentation/view_comments/view_comments_screen.dart';
+import 'package:pds/widgets/delete_Room_dailog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../API/Bloc/CreateRoom_Bloc/CreateRoom_cubit.dart';
@@ -57,6 +60,10 @@ class _RoomsScreenState extends State<RoomsScreen> {
   bool SubmitOneTime = false;
   String? userId;
   List<ExpertUserProfile> statusList = [];
+  bool? createRoomDailog;
+  bool? inviteUserDailog;
+  int? selectedIndex;
+  bool? deleteDailog;
 
   sherPerffrence() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -160,694 +167,711 @@ class _RoomsScreenState extends State<RoomsScreen> {
     var _width = MediaQuery.of(context).size.width;
     var _height = MediaQuery.of(context).size.height;
 
-    return WillPopScope(
-      onWillPop: () async {
-        Navigator.of(context).pushAndRemoveUntil(
-            MaterialPageRoute(
-                builder: (context) => NewBottomBar(buttomIndex: 0)),
-            (Route<dynamic> route) => false);
-        return true;
-      },
-      child: Scaffold(
-          backgroundColor: theme.colorScheme.onPrimary,
-          appBar: AppBar(
-            backgroundColor: theme.colorScheme.onPrimary,
-            elevation: 0,
-            centerTitle: true,
-            title: Text(
-              "Rooms",
-              style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
-                  fontFamily: "outfit",
-                  fontSize: 20),
-            ),
-          ),
-          body: BlocConsumer<GetAllPrivateRoomCubit, GetAllPrivateRoomState>(
-              listener: (context, state) async {
-            if (state is GetAllPrivateRoomErrorState) {
-              if (state.error == "not found") {
-                print("Show Image");
-                Show_NoData_Image = true;
-              } else {
-                SnackBar snackBar = SnackBar(
-                  content: Text(state.error),
-                  backgroundColor: ColorConstant.primary_color,
-                );
-                ScaffoldMessenger.of(context).showSnackBar(snackBar);
-              }
-            }
-
-            if (state is GetAllPrivateRoomLoadingState) {
-              Center(
-                child: Container(
-                  margin: EdgeInsets.only(bottom: 100),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(20),
-                    child: Image.asset(ImageConstant.loader,
-                        fit: BoxFit.cover, height: 100.0, width: 100),
-                  ),
+    return Stack(
+      children: [
+        WillPopScope(
+          onWillPop: () async {
+            Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(
+                    builder: (context) => NewBottomBar(buttomIndex: 0)),
+                (Route<dynamic> route) => false);
+            return true;
+          },
+          child: Scaffold(
+              backgroundColor: theme.colorScheme.onPrimary,
+              appBar: AppBar(
+                backgroundColor: theme.colorScheme.onPrimary,
+                elevation: 0,
+                centerTitle: true,
+                title: Text(
+                  "Rooms",
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                      fontFamily: "outfit",
+                      fontSize: 20),
                 ),
-              );
-            }
-            if (state is GetAllPrivateRoomLoadedState) {
-              print("GetAllPrivateRoomLoadedState");
-              PriveateRoomData = state.PublicRoomData;
-              if (PriveateRoomData?.object?.length == 0 ||
-                  PriveateRoomData?.object?.length == null) {
-                Show_NoData_Image = true;
-              } else {
-                Show_NoData_Image = false;
-              }
-
-              /* state.PublicRoomData.object?.forEach((element) {
-                element.expertUserProfile?.forEach((element1) {
-                  if (element1.approvalStatus == "APPROVED") {
-                    print("this condison is working");
-                    statusList.add(element1);
+              ),
+              body:
+                  BlocConsumer<GetAllPrivateRoomCubit, GetAllPrivateRoomState>(
+                      listener: (context, state) async {
+                if (state is GetAllPrivateRoomErrorState) {
+                  if (state.error == "not found") {
+                    print("Show Image");
+                    Show_NoData_Image = true;
+                  } else {
+                    SnackBar snackBar = SnackBar(
+                      content: Text(state.error),
+                      backgroundColor: ColorConstant.primary_color,
+                    );
+                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
                   }
-                });
-              }
-              ); */
-              state.PublicRoomData.object?.forEach((elment) {
-                if (elment.expertUserProfile?.isNotEmpty == true) {
-                  elment.expertUserProfile?.forEach((index) {
-                    if (index.approvalStatus == 'APPROVED') {
-                      statusList.add(index);
+                }
+
+                if (state is GetAllPrivateRoomLoadingState) {
+                  Center(
+                    child: Container(
+                      margin: EdgeInsets.only(bottom: 100),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(20),
+                        child: Image.asset(ImageConstant.loader,
+                            fit: BoxFit.cover, height: 100.0, width: 100),
+                      ),
+                    ),
+                  );
+                }
+                if (state is GetAllPrivateRoomLoadedState) {
+                  print("GetAllPrivateRoomLoadedState");
+                  PriveateRoomData = state.PublicRoomData;
+                  if (PriveateRoomData?.object?.length == 0 ||
+                      PriveateRoomData?.object?.length == null) {
+                    Show_NoData_Image = true;
+                  } else {
+                    Show_NoData_Image = false;
+                  }
+
+                  /* state.PublicRoomData.object?.forEach((element) {
+                    element.expertUserProfile?.forEach((element1) {
+                      if (element1.approvalStatus == "APPROVED") {
+                        print("this condison is working");
+                        statusList.add(element1);
+                      }
+                    });
+                  }
+                  ); */
+                  state.PublicRoomData.object?.forEach((elment) {
+                    if (elment.expertUserProfile?.isNotEmpty == true) {
+                      elment.expertUserProfile?.forEach((index) {
+                        if (index.approvalStatus == 'APPROVED') {
+                          statusList.add(index);
+                        }
+                      });
                     }
                   });
+                  uniqueList = statusList.fold<List<ExpertUserProfile>>([],
+                      (List<ExpertUserProfile> acc, ExpertUserProfile curr) {
+                    bool isExisting =
+                        acc.any((element) => element.uuid == curr.uuid);
+                    if (!isExisting) {
+                      acc.add(curr);
+                    }
+                    return acc;
+                  });
                 }
-              });
-              uniqueList = statusList.fold<List<ExpertUserProfile>>([],
-                  (List<ExpertUserProfile> acc, ExpertUserProfile curr) {
-                bool isExisting =
-                    acc.any((element) => element.uuid == curr.uuid);
-                if (!isExisting) {
-                  acc.add(curr);
+
+                if (state is GetNotificationCountLoadedState) {
+                  print(state.GetNotificationCountData.object);
+                  saveNotificationCount(
+                      state.GetNotificationCountData.object
+                              ?.notificationCount ??
+                          0,
+                      state.GetNotificationCountData.object?.messageCount ?? 0);
                 }
-                return acc;
-              });
-            }
 
-            if (state is GetNotificationCountLoadedState) {
-              print(state.GetNotificationCountData.object);
-              saveNotificationCount(
-                  state.GetNotificationCountData.object?.notificationCount ?? 0,
-                  state.GetNotificationCountData.object?.messageCount ?? 0);
-            }
+                if (state is CheckuserLoadedState) {
+                  print(
+                      'User Create Forum -${state.checkUserStausModel.object}');
+                  checkuserdata = state.checkUserStausModel.object ?? "";
+                }
+              }, builder: (context, state) {
+                print('hear this builder can build');
 
-            if (state is CheckuserLoadedState) {
-              print('User Create Forum -${state.checkUserStausModel.object}');
-              checkuserdata = state.checkUserStausModel.object ?? "";
-            }
-          }, builder: (context, state) {
-            print('hear this builder can build');
+                if (state is GetAllPrivateRoomLoadedState) {
+                  return Show_NoData_Image == false
+                      ? Stack(
+                          children: [
+                            SingleChildScrollView(
+                              child: Column(children: [
+                                ListView.builder(
+                                  // itemCount: aa.length,
+                                  itemCount: PriveateRoomData?.object?.length,
+                                  /* (image?.contains(index) ?? false)
+                                    ? aa.length
+                                    : aa.length, */
+                                  shrinkWrap: true,
+                                  physics: NeverScrollableScrollPhysics(),
+                                  itemBuilder: (context, index) {
+                                    print(
+                                        "####################################${PriveateRoomData?.object?[index]}");
+                                    // final apiDate = DateTime.parse(PublicRoomData
+                                    //         ?.object?[index].createdDate
+                                    //         .toString() ??
+                                    //     '');
 
-            if (state is GetAllPrivateRoomLoadedState) {
-              return Show_NoData_Image == false
-                  ? Stack(
-                      children: [
-                        SingleChildScrollView(
-                          child: Column(children: [
-                            ListView.builder(
-                              // itemCount: aa.length,
-                              itemCount: PriveateRoomData?.object?.length,
-                              /* (image?.contains(index) ?? false)
-                                ? aa.length
-                                : aa.length, */
-                              shrinkWrap: true,
-                              physics: NeverScrollableScrollPhysics(),
-                              itemBuilder: (context, index) {
-                                print(
-                                    "####################################${PriveateRoomData?.object?[index]}");
-                                // final apiDate = DateTime.parse(PublicRoomData
-                                //         ?.object?[index].createdDate
-                                //         .toString() ??
-                                //     '');
-
-                                DateTime parsedDateTime = DateTime.parse(
-                                    '${PriveateRoomData?.object?[index].createdDate ?? ""}');
-                                return Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 35, vertical: 5),
-                                  child: GestureDetector(
-                                    onTap: () {},
-                                    child: Container(
-                                      // height: demo.contains(index) ? null: height / 16,
-                                      width: _width / 1.2,
-                                      decoration: BoxDecoration(
-                                          border: Border.all(
-                                              color:
-                                                  ColorConstant.primary_color,
-                                              width: 1),
-                                          borderRadius:
-                                              BorderRadius.circular(5)),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          SizedBox(
-                                            height: 15,
-                                          ),
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
+                                    DateTime parsedDateTime = DateTime.parse(
+                                        '${PriveateRoomData?.object?[index].createdDate ?? ""}');
+                                    return Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 35, vertical: 5),
+                                      child: GestureDetector(
+                                        onTap: () {},
+                                        child: Container(
+                                          // height: demo.contains(index) ? null: height / 16,
+                                          width: _width / 1.2,
+                                          decoration: BoxDecoration(
+                                              border: Border.all(
+                                                  color: ColorConstant
+                                                      .primary_color,
+                                                  width: 1),
+                                              borderRadius:
+                                                  BorderRadius.circular(5)),
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
                                             children: [
                                               SizedBox(
-                                                width: 10,
+                                                height: 15,
                                               ),
-                                              // Text(formattedDate),
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                children: [
+                                                  SizedBox(
+                                                    width: 10,
+                                                  ),
+                                                  // Text(formattedDate),
 
-                                              Text(
-                                                customFormat(parsedDateTime),
-                                                // "${parsedDateTime}"  ,
-                                                maxLines: 2,
-                                                textScaleFactor: 1.0,
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.w500,
-                                                    color: Colors.grey,
-                                                    fontFamily: "outfit",
-                                                    fontSize: 14),
-                                              ),
-                                              Spacer(),
-                                              PriveateRoomData?.object?[index]
-                                                          .isLoginUserAdmin ==
-                                                      true
-                                                  ? Padding(
-                                                      padding:
-                                                          const EdgeInsets.only(
-                                                              right: 35.0),
-                                                      child: GestureDetector(
-                                                        onTap: () {
-                                                          showDialog(
-                                                            context: context,
-                                                            builder: (context) =>
-                                                                ScaffoldMessenger(
-                                                              child: Builder(
+                                                  Text(
+                                                    customFormat(
+                                                        parsedDateTime),
+                                                    // "${parsedDateTime}"  ,
+                                                    maxLines: 2,
+                                                    textScaleFactor: 1.0,
+                                                    style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                        color: Colors.grey,
+                                                        fontFamily: "outfit",
+                                                        fontSize: 14),
+                                                  ),
+                                                  Spacer(),
+                                                  PriveateRoomData
+                                                              ?.object?[index]
+                                                              .isLoginUserAdmin ==
+                                                          true
+                                                      ? Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                      .only(
+                                                                  right: 35.0),
+                                                          child:
+                                                              GestureDetector(
+                                                            onTap: () {
+                                                              showDialog(
+                                                                context:
+                                                                    context,
                                                                 builder:
                                                                     (context) =>
-                                                                        Scaffold(
-                                                                  backgroundColor:
-                                                                      Colors
-                                                                          .transparent,
-                                                                  body:
-                                                                      EditDilogScreen(
-                                                                    parentName: PriveateRoomData
-                                                                        ?.object?[
-                                                                            index]
-                                                                        .roomQuestion,
-                                                                    uid: PriveateRoomData
-                                                                        ?.object?[
-                                                                            index]
-                                                                        .uid
-                                                                        .toString(),
+                                                                        ScaffoldMessenger(
+                                                                  child:
+                                                                      Builder(
+                                                                    builder:
+                                                                        (context) =>
+                                                                            Scaffold(
+                                                                      backgroundColor:
+                                                                          Colors
+                                                                              .transparent,
+                                                                      body:
+                                                                          EditDilogScreen(
+                                                                        parentName: PriveateRoomData
+                                                                            ?.object?[index]
+                                                                            .roomQuestion,
+                                                                        uid: PriveateRoomData
+                                                                            ?.object?[index]
+                                                                            .uid
+                                                                            .toString(),
+                                                                      ),
+                                                                    ),
                                                                   ),
                                                                 ),
-                                                              ),
-                                                            ),
-                                                          );
+                                                              );
 
-                                                          // showDialog(
-                                                          //   context: context,
-                                                          //   builder:
-                                                          //       (BuildContext context) {
-                                                          //     print(
-                                                          //         'uid print-${PublicRoomData?.object?[index].uid}');
-                                                          //     return MultiBlocProvider(
-                                                          //         providers: [
-                                                          //           BlocProvider<
-                                                          //               EditroomCubit>(
-                                                          //             create: (context) =>
-                                                          //                 EditroomCubit(),
-                                                          //           )
-                                                          //         ],
-                                                          //         child:
-                                                          //             EditDilogScreen(
-                                                          //           parentName:
-                                                          //               PublicRoomData
-                                                          //                   ?.object?[
-                                                          //                       index]
-                                                          //                   .roomQuestion,
-                                                          //           uid: PublicRoomData
-                                                          //               ?.object?[index]
-                                                          //               .uid
-                                                          //               .toString(),
-                                                          //         ));
-                                                          //   },
-                                                          // );
-                                                          // editProfile(PublicRoomData?.object?[index].uid.toString());
-                                                          // showDialog(
-                                                          //     context: context,
-                                                          //     builder: (_) =>
-                                                          //         EditDilogScreen());
-                                                        },
-                                                        child: CustomImageView(
-                                                          imagePath:
-                                                              ImageConstant.pen,
-                                                          height: 15,
-                                                        ),
-                                                      ),
-                                                    )
-                                                  : SizedBox(),
-                                              /*  checkuserdata ==
-                                                      "PARTIALLY_REGISTERED"
-                                                  ? SizedBox()
-                                                  : User_Mood == "EXPERT"
+                                                              // showDialog(
+                                                              //   context: context,
+                                                              //   builder:
+                                                              //       (BuildContext context) {
+                                                              //     print(
+                                                              //         'uid print-${PublicRoomData?.object?[index].uid}');
+                                                              //     return MultiBlocProvider(
+                                                              //         providers: [
+                                                              //           BlocProvider<
+                                                              //               EditroomCubit>(
+                                                              //             create: (context) =>
+                                                              //                 EditroomCubit(),
+                                                              //           )
+                                                              //         ],
+                                                              //         child:
+                                                              //             EditDilogScreen(
+                                                              //           parentName:
+                                                              //               PublicRoomData
+                                                              //                   ?.object?[
+                                                              //                       index]
+                                                              //                   .roomQuestion,
+                                                              //           uid: PublicRoomData
+                                                              //               ?.object?[index]
+                                                              //               .uid
+                                                              //               .toString(),
+                                                              //         ));
+                                                              //   },
+                                                              // );
+                                                              // editProfile(PublicRoomData?.object?[index].uid.toString());
+                                                              // showDialog(
+                                                              //     context: context,
+                                                              //     builder: (_) =>
+                                                              //         EditDilogScreen());
+                                                            },
+                                                            child:
+                                                                CustomImageView(
+                                                              imagePath:
+                                                                  ImageConstant
+                                                                      .pen,
+                                                              height: 15,
+                                                            ),
+                                                          ),
+                                                        )
+                                                      : SizedBox(),
+                                                  /*  checkuserdata ==
+                                                          "PARTIALLY_REGISTERED"
+                                                      ? SizedBox()
+                                                      : User_Mood == "EXPERT"
+                                                          ? SizedBox()
+                                                          : PriveateRoomData
+                                                                      ?.object?[
+                                                                          index]
+                                                                      .isLoginUserAdmin ==
+                                                                  true
+                                                              ? Padding(
+                                                                  padding:
+                                                                      const EdgeInsets
+                                                                              .only(
+                                                                          right:
+                                                                              35.0),
+                                                                  child:
+                                                                      GestureDetector(
+                                                                    onTap: () {
+                                                                      showDialog(
+                                                                        context:
+                                                                            context,
+                                                                        builder:
+                                                                            (context) =>
+                                                                                ScaffoldMessenger(
+                                                                          child:
+                                                                              Builder(
+                                                                            builder:
+                                                                                (context) =>
+                                                                                    Scaffold(
+                                                                              backgroundColor:
+                                                                                  Colors.transparent,
+                                                                              body:
+                                                                                  EditDilogScreen(
+                                                                                parentName:
+                                                                                    PriveateRoomData?.object?[index].roomQuestion,
+                                                                                uid:
+                                                                                    PriveateRoomData?.object?[index].uid.toString(),
+                                                                              ),
+                                                                            ),
+                                                                          ),
+                                                                        ),
+                                                                      );
+
+                                                                      // showDialog(
+                                                                      //   context: context,
+                                                                      //   builder:
+                                                                      //       (BuildContext context) {
+                                                                      //     print(
+                                                                      //         'uid print-${PublicRoomData?.object?[index].uid}');
+                                                                      //     return MultiBlocProvider(
+                                                                      //         providers: [
+                                                                      //           BlocProvider<
+                                                                      //               EditroomCubit>(
+                                                                      //             create: (context) =>
+                                                                      //                 EditroomCubit(),
+                                                                      //           )
+                                                                      //         ],
+                                                                      //         child:
+                                                                      //             EditDilogScreen(
+                                                                      //           parentName:
+                                                                      //               PublicRoomData
+                                                                      //                   ?.object?[
+                                                                      //                       index]
+                                                                      //                   .roomQuestion,
+                                                                      //           uid: PublicRoomData
+                                                                      //               ?.object?[index]
+                                                                      //               .uid
+                                                                      //               .toString(),
+                                                                      //         ));
+                                                                      //   },
+                                                                      // );
+                                                                      // editProfile(PublicRoomData?.object?[index].uid.toString());
+                                                                      // showDialog(
+                                                                      //     context: context,
+                                                                      //     builder: (_) =>
+                                                                      //         EditDilogScreen());
+                                                                    },
+                                                                    child:
+                                                                        CustomImageView(
+                                                                      imagePath:
+                                                                          ImageConstant
+                                                                              .pen,
+                                                                      height: 15,
+                                                                    ),
+                                                                  ),
+                                                                )
+                                                              : SizedBox(), */
+                                                  /* checkuserdata ==
+                                                          "PARTIALLY_REGISTERED"
+                                                      ? SizedBox()
+                                                      : User_Mood == "EXPERT"
+                                                          ? SizedBox()
+                                                          : */
+                                                  PriveateRoomData
+                                                              ?.object?[index]
+                                                              .isLoginUserAdmin ==
+                                                          true
+                                                      ? GestureDetector(
+                                                          onTap: () {
+                                                            if ((PriveateRoomData
+                                                                        ?.object?[
+                                                                            index]
+                                                                        .adminCount ??
+                                                                    0) >
+                                                                1) {
+                                                              /* showDialog(
+                                                                  context:
+                                                                      context,
+                                                                  builder:
+                                                                      (context) {
+                                                                    return Center(
+                                                                      child:
+                                                                          Container(
+                                                                        color: Colors
+                                                                            .white,
+                                                                        margin: EdgeInsets.only(
+                                                                            left:
+                                                                                20,
+                                                                            right:
+                                                                                20),
+                                                                        height:
+                                                                            200,
+                                                                        width:
+                                                                            _width,
+                                                                        // color: Colors.amber,
+                                                                        child: BlocConsumer<
+                                                                            GetAllPrivateRoomCubit,
+                                                                            GetAllPrivateRoomState>(
+                                                                          listener:
+                                                                              (context, state) {
+                                                                            if (state
+                                                                                is DeleteRoomLoadedState) {
+                                                                              SnackBar snackBar = SnackBar(
+                                                                                content: Text(state.DeleteRoom.object ?? ""),
+                                                                                backgroundColor: ColorConstant.primary_color,
+                                                                              );
+                                                                              ScaffoldMessenger.of(context).showSnackBar(snackBar);
+
+                                                                              method();
+                                                                              Navigator.pop(context);
+                                                                            }
+                                                                          },
+                                                                          builder:
+                                                                              (context, state) {
+                                                                            return Column(aaa
+                                                                              children: [
+                                                                                SizedBox(
+                                                                                  height: 10,
+                                                                                ),
+                                                                                Text(
+                                                                                  "Delete Room",
+                                                                                  style: TextStyle(
+                                                                                    fontFamily: 'outfit',
+                                                                                    fontSize: 20,
+                                                                                    color: Colors.black,
+                                                                                    fontWeight: FontWeight.bold,
+                                                                                  ),
+                                                                                ),
+                                                                                Divider(
+                                                                                  color: Colors.grey,
+                                                                                ),
+                                                                                SizedBox(
+                                                                                  height: 5,
+                                                                                ),
+                                                                                Center(
+                                                                                    child: Text(
+                                                                                  "Are You Sure You Want To Delete This Room",
+                                                                                  style: TextStyle(
+                                                                                    fontFamily: 'outfit',
+                                                                                    fontSize: 15,
+                                                                                    color: Colors.black,
+                                                                                    fontWeight: FontWeight.w500,
+                                                                                  ),
+                                                                                )),
+                                                                                SizedBox(
+                                                                                  height: 50,
+                                                                                ),
+                                                                                Row(
+                                                                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                                                                  children: [
+                                                                                    GestureDetector(
+                                                                                      onTap: () => Navigator.pop(context),
+                                                                                      child: Container(
+                                                                                        height: 43,
+                                                                                        width: _width / 3.5,
+                                                                                        decoration: BoxDecoration(color: Colors.transparent, border: Border.all(color: Colors.grey.shade400), borderRadius: BorderRadius.circular(10)),
+                                                                                        child: Center(
+                                                                                            child: Text(
+                                                                                          "Cancel",
+                                                                                          style: TextStyle(
+                                                                                            fontFamily: 'outfit',
+                                                                                            fontSize: 15,
+                                                                                            color: ColorConstant.primary_color,
+                                                                                            fontWeight: FontWeight.w400,
+                                                                                          ),
+                                                                                        )),
+                                                                                      ),
+                                                                                    ),
+                                                                                    GestureDetector(
+                                                                                      onTap: () {
+                                                                                        BlocProvider.of<GetAllPrivateRoomCubit>(context).DeleteRoomm(PriveateRoomData!.object![index].uid.toString(), "Deleted", context);
+                                                                                      },
+                                                                                      child: Container(
+                                                                                        height: 43,
+                                                                                        width: _width / 3.5,
+                                                                                        decoration: BoxDecoration(color: ColorConstant.primary_color, borderRadius: BorderRadius.circular(10)),
+                                                                                        child: Center(
+                                                                                            child: Text(
+                                                                                          "Delete",
+                                                                                          style: TextStyle(
+                                                                                            fontFamily: 'outfit',
+                                                                                            fontSize: 15,
+                                                                                            color: Colors.white,
+                                                                                            fontWeight: FontWeight.w400,
+                                                                                          ),
+                                                                                        )),
+                                                                                      ),
+                                                                                    ),
+                                                                                  ],
+                                                                                ),
+                                                                              ],
+                                                                            );
+                                                                          },
+                                                                        ),
+                                                                      ),
+                                                                    );
+                                                                  }); */
+                                                              setState(() {
+                                                                deleteDailog =
+                                                                    true;
+                                                                selectedIndex =
+                                                                    index;
+                                                              });
+                                                            } else {
+                                                              if ((PriveateRoomData
+                                                                          ?.object?[
+                                                                              index]
+                                                                          .usersList
+                                                                          ?.length ??
+                                                                      0) <=
+                                                                  1) {
+                                                                print(
+                                                                    "only for one User");
+                                                                /*  showDialog(
+                                                                    context:
+                                                                        context,
+                                                                    builder:
+                                                                        (context) {
+                                                                      return Center(
+                                                                        child:
+                                                                            Container(
+                                                                          color:
+                                                                              Colors.white,
+                                                                          margin: EdgeInsets.only(
+                                                                              left: 20,
+                                                                              right: 20),
+                                                                          height:
+                                                                              200,
+                                                                          // width:
+                                                                          //     _width,
+                                                                          // color: Colors.amber,
+                                                                          child: BlocConsumer<
+                                                                              GetAllPrivateRoomCubit,
+                                                                              GetAllPrivateRoomState>(
+                                                                            listener:
+                                                                                (context, state) {
+                                                                              if (state is DeleteRoomLoadedState) {
+                                                                                SnackBar snackBar = SnackBar(
+                                                                                  content: Text(state.DeleteRoom.object ?? ""),
+                                                                                  backgroundColor: ColorConstant.primary_color,
+                                                                                );
+                                                                                ScaffoldMessenger.of(context).showSnackBar(snackBar);
+
+                                                                                method();
+                                                                                Navigator.pop(context);
+                                                                              }
+                                                                            },
+                                                                            builder:
+                                                                                (context, state) {
+                                                                              return Column(
+                                                                                children: [
+                                                                                  SizedBox(
+                                                                                    height: 10,
+                                                                                  ),
+                                                                                  Text(
+                                                                                    "Delete Room",
+                                                                                    style: TextStyle(
+                                                                                      fontFamily: 'outfit',
+                                                                                      fontSize: 20,
+                                                                                      color: Colors.black,
+                                                                                      fontWeight: FontWeight.bold,
+                                                                                    ),
+                                                                                  ),
+                                                                                  Divider(
+                                                                                    color: Colors.grey,
+                                                                                  ),
+                                                                                  SizedBox(
+                                                                                    height: 5,
+                                                                                  ),
+                                                                                  Center(
+                                                                                      child: Text(
+                                                                                    "Are You Sure You Want To Delete This Room1",
+                                                                                    style: TextStyle(
+                                                                                      fontFamily: 'outfit',
+                                                                                      fontSize: 15,
+                                                                                      color: Colors.black,
+                                                                                      fontWeight: FontWeight.w500,
+                                                                                    ),
+                                                                                  )),
+                                                                                  SizedBox(
+                                                                                    height: 50,
+                                                                                  ),
+                                                                                  Row(
+                                                                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                                                                    children: [
+                                                                                      GestureDetector(
+                                                                                        onTap: () => Navigator.pop(context),
+                                                                                        child: Container(
+                                                                                          height: 43,
+                                                                                          width: _width / 3.5,
+                                                                                          decoration: BoxDecoration(color: Colors.transparent, border: Border.all(color: Colors.grey.shade400), borderRadius: BorderRadius.circular(10)),
+                                                                                          child: Center(
+                                                                                              child: Text(
+                                                                                            "Cancel",
+                                                                                            style: TextStyle(
+                                                                                              fontFamily: 'outfit',
+                                                                                              fontSize: 15,
+                                                                                              color: ColorConstant.primary_color,
+                                                                                              fontWeight: FontWeight.w400,
+                                                                                            ),
+                                                                                          )),
+                                                                                        ),
+                                                                                      ),
+                                                                                      GestureDetector(
+                                                                                        onTap: () {
+                                                                                          BlocProvider.of<GetAllPrivateRoomCubit>(context).DeleteRoomm(PriveateRoomData!.object![index].uid.toString(), "Deleted", context);
+                                                                                        },
+                                                                                        child: Container(
+                                                                                          height: 43,
+                                                                                          width: _width / 3.5,
+                                                                                          decoration: BoxDecoration(color: ColorConstant.primary_color, borderRadius: BorderRadius.circular(10)),
+                                                                                          child: Center(
+                                                                                              child: Text(
+                                                                                            "Delete",
+                                                                                            style: TextStyle(
+                                                                                              fontFamily: 'outfit',
+                                                                                              fontSize: 15,
+                                                                                              color: Colors.white,
+                                                                                              fontWeight: FontWeight.w400,
+                                                                                            ),
+                                                                                          )),
+                                                                                        ),
+                                                                                      ),
+                                                                                    ],
+                                                                                  ),
+                                                                                ],
+                                                                              );
+                                                                            },
+                                                                          ),
+                                                                        ),
+                                                                      );
+                                                                    }); */
+                                                                setState(() {
+                                                                  deleteDailog =
+                                                                      true;
+                                                                  selectedIndex =
+                                                                      index;
+                                                                });
+                                                              } else {
+                                                                print(
+                                                                    "Assign Addmin");
+                                                                showDialog(
+                                                                    context:
+                                                                        context,
+                                                                    builder: (_) =>
+                                                                        AssignAdminScreenn(
+                                                                          DeleteFlag:
+                                                                              true,
+                                                                          RoomScreenBool:
+                                                                              true,
+                                                                          roomID: PriveateRoomData
+                                                                              ?.object?[index]
+                                                                              .uid,
+                                                                          UserList: PriveateRoomData
+                                                                              ?.object?[index]
+                                                                              .usersList,
+                                                                          RoomOwnerCount:
+                                                                              PriveateRoomData?.object?[index].adminCount ?? 0,
+                                                                        )).then(
+                                                                    (value) =>
+                                                                        method());
+                                                              }
+                                                            }
+                                                          },
+                                                          child:
+                                                              CustomImageView(
+                                                            imagePath:
+                                                                ImageConstant
+                                                                    .delete,
+                                                            height: 20,
+                                                            color: Colors.black,
+                                                          ),
+                                                        )
+                                                      : SizedBox(),
+                                                  checkuserdata ==
+                                                          "PARTIALLY_REGISTERED"
                                                       ? SizedBox()
                                                       : PriveateRoomData
                                                                   ?.object?[
                                                                       index]
                                                                   .isLoginUserAdmin ==
                                                               true
-                                                          ? Padding(
-                                                              padding:
-                                                                  const EdgeInsets
-                                                                          .only(
-                                                                      right:
-                                                                          35.0),
-                                                              child:
-                                                                  GestureDetector(
-                                                                onTap: () {
-                                                                  showDialog(
-                                                                    context:
+                                                          ? SizedBox()
+                                                          : /* User_Mood ==
+                                                                  "EXPERT"
+                                                              ? GestureDetector(
+                                                                  onTap: () {
+                                                                    print(
+                                                                        'EXPERT');
+                                                                    print(
+                                                                        "check UserId Print-->${PriveateRoomData?.object?[index].uid.toString()}");
+                                                                    Navigator.push(
                                                                         context,
-                                                                    builder:
-                                                                        (context) =>
-                                                                            ScaffoldMessenger(
-                                                                      child:
-                                                                          Builder(
-                                                                        builder:
-                                                                            (context) =>
-                                                                                Scaffold(
-                                                                          backgroundColor:
-                                                                              Colors.transparent,
-                                                                          body:
-                                                                              EditDilogScreen(
-                                                                            parentName:
-                                                                                PriveateRoomData?.object?[index].roomQuestion,
-                                                                            uid:
-                                                                                PriveateRoomData?.object?[index].uid.toString(),
-                                                                          ),
-                                                                        ),
-                                                                      ),
-                                                                    ),
-                                                                  );
-
-                                                                  // showDialog(
-                                                                  //   context: context,
-                                                                  //   builder:
-                                                                  //       (BuildContext context) {
-                                                                  //     print(
-                                                                  //         'uid print-${PublicRoomData?.object?[index].uid}');
-                                                                  //     return MultiBlocProvider(
-                                                                  //         providers: [
-                                                                  //           BlocProvider<
-                                                                  //               EditroomCubit>(
-                                                                  //             create: (context) =>
-                                                                  //                 EditroomCubit(),
-                                                                  //           )
-                                                                  //         ],
-                                                                  //         child:
-                                                                  //             EditDilogScreen(
-                                                                  //           parentName:
-                                                                  //               PublicRoomData
-                                                                  //                   ?.object?[
-                                                                  //                       index]
-                                                                  //                   .roomQuestion,
-                                                                  //           uid: PublicRoomData
-                                                                  //               ?.object?[index]
-                                                                  //               .uid
-                                                                  //               .toString(),
-                                                                  //         ));
-                                                                  //   },
-                                                                  // );
-                                                                  // editProfile(PublicRoomData?.object?[index].uid.toString());
-                                                                  // showDialog(
-                                                                  //     context: context,
-                                                                  //     builder: (_) =>
-                                                                  //         EditDilogScreen());
-                                                                },
-                                                                child:
-                                                                    CustomImageView(
-                                                                  imagePath:
-                                                                      ImageConstant
-                                                                          .pen,
-                                                                  height: 15,
-                                                                ),
-                                                              ),
-                                                            )
-                                                          : SizedBox(), */
-                                              /* checkuserdata ==
-                                                      "PARTIALLY_REGISTERED"
-                                                  ? SizedBox()
-                                                  : User_Mood == "EXPERT"
-                                                      ? SizedBox()
-                                                      : */
-                                              PriveateRoomData?.object?[index]
-                                                          .isLoginUserAdmin ==
-                                                      true
-                                                  ? GestureDetector(
-                                                      onTap: () {
-                                                        if ((PriveateRoomData
-                                                                    ?.object?[
-                                                                        index]
-                                                                    .adminCount ??
-                                                                0) >
-                                                            1) {
-                                                          showDialog(
-                                                              context: context,
-                                                              builder:
-                                                                  (context) {
-                                                                return Center(
-                                                                  child:
-                                                                      Container(
-                                                                    color: Colors
-                                                                        .white,
-                                                                    margin: EdgeInsets.only(
-                                                                        left:
-                                                                            20,
-                                                                        right:
-                                                                            20),
-                                                                    height: 200,
-                                                                    width:
-                                                                        _width,
-                                                                    // color: Colors.amber,
-                                                                    child: BlocConsumer<
-                                                                        GetAllPrivateRoomCubit,
-                                                                        GetAllPrivateRoomState>(
-                                                                      listener:
-                                                                          (context,
-                                                                              state) {
-                                                                        if (state
-                                                                            is DeleteRoomLoadedState) {
-                                                                          SnackBar
-                                                                              snackBar =
-                                                                              SnackBar(
-                                                                            content:
-                                                                                Text(state.DeleteRoom.object ?? ""),
-                                                                            backgroundColor:
-                                                                                ColorConstant.primary_color,
-                                                                          );
-                                                                          ScaffoldMessenger.of(context)
-                                                                              .showSnackBar(snackBar);
-
-                                                                          method();
-                                                                          Navigator.pop(
-                                                                              context);
-                                                                        }
-                                                                      },
+                                                                        MaterialPageRoute(
                                                                       builder:
-                                                                          (context,
-                                                                              state) {
-                                                                        return Column(
-                                                                          children: [
-                                                                            SizedBox(
-                                                                              height: 10,
-                                                                            ),
-                                                                            Text(
-                                                                              "Delete Room",
-                                                                              style: TextStyle(
-                                                                                fontFamily: 'outfit',
-                                                                                fontSize: 20,
-                                                                                color: Colors.black,
-                                                                                fontWeight: FontWeight.bold,
-                                                                              ),
-                                                                            ),
-                                                                            Divider(
-                                                                              color: Colors.grey,
-                                                                            ),
-                                                                            SizedBox(
-                                                                              height: 5,
-                                                                            ),
-                                                                            Center(
-                                                                                child: Text(
-                                                                              "Are You Sure You Want To Delete This Room",
-                                                                              style: TextStyle(
-                                                                                fontFamily: 'outfit',
-                                                                                fontSize: 15,
-                                                                                color: Colors.black,
-                                                                                fontWeight: FontWeight.w500,
-                                                                              ),
-                                                                            )),
-                                                                            SizedBox(
-                                                                              height: 50,
-                                                                            ),
-                                                                            Row(
-                                                                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                                                              children: [
-                                                                                GestureDetector(
-                                                                                  onTap: () => Navigator.pop(context),
-                                                                                  child: Container(
-                                                                                    height: 43,
-                                                                                    width: _width / 3.5,
-                                                                                    decoration: BoxDecoration(color: Colors.transparent, border: Border.all(color: Colors.grey.shade400), borderRadius: BorderRadius.circular(10)),
-                                                                                    child: Center(
-                                                                                        child: Text(
-                                                                                      "Cancel",
-                                                                                      style: TextStyle(
-                                                                                        fontFamily: 'outfit',
-                                                                                        fontSize: 15,
-                                                                                        color: ColorConstant.primary_color,
-                                                                                        fontWeight: FontWeight.w400,
-                                                                                      ),
-                                                                                    )),
-                                                                                  ),
-                                                                                ),
-                                                                                GestureDetector(
-                                                                                  onTap: () {
-                                                                                    BlocProvider.of<GetAllPrivateRoomCubit>(context).DeleteRoomm(PriveateRoomData!.object![index].uid.toString(), "Deleted", context);
-                                                                                  },
-                                                                                  child: Container(
-                                                                                    height: 43,
-                                                                                    width: _width / 3.5,
-                                                                                    decoration: BoxDecoration(color: ColorConstant.primary_color, borderRadius: BorderRadius.circular(10)),
-                                                                                    child: Center(
-                                                                                        child: Text(
-                                                                                      "Delete",
-                                                                                      style: TextStyle(
-                                                                                        fontFamily: 'outfit',
-                                                                                        fontSize: 15,
-                                                                                        color: Colors.white,
-                                                                                        fontWeight: FontWeight.w400,
-                                                                                      ),
-                                                                                    )),
-                                                                                  ),
-                                                                                ),
-                                                                              ],
-                                                                            ),
-                                                                          ],
+                                                                          (context) {
+                                                                        return RoomDetailScreen(
+                                                                          uuid: PriveateRoomData
+                                                                              ?.object?[index]
+                                                                              .uid
+                                                                              .toString(),
                                                                         );
                                                                       },
-                                                                    ),
-                                                                  ),
-                                                                );
-                                                              });
-                                                        } else {
-                                                          if ((PriveateRoomData
-                                                                      ?.object?[
-                                                                          index]
-                                                                      .usersList
-                                                                      ?.length ??
-                                                                  0) <=
-                                                              1) {
-                                                            print(
-                                                                "only for one User");
-                                                            showDialog(
-                                                                context:
-                                                                    context,
-                                                                builder:
-                                                                    (context) {
-                                                                  return Center(
-                                                                    child:
-                                                                        Container(
-                                                                      color: Colors
-                                                                          .white,
-                                                                      margin: EdgeInsets.only(
-                                                                          left:
-                                                                              20,
-                                                                          right:
-                                                                              20),
-                                                                      height:
-                                                                          200,
-                                                                      // width:
-                                                                      //     _width,
-                                                                      // color: Colors.amber,
-                                                                      child: BlocConsumer<
-                                                                          GetAllPrivateRoomCubit,
-                                                                          GetAllPrivateRoomState>(
-                                                                        listener:
-                                                                            (context,
-                                                                                state) {
-                                                                          if (state
-                                                                              is DeleteRoomLoadedState) {
-                                                                            SnackBar
-                                                                                snackBar =
-                                                                                SnackBar(
-                                                                              content: Text(state.DeleteRoom.object ?? ""),
-                                                                              backgroundColor: ColorConstant.primary_color,
-                                                                            );
-                                                                            ScaffoldMessenger.of(context).showSnackBar(snackBar);
-
-                                                                            method();
-                                                                            Navigator.pop(context);
-                                                                          }
-                                                                        },
-                                                                        builder:
-                                                                            (context,
-                                                                                state) {
-                                                                          return Column(
-                                                                            children: [
-                                                                              SizedBox(
-                                                                                height: 10,
-                                                                              ),
-                                                                              Text(
-                                                                                "Delete Room",
-                                                                                style: TextStyle(
-                                                                                  fontFamily: 'outfit',
-                                                                                  fontSize: 20,
-                                                                                  color: Colors.black,
-                                                                                  fontWeight: FontWeight.bold,
-                                                                                ),
-                                                                              ),
-                                                                              Divider(
-                                                                                color: Colors.grey,
-                                                                              ),
-                                                                              SizedBox(
-                                                                                height: 5,
-                                                                              ),
-                                                                              Center(
-                                                                                  child: Text(
-                                                                                "Are You Sure You Want To Delete This Room1",
-                                                                                style: TextStyle(
-                                                                                  fontFamily: 'outfit',
-                                                                                  fontSize: 15,
-                                                                                  color: Colors.black,
-                                                                                  fontWeight: FontWeight.w500,
-                                                                                ),
-                                                                              )),
-                                                                              SizedBox(
-                                                                                height: 50,
-                                                                              ),
-                                                                              Row(
-                                                                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                                                                children: [
-                                                                                  GestureDetector(
-                                                                                    onTap: () => Navigator.pop(context),
-                                                                                    child: Container(
-                                                                                      height: 43,
-                                                                                      width: _width / 3.5,
-                                                                                      decoration: BoxDecoration(color: Colors.transparent, border: Border.all(color: Colors.grey.shade400), borderRadius: BorderRadius.circular(10)),
-                                                                                      child: Center(
-                                                                                          child: Text(
-                                                                                        "Cancel",
-                                                                                        style: TextStyle(
-                                                                                          fontFamily: 'outfit',
-                                                                                          fontSize: 15,
-                                                                                          color: ColorConstant.primary_color,
-                                                                                          fontWeight: FontWeight.w400,
-                                                                                        ),
-                                                                                      )),
-                                                                                    ),
-                                                                                  ),
-                                                                                  GestureDetector(
-                                                                                    onTap: () {
-                                                                                      BlocProvider.of<GetAllPrivateRoomCubit>(context).DeleteRoomm(PriveateRoomData!.object![index].uid.toString(), "Deleted", context);
-                                                                                    },
-                                                                                    child: Container(
-                                                                                      height: 43,
-                                                                                      width: _width / 3.5,
-                                                                                      decoration: BoxDecoration(color: ColorConstant.primary_color, borderRadius: BorderRadius.circular(10)),
-                                                                                      child: Center(
-                                                                                          child: Text(
-                                                                                        "Delete",
-                                                                                        style: TextStyle(
-                                                                                          fontFamily: 'outfit',
-                                                                                          fontSize: 15,
-                                                                                          color: Colors.white,
-                                                                                          fontWeight: FontWeight.w400,
-                                                                                        ),
-                                                                                      )),
-                                                                                    ),
-                                                                                  ),
-                                                                                ],
-                                                                              ),
-                                                                            ],
-                                                                          );
-                                                                        },
-                                                                      ),
-                                                                    ),
-                                                                  );
-                                                                });
-                                                          } else {
-                                                            print(
-                                                                "Assign Addmin");
-                                                            showDialog(
-                                                                context:
-                                                                    context,
-                                                                builder: (_) =>
-                                                                    AssignAdminScreenn(
-                                                                      DeleteFlag:
-                                                                          true,
-                                                                      RoomScreenBool:
-                                                                          true,
-                                                                      roomID: PriveateRoomData
-                                                                          ?.object?[
-                                                                              index]
-                                                                          .uid,
-                                                                      UserList: PriveateRoomData
-                                                                          ?.object?[
-                                                                              index]
-                                                                          .usersList,
-                                                                      RoomOwnerCount:
-                                                                          PriveateRoomData?.object?[index].adminCount ??
-                                                                              0,
-                                                                    )).then(
-                                                                (value) =>
-                                                                    method());
-                                                          }
-                                                        }
-                                                      },
-                                                      child: CustomImageView(
-                                                        imagePath: ImageConstant
-                                                            .delete,
-                                                        height: 20,
-                                                        color: Colors.black,
-                                                      ),
-                                                    )
-                                                  : SizedBox(),
-                                              checkuserdata ==
-                                                      "PARTIALLY_REGISTERED"
-                                                  ? SizedBox()
-                                                  : PriveateRoomData
-                                                              ?.object?[index]
-                                                              .isLoginUserAdmin ==
-                                                          true
-                                                      ? SizedBox()
-                                                      : User_Mood == "EXPERT"
-                                                          ? GestureDetector(
-                                                              onTap: () {
-                                                                print('EXPERT');
-                                                                print(
-                                                                    "check UserId Print-->${PriveateRoomData?.object?[index].uid.toString()}");
-                                                                Navigator.push(
-                                                                    context,
-                                                                    MaterialPageRoute(
-                                                                  builder:
-                                                                      (context) {
-                                                                    return RoomDetailScreen(
-                                                                      uuid: PriveateRoomData
-                                                                          ?.object?[
-                                                                              index]
-                                                                          .uid
-                                                                          .toString(),
-                                                                    );
+                                                                    ));
                                                                   },
-                                                                ));
-                                                              },
-                                                              child: Icon(Icons
-                                                                  .remove_red_eye_outlined),
-                                                            )
-                                                          : GestureDetector(
+                                                                  child: Icon(Icons
+                                                                      .remove_red_eye_outlined),
+                                                                )
+                                                              : */
+                                                          GestureDetector(
                                                               onTap: () {
                                                                 print('EXPERT');
                                                                 print(
@@ -870,150 +894,103 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                                               child: Icon(Icons
                                                                   .remove_red_eye_outlined),
                                                             ),
-                                              SizedBox(
-                                                width: 10,
+                                                  SizedBox(
+                                                    width: 10,
+                                                  ),
+                                                ],
                                               ),
-                                            ],
-                                          ),
-                                          SizedBox(
-                                            height: 15,
-                                          ),
-                                          Row(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            children: [
+                                              SizedBox(
+                                                height: 15,
+                                              ),
+                                              Row(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                children: [
+                                                  Padding(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            left: 10),
+                                                    child: Container(
+                                                      // color: Colors.amber,
+                                                      width: _width / 1.4,
+                                                      child: Text(
+                                                        "${PriveateRoomData?.object?[index].roomQuestion}",
+                                                        style: TextStyle(
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                            color: Colors.black,
+                                                            fontFamily:
+                                                                "outfit",
+                                                            fontSize: 14),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+
                                               Padding(
                                                 padding: const EdgeInsets.only(
-                                                    left: 10),
-                                                child: Container(
-                                                  // color: Colors.amber,
-                                                  width: _width / 1.4,
-                                                  child: Text(
-                                                    "${PriveateRoomData?.object?[index].roomQuestion}",
-                                                    style: TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        color: Colors.black,
-                                                        fontFamily: "outfit",
-                                                        fontSize: 14),
-                                                  ),
+                                                    left: 8.0),
+                                                child: Text(
+                                                  "${PriveateRoomData?.object?[index].description}",
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.w400,
+                                                      color: Colors.black
+                                                          .withOpacity(0.5),
+                                                      fontFamily: "outfit",
+                                                      fontSize: 14),
                                                 ),
                                               ),
-                                            ],
-                                          ),
-
-                                          Padding(
-                                            padding: const EdgeInsets.only(
-                                                left: 8.0),
-                                            child: Text(
-                                              "${PriveateRoomData?.object?[index].description}",
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.w400,
-                                                  color: Colors.black
-                                                      .withOpacity(0.5),
-                                                  fontFamily: "outfit",
-                                                  fontSize: 14),
-                                            ),
-                                          ),
-                                          SizedBox(
-                                            height: 15,
-                                          ),
-                                         GestureDetector(
-                                            onTap: () {
-                                              Navigator.push(context,
-                                                  MaterialPageRoute(
-                                                builder: (context) {
-                                                  return RoomMembersScreen(
-                                                      RoomOwnerCount:
-                                                          PriveateRoomData
-                                                                  ?.object?[
-                                                                      index]
-                                                                  .adminCount ??
-                                                              0,
-                                                      roomname:
-                                                          "${PriveateRoomData?.object?[index].roomQuestion}",
-                                                      RoomOwner: PriveateRoomData
-                                                              ?.object?[index]
-                                                              .isLoginUserAdmin ==
-                                                          true,
-                                                      CreateUserID: userId,
-                                                      roomdescription:
-                                                          "${PriveateRoomData?.object?[index].description}",
-                                                      room_Id:
-                                                          '${PriveateRoomData?.object?[index].uid.toString()}');
+                                              SizedBox(
+                                                height: 15,
+                                              ),
+                                              GestureDetector(
+                                                onTap: () {
+                                                  Navigator.push(context,
+                                                      MaterialPageRoute(
+                                                    builder: (context) {
+                                                      return RoomMembersScreen(
+                                                          RoomOwnerCount:
+                                                              PriveateRoomData
+                                                                      ?.object?[
+                                                                          index]
+                                                                      .adminCount ??
+                                                                  0,
+                                                          roomname:
+                                                              "${PriveateRoomData?.object?[index].roomQuestion}",
+                                                          RoomOwner:
+                                                              PriveateRoomData
+                                                                      ?.object?[
+                                                                          index]
+                                                                      .isLoginUserAdmin ==
+                                                                  true,
+                                                          CreateUserID: userId,
+                                                          roomdescription:
+                                                              "${PriveateRoomData?.object?[index].description}",
+                                                          room_Id:
+                                                              '${PriveateRoomData?.object?[index].uid.toString()}');
+                                                    },
+                                                  )).then((value) => method());
                                                 },
-                                              )).then((value) => method());
-                                            },
-                                            child: Padding(
-                                              padding: const EdgeInsets.only(
-                                                  left: 10.0, right: 10),
-                                              child: Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  PriveateRoomData
-                                                              ?.object?[index]
-                                                              .usersList
-                                                              ?.length ==
-                                                          1
-                                                      ? Container(
-                                                          width: 99,
-                                                          height: 27.88,
-                                                          child: Stack(
-                                                            children: [
-                                                              Positioned(
-                                                                left: 0,
-                                                                top: 0,
-                                                                child: Container(
-                                                                    width: 26.88,
-                                                                    height: 26.87,
-                                                                    decoration: BoxDecoration(color: ColorConstant.primary_color, shape: BoxShape.circle),
-                                                                    child: PriveateRoomData?.object?[index].usersList?[0].userProfilePic?.isNotEmpty ?? false
-                                                                        ? CustomImageView(
-                                                                            url:
-                                                                                "${PriveateRoomData?.object?[index].usersList?[0].userProfilePic}",
-                                                                            height:
-                                                                                20,
-                                                                            radius:
-                                                                                BorderRadius.circular(20),
-                                                                            width:
-                                                                                20,
-                                                                            fit:
-                                                                                BoxFit.fill,
-                                                                          )
-                                                                        : CustomImageView(
-                                                                            imagePath:
-                                                                                ImageConstant.tomcruse,
-                                                                            height:
-                                                                                20,
-                                                                            radius:
-                                                                                BorderRadius.circular(20),
-                                                                            width:
-                                                                                20,
-                                                                            fit:
-                                                                                BoxFit.fill,
-                                                                          )
-                                                                    /* Image.network(
-                                                                      "",
-                                                                      
-                                                                      size: 20,
-                                                                      color: Colors
-                                                                          .white,
-                                                                    ) */
-                                                                    ),
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        )
-                                                      : PriveateRoomData
+                                                child: Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          left: 10.0,
+                                                          right: 10),
+                                                  child: Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                    children: [
+                                                      PriveateRoomData
                                                                   ?.object?[
                                                                       index]
                                                                   .usersList
                                                                   ?.length ==
-                                                              2
+                                                              1
                                                           ? Container(
                                                               width: 99,
                                                               height: 27.88,
@@ -1040,30 +1017,15 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                                                                 radius: BorderRadius.circular(20),
                                                                                 width: 20,
                                                                                 fit: BoxFit.fill,
-                                                                              )),
-                                                                  ),
-                                                                  Positioned(
-                                                                    left: 22.56,
-                                                                    top: 0,
-                                                                    child: Container(
-                                                                        width: 26.88,
-                                                                        height: 26.87,
-                                                                        decoration: BoxDecoration(color: ColorConstant.primary_color, shape: BoxShape.circle),
-                                                                        child: PriveateRoomData?.object?[index].usersList?[1].userProfilePic?.isNotEmpty ?? false
-                                                                            ? CustomImageView(
-                                                                                url: "${PriveateRoomData?.object?[index].usersList?[1].userProfilePic}",
-                                                                                height: 20,
-                                                                                radius: BorderRadius.circular(20),
-                                                                                width: 20,
-                                                                                fit: BoxFit.fill,
                                                                               )
-                                                                            : CustomImageView(
-                                                                                imagePath: ImageConstant.tomcruse,
-                                                                                height: 20,
-                                                                                radius: BorderRadius.circular(20),
-                                                                                width: 20,
-                                                                                fit: BoxFit.fill,
-                                                                              )),
+                                                                        /* Image.network(
+                                                                          "",
+                                                                          
+                                                                          size: 20,
+                                                                          color: Colors
+                                                                              .white,
+                                                                        ) */
+                                                                        ),
                                                                   ),
                                                                 ],
                                                               ),
@@ -1073,7 +1035,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                                                           index]
                                                                       .usersList
                                                                       ?.length ==
-                                                                  3
+                                                                  2
                                                               ? Container(
                                                                   width: 99,
                                                                   height: 27.88,
@@ -1126,243 +1088,328 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                                                                     fit: BoxFit.fill,
                                                                                   )),
                                                                       ),
-                                                                      Positioned(
-                                                                        left:
-                                                                            45.12,
-                                                                        top: 0,
-                                                                        child: Container(
-                                                                            width: 26.88,
-                                                                            height: 26.87,
-                                                                            decoration: BoxDecoration(color: ColorConstant.primary_color, shape: BoxShape.circle),
-                                                                            child: PriveateRoomData?.object?[index].usersList?[2].userProfilePic?.isNotEmpty ?? false
-                                                                                ? CustomImageView(
-                                                                                    url: "${PriveateRoomData?.object?[index].usersList?[2].userProfilePic}",
-                                                                                    height: 20,
-                                                                                    radius: BorderRadius.circular(20),
-                                                                                    width: 20,
-                                                                                    fit: BoxFit.fill,
-                                                                                  )
-                                                                                : CustomImageView(
-                                                                                    imagePath: ImageConstant.tomcruse,
-                                                                                    height: 20,
-                                                                                    radius: BorderRadius.circular(20),
-                                                                                    width: 20,
-                                                                                    fit: BoxFit.fill,
-                                                                                  )),
-                                                                      ),
                                                                     ],
                                                                   ),
                                                                 )
-                                                              : Container(
-                                                                  width: 120,
-                                                                  height: 27.88,
-                                                                  child: Stack(
-                                                                    children: [
-                                                                      Positioned(
-                                                                        left: 0,
-                                                                        top: 0,
-                                                                        child: Container(
-                                                                            width: 26.88,
-                                                                            height: 26.87,
-                                                                            decoration: BoxDecoration(color: ColorConstant.primary_color, shape: BoxShape.circle),
-                                                                            child: PriveateRoomData?.object?[index].usersList?[0].userProfilePic?.isNotEmpty ?? false
-                                                                                ? CustomImageView(
-                                                                                    url: "${PriveateRoomData?.object?[index].usersList?[0].userProfilePic}",
-                                                                                    height: 20,
-                                                                                    radius: BorderRadius.circular(20),
-                                                                                    width: 20,
-                                                                                    fit: BoxFit.fill,
-                                                                                  )
-                                                                                : CustomImageView(
-                                                                                    imagePath: ImageConstant.tomcruse,
-                                                                                    height: 20,
-                                                                                    radius: BorderRadius.circular(20),
-                                                                                    width: 20,
-                                                                                    fit: BoxFit.fill,
-                                                                                  )),
-                                                                      ),
-                                                                      Positioned(
-                                                                        left:
-                                                                            22.56,
-                                                                        top: 0,
-                                                                        child: Container(
-                                                                            width: 26.88,
-                                                                            height: 26.87,
-                                                                            decoration: BoxDecoration(color: ColorConstant.primary_color, shape: BoxShape.circle),
-                                                                            child: PriveateRoomData?.object?[index].usersList?[1].userProfilePic?.isNotEmpty ?? false
-                                                                                ? CustomImageView(
-                                                                                    url: "${PriveateRoomData?.object?[index].usersList?[1].userProfilePic}",
-                                                                                    height: 20,
-                                                                                    radius: BorderRadius.circular(20),
-                                                                                    width: 20,
-                                                                                    fit: BoxFit.fill,
-                                                                                  )
-                                                                                : CustomImageView(
-                                                                                    imagePath: ImageConstant.tomcruse,
-                                                                                    height: 20,
-                                                                                    radius: BorderRadius.circular(20),
-                                                                                    width: 20,
-                                                                                    fit: BoxFit.fill,
-                                                                                  )),
-                                                                      ),
-                                                                      Positioned(
-                                                                        left:
-                                                                            45.12,
-                                                                        top: 0,
-                                                                        child: Container(
-                                                                            width: 26.88,
-                                                                            height: 26.87,
-                                                                            decoration: BoxDecoration(color: ColorConstant.primary_color, shape: BoxShape.circle),
-                                                                            child: PriveateRoomData?.object?[index].usersList?[2].userProfilePic?.isNotEmpty ?? false
-                                                                                ? CustomImageView(
-                                                                                    url: "${PriveateRoomData?.object?[index].usersList?[2].userProfilePic}",
-                                                                                    height: 20,
-                                                                                    radius: BorderRadius.circular(20),
-                                                                                    width: 20,
-                                                                                    fit: BoxFit.fill,
-                                                                                  )
-                                                                                : CustomImageView(
-                                                                                    imagePath: ImageConstant.tomcruse,
-                                                                                    height: 20,
-                                                                                    radius: BorderRadius.circular(20),
-                                                                                    width: 20,
-                                                                                    fit: BoxFit.fill,
-                                                                                  )),
-                                                                      ),
-                                                                      Positioned(
-                                                                        left:
-                                                                            78,
-                                                                        top: 7,
-                                                                        child:
-                                                                            Container(
-                                                                          width:
-                                                                              160,
-                                                                          height:
-                                                                              17,
-                                                                          // color: Colors.red,
-                                                                          child:
-                                                                              Text(
-                                                                            "+${(PriveateRoomData?.object?[index].usersList?.length ?? 0) - 3}",
-                                                                            style:
-                                                                                TextStyle(
-                                                                              color: Color(0xFF2A2A2A),
-                                                                              fontSize: 14,
-                                                                              fontFamily: 'Outfit',
-                                                                              fontWeight: FontWeight.w400,
-                                                                            ),
-                                                                          ),
-                                                                        ),
-                                                                      ),
-                                                                    ],
-                                                                  ),
-                                                                ),
-                                                  PriveateRoomData
-                                                              ?.object?[index]
-                                                              .isLoginUserAdmin ==
-                                                          true
-                                                      ? GestureDetector(
-                                                          onTap: () {
-                                                            print("Room invited Link --> " +
-                                                                "${PriveateRoomData?.object?[index].roomLink}");
-
-                                                            showDialog(
-                                                              context: context,
-                                                              builder: (context) =>
-                                                                  ScaffoldMessenger(
-                                                                child: Builder(
-                                                                  builder:
-                                                                      (context) =>
-                                                                          Scaffold(
-                                                                    backgroundColor:
-                                                                        Colors
-                                                                            .transparent,
-                                                                    body:
-                                                                        InviteDilogScreen(
-                                                                      Room_UUID:
-                                                                          "${PriveateRoomData?.object?[index].uid}",
-                                                                      Room_Link: PriveateRoomData
+                                                              : PriveateRoomData
                                                                           ?.object?[
                                                                               index]
-                                                                          .roomLink,
+                                                                          .usersList
+                                                                          ?.length ==
+                                                                      3
+                                                                  ? Container(
+                                                                      width: 99,
+                                                                      height:
+                                                                          27.88,
+                                                                      child:
+                                                                          Stack(
+                                                                        children: [
+                                                                          Positioned(
+                                                                            left:
+                                                                                0,
+                                                                            top:
+                                                                                0,
+                                                                            child: Container(
+                                                                                width: 26.88,
+                                                                                height: 26.87,
+                                                                                decoration: BoxDecoration(color: ColorConstant.primary_color, shape: BoxShape.circle),
+                                                                                child: PriveateRoomData?.object?[index].usersList?[0].userProfilePic?.isNotEmpty ?? false
+                                                                                    ? CustomImageView(
+                                                                                        url: "${PriveateRoomData?.object?[index].usersList?[0].userProfilePic}",
+                                                                                        height: 20,
+                                                                                        radius: BorderRadius.circular(20),
+                                                                                        width: 20,
+                                                                                        fit: BoxFit.fill,
+                                                                                      )
+                                                                                    : CustomImageView(
+                                                                                        imagePath: ImageConstant.tomcruse,
+                                                                                        height: 20,
+                                                                                        radius: BorderRadius.circular(20),
+                                                                                        width: 20,
+                                                                                        fit: BoxFit.fill,
+                                                                                      )),
+                                                                          ),
+                                                                          Positioned(
+                                                                            left:
+                                                                                22.56,
+                                                                            top:
+                                                                                0,
+                                                                            child: Container(
+                                                                                width: 26.88,
+                                                                                height: 26.87,
+                                                                                decoration: BoxDecoration(color: ColorConstant.primary_color, shape: BoxShape.circle),
+                                                                                child: PriveateRoomData?.object?[index].usersList?[1].userProfilePic?.isNotEmpty ?? false
+                                                                                    ? CustomImageView(
+                                                                                        url: "${PriveateRoomData?.object?[index].usersList?[1].userProfilePic}",
+                                                                                        height: 20,
+                                                                                        radius: BorderRadius.circular(20),
+                                                                                        width: 20,
+                                                                                        fit: BoxFit.fill,
+                                                                                      )
+                                                                                    : CustomImageView(
+                                                                                        imagePath: ImageConstant.tomcruse,
+                                                                                        height: 20,
+                                                                                        radius: BorderRadius.circular(20),
+                                                                                        width: 20,
+                                                                                        fit: BoxFit.fill,
+                                                                                      )),
+                                                                          ),
+                                                                          Positioned(
+                                                                            left:
+                                                                                45.12,
+                                                                            top:
+                                                                                0,
+                                                                            child: Container(
+                                                                                width: 26.88,
+                                                                                height: 26.87,
+                                                                                decoration: BoxDecoration(color: ColorConstant.primary_color, shape: BoxShape.circle),
+                                                                                child: PriveateRoomData?.object?[index].usersList?[2].userProfilePic?.isNotEmpty ?? false
+                                                                                    ? CustomImageView(
+                                                                                        url: "${PriveateRoomData?.object?[index].usersList?[2].userProfilePic}",
+                                                                                        height: 20,
+                                                                                        radius: BorderRadius.circular(20),
+                                                                                        width: 20,
+                                                                                        fit: BoxFit.fill,
+                                                                                      )
+                                                                                    : CustomImageView(
+                                                                                        imagePath: ImageConstant.tomcruse,
+                                                                                        height: 20,
+                                                                                        radius: BorderRadius.circular(20),
+                                                                                        width: 20,
+                                                                                        fit: BoxFit.fill,
+                                                                                      )),
+                                                                          ),
+                                                                        ],
+                                                                      ),
+                                                                    )
+                                                                  : Container(
+                                                                      width:
+                                                                          120,
+                                                                      height:
+                                                                          27.88,
+                                                                      child:
+                                                                          Stack(
+                                                                        children: [
+                                                                          Positioned(
+                                                                            left:
+                                                                                0,
+                                                                            top:
+                                                                                0,
+                                                                            child: Container(
+                                                                                width: 26.88,
+                                                                                height: 26.87,
+                                                                                decoration: BoxDecoration(color: ColorConstant.primary_color, shape: BoxShape.circle),
+                                                                                child: PriveateRoomData?.object?[index].usersList?[0].userProfilePic?.isNotEmpty ?? false
+                                                                                    ? CustomImageView(
+                                                                                        url: "${PriveateRoomData?.object?[index].usersList?[0].userProfilePic}",
+                                                                                        height: 20,
+                                                                                        radius: BorderRadius.circular(20),
+                                                                                        width: 20,
+                                                                                        fit: BoxFit.fill,
+                                                                                      )
+                                                                                    : CustomImageView(
+                                                                                        imagePath: ImageConstant.tomcruse,
+                                                                                        height: 20,
+                                                                                        radius: BorderRadius.circular(20),
+                                                                                        width: 20,
+                                                                                        fit: BoxFit.fill,
+                                                                                      )),
+                                                                          ),
+                                                                          Positioned(
+                                                                            left:
+                                                                                22.56,
+                                                                            top:
+                                                                                0,
+                                                                            child: Container(
+                                                                                width: 26.88,
+                                                                                height: 26.87,
+                                                                                decoration: BoxDecoration(color: ColorConstant.primary_color, shape: BoxShape.circle),
+                                                                                child: PriveateRoomData?.object?[index].usersList?[1].userProfilePic?.isNotEmpty ?? false
+                                                                                    ? CustomImageView(
+                                                                                        url: "${PriveateRoomData?.object?[index].usersList?[1].userProfilePic}",
+                                                                                        height: 20,
+                                                                                        radius: BorderRadius.circular(20),
+                                                                                        width: 20,
+                                                                                        fit: BoxFit.fill,
+                                                                                      )
+                                                                                    : CustomImageView(
+                                                                                        imagePath: ImageConstant.tomcruse,
+                                                                                        height: 20,
+                                                                                        radius: BorderRadius.circular(20),
+                                                                                        width: 20,
+                                                                                        fit: BoxFit.fill,
+                                                                                      )),
+                                                                          ),
+                                                                          Positioned(
+                                                                            left:
+                                                                                45.12,
+                                                                            top:
+                                                                                0,
+                                                                            child: Container(
+                                                                                width: 26.88,
+                                                                                height: 26.87,
+                                                                                decoration: BoxDecoration(color: ColorConstant.primary_color, shape: BoxShape.circle),
+                                                                                child: PriveateRoomData?.object?[index].usersList?[2].userProfilePic?.isNotEmpty ?? false
+                                                                                    ? CustomImageView(
+                                                                                        url: "${PriveateRoomData?.object?[index].usersList?[2].userProfilePic}",
+                                                                                        height: 20,
+                                                                                        radius: BorderRadius.circular(20),
+                                                                                        width: 20,
+                                                                                        fit: BoxFit.fill,
+                                                                                      )
+                                                                                    : CustomImageView(
+                                                                                        imagePath: ImageConstant.tomcruse,
+                                                                                        height: 20,
+                                                                                        radius: BorderRadius.circular(20),
+                                                                                        width: 20,
+                                                                                        fit: BoxFit.fill,
+                                                                                      )),
+                                                                          ),
+                                                                          Positioned(
+                                                                            left:
+                                                                                78,
+                                                                            top:
+                                                                                7,
+                                                                            child:
+                                                                                Container(
+                                                                              width: 160,
+                                                                              height: 17,
+                                                                              // color: Colors.red,
+                                                                              child: Text(
+                                                                                "+${(PriveateRoomData?.object?[index].usersList?.length ?? 0) - 3}",
+                                                                                style: TextStyle(
+                                                                                  color: Color(0xFF2A2A2A),
+                                                                                  fontSize: 14,
+                                                                                  fontFamily: 'Outfit',
+                                                                                  fontWeight: FontWeight.w400,
+                                                                                ),
+                                                                              ),
+                                                                            ),
+                                                                          ),
+                                                                        ],
+                                                                      ),
+                                                                    ),
+                                                      PriveateRoomData
+                                                                  ?.object?[
+                                                                      index]
+                                                                  .isLoginUserAdmin ==
+                                                              true
+                                                          ? GestureDetector(
+                                                              onTap: () {
+                                                                print("Room invited Link --> " +
+                                                                    "${PriveateRoomData?.object?[index].roomLink}");
+                                                                setState(() {
+                                                                  inviteUserDailog =
+                                                                      true;
+                                                                  selectedIndex =
+                                                                      index;
+                                                                });
+
+                                                                /*  showDialog(
+                                                                  context:
+                                                                      context,
+                                                                  builder:
+                                                                      (context) =>
+                                                                          ScaffoldMessenger(
+                                                                    child:
+                                                                        Builder(
+                                                                      builder:
+                                                                          (context) =>
+                                                                              Scaffold(
+                                                                        backgroundColor:
+                                                                            Colors.transparent,
+                                                                        body:
+                                                                            InviteDilogScreen(
+                                                                          Room_UUID:
+                                                                              "${PriveateRoomData?.object?[index].uid}",
+                                                                          Room_Link: PriveateRoomData
+                                                                              ?.object?[index]
+                                                                              .roomLink,
+                                                                        ),
+                                                                      ),
                                                                     ),
                                                                   ),
-                                                                ),
-                                                              ),
-                                                            );
-                                                          },
-                                                          child: Container(
-                                                            width: _width / 3,
-                                                            height: 22.51,
-                                                            decoration:
-                                                                ShapeDecoration(
-                                                              color: Color(
-                                                                  0xFFFFD9DA),
-                                                              shape:
-                                                                  RoundedRectangleBorder(
-                                                                side:
-                                                                    BorderSide(
-                                                                  width: 1,
-                                                                  color: ColorConstant
-                                                                      .primary_color,
-                                                                ),
-                                                                borderRadius:
-                                                                    BorderRadius
-                                                                        .circular(
+                                                                ); */
+                                                              },
+                                                              child: Container(
+                                                                width:
+                                                                    _width / 3,
+                                                                height: 22.51,
+                                                                decoration:
+                                                                    ShapeDecoration(
+                                                                  color: Color(
+                                                                      0xFFFFD9DA),
+                                                                  shape:
+                                                                      RoundedRectangleBorder(
+                                                                    side:
+                                                                        BorderSide(
+                                                                      width: 1,
+                                                                      color: ColorConstant
+                                                                          .primary_color,
+                                                                    ),
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
                                                                             50),
+                                                                  ),
+                                                                ),
+                                                                child: Center(
+                                                                    child: Text(
+                                                                  "Invite User",
+                                                                  style: TextStyle(
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w400,
+                                                                      color: ColorConstant
+                                                                          .primary_color,
+                                                                      fontFamily:
+                                                                          "outfit",
+                                                                      fontSize:
+                                                                          13),
+                                                                )),
                                                               ),
-                                                            ),
-                                                            child: Center(
-                                                                child: Text(
-                                                              "Invite User",
-                                                              style: TextStyle(
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w400,
-                                                                  color: ColorConstant
-                                                                      .primary_color,
-                                                                  fontFamily:
-                                                                      "outfit",
-                                                                  fontSize: 13),
-                                                            )),
-                                                          ),
-                                                        )
-                                                      : User_Mood == "EXPERT"
-                                                          ? SizedBox()
-                                                          : checkuserdata ==
+                                                            )
+                                                          : /* User_Mood ==
+                                                                  "EXPERT"
+                                                              ? SizedBox()
+                                                              :  */
+                                                          checkuserdata ==
                                                                   "PARTIALLY_REGISTERED"
                                                               ? SizedBox()
                                                               : GestureDetector(
                                                                   onTap: () {
                                                                     print("Room invited Link --> " +
                                                                         "${PriveateRoomData?.object?[index].roomLink}");
+                                                                    setState(
+                                                                        () {
+                                                                      inviteUserDailog =
+                                                                          true;
+                                                                      selectedIndex =
+                                                                          index;
+                                                                    });
 
-                                                                    showDialog(
-                                                                      context:
-                                                                          context,
-                                                                      builder:
-                                                                          (context) =>
-                                                                              ScaffoldMessenger(
-                                                                        child:
-                                                                            Builder(
+                                                                    /*  showDialog(
+                                                                          context:
+                                                                              context,
                                                                           builder: (context) =>
-                                                                              Scaffold(
-                                                                            backgroundColor:
-                                                                                Colors.transparent,
-                                                                            body:
-                                                                                InviteDilogScreen(
-                                                                              Room_UUID: "${PriveateRoomData?.object?[index].uid}",
-                                                                              Room_Link: PriveateRoomData?.object?[index].roomLink,
+                                                                              ScaffoldMessenger(
+                                                                            child:
+                                                                                Builder(
+                                                                              builder: (context) => Scaffold(
+                                                                                backgroundColor: Colors.transparent,
+                                                                                body: InviteDilogScreen(
+                                                                                  Room_UUID: "${PriveateRoomData?.object?[index].uid}",
+                                                                                  Room_Link: PriveateRoomData?.object?[index].roomLink,
+                                                                                ),
+                                                                              ),
                                                                             ),
                                                                           ),
-                                                                        ),
-                                                                      ),
-                                                                    );
+                                                                        ); */
                                                                   },
                                                                   child: /* PriveateRoomData
-                                                                          ?.object?[
-                                                                              index]
-                                                                          .createdBy ==
-                                                                      userId */
+                                                                              ?.object?[
+                                                                                  index]
+                                                                              .createdBy ==
+                                                                          userId */
                                                                       PriveateRoomData?.object?[index].isLoginUserAdmin ==
                                                                               true
                                                                           ? Container(
@@ -1386,140 +1433,264 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                                                             )
                                                                           : Container(),
                                                                 )
-                                                ],
+                                                    ],
+                                                  ),
+                                                ),
                                               ),
-                                            ),
-                                          ),
 
-                                          // PriveateRoomData?.object?[index].usersList?[0]
-                                          // PriveateRoomData?.object?[index].usersList?.forEach((element) {
+                                              // PriveateRoomData?.object?[index].usersList?[0]
+                                              // PriveateRoomData?.object?[index].usersList?.forEach((element) {
 
-                                          // })
-                                          Padding(
-                                            padding:
-                                                const EdgeInsets.only(top: 5),
-                                            child: Container(
-                                              height: 0.5,
-                                              color: Colors.grey,
-                                            ),
-                                          ),
+                                              // })
+                                              Padding(
+                                                padding: const EdgeInsets.only(
+                                                    top: 5),
+                                                child: Container(
+                                                  height: 0.5,
+                                                  color: Colors.grey,
+                                                ),
+                                              ),
                                               SizedBox(
                                                 height: 3,
                                               ),
-                                          PriveateRoomData
-                                                      ?.object?[index]
-                                                      .expertUserProfile
-                                                      ?.isEmpty !=
-                                                  true
-                                              ? Padding(
-                                                  padding:
-                                                      const EdgeInsets.all(8.0),
-                                                  child: Row(
-                                                    children: [
-                                                      GestureDetector(
-                                                        onTap: () {
-                                                          Navigator.push(
-                                                              context,
-                                                              MaterialPageRoute(
-                                                            builder: (context) {
-                                                              return ProfileScreen(
-                                                                  User_ID:
-                                                                      "${PriveateRoomData?.object?[index].expertUserProfile?.first.uuid}",
-                                                                  isFollowing:
-                                                                      "");
+                                              PriveateRoomData
+                                                          ?.object?[index]
+                                                          .expertUserProfile
+                                                          ?.isEmpty !=
+                                                      true
+                                                  ? Padding(
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              8.0),
+                                                      child: Row(
+                                                        children: [
+                                                          GestureDetector(
+                                                            onTap: () {
+                                                              Navigator.push(
+                                                                  context,
+                                                                  MaterialPageRoute(
+                                                                builder:
+                                                                    (context) {
+                                                                  return ProfileScreen(
+                                                                      User_ID:
+                                                                          "${PriveateRoomData?.object?[index].expertUserProfile?.first.uuid}",
+                                                                      isFollowing:
+                                                                          "");
+                                                                },
+                                                              ));
                                                             },
-                                                          ));
-                                                        },
-                                                        child: PriveateRoomData
-                                                                    ?.object?[
-                                                                        index]
-                                                                    .expertUserProfile
-                                                                    ?.first
-                                                                    .userProfilePic !=
-                                                                null
-                                                            ? CustomImageView(
-                                                                url:
-                                                                    "${PriveateRoomData?.object?[index].expertUserProfile?.first.userProfilePic}",
-                                                                height: 30,
-                                                                radius:
-                                                                    BorderRadius
+                                                            child: PriveateRoomData
+                                                                        ?.object?[
+                                                                            index]
+                                                                        .expertUserProfile
+                                                                        ?.first
+                                                                        .userProfilePic !=
+                                                                    null
+                                                                ? CustomImageView(
+                                                                    url:
+                                                                        "${PriveateRoomData?.object?[index].expertUserProfile?.first.userProfilePic}",
+                                                                    height: 30,
+                                                                    radius: BorderRadius
                                                                         .circular(
                                                                             15),
-                                                                width: 30,
-                                                                fit:
-                                                                    BoxFit.fill,
-                                                              )
-                                                            : CircleAvatar(
-                                                                radius: 25,
-                                                                backgroundColor:
-                                                                    Colors
-                                                                        .white,
-                                                                backgroundImage:
-                                                                    AssetImage(
-                                                                        ImageConstant
-                                                                            .tomcruse),
-                                                              ),
-                                                      ),
-                                                      GestureDetector(
-                                                        onTap: () {
-                                                          Navigator.push(
-                                                              context,
-                                                              MaterialPageRoute(
-                                                            builder: (context) {
-                                                              return ProfileScreen(
-                                                                  User_ID:
-                                                                      "${PriveateRoomData?.object?[index].expertUserProfile?.first.uuid}",
-                                                                  isFollowing:
-                                                                      "");
+                                                                    width: 30,
+                                                                    fit: BoxFit
+                                                                        .fill,
+                                                                  )
+                                                                : CircleAvatar(
+                                                                    radius: 25,
+                                                                    backgroundColor:
+                                                                        Colors
+                                                                            .white,
+                                                                    backgroundImage:
+                                                                        AssetImage(
+                                                                            ImageConstant.tomcruse),
+                                                                  ),
+                                                          ),
+                                                          GestureDetector(
+                                                            onTap: () {
+                                                              Navigator.push(
+                                                                  context,
+                                                                  MaterialPageRoute(
+                                                                builder:
+                                                                    (context) {
+                                                                  return ProfileScreen(
+                                                                      User_ID:
+                                                                          "${PriveateRoomData?.object?[index].expertUserProfile?.first.uuid}",
+                                                                      isFollowing:
+                                                                          "");
+                                                                },
+                                                              ));
                                                             },
-                                                          ));
-                                                        },
-                                                        child: Container(
-                                                          child: Text(
-                                                              " ${PriveateRoomData?.object?[index].expertUserProfile?.first.userName}"),
-                                                        ),
-                                                      ),
-                                                      Spacer(),
-                                                      GestureDetector(
-                                                        onTap: () {
-                                                          print(
-                                                              "hey i am experts");
-
-                                                          /*   Navigator.push(
-                                                              context,
-                                                              MaterialPageRoute(
-                                                            builder: (context) {
-                                                              return ExpertMemberScreen(
-                                                                roomname:
-                                                                    "${PriveateRoomData?.object?[index].roomQuestion}",
-                                                                roomdescription:
-                                                                    "${PriveateRoomData?.object?[index].description}",
-                                                                list:
-                                                                    uniqueList,
-                                                              );
-                                                            },
-                                                          )); */
-                                                        },
-                                                        child: Container(
-                                                          margin: EdgeInsets.only(right: 3),
-                                                          width: 80,
-                                                          height: 20,
-                                                          decoration:
-                                                              ShapeDecoration(
-                                                            color: ColorConstant
-                                                                .primary_color,
-                                                            // color: ColorConstant.primary_color,
-                                                            shape:
-                                                                RoundedRectangleBorder(
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          49.46),
+                                                            child: Container(
+                                                              child: Text(
+                                                                  " ${PriveateRoomData?.object?[index].expertUserProfile?.first.userName}"),
                                                             ),
                                                           ),
-                                                          child: Center(
-                                                              child: Text(
-                                                            "Expert",
+                                                          Spacer(),
+                                                          GestureDetector(
+                                                            onTap: () {
+                                                              print(
+                                                                  "hey i am experts");
+
+                                                              /*   Navigator.push(
+                                                                  context,
+                                                                  MaterialPageRoute(
+                                                                builder: (context) {
+                                                                  return ExpertMemberScreen(
+                                                                    roomname:
+                                                                        "${PriveateRoomData?.object?[index].roomQuestion}",
+                                                                    roomdescription:
+                                                                        "${PriveateRoomData?.object?[index].description}",
+                                                                    list:
+                                                                        uniqueList,
+                                                                  );
+                                                                },
+                                                              )); */
+                                                            },
+                                                            child: Container(
+                                                              margin: EdgeInsets
+                                                                  .only(
+                                                                      right: 3),
+                                                              width: 80,
+                                                              height: 20,
+                                                              decoration:
+                                                                  ShapeDecoration(
+                                                                color: ColorConstant
+                                                                    .primary_color,
+                                                                // color: ColorConstant.primary_color,
+                                                                shape:
+                                                                    RoundedRectangleBorder(
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              49.46),
+                                                                ),
+                                                              ),
+                                                              child: Center(
+                                                                  child: Text(
+                                                                "Expert",
+                                                                style: TextStyle(
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w400,
+                                                                    color: Colors
+                                                                        .white,
+                                                                    fontFamily:
+                                                                        "outfit",
+                                                                    fontSize:
+                                                                        10),
+                                                              )),
+                                                            ),
+                                                          )
+                                                        ],
+                                                      ),
+                                                    )
+                                                  : SizedBox(),
+
+                                              // index == 1 || index == 2 || index == 3
+                                              //     ? Divider(color: Colors.grey)
+                                              //     : SizedBox(),
+
+                                              // index == 1 || index == 3
+                                              //     ? Padding(
+                                              //         padding:
+                                              //             const EdgeInsets.all(8.0),
+                                              //         child: Row(
+                                              //           children: [
+                                              //             CustomImageView(
+                                              //               imagePath: ImageConstant
+                                              //                   .workimage,
+                                              //               height: 30,
+                                              //             ),
+                                              //             Text("Expert 1"),
+                                              //             Spacer(),
+                                              //             Container(
+                                              //               width: 80,
+                                              //               height: 20,
+                                              //               decoration:
+                                              //                   ShapeDecoration(
+                                              //                 color:
+                                              //                     ColorConstant.primary_color,
+                                              //                 shape:
+                                              //                     RoundedRectangleBorder(
+                                              //                   borderRadius:
+                                              //                       BorderRadius
+                                              //                           .circular(
+                                              //                               49.46),
+                                              //                 ),
+                                              //               ),
+                                              //               child: Center(
+                                              //                   child: Text(
+                                              //                 "Switch Expert",
+                                              //                 style: TextStyle(
+                                              //                     fontWeight:
+                                              //                         FontWeight.w400,
+                                              //                     color: Colors.white,
+                                              //                     fontFamily:
+                                              //                         "outfit",
+                                              //                     fontSize: 10),
+                                              //               )),
+                                              //             )
+                                              //           ],
+                                              //         ),
+                                              //       )
+                                              //     : SizedBox(),
+                                              SizedBox(
+                                                height: 2,
+                                              ),
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                children: [
+                                                  Expanded(
+                                                    flex: 2,
+                                                    child: GestureDetector(
+                                                      onTap: () {
+                                                        /* Navigator.push(context,
+                                                            MaterialPageRoute(
+                                                                builder:
+                                                                    (context) {
+                                                          return DmScreenNew(
+                                                            chatUserName:
+                                                                "${PriveateRoomData?.object?[index].roomQuestion} ",
+                                                            chatInboxUid:
+                                                                "${PriveateRoomData?.object?[index].uid ?? ""}",
+                                                            chatOtherUseruid:
+                                                                " ",
+                                                            chatUserProfile:
+                                                                " ",
+                                                            isRoom: true,
+                                                          );
+                                                        })); */
+                                                        Navigator.push(context,
+                                                            MaterialPageRoute(
+                                                                builder:
+                                                                    (context) {
+                                                          return ViewCommentScreen(
+                                                            Room_ID:
+                                                                "${PriveateRoomData?.object?[index].uid ?? ""}",
+                                                            Title:
+                                                                "${PriveateRoomData?.object?[index].roomQuestion ?? ""}",
+                                                          );
+                                                        }));
+                                                      },
+                                                      child: Container(
+                                                        height: 40,
+                                                        width: _width / 2.48,
+                                                        decoration:
+                                                            BoxDecoration(
+                                                                // color: Color(0XFF9B9B9B),
+                                                                color: ColorConstant
+                                                                    .primary_color,
+                                                                borderRadius: BorderRadius.only(
+                                                                    bottomLeft:
+                                                                        Radius.circular(
+                                                                            4))),
+                                                        child: Center(
+                                                          child: Text(
+                                                            "Chat",
                                                             style: TextStyle(
                                                                 fontWeight:
                                                                     FontWeight
@@ -1528,126 +1699,28 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                                                     .white,
                                                                 fontFamily:
                                                                     "outfit",
-                                                                fontSize: 10),
-                                                          )),
+                                                                fontSize: 15),
+                                                          ),
                                                         ),
-                                                      )
-                                                    ],
-                                                  ),
-                                                )
-                                              : SizedBox(),
-
-                                          // index == 1 || index == 2 || index == 3
-                                          //     ? Divider(color: Colors.grey)
-                                          //     : SizedBox(),
-
-                                          // index == 1 || index == 3
-                                          //     ? Padding(
-                                          //         padding:
-                                          //             const EdgeInsets.all(8.0),
-                                          //         child: Row(
-                                          //           children: [
-                                          //             CustomImageView(
-                                          //               imagePath: ImageConstant
-                                          //                   .workimage,
-                                          //               height: 30,
-                                          //             ),
-                                          //             Text("Expert 1"),
-                                          //             Spacer(),
-                                          //             Container(
-                                          //               width: 80,
-                                          //               height: 20,
-                                          //               decoration:
-                                          //                   ShapeDecoration(
-                                          //                 color:
-                                          //                     ColorConstant.primary_color,
-                                          //                 shape:
-                                          //                     RoundedRectangleBorder(
-                                          //                   borderRadius:
-                                          //                       BorderRadius
-                                          //                           .circular(
-                                          //                               49.46),
-                                          //                 ),
-                                          //               ),
-                                          //               child: Center(
-                                          //                   child: Text(
-                                          //                 "Switch Expert",
-                                          //                 style: TextStyle(
-                                          //                     fontWeight:
-                                          //                         FontWeight.w400,
-                                          //                     color: Colors.white,
-                                          //                     fontFamily:
-                                          //                         "outfit",
-                                          //                     fontSize: 10),
-                                          //               )),
-                                          //             )
-                                          //           ],
-                                          //         ),
-                                          //       )
-                                          //     : SizedBox(),
-                                        SizedBox(
-                                          height: 2,
-                                        ),
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Expanded(
-                                                flex: 2,
-                                                child: GestureDetector(
-                                                  onTap: () {
-                                                    Navigator.push(context,
-                                                        MaterialPageRoute(
-                                                            builder: (context) {
-                                                      return ViewCommentScreen(
-                                                        Room_ID:
-                                                            "${PriveateRoomData?.object?[index].uid ?? ""}",
-                                                        Title:
-                                                            "${PriveateRoomData?.object?[index].roomQuestion ?? ""}",
-                                                      );
-                                                    }));
-                                                  },
-                                                  child: Container(
-                                                    height: 40,
-                                                    width: _width / 2.48,
-                                                    decoration: BoxDecoration(
-                                                        // color: Color(0XFF9B9B9B),
-                                                        color: ColorConstant
-                                                            .primary_color,
-                                                        borderRadius:
-                                                            BorderRadius.only(
-                                                                bottomLeft: Radius
-                                                                    .circular(
-                                                                        4))),
-                                                    child: Center(
-                                                      child: Text(
-                                                        "Chat",
-                                                        style: TextStyle(
-                                                            fontWeight:
-                                                                FontWeight.w400,
-                                                            color: Colors.white,
-                                                            fontFamily:
-                                                                "outfit",
-                                                            fontSize: 15),
                                                       ),
                                                     ),
                                                   ),
-                                                ),
-                                              ),
-                                              SizedBox(
-                                                width: PriveateRoomData
-                                                            ?.object?[index]
-                                                            .expertUserProfile ==
-                                                        null
-                                                    ? 1
-                                                    : 0,
-                                              ),
-                                              PriveateRoomData?.object?[index]
-                                                          .expertUserProfile ==
-                                                      null
-                                                  ? User_Mood == "EXPERT"
-                                                      ? SizedBox()
-                                                      : checkuserdata ==
+                                                  SizedBox(
+                                                    width: PriveateRoomData
+                                                                ?.object?[index]
+                                                                .expertUserProfile ==
+                                                            null
+                                                        ? 1
+                                                        : 0,
+                                                  ),
+                                                  PriveateRoomData
+                                                              ?.object?[index]
+                                                              .expertUserProfile ==
+                                                          null
+                                                      ? /*  User_Mood == "EXPERT"
+                                                          ? SizedBox()
+                                                          :  */
+                                                      checkuserdata ==
                                                               "PARTIALLY_REGISTERED"
                                                           ? SizedBox()
                                                           : Expanded(
@@ -1699,57 +1772,61 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                                                 ),
                                                               ),
                                                             )
-                                                  : SizedBox(),
+                                                      : SizedBox(),
+                                                ],
+                                              ),
+
+                                              // Container(
+                                              //   color: Colors.amber,
+                                              //   child: Stack(
+                                              //     children: [
+                                              //       Row(
+                                              //         children: [
+                                              //           CustomImageView(
+                                              //             imagePath: ImageConstant.expertone,
+                                              //             height: 30,
+                                              //           ),
+                                              //           CustomImageView(
+                                              //             imagePath: ImageConstant.experttwo,
+                                              //             height: 30,
+                                              //           ),
+                                              //           CustomImageView(
+                                              //             imagePath: ImageConstant.expertthree,
+                                              //             height: 30,
+                                              //           ),
+                                              //         ],
+                                              //       ),
+                                              //     ],
+                                              //   ),
+                                              // ),
                                             ],
                                           ),
-
-                                          // Container(
-                                          //   color: Colors.amber,
-                                          //   child: Stack(
-                                          //     children: [
-                                          //       Row(
-                                          //         children: [
-                                          //           CustomImageView(
-                                          //             imagePath: ImageConstant.expertone,
-                                          //             height: 30,
-                                          //           ),
-                                          //           CustomImageView(
-                                          //             imagePath: ImageConstant.experttwo,
-                                          //             height: 30,
-                                          //           ),
-                                          //           CustomImageView(
-                                          //             imagePath: ImageConstant.expertthree,
-                                          //             height: 30,
-                                          //           ),
-                                          //         ],
-                                          //       ),
-                                          //     ],
-                                          //   ),
-                                          // ),
-                                        ],
+                                        ),
                                       ),
-                                    ),
-                                  ),
-                                );
-                              },
+                                    );
+                                  },
+                                ),
+                              ]),
                             ),
-                          ]),
-                        ),
-                        checkuserdata == "PARTIALLY_REGISTERED"
-                            ? SizedBox()
-                            : User_Mood == "EXPERT"
+                            checkuserdata == "PARTIALLY_REGISTERED"
                                 ? SizedBox()
-                                : Padding(
+                                : /* User_Mood == "EXPERT"
+                                    ? SizedBox()
+                                    :  */
+                                Padding(
                                     padding: const EdgeInsets.all(8.0),
                                     child: GestureDetector(
                                       onTap: () {
                                         /* showDialog(
-                              context: context,
-                              builder: (_) => BlocProvider<CreateRoomCubit>(
-                                  create: (context) => CreateRoomCubit(),
-                                  child: CreateRoomScreen()),
-                            ); */
-                                        CreatRoom(_height, _width);
+                                  context: context,
+                                  builder: (_) => BlocProvider<CreateRoomCubit>(
+                                      create: (context) => CreateRoomCubit(),
+                                      child: CreateRoomScreen()),
+                                ); */
+                                        /*   CreatRoom(_height, _width); */
+                                        setState(() {
+                                          createRoomDailog = true;
+                                        });
                                       },
                                       child: CustomImageView(
                                         imagePath: ImageConstant.addroomimage,
@@ -1758,75 +1835,134 @@ class _RoomsScreenState extends State<RoomsScreen> {
                                       ),
                                     ),
                                   ),
-                      ],
-                    )
-                  : Stack(
-                      children: [
-                        Center(
-                          child: Container(
-                            height: _height / 2.5,
+                          ],
+                        )
+                      : Stack(
+                          children: [
+                            Center(
+                              child: Container(
+                                height: _height / 2.5,
 
-                            child: CustomImageView(
-                              imagePath: checkuserdata == "PARTIALLY_REGISTERED"
-                                  ? ImageConstant.CreateForum //done
-                                  : checkuserdata == "PENDING"
-                                      ? ImageConstant.InPending //done
-                                      : checkuserdata == "APPROVED"
-                                          ? ImageConstant.noRoom //done
-                                          : ImageConstant.Rejected,
-                            ),
-
-                            // color: Colors.red,
-                          ),
-                        ),
-                        // checkuserdata == false
-                        // ? SizedBox()
-                        // :
-                        User_Mood == "EXPERT"
-                            ? SizedBox()
-                            : Padding(
-                                padding: const EdgeInsets.all(18.0),
-                                child: GestureDetector(
-                                  onTap: () {
-                                    /*  showDialog(
-                              context: context,
-                              builder: (_) => BlocProvider<CreateRoomCubit>(
-                                  create: (context) => CreateRoomCubit(),
-                                  child: CreateRoomScreen()),
-                            ); */
-
-                                    //  CreatRoom(_height, _width)
-                                    //                                     : CreateForum()
-
-                                    checkuserdata == "PARTIALLY_REGISTERED"
-                                        ? CreateForum()
-                                        : checkuserdata == "PENDING"
-                                            ? showAlert()
-                                            : checkuserdata == "APPROVED"
-                                                ? CreatRoom(_height, _width)
-                                                : showAlert1();
-                                  },
-                                  child: CustomImageView(
-                                    imagePath: ImageConstant.addroomimage,
-                                    height: 55,
-                                    alignment: Alignment.bottomRight,
-                                  ),
+                                child: CustomImageView(
+                                  imagePath:
+                                      checkuserdata == "PARTIALLY_REGISTERED"
+                                          ? ImageConstant.CreateForum //done
+                                          : checkuserdata == "PENDING"
+                                              ? ImageConstant.InPending //done
+                                              : checkuserdata == "APPROVED"
+                                                  ? ImageConstant.noRoom //done
+                                                  : ImageConstant.Rejected,
                                 ),
+
+                                // color: Colors.red,
                               ),
-                      ],
-                    );
-            }
-            return Center(
-              child: Container(
-                margin: EdgeInsets.only(bottom: 100),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(20),
-                  child: Image.asset(ImageConstant.loader,
-                      fit: BoxFit.cover, height: 100.0, width: 100),
+                            ),
+                            // checkuserdata == false
+                            // ? SizedBox()
+                            // :
+                            User_Mood == "EXPERT"
+                                ? SizedBox()
+                                : Padding(
+                                    padding: const EdgeInsets.all(18.0),
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        /*  showDialog(
+                                  context: context,
+                                  builder: (_) => BlocProvider<CreateRoomCubit>(
+                                      create: (context) => CreateRoomCubit(),
+                                      child: CreateRoomScreen()),
+                                ); */
+
+                                        //  CreatRoom(_height, _width)
+                                        //                                     : CreateForum()
+
+                                        checkuserdata == "PARTIALLY_REGISTERED"
+                                            ? CreateForum()
+                                            : checkuserdata == "PENDING"
+                                                ? showAlert()
+                                                : checkuserdata == "APPROVED"
+                                                    ? setState(() {
+                                                        createRoomDailog = true;
+                                                      }) /* CreatRoom(_height, _width) */
+                                                    : showAlert1();
+                                      },
+                                      child: CustomImageView(
+                                        imagePath: ImageConstant.addroomimage,
+                                        height: 55,
+                                        alignment: Alignment.bottomRight,
+                                      ),
+                                    ),
+                                  ),
+                          ],
+                        );
+                }
+                return Center(
+                  child: Container(
+                    margin: EdgeInsets.only(bottom: 100),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(20),
+                      child: Image.asset(ImageConstant.loader,
+                          fit: BoxFit.cover, height: 100.0, width: 100),
+                    ),
+                  ),
+                );
+              })),
+        ),
+        createRoomDailog == true
+            ? Container(
+                height: _height,
+                width: _width,
+                color: const Color.fromARGB(109, 0, 0, 0),
+                child: Center(
+                  child: CreateRoomScreen(
+                    onClose: () {
+                      setState(() {
+                        createRoomDailog = false;
+                      });
+                    },
+                  ),
                 ),
-              ),
-            );
-          })),
+              )
+            : SizedBox(),
+        inviteUserDailog == true
+            ? Container(
+                height: _height,
+                width: _width,
+                color: const Color.fromARGB(109, 0, 0, 0),
+                child: Center(
+                  child: InviteDilogScreen(
+                    Room_UUID:
+                        "${PriveateRoomData?.object?[selectedIndex ?? 0].uid}",
+                    Room_Link:
+                        PriveateRoomData?.object?[selectedIndex ?? 0].roomLink,
+                    onClose: () {
+                      setState(() {
+                        inviteUserDailog = false;
+                      });
+                    },
+                  ),
+                ),
+              )
+            : SizedBox(),
+        deleteDailog == true
+            ? Container(
+                height: _height,
+                width: _width,
+                color: const Color.fromARGB(109, 0, 0, 0),
+                child: Center(
+                  child: DeleteRoomDailog(
+                    deleteID: PriveateRoomData!.object![selectedIndex ?? 0].uid
+                        .toString(),
+                    onClose: () {
+                      setState(() {
+                        deleteDailog = false;
+                      });
+                    },
+                  ),
+                ),
+              )
+            : SizedBox(),
+      ],
     );
   }
 
@@ -1868,7 +2004,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
     }
   }
 
-  CreatRoom(_height, _width) {
+/*   CreatRoom(_height, _width) {
     TextEditingController _roomName = TextEditingController();
     TextEditingController _DescriptionText = TextEditingController();
     print('createroom');
@@ -2188,7 +2324,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
     //     builder: (context) {
     //       return
     //     });
-  }
+  } */
 
   void show_Icon_Flushbar(BuildContext context, {String? msg}) {
     Flushbar(

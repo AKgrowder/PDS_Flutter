@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pds/API/Bloc/sherinvite_Block/sherinvite_cubit.dart';
 import 'package:pds/API/Bloc/sherinvite_Block/sherinvite_state.dart';
 import 'package:pds/core/utils/color_constant.dart';
+import 'package:pds/presentation/%20new/newbottembar.dart';
 
 import '../core/utils/image_constant.dart';
 import '../widgets/custom_image_view.dart';
@@ -13,7 +14,9 @@ import '../widgets/custom_image_view.dart';
 class InviteDilogScreen extends StatefulWidget {
   String? Room_UUID;
   String? Room_Link;
-  InviteDilogScreen({required this.Room_UUID, required this.Room_Link});
+  void Function()? onClose;
+  InviteDilogScreen(
+      {required this.Room_UUID, required this.Room_Link, this.onClose});
   @override
   State<StatefulWidget> createState() => _InviteDilogScreenState();
 }
@@ -93,7 +96,12 @@ class _InviteDilogScreenState extends State<InviteDilogScreen>
           );
           ScaffoldMessenger.of(context).showSnackBar(snackBar);
           Future.delayed(const Duration(seconds: 2), () {
-            Navigator.pop(context);
+            Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(
+                    builder: (context) => NewBottomBar(
+                          buttomIndex: 1,
+                        )),
+                (Route<dynamic> route) => false);
           });
         }
       },
@@ -105,7 +113,7 @@ class _InviteDilogScreenState extends State<InviteDilogScreen>
               scale: scaleAnimation,
               child: Container(
                 height: height / 2,
-                width: width / 1.17,
+                width: 400,
                 decoration: ShapeDecoration(
                   // color: Colors.black,
 
@@ -146,7 +154,7 @@ class _InviteDilogScreenState extends State<InviteDilogScreen>
                                       ),
                                     ),
                                     GestureDetector(
-                                      onTap: () => Navigator.pop(context),
+                                      onTap: widget.onClose,
                                       child: CustomImageView(
                                         imagePath: ImageConstant.closeimage,
                                         height: 40,
@@ -159,7 +167,7 @@ class _InviteDilogScreenState extends State<InviteDilogScreen>
                                 color: Colors.grey,
                               ),
                               Padding(
-                                padding: const EdgeInsets.only(left: 22.0),
+                                padding: const EdgeInsets.only(left: 10.0),
                                 child: Text(
                                   "Enter Email ID",
                                   style: TextStyle(
@@ -173,37 +181,41 @@ class _InviteDilogScreenState extends State<InviteDilogScreen>
                               SizedBox(
                                 height: 5,
                               ),
-                              Center(
-                                child: Container(
-                                  // height: 40,
-                                  width: width / 1.45,
-                                  decoration: BoxDecoration(
-                                      border: Border.all(color: Colors.grey),
-                                      borderRadius: BorderRadius.circular(5)),
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(
-                                        top: 0.0, left: 10),
-                                    child: TextFormField(
-                                      inputFormatters: [
-                                        LengthLimitingTextInputFormatter(50),
-                                      ],
-                                      // validator: (value) {
-                                      //   final RegExp emailRegExp = RegExp(
-                                      //       r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$');
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                    left: 10.0, right: 10),
+                                child: Center(
+                                  child: Container(
+                                    // height: 40,
+                                    width: width / 1.45,
+                                    decoration: BoxDecoration(
+                                        border: Border.all(color: Colors.grey),
+                                        borderRadius: BorderRadius.circular(5)),
+                                    child: Padding(
+                                      padding: const EdgeInsets.only(
+                                          top: 0.0, left: 10),
+                                      child: TextFormField(
+                                        inputFormatters: [
+                                          LengthLimitingTextInputFormatter(50),
+                                        ],
+                                        // validator: (value) {
+                                        //   final RegExp emailRegExp = RegExp(
+                                        //       r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$');
 
-                                      //   if (value!.isEmpty) {
-                                      //     return 'Please Enter Email';
-                                      //   } else if (!emailRegExp
-                                      //       .hasMatch(value)) {
-                                      //     return 'Please Enter Vaild Email';
-                                      //   }
-                                      //   return null;
-                                      // },
-                                      controller: email,
-                                      cursorColor: Colors.grey,
-                                      decoration: InputDecoration(
-                                          border: InputBorder.none,
-                                          hintText: 'Email'),
+                                        //   if (value!.isEmpty) {
+                                        //     return 'Please Enter Email';
+                                        //   } else if (!emailRegExp
+                                        //       .hasMatch(value)) {
+                                        //     return 'Please Enter Vaild Email';
+                                        //   }
+                                        //   return null;
+                                        // },
+                                        controller: email,
+                                        cursorColor: Colors.grey,
+                                        decoration: InputDecoration(
+                                            border: InputBorder.none,
+                                            hintText: 'Email'),
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -211,111 +223,132 @@ class _InviteDilogScreenState extends State<InviteDilogScreen>
                               SizedBox(
                                 height: 30,
                               ),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                children: [
-                                  GestureDetector(
-                                    onTap: () => Navigator.pop(context),
-                                    child: Container(
-                                      height: 43,
-                                      width: width / 3.5,
-                                      decoration: BoxDecoration(
-                                          color: Colors.transparent,
-                                          border: Border.all(
-                                              color: Colors.grey.shade400),
-                                          borderRadius:
-                                              BorderRadius.circular(10)),
-                                      child: Center(
-                                          child: Text(
-                                        "Cancel",
-                                        style: TextStyle(
-                                          fontFamily: 'outfit',
-                                          fontSize: 15,
-                                          color: ColorConstant.primary_color,
-                                          fontWeight: FontWeight.w400,
+                              Padding(
+                                padding:
+                                    const EdgeInsets.only(left: 30, right: 30),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    Flexible(
+                                      flex: 2,
+                                      fit: FlexFit.tight,
+                                      child: GestureDetector(
+                                        onTap: widget.onClose,
+                                        child: Container(
+                                          height: 43,
+                                          width: width / 3.5,
+                                          decoration: BoxDecoration(
+                                              color: Colors.transparent,
+                                              border: Border.all(
+                                                  color: Colors.grey.shade400),
+                                              borderRadius:
+                                                  BorderRadius.circular(10)),
+                                          child: Center(
+                                              child: Text(
+                                            "Cancel",
+                                            style: TextStyle(
+                                              fontFamily: 'outfit',
+                                              fontSize: 15,
+                                              color:
+                                                  ColorConstant.primary_color,
+                                              fontWeight: FontWeight.w400,
+                                            ),
+                                          )),
                                         ),
-                                      )),
+                                      ),
                                     ),
-                                  ),
-                                  GestureDetector(
-                                    onTap: () {
-                                      final RegExp emailRegExp = RegExp(
-                                          r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$');
-                                      // if (email.text.toString() != null) {
-                                      //   print('uid-${widget.Room_UUID}');
-                                      //   print('email -${email.text}');
-                                      //   BlocProvider.of<SherInviteCubit>(
-                                      //           context)
-                                      //       .sherInviteApi(
-                                      //           widget.Room_UUID.toString(),
-                                      //           email.text.toString());
-                                      // }
-                                      // else if(!emailRegExp.hasMatch(email.text)){
+                                    SizedBox(
+                                      width: 20,
+                                    ),
+                                    Flexible(
+                                      flex: 2,
+                                      fit: FlexFit.tight,
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          final RegExp emailRegExp = RegExp(
+                                              r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$');
+                                          // if (email.text.toString() != null) {
+                                          //   print('uid-${widget.Room_UUID}');
+                                          //   print('email -${email.text}');
+                                          //   BlocProvider.of<SherInviteCubit>(
+                                          //           context)
+                                          //       .sherInviteApi(
+                                          //           widget.Room_UUID.toString(),
+                                          //           email.text.toString());
+                                          // }
+                                          // else if(!emailRegExp.hasMatch(email.text)){
 
-                                      // }
-                                      if (email.text.toString().isEmpty) {
-                                        SnackBar snackBar = SnackBar(
-                                          content: Text('Please Enter Email'),
-                                          backgroundColor:
-                                              ColorConstant.primary_color,
-                                        );
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(snackBar);
-                                      } else if (email.text.trim().isEmpty ||
-                                          email.text.trim() == '') {
-                                        SnackBar snackBar = SnackBar(
-                                          content: Text(
-                                              'email can\'t be just blank spaces'),
-                                          backgroundColor:
-                                              ColorConstant.primary_color,
-                                        );
-                                        ScaffoldMessenger.of(context);
-                                      } else if (!emailRegExp
-                                          .hasMatch(email.text.toString())) {
-                                        SnackBar snackBar = SnackBar(
-                                          content:
-                                              Text('Please Enter Vaild Email'),
-                                          backgroundColor:
-                                              ColorConstant.primary_color,
-                                        );
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(snackBar);
-                                      } else {
-                                        print('uid-${widget.Room_UUID}');
-                                        print('email -${email.text}');
-                                        if (SubmitOneTime == false) {
-                                          SubmitOneTime = true;
-                                          BlocProvider.of<SherInviteCubit>(
-                                                  context)
-                                              .sherInviteApi(
-                                                  widget.Room_UUID.toString(),
-                                                  email.text.toString(),
-                                                  context);
-                                        }
-                                      }
-                                      // if (_formKey.currentState!.validate()) {
-                                    },
-                                    child: Container(
-                                      height: 43,
-                                      width: width / 3.5,
-                                      decoration: BoxDecoration(
-                                          color: ColorConstant.primary_color,
-                                          borderRadius:
-                                              BorderRadius.circular(10)),
-                                      child: Center(
-                                          child: Text(
-                                        "Invite",
-                                        style: TextStyle(
-                                          fontFamily: 'outfit',
-                                          fontSize: 15,
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.w400,
+                                          // }
+                                          if (email.text.toString().isEmpty) {
+                                            SnackBar snackBar = SnackBar(
+                                              content:
+                                                  Text('Please Enter Email'),
+                                              backgroundColor:
+                                                  ColorConstant.primary_color,
+                                            );
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(snackBar);
+                                          } else if (email.text
+                                                  .trim()
+                                                  .isEmpty ||
+                                              email.text.trim() == '') {
+                                            SnackBar snackBar = SnackBar(
+                                              content: Text(
+                                                  'email can\'t be just blank spaces'),
+                                              backgroundColor:
+                                                  ColorConstant.primary_color,
+                                            );
+                                            ScaffoldMessenger.of(context);
+                                          } else if (!emailRegExp.hasMatch(
+                                              email.text.toString())) {
+                                            SnackBar snackBar = SnackBar(
+                                              content: Text(
+                                                  'Please Enter Vaild Email'),
+                                              backgroundColor:
+                                                  ColorConstant.primary_color,
+                                            );
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(snackBar);
+                                          } else {
+                                            print('uid-${widget.Room_UUID}');
+                                            print('email -${email.text}');
+                                            if (SubmitOneTime == false) {
+                                              SubmitOneTime = true;
+                                              BlocProvider.of<SherInviteCubit>(
+                                                      context)
+                                                  .sherInviteApi(
+                                                      widget.Room_UUID
+                                                          .toString(),
+                                                      email.text.toString(),
+                                                      context);
+                                            }
+                                          }
+                                          // if (_formKey.currentState!.validate()) {
+                                        },
+                                        child: Container(
+                                          height: 43,
+                                          width: width / 3.5,
+                                          decoration: BoxDecoration(
+                                              color:
+                                                  ColorConstant.primary_color,
+                                              borderRadius:
+                                                  BorderRadius.circular(10)),
+                                          child: Center(
+                                              child: Text(
+                                            "Invite",
+                                            style: TextStyle(
+                                              fontFamily: 'outfit',
+                                              fontSize: 15,
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.w400,
+                                            ),
+                                          )),
                                         ),
-                                      )),
+                                      ),
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
                               SizedBox(
                                 height: 8,

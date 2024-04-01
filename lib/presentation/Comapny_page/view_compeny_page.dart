@@ -133,7 +133,7 @@ class _ViewCompenyPageState extends State<ViewCompenyPage> {
                               Text(
                                 "Company Details",
                                 style: TextStyle(
-                                    fontSize: 15,
+                                    fontSize: 15,fontFamily: 'outfit',
                                     fontWeight: FontWeight.w500,
                                     color: Colors.black),
                               ),
@@ -146,7 +146,7 @@ class _ViewCompenyPageState extends State<ViewCompenyPage> {
                         child: Text(
                           "Company Name",
                           style: TextStyle(
-                            fontSize: 15,
+                            fontSize: 15,fontFamily: 'outfit',
                             fontWeight: FontWeight.w500,
                             color: Colors.black,
                           ),
@@ -177,7 +177,7 @@ class _ViewCompenyPageState extends State<ViewCompenyPage> {
                         child: Text(
                           "Page ID",
                           style: TextStyle(
-                            fontSize: 15,
+                            fontSize: 15,fontFamily: 'outfit',
                             fontWeight: FontWeight.w500,
                             color: Colors.black,
                           ),
@@ -209,7 +209,7 @@ class _ViewCompenyPageState extends State<ViewCompenyPage> {
                         child: Text(
                           "Comapny Type",
                           style: TextStyle(
-                            fontSize: 15,
+                            fontSize: 15,fontFamily: 'outfit',
                             fontWeight: FontWeight.w500,
                             color: Colors.black,
                           ),
@@ -236,14 +236,14 @@ class _ViewCompenyPageState extends State<ViewCompenyPage> {
                           ),
                         ),
                       ),
-                      Padding(
+                      if(widget.description?.isNotEmpty == true)  Padding(
                         padding: const EdgeInsets.only(
                           top: 20,
                         ),
                         child: Text(
                           "Description",
                           style: TextStyle(
-                            fontSize: 15,
+                            fontSize: 15,fontFamily: 'outfit',
                             fontWeight: FontWeight.w500,
                             color: Colors.black,
                           ),
@@ -252,7 +252,7 @@ class _ViewCompenyPageState extends State<ViewCompenyPage> {
                       SizedBox(
                         height: 5,
                       ),
-                      Container(
+                      if(widget.description?.isNotEmpty == true) Container(
                         width: _width,
                         height: 100,
                         decoration: BoxDecoration(

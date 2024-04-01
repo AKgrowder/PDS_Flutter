@@ -1,14 +1,16 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:any_link_preview/any_link_preview.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:device_info_plus/device_info_plus.dart';
+import 'package:dio/dio.dart';
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_observer/Observable.dart';
 import 'package:flutter_observer/Observer.dart';
-import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:linkfy_text/linkfy_text.dart';
@@ -29,10 +31,12 @@ import 'package:pds/presentation/%20new/profileNew.dart';
 import 'package:pds/presentation/register_create_account_screen/register_create_account_screen.dart';
 import 'package:pds/widgets/commentPdf.dart';
 import 'package:pds/widgets/custom_image_view.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:video_thumbnail/video_thumbnail.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 import '../../API/Bloc/OpenSaveImagepost_Bloc/OpenSaveImagepost_state.dart';
@@ -40,10 +44,6 @@ import '../../API/Model/UserTagModel/UserTag_model.dart';
 import '../../core/utils/sharedPreferences.dart';
 import '../Create_Post_Screen/Ceratepost_Screen.dart';
 import 'home_screen_new.dart';
-import 'package:device_info_plus/device_info_plus.dart';
-import 'package:dio/dio.dart';
-import 'package:permission_handler/permission_handler.dart';
-import 'package:video_thumbnail/video_thumbnail.dart';
 
 // ignore: must_be_immutable
 class OpenSavePostImage extends StatefulWidget {
@@ -89,7 +89,7 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> with Observer {
   String _localPath = "";
 
   int? version;
-   int? indexOfSave;
+  int? indexOfSave;
 
   @override
   void initState() {
@@ -398,15 +398,27 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> with Observer {
                                                                     ?.isFollowing);
                                                       }));
                                                     },
-                                                    child: Container(
-                                                      child: Text(
-                                                        '${OpenSaveModelData?.object?.postUserName}',
-                                                        style: TextStyle(
-                                                          color: Colors.white,
-                                                          fontSize: 16,
-                                                          fontFamily: 'outfit',
-                                                          fontWeight:
-                                                              FontWeight.w600,
+                                                    child: GestureDetector(
+                                                      onTap: () {
+                                                        if (uuid == null) {
+                                                          Navigator.of(context).push(
+                                                              MaterialPageRoute(
+                                                                  builder:
+                                                                      (context) =>
+                                                                          RegisterCreateAccountScreen()));
+                                                        }
+                                                      },
+                                                      child: Container(
+                                                        child: Text(
+                                                          '${OpenSaveModelData?.object?.postUserName}',
+                                                          style: TextStyle(
+                                                            color: Colors.white,
+                                                            fontSize: 16,
+                                                            fontFamily:
+                                                                'outfit',
+                                                            fontWeight:
+                                                                FontWeight.w600,
+                                                          ),
                                                         ),
                                                       ),
                                                     ),
@@ -2604,14 +2616,24 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> with Observer {
                                                             ?.isFollowing);
                                               }));
                                             },
-                                            child: Container(
-                                              child: Text(
-                                                '${OpenSaveModelData?.object?.postUserName}',
-                                                style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 16,
-                                                  fontFamily: 'outfit',
-                                                  fontWeight: FontWeight.w600,
+                                            child: GestureDetector(
+                                              onTap: () {
+                                                if (uuid == null) {
+                                                  Navigator.of(context).push(
+                                                      MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              RegisterCreateAccountScreen()));
+                                                }
+                                              },
+                                              child: Container(
+                                                child: Text(
+                                                  '${OpenSaveModelData?.object?.postUserName}',
+                                                  style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 16,
+                                                    fontFamily: 'outfit',
+                                                    fontWeight: FontWeight.w600,
+                                                  ),
                                                 ),
                                               ),
                                             ),
@@ -4149,17 +4171,18 @@ class _OpenSavePostImageState extends State<OpenSavePostImage> with Observer {
 
       if (OpenSaveModelData?.object?.isSaved == true) {
         OpenSaveModelData?.object?.isSaved = false;
-       indexOfSave = AllGuestPostRoomData?.object?.content?.indexWhere(
+        indexOfSave = AllGuestPostRoomData?.object?.content?.indexWhere(
             (element) => element.postUid == OpenSaveModelData?.object?.postUid);
-            AllGuestPostRoomData?.object?.content?[indexOfSave ??0].isSaved = false;
+        AllGuestPostRoomData?.object?.content?[indexOfSave ?? 0].isSaved =
+            false;
         print("index check -${indexOfSave}");
       } else {
         OpenSaveModelData?.object?.isSaved = true;
         indexOfSave = AllGuestPostRoomData?.object?.content?.indexWhere(
             (element) => element.postUid == OpenSaveModelData?.object?.postUid);
-            AllGuestPostRoomData?.object?.content?[indexOfSave ??0].isSaved = true;
+        AllGuestPostRoomData?.object?.content?[indexOfSave ?? 0].isSaved = true;
       }
-    }/* else if (apiName == 'Follow') {
+    } /* else if (apiName == 'Follow') {
       print("dfhsdfhsdfhsdgf");
       await BlocProvider.of<OpenSaveCubit>(context)
           .followWIngMethodd(OpenSaveModelData?.object?.userUid, context);
