@@ -1455,7 +1455,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
       String useruidsort = User_ID!.split('-').last.toString();
       onUserLogin('${useruidsort}', '${User_Name}');
     } */
-    timer = Timer.periodic(Duration(seconds: 15), (timer) async {
+  /*   timer = Timer.periodic(Duration(seconds: 15), (timer) async {
       setState(() {
         secound = timer.tick;
       });
@@ -1463,7 +1463,7 @@ class _HomeScreenNewState extends State<HomeScreenNew>
           .seetinonExpried(context);
       await BlocProvider.of<GetGuestAllPostCubit>(context)
           .getAllNoticationsCountAPI(context);
-    });
+    }); */
     await BlocProvider.of<GetGuestAllPostCubit>(context)
         .getallcompenypagee(context);
     await BlocProvider.of<GetGuestAllPostCubit>(context)

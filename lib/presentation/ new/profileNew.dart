@@ -31,6 +31,7 @@ import 'package:pds/API/Model/NewProfileScreenModel/GetUserPostCommet_Model.dart
 import 'package:pds/API/Model/NewProfileScreenModel/NewProfileScreen_Model.dart';
 import 'package:pds/API/Model/getall_compeny_page_model/getall_compeny_page.dart';
 import 'package:pds/API/Model/saveAllBlogModel/saveAllBlog_Model.dart';
+import 'package:pds/Market_place/MP_Prasantation/Mp_Ragister_screen/MP_ragister_now.dart';
 import 'package:pds/core/app_export.dart';
 import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/core/utils/sharedPreferences.dart';
@@ -1292,6 +1293,9 @@ class _ProfileScreenState extends State<ProfileScreen>
                                             ),
                                           ),
                                         ),
+                                        IconButton(onPressed: () {
+                                          Navigator.push(context, MaterialPageRoute(builder: (context) => ChooseCatgory(),));
+                                        }, icon: Icon(Icons.abc,size: 14,)),
                                         GestureDetector(
                                           onTap: () {
                                             Navigator.push(
