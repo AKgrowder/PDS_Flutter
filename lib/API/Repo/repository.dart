@@ -287,9 +287,9 @@ class Repository {
     }
   }
 
-  loginApiisExistFromOnBoarding(Map<String, dynamic> params, BuildContext context) async {
+  loginApiisExistFromOnBoarding(String username,String password, BuildContext context) async {
     final response =
-        await apiServices.postApiCall(Config.loginApiisExistFromOnBoarding, params, context);
+        await apiServices.postApiCalla(Config.loginApiisExistFromOnBoarding+"?username=${username}&password=${password}", context);
     var jsonString = json.decode(response.body);
     print('jsonString-$jsonString');
     switch (response.statusCode) {

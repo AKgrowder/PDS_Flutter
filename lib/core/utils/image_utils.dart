@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -29,6 +30,18 @@ class ImagePickerController {
       pickedImageFile = await picker.pickImage(source: ImageSource.gallery);
       // Get.back();
     }
+  }
+}
+
+class ImageCompressor {
+  static Future<File> compressImage(File file, int quality) async {
+    var result = await FlutterImageCompress.compressAndGetFile(
+      file.absolute.path,
+      file.absolute.path,
+      quality: quality,
+    );
+
+    return File(result!.path);
   }
 }
 

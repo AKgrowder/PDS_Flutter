@@ -105,11 +105,13 @@ class _ViewCommentScreenState extends State<ViewCommentScreen> {
 
   @override
   void initState() {
+    getToken();
     pageNumberMethod();
     print('Room UID :-----> ${widget.Room_ID}');
     getUserID();
-    getToken();
+
     getDocumentSize();
+    print("user name -- ${User_Name}");
 
     keyboardVisibilityController.onChange.listen((bool isKeyboardVisible) {
       this.isKeyboardVisible = isKeyboardVisible;

@@ -25,11 +25,14 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../policy_of_company/privecy_policy.dart';
 
 class CreateAccountScreen extends StatefulWidget {
-  CreateAccountScreen({Key? key})
-      : super(
-          key: key,
-        );
-
+  String? name;
+  String? email;
+  String? mobileNumber;
+  bool? Autofill;
+  LogInIsExistFromOnBoardingModel? loginisexistfromonbordingmodel;
+  CreateAccountScreen(
+      {this.name, this.email, this.mobileNumber, this.Autofill,this.loginisexistfromonbordingmodel
+});
   @override
   State<CreateAccountScreen> createState() => _CreateAccountScreenState();
 }
@@ -41,7 +44,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
   TextEditingController emailAndMobileController = TextEditingController();
   TextEditingController contectnumberController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
-  TextEditingController phoneNumberController = TextEditingController();
+  // TextEditingController phoneNumberController = TextEditingController();
   Country selectedCountry = CountryPickerUtils.getCountryByPhoneCode('91');
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   bool Show_Password = true;
@@ -91,6 +94,13 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
   void initState() {
     dataGet();
     getDocumentSize();
+    if (widget.Autofill == true) {
+      nameController.text =  "${widget.loginisexistfromonbordingmodel?.object?.name}";
+      emailAndMobileController.text =  "${widget.loginisexistfromonbordingmodel?.object?.email}";
+      contectnumberController.text =  "${widget.loginisexistfromonbordingmodel?.object?.mobileNo}";
+      passwordController.text = "${widget.loginisexistfromonbordingmodel?.object?.password}";
+      enteruseridController.text =  "${widget.loginisexistfromonbordingmodel?.object?.userName}";
+    }
     /* _requestPermissions(); */
   }
 
@@ -170,7 +180,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                             builder: (context) => OtpVerificationScreen(
                                   phonNumber: contectnumberController.text,
                                   flowCheck: 'Rgister',
-                                   loginModelData: loginModelData,
+                                  loginModelData: loginModelData,
                                 )),
                       );
                     }
@@ -208,15 +218,19 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                               ),
                               Spacer(),
                               Padding(
-                                padding: const EdgeInsets.only(right: 20),
-                                child: SvgPicture.asset(ImageConstant.splashImage,height: 37,alignment: Alignment.center,)
-                                /* CustomImageView(
+                                  padding: const EdgeInsets.only(right: 20),
+                                  child: SvgPicture.asset(
+                                    ImageConstant.splashImage,
+                                    height: 37,
+                                    alignment: Alignment.center,
+                                  )
+                                  /* CustomImageView(
                                   imagePath:  
                                   ImageConstant.splashImage,
                                   height: 37,
                                   alignment: Alignment.center,
                                 ), */
-                              ),
+                                  ),
                               Spacer(),
                             ],
                           ),
@@ -402,8 +416,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                             RegExp nameRegExp = RegExp(r"^[a-zA-Z0-9\s'@]+$");
                             if (value!.isEmpty) {
                               return 'Please Enter User ID';
-                            } else if (value.length < 4 ||
-                                value.length > 50) {
+                            } else if (value.length < 4 || value.length > 50) {
                               return 'Minimum length required';
                             } else if (!nameRegExp.hasMatch(value)) {
                               return 'Input cannot contains prohibited special characters';
@@ -446,8 +459,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                               return 'Name can\'t be just blank spaces';
                             } else if (!nameRegExp.hasMatch(value)) {
                               return 'Input cannot contains prohibited special characters';
-                            } else if (value.length <= 3 ||
-                                value.length > 50) {
+                            } else if (value.length <= 3 || value.length > 50) {
                               return 'Minimum length required';
                             } else if (value.contains('..')) {
                               return 'username does not contain is correct';
@@ -504,8 +516,8 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                             final RegExp regex = RegExp('[a-zA-Z]');
                             if (emailAndMobileController.text == null ||
                                 emailAndMobileController.text.isEmpty ||
-                                !regex.hasMatch(
-                                    emailAndMobileController.text)) {
+                                !regex
+                                    .hasMatch(emailAndMobileController.text)) {
                               if (this.mounted) {
                                 super.setState(() {
                                   isPhone = true;
@@ -739,8 +751,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                               text: TextSpan(
                                 children: [
                                   TextSpan(
-                                    text:
-                                        "By Submitting you are agreeing to ",
+                                    text: "By Submitting you are agreeing to ",
                                     style: TextStyle(
                                       color: appTheme.black900,
                                       fontSize: 14,
@@ -802,7 +813,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
                                   color: theme.colorScheme.primary,
-                                  fontSize: _width/30,
+                                  fontSize: _width / 30,
                                   fontFamily: 'Outfit',
                                   fontWeight: FontWeight.w500,
                                   decoration: TextDecoration.underline,
@@ -828,7 +839,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                                     overflow: TextOverflow.ellipsis,
                                     style: TextStyle(
                                       color: theme.colorScheme.primary,
-                                      fontSize: _width/30,
+                                      fontSize: _width / 30,
                                       fontFamily: 'Outfit',
                                       fontWeight: FontWeight.w500,
                                       decoration: TextDecoration.underline,
