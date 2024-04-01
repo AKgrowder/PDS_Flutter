@@ -3,11 +3,11 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:pds/Market_place/MP_Prasantation/Cart/mp_cart_screen.dart';
 import 'package:pds/Market_place/MP_Prasantation/Charge_Payment_Screen/charge_payment_screen.dart';
 import 'package:pds/Market_place/MP_Prasantation/MP_Create_Account_Screen/mp_create_account_screen.dart';
 import 'package:pds/Market_place/MP_Prasantation/Mp_Ragister_screen/MP_ragister_now.dart';
 import 'package:pds/Market_place/MP_Prasantation/Product_Details_Screen/product_details_screen.dart';
-import 'package:pds/Market_place/MP_Prasantation/choose_your_category_screen/choose_category_screen.dart';
 import 'package:pds/Market_place/MP_Prasantation/home/MP_home_screen.dart';
 import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/core/utils/image_constant.dart';
@@ -39,7 +39,7 @@ class MpBottomBarScreen extends StatefulWidget {
   State<MpBottomBarScreen> createState() => _MpBottomBarScreenState();
 }
 
-ScrollController scrollController = ScrollController();
+ 
 
 class _MpBottomBarScreenState extends State<MpBottomBarScreen> {
   bool keyboardOpen = false;
@@ -52,10 +52,11 @@ class _MpBottomBarScreenState extends State<MpBottomBarScreen> {
   List widgetOptions = [
     MpHomeScreen(),
     MPProductdetailsScreen(),
-    PaymentAndChargeScreen(),
+    PaymentAndChargeScreen(category: '',),
     CaPershonalDetailScreen(),
     // ChooseCategoryScreen(),
     ChooseCatgory(),
+    MpcartScreen(),
   ];
   late StreamSubscription _connectionChangeStream;
   bool isOffline = false;
@@ -94,9 +95,7 @@ class _MpBottomBarScreenState extends State<MpBottomBarScreen> {
                         onTap: () {
                           super.setState(() {
                             print("objecaaaaaaaaaaaaaaaaat");
-                            scrollController.animateTo(0,
-                                duration: Duration(milliseconds: 500),
-                                curve: Curves.easeInOut);
+                            
 
                             selectedIndex = 0;
                           });

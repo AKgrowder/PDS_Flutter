@@ -56,7 +56,9 @@ class _LoginScreenState extends State<LoginScreen> {
   bool SubmitOneTime = false;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(
+    BuildContext context,
+  ) {
     var _height = MediaQuery.of(context).size.height;
     var _width = MediaQuery.of(context).size.width;
     return WillPopScope(
@@ -102,6 +104,14 @@ class _LoginScreenState extends State<LoginScreen> {
                 );
               }
               if (state is LoginLoadedState) {
+                Map<String, dynamic> dataPassing = {
+                  "username": emailAndMobileController.text,
+                  "password": passwordoneController.text,              
+                };
+                if (isPhone == true) {
+                  BlocProvider.of<LoginCubit>(context)
+                      .loginApiisExistFromOnBoarding(dataPassing, context);
+                }
                 SubmitOneTime = false;
                 if (state.loginModel.message == "User Deleted") {
                   showDialog(
@@ -173,12 +183,12 @@ class _LoginScreenState extends State<LoginScreen> {
 
                   if (state.loginModel.object?.verified == true) {
                     SnackBar snackBar = SnackBar(
-                    content: Text(state.loginModel.message ?? ""),
-                    backgroundColor: ColorConstant.primary_color,
-                  );
-                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                  } 
-                  
+                      content: Text(state.loginModel.message ?? ""),
+                      backgroundColor: ColorConstant.primary_color,
+                    );
+                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                  }
+
                   print('check Status--${state.loginModel.message}');
                 }
               }
@@ -264,10 +274,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   width: 24,
                                   svgPath: ImageConstant.imgArrowleft,
                                   margin: EdgeInsets.only(
-                                      left: 20,
-                                      top: 50,
-                                      bottom: 13,
-                                      right: 15),
+                                      left: 20, top: 50, bottom: 13, right: 15),
                                   onTap: () {
                                     if (widget.flagCheck != null ||
                                         widget.flagCheck == 'otp done') {
@@ -509,6 +516,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 //   SubmitOneTime = true;
                                 BlocProvider.of<LoginCubit>(context)
                                     .loginApidata(dataPassing, context);
+
                                 // }
                               }
                             },
@@ -622,11 +630,11 @@ class _LoginScreenState extends State<LoginScreen> {
 
   saveUserProfile() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-        print("dsfsdgfsdfg${getUserDataModelData?.object?.userName}");
+    print("dsfsdgfsdfg${getUserDataModelData?.object?.userName}");
     prefs.setString(PreferencesKey.ProfileUserName,
         "${getUserDataModelData?.object?.userName}");
 
-       print("chehck value-${getUserDataModelData?.object?.userName}"); 
+    print("chehck value-${getUserDataModelData?.object?.userName}");
     prefs.setString(
         PreferencesKey.ProfileName, "${getUserDataModelData?.object?.name}");
     prefs.setString(
@@ -686,7 +694,7 @@ class _LoginScreenState extends State<LoginScreen> {
     );
     Uri mailto = Uri.parse("mailto:$emailLaunchUri");
     // if (Platform.isAndroid && Platform.isIOS) {
-      await launchUrl(mailto);
+    await launchUrl(mailto);
     // } else {
     //   print("Somthing went wrong!");
     // }
