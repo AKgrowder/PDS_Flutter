@@ -3,7 +3,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pds/Market_place/MP_Dilogs/MP_singup_flow_dilogs.dart';
+import 'package:pds/Market_place/MP_Dilogs/commen_dialod.dart';
 import 'package:pds/Market_place/commenWiget.dart/commenButton.dart';
+import 'package:pds/core/app_export.dart';
 import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/presentation/policy_of_company/policy_screen.dart';
 import 'package:pds/presentation/policy_of_company/privecy_policy.dart';
@@ -33,7 +36,7 @@ class _LoginAndRegistrstionScreenState
     extends State<LoginAndRegistrstionScreen> {
   TextEditingController mobilenumberController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
+  bool isDataGet = false;
   bool isPhonee = false;
   bool isChecked = false;
   @override
@@ -61,7 +64,9 @@ class _LoginAndRegistrstionScreenState
           child: BlocBuilder<LoginRegisterCubit, LoginRegtistrtionState>(
             builder: (context, state) {
               if (state is LoginRegtistrtionResponceGetState) {
-                print("this Condison is working");
+                if (state.commenModel.message == 'Accepted') {
+                  isDataGet = true;
+                }
               }
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -287,11 +292,26 @@ class _LoginAndRegistrstionScreenState
       } else if (widget.registrationName == 'Franchise Owner') {
         params['productServices'] = 'FRANCHISE';
       } else {
-        params['rmServices'] = widget.registrationName?.split('/').first.toUpperCase();
-        params['productServices'] = widget.registrationName?.split('/').last.toUpperCase();
-
+        params['rmServices'] =
+            widget.registrationName?.split('/').first.toUpperCase();
+        params['productServices'] =
+            widget.registrationName?.split('/').last.toUpperCase();
       }
-      BlocProvider.of<LoginRegisterCubit>(context).loginApidata(params, context);
+      BlocProvider.of<LoginRegisterCubit>(context)
+          .loginApidata(params, context);
+      if (isDataGet == true) {
+        showDialog(
+          barrierDismissible: true,
+          context: context,
+          builder: (_) => OtpVarificationDilog(
+            mobileNumber: mobilenumberController.text,
+          ),
+        ).then((value) {
+          setState(() {
+            isDataGet = false;
+          });
+        });
+      }
     }
   }
 }
