@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_observer/Observable.dart';
 import 'package:pds/API/Model/AddExportProfileModel/AddExportProfileModel.dart';
@@ -75,6 +74,7 @@ import 'package:pds/API/Model/forwad_Meesage/forwad_Message.dart';
 import 'package:pds/API/Model/getAllCompanyTypeModel/getAllCompanyTypeModel.dart';
 import 'package:pds/API/Model/getCountOfSavedRoomModel/getCountOfSavedRoomModel.dart';
 import 'package:pds/API/Model/getSerchDataModel/getSerchDataModel.dart';
+import 'package:pds/API/Model/get_Starred_MessagesModel/get_Starred_Messages.dart';
 import 'package:pds/API/Model/get_assigned_users_of_company_pageModel/get_assigned_users_of_company_pageModel.dart';
 import 'package:pds/API/Model/inboxScreenModel/LiveStatusModel.dart';
 import 'package:pds/API/Model/inboxScreenModel/SeenAllMessageModel.dart';
@@ -95,9 +95,7 @@ import 'package:pds/API/Model/storyModel/stroyModel.dart';
 import 'package:pds/API/Model/updateprofileModel/updateprofileModel.dart';
 import 'package:pds/core/utils/color_constant.dart';
 import 'package:pds/core/utils/sharedPreferences.dart';
-import 'package:pds/presentation/%20new/commenwigetReposrt.dart';
 import 'package:pds/presentation/%20new/newbottembar.dart';
-import 'package:pds/presentation/splash_screen/splash_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../presentation/ new/home_screen_new.dart';
@@ -130,7 +128,6 @@ import '../Model/fetch_room_detail_model/fetch_room_detail_model.dart';
 import '../Model/forget_password_model/change_password_model.dart';
 import '../Model/getall_compeny_page_model/getall_compeny_page.dart';
 import '../Model/myaccountModel/myaccountModel.dart';
-import 'package:pds/API/Model/get_Starred_MessagesModel/get_Starred_Messages.dart';
 
 class Repository {
   ApiServices apiServices = ApiServices();
@@ -280,6 +277,28 @@ class Repository {
         return Config.somethingWentWrong;
       case 400:
         return LoginModel.fromJson(jsonString);
+      // return Config.loginerror;
+      case 500:
+        return Config.servernotreachable;
+      case 701:
+        return Config.somethingWentWrong;
+      default:
+        return jsonString;
+    }
+  }
+
+  loginApiisExistFromOnBoarding(Map<String, dynamic> params, BuildContext context) async {
+    final response =
+        await apiServices.postApiCall(Config.loginApiisExistFromOnBoarding, params, context);
+    var jsonString = json.decode(response.body);
+    print('jsonString-$jsonString');
+    switch (response.statusCode) {
+      case 200:
+        return LogInIsExistFromOnBoardingModel.fromJson(jsonString);
+      case 404:
+        return Config.somethingWentWrong;
+      case 400:
+        return LogInIsExistFromOnBoardingModel.fromJson(jsonString);
       // return Config.loginerror;
       case 500:
         return Config.servernotreachable;
@@ -2118,12 +2137,14 @@ class Repository {
     }
   }
 
-  GetAppPostAPI(BuildContext context, String userUid) async {
+  GetAppPostAPI(BuildContext context, String pageNumber,String userUid) async {
+    print("dfgdfgdfgdfgdfh-${userUid}");
     final response = await apiServices.getApiCallWithToken(
-        "${Config.GetAppPost}?userUid=${userUid}", context);
-    print('AddPost$response');
+        "${Config.GetAppPost}?pageNumber=$pageNumber&numberOfRecords=10&userUid=$userUid", context);
+  
     // var jsonString = json.decode(response.body);
     var jsonString = json.decode(utf8.decode(response.bodyBytes));
+      print('AddPost$jsonString');
     switch (response.statusCode) {
       case 200:
         return GetAppUserPostModel.fromJson(jsonString);
@@ -2282,11 +2303,18 @@ class Repository {
     }
   }
 
-  HashTagForYouAPI(
-      BuildContext context, String hashtagViewType, String pageNumber,bool user) async {
-    final response = await apiServices.getApiCall(
-        '${user ? 'user':'guest'}${Config.HashTagForYou}?hashtagViewType=$hashtagViewType&pageNumber=$pageNumber&pageSize=20',
-        context);
+ HashTagForYouAPI(BuildContext context, String hashtagViewType,
+      String pageNumber, bool user) async {
+    dynamic response;
+    if (user) {
+      response = await apiServices.getApiCallWithToken(
+          'user${Config.HashTagForYou}?hashtagViewType=$hashtagViewType&pageNumber=$pageNumber&pageSize=20',
+          context);
+    } else {
+      response = await apiServices.getApiCall(
+          'guest${Config.HashTagForYou}?hashtagViewType=$hashtagViewType&pageNumber=$pageNumber&pageSize=20',
+          context);
+    }
 
     var jsonString = json.decode(utf8.decode(response.bodyBytes));
     print("jasonnStingview-${jsonString}");
@@ -3538,7 +3566,7 @@ class Repository {
         PreferencesKey.module1,
       );
     }
-
+    pref.setString(PreferencesKey.loginUserID, compnyPageUid);
     print('get_page_by_uid${response.body}');
     switch (response.statusCode) {
       case 200:
@@ -3573,7 +3601,6 @@ class Repository {
         return jsonString;
     }
   }
-
   delete_company_pages(String pageUid, BuildContext context) async {
     final response = await apiServices.deleteApiCallWithToken(
         "${Config.delete_company_pages}?companyPageUid=${pageUid}", context);
